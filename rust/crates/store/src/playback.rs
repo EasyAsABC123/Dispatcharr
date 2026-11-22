@@ -769,75 +769,112 @@ impl AuthService {
             .setting("user_limit_settings")
             .await
             .map_err(playback_error)?;
-        let defaults = UserLimitPolicy::default();
-        let viewer = PlaybackViewer {
-            user_id: user.as_ref().map(|user| user.id),
-            username: user.as_ref().map(|user| user.username.clone()),
-            ip_address: self.source_client_ip(&request),
-            user_agent: request.header("user-agent").unwrap_or("").to_string(),
-            stream_limit: user
-                .as_ref()
-                .map_or(0, |user| user.stream_limit.max(0) as u32),
-            limit_policy: UserLimitPolicy {
-                terminate_on_limit_exceeded: limits
-                    .get("terminate_on_limit_exceeded")
-                    .and_then(serde_json::Value::as_bool)
-                    .unwrap_or(defaults.terminate_on_limit_exceeded),
-                prioritize_single_client_channels: limits
-                    .get("prioritize_single_client_channels")
-                    .and_then(serde_json::Value::as_bool)
-                    .unwrap_or(defaults.prioritize_single_client_channels),
-                ignore_same_channel_connections: limits
-                    .get("ignore_same_channel_connections")
-                    .and_then(serde_json::Value::as_bool)
-                    .unwrap_or(defaults.ignore_same_channel_connections),
-                terminate_oldest: limits
-                    .get("terminate_oldest")
-                    .and_then(serde_json::Value::as_bool)
-                    .unwrap_or(defaults.terminate_oldest),
-            },
-        };
-        let mut streams = channel.streams.into_iter();
-        let stream = streams
-            .next()
-            .ok_or_else(|| PlaybackError::new(503, "No active stream available"))?;
-        Ok(PlaybackSource {
+        assemble_playback_source(
+            &request,
+            user.as_ref(),
+            self.source_client_ip(&request),
+            &output,
             output_profile,
-            input_command: stream.input_command,
-            channel_id: channel.id,
-            channel_name: channel.name,
-            stream_id: stream.stream_id,
-            profile_id: channel.profile_id,
-            provider_profile_id: Some(stream.provider_profile_id),
-            provider_max_streams: stream.provider_max_streams,
-            credential_pool: stream.credential_pool,
-            url: stream.url,
-            user_agent: stream.user_agent,
-            headers: Vec::new(),
-            metadata: stream.metadata,
-            output_format: match output.as_str() {
-                "fmp4" => OutputFormat::Fmp4,
-                "hls" => OutputFormat::Hls,
-                _ => OutputFormat::MpegTs,
-            },
-            shutdown_delay: channel.shutdown_delay,
-            startup_behind: channel.startup_behind,
-            alternates: streams
-                .map(|stream| PlaybackCandidate {
-                    input_command: stream.input_command,
-                    stream_id: stream.stream_id,
-                    provider_profile_id: Some(stream.provider_profile_id),
-                    provider_max_streams: stream.provider_max_streams,
-                    credential_pool: stream.credential_pool,
-                    url: stream.url,
-                    user_agent: stream.user_agent,
-                    headers: Vec::new(),
-                    metadata: stream.metadata,
-                })
-                .collect(),
-            viewer: Some(viewer),
-        })
+            &limits,
+            channel,
+        )
     }
+}
+
+pub(crate) fn assemble_playback_source(
+    request: &PlaybackRequest,
+    user: Option<&User>,
+    ip: dispatcharr_contracts::SourceIpAddr,
+    output: &str,
+    output_profile: Option<dispatcharr_contracts::PlaybackOutputProfile>,
+    limits: &serde_json::Value,
+    channel: ResolvedChannel,
+) -> Result<PlaybackSource, PlaybackError> {
+    let defaults = UserLimitPolicy::default();
+    let viewer = PlaybackViewer {
+        user_id: user.map(|user| user.id),
+        username: user.map(|user| user.username.clone()),
+        ip_address: ip,
+        user_agent: request.header("user-agent").unwrap_or("").to_string(),
+        stream_limit: user.map_or(0, |user| user.stream_limit.max(0) as u32),
+        limit_policy: UserLimitPolicy {
+            terminate_on_limit_exceeded: limits
+                .get("terminate_on_limit_exceeded")
+                .and_then(serde_json::Value::as_bool)
+                .unwrap_or(defaults.terminate_on_limit_exceeded),
+            prioritize_single_client_channels: limits
+                .get("prioritize_single_client_channels")
+                .and_then(serde_json::Value::as_bool)
+                .unwrap_or(defaults.prioritize_single_client_channels),
+            ignore_same_channel_connections: limits
+                .get("ignore_same_channel_connections")
+                .and_then(serde_json::Value::as_bool)
+                .unwrap_or(defaults.ignore_same_channel_connections),
+            terminate_oldest: limits
+                .get("terminate_oldest")
+                .and_then(serde_json::Value::as_bool)
+                .unwrap_or(defaults.terminate_oldest),
+        },
+    };
+    let mut streams = channel.streams.into_iter();
+    let stream = streams
+        .next()
+        .ok_or_else(|| PlaybackError::new(503, "No active stream available"))?;
+    Ok(PlaybackSource {
+        output_profile,
+        input_command: stream.input_command,
+        channel_id: channel.id,
+        channel_name: channel.name,
+        stream_id: stream.stream_id,
+        profile_id: channel.profile_id,
+        provider_profile_id: Some(stream.provider_profile_id),
+        provider_max_streams: stream.provider_max_streams,
+        credential_pool: stream.credential_pool,
+        url: stream.url,
+        user_agent: stream.user_agent,
+        headers: Vec::new(),
+        metadata: stream.metadata,
+        output_format: match output {
+            "fmp4" => OutputFormat::Fmp4,
+            "hls" => OutputFormat::Hls,
+            _ => OutputFormat::MpegTs,
+        },
+        shutdown_delay: channel.shutdown_delay,
+        startup_behind: channel.startup_behind,
+        alternates: streams
+            .map(|stream| PlaybackCandidate {
+                input_command: stream.input_command,
+                stream_id: stream.stream_id,
+                provider_profile_id: Some(stream.provider_profile_id),
+                provider_max_streams: stream.provider_max_streams,
+                credential_pool: stream.credential_pool,
+                url: stream.url,
+                user_agent: stream.user_agent,
+                headers: Vec::new(),
+                metadata: stream.metadata,
+            })
+            .collect(),
+        viewer: Some(viewer),
+    })
+}
+
+#[cfg(feature = "sqlite-copied-data-runtime")]
+pub(crate) fn resolve_std_provider_url(
+    url: &str,
+    search: &str,
+    replace: &str,
+) -> Result<Option<String>, StoreError> {
+    ProviderUrl {
+        account_type: "STD",
+        stored: url,
+        server: "",
+        username: "",
+        password: "",
+        stream_id: "",
+        search,
+        replace,
+    }
+    .resolve()
 }
 
 impl PlaybackResolver for AuthService {
@@ -1022,7 +1059,10 @@ fn resolve_output_format(
         .unwrap_or("mpegts")
         .to_owned()
 }
-fn resolve_output_profile_id(request: &PlaybackRequest, user: Option<&User>) -> Option<i64> {
+pub(crate) fn resolve_output_profile_id(
+    request: &PlaybackRequest,
+    user: Option<&User>,
+) -> Option<i64> {
     let parse_id = |value: &str| {
         dispatcharr_ingest_core::source_integer_literal(value)?
             .parse()
@@ -1054,7 +1094,7 @@ fn resolve_output_profile_id(request: &PlaybackRequest, user: Option<&User>) -> 
 // Source Channel.get_stream checks reusable public assignments before today's
 // active SQL membership. This read grants no provider or ownership capability.
 impl crate::NotificationCache {
-    async fn raw_source_assignment(
+    pub(crate) async fn raw_source_assignment(
         &self,
         numeric: i64,
         worker: &str,

@@ -612,7 +612,7 @@ impl RetainedSqliteRestReads {
         .await
     }
 
-    async fn authenticate_bearer(
+    pub(crate) async fn authenticate_bearer(
         &self,
         request: &PlaybackRequest,
     ) -> Result<Option<RetainedRestSubject>, StoreError> {
@@ -703,6 +703,57 @@ impl RetainedSqliteRestReads {
     #[cfg(feature = "sqlite-copied-data-runtime")]
     pub(crate) fn environment_request_cache(&self) -> Option<&NotificationCache> {
         self.cache.as_ref()
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn preview_viewer(
+        &self,
+        request: &PlaybackRequest,
+    ) -> Result<RetainedRestSubject, StoreError> {
+        let subject = self
+            .authenticate_bearer(request)
+            .await?
+            .ok_or(StoreError::Unauthorized(
+                "Authentication credentials were not provided.",
+            ))?;
+        let ip = auth::source_client_ip_for_config(&self.config, request).address();
+        let cache = self.cache.as_ref().ok_or_else(capacity)?;
+        let policy = cache
+            .settings_group_bounded("network_access", || self.network_group())
+            .await?;
+        if !crate::xc_auth::system_allowed(&policy, "STREAMS", ip)? {
+            return Err(StoreError::Forbidden);
+        }
+        if subject.user().user_level < 1 {
+            return Err(StoreError::PermissionDenied);
+        }
+        Ok(subject)
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn preview_setting(&self, key: &'static str) -> Result<Value, StoreError> {
+        self.group_value(key).await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn preview_sql<T, F>(&self, run: F) -> Result<T, StoreError>
+    where
+        T: Send + 'static,
+        F: for<'c> FnOnce(
+                &'c mut sqlx::SqliteConnection,
+            )
+                -> dispatcharr_contracts::BoxFuture<'c, Result<T, StoreError>>
+            + Send
+            + 'static,
+    {
+        let pool = self.pool.clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = run(&mut connection).await;
+            settle(connection).await?;
+            result
+        })
+        .await
     }
 
     #[cfg(feature = "sqlite-copied-data-runtime")]

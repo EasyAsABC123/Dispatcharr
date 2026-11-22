@@ -4,12 +4,17 @@ use super::{
     response_headers, static_assets, LatchedShutdown,
 };
 use axum::{middleware, routing::get_service, Router};
+use dispatcharr_clients::{ClientConfig, ClientStore};
+use dispatcharr_coordination::{Coordinator, LeaseConfig};
+use dispatcharr_input_store::InputStore;
 use dispatcharr_realtime::RealtimeGateway;
 use dispatcharr_store::{AuthConfig, CopiedSqliteRuntime};
+use dispatcharr_stream_http::StreamEngine;
 use std::{
     net::SocketAddr,
     path::{Path, PathBuf},
     sync::Arc,
+    time::Duration,
 };
 use tower_http::services::ServeFile;
 
@@ -46,6 +51,50 @@ fn copied_path(source: &Path) -> Result<PathBuf, String> {
         }
     }
     Ok(canonical.join(source.file_name().ok_or("Invalid configured SQLite name")?))
+}
+
+async fn preview_engine(
+    runtime: &CopiedSqliteRuntime,
+    redis: &str,
+) -> Result<(StreamEngine, ClientStore), String> {
+    let config = super::live_engine_config()?;
+    let settings = runtime.preview_engine_settings().await?;
+    let config = super::live_engine_settings(config, &settings)?;
+    let input = super::live_input_config(&config)?;
+    let maximum = config
+        .max_channels
+        .checked_mul(config.max_viewers_per_channel)
+        .ok_or("Client capacity overflow")?;
+    let lease = Coordinator::connect(redis, LeaseConfig::default())
+        .await
+        .map_err(|_| "Copied SQLite Preview coordination unavailable")?;
+    let inputs = InputStore::connect(redis, input)
+        .await
+        .map_err(|_| "Copied SQLite Preview input storage unavailable")?;
+    let clients = ClientStore::connect(
+        redis,
+        ClientConfig {
+            max_clients: super::positive("RUST_MAX_CLIENTS", maximum)?,
+            ..Default::default()
+        },
+    )
+    .await
+    .map_err(|_| "Copied SQLite Preview client metadata unavailable")?;
+    let engine = match StreamEngine::new_with_shared_inputs(
+        config,
+        Some(lease),
+        Some(clients.clone()),
+        Some(inputs),
+    )
+    .and_then(StreamEngine::with_source_http_retry_backoff)
+    {
+        Ok(engine) => engine,
+        Err(_) => {
+            clients.shutdown().await;
+            return Err("Invalid copied SQLite Preview streaming configuration".into());
+        }
+    };
+    Ok((engine, clients))
 }
 
 pub(super) async fn run() -> Result<(), String> {
@@ -93,6 +142,15 @@ pub(super) async fn run() -> Result<(), String> {
             return Err("Invalid copied SQLite realtime configuration".into());
         }
     };
+    let (engine, clients) = match preview_engine(&runtime, &redis).await {
+        Ok(media) => media,
+        Err(error) => {
+            let _ = gateway.shutdown().await;
+            drop(gateway);
+            runtime.close().await?;
+            return Err(error);
+        }
+    };
     let result = async {
         let listener = tokio::net::TcpListener::bind(bind)
             .await
@@ -102,23 +160,34 @@ pub(super) async fn run() -> Result<(), String> {
             .map_err(|_| "SQLite copied runtime bind address unavailable")?;
         println!("dispatcharr-sqlite-copied-ready {address}");
         let shutdown_gateway = gateway.clone();
+        let shutdown_engine = engine.clone();
+        let playback =
+            super::playback::router(engine.clone(), Arc::new(runtime.clone()), None, None)
+                .layer(middleware::from_fn(response_headers::apply));
         axum::serve(
             listener,
             runtime
                 .router()
                 .merge(frontend)
+                .merge(playback)
                 .merge(gateway.router())
                 .into_make_service_with_connect_info::<SocketAddr>(),
         )
         .with_graceful_shutdown(async move {
             stop.wait().await;
             shutdown_gateway.begin_shutdown();
+            shutdown_engine.shutdown();
         })
         .await
         .map_err(|_| "SQLite copied runtime HTTP stopped with an error")
     }
     .await;
-    let drained = gateway.shutdown().await;
+    let (drained, media_drained) = tokio::join!(
+        gateway.shutdown(),
+        engine.shutdown_wait(Duration::from_secs(8))
+    );
+    clients.shutdown().await;
+    drop(engine);
     drop(gateway);
     let retired = runtime.close().await;
     let realtime_retired = drained
@@ -126,6 +195,11 @@ pub(super) async fn run() -> Result<(), String> {
         .ok_or("Copied SQLite realtime drain deadline");
     result
         .and(realtime_retired)
+        .and(
+            media_drained
+                .then_some(())
+                .ok_or("Copied SQLite Preview drain deadline"),
+        )
         .and(retired)
         .map_err(str::to_owned)
 }

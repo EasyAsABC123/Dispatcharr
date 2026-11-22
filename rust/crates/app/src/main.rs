@@ -52,6 +52,82 @@ fn positive(name: &str, default: usize) -> Result<usize, String> {
     Ok(value)
 }
 
+fn live_engine_config() -> Result<EngineConfig, String> {
+    let mut config = EngineConfig::default();
+    config.initial_buffer_chunks = 4;
+    config.flush_partial_chunks = false;
+    config.source_initialization = true;
+    config.startup_timeout = Duration::from_secs(60);
+    // Original HTTPStreamReader uses requests timeout=(5,30).
+    config.connect_timeout = Duration::from_secs(5);
+    config.read_timeout = Duration::from_secs(30);
+    config.max_channels = positive("RUST_MAX_CHANNELS", config.max_channels)?;
+    config.max_viewers_per_channel = positive(
+        "RUST_MAX_VIEWERS_PER_CHANNEL",
+        config.max_viewers_per_channel,
+    )?;
+    config.retained_bytes_per_channel = positive(
+        "RUST_RETAINED_BYTES_PER_CHANNEL",
+        config.retained_bytes_per_channel,
+    )?;
+    Ok(config)
+}
+
+fn live_engine_settings(
+    mut config: EngineConfig,
+    proxy_settings: &serde_json::Value,
+) -> Result<EngineConfig, String> {
+    for (name, default, target) in [
+        (
+            "stream_startup_timeout",
+            8.0,
+            &mut config.health_startup_timeout,
+        ),
+        (
+            "connection_timeout",
+            10.0,
+            &mut config.health_connection_timeout,
+        ),
+        (
+            "channel_init_grace_period",
+            60.0,
+            &mut config.health_initialization_grace,
+        ),
+    ] {
+        let seconds = proxy_settings
+            .get(name)
+            .and_then(serde_json::Value::as_f64)
+            .unwrap_or(default);
+        *target = Duration::try_from_secs_f64(seconds)
+            .map_err(|_| format!("Invalid {name} health timeout"))?;
+    }
+    let configured_retention = proxy_settings
+        .get("redis_chunk_ttl")
+        .and_then(serde_json::Value::as_u64)
+        .unwrap_or(60);
+    config.retention = Duration::from_secs(positive(
+        "RUST_RETENTION_SECONDS",
+        usize::try_from(configured_retention).map_err(|_| "Retention overflow")?,
+    )? as u64);
+    config.chunk_bytes = positive("RUST_CHUNK_PACKETS", 1361)?
+        .checked_mul(188)
+        .ok_or("Chunk size overflow")?;
+    Ok(config)
+}
+
+fn live_input_config(config: &EngineConfig) -> Result<InputConfig, String> {
+    Ok(InputConfig {
+        max_chunk_bytes: config.chunk_bytes,
+        max_channel_bytes: config.retained_bytes_per_channel,
+        max_chunks: positive("RUST_INPUT_MAX_CHUNKS", 4096)?,
+        max_read_bytes: positive("RUST_INPUT_READ_BYTES", 64 * 1024 * 1024)?,
+        max_operations: positive("RUST_INPUT_OPERATIONS", 16)?,
+        chunk_ttl: config.retention,
+        preserve_source_era: config.source_initialization,
+        ..Default::default()
+    })
+}
+
 fn version_task_options() -> dispatcharr_job_transport::version_service::Options {
     let endpoint = env::var("RUST_VERSION_HTTP_ORIGIN")
         .map(|origin| format!("{}/owned-version", origin.trim_end_matches('/')))
@@ -396,62 +472,12 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         }
         None
     };
-    let mut config = EngineConfig::default();
-    config.initial_buffer_chunks = 4;
-    config.flush_partial_chunks = false;
-    config.source_initialization = true;
-    config.startup_timeout = Duration::from_secs(60);
-    // Original HTTPStreamReader uses requests timeout=(5,30).
-    config.connect_timeout = Duration::from_secs(5);
-    config.read_timeout = Duration::from_secs(30);
-    config.max_channels = positive("RUST_MAX_CHANNELS", config.max_channels)?;
-    config.max_viewers_per_channel = positive(
-        "RUST_MAX_VIEWERS_PER_CHANNEL",
-        config.max_viewers_per_channel,
-    )?;
-    config.retained_bytes_per_channel = positive(
-        "RUST_RETAINED_BYTES_PER_CHANNEL",
-        config.retained_bytes_per_channel,
-    )?;
+    let config = live_engine_config()?;
     let proxy_settings = store
         .setting("proxy_settings")
         .await
         .map_err(|_| "Proxy settings unavailable")?;
-    for (name, default, target) in [
-        (
-            "stream_startup_timeout",
-            8.0,
-            &mut config.health_startup_timeout,
-        ),
-        (
-            "connection_timeout",
-            10.0,
-            &mut config.health_connection_timeout,
-        ),
-        (
-            "channel_init_grace_period",
-            60.0,
-            &mut config.health_initialization_grace,
-        ),
-    ] {
-        let seconds = proxy_settings
-            .get(name)
-            .and_then(serde_json::Value::as_f64)
-            .unwrap_or(default);
-        *target = Duration::try_from_secs_f64(seconds)
-            .map_err(|_| format!("Invalid {name} health timeout"))?;
-    }
-    let configured_retention = proxy_settings
-        .get("redis_chunk_ttl")
-        .and_then(serde_json::Value::as_u64)
-        .unwrap_or(60);
-    config.retention = Duration::from_secs(positive(
-        "RUST_RETENTION_SECONDS",
-        usize::try_from(configured_retention).map_err(|_| "Retention overflow")?,
-    )? as u64);
-    config.chunk_bytes = positive("RUST_CHUNK_PACKETS", 1361)?
-        .checked_mul(188)
-        .ok_or("Chunk size overflow")?;
+    let config = live_engine_settings(config, &proxy_settings)?;
     let mut hls_config = dispatcharr_hls_http::GatewayConfig {
         max_managers: config.max_channels,
         max_sessions: positive(
@@ -478,16 +504,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         ..Default::default()
     };
     hls_config.segment_ttl = output_config.chunk_ttl;
-    let input_config = InputConfig {
-        max_chunk_bytes: config.chunk_bytes,
-        max_channel_bytes: config.retained_bytes_per_channel,
-        max_chunks: positive("RUST_INPUT_MAX_CHUNKS", 4096)?,
-        max_read_bytes: positive("RUST_INPUT_READ_BYTES", 64 * 1024 * 1024)?,
-        max_operations: positive("RUST_INPUT_OPERATIONS", 16)?,
-        chunk_ttl: config.retention,
-        preserve_source_era: config.source_initialization,
-        ..Default::default()
-    };
+    let input_config = live_input_config(&config)?;
     let lease_config = LeaseConfig::default();
     let (coordinator, clients, outputs, inputs) = if let Some(url) = cache_url.as_deref() {
         let coordinator = Coordinator::connect(url, lease_config.clone())

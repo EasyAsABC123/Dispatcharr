@@ -1654,8 +1654,58 @@ async fn install_default(
     // Model update_or_create/save + tracking signal share this inner transaction;
     // creating its schedule FK above is Source's separate earlier effect boundary.
     let mut transaction = connection.begin().await?;
-    let update=sqlx::query("INSERT INTO django_celery_beat_periodictask(name,task,interval_id,crontab_id,args,kwargs,headers,enabled,total_run_count,date_changed,description,one_off,expire_seconds) VALUES($1,$2,$3,$4,'[]','{}','{}',$5,0,$6,'',false,$7) ON CONFLICT(name) DO UPDATE SET task=EXCLUDED.task,interval_id=EXCLUDED.interval_id,crontab_id=EXCLUDED.crontab_id,solar_id=NULL,clocked_id=NULL,args='[]',kwargs='{}',headers='{}',queue=NULL,exchange=NULL,routing_key=NULL,priority=NULL,expire_seconds=EXCLUDED.expire_seconds,enabled=CASE WHEN EXCLUDED.name='fetch-channel-statuses' THEN false ELSE django_celery_beat_periodictask.enabled END,last_run_at=CASE WHEN NOT django_celery_beat_periodictask.enabled OR EXCLUDED.name='fetch-channel-statuses' THEN NULL ELSE django_celery_beat_periodictask.last_run_at END,date_changed=EXCLUDED.date_changed").bind(name).bind(task).bind(interval).bind(cron).bind(name!="fetch-channel-statuses").bind(Utc::now()).bind(if every.is_none(){Some(43200i32)}else{None}).execute(&mut *transaction).await;
-    if let Err(error) = update {
+    // Match update_or_create on an existing row. PostgreSQL evaluates INSERT
+    // identity defaults before testing conflicts, so use INSERT only on absence.
+    macro_rules! default_fields {
+        () => {
+            concat!(
+                "task=$2,interval_id=$3,crontab_id=$4,solar_id=NULL,clocked_id=NULL,",
+                "args='[]',kwargs='{}',headers='{}',queue=NULL,exchange=NULL,routing_key=NULL,",
+                "priority=NULL,expire_seconds=$7,enabled=saved.enabled AND $5,",
+                "last_run_at=CASE WHEN saved.enabled AND $5 THEN saved.last_run_at ELSE NULL END,",
+                "date_changed=$6"
+            )
+        };
+    }
+    let enabled = name != "fetch-channel-statuses";
+    let changed = Utc::now();
+    let expiry = every.is_none().then_some(43_200i32);
+    let write = |statement: &'static str| {
+        sqlx::query(statement)
+            .bind(name)
+            .bind(task)
+            .bind(interval)
+            .bind(cron)
+            .bind(enabled)
+            .bind(changed)
+            .bind(expiry)
+    };
+    let observed = async {
+        let updated = write(concat!(
+            "UPDATE django_celery_beat_periodictask AS saved SET ",
+            default_fields!(),
+            " WHERE saved.name=$1"
+        ))
+        .execute(&mut *transaction)
+        .await?;
+        if updated.rows_affected() == 0 {
+            // A creator can win between UPDATE and INSERT. Normalize the
+            // winner using the same existing-row fields under the unique key.
+            write(concat!(
+                "INSERT INTO django_celery_beat_periodictask AS saved ",
+                "(name,task,interval_id,crontab_id,args,kwargs,headers,enabled,total_run_count,",
+                "date_changed,description,one_off,expire_seconds) ",
+                "VALUES($1,$2,$3,$4,'[]','{}','{}',$5,0,$6,'',false,$7) ",
+                "ON CONFLICT(name) DO UPDATE SET ",
+                default_fields!()
+            ))
+            .execute(&mut *transaction)
+            .await?;
+        }
+        Ok::<(), sqlx::Error>(())
+    }
+    .await;
+    if let Err(error) = observed {
         transaction.rollback().await?;
         return Err(error.into());
     }

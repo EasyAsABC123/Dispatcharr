@@ -24,6 +24,8 @@ mod environment;
 pub(crate) mod epg_collections;
 #[path = "sqlite_m3u_accounts.rs"]
 pub(crate) mod m3u_accounts;
+#[path = "sqlite_playback.rs"]
+pub(crate) mod playback;
 #[path = "sqlite_profile.rs"]
 pub(crate) mod profile;
 #[path = "sqlite_stream_filter_options.rs"]
