@@ -54,6 +54,12 @@ pub fn gateway(
     stream_regex: StreamRegexPreview,
 ) -> Result<Option<RealtimeGateway>, String> {
     let Some(bus) = bus else { return Ok(None) };
+    RealtimeGateway::new(auth, bus, gateway_config()?)
+        .map(|gateway| Some(gateway.with_preview_handler(Arc::new(ProfilePreview(stream_regex)))))
+        .map_err(|_| "Invalid realtime configuration".into())
+}
+
+pub(super) fn gateway_config() -> Result<GatewayConfig, String> {
     let mut config = GatewayConfig::default();
     config.max_buffered_events =
         crate::positive("RUST_WS_BUFFERED_EVENTS", config.max_buffered_events)?;
@@ -67,7 +73,5 @@ pub fn gateway(
         "RUST_WS_SOCKET_OUTPUT_BYTES",
         config.max_socket_output_bytes,
     )?;
-    RealtimeGateway::new(auth, bus, config)
-        .map(|gateway| Some(gateway.with_preview_handler(Arc::new(ProfilePreview(stream_regex)))))
-        .map_err(|_| "Invalid realtime configuration".into())
+    Ok(config)
 }

@@ -16,6 +16,10 @@ use redis::{
 use serde_json::{json, Map, Value};
 use sqlx::{postgres::PgRow, Row};
 use std::{net::SocketAddr, sync::Arc, time::Duration};
+#[cfg(feature = "sqlite-copied-data-runtime")]
+#[path = "sqlite_notifications.rs"]
+pub(crate) mod sqlite;
+
 use tokio::{
     sync::{OwnedSemaphorePermit, Semaphore},
     time::timeout,
@@ -399,7 +403,25 @@ impl NotificationCache {
         id: i64,
         conditions: &Value,
     ) -> Result<bool, StoreError> {
-        let key = format!(":1:dev_notif_condition_{id}_{}", user.id);
+        self.condition_visible(user.id, id, conditions, true, || {
+            self.network_settings(|| load_network(auth))
+        })
+        .await
+    }
+
+    async fn condition_visible<F, Fut>(
+        &self,
+        user_id: i64,
+        id: i64,
+        conditions: &Value,
+        fill_cache: bool,
+        load_settings: F,
+    ) -> Result<bool, StoreError>
+    where
+        F: Fn() -> Fut,
+        Fut: std::future::Future<Output = Result<Value, StoreError>>,
+    {
+        let key = format!(":1:dev_notif_condition_{id}_{user_id}");
         if let Some(raw) = self.get(&key).await? {
             let value = decode_cache(&raw).ok_or_else(failed)?;
             if !value.is_null() {
@@ -414,17 +436,16 @@ impl NotificationCache {
             }
             if condition.as_str() == Some("m3u_epg_network_insecure") {
                 // Original check catches every exception and returns False.
-                let settings = self
-                    .network_settings(|| load_network(auth))
-                    .await
-                    .unwrap_or(Value::Null);
+                let settings = load_settings().await.unwrap_or(Value::Null);
                 show = network_insecure(&settings);
                 if !show {
                     break;
                 }
             }
         }
-        self.set(&key, &Value::Bool(show)).await?;
+        if fill_cache {
+            self.set(&key, &Value::Bool(show)).await?;
+        }
         Ok(show)
     }
 }
@@ -598,6 +619,13 @@ async fn authenticated_user(
         ))
 }
 
+pub(crate) fn include_dismissed(raw: Option<&str>) -> bool {
+    url::form_urlencoded::parse(raw.unwrap_or("").as_bytes())
+        .filter(|(key, _)| key == "include_dismissed")
+        .last()
+        .is_some_and(|(_, value)| value.to_lowercase() == "true")
+}
+
 async fn list(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -605,10 +633,7 @@ async fn list(
     RawQuery(raw): RawQuery,
 ) -> Result<Json<Value>, StoreError> {
     let user = authenticated_user(&auth, peer, headers).await?;
-    let include = url::form_urlencoded::parse(raw.as_deref().unwrap_or("").as_bytes())
-        .filter(|(key, _)| key == "include_dismissed")
-        .last()
-        .is_some_and(|(_, value)| value.to_lowercase() == "true");
+    let include = include_dismissed(raw.as_deref());
     let values: Vec<_> = visible(&auth, &user, None)
         .await?
         .into_iter()

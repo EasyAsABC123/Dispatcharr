@@ -6,7 +6,7 @@ use crate::{
     NotificationCache, RestReadLimits, RetainedSqliteRestReads,
 };
 use axum::{
-    extract::{OriginalUri, Path as RoutePath, Query},
+    extract::{OriginalUri, Path as RoutePath, Query, RawQuery},
     http::Method,
     Extension,
 };
@@ -14,6 +14,8 @@ use chrono::Utc;
 
 #[path = "sqlite_app_data.rs"]
 pub(crate) mod application_data;
+#[path = "sqlite_channel_logos.rs"]
+pub(crate) mod channel_logos;
 #[path = "sqlite_core_catalog.rs"]
 pub(crate) mod core_catalog;
 #[path = "sqlite_environment.rs"]
@@ -71,6 +73,14 @@ impl CopiedSqliteRuntime {
         self
     }
 
+    pub fn websocket_identity(&self) -> crate::realtime::CopiedWebsocketIdentity {
+        crate::realtime::CopiedWebsocketIdentity {
+            owner: Arc::downgrade(&self.identity),
+            config: self.config.clone(),
+            cache: self.cache.clone(),
+        }
+    }
+
     pub fn router(&self) -> Router {
         Router::new()
             .merge(application_data::router())
@@ -100,6 +110,7 @@ impl CopiedSqliteRuntime {
                 "/api/channels/profiles/",
                 axum::routing::get(channel_profiles),
             )
+            .route("/api/channels/logos/", axum::routing::get(channel_logos))
             .route("/api/channels/channels/", axum::routing::get(channels))
             .route(
                 "/api/channels/channels/ids/",
@@ -112,6 +123,10 @@ impl CopiedSqliteRuntime {
             .route(
                 "/api/channels/channels/{id}/",
                 axum::routing::get(channel_detail),
+            )
+            .route(
+                "/api/core/notifications/",
+                axum::routing::get(notifications),
             )
             .route("/api/core/version/", axum::routing::any(version))
             .route("/api/core/settings/", axum::routing::get(settings))
@@ -612,7 +627,10 @@ async fn setup_status(
     let ip = source_client_ip_for_config(&runtime.config, &request(peer, headers));
     let override_ip = std::env::var("DISPATCHARR_SETUP_ALLOWED_IP").unwrap_or_default();
     Ok((
-        [(axum::http::header::CONTENT_TYPE, "application/json")],
+        [
+            (axum::http::header::CONTENT_TYPE, "application/json"),
+            (axum::http::header::VARY, "origin"),
+        ],
         setup_document(exists, &ip, &override_ip),
     )
         .into_response())
@@ -788,6 +806,32 @@ async fn epg_collection(
     copied_read_headers(response, collection.allow())
 }
 
+async fn notifications(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    RawQuery(raw): RawQuery,
+) -> Response {
+    let include = crate::notifications::include_dismissed(raw.as_deref());
+    let read = async {
+        runtime
+            .allocate_read()
+            .await?
+            .notification_collection(peer, headers, include)
+            .await
+    }
+    .await;
+    let response = match read {
+        Ok(body) => (
+            [(axum::http::header::CONTENT_TYPE, "application/json")],
+            body,
+        )
+            .into_response(),
+        Err(error) => error.into_response(),
+    };
+    copied_read_headers(response, crate::channels::COLLECTION_ALLOW)
+}
+
 async fn provider_accounts(
     State(runtime): State<CopiedSqliteRuntime>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -798,6 +842,31 @@ async fn provider_accounts(
             .allocate_read()
             .await?
             .provider_accounts(peer, headers)
+            .await
+    }
+    .await;
+    let response = match read {
+        Ok(body) => (
+            [(axum::http::header::CONTENT_TYPE, "application/json")],
+            body,
+        )
+            .into_response(),
+        Err(error) => error.into_response(),
+    };
+    copied_read_headers(response, crate::channels::COLLECTION_ALLOW)
+}
+
+async fn channel_logos(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    OriginalUri(uri): OriginalUri,
+    headers: HeaderMap,
+) -> Response {
+    let read = async {
+        runtime
+            .allocate_read()
+            .await?
+            .channel_logo_collection(peer, headers, &uri)
             .await
     }
     .await;

@@ -35,6 +35,42 @@ impl Jobs {
             }
             (message.common.id, true)
         };
+        match self
+            .publish_core_frame(publication, owner, task_id, PUBLISH, programme_root)
+            .await?
+        {
+            n if n > 0 => Ok(()),
+            -2 => Err(Error::Capacity),
+            _ => Err(Error::Corrupt),
+        }
+    }
+
+    pub(crate) async fn publish_provider_rehash(
+        &self,
+        publication: dispatcharr_store::CoreTaskPublication,
+        owner: Arc<dyn Send + Sync>,
+        task_id: Uuid,
+    ) -> Result<dispatcharr_store::ProviderRehashResult, Error> {
+        use dispatcharr_store::ProviderRehashResult;
+        match self
+            .publish_core_frame(publication, owner, task_id, PUBLISH_PROVIDER_REHASH, false)
+            .await?
+        {
+            n if n > 0 => Ok(ProviderRehashResult::Acknowledged),
+            -4 => Ok(ProviderRehashResult::Refused),
+            -2 => Err(Error::Capacity),
+            _ => Err(Error::Corrupt),
+        }
+    }
+
+    async fn publish_core_frame(
+        &self,
+        publication: dispatcharr_store::CoreTaskPublication,
+        owner: Arc<dyn Send + Sync>,
+        task_id: Uuid,
+        script: &'static str,
+        programme_root: bool,
+    ) -> Result<i64, Error> {
         if task_id != publication.task_id() {
             return Err(Error::Protocol);
         }
@@ -48,19 +84,17 @@ impl Jobs {
             self.inner
                 .broker
                 .command_publication_classified_with_diagnostic::<i64, _>(
-                    PUBLISH, &keys, &args, guard, None,
+                    script, &keys, &args, guard, None,
                 )
                 .await
         } else {
             self.inner
                 .broker
-                .command_classified::<i64, _>(PUBLISH, &keys, &args, guard)
+                .command_classified::<i64, _>(script, &keys, &args, guard)
                 .await
         };
         match outcome {
-            Ok((n, _)) if n > 0 => Ok(()),
-            Ok((-2, _)) => Err(Error::Capacity),
-            Ok(_) => Err(Error::Corrupt),
+            Ok((n, _)) => Ok(n),
             Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(task_id)),
             Err(error) => Err(map(error)),
         }

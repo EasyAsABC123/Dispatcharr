@@ -392,6 +392,83 @@ impl RetainedSqliteRestReads {
         .await
     }
 
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn channel_logo_collection(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        uri: &axum::http::Uri,
+    ) -> Result<Vec<u8>, StoreError> {
+        use crate::auth::sqlite_runtime::channel_logos;
+        let subject = self
+            .bearer_account_user(peer, headers.clone(), false)
+            .await?;
+        crate::channel_groups::collection_permission(subject.user())?;
+        if !channel_logos::supports(uri.query()) {
+            return Err(crate::logos::missing());
+        }
+        let origin = crate::channels::base_url(&headers, uri)?
+            .origin()
+            .ascii_serialization();
+        let pool = self.pool.clone();
+        let work_bytes = self.limits.work_bytes;
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let selected = channel_logos::rows(&mut connection, work_bytes).await;
+            settle(connection).await?;
+            let selected = selected?;
+            tokio::task::spawn_blocking(move || {
+                channel_logos::document(selected, &origin, work_bytes)
+            })
+            .await
+            .map_err(|_| database_unavailable())?
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn notification_collection(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        include_dismissed: bool,
+    ) -> Result<Vec<u8>, StoreError> {
+        use crate::notifications::sqlite;
+        // The Original read is IsAuthenticated, independent of UI network
+        // admission. The held preview bearer still supplies the active user.
+        let actor = self
+            .authenticate_bearer(&Self::checked_bearer_request(peer, headers)?)
+            .await?
+            .ok_or(StoreError::Unauthorized(
+                "Authentication credentials were not provided.",
+            ))?;
+        let pool = self.pool.clone();
+        let actor_id = actor.user().id;
+        let admin = actor.user().user_level >= 10;
+        let limits = self.limits;
+        let rows = supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let rows =
+                sqlite::read(&mut connection, actor_id, admin, chrono::Utc::now(), limits).await;
+            settle(connection).await?;
+            rows
+        })
+        .await?;
+        sqlite::render(
+            rows,
+            include_dismissed,
+            limits.work_bytes,
+            |id, conditions| async move {
+                let cache = self.cache.as_ref().ok_or(StoreError::Unsupported(
+                    "Developer notification conditions require the original shared Redis cache.",
+                ))?;
+                sqlite::developer_visible(cache, actor_id, id, &conditions, || self.network_group())
+                    .await
+            },
+        )
+        .await
+    }
+
     async fn authenticate_bearer(
         &self,
         request: &PlaybackRequest,

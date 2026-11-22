@@ -1346,11 +1346,15 @@ async fn change(
                 let publication = crate::core_settings_special_broker::publish_provider_rehash(
                     &auth, &scratch, keys, account, &owned.token, rehash.as_ref(),
                 ).await?;
-                handed_off = true;
-                if publication == crate::ProviderRehashResult::Uncertain {
-                    return Err(StoreError::StatusBody(
-                        503, json!({"detail":"Provider rehash publication outcome is unsettled."}),
-                    ));
+                match publication {
+                    crate::ProviderRehashResult::Acknowledged => handed_off = true,
+                    crate::ProviderRehashResult::Refused => return Err(StoreError::UnhandledRestFault),
+                    crate::ProviderRehashResult::Uncertain => {
+                        handed_off = true;
+                        return Err(StoreError::StatusBody(
+                            503, json!({"detail":"Provider rehash publication outcome is unsettled."}),
+                        ));
+                    }
                 }
             }
             let response=if direct_xc {

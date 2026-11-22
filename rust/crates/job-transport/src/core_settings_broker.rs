@@ -131,8 +131,12 @@ impl ProviderRehashAdmission for RehashAdmission {
             if !crate::normal_core_tasks::owned_provider_rehash(&parsed.kind) {
                 return Err(provider_rehash_unavailable());
             }
-            match self.jobs.publish_core_settings(frame, owner).await {
-                Ok(()) => Ok(ProviderRehashResult::Acknowledged),
+            match self
+                .jobs
+                .publish_provider_rehash(frame, owner, parsed.id)
+                .await
+            {
+                Ok(result) => Ok(result),
                 Err(
                     Error::Capacity
                     | Error::Closed

@@ -622,7 +622,7 @@ pub(crate) fn active_bearer_subject(
     }
 }
 
-fn decode_token_for_config(
+pub(crate) fn decode_token_for_config(
     config: &AuthConfig,
     token: &str,
     kind: &str,
