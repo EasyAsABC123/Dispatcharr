@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [paired playback follow-up](rust-m2-m3-shared-playback-compose-followup.md)
+matched finite MPEG-TS handoff on 4558a85b and exercised two-viewer fMP4
+playback with Native dynamic health enabled on 25dc1502. Both comparisons
+saw one upstream connection at a time and verified exact cleanup.
+
 The [9ace9f66 Compose checkpoint](rust-m6-m8-9ace9f66-compose-checkpoint.md)
 matched 36 copied Logo GET and HEAD observations and a normal provider
 rehash. The measured broker reply-loss case still differs in first HTTP

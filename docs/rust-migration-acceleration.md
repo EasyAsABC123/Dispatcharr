@@ -35,6 +35,28 @@ Cheap affected-package feedback before freezing the integration candidate would
 have exposed this without waiting for its entire workspace test phase.
 Local evidence: `artifacts/rust/normal-graph-batch17-sdk-1/attempt50/checks.json`.
 
+## November 22 build and acceptance review
+
+The two Rust compiler steps took 708.9 seconds on `25dc1502` and 707.0
+seconds on `9ace9f66` across the ordinary and copied-data images. Both
+modes rebuilt 26 local crates. The copied-data build already reused the
+ordinary compiler layer. The frontend, media, and helper layers were
+cached. The largest measured opportunity is to reuse verified unchanged
+Rust inputs across candidates. Measure content-aware cache invalidation
+with distinct warmed cache namespaces and verify both binaries, image
+provenance, packaged behavior, and same-path source changes. Savings
+from this experiment are unmeasured.
+
+The historical best required matrix passed 26 of 127 rows on `4558a85b`.
+The separate `25dc1502` report passed 21. The next throughput target is one
+current image with the existing package selectors bound to a shared set
+of fixtures, followed by whole production workflows. For playback and
+React, share the paired media, database, and player setup while retaining
+each row's assertions and cleanup. For scheduled work, prioritize natural
+producer-to-worker execution and descendant results. That remains a
+product gap. Finish functional qualification before the paired
+application resource comparison.
+
 ## Parallel ownership with a bounded integration queue
 
 Use four concurrent agents on this host: one integrator and three work owners.

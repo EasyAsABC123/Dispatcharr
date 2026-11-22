@@ -1,0 +1,133 @@
+{
+  "comparative_application_performance_measured": false,
+  "dynamic_health_fmp4": {
+    "backends": [
+      {
+        "backend": "Original",
+        "decoded_frames": [
+          74,
+          75
+        ],
+        "dynamic_health_opt_in": false,
+        "exact_owned_containers_retired": 2,
+        "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "observed_origin_connections": 1,
+        "shared_complete_fragments": 6,
+        "survivor_advanced": true
+      },
+      {
+        "backend": "Native",
+        "decoded_frames": [
+          74,
+          75
+        ],
+        "dynamic_health_opt_in": true,
+        "exact_owned_containers_retired": 3,
+        "image_id": "sha256:1077fd8b90ab1d5cea25dcfd40a68314e5386c844eb8a33fab214937e8d8e0a3",
+        "observed_origin_connections": 1,
+        "shared_complete_fragments": 6,
+        "survivor_advanced": true
+      }
+    ],
+    "comparison": {
+      "candidate": "25dc1502054b67175009eac71592b445278ef0a0",
+      "exact_report_sha256": "9b44072413a23db5ec984c8560464499c888e445f6b0960316947cc6ac1f6823",
+      "formal_required_nodes_added": 0,
+      "full_proxy_health_requirement_passed": false,
+      "health_timeout_change_measured": false,
+      "literal_child_exit": 0,
+      "manifest_sha256": "da128a05572f5c48942350e2da7e57a62204cb62d2c6f3c5a2cf3bfa4a26b03a",
+      "runtime": [
+        {
+          "backend": "Original",
+          "decoder_exits": [
+            0,
+            0
+          ],
+          "exact_retired": 2,
+          "opted_dynamic_health": false
+        },
+        {
+          "backend": "Native",
+          "decoder_exits": [
+            0,
+            0
+          ],
+          "exact_retired": 3,
+          "opted_dynamic_health": true
+        }
+      ],
+      "scope": "ordinary fMP4 playback with opted-in dynamic health"
+    },
+    "reducer_sha256": "7b9d1306b7af046db7c6770b44eff2f82006b0661abc521ba36be7c4187d324a"
+  },
+  "finite_mpeg_ts": {
+    "comparison": {
+      "Native": {
+        "active_fallback_metadata_verified": true,
+        "backend": "Native",
+        "candidate": {
+          "image_id": "sha256:099563f862f9046612f467f567091ff874478a3ee5cee1e152b11940f4f921c1",
+          "manifest_sha256": "f41fd57e688f12aa2387b1b6f195ff502a89aa4a271e606128e423fcc775885d",
+          "original_receipt_sha256": "8f77391956959da032a69c0e7219f2e0145c5e7ff3d64f58db2e628102320f0a",
+          "retained_original_receipt_sha256": "f5dfa8c9f31a4bceee6f0dfb955323e7034ec7b69423acb13e241bd9db63f34a",
+          "review_sha256": "5f3ec9600a50b20615c7d020f4df1284847ac6bf3ba7a206b7d20b5f3f59b6bf",
+          "revision": "4558a85bce631feddad3fed05e07aaf2b0fc58cb"
+        },
+        "concurrent_upstreams_maximum": 1,
+        "distinct_fallback_requests": 1,
+        "exact_cleanup": true,
+        "legacy_assignment_stayed_on_primary": true,
+        "literal_exit": 0,
+        "ordinary_authenticated_viewers": 2,
+        "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "owned_origin_media": {
+          "fallback": {
+            "bytes": 12503504,
+            "sha256": "3460cf4ec995903e0478efc646438f4cabdf064b293b733f60bd31e2cf21f20a"
+          },
+          "primary": {
+            "bytes": 2504912,
+            "sha256": "eab42f606d4dfab41ef092f6ce01dd65ec92b29a1fa5f07220b7d11d5a40734e"
+          }
+        },
+        "performance_measured": false,
+        "primary_clean_EOF_requests": 3,
+        "proven_AV_windows": 4,
+        "raw_receipt_sha256": "39971c182bda881f2e327fafd5ef2b96fd23e7479c30514f87ea233931a759ea"
+      },
+      "Original": {
+        "active_fallback_metadata_verified": true,
+        "backend": "Original",
+        "candidate": null,
+        "concurrent_upstreams_maximum": 1,
+        "distinct_fallback_requests": 1,
+        "exact_cleanup": true,
+        "legacy_assignment_stayed_on_primary": true,
+        "literal_exit": 0,
+        "ordinary_authenticated_viewers": 2,
+        "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "owned_origin_media": {
+          "fallback": {
+            "bytes": 12503504,
+            "sha256": "3460cf4ec995903e0478efc646438f4cabdf064b293b733f60bd31e2cf21f20a"
+          },
+          "primary": {
+            "bytes": 2504912,
+            "sha256": "eab42f606d4dfab41ef092f6ce01dd65ec92b29a1fa5f07220b7d11d5a40734e"
+          }
+        },
+        "performance_measured": false,
+        "primary_clean_EOF_requests": 3,
+        "proven_AV_windows": 4,
+        "raw_receipt_sha256": "8f77391956959da032a69c0e7219f2e0145c5e7ff3d64f58db2e628102320f0a"
+      },
+      "performance_measured": false
+    },
+    "reducer_sha256": "35a2b6520c427e65d1ae4629c6ea736f888cd48e6d10698013b318a5824036f6"
+  },
+  "formal_required_rows_added": 0,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}
