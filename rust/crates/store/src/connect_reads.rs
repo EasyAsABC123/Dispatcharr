@@ -78,6 +78,8 @@ pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/connect/integrations/", get(list).post(create))
         .route("/api/connect/logs/", get(logs))
+        .route("/api/connect/logs.json", get(logs))
+        .route("/api/connect/logs.json/", get(logs))
         .route("/api/connect/logs/{id}/", get(retrieve_log))
         .route("/api/connect/logs/{id}", get(retrieve_log))
         .route(

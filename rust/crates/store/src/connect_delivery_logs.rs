@@ -8,7 +8,6 @@ use crate::{
 use axum::http::{header, uri::Authority, HeaderMap, Uri};
 use serde_json::json;
 
-const ROUTE: &str = "/api/connect/logs/";
 const FILTERED: &str = r#"
     FROM dispatcharr_connect_deliverylog l
     WHERE NOT $3::boolean AND (($1::bigint IS NULL AND $2::text IS NULL) OR EXISTS (
@@ -131,11 +130,11 @@ pub(super) async fn list(
         let origin = request_origin(headers)?;
         let next = page
             .has_next()
-            .then(|| page_url(&origin, ROUTE, &query, Some(page.number + 1)));
+            .then(|| page_url(&origin, uri.path(), &query, Some(page.number + 1)));
         let previous = page.has_previous().then(|| {
             page_url(
                 &origin,
-                ROUTE,
+                uri.path(),
                 &query,
                 (page.number > 2).then_some(page.number - 1),
             )
