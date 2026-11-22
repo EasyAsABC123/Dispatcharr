@@ -4,8 +4,8 @@ use crate::{AuthService, RestReadLimits, StoreError};
 use axum::{
     body::Body,
     extract::{ConnectInfo, Path, Request, State},
-    http::{header, HeaderMap, Method, StatusCode, Uri},
-    response::Response,
+    http::{header, HeaderMap, HeaderValue, Method, StatusCode, Uri},
+    response::{IntoResponse, Response},
     routing::{get, post, put},
     Router,
 };
@@ -78,8 +78,8 @@ pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route("/api/connect/integrations/", get(list).post(create))
         .route("/api/connect/logs/", get(logs))
-        .route("/api/connect/logs.json", get(logs))
-        .route("/api/connect/logs.json/", get(logs))
+        .route("/api/connect/logs.json", get(fixed_json_logs))
+        .route("/api/connect/logs.json/", get(fixed_json_logs))
         .route("/api/connect/logs/{id}/", get(retrieve_log))
         .route("/api/connect/logs/{id}", get(retrieve_log))
         .route(
@@ -292,6 +292,48 @@ async fn logs(
     execute(auth, peer, headers, ConnectRequest::Logs(uri)).await
 }
 
+async fn fixed_json_logs(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Response {
+    // Explicit format suffix restricts DRF to JSON before it checks Accept.
+    // Keep content negotiation ahead of the shared auth and SQL read owner.
+    let mut response = if accepts_log_json(&headers) {
+        execute(auth, peer, headers, ConnectRequest::Logs(uri))
+            .await
+            .into_response()
+    } else {
+        StoreError::StatusBody(
+            StatusCode::NOT_ACCEPTABLE.as_u16(),
+            json!({"detail":"Could not satisfy the request Accept header."}),
+        )
+        .into_response()
+    };
+    response
+        .headers_mut()
+        .append(header::VARY, HeaderValue::from_static("Accept"));
+    response
+}
+
+fn accepts_log_json(headers: &HeaderMap) -> bool {
+    let accepts = headers.get_all(header::ACCEPT);
+    let mut values = accepts.iter().peekable();
+    if values.peek().is_none() {
+        return true;
+    }
+    values.any(|value| {
+        let value = dispatcharr_contracts::source_header_value(value.as_bytes());
+        value.split(',').any(|media| {
+            let kind = media.split(';').next().unwrap_or("").trim();
+            kind == "*/*"
+                || kind.eq_ignore_ascii_case("application/*")
+                || kind.eq_ignore_ascii_case("application/json")
+        })
+    })
+}
+
 enum ConnectRequest {
     Integrations,
     Integration(String),
@@ -482,6 +524,89 @@ async fn execute(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn fixed_json_accept_matches_normal_drf_media_types() {
+        for (accept, expected) in [
+            (None, true),
+            (Some("*/*"), true),
+            (Some("application/*"), true),
+            (Some("application/json"), true),
+            (Some("APPLICATION/JSON"), true),
+            (Some("text/html, application/json;q=0.3"), true),
+            (Some("application/json; indent=2"), true),
+            (Some("text/html"), false),
+            (Some("text/*"), false),
+            (Some("application/xml"), false),
+            (Some(""), false),
+        ] {
+            let mut headers = HeaderMap::new();
+            if let Some(accept) = accept {
+                headers.insert(header::ACCEPT, HeaderValue::from_static(accept));
+            }
+            assert_eq!(accepts_log_json(&headers), expected, "{accept:?}");
+        }
+    }
+
+    #[tokio::test]
+    async fn fixed_json_log_routes_qualify_exact_406_and_keep_other_access() {
+        use crate::{AuthConfig, Store};
+        use axum::{body::to_bytes, http::Request};
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://unused@127.0.0.1:1/unused")
+            .unwrap();
+        let app = router(AuthService::new(
+            Store { pool },
+            AuthConfig::new("local-fixture".into()).unwrap(),
+        ));
+        for uri in ["/api/connect/logs.json", "/api/connect/logs.json/"] {
+            for (accept, code) in [
+                (Some("text/html"), StatusCode::NOT_ACCEPTABLE),
+                (Some("application/json"), StatusCode::UNAUTHORIZED),
+                (Some("*/*"), StatusCode::UNAUTHORIZED),
+                (None, StatusCode::UNAUTHORIZED),
+            ] {
+                let mut request = Request::builder()
+                    .uri(uri)
+                    .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 19000))));
+                if let Some(accept) = accept {
+                    request = request.header(header::ACCEPT, accept);
+                }
+                let response = app
+                    .clone()
+                    .oneshot(request.body(Body::empty()).unwrap())
+                    .await
+                    .unwrap();
+                assert_eq!(response.status(), code);
+                assert_eq!(response.headers()[header::VARY], "Accept");
+                if code == StatusCode::NOT_ACCEPTABLE {
+                    assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+                    assert!(!response.headers().contains_key(header::WWW_AUTHENTICATE));
+                    let body = to_bytes(response.into_body(), 57).await.unwrap();
+                    assert_eq!(
+                        &body[..],
+                        br#"{"detail":"Could not satisfy the request Accept header."}"#
+                    );
+                } else {
+                    assert!(response.headers().contains_key(header::WWW_AUTHENTICATE));
+                }
+            }
+        }
+        for (uri, code) in [
+            ("/api/connect/logs/", StatusCode::UNAUTHORIZED),
+            ("/api/connect/logs.api", StatusCode::NOT_FOUND),
+        ] {
+            let request = Request::builder()
+                .uri(uri)
+                .header(header::ACCEPT, "text/html")
+                .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 19000))))
+                .body(Body::empty())
+                .unwrap();
+            assert_eq!(app.clone().oneshot(request).await.unwrap().status(), code);
+        }
+    }
 
     #[test]
     fn connect_detail_suffix_preserves_the_same_lookup() {
