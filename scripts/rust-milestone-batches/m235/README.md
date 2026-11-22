@@ -45,6 +45,16 @@ The declared Source return statuses, errors and incomplete captures are retained
 not used to choose another request or retry. The global fixture context supplies
 one nonce/output; no per-helper approval file is created.
 
+The global coordinator can admit the exact retained Original cache and
+profile capture. In the run bindings set
+`owner_bindings.m235.retained_sources.cache_profile_contexts` to the value
+returned by `retained_cache_profile.reference()` and omit
+`source/cache-and-profile-contexts` from the dispatched nodes. The adapter
+requires the original local, hash-matched capture, reruns the strict
+qualifier, and verifies eight cleanup steps. The receipt satisfies the
+Original prerequisite for the Native health and Original media/profile
+workflows. Both workflows still require their own physical execution.
+
 Known active-profile/HLS-profile 501 routes are **failure probes**, not readiness
 skips once a safe owned fixture/current candidate exists. Full profile delivery,
 format/failover and task-consumer cells remain explicit blockers until implemented

@@ -166,7 +166,13 @@ def owner_readiness(nodes, document):
     for node in nodes:
         key = node["id"]
         if node["owner"] == "m235":
-            resolved = m235.resolve_node(key, owners.get("m235", {}), HERE.parents[1])
+            owner_binding = owners.get("m235", {})
+            retained_sources = owner_binding.get("retained_sources", {})
+            if key == "source/cache-and-profile-contexts" and "cache_profile_contexts" in retained_sources:
+                adapter = module(HERE / "m235/retained_cache_profile.py", "retained_cache_profile")
+                resolved = adapter.resolve(retained_sources["cache_profile_contexts"], HERE.parents[1])
+            else:
+                resolved = m235.resolve_node(key, owner_binding, HERE.parents[1])
             if resolved.get("status") == "retained_source_authority":
                 if key in bindings:
                     raise ValueError("retained Source cannot also be dispatched: " + key)
