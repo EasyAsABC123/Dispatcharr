@@ -1,0 +1,1080 @@
+{
+  "application": "25dc1502054b67175009eac71592b445278ef0a0",
+  "application_inputs": 2153,
+  "application_parent": "626a157eb8612bc1cc4fd43d7c135761e731aa9c",
+  "build": {
+    "feature": {
+      "archive_sha256": "508a876a7aec7b5a7499f8c4b749bc9f7b2b78bab80d3d0bcfd346986276965a",
+      "build_arg": 1,
+      "image": "sha256:572650df037bd6f8b2a2d072403710f6f8c6dd23da711f4104d6debc54b82f1f"
+    },
+    "ordinary": {
+      "build_arg": 0,
+      "image": "sha256:1077fd8b90ab1d5cea25dcfd40a68314e5386c844eb8a33fab214937e8d8e0a3",
+      "manifest_sha256": "da128a05572f5c48942350e2da7e57a62204cb62d2c6f3c5a2cf3bfa4a26b03a"
+    },
+    "revision": "25dc1502054b67175009eac71592b445278ef0a0",
+    "tree": "570f774471d03a859bfcf8031fdbbcfc3e6e537344b6a9d0655a42043dc0c25d"
+  },
+  "build_verification_sha256": "105acd3384705e531a8bd8473fdf52ab5a2336026207ffe9963bd6af96ba5cda",
+  "credit": "Original Dispatcharr and dependency authors retain full credit.",
+  "host_counts": {
+    "feature": {
+      "failed": 0,
+      "ignored": 139,
+      "passed": 790
+    },
+    "workspace": {
+      "failed": 0,
+      "ignored": 814,
+      "passed": 1567
+    }
+  },
+  "notification_dismiss": {
+    "POSTs": 5,
+    "actual_cleanup": true,
+    "all_five_wire_responses_exact": true,
+    "byte_identical_pre_dismissal_sqlite_copy": true,
+    "cleanup_sha256": "0bc6bc0a189dce1b78092e61e517a1bbf12670c772e822c9d8d74bb7a54164ec",
+    "exact_same_subjects_after_restart": true,
+    "live_generations": 4,
+    "original_proof_sha256": "d18f5eee04bf75b016eab416ffd02e8abf43e45b4d831668a9ea1255de6ba9fd",
+    "original_receipt_sha256": "11ad85d5a971a4f2765becfd1a90f20e34251bbd3f5b5b0ee517d00abdeb15b4",
+    "owned_CIDs": 5,
+    "probe_sha256": "4714aa2dd778f4fab63e22976032e5410a3189a8e582352b2aea5188f5c0c6b7",
+    "proof_sha256": "4c167ed5a56f8cd971454c4c1f0614dfaa3188b7a179bc1a1f3953ec3a539793",
+    "result": {
+      "actor_readback_sha256": "b5ce5d7217d72659fce82f2ac61eb06502dfdaede8f047c6b6bb269600e64dd7",
+      "all_new_clocks_in_owned_request_window": true,
+      "committed_snapshot_sha256": "d99326ceb88520697715a1d11a64cfe0ed029dc9898112c8e0970215ed41db18",
+      "noninternal_tables_checked": 62,
+      "only_dismissal_sequence_advanced_by_two": true,
+      "other_tables_and_schema_unchanged": true,
+      "typed_mutation": {
+        "default_and_inclusive_reads_verified": true,
+        "fresh_rows": 2,
+        "same_row_and_first_clock_after_update_and_repeat": true,
+        "stable_existing_actor_rows_and_notification_table": true,
+        "unauthorized_visibility_had_no_effect": true,
+        "wire": {
+          "admin-own-notice": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 102,
+            "content_type": "application/json",
+            "declared_length": 102,
+            "response_matches_expected": true,
+            "sha256": "3edefba34f6ee4b7b1bf29d450fd0cea3e24efec1ad7d5deff5b86d552457bd9",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          "standard-admin-only": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 59,
+            "content_type": "application/json",
+            "declared_length": 59,
+            "response_matches_expected": true,
+            "sha256": "4f589c6850db763b492e190a104efe115eb7478e0450f38828cb69ca49d8aee0",
+            "status": 404,
+            "vary": "Accept, origin"
+          },
+          "standard-create": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 103,
+            "content_type": "application/json",
+            "declared_length": 103,
+            "response_matches_expected": true,
+            "sha256": "5a561859093630a95be411b9385fd8ddde7e70e41fb6f7a34f205ef856cfc733",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          "standard-repeat": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 103,
+            "content_type": "application/json",
+            "declared_length": 103,
+            "response_matches_expected": true,
+            "sha256": "5a561859093630a95be411b9385fd8ddde7e70e41fb6f7a34f205ef856cfc733",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          "standard-set-action": {
+            "allow": "POST, OPTIONS",
+            "body_bytes": 103,
+            "content_type": "application/json",
+            "declared_length": 103,
+            "response_matches_expected": true,
+            "sha256": "5a561859093630a95be411b9385fd8ddde7e70e41fb6f7a34f205ef856cfc733",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        }
+      }
+    },
+    "scope": "copied SQLite personal single dismissal"
+  },
+  "performance_measured": false,
+  "protected_inputs": 497,
+  "runtime_actual_exits": {
+    "dismissal": 0,
+    "streams-package": 0,
+    "streams-proof": 0,
+    "streams-run": 0
+  },
+  "streams": {
+    "cases": [
+      {
+        "case": "empty-page-standard",
+        "http": [
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 52,
+            "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+            "content_length": "52",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "52",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "empty",
+        "role": "standard",
+        "semantic": {
+          "admin_urls_match_owned_seed": false,
+          "count": 0,
+          "links": {
+            "next": "null",
+            "previous": "null"
+          },
+          "page_rows": 0,
+          "standard_urls_omitted": true
+        },
+        "surface": "page",
+        "unchanged_sql_sha256": "4b767e2896aecee3de41e35490c33c93d32597e309fd08fbcc0daf8524413fb6"
+      },
+      {
+        "case": "empty-ids-standard",
+        "http": [
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 2,
+            "body_sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+            "content_length": "2",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "2",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "empty",
+        "role": "standard",
+        "semantic": {
+          "bare_order_and_spacing": true,
+          "ids": 0
+        },
+        "surface": "ids",
+        "unchanged_sql_sha256": "4b767e2896aecee3de41e35490c33c93d32597e309fd08fbcc0daf8524413fb6"
+      },
+      {
+        "case": "empty-filter-options-standard",
+        "http": [
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 31,
+            "body_sha256": "ef32ce140c1d8b12b0f6b5d076fb33383c36c79c8ef1659e911ef0e02ba03242",
+            "content_length": "31",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "31",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "empty",
+        "role": "standard",
+        "semantic": {
+          "exact_sorted_options": true,
+          "groups": 0,
+          "provider_options": 0
+        },
+        "surface": "filter-options",
+        "unchanged_sql_sha256": "4b767e2896aecee3de41e35490c33c93d32597e309fd08fbcc0daf8524413fb6"
+      },
+      {
+        "case": "populated-page-anonymous",
+        "http": [
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 58,
+            "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "content_length": "58",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 401,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "58",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 401,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "anonymous",
+        "semantic": {
+          "denied": true
+        },
+        "surface": "page",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-page-streamer",
+        "http": [
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 63,
+            "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "content_length": "63",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 403,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "63",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 403,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "streamer",
+        "semantic": {
+          "denied": true
+        },
+        "surface": "page",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-page-standard",
+        "http": [
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 11871,
+            "body_sha256": "a1b319e5f349176a7575d7f3bd07753202c7d4499eac96d55a1cedb16b06022f",
+            "content_length": "11871",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "11871",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "standard",
+        "semantic": {
+          "admin_urls_match_owned_seed": false,
+          "count": 23,
+          "links": {
+            "next": "null",
+            "previous": "null"
+          },
+          "page_rows": 23,
+          "standard_urls_omitted": true
+        },
+        "surface": "page",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-page-admin",
+        "http": [
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 12749,
+            "body_sha256": "2de9bb9e37b8cfea04e0e1c748a365e311c348bfc81ee45cfbce1487347c968a",
+            "content_length": "12749",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "12749",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "admin",
+        "semantic": {
+          "admin_urls_match_owned_seed": true,
+          "count": 23,
+          "links": {
+            "next": "null",
+            "previous": "null"
+          },
+          "page_rows": 23,
+          "standard_urls_omitted": false
+        },
+        "surface": "page",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-ids-anonymous",
+        "http": [
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 58,
+            "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "content_length": "58",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 401,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "58",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 401,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "anonymous",
+        "semantic": {
+          "denied": true
+        },
+        "surface": "ids",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-ids-streamer",
+        "http": [
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 63,
+            "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "content_length": "63",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 403,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "63",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 403,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "streamer",
+        "semantic": {
+          "denied": true
+        },
+        "surface": "ids",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-ids-standard",
+        "http": [
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 88,
+            "body_sha256": "6d2ed114758b0cf84822c8201994fa8aeda415902f379af904300df9f6f88e44",
+            "content_length": "88",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "88",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "standard",
+        "semantic": {
+          "bare_order_and_spacing": true,
+          "ids": 23
+        },
+        "surface": "ids",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-ids-admin",
+        "http": [
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 88,
+            "body_sha256": "6d2ed114758b0cf84822c8201994fa8aeda415902f379af904300df9f6f88e44",
+            "content_length": "88",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "88",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "admin",
+        "semantic": {
+          "bare_order_and_spacing": true,
+          "ids": 23
+        },
+        "surface": "ids",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-filter-options-anonymous",
+        "http": [
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 58,
+            "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+            "content_length": "58",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 401,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "58",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 401,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "anonymous",
+        "semantic": {
+          "denied": true
+        },
+        "surface": "filter-options",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-filter-options-streamer",
+        "http": [
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 63,
+            "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+            "content_length": "63",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 403,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "63",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 403,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "streamer",
+        "semantic": {
+          "denied": true
+        },
+        "surface": "filter-options",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-filter-options-standard",
+        "http": [
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 180,
+            "body_sha256": "679be2f50ea53dd90b103983c4b5f7b2fee10fec50a86c019014ec0893a25dfd",
+            "content_length": "180",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "180",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "standard",
+        "semantic": {
+          "exact_sorted_options": true,
+          "groups": 2,
+          "provider_options": 2
+        },
+        "surface": "filter-options",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "populated-filter-options-admin",
+        "http": [
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 180,
+            "body_sha256": "679be2f50ea53dd90b103983c4b5f7b2fee10fec50a86c019014ec0893a25dfd",
+            "content_length": "180",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "180",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "admin",
+        "semantic": {
+          "exact_sorted_options": true,
+          "groups": 2,
+          "provider_options": 2
+        },
+        "surface": "filter-options",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "first-small-page-admin",
+        "http": [
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 661,
+            "body_sha256": "904ae03e5e84780e52610bc9bb9b2e93d7b95bf39bbbf54e6a6fcba8f3d5be78",
+            "content_length": "661",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "661",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "admin",
+        "semantic": {
+          "admin_urls_match_owned_seed": true,
+          "count": 23,
+          "links": {
+            "next": "page-2",
+            "previous": "null"
+          },
+          "page_rows": 1,
+          "standard_urls_omitted": false
+        },
+        "surface": "first-small-page",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      },
+      {
+        "case": "second-small-page-admin",
+        "http": [
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 747,
+            "body_sha256": "f4983c380012604e23db6b65358091c74d4cc99de021dd0e4efda49c7d290dc2",
+            "content_length": "747",
+            "content_type": "application/json",
+            "method": "GET",
+            "status": 200,
+            "vary": "Accept, origin"
+          },
+          {
+            "allow": "GET, POST, HEAD, OPTIONS",
+            "body_bytes": 0,
+            "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "content_length": "747",
+            "content_type": "application/json",
+            "method": "HEAD",
+            "status": 200,
+            "vary": "Accept, origin"
+          }
+        ],
+        "phase": "populated",
+        "role": "admin",
+        "semantic": {
+          "admin_urls_match_owned_seed": true,
+          "count": 23,
+          "links": {
+            "next": "page-3",
+            "previous": "first-page-without-parameter"
+          },
+          "page_rows": 1,
+          "standard_urls_omitted": false
+        },
+        "surface": "second-small-page",
+        "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+      }
+    ],
+    "cleanup_sha256": "0bc6bc0a189dce1b78092e61e517a1bbf12670c772e822c9d8d74bb7a54164ec",
+    "feature_receipt_sha256": "27f2c9a024d74d012a267a5999500191a7a6b467299412fe2c048007fa996260",
+    "image": "sha256:572650df037bd6f8b2a2d072403710f6f8c6dd23da711f4104d6debc54b82f1f",
+    "native_HTTP_reads": 34,
+    "owned_internal_network": true,
+    "passed": true,
+    "proof_sha256": "601f76187f475a7ade569b7dba3f133403c164fc2d7507115c1da191b36e2799",
+    "raw_body_or_credentials_retained": false,
+    "raw_receipt_sha256": "6e4e0a04a1c175d43af5c2f14fc96bc6e765a8af5d178842552500c23ce94041",
+    "read_only_sql_unchanged": true,
+    "revision": "25dc1502054b67175009eac71592b445278ef0a0",
+    "scope": "copied SQLite Streams startup",
+    "source_receipt_sha256": "077217f2d65e1ccb1fd0c5160f123911c0f440dacfa617fd858c3faaf92fb4f4"
+  },
+  "streams_name": {
+    "Original_PostgreSQL_Name_receipt_sha256": "d72d4e53cbd871517d110251cfc7fdc458946afce45750fdc507b88e848340d8",
+    "cleanup_sha256": "0bc6bc0a189dce1b78092e61e517a1bbf12670c772e822c9d8d74bb7a54164ec",
+    "cross_datastore_raw_bytes_equal_claimed": false,
+    "feature_receipt_sha256": "27f2c9a024d74d012a267a5999500191a7a6b467299412fe2c048007fa996260",
+    "full_Streams_acceptance": false,
+    "image": "sha256:572650df037bd6f8b2a2d072403710f6f8c6dd23da711f4104d6debc54b82f1f",
+    "matches_PostgreSQL_typed_ASCII_Name_and_stable_headers": true,
+    "native_HTTP_reads": 20,
+    "observed_Native": {
+      "HTTP_reads": 20,
+      "cases": [
+        {
+          "case": "first-name-page-admin",
+          "http": [
+            {
+              "allow": "GET, POST, HEAD, OPTIONS",
+              "body_bytes": 681,
+              "body_sha256": "cdc05a6e7cfc0f68ec157c281a9d3705dba8ffd8a0cd9c0d38d9de030715a403",
+              "content_length": "681",
+              "content_type": "application/json",
+              "method": "GET",
+              "status": 200,
+              "vary": "Accept, origin"
+            },
+            {
+              "allow": "GET, POST, HEAD, OPTIONS",
+              "body_bytes": 0,
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "content_length": "681",
+              "content_type": "application/json",
+              "method": "HEAD",
+              "status": 200,
+              "vary": "Accept, origin"
+            }
+          ],
+          "role": "admin",
+          "semantic": {
+            "actor_level": 10,
+            "count": 2,
+            "links_keep_name": true,
+            "page_rows": 1
+          },
+          "surface": "page",
+          "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+        },
+        {
+          "case": "second-name-page-standard",
+          "http": [
+            {
+              "allow": "GET, POST, HEAD, OPTIONS",
+              "body_bytes": 642,
+              "body_sha256": "4c7dc53fc76da78b50773acd31a6015e4624c7bfcdb3c635942e213aad0421e9",
+              "content_length": "642",
+              "content_type": "application/json",
+              "method": "GET",
+              "status": 200,
+              "vary": "Accept, origin"
+            },
+            {
+              "allow": "GET, POST, HEAD, OPTIONS",
+              "body_bytes": 0,
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "content_length": "642",
+              "content_type": "application/json",
+              "method": "HEAD",
+              "status": 200,
+              "vary": "Accept, origin"
+            }
+          ],
+          "role": "standard",
+          "semantic": {
+            "actor_level": 1,
+            "count": 2,
+            "links_keep_name": true,
+            "page_rows": 1
+          },
+          "surface": "page",
+          "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+        },
+        {
+          "case": "literal-name-ids",
+          "http": [
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 8,
+              "body_sha256": "538f24c0e3be834debfe740a9f981a48bf0669e9b3f3c82d2fb36cf89d088774",
+              "content_length": "8",
+              "content_type": "application/json",
+              "method": "GET",
+              "status": 200,
+              "vary": "Accept, origin"
+            },
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 0,
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "content_length": "8",
+              "content_type": "application/json",
+              "method": "HEAD",
+              "status": 200,
+              "vary": "Accept, origin"
+            }
+          ],
+          "role": "standard",
+          "semantic": {
+            "bare_order_and_spacing": true,
+            "ids": 2
+          },
+          "surface": "ids",
+          "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+        },
+        {
+          "case": "literal-name-options",
+          "http": [
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 132,
+              "body_sha256": "1690c66916248d8152e4afe554cf26773baace3389d762dc5dede3d65269ac38",
+              "content_length": "132",
+              "content_type": "application/json",
+              "method": "GET",
+              "status": 200,
+              "vary": "Accept, origin"
+            },
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 0,
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "content_length": "132",
+              "content_type": "application/json",
+              "method": "HEAD",
+              "status": 200,
+              "vary": "Accept, origin"
+            }
+          ],
+          "role": "standard",
+          "semantic": {
+            "exact_sorted_options": true,
+            "groups": 2,
+            "providers": 1
+          },
+          "surface": "filter-options",
+          "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+        },
+        {
+          "case": "backslash-name-ids",
+          "http": [
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 4,
+              "body_sha256": "501376e57c8da536b2be29ebdc7dbeacbd7b9520b4f2250e65b0fc60e72365ec",
+              "content_length": "4",
+              "content_type": "application/json",
+              "method": "GET",
+              "status": 200,
+              "vary": "Accept, origin"
+            },
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 0,
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "content_length": "4",
+              "content_type": "application/json",
+              "method": "HEAD",
+              "status": 200,
+              "vary": "Accept, origin"
+            }
+          ],
+          "role": "standard",
+          "semantic": {
+            "bare_order_and_spacing": true,
+            "ids": 1
+          },
+          "surface": "ids",
+          "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+        },
+        {
+          "case": "apostrophe-name-ids",
+          "http": [
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 4,
+              "body_sha256": "b022d439d70bbd7c48638504f94de6a5d91eb216409998615123bfba895f6287",
+              "content_length": "4",
+              "content_type": "application/json",
+              "method": "GET",
+              "status": 200,
+              "vary": "Accept, origin"
+            },
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 0,
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "content_length": "4",
+              "content_type": "application/json",
+              "method": "HEAD",
+              "status": 200,
+              "vary": "Accept, origin"
+            }
+          ],
+          "role": "standard",
+          "semantic": {
+            "bare_order_and_spacing": true,
+            "ids": 1
+          },
+          "surface": "ids",
+          "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+        },
+        {
+          "case": "last-name-options",
+          "http": [
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 132,
+              "body_sha256": "1690c66916248d8152e4afe554cf26773baace3389d762dc5dede3d65269ac38",
+              "content_length": "132",
+              "content_type": "application/json",
+              "method": "GET",
+              "status": 200,
+              "vary": "Accept, origin"
+            },
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 0,
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "content_length": "132",
+              "content_type": "application/json",
+              "method": "HEAD",
+              "status": 200,
+              "vary": "Accept, origin"
+            }
+          ],
+          "role": "standard",
+          "semantic": {
+            "exact_sorted_options": true,
+            "groups": 2,
+            "providers": 1
+          },
+          "surface": "filter-options",
+          "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+        },
+        {
+          "case": "missing-name-page",
+          "http": [
+            {
+              "allow": "GET, POST, HEAD, OPTIONS",
+              "body_bytes": 52,
+              "body_sha256": "0595424161ea863805d9b92c0e52d7aa1e3c46ec58cd8f0d6933759006a5fb74",
+              "content_length": "52",
+              "content_type": "application/json",
+              "method": "GET",
+              "status": 200,
+              "vary": "Accept, origin"
+            },
+            {
+              "allow": "GET, POST, HEAD, OPTIONS",
+              "body_bytes": 0,
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "content_length": "52",
+              "content_type": "application/json",
+              "method": "HEAD",
+              "status": 200,
+              "vary": "Accept, origin"
+            }
+          ],
+          "role": "admin",
+          "semantic": {
+            "actor_level": 10,
+            "count": 0,
+            "links_keep_name": false,
+            "page_rows": 0
+          },
+          "surface": "page",
+          "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+        },
+        {
+          "case": "missing-name-options",
+          "http": [
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 31,
+              "body_sha256": "ef32ce140c1d8b12b0f6b5d076fb33383c36c79c8ef1659e911ef0e02ba03242",
+              "content_length": "31",
+              "content_type": "application/json",
+              "method": "GET",
+              "status": 200,
+              "vary": "Accept, origin"
+            },
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 0,
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "content_length": "31",
+              "content_type": "application/json",
+              "method": "HEAD",
+              "status": 200,
+              "vary": "Accept, origin"
+            }
+          ],
+          "role": "standard",
+          "semantic": {
+            "exact_sorted_options": true,
+            "groups": 0,
+            "providers": 0
+          },
+          "surface": "filter-options",
+          "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+        },
+        {
+          "case": "streamer-name-denied",
+          "http": [
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 63,
+              "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+              "content_length": "63",
+              "content_type": "application/json",
+              "method": "GET",
+              "status": 403,
+              "vary": "Accept, origin"
+            },
+            {
+              "allow": "GET, HEAD, OPTIONS",
+              "body_bytes": 0,
+              "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+              "content_length": "63",
+              "content_type": "application/json",
+              "method": "HEAD",
+              "status": 403,
+              "vary": "Accept, origin"
+            }
+          ],
+          "role": "streamer",
+          "semantic": {
+            "denied": true
+          },
+          "surface": "ids",
+          "unchanged_sql_sha256": "ac952eff1c6522d5325c5950b492b780800e934d5eeee41aaff495b84763b0bb"
+        }
+      ],
+      "read_only_SQL_unchanged": true,
+      "role_levels": {
+        "admin": 10,
+        "standard": 1,
+        "streamer": 0
+      }
+    },
+    "private_probe_sha256": "e0626be4e3db00fd299e0d47416c1ef9cc5a8b7e97b312f85da778c70a4926c2",
+    "raw_receipt_sha256": "455806d854fafd0947f90b10c7173cbae1884c0624ce65d7f4280121de298e19",
+    "revision": "25dc1502054b67175009eac71592b445278ef0a0"
+  }
+}

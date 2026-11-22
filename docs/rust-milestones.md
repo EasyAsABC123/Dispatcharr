@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [25dc1502 copied SQLite workflow](rust-m8-25dc1502-copied-streams-dismissal.md)
+passed 34 Streams startup reads, 20 Streams Name reads, and five personal
+dismissal responses. The exact image preserved notification state after
+restart, and both Compose scopes verified cleanup.
+
 The [e65b4318 native ARM64 restart](rust-m10-e65b4318-native-arm64.md) passed
 on lappy with a locally generated copied SQLite fixture, protected React
 shell and assets, the direct login shell, and five Core reads across both
