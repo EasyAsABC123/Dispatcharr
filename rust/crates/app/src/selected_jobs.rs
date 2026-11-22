@@ -1001,14 +1001,17 @@ impl SelectedJobs {
             eprintln!("Recording playback drain remains physically unsettled");
             return selected_shutdown_failed("recording_playback");
         }
-        if self
+        let scheduler_settled = self
             .inner
             .scheduler
             .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
             .await
-            .is_err()
-        {
-            return selected_shutdown_failed("scheduler");
+            .is_ok();
+        if !scheduler_settled {
+            selected_shutdown_diagnostic("scheduler", None, "unsettled");
+            if self.inner.beat != Beat::Core {
+                return false;
+            }
         }
         let drained = self
             .inner
@@ -1082,8 +1085,10 @@ impl SelectedJobs {
         {
             return selected_shutdown_failed("shared_jobs");
         }
-        self.inner.startup.send_replace(Startup::Stopped);
-        true
+        if scheduler_settled {
+            self.inner.startup.send_replace(Startup::Stopped);
+        }
+        scheduler_settled
     }
 }
 // Opt-in, fixed-vocabulary shutdown diagnostics. Never format runtime errors,

@@ -4,6 +4,7 @@
 use crate::{
     database_schedule::{self, Entry},
     interval_schedule::PersistenceEffect,
+    normal_queue::SelectedScheduleAvailability::{self, Ready, Terminal, Waiting},
     transport::{self, Jobs},
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
@@ -31,6 +32,7 @@ pub enum Error {
     },
     Transport(transport::Error),
     Supervisor,
+    RoleDatabaseTimeout,
     Drain,
 }
 impl From<sqlx::Error> for Error {
@@ -58,7 +60,10 @@ pub struct Setup {
 pub enum Status {
     Prepared,
     Running,
+    Standby,
+    Acquired,
     Observed(Tick),
+    ReceiverFault,
     Fault(Arc<Error>),
     Stopped,
 }
@@ -584,8 +589,20 @@ impl Scheduler {
         let inner = self.inner.clone();
         tokio::spawn(async move {
             let _owner = owner;
+            if inner.scope.uses_selected_receivers() {
+                let timeout = inner.pool.options().get_acquire_timeout();
+                let mut connection = connect_selected_core(&inner.pool, timeout).await?;
+                let observed = async {
+                    if !try_selected_core_owner(&mut connection, timeout).await? {
+                        return Ok(Setup::default());
+                    }
+                    install_defaults(&mut connection).await
+                }
+                .await;
+                return settle_selected_core(connection, observed, timeout).await;
+            }
             let mut connection = inner.pool.acquire().await?.detach();
-            let observed = if inner.scope.is_core() && !inner.scope.uses_selected_receivers() {
+            let observed = if inner.scope.is_core() {
                 install_default(
                     &mut connection,
                     CLEANUP_PERIODIC_TASK,
@@ -626,6 +643,14 @@ impl Scheduler {
         let this = self.clone();
         let mut stop = self.inner.lifecycle.stop.subscribe();
         tokio::spawn(async move {
+            if this.inner.scope.uses_selected_receivers() {
+                let status = match this.serve_selected_core(&mut stop, caller).await {
+                    Ok(status) => status,
+                    Err(error) => Status::Fault(Arc::new(error)),
+                };
+                this.inner.lifecycle.finish(status);
+                return;
+            }
             while !*stop.borrow() {
                 match this.tick_once(caller.clone()).await {
                     Ok(tick) => {
@@ -651,7 +676,119 @@ impl Scheduler {
         });
         Ok(())
     }
+    fn selected_core_availability(&self) -> SelectedScheduleAvailability {
+        match self.inner.backup_worker.as_ref() {
+            Some(ScheduleConsumer::Selected(worker)) => worker.availability(),
+            _ => Terminal,
+        }
+    }
+
+    async fn serve_selected_core(
+        &self,
+        stop: &mut watch::Receiver<bool>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Status, Error> {
+        let timeout = self.inner.pool.options().get_acquire_timeout();
+        while !*stop.borrow() {
+            match self.selected_core_availability() {
+                Terminal => return Ok(Status::ReceiverFault),
+                Waiting => {
+                    tokio::select! {
+                        _ = tokio::time::sleep(self.inner.maximum_sleep) => {},
+                        _ = stop.changed() => {},
+                    }
+                    continue;
+                }
+                Ready => {}
+            }
+            let mut connection = tokio::select! {
+                biased;
+                _ = stop.changed() => return Ok(Status::Stopped),
+                connection = connect_selected_core(&self.inner.pool, timeout) => connection?,
+            };
+            // This socket is role-only. Cancellation drops it and cannot
+            // return a live advisory lock to a Main Store pool borrower.
+            match try_selected_core_owner(&mut connection, timeout).await {
+                Ok(true) => {
+                    self.inner.lifecycle.status.send_replace(Status::Acquired);
+                    *self.inner.cache.lock().await = Cache::default();
+                    let observed = self.run_selected_core(&mut connection, stop, caller).await;
+                    return settle_selected_core(connection, observed, timeout).await;
+                }
+                Ok(false) => {
+                    settle_selected_core(connection, Ok(()), timeout).await?;
+                    self.inner.lifecycle.status.send_replace(Status::Standby);
+                }
+                Err(error) => return settle_selected_core(connection, Err(error), timeout).await,
+            }
+            tokio::select! {
+                _ = tokio::time::sleep(self.inner.maximum_sleep) => {},
+                _ = stop.changed() => {},
+            }
+        }
+        Ok(Status::Stopped)
+    }
+
+    async fn run_selected_core(
+        &self,
+        connection: &mut PgConnection,
+        stop: &mut watch::Receiver<bool>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Status, Error> {
+        let end = loop {
+            if *stop.borrow() {
+                break Status::Stopped;
+            }
+            match self.selected_core_availability() {
+                Terminal => break Status::ReceiverFault,
+                Waiting => {
+                    self.inner.lifecycle.status.send_replace(Status::Acquired);
+                    tokio::select! {
+                        _ = tokio::time::sleep(self.inner.maximum_sleep) => {},
+                        _ = stop.changed() => {},
+                    }
+                    continue;
+                }
+                Ready => {}
+            }
+            let slot = match self.inner.lifecycle.reserve(Operation::Tick) {
+                Ok(slot) => slot,
+                Err(Error::Closed) => break Status::Stopped,
+                Err(error) => return Err(error),
+            };
+            let owner = Arc::new(Owner {
+                _caller: caller.clone(),
+                _slot: slot,
+                _inner: self.inner.clone(),
+            });
+            let observed = tick_owned(&self.inner, connection, owner).await?;
+            let delay = observed.delay_seconds;
+            self.inner
+                .lifecycle
+                .status
+                .send_replace(Status::Observed(observed));
+            if delay > 0.0 {
+                let duration = Duration::from_secs_f64(delay).min(self.inner.maximum_sleep);
+                tokio::select! {
+                    _ = tokio::time::sleep(duration) => {},
+                    _ = stop.changed() => {},
+                }
+            }
+        };
+        let mut cache = self.inner.cache.lock().await;
+        sync(connection, &mut cache, true).await?;
+        if !cache.dirty.is_empty() {
+            return Err(Error::Drain);
+        }
+        Ok(end)
+    }
+
     pub async fn tick_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Tick, Error> {
+        if self.inner.scope.uses_selected_receivers() {
+            return Err(Error::Configuration(
+                "Selected Core ticks require the scheduler owner",
+            ));
+        }
         let slot = self.inner.lifecycle.reserve(Operation::Tick)?;
         if self
             .inner
@@ -674,24 +811,7 @@ impl Scheduler {
         // owned through all statements, broker reply, Ready and physical close.
         tokio::spawn(async move {
             let mut connection = inner.pool.acquire().await?.detach();
-            let observed = async {
-                if inner.scope.is_core()
-                    && crate::normal_backup_schedule::try_lock_due_occurrence(&mut connection)
-                        .await?
-                {
-                    let backup = tick_backup(&inner, &mut connection, owner.clone()).await?;
-                    if backup.synchronized != 0 {
-                        return Ok(backup);
-                    }
-                    if !crate::normal_backup_schedule::release_due_occurrence(&mut connection)
-                        .await?
-                    {
-                        return Err(Error::Configuration("backup schedule lock settlement"));
-                    }
-                }
-                tick(&inner, &mut connection, owner).await
-            }
-            .await;
+            let observed = tick_owned(&inner, &mut connection, owner).await;
             settle(connection, observed).await
         })
         .await
@@ -727,6 +847,12 @@ impl Scheduler {
                 .await
                 .map_err(|_| Error::Drain)?
                 .map_err(|_| Error::Drain)?;
+        if self.inner.scope.uses_selected_receivers() {
+            return match self.status() {
+                Status::Fault(_) => Err(Error::Drain),
+                _ => Ok(()),
+            };
+        }
         if self.inner.cache.lock().await.dirty.is_empty() {
             drop(slot);
             return Ok(());
@@ -737,7 +863,7 @@ impl Scheduler {
             let _slot = slot;
             let mut connection = inner.pool.acquire().await?.detach();
             let mut cache = inner.cache.lock().await;
-            let observed = sync(&mut connection, &mut cache).await.map(|_| ());
+            let observed = sync(&mut connection, &mut cache, false).await.map(|_| ());
             settle(connection, observed).await
         });
         tokio::time::timeout_at(deadline, task)
@@ -766,9 +892,82 @@ impl dispatcharr_store::BackupScheduleEnableApi for Scheduler {
         })
     }
 }
+async fn connect_selected_core(pool: &PgPool, timeout: Duration) -> Result<PgConnection, Error> {
+    let options = pool.connect_options();
+    tokio::time::timeout(timeout, PgConnection::connect_with(options.as_ref()))
+        .await
+        .map_err(|_| Error::RoleDatabaseTimeout)?
+        .map_err(Error::from)
+}
+
+async fn try_selected_core_owner(
+    connection: &mut PgConnection,
+    timeout: Duration,
+) -> Result<bool, Error> {
+    let claim = sqlx::query_scalar(
+        "SELECT pg_try_advisory_lock(hashtext('dispatcharr:selected-core-beat'), 0)",
+    )
+    .fetch_one(connection);
+    tokio::time::timeout(timeout, claim)
+        .await
+        .map_err(|_| Error::RoleDatabaseTimeout)?
+        .map_err(Error::from)
+}
+
+async fn tick_owned(
+    inner: &Inner,
+    connection: &mut PgConnection,
+    owner: Arc<Owner>,
+) -> Result<Tick, Error> {
+    if inner.scope.is_core()
+        && crate::normal_backup_schedule::try_lock_due_occurrence(connection).await?
+    {
+        let backup = tick_backup(inner, connection, owner.clone()).await?;
+        if backup.synchronized != 0 && !inner.scope.uses_selected_receivers() {
+            // The legacy detached session will release the lock on close.
+            return Ok(backup);
+        }
+        if !crate::normal_backup_schedule::release_due_occurrence(connection).await? {
+            return Err(Error::Configuration("backup schedule lock settlement"));
+        }
+        if backup.synchronized != 0 {
+            return Ok(backup);
+        }
+    }
+    tick(inner, connection, owner).await
+}
+
+async fn settle_selected_core<T>(
+    mut connection: PgConnection,
+    observed: Result<T, Error>,
+    timeout: Duration,
+) -> Result<T, Error> {
+    let deadline = tokio::time::Instant::now() + timeout;
+    let timed_out = || sqlx::Error::Io(std::io::ErrorKind::TimedOut.into());
+    let ready = tokio::time::timeout_at(deadline, connection.ping())
+        .await
+        .unwrap_or_else(|_| Err(timed_out()))
+        .err()
+        .map(Box::new);
+    let close = tokio::time::timeout_at(deadline, connection.close())
+        .await
+        .unwrap_or_else(|_| Err(timed_out()))
+        .err()
+        .map(Box::new);
+    settlement(observed, ready, close)
+}
+
 async fn settle<T>(mut connection: PgConnection, observed: Result<T, Error>) -> Result<T, Error> {
     let ready = connection.ping().await.err().map(Box::new);
     let close = connection.close().await.err().map(Box::new);
+    settlement(observed, ready, close)
+}
+
+fn settlement<T>(
+    observed: Result<T, Error>,
+    ready: Option<Box<sqlx::Error>>,
+    close: Option<Box<sqlx::Error>>,
+) -> Result<T, Error> {
     if ready.is_some() || close.is_some() {
         return Err(Error::Settlement {
             primary: observed.err().map(Box::new),
@@ -936,7 +1135,11 @@ async fn disable(
     entry.entry.total_run_count = count;
     Ok(())
 }
-async fn sync(connection: &mut PgConnection, cache: &mut Cache) -> Result<(usize, usize), Error> {
+async fn sync(
+    connection: &mut PgConnection,
+    cache: &mut Cache,
+    required: bool,
+) -> Result<(usize, usize), Error> {
     let mut saved = 0;
     let mut missing = HashSet::new();
     while let Some(name) = cache.dirty.iter().next().cloned() {
@@ -952,7 +1155,7 @@ async fn sync(connection: &mut PgConnection, cache: &mut Cache) -> Result<(usize
             Ok(_) => {
                 missing.insert(name);
             }
-            Err(sqlx::Error::Database(error)) => {
+            Err(sqlx::Error::Database(error)) if !required => {
                 // Source pops the attempted name before save. A DatabaseError does
                 // not restore that name; missing names and not-yet-tried names stay.
                 eprintln!(
@@ -967,6 +1170,9 @@ async fn sync(connection: &mut PgConnection, cache: &mut Cache) -> Result<(usize
                 break;
             }
             Err(error) => {
+                if required {
+                    cache.dirty.insert(name);
+                }
                 cache.dirty.extend(missing);
                 return Err(error.into());
             }
@@ -1359,7 +1565,12 @@ async fn tick(
             .is_none_or(|last| last.elapsed() >= Duration::from_secs(300));
     cache.marker = marker;
     if reload {
-        let (saved, missing) = sync(connection, &mut cache).await?;
+        let (saved, missing) = sync(
+            connection,
+            &mut cache,
+            inner.scope.uses_selected_receivers(),
+        )
+        .await?;
         result.synchronized += saved;
         result.missing += missing;
         let (entries, invalid) = load(connection, now, inner.scope).await?;
@@ -1480,7 +1691,12 @@ async fn tick(
         .last_sync
         .is_none_or(|last| last.elapsed() > Duration::from_secs(180))
     {
-        let (saved, missing) = sync(connection, &mut cache).await?;
+        let (saved, missing) = sync(
+            connection,
+            &mut cache,
+            inner.scope.uses_selected_receivers(),
+        )
+        .await?;
         result.synchronized += saved;
         result.missing += missing;
         cache.last_sync = Some(std::time::Instant::now());

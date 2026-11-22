@@ -263,13 +263,19 @@ impl HdhrGateway {
         let method = request.method().clone();
         let headers = request.headers();
         let endpoint = endpoint(request.uri().path())?;
-        if let Some(status) = negotiation_status(
-            &method,
-            request.uri().path(),
-            &endpoint,
-            identity.parameter("format"),
-            headers.get("accept").and_then(|value| value.to_str().ok()),
-        ) {
+        let browser_options = lineup_status_browser_options(&method, request.uri(), headers);
+        let rejection = if browser_options {
+            None
+        } else {
+            negotiation_status(
+                &method,
+                request.uri().path(),
+                &endpoint,
+                identity.parameter("format"),
+                headers.get("accept").and_then(|value| value.to_str().ok()),
+            )
+        };
+        if let Some(status) = rejection {
             let detail = if status == StatusCode::NOT_FOUND {
                 "Not found."
             } else {
@@ -332,6 +338,13 @@ impl HdhrGateway {
             let mut response =
                 self.retained(StatusCode::UNAUTHORIZED, Some(body), memory, false)?;
             set_lineup_status_auth_headers(response.headers_mut(), set_cookie);
+            return Ok(response);
+        }
+        if browser_options {
+            let (body, cookie) =
+                lineup_status_browser_options_html(self.inner.config.max_response_bytes)?;
+            let mut response = self.retained(StatusCode::OK, Some(body), memory, false)?;
+            set_lineup_status_browsable_headers(response.headers_mut(), cookie);
             return Ok(response);
         }
         if method == Method::OPTIONS && request.uri().path() == LINEUP_STATUS_PATH {
@@ -412,8 +425,46 @@ const BROWSABLE_AUTH_VARY: HeaderValue = HeaderValue::from_static("Accept, origi
 const LINEUP_STATUS_AUTH_SHELL: &str = include!("../datasets/lineup-status-auth.rs");
 const LINEUP_STATUS_ORDINARY_BROWSER_AUTH_SHELL: &str =
     include!("../datasets/lineup-status-ordinary-browser-auth.rs");
+const LINEUP_STATUS_BROWSER_OPTIONS_SHELL: &str =
+    include!("../datasets/lineup-status-browser-options.rs");
 const ORDINARY_BROWSER_ACCEPT: &str =
     "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+
+fn lineup_status_browser_options(method: &Method, uri: &Uri, headers: &HeaderMap) -> bool {
+    if *method != Method::OPTIONS
+        || uri.path() != LINEUP_STATUS_PATH
+        || uri.query() != Some("format=api")
+        || headers.contains_key(header::AUTHORIZATION)
+        || headers.contains_key("x-api-key")
+        || headers.contains_key(header::COOKIE)
+    {
+        return false;
+    }
+    let mut accepts = headers.get_all(header::ACCEPT).iter();
+    accepts
+        .next()
+        .is_some_and(|value| value == ORDINARY_BROWSER_ACCEPT)
+        && accepts.next().is_none()
+}
+
+fn lineup_status_browser_options_html(
+    maximum: usize,
+) -> Result<(Vec<u8>, HeaderValue), StoreError> {
+    let (before, after) = LINEUP_STATUS_BROWSER_OPTIONS_SHELL
+        .split_once("@@HDHR_CSRF_SCRIPT@@")
+        .expect("captured HDHR OPTIONS CSRF slot");
+    let (_, masked, set_cookie) = source_browsable_csrf(None);
+    let length = before.len() + masked.len() + after.len();
+    if length > maximum {
+        return Err(unavailable());
+    }
+    let mut body = Vec::with_capacity(length);
+    for part in [before, &masked, after] {
+        body.extend_from_slice(part.as_bytes());
+    }
+    let cookie = HeaderValue::from_str(&set_cookie).map_err(|_| unavailable())?;
+    Ok((body, cookie))
+}
 
 fn lineup_status_auth_shell(
     method: &Method,
@@ -437,16 +488,20 @@ fn lineup_status_auth_shell(
 }
 
 fn set_lineup_status_auth_headers(headers: &mut HeaderMap, set_cookie: HeaderValue) {
+    set_lineup_status_browsable_headers(headers, set_cookie);
+    headers.insert(
+        header::WWW_AUTHENTICATE,
+        HeaderValue::from_static("Bearer realm=\"api\""),
+    );
+}
+
+fn set_lineup_status_browsable_headers(headers: &mut HeaderMap, set_cookie: HeaderValue) {
     for (name, value) in [
         (
             header::CONTENT_TYPE,
             HeaderValue::from_static("text/html; charset=utf-8"),
         ),
         (header::VARY, BROWSABLE_AUTH_VARY),
-        (
-            header::WWW_AUTHENTICATE,
-            HeaderValue::from_static("Bearer realm=\"api\""),
-        ),
         (header::SET_COOKIE, set_cookie),
     ] {
         headers.insert(name, value);
@@ -755,6 +810,94 @@ fn origin(auth: &AuthService, identity: &PlaybackRequest, _headers: &HeaderMap) 
 mod tests {
     use super::*;
     use http_body_util::BodyExt;
+
+    #[test]
+    fn selects_only_the_observed_anonymous_fixed_browser_options() {
+        let uri: Uri = "/hdhr/lineup_status.json?format=api".parse().unwrap();
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            header::ACCEPT,
+            HeaderValue::from_static(ORDINARY_BROWSER_ACCEPT),
+        );
+        assert!(lineup_status_browser_options(
+            &Method::OPTIONS,
+            &uri,
+            &headers
+        ));
+        for method in [Method::GET, Method::HEAD] {
+            assert!(!lineup_status_browser_options(&method, &uri, &headers));
+        }
+        for path in [
+            "/hdhr/lineup_status.json",
+            "/hdhr/lineup_status.json?format=json",
+            "/hdhr/lineup_status.json?format=api&other=1",
+            "/api/hdhr/lineup_status.json?format=api",
+        ] {
+            assert!(!lineup_status_browser_options(
+                &Method::OPTIONS,
+                &path.parse().unwrap(),
+                &headers
+            ));
+        }
+        for header_name in [
+            header::AUTHORIZATION,
+            header::COOKIE,
+            header::HeaderName::from_static("x-api-key"),
+        ] {
+            headers.insert(header_name.clone(), HeaderValue::from_static("fixture"));
+            assert!(!lineup_status_browser_options(
+                &Method::OPTIONS,
+                &uri,
+                &headers
+            ));
+            headers.remove(header_name);
+        }
+        headers.append(header::ACCEPT, HeaderValue::from_static("application/json"));
+        assert!(!lineup_status_browser_options(
+            &Method::OPTIONS,
+            &uri,
+            &headers
+        ));
+        headers.insert(header::ACCEPT, HeaderValue::from_static("application/json"));
+        assert!(!lineup_status_browser_options(
+            &Method::OPTIONS,
+            &uri,
+            &headers
+        ));
+    }
+
+    #[test]
+    fn fixed_browser_options_use_the_stock_shell_with_fresh_csrf() {
+        let (body, cookie) = lineup_status_browser_options_html(10642).unwrap();
+        let (other_body, other_cookie) = lineup_status_browser_options_html(10642).unwrap();
+        assert_eq!(body.len(), 10642);
+        assert_ne!(body, other_body);
+        assert_ne!(cookie, other_cookie);
+        assert!(lineup_status_browser_options_html(10641).is_err());
+        let text = std::str::from_utf8(&body).unwrap();
+        assert!(text.contains("HTTP 200 OK"));
+        assert!(text.contains("&quot;Lineup Status Api&quot;"));
+        assert!(!text.contains("@@"));
+        let (_, inline) = text.split_once("\"csrfToken\": \"").unwrap();
+        let (masked, _) = inline.split_once('"').unwrap();
+        assert_eq!(masked.len(), 64);
+        assert!(masked.bytes().all(|byte| byte.is_ascii_alphanumeric()));
+
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            header::CONTENT_TYPE,
+            HeaderValue::from_static("application/json"),
+        );
+        headers.insert(header::CONTENT_LENGTH, HeaderValue::from_static("10642"));
+        set_lineup_status_browsable_headers(&mut headers, cookie);
+        set_dispatch_headers(&mut headers, "GET, HEAD, OPTIONS");
+        assert_eq!(headers.get_all(header::CONTENT_TYPE).iter().count(), 1);
+        assert_eq!(headers[header::CONTENT_TYPE], "text/html; charset=utf-8");
+        assert_eq!(headers[header::CONTENT_LENGTH], "10642");
+        assert_eq!(headers[header::VARY], BROWSABLE_AUTH_VARY);
+        assert_eq!(headers.get_all(header::SET_COOKIE).iter().count(), 1);
+        assert!(!headers.contains_key(header::WWW_AUTHENTICATE));
+    }
 
     #[test]
     fn selects_the_captured_ordinary_browser_auth_shell_only_for_fixed_get() {

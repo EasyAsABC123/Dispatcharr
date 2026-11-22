@@ -260,6 +260,13 @@ pub struct SelectedCoreSchedules {
     saved_xc: Option<crate::normal_xc_live::Worker>,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub(super) enum SelectedScheduleAvailability {
+    Ready,
+    Waiting,
+    Terminal,
+}
+
 impl SelectedCoreSchedules {
     pub fn with_saved_xc(
         mut self,
@@ -301,13 +308,17 @@ impl SelectedCoreSchedules {
     }
 
     pub(super) fn ready(&self) -> bool {
+        self.availability() == SelectedScheduleAvailability::Ready
+    }
+
+    pub(super) fn availability(&self) -> SelectedScheduleAvailability {
         let Some((receiver, stop)) = self.receiver.upgrade().zip(self.stop.upgrade()) else {
-            return false;
+            return SelectedScheduleAvailability::Terminal;
         };
         let stopping = *stop.0.borrow();
         let celery = receiver.celery.state.borrow();
         let dvr = receiver.dvr.state.borrow();
-        selected_schedules_ready(
+        selected_schedule_availability(
             stopping,
             self.backup.scheduled_admission_open(),
             &celery,
@@ -340,13 +351,36 @@ impl SelectedCoreSchedules {
     }
 }
 
+fn selected_schedule_availability(
+    stopping: bool,
+    backup_open: bool,
+    celery: &State,
+    dvr: &State,
+) -> SelectedScheduleAvailability {
+    use SelectedScheduleAvailability::{Ready, Terminal, Waiting};
+    if stopping
+        || !backup_open
+        || [celery, dvr]
+            .into_iter()
+            .any(|state| matches!(state, State::Fault(_) | State::Stopped))
+    {
+        Terminal
+    } else if celery.ready() && dvr.ready() {
+        Ready
+    } else {
+        Waiting
+    }
+}
+
+#[cfg(test)]
 fn selected_schedules_ready(
     stopping: bool,
     backup_open: bool,
     celery: &State,
     dvr: &State,
 ) -> bool {
-    !stopping && backup_open && celery.ready() && dvr.ready()
+    selected_schedule_availability(stopping, backup_open, celery, dvr)
+        == SelectedScheduleAvailability::Ready
 }
 
 fn saved_xc_receivers_match(
@@ -1625,6 +1659,26 @@ mod tests {
         assert!(mode.bind(ScheduleOwner::Taskless).is_ok());
         assert!(mode.bind(ScheduleOwner::Taskless).is_ok());
         assert!(mode.bind(ScheduleOwner::Core).is_err());
+    }
+
+    #[test]
+    fn selected_schedule_receiver_blocked_can_recover_but_stopped_is_terminal() {
+        use SelectedScheduleAvailability::{Terminal, Waiting};
+        let ready = State::Working(1);
+        let blocked = State::Blocked(Disposition::NotDue);
+        let fault = State::Fault(Disposition::NotDue);
+        assert_eq!(
+            selected_schedule_availability(false, true, &blocked, &ready),
+            Waiting
+        );
+        assert_eq!(
+            selected_schedule_availability(false, true, &fault, &ready),
+            Terminal
+        );
+        assert_eq!(
+            selected_schedule_availability(false, true, &ready, &State::Stopped),
+            Terminal
+        );
     }
 
     #[test]
