@@ -18,6 +18,14 @@ Guide cases to the two declared list and detail GET rows as partial evidence.
 The [9cf6407 profiled HLS pair](rust-m3-9cf6407-profiled-hls-performance.md) matched
 30 complete segments with 32.4% lower CPU and 47.4% lower peak working memory.
 
+The [9cf64 completed-DVR comparison](rust-m4-9cf64-completed-dvr-performance.md)
+passed all six pairs with identical media and equal goodput. At ten viewers Rust
+used 64.2% less CPU and 58.7% less peak working memory across the fixture.
+
+The [5d9568f explicit worker rehearsal](rust-m6-5d9568f-explicit-role-compose.md)
+verified startup, HTTP XMLTV import and descendants, natural scan and cleanup,
+durability after retirement, and a ready peer with exact teardown.
+
 The [scoped Compose wave](rust-m5-m7-m8-scoped-compose.md) verified the manual
 channel edit on `5d9568f`, and realtime and ordinary plugin settings on `1124391`.
 Each workflow passed its owned cleanup checks.

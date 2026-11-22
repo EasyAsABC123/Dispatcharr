@@ -1,0 +1,879 @@
+{
+  "candidate": {
+    "build_manifest_sha256": "19d618bfe72657a0adfc65fd93094ad42cbaffbe8b609bdc68ba8eddfb7e17a1",
+    "image_id": "sha256:fd1a839e1fce4835039b7b079cd0929cd3c658261374cea2c7bbebf813fae3a9",
+    "revision": "9cf640701dacea07ea5f394ce7b18a6fa7c8c088",
+    "source_archive_sha256": "8241980434509febbe3269016bbc66f3ea473bb2bc4a23296ae4c2a1651f3276",
+    "source_tree_sha256": "d882ac35a940175173a8293595de8b91a00a0372442c12230f3c279e8c603e6c",
+    "verified_receiving_revision": "49fa7420937664064b3d3b04914b9f366fc3feab"
+  },
+  "comparison_stage_sha256": "76f34d73bbdca1a0ecf6583ea02023272415221da77291884ec53206df5c64b0",
+  "credit": "Original Dispatcharr authors and contributors retain full application, media, and UI credit. FFmpeg, PostgreSQL, Redis, and all other dependency authors retain full credit for their work.",
+  "functional": {
+    "dvr_checks": 18,
+    "exact_cleanup": true,
+    "foundation_checks": 19,
+    "independent_cleanup_sha256": "d36b4b94c4d872417962f5b24d288924b916ea15cceedb18494ae56e485d690a",
+    "literal_fixture_exit": 0,
+    "literal_owner_exit": 0,
+    "literal_qualification_exit": 0,
+    "qualification_sha256": "09c594395dc51ea1f59930f61a49dff74b78e64ab646b7c89438faa2bb15ac4e",
+    "receipt_sha256": "3eafc305d61cc7a5aec0754b1ab1f7cd3eee77dbf62c86f3daa1818e6a23a1ee",
+    "retired_roles": 4
+  },
+  "original": {
+    "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "owner_stage_sha256": "6b67ddec63619f88cb22dd8e93cfd196c6dce95901953122bc8bfbe2633e0736",
+  "performance": {
+    "all_six_pairs": [
+      {
+        "arms": {
+          "Original": {
+            "bytes": 67251260,
+            "cpu_percent": 0.7662791317654812,
+            "goodput_bytes_per_second": 1120854.3333333333,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 8.450439956504852,
+                "p95_total_ms": 9.193431003950536
+              },
+              "complete": {
+                "p95_first_byte_ms": 10.127267974894494,
+                "p95_total_ms": 21.80092001799494
+              }
+            },
+            "peak_working_bytes": 385118208,
+            "phase_sha256": "e98778702bc0d33fa8729ca2617d43c657329decbfffb6de1364bb27d1bec89c",
+            "requests": 40,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.13674694398651,
+                "usage_usec": 317631
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.13770454196492,
+                "usage_usec": 114216
+              },
+              "origin": {
+                "elapsed_seconds": 60.13641260500299,
+                "usage_usec": 28970
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 0.5281812138855012,
+              "infrastructure": 0.18992410979088584,
+              "origin": 0.04817380808909421
+            },
+            "service_peak_working_bytes": {
+              "backend": 254152704,
+              "infrastructure": 118349824,
+              "origin": 12976128
+            }
+          },
+          "Rust": {
+            "bytes": 67251260,
+            "cpu_percent": 0.43472692651302003,
+            "goodput_bytes_per_second": 1120854.3333333333,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 5.042332981247455,
+                "p95_total_ms": 5.37317298585549
+              },
+              "complete": {
+                "p95_first_byte_ms": 5.888867017347366,
+                "p95_total_ms": 11.414563981816173
+              }
+            },
+            "peak_working_bytes": 137252864,
+            "phase_sha256": "2c8a3bcf2c5b82d2f48840e50bb5cc3344850877d2b7a44199f31dbe7f9436fa",
+            "requests": 40,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.12960598099744,
+                "usage_usec": 145502
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.13110053300625,
+                "usage_usec": 85954
+              },
+              "origin": {
+                "elapsed_seconds": 60.13015940703917,
+                "usage_usec": 29946
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 0.24198063104884227,
+              "infrastructure": 0.14294433203134116,
+              "origin": 0.04980196343283659
+            },
+            "service_peak_working_bytes": {
+              "backend": 9711616,
+              "infrastructure": 117080064,
+              "origin": 12562432
+            }
+          }
+        },
+        "gates": {
+          "cpu": true,
+          "equal_work": true,
+          "latency": true,
+          "throughput": true,
+          "working_set": true
+        },
+        "latency_ratios": {
+          "closed_seek": {
+            "p95_first_byte_ms": 1.0,
+            "p95_total_ms": 1.0
+          },
+          "complete": {
+            "p95_first_byte_ms": 1.0,
+            "p95_total_ms": 1.0
+          }
+        },
+        "ratios": {
+          "throughput_ratio": 1.0,
+          "whole_cpu_ratio": 0.5673218915820191,
+          "whole_peak_memory_ratio": 0.3563915212235304
+        },
+        "trial": 1,
+        "viewers": 1
+      },
+      {
+        "arms": {
+          "Original": {
+            "bytes": 67251260,
+            "cpu_percent": 0.709307354899972,
+            "goodput_bytes_per_second": 1120854.3333333333,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 8.00378801068291,
+                "p95_total_ms": 8.65773600526154
+              },
+              "complete": {
+                "p95_first_byte_ms": 8.345076988916844,
+                "p95_total_ms": 21.86047105351463
+              }
+            },
+            "peak_working_bytes": 383553536,
+            "phase_sha256": "b4f566b4fee48d2453f15d6721f9b2ff638f18f779bfbad699e43a6191eb7c36",
+            "requests": 40,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.13737285300158,
+                "usage_usec": 311362
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.135721864993684,
+                "usage_usec": 85883
+              },
+              "origin": {
+                "elapsed_seconds": 60.13644790597027,
+                "usage_usec": 29311
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 0.5177512505594253,
+              "infrastructure": 0.14281528072916402,
+              "origin": 0.048740823611382676
+            },
+            "service_peak_working_bytes": {
+              "backend": 252837888,
+              "infrastructure": 119128064,
+              "origin": 12189696
+            }
+          },
+          "Rust": {
+            "bytes": 67251260,
+            "cpu_percent": 0.42690555860360657,
+            "goodput_bytes_per_second": 1120854.3333333333,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 5.225898989010602,
+                "p95_total_ms": 5.651120969559997
+              },
+              "complete": {
+                "p95_first_byte_ms": 5.819564976263791,
+                "p95_total_ms": 12.106133974157274
+              }
+            },
+            "peak_working_bytes": 145117184,
+            "phase_sha256": "99ecd4e9e687cc16e8aa01f631ab55dfdf3b8052345ad0a2ddf9a9b7c930c6f4",
+            "requests": 40,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.130256432981696,
+                "usage_usec": 143255
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.12986859201919,
+                "usage_usec": 83681
+              },
+              "origin": {
+                "elapsed_seconds": 60.13052439101739,
+                "usage_usec": 29763
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 0.23824112601226832,
+              "infrastructure": 0.1391671093908006,
+              "origin": 0.04949732320053765
+            },
+            "service_peak_working_bytes": {
+              "backend": 9613312,
+              "infrastructure": 117276672,
+              "origin": 19730432
+            }
+          }
+        },
+        "gates": {
+          "cpu": true,
+          "equal_work": true,
+          "latency": true,
+          "throughput": true,
+          "working_set": true
+        },
+        "latency_ratios": {
+          "closed_seek": {
+            "p95_first_byte_ms": 1.0,
+            "p95_total_ms": 1.0
+          },
+          "complete": {
+            "p95_first_byte_ms": 1.0,
+            "p95_total_ms": 1.0
+          }
+        },
+        "ratios": {
+          "throughput_ratio": 1.0,
+          "whole_cpu_ratio": 0.6018625855977621,
+          "whole_peak_memory_ratio": 0.3783492273683536
+        },
+        "trial": 2,
+        "viewers": 1
+      },
+      {
+        "arms": {
+          "Original": {
+            "bytes": 67251260,
+            "cpu_percent": 0.7200992240652819,
+            "goodput_bytes_per_second": 1120854.3333333333,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 7.894984970334917,
+                "p95_total_ms": 8.721947961021215
+              },
+              "complete": {
+                "p95_first_byte_ms": 8.455650007817894,
+                "p95_total_ms": 20.76551999198273
+              }
+            },
+            "peak_working_bytes": 387358720,
+            "phase_sha256": "6be6396566548dffc914c717b8aa58e5dc5f76840627acb79c8cf60811aee791",
+            "requests": 40,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.137685349036474,
+                "usage_usec": 312412
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.13565572001971,
+                "usage_usec": 90892
+              },
+              "origin": {
+                "elapsed_seconds": 60.13376723701367,
+                "usage_usec": 29742
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 0.5194945535179389,
+              "infrastructure": 0.1511449387417941,
+              "origin": 0.049459731805548905
+            },
+            "service_peak_working_bytes": {
+              "backend": 252719104,
+              "infrastructure": 123228160,
+              "origin": 12881920
+            }
+          },
+          "Rust": {
+            "bytes": 67251260,
+            "cpu_percent": 0.4430737598489381,
+            "goodput_bytes_per_second": 1120854.3333333333,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 5.956770037300885,
+                "p95_total_ms": 6.3277099980041385
+              },
+              "complete": {
+                "p95_first_byte_ms": 5.763913970440626,
+                "p95_total_ms": 11.178636981640011
+              }
+            },
+            "peak_working_bytes": 159211520,
+            "phase_sha256": "2a818e87a4499afa78dd50e8830a9504d0aec6de54a8c120ce847fb5fc13737f",
+            "requests": 40,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.13046743097948,
+                "usage_usec": 145411
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.129679109028075,
+                "usage_usec": 92097
+              },
+              "origin": {
+                "elapsed_seconds": 60.12814766401425,
+                "usage_usec": 28912
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 0.2418258267606342,
+              "infrastructure": 0.1531639638937841,
+              "origin": 0.04808396919451982
+            },
+            "service_peak_working_bytes": {
+              "backend": 10199040,
+              "infrastructure": 140083200,
+              "origin": 13443072
+            }
+          }
+        },
+        "gates": {
+          "cpu": true,
+          "equal_work": true,
+          "latency": true,
+          "throughput": true,
+          "working_set": true
+        },
+        "latency_ratios": {
+          "closed_seek": {
+            "p95_first_byte_ms": 1.0,
+            "p95_total_ms": 1.0
+          },
+          "complete": {
+            "p95_first_byte_ms": 1.0,
+            "p95_total_ms": 1.0
+          }
+        },
+        "ratios": {
+          "throughput_ratio": 1.0,
+          "whole_cpu_ratio": 0.6152954274101127,
+          "whole_peak_memory_ratio": 0.4110182933276938
+        },
+        "trial": 3,
+        "viewers": 1
+      },
+      {
+        "arms": {
+          "Original": {
+            "bytes": 672512600,
+            "cpu_percent": 5.712826943547452,
+            "goodput_bytes_per_second": 11208543.333333334,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 30.658781004603952,
+                "p95_total_ms": 32.99898700788617
+              },
+              "complete": {
+                "p95_first_byte_ms": 51.551643991842866,
+                "p95_total_ms": 121.88086099922657
+              }
+            },
+            "peak_working_bytes": 413249536,
+            "phase_sha256": "c805c73d329cde2ec2c52abef037e5a4f3c19e7f39e22c76886925b00686bfe8",
+            "requests": 400,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.13758990401402,
+                "usage_usec": 2619770
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.13643596001202,
+                "usage_usec": 786028
+              },
+              "origin": {
+                "elapsed_seconds": 60.134847564972006,
+                "usage_usec": 29742
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 4.356293632953085,
+              "infrastructure": 1.3070744673373604,
+              "origin": 0.049458843257007674
+            },
+            "service_peak_working_bytes": {
+              "backend": 255713280,
+              "infrastructure": 146993152,
+              "origin": 12947456
+            }
+          },
+          "Rust": {
+            "bytes": 672512600,
+            "cpu_percent": 2.040239090106453,
+            "goodput_bytes_per_second": 11208543.333333334,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 24.06571398023516,
+                "p95_total_ms": 26.461402012500912
+              },
+              "complete": {
+                "p95_first_byte_ms": 35.43593699578196,
+                "p95_total_ms": 62.4754240270704
+              }
+            },
+            "peak_working_bytes": 169795584,
+            "phase_sha256": "c9d4c6e8452d120d4e7dc79fcd8e2e74f7030362541bb1d6e4b45d9957d3b462",
+            "requests": 400,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.12745798600372,
+                "usage_usec": 1045855
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.12625633197604,
+                "usage_usec": 151421
+              },
+              "origin": {
+                "elapsed_seconds": 60.12771206401521,
+                "usage_usec": 29465
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 1.7393966667332765,
+              "infrastructure": 0.25183839679616316,
+              "origin": 0.04900402657701322
+            },
+            "service_peak_working_bytes": {
+              "backend": 11255808,
+              "infrastructure": 148590592,
+              "origin": 11890688
+            }
+          }
+        },
+        "gates": {
+          "cpu": true,
+          "equal_work": true,
+          "latency": true,
+          "throughput": true,
+          "working_set": true
+        },
+        "latency_ratios": {
+          "closed_seek": {
+            "p95_first_byte_ms": 1.0,
+            "p95_total_ms": 1.0
+          },
+          "complete": {
+            "p95_first_byte_ms": 0.9699011734312801,
+            "p95_total_ms": 0.5125942130279738
+          }
+        },
+        "ratios": {
+          "throughput_ratio": 1.0,
+          "whole_cpu_ratio": 0.3571330114263081,
+          "whole_peak_memory_ratio": 0.4108790675084993
+        },
+        "trial": 1,
+        "viewers": 10
+      },
+      {
+        "arms": {
+          "Original": {
+            "bytes": 672512600,
+            "cpu_percent": 5.681968258718827,
+            "goodput_bytes_per_second": 11208543.333333334,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 26.218135957606137,
+                "p95_total_ms": 26.844222971703857
+              },
+              "complete": {
+                "p95_first_byte_ms": 47.639982018154114,
+                "p95_total_ms": 119.63043501600623
+              }
+            },
+            "peak_working_bytes": 414556160,
+            "phase_sha256": "c1d52b0c0954cb0e54a2086815c0ee28f9d0a3474705504fbacc6398fcb5ac3e",
+            "requests": 400,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.134697235014755,
+                "usage_usec": 2604268
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.137239253963344,
+                "usage_usec": 782453
+              },
+              "origin": {
+                "elapsed_seconds": 60.13772149395663,
+                "usage_usec": 30148
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 4.330724389984303,
+              "infrastructure": 1.3011122720410422,
+              "origin": 0.05013159669348237
+            },
+            "service_peak_working_bytes": {
+              "backend": 256983040,
+              "infrastructure": 146305024,
+              "origin": 13807616
+            }
+          },
+          "Rust": {
+            "bytes": 672512600,
+            "cpu_percent": 2.036890534929539,
+            "goodput_bytes_per_second": 11208543.333333334,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 24.76432704133913,
+                "p95_total_ms": 25.31971305143088
+              },
+              "complete": {
+                "p95_first_byte_ms": 38.397869968321174,
+                "p95_total_ms": 68.41917999554425
+              }
+            },
+            "peak_working_bytes": 174776320,
+            "phase_sha256": "1902a634b6a14ae736db999fbfcf974767c1f5a226d6827bbd2c79568bae54d0",
+            "requests": 400,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.12757708103163,
+                "usage_usec": 1047501
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.12767547700787,
+                "usage_usec": 149413
+              },
+              "origin": {
+                "elapsed_seconds": 60.12720758799696,
+                "usage_usec": 27819
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 1.7421307341027945,
+              "infrastructure": 0.24849289252356646,
+              "origin": 0.04626690830317794
+            },
+            "service_peak_working_bytes": {
+              "backend": 12705792,
+              "infrastructure": 150740992,
+              "origin": 13316096
+            }
+          }
+        },
+        "gates": {
+          "cpu": true,
+          "equal_work": true,
+          "latency": true,
+          "throughput": true,
+          "working_set": true
+        },
+        "latency_ratios": {
+          "closed_seek": {
+            "p95_first_byte_ms": 1.0,
+            "p95_total_ms": 1.0
+          },
+          "complete": {
+            "p95_first_byte_ms": 1.0,
+            "p95_total_ms": 0.5719211836552291
+          }
+        },
+        "ratios": {
+          "throughput_ratio": 1.0,
+          "whole_cpu_ratio": 0.3584832653374973,
+          "whole_peak_memory_ratio": 0.4215986562592629
+        },
+        "trial": 2,
+        "viewers": 10
+      },
+      {
+        "arms": {
+          "Original": {
+            "bytes": 672512600,
+            "cpu_percent": 5.7171133242933685,
+            "goodput_bytes_per_second": 11208543.333333334,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 28.2098600291647,
+                "p95_total_ms": 30.08966497145593
+              },
+              "complete": {
+                "p95_first_byte_ms": 63.558831985574216,
+                "p95_total_ms": 137.48368702363223
+              }
+            },
+            "peak_working_bytes": 415371264,
+            "phase_sha256": "7f534133bc99b6e1818c30a428644b9e083e017d5cc493dea2b7a5e7b7c8e6e4",
+            "requests": 400,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.13977183500538,
+                "usage_usec": 2623095
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.14008072001161,
+                "usage_usec": 784492
+              },
+              "origin": {
+                "elapsed_seconds": 60.141853867971804,
+                "usage_usec": 30677
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 4.361664369456724,
+              "infrastructure": 1.304441215588459,
+              "origin": 0.051007739248185795
+            },
+            "service_peak_working_bytes": {
+              "backend": 258772992,
+              "infrastructure": 146108416,
+              "origin": 12730368
+            }
+          },
+          "Rust": {
+            "bytes": 672512600,
+            "cpu_percent": 2.048748304759089,
+            "goodput_bytes_per_second": 11208543.333333334,
+            "latency_ms": {
+              "closed_seek": {
+                "p95_first_byte_ms": 23.359184036962688,
+                "p95_total_ms": 24.519008002243936
+              },
+              "complete": {
+                "p95_first_byte_ms": 40.84988997783512,
+                "p95_total_ms": 69.1136890091002
+              }
+            },
+            "peak_working_bytes": 171515904,
+            "phase_sha256": "a7a5bf9063a7a8e57ee6a3eb7f10b393b3e12ef207c2fbd8efb67e132666fe3a",
+            "requests": 400,
+            "sample_count": 30,
+            "service_cpu_counter_deltas": {
+              "backend": {
+                "elapsed_seconds": 60.13080791995162,
+                "usage_usec": 1048909
+              },
+              "infrastructure": {
+                "elapsed_seconds": 60.13024897896685,
+                "usage_usec": 153822
+              },
+              "origin": {
+                "elapsed_seconds": 60.12776385300094,
+                "usage_usec": 29195
+              }
+            },
+            "service_cpu_percent": {
+              "backend": 1.7443786908640024,
+              "infrastructure": 0.2558146733332268,
+              "origin": 0.04855494056185975
+            },
+            "service_peak_working_bytes": {
+              "backend": 11735040,
+              "infrastructure": 149950464,
+              "origin": 13103104
+            }
+          }
+        },
+        "gates": {
+          "cpu": true,
+          "equal_work": true,
+          "latency": true,
+          "throughput": true,
+          "working_set": true
+        },
+        "latency_ratios": {
+          "closed_seek": {
+            "p95_first_byte_ms": 1.0,
+            "p95_total_ms": 1.0
+          },
+          "complete": {
+            "p95_first_byte_ms": 0.7866727319870883,
+            "p95_total_ms": 0.5027046517687598
+          }
+        },
+        "ratios": {
+          "throughput_ratio": 1.0,
+          "whole_cpu_ratio": 0.3583536285792118,
+          "whole_peak_memory_ratio": 0.41292193000621247
+        },
+        "trial": 3,
+        "viewers": 10
+      }
+    ],
+    "backend_medians": {
+      "1": {
+        "Original": {
+          "cpu_percent": 0.7200992240652819,
+          "goodput_bytes_per_second": 1120854.3333333333,
+          "median_of_phase_p95_ms": {
+            "closed_seek": {
+              "p95_first_byte_ms": 8.00378801068291,
+              "p95_total_ms": 8.721947961021215
+            },
+            "complete": {
+              "p95_first_byte_ms": 8.455650007817894,
+              "p95_total_ms": 21.80092001799494
+            }
+          },
+          "peak_working_bytes": 385118208
+        },
+        "Rust": {
+          "cpu_percent": 0.43472692651302003,
+          "goodput_bytes_per_second": 1120854.3333333333,
+          "median_of_phase_p95_ms": {
+            "closed_seek": {
+              "p95_first_byte_ms": 5.225898989010602,
+              "p95_total_ms": 5.651120969559997
+            },
+            "complete": {
+              "p95_first_byte_ms": 5.819564976263791,
+              "p95_total_ms": 11.414563981816173
+            }
+          },
+          "peak_working_bytes": 145117184
+        }
+      },
+      "10": {
+        "Original": {
+          "cpu_percent": 5.712826943547452,
+          "goodput_bytes_per_second": 11208543.333333334,
+          "median_of_phase_p95_ms": {
+            "closed_seek": {
+              "p95_first_byte_ms": 28.2098600291647,
+              "p95_total_ms": 30.08966497145593
+            },
+            "complete": {
+              "p95_first_byte_ms": 51.551643991842866,
+              "p95_total_ms": 121.88086099922657
+            }
+          },
+          "peak_working_bytes": 414556160
+        },
+        "Rust": {
+          "cpu_percent": 2.040239090106453,
+          "goodput_bytes_per_second": 11208543.333333334,
+          "median_of_phase_p95_ms": {
+            "closed_seek": {
+              "p95_first_byte_ms": 24.06571398023516,
+              "p95_total_ms": 25.31971305143088
+            },
+            "complete": {
+              "p95_first_byte_ms": 38.397869968321174,
+              "p95_total_ms": 68.41917999554425
+            }
+          },
+          "peak_working_bytes": 171515904
+        }
+      }
+    },
+    "covered_services": [
+      "backend",
+      "infrastructure",
+      "origin"
+    ],
+    "driver_and_relay_included": false,
+    "equal_work": true,
+    "exact_cleanup": {
+      "absent_container_ids": 6,
+      "absent_host_generations": 15,
+      "passed": true
+    },
+    "functional_receipt_sha256": "3eafc305d61cc7a5aec0754b1ab1f7cd3eee77dbf62c86f3daa1818e6a23a1ee",
+    "literal_controller_exit": 0,
+    "literal_owner_exit": 0,
+    "literal_reducer_exit": 0,
+    "measurement": {
+      "comparison": {
+        "latency_floor_ms": 50,
+        "max_p95_ratio": 1.1,
+        "min_throughput_ratio": 0.95,
+        "whole_cpu_max_ratio": 1.0,
+        "whole_peak_memory_max_ratio": 1.0
+      },
+      "limits": {
+        "backend": {
+          "memory_bytes": 536870912,
+          "nano_cpus": 2000000000
+        },
+        "infrastructure": {
+          "memory_bytes": 1073741824,
+          "nano_cpus": 1000000000
+        },
+        "origin": {
+          "memory_bytes": 1073741824,
+          "nano_cpus": 2000000000
+        }
+      },
+      "measure_seconds": 60,
+      "minimum_samples": 25,
+      "orders": [
+        [
+          "source",
+          "candidate"
+        ],
+        [
+          "candidate",
+          "source"
+        ],
+        [
+          "source",
+          "candidate"
+        ]
+      ],
+      "sample_seconds": 2,
+      "timeout_seconds": 2.75,
+      "viewers": [
+        1,
+        10
+      ],
+      "warmup_seconds": 15,
+      "wave_seconds": 3
+    },
+    "media": {
+      "closed_seek": {
+        "bytes": 196608,
+        "range": "bytes=262144-458751",
+        "sha256": "297e96d8d09f13aba87a349abab87b0ef1deece67394309e675fa127b3e62617",
+        "status": 206
+      },
+      "complete": {
+        "bytes": 3165955,
+        "range": null,
+        "sha256": "3d8d21dfb6acb0af0f773b1026a78ee6501002c8e25d9711b43d53bc0050d888",
+        "status": 200
+      }
+    },
+    "memory_metric": "peak concurrent Docker working-set bytes, with per-service peaks",
+    "paired_ratios_medians": {
+      "1": {
+        "throughput_ratio": 1.0,
+        "whole_cpu_ratio": 0.6018625855977621,
+        "whole_peak_memory_ratio": 0.3783492273683536
+      },
+      "10": {
+        "throughput_ratio": 1.0,
+        "whole_cpu_ratio": 0.3583536285792118,
+        "whole_peak_memory_ratio": 0.41292193000621247
+      }
+    },
+    "plan_sha256": "9f9678bf56e4660925176ad6ca8fb40d0ed3051c0446c170457bf9472b3144db",
+    "quiet_authorization_sha256": "56215ba24216a4415266efa90d4a0ddba375095df6132fc812107773ba738b20",
+    "reducer_sha256": "df74fa83ba02f156d5dc995b3ac21554dcbb87c0e5b353a9de2f7239fb9adbfe",
+    "request_manifest_sha256": "ae5b8d29497b59bd5c57dd6cf63b39ede98dc265808f7e4adebc6dd1a61898cd",
+    "terminal_report_sha256": "9423b26d91a6525c225b729829c3d28eb9fb97a605272d8730e7c02420a585a7"
+  },
+  "whole_M4_qualified": false
+}

@@ -1,0 +1,73 @@
+{
+  "DVR_recovery_deferred": false,
+  "all_commands_reached_EOF": true,
+  "candidate": "5d9568f6525228c233fda7f76acdee07e4c39f75",
+  "cleanup": {
+    "exact_inventory_empty": true,
+    "normal_bootstrap_stop": true,
+    "owned_cids_absent": true,
+    "owned_host_generations_absent": true,
+    "passed": true
+  },
+  "cleanup_checkpoint_after_graceful_owner_stop": true,
+  "cross_backend_raw_Celery_origin_parity_verified": false,
+  "earlier_fixture_stops": [
+    {
+      "exact_cleanup": true,
+      "literal_exit": 1,
+      "reason": "The natural scanner discovered the active API input in its watch directory.",
+      "receipt_sha256": "545dad39300194af26b54c9028f41b430507bc7d5588b3b747a6c81a94f5d90c"
+    },
+    {
+      "exact_cleanup": true,
+      "literal_exit": 1,
+      "reason": "The harness checked the durable count before orderly retirement flushed it.",
+      "receipt_sha256": "545dad39300194af26b54c9028f41b430507bc7d5588b3b747a6c81a94f5d90c"
+    }
+  ],
+  "engine_calls": 0,
+  "explicit_selected_core_only": true,
+  "flags_off_worker_activation": false,
+  "formal_rows_promoted": 0,
+  "image": "sha256:ac81c1e9cd969f939101b9d9883852abd032794760fa80ad6b0e7de05dc01fd1",
+  "inherited_redis_databases": {
+    "broker": 0,
+    "cache": 0,
+    "result": 0
+  },
+  "literal_exit": 0,
+  "manifest_sha256": "d7f78ebfe6c3c4598dad86398b2d91f8e8f1544a525f42388fb29255e5ae0b93",
+  "natural_cleanup": "one SUCCESS/null",
+  "natural_scanner_and_groups": 2,
+  "one_scheduler_then_zero": true,
+  "owned_api_import_and_children": 3,
+  "owned_roles_retired": 6,
+  "performance_measured": false,
+  "physical_rerun": false,
+  "prior_physical_actual_exit": 0,
+  "prior_reducer_actual_exit": 1,
+  "prior_reducer_stderr_sha256": "a3349d4eef1b3b0cb2f614dc424667e0cb918b59a216972da46f85e8f49af92b",
+  "producer_label_negative_controls": 4,
+  "raw_redis_journal_sha256": "19c1b7f2a785adc49f445223a7d56b8109a51f9394d015dc760b4ce281a253a8",
+  "raw_snapshot_sha256": "7f1f49dd4fc9459f7375f1fed81a422fe5b6e50d586d1b6281b71bf0a7a92dc7",
+  "receipt_sha256": "f62a6979845fc85319ff845384c49164415a8b00741227a4993c123e67803067",
+  "reduction_sha256": "84073c1a3cf3a8f26d61530e0de7c5e57d8f86423683c1baf8de04a197127d83",
+  "retained_transport_source_sha256": "0ea3b4d36b581a357ac0a68bae22627c81e0bf5bf77f6165ee232d971e91c36a",
+  "same_peer_ready_after_owner_stop": true,
+  "same_terminal_evidence_reduced": true,
+  "scope_complete": true,
+  "startup_DVR": "SUCCESS/Recovery complete",
+  "startup_version": "SUCCESS/null via one HTTP 503",
+  "stock_setup_rows": 6,
+  "terminal_journal_families": [
+    "apps.channels.tasks.evaluate_series_rules",
+    "apps.channels.tasks.recover_recordings_on_startup",
+    "apps.epg.tasks.build_programme_index_task",
+    "apps.epg.tasks.refresh_epg_data",
+    "apps.m3u.tasks.refresh_m3u_groups",
+    "celery.backend_cleanup",
+    "core.tasks.check_for_version_update",
+    "core.tasks.scan_and_process_files"
+  ],
+  "whole_M6": false
+}
