@@ -2148,6 +2148,179 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
     Ok(())
 }
 
+fn saved_cleanup_scheduler_argument<I>(mut args: I) -> Result<Option<String>, String>
+where
+    I: Iterator<Item = std::ffi::OsString>,
+{
+    if args.next().as_deref() != Some(std::ffi::OsStr::new("--saved-cleanup-scheduler")) {
+        return Ok(None);
+    }
+    let name = args
+        .next()
+        .and_then(|arg| arg.into_string().ok())
+        .filter(|name| !name.is_empty() && !name.starts_with("--"))
+        .ok_or("Saved cleanup scheduler requires one saved name")?;
+    if args.next().is_some() {
+        return Err("Saved cleanup scheduler requires one saved name".into());
+    }
+    Ok(Some(name))
+}
+
+async fn run_saved_cleanup_scheduler(name: &str) -> Result<(), String> {
+    use dispatcharr_job_transport::{
+        normal_beat::{Error as BeatError, Scheduler, Status},
+        transport::{Config, Jobs},
+    };
+    use dispatcharr_store::ProducerIdentitySource;
+
+    let (selected, _) = selected_jobs::configuration()?;
+    if selected || core_scheduled_jobs::enabled()? {
+        return Err("Saved cleanup scheduler requires its own process without a worker".into());
+    }
+    let mut stop = LatchedShutdown::register()?;
+    let budget = Duration::from_secs(positive("RUST_SHUTDOWN_SECONDS", 12)? as u64);
+    let broker = env::var("CELERY_BROKER_URL").map_err(|_| "CELERY_BROKER_URL is required")?;
+    let result =
+        env::var("CELERY_RESULT_BACKEND").map_err(|_| "CELERY_RESULT_BACKEND is required")?;
+    let store = Store::connect(&database_url()?, 1)
+        .await
+        .map_err(|_| "Saved cleanup database connection failed")?;
+    let jobs = Jobs::connect_defaults(&broker, &result, Config::default())
+        .await
+        .map_err(|_| "Saved cleanup transport connection failed")?;
+    let configure = || {
+        Scheduler::prepare_saved_cleanup(
+            store.pool().clone(),
+            jobs.clone(),
+            ProducerIdentitySource::for_producer_process(),
+            name,
+        )
+        .map_err(|_| "Saved cleanup scheduler configuration failed")
+    };
+    let scheduler = match configure() {
+        Ok(scheduler) => scheduler,
+        Err(error) => {
+            jobs.shutdown(budget)
+                .await
+                .map_err(|_| "Saved cleanup transport preparation did not settle")?;
+            return Err(error.into());
+        }
+    };
+    let mut status = scheduler.subscribe_status();
+    let mut task = if stop.pending().await {
+        None
+    } else {
+        match scheduler.start_saved_cleanup(Arc::new(())) {
+            Ok(task) => Some(task),
+            Err(_) => {
+                jobs.shutdown(budget)
+                    .await
+                    .map_err(|_| "Saved cleanup transport preparation did not settle")?;
+                return Err("Saved cleanup scheduler startup failed".into());
+            }
+        }
+    };
+    let mut observed_task = None;
+
+    let mut owned = false;
+    let mut saved_row = None;
+    let failed = loop {
+        let state = status.borrow_and_update().clone();
+        if !owned && matches!(state, Status::Acquired | Status::Observed(_)) {
+            eprintln!("Saved cleanup scheduler owns advisory session");
+            owned = true;
+        }
+        match state {
+            Status::Observed(tick) if tick.saved_cleanup != saved_row => {
+                if let Some(row) = &tick.saved_cleanup {
+                    eprintln!(
+                        "Saved cleanup scheduler observed row id={} runs={}",
+                        row.id, row.total_run_count
+                    );
+                } else {
+                    eprintln!("Saved cleanup scheduler has no enabled row in the active window");
+                }
+                saved_row = tick.saved_cleanup;
+            }
+            Status::Stopped => break false,
+            Status::Contended | Status::Fault(_) | Status::ReceiverFault => break true,
+            _ => {}
+        }
+        tokio::select! {
+            biased;
+            _ = stop.wait() => break false,
+            changed = status.changed() => if changed.is_err() { break true; },
+            joined = async {
+                match task.as_mut() {
+                    Some(task) => task.await,
+                    None => std::future::pending().await,
+                }
+            } => {
+                let failed = joined.is_err() || !matches!(scheduler.status(), Status::Stopped);
+                observed_task = Some(joined);
+                break failed;
+            }
+        }
+    };
+    let unexpected_task_exit = observed_task.as_ref().is_some_and(Result::is_err);
+    let settled_in_budget = if unexpected_task_exit {
+        scheduler.stop_admission();
+        false
+    } else {
+        scheduler.shutdown(budget).await.is_ok()
+    };
+    if !settled_in_budget {
+        eprintln!("Saved cleanup scheduler reported an unsuccessful shutdown");
+        // The engine must not abort the scheduler task and release its SQL
+        // fence while a logically timed-out publication still owns a permit.
+    }
+    // A failed shutdown observer must not drop the runtime while the task
+    // still owns SQL or a logically timed-out physical broker operation.
+    let joined = match (observed_task, task) {
+        (Some(result), _) => result,
+        (None, Some(task)) => task.await,
+        (None, None) => Ok(()),
+    };
+    let transport = jobs.shutdown(budget).await;
+    if let Status::Fault(error) = scheduler.status() {
+        if let BeatError::SavedCleanupUncertain(task_id) = error.as_ref() {
+            eprintln!("Saved cleanup outcome uncertain, reconcile task {task_id} before restart");
+        }
+    }
+    if failed || !settled_in_budget || joined.is_err() || transport.is_err() {
+        return Err("Saved cleanup scheduler did not retire cleanly".into());
+    }
+    Ok(())
+}
+
+#[cfg(test)]
+mod saved_cleanup_scheduler_tests {
+    use super::saved_cleanup_scheduler_argument;
+
+    fn parse(args: &[&str]) -> Result<Option<String>, String> {
+        saved_cleanup_scheduler_argument(args.iter().map(std::ffi::OsString::from))
+    }
+
+    #[test]
+    fn saved_cleanup_scheduler_requires_one_explicit_saved_name() {
+        assert_eq!(parse(&[]).unwrap(), None);
+        assert_eq!(parse(&["--sqlite-copied-data-runtime"]).unwrap(), None);
+        assert_eq!(parse(&["--existing-argument"]).unwrap(), None);
+        assert_eq!(
+            parse(&["--saved-cleanup-scheduler", "copied cleanup"]).unwrap(),
+            Some("copied cleanup".into())
+        );
+        for invalid in [
+            vec!["--saved-cleanup-scheduler"],
+            vec!["--saved-cleanup-scheduler", ""],
+            vec!["--saved-cleanup-scheduler", "--other"],
+            vec!["--saved-cleanup-scheduler", "copied cleanup", "extra"],
+        ] {
+            assert!(parse(&invalid).is_err());
+        }
+    }
+}
+
 #[tokio::main]
 async fn serve(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     #[cfg(feature = "sqlite-copied-data-runtime")]
@@ -2156,6 +2329,9 @@ async fn serve(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         .eq([std::ffi::OsString::from("--sqlite-copied-data-runtime")])
     {
         return sqlite_copied_runtime::run().await;
+    }
+    if let Some(name) = saved_cleanup_scheduler_argument(std::env::args_os().skip(1))? {
+        return run_saved_cleanup_scheduler(&name).await;
     }
     plugin_gpg_trace::install_from_environment()?;
     run(logs).await

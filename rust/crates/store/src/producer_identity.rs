@@ -19,6 +19,13 @@ impl AuthService {
     }
 }
 impl ProducerIdentitySource {
+    /// Identity for a producer process that does not run HTTP authentication.
+    pub fn for_producer_process() -> Self {
+        Self {
+            application: Arc::new(Semaphore::new(1)),
+        }
+    }
+
     pub fn current(&self) -> Result<ProducerIdentity, StoreError> {
         let actual = crate::celery_metadata::identity(Arc::as_ptr(&self.application) as usize)?;
         Ok(ProducerIdentity {

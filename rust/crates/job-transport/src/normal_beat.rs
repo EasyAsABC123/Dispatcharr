@@ -33,6 +33,7 @@ pub enum Error {
     Transport(transport::Error),
     Supervisor,
     RoleDatabaseTimeout,
+    SavedCleanupUncertain(Uuid),
     Drain,
 }
 impl From<sqlx::Error> for Error {
@@ -50,6 +51,12 @@ pub struct Tick {
     pub missing: usize,
     pub invalid_rows: usize,
     pub delay_seconds: f64,
+    pub saved_cleanup: Option<SavedCleanupObservation>,
+}
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct SavedCleanupObservation {
+    pub id: i64,
+    pub total_run_count: i64,
 }
 #[derive(Clone, Debug, Default)]
 pub struct Setup {
@@ -85,6 +92,7 @@ struct Cache {
     last_full: Option<std::time::Instant>,
     last_sync: Option<std::time::Instant>,
     invalid_rows: usize,
+    saved_cleanup: Option<SavedCleanupSnapshot>,
 }
 struct Inner {
     pool: PgPool,
@@ -94,6 +102,7 @@ struct Inner {
     lifecycle: Lifecycle,
     maximum_sleep: Duration,
     scope: ScheduleScope,
+    saved_cleanup: Option<SavedCleanupSchedule>,
     backup_worker: Option<ScheduleConsumer>,
 }
 
@@ -150,6 +159,7 @@ const MAINTAIN_RECURRING: (&str, &str, i32) = (
 enum ScheduleScope {
     All,
     Backup,
+    SavedCleanup,
     Core,
     CoreWithPluginRefresh,
     CoreWithXmltv {
@@ -179,6 +189,10 @@ impl ScheduleScope {
 
     fn uses_selected_receivers(self) -> bool {
         matches!(self, Self::CoreWithXmltv { .. })
+    }
+
+    fn strict_checkpoint(self) -> bool {
+        self.uses_selected_receivers() || self == Self::SavedCleanup
     }
 
     fn includes_saved_xc(self) -> bool {
@@ -287,6 +301,7 @@ impl ScheduleScope {
         match self {
             Self::All => (None, None),
             Self::Backup => (Some(BACKUP_PERIODIC_NAME), Some(BACKUP_PERIODIC_TASK)),
+            Self::SavedCleanup => (None, None),
             Self::Core | Self::CoreWithPluginRefresh | Self::CoreWithXmltv { .. } => {
                 (Some(CLEANUP_PERIODIC_TASK), Some(CLEANUP_PERIODIC_TASK))
             }
@@ -295,6 +310,9 @@ impl ScheduleScope {
     fn admits(self, entry: &Entry) -> bool {
         if self == Self::All {
             return true;
+        }
+        if self == Self::SavedCleanup {
+            return false;
         }
         if self.is_core() {
             if self.admits_saved_stats(entry) {
@@ -533,7 +551,7 @@ impl Scheduler {
         identity: ProducerIdentitySource,
         maximum_sleep: Duration,
     ) -> Result<Self, Error> {
-        Self::prepare_scoped(pool, jobs, identity, maximum_sleep, None, None)
+        Self::prepare_scoped(pool, jobs, identity, maximum_sleep, None, None, None)
     }
 
     /// Route a backup-only periodic owner through the same model/reload and
@@ -551,6 +569,7 @@ impl Scheduler {
             identity,
             maximum_sleep,
             Some(ScheduleConsumer::Core(worker)),
+            None,
             None,
         )
     }
@@ -574,6 +593,27 @@ impl Scheduler {
             maximum_sleep,
             Some(ScheduleConsumer::Selected(worker)),
             Some(scope),
+            None,
+        )
+    }
+
+    /// Prepare one explicitly selected saved cleanup row without a receiver.
+    /// The producer's only tick path uses the same normal Beat session fence.
+    pub fn prepare_saved_cleanup(
+        pool: PgPool,
+        jobs: Jobs,
+        identity: ProducerIdentitySource,
+        name: &str,
+    ) -> Result<Self, Error> {
+        let saved_cleanup = SavedCleanupSchedule::new(name)?;
+        Self::prepare_scoped(
+            pool,
+            jobs,
+            identity,
+            Duration::from_secs(5),
+            None,
+            Some(ScheduleScope::SavedCleanup),
+            Some(saved_cleanup),
         )
     }
 
@@ -584,6 +624,7 @@ impl Scheduler {
         maximum_sleep: Duration,
         backup_worker: Option<ScheduleConsumer>,
         scope: Option<ScheduleScope>,
+        saved_cleanup: Option<SavedCleanupSchedule>,
     ) -> Result<Self, Error> {
         if !jobs.allows_defaults()
             || maximum_sleep.is_zero()
@@ -606,6 +647,7 @@ impl Scheduler {
                     Some(_) => ScheduleScope::Core,
                     None => ScheduleScope::All,
                 }),
+                saved_cleanup,
                 backup_worker,
             }),
         })
@@ -614,6 +656,9 @@ impl Scheduler {
     /// defaults before timer start. Existing disabled rows stay disabled except
     /// the explicitly disabled legacy stats row, which is always disabled.
     pub async fn initialize(&self, caller: Arc<dyn Send + Sync>) -> Result<Setup, Error> {
+        if self.inner.saved_cleanup.is_some() {
+            return Err(Error::Configuration("saved cleanup has no default setup"));
+        }
         let slot = self.inner.lifecycle.reserve(Operation::Initialize)?;
         let inner = self.inner.clone();
         tokio::spawn(async move {
@@ -655,6 +700,30 @@ impl Scheduler {
         self.inner.lifecycle.status.borrow().clone()
     }
     pub fn start(&self, caller: Arc<dyn Send + Sync>) -> Result<(), Error> {
+        if self.inner.saved_cleanup.is_some() {
+            return Err(Error::Configuration(
+                "saved cleanup requires a supervised task",
+            ));
+        }
+        self.spawn_timer(caller).map(drop)
+    }
+
+    pub fn start_saved_cleanup(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<tokio::task::JoinHandle<()>, Error> {
+        if self.inner.saved_cleanup.is_none() {
+            return Err(Error::Configuration(
+                "saved cleanup task requires its own scope",
+            ));
+        }
+        self.spawn_timer(caller)
+    }
+
+    fn spawn_timer(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<tokio::task::JoinHandle<()>, Error> {
         if self
             .inner
             .backup_worker
@@ -668,14 +737,13 @@ impl Scheduler {
         self.inner.lifecycle.start()?;
         let this = self.clone();
         let mut stop = self.inner.lifecycle.stop.subscribe();
-        tokio::spawn(async move {
+        Ok(tokio::spawn(async move {
             let status = match this.serve_owned(&mut stop, caller).await {
                 Ok(status) => status,
                 Err(error) => Status::Fault(Arc::new(error)),
             };
             this.inner.lifecycle.finish(status);
-        });
-        Ok(())
+        }))
     }
 
     fn receiver_availability(&self) -> SelectedScheduleAvailability {
@@ -711,7 +779,7 @@ impl Scheduler {
             // Only connection setup may be cancelled by TERM. Once the SQL
             // claim starts, settle its reply/socket within the role budget.
             if let Some(mut session) = session.try_claim().await? {
-                if self.inner.scope.uses_selected_receivers() {
+                if self.inner.scope.strict_checkpoint() {
                     self.inner.lifecycle.status.send_replace(Status::Acquired);
                 }
                 *self.inner.cache.lock().await = Cache::default();
@@ -766,7 +834,16 @@ impl Scheduler {
                 _inner: self.inner.clone(),
                 _physical_permit: physical_permit,
             });
-            let observed = tick_owned(&self.inner, connection, owner).await;
+            let tick = tick_owned(&self.inner, connection, owner);
+            let observed = if let Some(saved) = self.inner.saved_cleanup.as_ref() {
+                observe_saved_cleanup_tick(tick)
+                    .await
+                    .unwrap_or_else(|error| {
+                        Err(saved.pending().map_or(error, Error::SavedCleanupUncertain))
+                    })
+            } else {
+                tick.await
+            };
             if observed.is_err() {
                 self.inner
                     .lifecycle
@@ -796,7 +873,7 @@ impl Scheduler {
         connection: &mut PgConnection,
         observed: Result<T, Error>,
     ) -> Result<T, Error> {
-        let strict = self.inner.scope.uses_selected_receivers();
+        let strict = self.inner.scope.strict_checkpoint();
         // Selected/Core does not advance a possibly failed occurrence on
         // shutdown. Any attempted final sync must account for remaining dirty
         // state before this process can report a clean fence release.
@@ -811,6 +888,11 @@ impl Scheduler {
     }
 
     pub async fn tick_once(&self, caller: Arc<dyn Send + Sync>) -> Result<Tick, Error> {
+        if self.inner.saved_cleanup.is_some() {
+            return Err(Error::Configuration(
+                "saved cleanup ticks require the scheduler owner",
+            ));
+        }
         if self.inner.scope.uses_selected_receivers() {
             return Err(Error::Configuration(
                 "Selected Core ticks require the scheduler owner",
@@ -850,6 +932,10 @@ impl Scheduler {
         })
         .await
         .map_err(|_| Error::Supervisor)?
+    }
+
+    pub fn subscribe_status(&self) -> watch::Receiver<Status> {
+        self.inner.lifecycle.status.subscribe()
     }
 
     pub fn core_schedule_ready(&self) -> bool {
@@ -1029,7 +1115,7 @@ async fn tick_backup(
     // The detached session keeps its advisory lock from the due check through
     // broker settlement and the durable SQL tick.
     let now = Utc::now();
-    let (mut entries, invalid) = load(connection, now, ScheduleScope::Backup).await?;
+    let (mut entries, invalid, _) = load(connection, now, ScheduleScope::Backup, None).await?;
     result.reloaded = true;
     result.invalid_rows = invalid;
     let Some(candidate) = entries.remove(BACKUP_PERIODIC_NAME) else {
@@ -1583,23 +1669,22 @@ async fn tick(
         (Some(old), Some(new)) => new > old,
         _ => false,
     };
-    let reload = !cache.loaded
+    let reload = inner.saved_cleanup.is_some()
+        || !cache.loaded
         || changed
         || cache
             .last_full
             .is_none_or(|last| last.elapsed() >= Duration::from_secs(300));
     cache.marker = marker;
     if reload {
-        let (saved, missing) = sync(
-            connection,
-            &mut cache,
-            inner.scope.uses_selected_receivers(),
-        )
-        .await?;
+        let (saved, missing) =
+            sync(connection, &mut cache, inner.scope.strict_checkpoint()).await?;
         result.synchronized += saved;
         result.missing += missing;
-        let (entries, invalid) = load(connection, now, inner.scope).await?;
+        let (entries, invalid, saved_cleanup) =
+            load(connection, now, inner.scope, inner.saved_cleanup.as_ref()).await?;
         cache.entries = entries;
+        cache.saved_cleanup = saved_cleanup;
         cache.loaded = true;
         cache.last_full = Some(std::time::Instant::now());
         result.reloaded = true;
@@ -1618,10 +1703,20 @@ async fn tick(
     let Some(name) = selected else {
         return Ok(result);
     };
+    let cache = &mut *cache;
     let entry = cache.entries.get_mut(&name).ok_or(Error::Supervisor)?;
+    if inner.saved_cleanup.is_some() {
+        result.saved_cleanup = Some(SavedCleanupObservation {
+            id: entry.entry.id,
+            total_run_count: entry.entry.total_run_count,
+        });
+    }
     let sampled = Utc::now();
     let due = decision(entry, sampled)?;
     if due.persistence != PersistenceEffect::Unchanged {
+        if inner.saved_cleanup.is_some() {
+            return Err(Error::Supervisor);
+        }
         disable(
             connection,
             entry,
@@ -1634,6 +1729,28 @@ async fn tick(
     if !due.due {
         result.delay_seconds = adjusted(due.next_seconds).min(5.0);
         return Ok(result);
+    }
+    if let Some(saved) = cache.saved_cleanup.as_ref() {
+        if let Some(published) =
+            publish_saved_cleanup(inner, connection, saved, &entry.entry, owner).await?
+        {
+            result.saved_cleanup = Some(SavedCleanupObservation {
+                id: entry.entry.id,
+                total_run_count: entry
+                    .entry
+                    .total_run_count
+                    .checked_add(1)
+                    .ok_or(Error::Capacity)?,
+            });
+            result.published = Some(published);
+            result.synchronized = 1;
+        } else {
+            result.saved_cleanup = None;
+        }
+        return Ok(result);
+    }
+    if inner.saved_cleanup.is_some() {
+        return Err(Error::Supervisor);
     }
     // Reserve BEFORE serialization/publication, retaining the advanced cached
     // count even on a known rejection. An ambiguous actual reply is never retried.
@@ -1716,12 +1833,7 @@ async fn tick(
         .last_sync
         .is_none_or(|last| last.elapsed() > Duration::from_secs(180))
     {
-        let (saved, missing) = sync(
-            connection,
-            &mut cache,
-            inner.scope.uses_selected_receivers(),
-        )
-        .await?;
+        let (saved, missing) = sync(connection, cache, inner.scope.strict_checkpoint()).await?;
         result.synchronized += saved;
         result.missing += missing;
         cache.last_sync = Some(std::time::Instant::now());
@@ -1936,12 +2048,20 @@ async fn load(
     connection: &mut PgConnection,
     now: DateTime<Utc>,
     scope: ScheduleScope,
-) -> Result<(BTreeMap<String, Cached>, usize), Error> {
+    saved_cleanup: Option<&SavedCleanupSchedule>,
+) -> Result<LoadedSchedules, Error> {
     // Source enabled_models_qs excludes far-future clocked and simple numeric
     // calendar hours BEFORE model loading. Apply those exact profile predicates
     // before LIMIT/serialization budget, not after an unrelated enabled-row cap.
     let filters = QueryFilters::new(now)?;
-    let (name, task) = scope.row_identity();
+    let (name, task) = if let Some(saved_cleanup) = saved_cleanup {
+        let (name, task) = saved_cleanup.row_identity();
+        (Some(name), Some(task))
+    } else if scope == ScheduleScope::SavedCleanup {
+        return Err(Error::Supervisor);
+    } else {
+        scope.row_identity()
+    };
     let expiration = scope
         .is_core()
         .then_some((EXPIRATION_PERIODIC_NAME, EXPIRATION_PERIODIC_TASK));
@@ -1997,6 +2117,7 @@ async fn load(
     }
     let mut entries = BTreeMap::new();
     let mut invalid = 0;
+    let mut loaded_cleanup = None;
     for row in rows {
         let Some(raw) = row.try_get::<Option<String>, _>("raw")? else {
             continue;
@@ -2013,6 +2134,14 @@ async fn load(
         let interval: Option<String> = row.try_get("interval_spec")?;
         let crontab: Option<String> = row.try_get("crontab_spec")?;
         let mut clocked: Option<DateTime<Utc>> = row.try_get("clocked_time")?;
+        let saved_snapshot = if saved_cleanup.is_some() {
+            crontab.as_ref().map(|cron| SavedCleanupSnapshot {
+                periodic: raw,
+                cron: cron.clone(),
+            })
+        } else {
+            None
+        };
         let interval = interval
             .map(|raw| {
                 let v: Value =
@@ -2139,7 +2268,10 @@ async fn load(
                 )
             }),
         };
-        let admitted = if scope.is_linked_clocked_dvr(&model.task) {
+        let admitted = if let Some(saved_cleanup) = saved_cleanup {
+            let raw_key = |name: &str| value.get(name).and_then(Value::as_i64);
+            saved_cleanup.admits(&model, raw_key("clocked_id"), raw_key("solar_id"))
+        } else if scope.is_linked_clocked_dvr(&model.task) {
             let channel: Option<i64> = row.try_get("dvr_channel")?;
             let end: Option<DateTime<Utc>> = row.try_get("dvr_end")?;
             clocked_dvr(&model, clocked)
@@ -2161,6 +2293,9 @@ async fn load(
             return Err(Error::Configuration(
                 "calendar date outside pinned Source TZif horizon",
             ));
+        }
+        if saved_cleanup.is_some() {
+            loaded_cleanup = Some(saved_snapshot.ok_or(Error::Supervisor)?);
         }
         let mut cached = Cached {
             entry: model,
@@ -2191,7 +2326,7 @@ async fn load(
             return Err(Error::Configuration("duplicate periodic name"));
         }
     }
-    Ok((entries, invalid))
+    Ok((entries, invalid, loaded_cleanup))
 }
 /// Sealed by the actual model-entry reserve path; no caller-provided raw frame
 /// is granted a generic publication hook. Unknown task names are still literal.
@@ -3622,6 +3757,17 @@ mod tests {
 #[cfg(test)]
 #[path = "normal_beat_query_tests.rs"]
 mod query_tests;
+
+mod saved_cleanup;
+use saved_cleanup::{
+    observe_saved_cleanup_tick, publish_saved_cleanup, SavedCleanupSchedule, SavedCleanupSnapshot,
+};
+
+type LoadedSchedules = (
+    BTreeMap<String, Cached>,
+    usize,
+    Option<SavedCleanupSnapshot>,
+);
 
 #[path = "plugin_startup_schedule.rs"]
 mod plugin_startup_schedule;
