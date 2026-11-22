@@ -15,6 +15,13 @@ offline verification covers the tested route identities, response projections an
 [executable contract register](rust-contract-register.md) now binds the 16 Programme
 Guide cases to the two declared list and detail GET rows as partial evidence.
 
+The [9cf6407 profiled HLS pair](rust-m3-9cf6407-profiled-hls-performance.md) matched
+30 complete segments with 32.4% lower CPU and 47.4% lower peak working memory.
+
+The [65dbbbd short soak](rust-m9-65dbbbd-short-soak-resource-stop.md) completed both guide
+refreshes and stopped on post-playback process and descriptor limits. A separate
+[Core shutdown SQL hold](rust-m6-9cf6407-sql-release.md) passed timely release and handoff.
+
 The [9cf6407 shared-viewing XMLTV benchmark](rust-m2-9cf6407-live-xmltv-performance.md)
 kept ten viewers progressing during one real import. One measured pair recorded 52.9%
 less backend and infrastructure CPU and 79.7% less peak working memory on Rust.
