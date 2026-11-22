@@ -1,0 +1,7 @@
+# Matched modular backup and plugin startup
+
+Stock Original uWSGI worker 1 and ordinary Rust modular Main on application `88b9f45` ran in disposable Compose projects with the same cloned PostgreSQL and authenticated Redis configuration. Both used their normal modular role without worker, Beat, or ownership overrides. The observers took their SQL snapshots before an application HTTP request.
+
+Both arms added the same 03:00 UTC backup schedule and six-hour plugin repository refresh. Each added one crontab, one interval, two periodic-task rows, and one Beat clock marker. The verifier checked the task names, arguments, links, and saved timestamp bounds, and verified unrelated rows stayed unchanged. Both arms shut down normally with exact project and process-generation cleanup. The [machine-readable result](../scripts/rust-integration/m8-88b9f45-matched-modular-startup.json) binds the actual receipts.
+
+Earlier attempts hit fixture startup failures and remain in evidence. The pinned Original image required its archived stock uWSGI configuration plus the corresponding read-only Python source mount. The successful retry verified the actual config bytes and imports while leaving the normal writable app socket path available. The [Lappy role-delta observation](rust-m8-e68fb95-arm64-startup-role-delta.md) still documents the different Daphne and Rust Main setup. This paired result qualifies the modular boot effects and does not exercise schedule dispatch or plugin network actions.
