@@ -32,7 +32,9 @@ also matched the delayed claim, acknowledgment and result on 34860b9a.
 A saved-only control ran once with zero startup publications through readiness.
 The [55c895bf provider rehash](rust-m6-55c895-core-provider-rehash.md) matched
 the ordinary PATCH, two-stream merge and real worker completion. The
-publication-failure cases remain open.
+[Original acknowledged held-worker control](rust-m6-55c895-original-rehash-held-worker.md)
+showed the saved override and exactly one pending task before replacement
+worker startup. The publication-failure cases remain open.
 
 The [native ARM64 copied SQLite preview](rust-m10-3843b61a-native-arm64-copied-sqlite.md)
 passed a same-image restart on lappy. The copied database retained the saved
@@ -50,7 +52,10 @@ two ordered stream relationships. The [55c895bf read cohort](rust-m8-55c895bf-co
 matched Channel List, detail, IDs and Guide summary. All 29 GET bodies and
 three HEAD lengths matched Original, and 20 admin reads repeated after restart.
 The build reused the ordinary Cargo layer from the same verified archive.
-Broader browser workflows and comparative playback performance remain open.
+The [f75cac4e copied SQLite bootstrap cohort](rust-m8-f75cac4e-copied-sqlite-bootstrap-groups.md)
+matched 19 Core reads and exercised eight scoped Channel Group operations
+across two generations. Broader browser workflows and comparative playback
+performance remain open.
 The [55c895bf cached Xtream info](rust-m7-55c895-cached-xc-info.md) also matched
 eight paired requests, with unchanged SQL and zero provider calls.
 
