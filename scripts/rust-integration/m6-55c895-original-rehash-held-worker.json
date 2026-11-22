@@ -1,0 +1,62 @@
+{
+  "business": {
+    "acknowledged_publications": 1,
+    "committed_override_before_worker": true,
+    "held_role_and_queue_observation": {
+      "aggregate_ready_or_reserved_count": 1,
+      "celery_registered": false,
+      "expected_role_set": true,
+      "observed_rehash_publications": 1,
+      "observer_generation_unchanged": true,
+      "unexpected_role_count": 0
+    },
+    "matching_token_before_worker": true,
+    "ordered_events": [
+      "starting",
+      "processing",
+      "completed"
+    ],
+    "ordinary_worker_generations_distinct": true,
+    "real_worker_result": "Successfully rehashed 2 streams",
+    "redacted_publication_journal_sha256": "c2675cf03ade5f184876ab5371ed895b4711de88da8a5fc75724450f3674c161",
+    "replacement_role_observation": {
+      "celery_registered": true,
+      "expected_role_set": true,
+      "observer_generation_unchanged": true,
+      "replacement_worker_generation_distinct": true,
+      "unexpected_role_count": 0
+    },
+    "same_observer_retired_exactly": true,
+    "same_value_retry_enqueued": false,
+    "token_absent_at_finish": true
+  },
+  "credit": "Original Dispatcharr, Django and Celery authors retain full credit.",
+  "exact_cleanup_sha256": "148a76f09e346e5aa723026dbf5f71fe2ff104cbced08ec3ad6f0662a2c25e08",
+  "full_m6": false,
+  "held_role_and_queue_sha256": "8149dd8e4fcaf7933ec1a4dd76f231611ce8ce829c7646c002cd4957577a54f8",
+  "independent_proof_sha256": "42467be24b7316d98293ca18165e6b30706d75253aad99a626324a83c2ef582c",
+  "literal_exit": 0,
+  "native_outcomes_measured": false,
+  "original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false,
+  "preceding_observer_short_circuit": {
+    "aggregate_queue_sample_reached": false,
+    "cleanup_sha256": "468b8a58492b8fb5d18b3aaff5e107decd9b0cf73e6ecea0924dea9e7f2ec8b5",
+    "cleanup_verified": true,
+    "controller_exit": 1,
+    "diagnosis_sha256": "7b8ee88f03bf65621ec53e1394eb41dbe720356d2a2bc0620469985eb96f628e",
+    "failure": "role set omitted active registered Redis observer",
+    "journal_sha256": "bd6a87c8dcab3a7465eb416c506c0b006c2bfbef3261805263375042756fadc9",
+    "journaled_rehash_publications": 1,
+    "journaled_unrelated_publications": 0,
+    "receipt_sha256": "ef8a1cf76e1c626b43654655ae64c9f89c032956761f590b9db1d0e3b54878a1",
+    "replacement_worker_started": false
+  },
+  "publication_error_measured": false,
+  "receiving_parent": "0c0aaf1b6293b396288c54cb501b1006383b0647",
+  "related_55c_application": "55c895bfe5637541788fe0445cd968c5f8f52ffc",
+  "replacement_role_sha256": "8c476e697b100faecf8f806b7a09566aafbf5744a0e0447cb45b5c8713cb94c8",
+  "retired_roles": 2,
+  "scope": "Original acknowledged deferred worker control"
+}
