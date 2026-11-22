@@ -123,6 +123,11 @@ method declarations. An exact [e68fb95 backup GET replay](rust-m0-e68fb95-backup
 passed inventory, direct owned archive download, repeated readback and cleanup
 on both backends.
 
+The [direct ModelAdmin diagnostic](rust-m0-e68fb95-modeladmin-readonly-diagnostic.md)
+confirmed Original administrator HTML 200 for two stock list and history
+registrations. The same Native paths returned its 404/301 ingress outcomes.
+Dedicated admin parity remains open.
+
 The [f960875 abrupt Native fMP4 observation](rust-m3-f960875-native-abrupt-fmp4.md)
 decoded both retained viewer prefixes and recorded the attached follower's EOF.
 Both backends passed the [six-default cold and warm scheduler rehearsal](rust-m6-f960875-cold-warm-scheduler-install.md)
