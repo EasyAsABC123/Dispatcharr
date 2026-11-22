@@ -28,7 +28,7 @@ const BOOLEAN_FIELDS: &[&str] = &[
 ];
 const STREAM_TIMESTAMPS: &[&str] = &["updated_at", "last_seen", "stream_stats_updated_at"];
 
-fn sqlite_json_object(alias: &str, fields: &[&str]) -> String {
+pub(crate) fn sqlite_json_object(alias: &str, fields: &[&str]) -> String {
     let items = fields.iter().filter(|field| **field != "streams").map(|field| {
         let column = format!("{alias}.{field}");
         let value = if BOOLEAN_FIELDS.contains(field) {
@@ -183,6 +183,17 @@ fn json_column<T: serde::de::DeserializeOwned>(
         .map_err(|_| StoreError::Unsupported("Malformed copied SQLite channel projection"))
 }
 
+pub(crate) fn normalize_stream_timestamps(raw: &mut Value) {
+    for field in STREAM_TIMESTAMPS {
+        if let Some(parsed) = raw[field]
+            .as_str()
+            .and_then(|value| NaiveDateTime::parse_from_str(value, "%Y-%m-%d %H:%M:%S%.f").ok())
+        {
+            raw[field] = Value::String(parsed.and_utc().to_rfc3339());
+        }
+    }
+}
+
 fn project(
     row: sqlx::sqlite::SqliteRow,
     include: bool,
@@ -195,14 +206,7 @@ fn project(
     let overrides: Option<Value> = json_column(&row, "overrides")?;
     let mut streams: Vec<Value> = json_column(&row, "streams")?;
     for stream in &mut streams {
-        for field in STREAM_TIMESTAMPS {
-            if let Some(parsed) = stream["raw"][field]
-                .as_str()
-                .and_then(|value| NaiveDateTime::parse_from_str(value, "%Y-%m-%d %H:%M:%S%.f").ok())
-            {
-                stream["raw"][field] = Value::String(parsed.and_utc().to_rfc3339());
-            }
-        }
+        normalize_stream_timestamps(&mut stream["raw"]);
     }
     Ok(channels::serialize_channel(
         &raw,

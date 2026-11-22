@@ -195,6 +195,7 @@ impl SqliteIdentity {
                 .chain(core_catalog::Catalog::STATEMENTS)
                 .chain(epg_collections::STATEMENTS)
                 .chain([m3u_accounts::QUERY, crate::notifications::sqlite::QUERY])
+                .chain(crate::auth::sqlite_runtime::stream_filter_options::STATEMENTS)
                 .chain(crate::channel_groups::sqlite::writes::STATEMENTS)
             {
                 snapshot.prepare(statement).await?;

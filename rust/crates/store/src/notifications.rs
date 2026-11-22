@@ -585,12 +585,12 @@ async fn visible(
     }
     Ok(out)
 }
-fn key(raw: String) -> Result<i64, StoreError> {
+pub(crate) fn key(raw: String) -> Result<i64, StoreError> {
     crate::channel_memberships::primary_key(&Value::String(raw))
         .map_err(|_| StoreError::NotFound)?
         .ok_or_else(missing)
 }
-fn missing() -> StoreError {
+pub(crate) fn missing() -> StoreError {
     StoreError::StatusBody(
         404,
         json!({"detail":"No SystemNotification matches the given query."}),
@@ -685,19 +685,12 @@ fn action_string(value: &Value) -> Option<String> {
         Value::Array(_) | Value::Object(_) => crate::python_action::collection_text(value, 50),
     }
 }
-async fn dismiss(
-    State(auth): State<AuthService>,
-    Path(raw): Path<String>,
-    ConnectInfo(peer): ConnectInfo<SocketAddr>,
-    headers: HeaderMap,
-    body: Bytes,
-) -> Result<Json<Value>, StoreError> {
-    let user = authenticated_user(&auth, peer, headers.clone()).await?;
-    let id = key(raw)?;
-    let value = visible(&auth, &user, Some(id))
-        .await?
-        .pop()
-        .ok_or_else(missing)?;
+struct DismissalAction {
+    text: Option<String>,
+    replace_existing: bool,
+}
+
+fn dismissal_action(headers: &HeaderMap, body: &[u8]) -> Result<DismissalAction, StoreError> {
     let body = if body.is_empty() || !headers.contains_key("content-type") {
         json!({})
     } else if headers
@@ -706,13 +699,13 @@ async fn dismiss(
         .is_some_and(|value| value.starts_with("application/x-www-form-urlencoded"))
     {
         Value::Object(
-            url::form_urlencoded::parse(&body)
+            url::form_urlencoded::parse(body)
                 .into_owned()
                 .map(|(key, value)| (key, Value::String(value)))
                 .collect(),
         )
     } else {
-        serde_json::from_slice(&body)
+        serde_json::from_slice(body)
             .map_err(|_| StoreError::InvalidInput(json!({"detail":"JSON parse error"})))?
     };
     let body = body.as_object().ok_or_else(failed)?;
@@ -730,6 +723,30 @@ async fn dismiss(
     {
         return Err(failed());
     }
+    Ok(DismissalAction {
+        text,
+        replace_existing: truthy(Some(action)),
+    })
+}
+
+fn dismissal_response(key: &Value) -> Value {
+    json!({"success":true,"message":"Notification dismissed","notification_key":key})
+}
+
+async fn dismiss(
+    State(auth): State<AuthService>,
+    Path(raw): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    body: Bytes,
+) -> Result<Json<Value>, StoreError> {
+    let user = authenticated_user(&auth, peer, headers.clone()).await?;
+    let id = key(raw)?;
+    let value = visible(&auth, &user, Some(id))
+        .await?
+        .pop()
+        .ok_or_else(missing)?;
+    let action = dismissal_action(&headers, &body)?;
     // Source get_or_create first reads the pair. A normal sequential repeat
     // must not attempt INSERT: PostgreSQL nextval survives ON CONFLICT.
     let mut dismissal: Option<i64> = sqlx::query_scalar(
@@ -742,7 +759,7 @@ async fn dismiss(
     let mut created = false;
     if dismissal.is_none() {
         dismissal = sqlx::query_scalar("INSERT INTO core_notificationdismissal(user_id,notification_id,dismissed_at,action_taken) VALUES($1,$2,now(),$3) ON CONFLICT(user_id,notification_id) DO NOTHING RETURNING id::bigint")
-            .bind(user.id).bind(id).bind(&text).fetch_optional(auth.store.pool()).await?;
+            .bind(user.id).bind(id).bind(&action.text).fetch_optional(auth.store.pool()).await?;
         created = dismissal.is_some();
         if !created {
             // A concurrent winner is read in a fresh statement/snapshot.
@@ -752,13 +769,11 @@ async fn dismiss(
         }
     }
     let dismissal = dismissal.ok_or_else(failed)?;
-    if !created && truthy(Some(action)) {
+    if !created && action.replace_existing {
         sqlx::query("UPDATE core_notificationdismissal SET action_taken=$1 WHERE id=$2 AND user_id=$3 AND notification_id=$4")
-            .bind(&text).bind(dismissal).bind(user.id).bind(id).execute(auth.store.pool()).await?;
+            .bind(&action.text).bind(dismissal).bind(user.id).bind(id).execute(auth.store.pool()).await?;
     }
-    Ok(Json(
-        json!({"success":true,"message":"Notification dismissed","notification_key":value["notification_key"]}),
-    ))
+    Ok(Json(dismissal_response(&value["notification_key"])))
 }
 async fn dismiss_all(
     State(auth): State<AuthService>,
