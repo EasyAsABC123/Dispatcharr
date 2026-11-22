@@ -1,0 +1,371 @@
+{
+  "M8_ordinary_backup_inventory_and_download": {
+    "candidate": {
+      "image_id": "sha256:e1cdcdf47904cec7225db224032c0d7b3f866dd6f851923ec9961b273efc68b0",
+      "manifest_sha256": "e21ebf687b9950ce64939eb66e86e2de9dec64ce9dc7881432c96f9f5659cc9a",
+      "revision": "949c864f704520382d6370e2ce14160f798d3f22",
+      "source_archive_sha256": "207f8b4244bb66231397e5781152f151c75f898b4b40b87dcff2d284ee0e092b",
+      "source_tree_sha256": "eb00be3776b722a48e69dabdffd063a6b0ea788b0438a0629b8a338015d9a196",
+      "tag": "dispatcharr-rust-candidate:a16-hdhr-header-949c864f7045"
+    },
+    "exact_cleanup": {
+      "Native": {
+        "cleanup_sha256": "ff97fbdb6bb68bc51552356bf672b13cf080c0d0211f19f83b38112c88f0fccc",
+        "exact_retired_roles": 4,
+        "probe_stdout_sha256": "342dd66420f249a4efcdaf9e1339978a0de4cd2c945a3f32442ed966b9c97f66",
+        "receipt_sha256": "5ac9fd785c67e91edbf07a0a1576f501dcda00ece093f54beba6319f9486a4f3"
+      },
+      "Original": {
+        "cleanup_sha256": "1fcd873682611aff85b14bf09755f1886ffbe22feb5b11b44e55da1a5c606e4f",
+        "exact_retired_roles": 2,
+        "probe_stdout_sha256": "17a78825d39771d83b7dcfa5f62eb2ff70b087c8e6cfd96d3150f0430a6535c2",
+        "receipt_sha256": "7eec42f00a832be9e9214e30b14961869c28063d944b48d015d861db2aea5631"
+      }
+    },
+    "formal_nodes_claimed": 0,
+    "literal_exits": {
+      "owner": 0,
+      "preflight": 0,
+      "proof": 0,
+      "run": 0
+    },
+    "observations": {
+      "authenticated_direct_download_exact_local_bytes": true,
+      "genuine_stock_PG_custom_dump_v2": true,
+      "initial_empty": true,
+      "repeat_list_files_SQL_unchanged": true,
+      "reverse_filename_order_not_mtime": true,
+      "sizes_match_local_files": true,
+      "timestamps_UTC_exact": true,
+      "two_listed": true,
+      "unlisted_control_excluded": true
+    },
+    "receipt": "campaign-1/proof.stdout",
+    "receipt_sha256": "a47c8ccd9982d343f07a830324ec5b0203658ad5e157edfa2b072eb353fbb4e9",
+    "restore_verified": false,
+    "scheduled_or_manual_job_execution_verified": false,
+    "scope": "ordinary packaged Core-admin PostgreSQL v2 backup inventory and direct export",
+    "stage": "m8-949c864f-default-backup-list-download-1",
+    "stage_seal_sha256": "2474f8d3a91f19612ebe6de361b3f45d7a15ea3f3a3dd9655b01bd6c2f0918e8"
+  },
+  "Original_ordinary_browser_HDHomeRun": {
+    "Native_measured": false,
+    "Original": {
+      "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+      "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+    },
+    "accept_profile": "browser",
+    "case_names": [
+      "allowed-inactive-api-key-authorization",
+      "allowed-inactive-api-key-header",
+      "allowed-inactive-bearer",
+      "allowed-standard-expired-bearer",
+      "policy-denied-inactive-api-key-authorization",
+      "policy-denied-inactive-api-key-header",
+      "policy-denied-inactive-bearer",
+      "policy-denied-standard-expired-bearer"
+    ],
+    "distinct_error_shapes": 3,
+    "exact_cleanup": true,
+    "formal_fixed_GET_verified": false,
+    "literal_exits": {
+      "owner": 0,
+      "proof": 0,
+      "run": 0
+    },
+    "method": "GET",
+    "qualified_cases": 8,
+    "query": "",
+    "raw_receipt_sha256": "4c9c54dd35724cbb511acd73b3ea4d9efa00de01f31a968c0565a535d99aaaa9",
+    "receipt": "physical-owner-1/proof.stdout",
+    "receipt_sha256": "801f7557144aedd9aea011a5abe0dca8b437636a62b59b9d4afd73908c029f8f",
+    "route": "/hdhr/lineup_status.json",
+    "stage": "m0-stock-hdhr-ordinary-browser-shell-1",
+    "stage_seal_sha256": "cdb1d6cc2a334d6912ca1acbfea0b99a6e0985ae427f5815ccb7004c503c617a",
+    "status": 401
+  },
+  "application_performance_measured": false,
+  "compose": {
+    "account_expiration": {
+      "Native_cleanup_sha256": "832f19fcb3f553294664375c60c9513db8664b54862d1b44a4f975ece4fbf605",
+      "Native_owned_roles_retired": 3,
+      "fresh_Native_lane_exit": 0,
+      "literal_exits": {
+        "owner": 0,
+        "preflight": 0,
+        "reduce": 0,
+        "run": 0
+      },
+      "observed": {
+        "active_profile_sql_effects": [
+          "warning updated in place",
+          "expired value created"
+        ],
+        "deleted_and_dismissed_notifications": 2,
+        "full_M6": false,
+        "inactive_account_filtered": true,
+        "normal_queue_drained": true,
+        "notice_update_events": 2,
+        "performance_verified": false,
+        "profile_and_unrelated_notice_rows_unchanged": true,
+        "root_task": "apps.m3u.tasks.check_account_expirations",
+        "stock_daily_task_runs": 1,
+        "success_result": null
+      },
+      "receipt": "owner-1/reduce.stdout",
+      "receipt_sha256": "19f75724552757902fd716aea8755afbcb5da3662cb3a5a620f204d2b50a2393",
+      "retained_Original_proof_sha256": "cf6d284673191829a6777a1933beea57f8f5e5a11e27bd74830c80d16b4da2d5",
+      "stage": "m6-949c-account-expiration-core-1",
+      "stage_seal_sha256": "fef6bef5d6a976f77b3b28708c98e3fa945fcdf4b86dee5f45d2e843675e5696"
+    },
+    "formal_output_profile_restart": {
+      "exact_cleanup": true,
+      "formal_required_nodes": 127,
+      "fresh_passed": {
+        "package/profile-restart": {
+          "cleanup_sha256": "b7e5d2a460404139f294e9b636457a2f93ed65c85ca82188b126b02a490c2976",
+          "qualification_sha256": "f0abe9f0c9fc634e2d3cff854c9b6abe5684c01e0495b69b4191b8a6b7503dde"
+        }
+      },
+      "literal_exits": {
+        "owner": 0,
+        "preflight": 0,
+        "prepare": 0,
+        "reduce": 0,
+        "run": 2
+      },
+      "observed": {
+        "Original_serializer_and_cache_cases": 127,
+        "first_post_restart_attempts_per_backend": 1,
+        "later_logical_attempts_per_backend": 2,
+        "named_cache_keys": 6,
+        "preserved_original_worker_and_candidate_container": true,
+        "same_service_redis_restart_arms": 2
+      },
+      "raw_report_sha256": "242b5d920fea7239024d2785ec11b77af88bccea89d4a90e929b29e99164124c",
+      "receipt": "owner-ledger-1/reduce.stdout",
+      "receipt_sha256": "f3f1bf708413c7edd22f5b2b3085e959680342338a649b99b6bdf5b0a305dfd9",
+      "stage": "m9-949c864f-required-profile-restart-wave-1",
+      "stage_seal_sha256": "980dd08ce4c21c16d0058b6a1c1b895c22e21c85af983a0148ac6aaf98d80b96",
+      "wave_statuses": {
+        "blocked": 126,
+        "failed": 0,
+        "not_run": 0,
+        "passed": 1,
+        "retained_source_authority": 0
+      }
+    },
+    "inherited_redis_two_main": {
+      "cleanup": {
+        "exact_inventory_empty": true,
+        "normal_bootstrap_stop": true,
+        "owned_cids_absent": true,
+        "owned_host_generations_absent": true,
+        "passed": true
+      },
+      "inherited_redis_databases": {
+        "broker": 0,
+        "cache": 0,
+        "result": 0
+      },
+      "literal_exits": {
+        "owner": 0,
+        "preflight": 0,
+        "proof": 0,
+        "run": 0
+      },
+      "native_raw_receipt_sha256": "422d01cc8a45f089e3741773995a6dddab9c7ecda4893512e05c292991b8f4db",
+      "natural_cleanup": "one SUCCESS/null with 43200-second expiry",
+      "owned_roles_retired": 6,
+      "peer_web_ready_after_owner_stop": true,
+      "prior_two_main_proof_sha256": "5947631f427e9c20e249407a051099e846dc0e4b08c5638a3caafd9bd0aa9a28",
+      "receipt": "owner-1/proof.stdout",
+      "receipt_sha256": "88fe1759dcd272ed1af7065d4418374b9b40706a2d372577c095adf9e27efa3d",
+      "retained_scope_authority_sha256": "63f238cfeb1412f38d1c4b22db88f2a90445f383d55aab80f14f493568bd8c36",
+      "stage": "m6-949c-inherited-redis-two-main-1",
+      "stage_seal_sha256": "cf1b2f7eb52e5344f33fcc978731113e5d53f6a7896842631287a0eb95747cbb",
+      "startup_DVR": "SUCCESS/Recovery complete",
+      "startup_version": "SUCCESS/null via one HTTP 503"
+    },
+    "newfoundland_cleanup": {
+      "fresh_Native_lane": {
+        "actual_exit": 0,
+        "cleanup_sha256": "87e9972fa05d05526cf49f3a0682566dd364012cdfc8533889ba379ce2cf452a",
+        "image": "sha256:e1cdcdf47904cec7225db224032c0d7b3f866dd6f851923ec9961b273efc68b0",
+        "lane_sha256": "c6b8000f94107dcbb92bfd2fdd66bd0a6b0482612cddd0d9a35749eed496148f",
+        "wire_sha256": "6979207e4138167a506cf9d8b364de28730cefaa763a1004711569230f68e59f"
+      },
+      "literal_exits": {
+        "owner": 0,
+        "preflight": 0,
+        "reduce": 0,
+        "run": 0
+      },
+      "native_Selected_Core_role_explicit": true,
+      "observed": {
+        "children": 0,
+        "expiry_seconds": 43200,
+        "other_rows_unchanged": true,
+        "periodic_task_name": "celery.backend_cleanup",
+        "query_hour_offset": 3,
+        "queue": "celery",
+        "queues_empty": true,
+        "root_publications": 1,
+        "saved_runs": 1,
+        "schedule_zone": "America/St_Johns",
+        "task": "celery.backend_cleanup",
+        "terminal_result": null,
+        "terminal_status": "SUCCESS"
+      },
+      "receipt": "owner-1/reduce.stdout",
+      "receipt_sha256": "98290a9155d949d2b54d4d010f6bbbbdeb122fc7d21c569d46b6e8567b7020a2",
+      "retained_Original_lane": {
+        "actual_exit": 0,
+        "cleanup_sha256": "759c2dab9204f913dae8045a4a494a9fe87239d7918dcd4244c93ba887646694",
+        "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+        "lane_sha256": "de3fca2ae2614547691de4bd3e939cb6f444d4235daa224d88696a0d8063ec82",
+        "retained_from": "a16ef96412f8a87f73c3f8ded54241db2e0c5e6a",
+        "wire_sha256": "292f3f2b6d7e1a866ef0ccfed2a2cea4bb830677361d12ae54229fdf0ec42cf0"
+      },
+      "retained_Original_proof_sha256": "7ecb59b91c06fea0ac209675c9df3ccf7db92d4379ed1b2f65b5cb657c4799a8",
+      "retained_Original_stage": "m6-a16ef964-newfoundland-core-pair-1",
+      "stage": "m6-949c-newfoundland-core-2",
+      "stage_seal_sha256": "e97eb66df2c4dda02ca3467558e1bd18f9d4dfa134bafb9922085080fac86890"
+    },
+    "recurring_repeat": {
+      "Native_cleanup_sha256": "5d340018951d9ce85204e981f0eb30861237a4ec15e50a6f04775c1b268416a3",
+      "Native_main_exit": 0,
+      "Native_owned_roles_retired": 3,
+      "fresh_Native_lane_exit": 0,
+      "literal_exits": {
+        "owner": 0,
+        "preflight": 0,
+        "proof": 0,
+        "run": 0
+      },
+      "observed": {
+        "artwork_child": "apps.channels.tasks.prefetch_recording_artwork",
+        "artwork_literal_result": "ok",
+        "booking_unchanged_after_repeat": true,
+        "distinct_roots": 2,
+        "final_ready_or_reserved": 0,
+        "full_M6": false,
+        "future_media_dispatched": false,
+        "linked_wire_and_terminal": true,
+        "performance_verified": false,
+        "recording_status": "scheduled",
+        "recordings_refreshed_events": 1,
+        "root_literal_results": [
+          1,
+          0
+        ],
+        "root_task": "apps.channels.tasks.maintain_recurring_recordings",
+        "run_count": 2,
+        "same_hourly_row_both_roots": true,
+        "same_name_local_artwork": true,
+        "utc_clocked_one_off_rows": 1
+      },
+      "receipt": "owner-1/proof.stdout",
+      "receipt_sha256": "19d69278b26b5b06b0ca8d0287ad7b4d28220971d3406cf16c5333df780fb30d",
+      "retained_Original_lane_sha256": "4074837cb45fad496ff93e511b1e32e24f84347cb79b077835e022bbc130f08d",
+      "retained_Original_stage": "m6-d608ff75-scheduled-recurring-repeat-1",
+      "stage": "m6-949c-recurring-repeat-core-1",
+      "stage_seal_sha256": "fdcf9362fa6060e677ff28fae3be08819b20302cf967a78caf5431179606e028"
+    }
+  },
+  "credit": "Original Dispatcharr authors and contributors retain all application credit. Django, Django REST Framework, Celery, django-celery-beat IANA/tzdata and other dependencies retain their authorship and licenses.",
+  "fresh_formal_rows": [
+    "package/profile-restart"
+  ],
+  "isolated_Docker_build_cache_pilot": {
+    "base_revision": "9ace9f6625a77c7926725479c6886590de3b5a9b",
+    "base_source_archive_sha256": "3950b90f4ddc70346221c2886f10e90935ef2efd43ed0fba18a42f9c0c436e1d",
+    "cold_observations": {
+      "all-touch-base": {
+        "cache_generation": "generation-yiatgtv_",
+        "cargo_wall_seconds": 439.8918947770144,
+        "compile_receipt_sha256": "0c9c1784a6299c38d12968feb807adc4cf408c9c726bb7e68f989d81bfb6058b",
+        "local_crates_compiled": 29,
+        "outer_wall_seconds": 442.700543806,
+        "products": {
+          "dispatcharr-operator": {
+            "embedded_cache_generation_occurrences": 40,
+            "mode": 448,
+            "sha256": "7ed0311ab8ba92d8849d90608780e67f14c94299e3eacd2d8b38bd167a5a2024"
+          },
+          "dispatcharr-rs": {
+            "embedded_cache_generation_occurrences": 310,
+            "mode": 448,
+            "sha256": "a143d0a8865abb09bf9799e5e0ef63e968e5a99b26d484ab6ee4a3e1e20f2402"
+          }
+        }
+      },
+      "content-aware-base": {
+        "cache_generation": "generation-3vv5anos",
+        "cargo_wall_seconds": 444.5002741520293,
+        "compile_receipt_sha256": "a97f17ef2779ceda9b287bb3c32780c9fec4448096faa35859196ef1e57b9c58",
+        "local_crates_compiled": 29,
+        "outer_wall_seconds": 447.674032599,
+        "products": {
+          "dispatcharr-operator": {
+            "embedded_cache_generation_occurrences": 40,
+            "mode": 448,
+            "sha256": "134c4665817e3d50e86ba680894e9573b18b01017124b8a10f9cfd93c1a8bc76"
+          },
+          "dispatcharr-rs": {
+            "embedded_cache_generation_occurrences": 310,
+            "mode": 448,
+            "sha256": "088e2a5a22a7d1bbfc7ff48df2fe0cdcdd59bc196482f0aefa12865babd8abca"
+          }
+        }
+      }
+    },
+    "diagnosis_receipt": "cold-identity-diagnosis-1/report.json",
+    "diagnosis_sha256": "cefb9d7d111966741f75379ce83a35e39aadc6cb28ff1eeeca0e4f21969353ba",
+    "followup": {
+      "compile_generation": "generation-00000000",
+      "engine_free_control_seal_sha256": "33671af0644611ca33dcf7d2356f9bd1416e174b1667adc61691e093aaa519b3",
+      "stage": "m10-cargo-content-mtime-docker-pilot-2",
+      "stage_seal_sha256": "1c36e67096671b185f3a12d6178eabd735d0f4cef75b119331e2387db1fb4a5c"
+    },
+    "identical_compiler_profile": true,
+    "literal_cold_build_exits": {
+      "all-touch-base": 0,
+      "content-aware-base": 0
+    },
+    "literal_owner_exit": 130,
+    "performance_accepted": false,
+    "planned_child_revision": "424880a9ba0a375eab8f985b1a279252c4d0a54b",
+    "planned_child_source_archive_sha256": "aef3c047b17f6ef679c87ca68927e59e7eaacd192c62dbf5122b544485798257",
+    "production_policy_changed": false,
+    "same_path_binary_equivalence": false,
+    "stage": "m10-cargo-content-mtime-docker-pilot-1",
+    "stage_seal_sha256": "f234a3b682546db4a85e307f95133b3b0ed8a58f5555289e1999843ae1342198",
+    "warm_comparison_completed": false
+  },
+  "milestones_closed": [],
+  "newfoundland_first_attempt": {
+    "cause": "Native child argument parser refused the dispatcher invocation before the lane started.",
+    "cleanup_reconciliation_exit": 0,
+    "literal_native_child_exit": 2,
+    "literal_owner_exit": 1,
+    "native_business_measured": false,
+    "native_execution_sha256": "118c482ca31bf3038e040d5efb0c059404728bc2ce619d58360aa42f326a5bba",
+    "stage": "m6-949c-newfoundland-core-1"
+  },
+  "ordinary_candidate": {
+    "application_inputs": 2155,
+    "image_id": "sha256:e1cdcdf47904cec7225db224032c0d7b3f866dd6f851923ec9961b273efc68b0",
+    "manifest_sha256": "e21ebf687b9950ce64939eb66e86e2de9dec64ce9dc7881432c96f9f5659cc9a",
+    "ordinary_feature_arg": 0,
+    "protected_frontend_and_attribution": 497,
+    "review_sha256": "c9a2b98065834e6944f81ce21b157611f171c628d01be9d48c25b9f16a3e3351",
+    "revision": "949c864f704520382d6370e2ce14160f798d3f22",
+    "source_archive_sha256": "207f8b4244bb66231397e5781152f151c75f898b4b40b87dcff2d284ee0e092b",
+    "source_tree_sha256": "eb00be3776b722a48e69dabdffd063a6b0ea788b0438a0629b8a338015d9a196",
+    "stage": "m0-a16-hdhr-header-successor-package-1"
+  },
+  "ordinary_default_worker_activation_verified": false,
+  "schema_version": 1
+}
