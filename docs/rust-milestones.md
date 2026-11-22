@@ -15,6 +15,14 @@ offline verification covers the tested route identities, response projections an
 [executable contract register](rust-contract-register.md) now binds the 16 Programme
 Guide cases to the two declared list and detail GET rows as partial evidence.
 
+The [9cf6407 shared-viewing XMLTV benchmark](rust-m2-9cf6407-live-xmltv-performance.md)
+kept ten viewers progressing during one real import. One measured pair recorded 52.9%
+less backend and infrastructure CPU and 79.7% less peak working memory on Rust.
+
+The [9cf6407 scheduled Version and recurring recording pairs](rust-m6-9cf6407-version-recurring-compose.md)
+verified four Version branches and a recurring recording run and repeat. The same image
+passed the scoped [React provider modal pair](rust-provider-modal-browser-9cf64.md).
+
 The [65dbbbd HDHomeRun successor](rust-m0-65dbbbd-browser-options.md) matches four
 ordinary and forced browser OPTIONS responses on the fixed status route across both
 network policies. The evidence includes the exact ordinary package and owned cleanup.

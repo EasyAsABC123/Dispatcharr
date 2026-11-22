@@ -1,0 +1,128 @@
+{
+  "Rust_over_Original_ratios": {
+    "backend_and_infrastructure": {
+      "cpu_core_seconds": 0.47103837482408206,
+      "peak_charged_bytes": 0.2036107512953368,
+      "peak_working_set_bytes": 0.2034746933101807
+    },
+    "observer": {
+      "cpu_core_seconds": 0.5653370125390577,
+      "peak_charged_bytes": 0.9997599351824993,
+      "peak_working_set_bytes": 1.0187785187785188
+    },
+    "origin": {
+      "cpu_core_seconds": 1.0429947615518935,
+      "peak_charged_bytes": 1.0032217550374052,
+      "peak_working_set_bytes": 1.0069880374274547
+    },
+    "whole_fixture": {
+      "cpu_core_seconds": 0.5415838532952548,
+      "peak_charged_bytes": 0.5301826888873551,
+      "peak_working_set_bytes": 0.41001469394327733
+    }
+  },
+  "application_revision": "9cf640701dacea07ea5f394ce7b18a6fa7c8c088",
+  "arms": {
+    "Original": {
+      "exact_owned_cleanup": true,
+      "job_observed_seconds": 0.7401041710400023,
+      "literal_execution_exit": 0,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.186855,
+          "peak_charged_bytes": 910688256,
+          "peak_working_set_bytes": 910512128
+        },
+        "observer": {
+          "cpu_core_seconds": 1.23215,
+          "peak_charged_bytes": 409489408,
+          "peak_working_set_bytes": 210051072
+        },
+        "origin": {
+          "cpu_core_seconds": 0.390001,
+          "peak_charged_bytes": 225030144,
+          "peak_working_set_bytes": 103747584
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 4.809006,
+          "peak_charged_bytes": 1542987776,
+          "peak_working_set_bytes": 1220943872
+        }
+      },
+      "origin_connections": 1,
+      "provider_slots": 1,
+      "raw_receipt_sha256": {
+        "actual-publications.json": "b38b14b0bc566773329f110b4c1aa3e964e90c7e32315d47762d2feee9ce0404",
+        "independent-owned-cleanup.json": "108657c5dc90b8f289469ee6071dbb0c361b58b853e212218c0bf0564fe27efa",
+        "owned-xmltv-arm.json": "e5df612bf0140009d373206c44696949d849cf5cbceb27ef1acce2dc68f4637e",
+        "resource-samples.json": "6aeead260f40d3ac24aec5cf275142f0ae6689b7e470b56f941943e1ff8eb43c",
+        "shared-ts.json": "9f3c8b6ed205710a9d27d78094dbfe4589c0373c82b28ea8e403893145a7222b",
+        "useful-media-complete.json": "ee6395ae565403a185b75349ec6daf54790c3931079a9ca38abc1194f5c2a7d0"
+      },
+      "readers_progressing_during_job": 10,
+      "validated_job_families": [
+        "apps.channels.tasks.evaluate_series_rules",
+        "apps.epg.tasks.build_programme_index_task",
+        "apps.epg.tasks.refresh_epg_data"
+      ]
+    },
+    "Rust": {
+      "exact_owned_cleanup": true,
+      "job_observed_seconds": 0.7328768100123852,
+      "literal_execution_exit": 0,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.501131,
+          "peak_charged_bytes": 185425920,
+          "peak_working_set_bytes": 185266176
+        },
+        "observer": {
+          "cpu_core_seconds": 0.69658,
+          "peak_charged_bytes": 409391104,
+          "peak_working_set_bytes": 213995520
+        },
+        "origin": {
+          "cpu_core_seconds": 0.406769,
+          "peak_charged_bytes": 225755136,
+          "peak_working_set_bytes": 104472576
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 2.60448,
+          "peak_charged_bytes": 818065408,
+          "peak_working_set_bytes": 500604928
+        }
+      },
+      "origin_connections": 1,
+      "provider_slots": 1,
+      "raw_receipt_sha256": {
+        "actual-publications.json": "44d6c54eff778e416273481b716effb10f4368130b098794b8a16b0cc196dfdd",
+        "independent-owned-cleanup.json": "711d6c172321f3fbd6efa36025bb76b212d95205ff3f303f5b514ac6c3fe1b6b",
+        "owned-xmltv-arm.json": "28d0fbfdfb9fb26039ce3ea2334c1aa10563fe0aa905c10840dd848211912560",
+        "resource-samples.json": "df67c43ad05413ab228e8aa614dccdafd8a7d7f89308eed4140fb291c143477d",
+        "shared-ts.json": "91eeb480781f8216ea5a0b1f1cb4778bda78aa8bfee679b6083055eeeea28f89",
+        "useful-media-complete.json": "1f04a2386fba07a3b32746dcda0131a62d071550ee3e7bb6439d8d1795c67efc"
+      },
+      "readers_progressing_during_job": 10,
+      "validated_job_families": [
+        "apps.channels.tasks.evaluate_series_rules",
+        "apps.epg.tasks.build_programme_index_task",
+        "apps.epg.tasks.refresh_epg_data"
+      ]
+    }
+  },
+  "controller_receipt_sha256": "b56ba1edbfc561c266f30a33282384b5b4bd417f6d91db17a34a53d3831b76c0",
+  "earlier_fixture_exit": {
+    "exact_cleanup_sha256": "c443d43bcc56d06ce37638bd27d9713c018f7e0cee7d6ee7c11f4dffd2408fd2",
+    "failure": "Missing owned media epgs directory",
+    "literal_exit": 1,
+    "measurements_present": false
+  },
+  "image": "sha256:fd1a839e1fce4835039b7b079cd0929cd3c658261374cea2c7bbebf813fae3a9",
+  "manifest_sha256": "19d618bfe72657a0adfc65fd93094ad42cbaffbe8b609bdc68ba8eddfb7e17a1",
+  "measured_pairs": 1,
+  "memory_swap_current": 0,
+  "memory_swap_max": 0,
+  "seconds_per_arm": 60,
+  "viewers": 10,
+  "xmltv_sha256": "68c244bac534326995947a6ad1d0c107b67b58739155cfc7fd8382cca15bd3bc"
+}
