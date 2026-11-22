@@ -18,6 +18,10 @@ Guide cases to the two declared list and detail GET rows as partial evidence.
 The [9cf6407 profiled HLS pair](rust-m3-9cf6407-profiled-hls-performance.md) matched
 30 complete segments with 32.4% lower CPU and 47.4% lower peak working memory.
 
+The [65dbbbd standalone restore](rust-m8-65dbbbd-standalone-restore.md) used a
+genuine Original archive and verified copied database rows, signed task completion,
+same-process reads and teardown.
+
 The [65dbbbd short soak](rust-m9-65dbbbd-short-soak-resource-stop.md) completed both guide
 refreshes and stopped on post-playback process and descriptor limits. A separate
 [Core shutdown SQL hold](rust-m6-9cf6407-sql-release.md) passed timely release and handoff.
