@@ -77,6 +77,13 @@ reconciled one accepted write through the warm Original endpoint in 7.929 s.
 
 Fresh native ARM64 projects matched the [ordinary account API](rust-m5-f960875-arm64-ordinary-account-pair.md)
 and verified [both owned AIO startup task terminals](rust-m6-f960875-arm64-aio-downstream-startup.md).
+
+The [f960875 planned fMP4 replay](rust-m3-f960875-planned-fmp4-handoff.md) passed
+on Original and Native after the lead viewer disconnected and both media leases
+drained. Each backend decoded both clips and admitted a fresh viewer on the
+peer. The [ARM64 standalone restore replay](rust-m8-f960875-arm64-standalone-restore.md)
+passed with a synthetic current-schema PostgreSQL archive, restored account
+and SQL readback, an unchanged independent control database, and exact cleanup.
 The AMD64 [AppData comparisons](rust-m0-m5-f960875-numeric-app-data.md)
 matched scoped SQL, roles, statuses, and bodies while retaining specific wire-header differences.
 
