@@ -1411,3 +1411,10 @@ mod source_rendered_error_tests {
 pub(crate) mod sqlite_runtime;
 #[cfg(feature = "sqlite-copied-data-runtime")]
 pub use sqlite_runtime::CopiedSqliteRuntime;
+
+#[cfg(feature = "direct-modeladmin-read")]
+#[path = "admin_session_read.rs"]
+mod admin_session_read;
+#[cfg(feature = "direct-modeladmin-read")]
+#[path = "modeladmin_channel_groups.rs"]
+mod modeladmin_channel_groups;
