@@ -141,23 +141,20 @@ fn scheduler_ready(enabled: bool, status: &jobs::normal_beat::Status) -> bool {
     !enabled || matches!(status, jobs::normal_beat::Status::Observed(_))
 }
 
-async fn start_beat(
+async fn after_core_receivers(
     beat: Beat,
     limit: Duration,
     closed: &AtomicBool,
-    mut ready: impl FnMut() -> bool,
-    start: impl FnOnce() -> Result<(), jobs::normal_beat::Error>,
+    mut ready: impl FnMut() -> Result<bool, &'static str>,
+    action: impl std::future::Future<Output = Result<(), &'static str>>,
 ) -> Result<(), &'static str> {
-    if beat == Beat::Off {
-        return Ok(());
-    }
     if beat == Beat::Core {
         tokio::time::timeout(limit, async {
             loop {
                 if closed.load(Ordering::Acquire) {
                     return Err("Selected startup closed");
                 }
-                if ready() {
+                if ready()? {
                     return Ok(());
                 }
                 tokio::time::sleep(Duration::from_millis(25)).await;
@@ -165,8 +162,38 @@ async fn start_beat(
         })
         .await
         .map_err(|_| "Selected Core Beat receiver did not become ready")??;
+        if closed.load(Ordering::Acquire) {
+            return Err("Selected startup closed");
+        }
     }
-    start().map_err(|_| "Selected normal Beat start failed")
+    action.await
+}
+
+fn core_receivers_ready(readiness: jobs::normal_queue::Readiness) -> Result<bool, &'static str> {
+    use jobs::normal_queue::State;
+    if [&readiness.celery, &readiness.dvr]
+        .into_iter()
+        .any(|lane| matches!(lane, State::Blocked(_) | State::Fault(_) | State::Stopped))
+    {
+        return Err("Selected Core receiver stopped or could not admit work");
+    }
+    Ok(readiness.ready)
+}
+
+async fn start_beat(
+    beat: Beat,
+    limit: Duration,
+    closed: &AtomicBool,
+    ready: impl FnMut() -> Result<bool, &'static str>,
+    start: impl FnOnce() -> Result<(), jobs::normal_beat::Error>,
+) -> Result<(), &'static str> {
+    if beat == Beat::Off {
+        return Ok(());
+    }
+    after_core_receivers(beat, limit, closed, ready, async {
+        start().map_err(|_| "Selected normal Beat start failed")
+    })
+    .await
 }
 
 fn loopback(actual: SocketAddr) -> Result<SocketAddr, String> {
@@ -826,13 +853,23 @@ impl SelectedJobs {
             .queue
             .start(Arc::new(()))
             .map_err(|_| "Selected worker graph start failed")?;
-        self.inner.startup.send_replace(Startup::WorkersRunning);
-        self.inner.startup.send_replace(Startup::PublishingRecovery);
-        self.inner
-            .recovery
-            .publish_startup(owner.clone())
-            .await
-            .map_err(|_| "Recovery/version root publication did not settle")?;
+        after_core_receivers(
+            self.inner.beat,
+            Duration::from_secs(5),
+            &self.inner.closed,
+            || core_receivers_ready(self.inner.queue.readiness()),
+            async {
+                self.inner.startup.send_replace(Startup::WorkersRunning);
+                self.inner.startup.send_replace(Startup::PublishingRecovery);
+                self.inner
+                    .recovery
+                    .publish_startup(owner.clone())
+                    .await
+                    .map(|_| ())
+                    .map_err(|_| "Recovery/version root publication did not settle")
+            },
+        )
+        .await?;
         if self.inner.closed.load(Ordering::Acquire) {
             return Err("Selected startup closed");
         }
@@ -850,7 +887,7 @@ impl SelectedJobs {
             self.inner.beat,
             Duration::from_secs(5),
             &self.inner.closed,
-            || self.inner.queue.readiness().ready,
+            || core_receivers_ready(self.inner.queue.readiness()),
             || self.inner.scheduler.start(Arc::new(())),
         )
         .await?;
@@ -1164,7 +1201,7 @@ mod readiness_tests {
         let closed = AtomicBool::new(false);
         let ready = || {
             observations.set(observations.get() + 1);
-            observations.get() >= 2
+            Ok(observations.get() >= 2)
         };
         let start = || {
             assert!(observations.get() >= 2);
@@ -1180,7 +1217,7 @@ mod readiness_tests {
                 Beat::Core,
                 Duration::ZERO,
                 &closed,
-                || false,
+                || Ok(false),
                 || panic!("started without the receiver"),
             )
             .await,
@@ -1198,6 +1235,89 @@ mod readiness_tests {
             .await,
             Err("Selected startup closed")
         );
+    }
+
+    #[tokio::test]
+    async fn selected_core_startup_dispatch_waits_for_both_receivers() {
+        use jobs::normal_queue::State;
+
+        let closed = AtomicBool::new(false);
+        let polls = std::cell::Cell::new(0);
+        let readiness = |dvr| {
+            let ready = matches!(dvr, State::Working(_));
+            jobs::normal_queue::Readiness {
+                scope: "configured receivers",
+                celery: State::Working(0),
+                dvr,
+                required_families: 1,
+                prepared_families: 1,
+                scheduler_enabled: true,
+                ready,
+            }
+        };
+        after_core_receivers(
+            Beat::Core,
+            Duration::from_secs(1),
+            &closed,
+            || {
+                polls.set(polls.get() + 1);
+                core_receivers_ready(readiness(if polls.get() == 1 {
+                    State::Starting
+                } else {
+                    State::Working(0)
+                }))
+            },
+            async {
+                assert_eq!(polls.get(), 2);
+                Ok(())
+            },
+        )
+        .await
+        .unwrap();
+
+        for (limit, dvr, expected) in [
+            (
+                Duration::ZERO,
+                State::Starting,
+                "Selected Core Beat receiver did not become ready",
+            ),
+            (
+                Duration::from_secs(1),
+                State::Stopped,
+                "Selected Core receiver stopped or could not admit work",
+            ),
+            (
+                Duration::from_secs(1),
+                State::Fault(jobs::milestone_dispatch::Disposition::Operational(
+                    "test".into(),
+                )),
+                "Selected Core receiver stopped or could not admit work",
+            ),
+        ] {
+            assert_eq!(
+                after_core_receivers(
+                    Beat::Core,
+                    limit,
+                    &closed,
+                    || core_receivers_ready(readiness(dvr.clone())),
+                    async { panic!("dispatched startup with an unavailable receiver") },
+                )
+                .await,
+                Err(expected)
+            );
+        }
+
+        for beat in [Beat::Off, Beat::Legacy] {
+            after_core_receivers(
+                beat,
+                Duration::ZERO,
+                &closed,
+                || panic!("legacy or Beat-Off startup inspected scoped readiness"),
+                async { Ok(()) },
+            )
+            .await
+            .unwrap();
+        }
     }
 
     #[tokio::test]
