@@ -21,7 +21,9 @@ controller exited 1 before Docker because its local authority module shadowed
 the inherited package-tool import. The retry retained the reviewed source and
 ran a fresh image. [Scoped receipts](../scripts/rust-integration/m8-2c939204-copied-sqlite-react-shell.json)
 
-The preview covers the React shell and local assets. Channel List JSON, full
-browser workflows and the ARM64 shell remain open. The original Dispatcharr,
-React, Django, SQLite, SQLx and other contributors retain full credit.
+The preview covers the React shell and local assets. A later native ARM64
+build matched the same four bodies through restart. Channel List JSON and
+full browser workflows remain open. The original Dispatcharr, React, Django,
+SQLite, SQLx and other contributors retain full credit.
+[Native ARM64 shell](rust-m10-a379-native-arm64-copied-sqlite-shell.md)
 [Attribution](../ATTRIBUTION.md)

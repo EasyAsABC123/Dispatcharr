@@ -32,7 +32,13 @@ passed a same-image restart on lappy. The copied database retained the saved
 app data, the existing bearer and token refresh. The [AMD64 React shell preview](rust-m8-2c939204-copied-sqlite-react-shell.md)
 matched the Original HTML on the root and channels routes and served the
 packaged JavaScript and CSS across restart. Channel List JSON and browser
-workflow checks remain open.
+workflow checks remain open. The [published native ARM64 shell](rust-m10-a379-native-arm64-copied-sqlite-shell.md)
+then matched all four AMD64 bodies through a restart on lappy.
+
+The [2c939204 ordinary playback batch](rust-m3-2c939204-ordinary-output-cohort.md)
+passed shared HLS, shared profiled fMP4, live fMP4 lease renewal and natural
+raw MPEG-TS failover. Each pair verified teardown. Broader output-process
+recovery and the comparative resource gate remain open.
 
 The [shared Core restore](rust-m8-core-postgres-restore.md) restored an
 Original PostgreSQL archive and a Rust recovery archive in order, with exact
