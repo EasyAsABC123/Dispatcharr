@@ -171,6 +171,11 @@ def owner_readiness(nodes, document):
             if key == "source/cache-and-profile-contexts" and "cache_profile_contexts" in retained_sources:
                 adapter = module(HERE / "m235/retained_cache_profile.py", "retained_cache_profile")
                 resolved = adapter.resolve(retained_sources["cache_profile_contexts"], HERE.parents[1])
+            elif key == "source/media-profile-and-format-workflows" and "media_profile_formats" in retained_sources:
+                cache_adapter = module(HERE / "m235/retained_cache_profile.py", "retained_cache_profile")
+                cache = cache_adapter.resolve(retained_sources.get("cache_profile_contexts"), HERE.parents[1])
+                adapter = module(HERE / "m235/retained_source_media.py", "retained_source_media")
+                resolved = adapter.resolve(retained_sources["media_profile_formats"], HERE.parents[1], cache)
             else:
                 resolved = m235.resolve_node(key, owner_binding, HERE.parents[1])
             if resolved.get("status") == "retained_source_authority":

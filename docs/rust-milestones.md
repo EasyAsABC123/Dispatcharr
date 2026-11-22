@@ -9,6 +9,11 @@ alone does not establish application parity or an application performance gain.
 
 ## Current integrated work
 
+The [Original media and profile reference](rust-m9-original-media-profile-workflows.md)
+verified 16 A/V observations, natural source switch, FFmpeg/VLC profiles,
+and recovery on a fresh request. It supplies the retained Original media
+dependency. Native profile delivery still requires its own complete run.
+
 The [7f6b7016 scheduled-backup pilot](rust-m6-m8-7f6b7016-selected-core-beat.md)
 matched the ordinary saved UTC backup workflow using one Selected worker
 and scoped Core Beat, with exact cleanup. The explicit mode remains a

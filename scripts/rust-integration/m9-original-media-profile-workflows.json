@@ -1,0 +1,75 @@
+{
+  "cohort_actual_exit": 0,
+  "comparative_performance_measured": false,
+  "independent_admission_sha256": "cf91511163a5043bf8e2ef410ea5368ffb74dd6fcc62728ae8925a4c6011b629",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "prior_physical_attempts": [
+    {
+      "exact_cleanup": true,
+      "physical_exit": 1,
+      "report_sha256": "e770e5ed86254ad217da415f4d543c4a9e2d5a42dd781ec082823ea6294ab5fe"
+    },
+    {
+      "exact_cleanup": true,
+      "physical_exit": 1,
+      "report_sha256": "2e5ec0efc43c3e1ca70536a92c62208e523f66e14f47ca7a480e97b15e4224ed"
+    },
+    {
+      "exact_cleanup": true,
+      "physical_exit": 1,
+      "report_sha256": "b56ba6a6b926db753529ccc33c8aa6479ec0e9b22478e358c8fa1112b99d1446"
+    }
+  ],
+  "raw_report_sha256": "0f412351a519db646ab397fe5aeb0407197bd9e69bedb0930de722e4dc63fec5",
+  "retained_original": {
+    "assertions": {
+      "decoded_av_observations": 16,
+      "exact_owned_cleanup": true,
+      "formats": [
+        "mpegts",
+        "hls",
+        "fmp4"
+      ],
+      "live_range": {
+        "content_range": null,
+        "matched_complete_segment": true,
+        "method": "GET",
+        "range": "bytes=0-187",
+        "status": 200
+      },
+      "origin_request_ledgers": "bounded actual GETs, Range and Content-Range fields, one active origin, retirement",
+      "per_profile_keys": "Original fMP4 shared transform and remux ownership and active state read from Redis",
+      "process_recovery": "exact owned FFmpeg child loss, on-demand fresh authenticated recovery with raw survivor",
+      "profile_processes": [
+        "ffmpeg",
+        "vlc"
+      ],
+      "sharing": "equivalent viewers share one transform, distinct OutputProfiles have distinct process generations",
+      "source_switch": {
+        "decoded_av_windows": 4,
+        "origin_maximum_active": 1,
+        "real_fallback": 1,
+        "real_primary_eofs": 3,
+        "recovered_viewers": 2
+      }
+    },
+    "id": "source/media-profile-and-format-workflows",
+    "new_candidate_passes": 0,
+    "ready": false,
+    "reasons": [],
+    "retained_source": {
+      "Original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "qualification": {
+        "path": "artifacts/rust/m9-original-shared-media-cohort-8/owner-ledger-1/proof.stdout",
+        "sha256": "38c8c905b47cdc5ed2477c3f12e7df9eba7d590237f139081d250bd95bbe4bc4"
+      },
+      "raw": {
+        "path": "artifacts/rust/m9-original-shared-media-cohort-8/actual-original-1/report.json",
+        "sha256": "0f412351a519db646ab397fe5aeb0407197bd9e69bedb0930de722e4dc63fec5"
+      }
+    },
+    "satisfies_dependency": true,
+    "status": "retained_source_authority"
+  },
+  "runtime_proof_sha256": "38c8c905b47cdc5ed2477c3f12e7df9eba7d590237f139081d250bd95bbe4bc4"
+}
