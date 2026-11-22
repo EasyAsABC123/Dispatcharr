@@ -128,6 +128,12 @@ const EXPIRATION_PERIODIC_NAME: &str = "check-account-expirations";
 const EXPIRATION_PERIODIC_TASK: &str = "apps.m3u.tasks.check_account_expirations";
 const VERSION_PERIODIC_NAME: &str = "check-version-updates";
 const DAILY_SECONDS: i32 = 86_400;
+const SCAN_FILES: (&str, &str, i32) = ("scan-files", "core.tasks.scan_and_process_files", 20);
+const MAINTAIN_RECURRING: (&str, &str, i32) = (
+    "maintain-recurring-recordings",
+    "apps.channels.tasks.maintain_recurring_recordings",
+    3_600,
+);
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum ScheduleScope {
@@ -149,6 +155,17 @@ impl ScheduleScope {
 
     fn loads_linked_xmltv(self) -> bool {
         matches!(self, Self::CoreWithXmltv { .. })
+    }
+
+    fn selected_default_interval(self, name: &str, task: &str) -> Option<i32> {
+        // Only this scope is bound to the complete Selected dispatcher.
+        if !self.loads_linked_xmltv() {
+            return None;
+        }
+        [SCAN_FILES, MAINTAIN_RECURRING]
+            .into_iter()
+            .find(|row| (row.0, row.1) == (name, task))
+            .map(|(_, _, seconds)| seconds)
     }
 
     fn is_linked_xmltv_task(self, task: &str) -> bool {
@@ -231,7 +248,17 @@ impl ScheduleScope {
                     .as_ref()
                     .is_some_and(|(every, period)| *every > 0 && period == "hours")
                 && entry.expire_seconds.is_none();
-            let ordinary = (cleanup || daily || plugin_refresh)
+            let selected_default =
+                self.selected_default_interval(&entry.name, &entry.task)
+                    .is_some_and(|seconds| {
+                        entry.enabled
+                            && entry.crontab.is_none()
+                            && entry.expire_seconds.is_none()
+                            && entry.interval.as_ref().is_some_and(|(every, period)| {
+                                *every == seconds && period == "seconds"
+                            })
+                    });
+            let ordinary = (cleanup || daily || plugin_refresh || selected_default)
                 && entry
                     .kwargs
                     .as_object()
@@ -456,7 +483,7 @@ impl Scheduler {
         tokio::spawn(async move {
             let _owner = owner;
             let mut connection = inner.pool.acquire().await?.detach();
-            let observed = if inner.scope.is_core() {
+            let observed = if inner.scope.is_core() && !inner.scope.loads_linked_xmltv() {
                 install_default(
                     &mut connection,
                     CLEANUP_PERIODIC_TASK,
@@ -1105,7 +1132,7 @@ fn date(value: &Value, key: &str) -> Result<Option<DateTime<Utc>>, Error> {
 // Remaining capacity is intentionally unchanged: >256 ELIGIBLE models or a
 // >1MiB aggregate eligible reply refuses. Generic pagination is still open.
 macro_rules! load_query {
-    ($xmltv:literal) => {
+    ($selected:literal) => {
         concat!(r#"WITH zone_offsets AS (SELECT * FROM unnest($4::text[],$5::integer[]) AS z(zone_name,hour_offset)),
 candidates AS MATERIALIZED (
  SELECT to_jsonb(p)::text AS raw,
@@ -1126,7 +1153,7 @@ candidates AS MATERIALIZED (
         OR (p.name=$13::text AND p.task=$14::text AND p.crontab_id IS NULL
             AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
                         WHERE i.id=p.interval_id AND i.every>0 AND i.period='hours'))
-"#, $xmltv, r#"   )))
+"#, $selected, r#"   )))
    AND (p.clocked_id IS NULL OR cl.clocked_time IS NULL OR cl.clocked_time <= $1::timestamptz)
    AND (p.crontab_id IS NULL OR cr.id IS NULL OR NOT (cr.hour=ANY($3::text[])) OR z.hour_offset IS NULL
         OR CASE WHEN cr.hour=ANY($3::text[]) THEN (cr.hour::integer+z.hour_offset+24)%24 END=ANY($2::integer[]))
@@ -1145,13 +1172,18 @@ FROM budget b LEFT JOIN candidates c ON b.rows<=256 AND b.bytes<=1048576"#)
     };
 }
 const LOAD_QUERY: &str = load_query!("");
-const LOAD_XMLTV_QUERY: &str = load_query!(
+const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
     r#"        OR (p.task=$15::text AND p.interval_id IS NOT NULL AND p.crontab_id IS NULL
            AND EXISTS (SELECT 1 FROM epg_epgsource s
                        WHERE s.id>0 AND s.is_active AND s.source_type='xmltv'
                          AND s.refresh_task_id=p.id AND p.name='epg_source-refresh-' || s.id::text)
            AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
                        WHERE i.id=p.interval_id AND i.every>0 AND i.period='hours'))
+        OR (p.interval_id IS NOT NULL AND p.crontab_id IS NULL
+           AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
+                       WHERE i.id=p.interval_id AND i.period='seconds'
+                         AND ((p.name=$16::text AND p.task=$17::text AND i.every=$18::integer)
+                           OR (p.name=$19::text AND p.task=$20::text AND i.every=$21::integer))))
 "#
 );
 struct ZoneHours {
@@ -1215,7 +1247,7 @@ async fn load(
     ));
     let linked_xmltv = scope.loads_linked_xmltv();
     let query = if linked_xmltv {
-        LOAD_XMLTV_QUERY
+        LOAD_SELECTED_CORE_QUERY
     } else {
         LOAD_QUERY
     };
@@ -1235,7 +1267,14 @@ async fn load(
         .bind(plugin_refresh.map(|(name, _)| name))
         .bind(plugin_refresh.map(|(_, task)| task));
     let query = if linked_xmltv {
-        query.bind(crate::refresh_protocol::NAME)
+        query
+            .bind(crate::refresh_protocol::NAME)
+            .bind(SCAN_FILES.0)
+            .bind(SCAN_FILES.1)
+            .bind(SCAN_FILES.2)
+            .bind(MAINTAIN_RECURRING.0)
+            .bind(MAINTAIN_RECURRING.1)
+            .bind(MAINTAIN_RECURRING.2)
     } else {
         query
     };
@@ -1254,7 +1293,9 @@ async fn load(
             serde_json::from_str(&raw).map_err(|_| Error::Configuration("periodic row JSON"))?;
         let id = integer(&value, "id")?;
         let task = text(&value, "task")?;
-        let is_xmltv = scope.is_linked_xmltv_task(&task);
+        let name = text(&value, "name")?;
+        let skip_invalid = scope.is_linked_xmltv_task(&task)
+            || scope.selected_default_interval(&name, &task).is_some();
         let interval: Option<String> = row.try_get("interval_spec")?;
         let crontab: Option<String> = row.try_get("crontab_spec")?;
         let mut clocked: Option<DateTime<Utc>> = row.try_get("clocked_time")?;
@@ -1315,7 +1356,7 @@ async fn load(
             .iter()
             .any(|v| *v > 65536)
         {
-            if is_xmltv {
+            if skip_invalid {
                 invalid += 1;
                 continue;
             }
@@ -1325,7 +1366,7 @@ async fn load(
         let kwargs = serde_json::from_str::<Value>(if kwargs.is_empty() { "{}" } else { &kwargs });
         let mut enabled = true;
         if args.is_err() || kwargs.is_err() {
-            if is_xmltv {
+            if skip_invalid {
                 invalid += 1;
                 continue;
             }
@@ -1354,7 +1395,7 @@ async fn load(
         }
         let model = Entry {
             id,
-            name: text(&value, "name")?,
+            name,
             task,
             enabled,
             args: args.unwrap_or(Value::Null),
@@ -1385,7 +1426,7 @@ async fn load(
             }),
         };
         if !scope.admits(&model) {
-            if is_xmltv {
+            if skip_invalid {
                 invalid += 1;
                 continue;
             }
@@ -1562,11 +1603,11 @@ async fn install_defaults(connection: &mut PgConnection) -> Result<Setup, Error>
             "apps.proxy.tasks.fetch_channel_stats",
             Some(2),
         ),
-        ("scan-files", "core.tasks.scan_and_process_files", Some(20)),
+        (SCAN_FILES.0, SCAN_FILES.1, Some(SCAN_FILES.2)),
         (
-            "maintain-recurring-recordings",
-            "apps.channels.tasks.maintain_recurring_recordings",
-            Some(3600),
+            MAINTAIN_RECURRING.0,
+            MAINTAIN_RECURRING.1,
+            Some(MAINTAIN_RECURRING.2),
         ),
         (
             VERSION_PERIODIC_NAME,
@@ -1756,13 +1797,16 @@ mod tests {
         assert!(
             LOCK_CURRENT_XMLTV.contains("COALESCE(p.last_run_at,p.date_changed)=$7::timestamptz")
         );
-        assert!(LOAD_XMLTV_QUERY.contains("s.refresh_task_id=p.id"));
-        assert!(LOAD_XMLTV_QUERY.contains("s.id>0 AND s.is_active AND s.source_type='xmltv'"));
-        assert!(LOAD_XMLTV_QUERY.contains("p.name='epg_source-refresh-' || s.id::text"));
-        assert!(!LOAD_XMLTV_QUERY.contains("s.id=$"));
+        assert!(LOAD_SELECTED_CORE_QUERY.contains("s.refresh_task_id=p.id"));
+        assert!(
+            LOAD_SELECTED_CORE_QUERY.contains("s.id>0 AND s.is_active AND s.source_type='xmltv'")
+        );
+        assert!(LOAD_SELECTED_CORE_QUERY.contains("p.name='epg_source-refresh-' || s.id::text"));
+        assert!(!LOAD_SELECTED_CORE_QUERY.contains("s.id=$"));
         assert!(!LOAD_QUERY.contains("epg_epgsource"));
         assert!(
-            LOAD_XMLTV_QUERY.find("s.refresh_task_id=p.id") < LOAD_XMLTV_QUERY.find("LIMIT 257")
+            LOAD_SELECTED_CORE_QUERY.find("s.refresh_task_id=p.id")
+                < LOAD_SELECTED_CORE_QUERY.find("LIMIT 257")
         );
     }
 
@@ -1921,6 +1965,109 @@ mod tests {
         assert!(!ScheduleScope::Core.admits(&changed));
         entry.one_off = true;
         assert!(!ScheduleScope::Core.admits(&entry));
+    }
+
+    #[tokio::test]
+    async fn selected_core_defaults_publish_to_registered_receiver_families() {
+        use crate::default_protocol::Kind;
+        use crate::milestone_dispatch::{builtin_family, Family, REQUIRED};
+        let scope = ScheduleScope::core_with_xmltv(false, true).unwrap();
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
+            .unwrap();
+        let auth = dispatcharr_store::AuthService::new(
+            dispatcharr_store::Store::from_pool(pool),
+            dispatcharr_store::AuthConfig::new("unused-metadata-only".into()).unwrap(),
+        );
+        let identity = auth.producer_identity_source();
+        let mut cleanup = model(CLEANUP_PERIODIC_TASK);
+        cleanup.name = CLEANUP_PERIODIC_TASK.into();
+        cleanup.interval = None;
+        cleanup.crontab = Some((
+            "0".into(),
+            "4".into(),
+            "*".into(),
+            "*".into(),
+            "*".into(),
+            "UTC".into(),
+        ));
+        cleanup.expire_seconds = Some(43_200);
+        let mut entries = vec![(
+            cleanup,
+            Family::BackendCleanup,
+            Some(Kind::RedisBackendCleanup),
+        )];
+        for ((name, task, seconds), family, kind) in [
+            (SCAN_FILES, Family::Scanner, Some(Kind::LogoScanner)),
+            (
+                MAINTAIN_RECURRING,
+                Family::Recurring,
+                Some(Kind::RecurringMaintenance),
+            ),
+            (
+                (
+                    EXPIRATION_PERIODIC_NAME,
+                    EXPIRATION_PERIODIC_TASK,
+                    DAILY_SECONDS,
+                ),
+                Family::AccountExpiration,
+                Some(Kind::InactiveAccountNotifications),
+            ),
+            (
+                (
+                    VERSION_PERIODIC_NAME,
+                    crate::version_protocol::TASK,
+                    DAILY_SECONDS,
+                ),
+                Family::VersionCheck,
+                None,
+            ),
+        ] {
+            let mut entry = model(task);
+            entry.name = name.into();
+            entry.interval = Some((seconds, "seconds".into()));
+            entries.push((entry, family, kind));
+        }
+        for (entry, family, kind) in entries {
+            assert!(scope.admits(&entry));
+            assert!(REQUIRED.contains(&family));
+            assert_eq!(builtin_family(&entry.task), Some(family));
+            let id = Uuid::new_v4();
+            let frame = prepare_publication(&entry, id, &identity).unwrap();
+            let envelope: Value = serde_json::from_slice(frame.bytes()).unwrap();
+            assert_eq!(frame.redis_queue(), "celery");
+            assert_eq!(envelope["headers"]["periodic_task_name"], entry.name);
+            if let Some(kind) = kind {
+                let parsed = crate::default_protocol::parse(frame.bytes()).unwrap();
+                assert_eq!(parsed.kind, kind);
+                assert_eq!(parsed.task_id, id);
+            } else {
+                assert_eq!(
+                    crate::version_protocol::parse(frame.bytes())
+                        .unwrap()
+                        .task_id,
+                    id
+                );
+            }
+            if matches!(family, Family::Scanner | Family::Recurring) {
+                assert!(!ScheduleScope::Core.admits(&entry));
+                assert!(!ScheduleScope::CoreWithPluginRefresh.admits(&entry));
+                assert!(!ScheduleScope::Backup.admits(&entry));
+                let mut different = entry.clone();
+                different.one_off = true;
+                assert!(!scope.admits(&different));
+                different.one_off = false;
+                different.enabled = false;
+                assert!(!scope.admits(&different));
+                different.enabled = true;
+                different.interval.as_mut().unwrap().0 += 1;
+                assert!(!scope.admits(&different));
+            }
+        }
+        let mut stats = model("apps.proxy.tasks.fetch_channel_stats");
+        stats.name = "fetch-channel-statuses".into();
+        stats.interval = Some((2, "seconds".into()));
+        assert!(!scope.admits(&stats));
     }
 
     #[tokio::test]
