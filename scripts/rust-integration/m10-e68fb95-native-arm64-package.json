@@ -1,0 +1,69 @@
+{
+  "actual_exit": 0,
+  "application_inputs": 2159,
+  "auth_smoke": {
+    "accounts_after": 1,
+    "accounts_before": 0,
+    "active_admin_login_rows": 1,
+    "actual_exit": 0,
+    "application_revision": "e68fb950c7ed4abf2ab58da45104f4e2c5f13937",
+    "candidate_engine_exit": 0,
+    "django_migrations": 184,
+    "exact_cleanup": true,
+    "exact_container_ids_retired": 5,
+    "exact_network_and_volume_absence": true,
+    "full_compose_qualification": false,
+    "group_rows_after": 0,
+    "guest_architecture": "aarch64",
+    "guest_uid": 65532,
+    "public_tables": 62,
+    "react_html": 200,
+    "ready": 200
+  },
+  "build_sha256": "2a1c8293dc9aef4945ae8ec3531178f519961ddf2a494cf86a41a9b222504ed7",
+  "copied_sqlite_arg": 0,
+  "credit": "Original Dispatcharr authors and contributors retain full application credit.",
+  "exact_content_container_absence": true,
+  "historical_sqlite_arg": 0,
+  "image": "sha256:ba228a4a8638aba8b8df77c5f9ac70626c2d6c05b58b3d4364fca2e5b1586068",
+  "image_metadata": {
+    "arm_manifest": "sha256:a255e6e917e9153be134a20110643fcdae1d1def64457f252739d07ad4cfc631",
+    "base_arm_manifest": "sha256:c3258965754a8d5052c7ea8340357e0eb063934af8ecb5ef8fdcaed1d83a7931",
+    "base_index": "sha256:1768853cb610b52b6311b0d37a92526650f2d6b472d6ffe0a3e2682fe2c98595",
+    "child_index_agree": true,
+    "copy_history": [
+      "COPY --chmod=0755 dispatcharr-operator /usr/local/bin/dispatcharr-operator # buildkit",
+      "COPY --chmod=0755 dispatcharr-rs /usr/local/bin/dispatcharr-rs # buildkit"
+    ],
+    "entrypoint": [
+      "/usr/local/bin/dispatcharr-rs"
+    ],
+    "exact_file_copy_layers": [
+      "sha256:38af91dca1ab7a7290e3cd89ef077ab3b3cb73dfe1f13a3d5f14df3a5c942978",
+      "sha256:da1c4763d3ed36cb0d241eb191c0303bd9521f9c7f989ec881c3b5d86d323137"
+    ],
+    "image": "sha256:ba228a4a8638aba8b8df77c5f9ac70626c2d6c05b58b3d4364fca2e5b1586068",
+    "inherited_base_layers": [
+      "sha256:c96c411090da09187c55ab267826b3903b542b5c03f1cafa912d60e060e7850c",
+      "sha256:7f856aa1cd067ecab082ff78086ce478a7ebd7b98d2fc2e641721f6445f04479",
+      "sha256:ebe45b161b711a9064f2a890525f760d79a55ff38a2f2c146beb5214b0226612",
+      "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+      "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+      "sha256:f880ee075530623c7da2fc784c392106dfd34f54272f376d4f1b4096fdd9119c"
+    ],
+    "original_one_suffix_assertion": false,
+    "platform": "linux/arm64",
+    "source_tree_label": "e0166a638b13fc689faadebde96f7da6ae1eb61e3d5d6701a25606e039fb30ca",
+    "user": "65532:65532"
+  },
+  "performance_measured": false,
+  "prior_assembly_controller_exits": [
+    1,
+    1
+  ],
+  "protected_inputs": 497,
+  "raw_ARM64_receipt_sha256": "e41dbf4ada6ed5a3d12b17c59aa6c062591a02982c6471357f26e43ad09ab390",
+  "reassembled": false,
+  "recompiled": false,
+  "status": "passed"
+}

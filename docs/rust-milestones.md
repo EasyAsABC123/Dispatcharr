@@ -82,7 +82,10 @@ The exact ordinary AMD64 [e68fb95 successor](rust-m0-m6-e68fb95-appdata-and-name
 matches the measured numeric AppData Allow/Vary fields and runs both separately
 named Version rows under ordinary AIO ownership. The two empty DELETE 204
 responses retain their original framing difference. The named cleanup shape
-passed host checks and awaits its dedicated Compose replay.
+passed three [e68fb95 checkpoints](rust-m6-e68fb95-named-cleanup-checkpoints.md) under
+ordinary AIO, covering current and overdue at boot and overdue after readiness.
+The [native ARM64 e68fb95 package](rust-m10-e68fb95-native-arm64-package.md)
+passed exact binary, default-UID, startup, React HTML, and scoped authentication checks.
 
 The fresh [e68fb95 ten-viewer XMLTV pair](rust-m2-e68fb95-live-xmltv-performance.md)
 measured 55.3% lower backend and infrastructure CPU and 78.3% lower peak working
