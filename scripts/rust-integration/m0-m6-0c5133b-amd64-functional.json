@@ -1,0 +1,204 @@
+{
+  "application_revision": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "architecture": "linux/amd64",
+  "attribution_sha256": "1202a089caf31b613a39ac819c8b362cd939cf828328a3880d1ffa16a45ffea7",
+  "candidate_image": "sha256:e6d40f935400adfc8ccd64d31211b556cf3bf8dffc39f7fd823fbb5688d0f2dd",
+  "candidate_manifest_sha256": "72c01c185cad19e515090807006f3f98fc034fb0459a981cebc759700278ee12",
+  "milestone_acceptance": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_verified": false,
+  "post_soak_owner_exits": {
+    "actual-exit": 0,
+    "browser.actual-exit": 0,
+    "cargo.actual-exit": 0,
+    "m6.actual-exit": 0,
+    "rename.actual-exit": 0
+  },
+  "scopes": {
+    "M0_routine_reads": {
+      "canonical_rows_changed": 0,
+      "cases": [
+        {
+          "contract_id": "route-5bebee38a2a56b0dd8e1:METHOD_UNRESOLVED",
+          "family": "version",
+          "method": "GET",
+          "role": "anonymous",
+          "status": 200
+        },
+        {
+          "contract_id": "route-5bebee38a2a56b0dd8e1:METHOD_UNRESOLVED",
+          "family": "version",
+          "method": "GET",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "contract_id": "route-5bebee38a2a56b0dd8e1:METHOD_UNRESOLVED",
+          "family": "version",
+          "method": "GET",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "contract_id": "route-723154c0bb4c22d1e1d4:METHOD_UNRESOLVED",
+          "family": "timezones",
+          "method": "GET",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "contract_id": "route-723154c0bb4c22d1e1d4:METHOD_UNRESOLVED",
+          "family": "timezones",
+          "method": "GET",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "contract_id": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+          "family": "permissions",
+          "method": "GET",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "contract_id": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+          "family": "permissions",
+          "method": "GET",
+          "role": "standard",
+          "status": 403
+        },
+        {
+          "contract_id": "route-11307f60cca29fe0e061:METHOD_UNRESOLVED",
+          "family": "events",
+          "method": "GET",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "contract_id": "route-11307f60cca29fe0e061:METHOD_UNRESOLVED",
+          "family": "events",
+          "method": "GET",
+          "role": "standard",
+          "status": 403
+        }
+      ],
+      "cases_per_arm": 9,
+      "cleanup_proof_sha256": "2f1763e13c67da73c473399f0123b6d1ff97507e6da1d291e24fe4ddbb7af40c",
+      "exact_cleanup": true,
+      "fresh_paired_http": true,
+      "fully_verified_added": 0,
+      "owner_exits": {
+        "campaign.actual-exit": 0,
+        "cleanup.actual-exit": 0,
+        "preflight.actual-exit": 0,
+        "proof.actual-exit": 0,
+        "run.actual-exit": 0
+      },
+      "paired_actual_receipt_sha256": "299769f3cff1e0a1cfe9155bbdcb94074dfedc1071e68ca5bc9720dc646a1c7a",
+      "proof_sha256": "bab740da1b9942843f109d5bf17e8b678562555f84e56bc8af372badc04ae7b1",
+      "scoped_SQL_and_broker_unchanged": true,
+      "seal_sha256": "bbed423a581780add2bd32935ef12c1ff2e613705ce0bf9e84c5c207ada294d8",
+      "typed_bodies_matched": true
+    },
+    "M1_stream_libraries": {
+      "actual_exit": 0,
+      "cargo": "1.90.0",
+      "cargo_stdout_sha256": "95bce12604343942ac65fdc5343b4585d32a6b833d123d4a65b77914afc74c4c",
+      "command": "cargo +1.90.0 test --locked --offline -j 2 --lib -p dispatcharr-stream-core -p dispatcharr-stream-runtime",
+      "failed": 0,
+      "ignored": 0,
+      "passed": {
+        "dispatcharr-stream-core": 17,
+        "dispatcharr-stream-runtime": 16
+      },
+      "source_custody_stdout_sha256": "c30b7d4c16f34a0079883fc16355ab9dda8a9c0b222e26acf11593ee173ed1de",
+      "source_files_pre_run_hash_matched": 1664
+    },
+    "M5_native_react_browser": {
+      "api_responses": 29,
+      "browser_actual_exit": 0,
+      "browser_exceptions": 0,
+      "browser_proof_sha256": "3ad13bece625b73fb8bdcd02f1d170e348cbe016a4d543d4c2f4833f585f0aec",
+      "earlier_attempt_exact_cleanup": true,
+      "earlier_attempt_exit": 1,
+      "earlier_attempt_proof_sha256": "bf25719d874eb641231c02ad7fcbae41298e15b21b7ad1365c6c0b9bec766141",
+      "exact_cleanup": true,
+      "owner_exits": {
+        "actual-exit": 0
+      },
+      "private_short_tmp_scratch": true,
+      "react_attribution_preserved": true,
+      "read_only_root_owned_data_volume": true,
+      "required_api_paths_passed": 16,
+      "seal_sha256": "2a8c5a905335be573749329a1a16df2f9f1c08651dcc0ba37e34ec903c668cbf",
+      "singleton_socket_path_bytes": 64,
+      "stored_token_predicates_passed": true,
+      "websocket_connected": true
+    },
+    "M5_paired_channel_name": {
+      "actual_receipt_sha256": "07d9846e180c612cbf19075a7946fd23f4e143c3beace82929b7da0a76f24d44",
+      "exact_cleanup": true,
+      "fresh_paired_http": true,
+      "owner_exits": {
+        "actual-exit": 0,
+        "preflight.actual-exit": 0,
+        "proof.actual-exit": 0,
+        "run.actual-exit": 0
+      },
+      "patch_and_readback_body_bytes_matched": true,
+      "proof_sha256": "5e6c3b79248a0208be26a26a248138951783301153c4c0f1e766526b609f5e87",
+      "scoped_SQL_restored": true,
+      "seal_sha256": "4b610ff45caca9c2b0aec22d24c6892486187e00487c68cf1d39972098e5b254",
+      "steps_per_arm": [
+        "rename",
+        "restore"
+      ]
+    },
+    "M6_native_natural_xmltv": {
+      "exact_cleanup": true,
+      "matched_business": {
+        "actual_success_null": true,
+        "children": [
+          "apps.epg.tasks.build_programme_index_task",
+          "apps.channels.tasks.evaluate_series_rules"
+        ],
+        "exact_child_lineage": true,
+        "index_present": true,
+        "owned_origin_requests": 1,
+        "periodic_model_kind": "epg_source-refresh",
+        "pre_arm_guide_empty": true,
+        "pre_arm_origin_requests": 0,
+        "programme_rows": [
+          [
+            "Owned scheduled guide programme",
+            "owned-scheduled-tvg"
+          ]
+        ],
+        "real_run_count_delta": 1,
+        "remaining_ready_or_reserved": 0,
+        "result_settled": 2,
+        "schedule_timezone": "UTC",
+        "source_status": "success",
+        "timelimit": [
+          14400,
+          null
+        ]
+      },
+      "native_cleanup_sha256": "47dfa4e0d102e50d9d654b61b7c8884fe3fce1b25fb5d23edca8a3ad170aa7d6",
+      "native_lane_sha256": "e110256e87e62e5bb117d9346df9f569f2c8f95ca2a277ad722060a4cdcfa457",
+      "ordinary_aio": true,
+      "owner_exits": {
+        "actual-exit": 0,
+        "control.actual-exit": 0,
+        "preflight.actual-exit": 0,
+        "reduce.actual-exit": 0,
+        "run.actual-exit": 0
+      },
+      "qualification_sha256": "28e4b78c3ad9477d19e0097c2ebfb4665939abe4688dd7aa13fb4c09165ec62d",
+      "reducer_sha256": "b5e7cfb78167c618afad70720b19cb6825d02a93c350c55194080c1705d8f118",
+      "retained_original_lane_sha256": "da672ac3947d3fdc7b8c981095553a5602f75f112934f8bf49ed52a3460c639e",
+      "retained_original_proof_sha256": "19cf785570d689fbeb1aa2ee6a24f7b1033969984813ebfabb588bdec634cc6d",
+      "seal_sha256": "4bf74fe4b9956c6ea5ca3631256c2c341051b9832ad311874a474720c728b39f"
+    }
+  }
+}
