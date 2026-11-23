@@ -329,6 +329,7 @@ impl RecordingHttp {
     /// with a separate dynamic playback subtree. Main supplies the same Auth.
     /// Playback's own authentication/STREAMS/DVR checks run before manage/UI.
     pub fn router_with_playback(self, playback: crate::RecordingPlayback) -> Router {
+        let library = playback.clone().library_alias_router();
         Router::new()
             .route("/api/channels/recordings/", any(handle_with_playback))
             .route(
@@ -341,6 +342,7 @@ impl RecordingHttp {
             )
             .route(recurring::PATH, any(recurring::with_playback))
             .with_state((self, playback))
+            .merge(library)
     }
     /// Keep management, playback and manual Comskip beneath the same outer
     /// catchall. Matching a separate dynamic Comskip subtree panics in matchit.
@@ -373,6 +375,13 @@ async fn handle_with_playback(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Response {
+    if *request.method() == Method::GET
+        && crate::recording_playback::LibraryRead::from_path(request.uri().path()).is_some()
+    {
+        return crate::recording_playback::library_read(State(playback), ConnectInfo(peer), request)
+            .await
+            .into_response();
+    }
     let eligible = matches!(*request.method(), Method::GET | Method::HEAD)
         && request
             .uri()
@@ -569,6 +578,77 @@ async fn settle<T>(
 pub(super) async fn list_value(auth: &AuthService, user: &User) -> Result<Value, StoreError> {
     let values = list(auth, user, None).await?;
     Ok(Value::Array(values.iter().map(Recording::value).collect()))
+}
+
+pub(super) async fn detail_value(
+    auth: &AuthService,
+    user: &User,
+    raw_id: &str,
+) -> Result<Value, StoreError> {
+    let id = dispatcharr_ingest_core::source_integer_literal(raw_id)
+        .and_then(|value| value.parse::<i64>().ok())
+        .ok_or_else(missing)?;
+    list(auth, user, Some(id))
+        .await?
+        .first()
+        .map(Recording::value)
+        .ok_or_else(missing)
+}
+
+pub(super) async fn series_rules_value(
+    auth: &AuthService,
+    owner: Arc<dyn Send + Sync>,
+) -> Result<Value, StoreError> {
+    // A cached dictionary is authoritative in Source. Read it without
+    // publishing a cache fill or extending the existing entry's lifetime.
+    if let Some(cache) = &auth.notification_cache {
+        if let Ok(Some(raw)) = cache
+            .clone()
+            .with_retained_scope(owner)
+            .get(":1:coresettings:group:dvr_settings")
+            .await
+        {
+            if raw.len() > RESPONSE {
+                return Err(StoreError::Unsupported("DVR settings cache capacity"));
+            }
+            let value = crate::notifications::decode_settings_cache(&raw).ok_or(
+                StoreError::Unsupported("DVR settings cache serialization unsupported"),
+            )?;
+            if value.is_object() {
+                return Ok(project_series_rules(&value));
+            }
+        }
+    }
+
+    let mut connection = auth.store.pool().acquire().await?;
+    let result = async {
+        let row: Option<Option<Value>> = sqlx::query_scalar(
+            "SELECT CASE WHEN octet_length(value::text) <= $1 THEN value END
+             FROM core_coresettings WHERE key = 'dvr_settings'",
+        )
+        .bind(RESPONSE as i32)
+        .fetch_optional(&mut *connection)
+        .await?;
+        match row {
+            Some(Some(value)) => Ok(project_series_rules(&value)),
+            None => Ok(project_series_rules(&Value::Null)),
+            Some(None) => Err(StoreError::Unsupported("DVR settings response budget")),
+        }
+    }
+    .await;
+    settle(connection, result).await
+}
+
+fn project_series_rules(settings: &Value) -> Value {
+    let rules = settings
+        .get("series_rules")
+        .and_then(Value::as_array)
+        .into_iter()
+        .flatten()
+        .filter(|rule| rule.is_object())
+        .cloned()
+        .collect::<Vec<_>>();
+    json!({"rules": rules})
 }
 
 async fn list(
@@ -1315,6 +1395,87 @@ mod recording_jobs_binding_tests {
             Box::pin(async { panic!("closed routing probe must not publish tasks") })
         }
     }
+    #[test]
+    fn dvr_library_projects_only_rule_objects_in_original_order() {
+        let first = json!({"title":"First","untagged_is_new":false,"extra":{"n":1}});
+        let second = json!({"title":"Second","epg_source_id":null});
+        assert_eq!(
+            project_series_rules(&json!({"series_rules":[first, 1, null, [], second]})),
+            json!({"rules":[first, second]})
+        );
+        for value in [Value::Null, json!({}), json!({"series_rules":{"title":"invalid"}})] {
+            assert_eq!(project_series_rules(&value), json!({"rules":[]}));
+        }
+    }
+
+    #[tokio::test]
+    async fn ordinary_dvr_library_get_preserves_unmapped_head_options_and_writes() {
+        use axum::http::header;
+        use tower::ServiceExt;
+
+        let playback = crate::RecordingPlayback::prepare(unbound_auth(), |_, _| {
+            panic!("Library reads do not construct a playback origin")
+        });
+        let router = playback.clone().router();
+        let peer = ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1)));
+        for (path, allow) in [
+            ("/api/channels/recordings/", "GET, POST, HEAD, OPTIONS"),
+            ("/api/channels/recordings.json", "GET, POST, HEAD, OPTIONS"),
+            ("/api/channels/recordings.json/", "GET, POST, HEAD, OPTIONS"),
+            ("/api/channels/recordings/17/", "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
+            ("/api/channels/recordings/17.json", "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
+            ("/api/channels/recordings/17.json/", "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
+            ("/api/channels/series-rules/", "GET, POST, DELETE, HEAD, OPTIONS"),
+        ] {
+            for method in [Method::GET, Method::OPTIONS, Method::POST, Method::PATCH, Method::DELETE] {
+                let is_get = method == Method::GET;
+                let mut request = Request::builder()
+                    .method(method)
+                    .uri(path)
+                    .header(header::ACCEPT, "application/xml")
+                    .body(Body::empty())
+                    .unwrap();
+                request.extensions_mut().insert(peer);
+                let response = router.clone().oneshot(request).await.unwrap();
+                if is_get {
+                    assert_eq!(response.status(), StatusCode::NOT_ACCEPTABLE, "{path}");
+                    assert_eq!(response.headers()[header::ALLOW], allow, "{path}");
+                    assert_eq!(response.headers()[header::VARY], "Accept", "{path}");
+                } else {
+                    let status = if path == "/api/channels/recordings/" {
+                        StatusCode::METHOD_NOT_ALLOWED
+                    } else {
+                        StatusCode::NOT_FOUND
+                    };
+                    assert_eq!(response.status(), status, "{path}");
+                    if status == StatusCode::NOT_FOUND {
+                        assert!(!response.headers().contains_key(header::ALLOW), "{path}");
+                    }
+                }
+            }
+        }
+
+        playback.close_admission();
+        for (path, status) in [
+            ("/api/channels/recordings/", StatusCode::SERVICE_UNAVAILABLE),
+            ("/api/channels/recordings.json", StatusCode::NOT_FOUND),
+            ("/api/channels/recordings/17/", StatusCode::NOT_FOUND),
+            ("/api/channels/recordings/17.json", StatusCode::NOT_FOUND),
+            ("/api/channels/series-rules/", StatusCode::NOT_FOUND),
+        ] {
+            let mut request = Request::builder()
+                .method(Method::HEAD)
+                .uri(path)
+                .body(Body::empty())
+                .unwrap();
+            request.extensions_mut().insert(peer);
+            let response = router.clone().oneshot(request).await.unwrap();
+            assert_eq!(response.status(), status, "{path}");
+            assert!(!response.headers().contains_key(header::ALLOW), "{path}");
+            assert!(to_bytes(response.into_body(), 4096).await.unwrap().is_empty());
+        }
+    }
+
     #[tokio::test]
     async fn actual_recording_catchall_composes_comskip_playback_and_management_without_sql() {
         use tower::ServiceExt;
@@ -1353,10 +1514,22 @@ mod recording_jobs_binding_tests {
                 json!({"detail":"Recording playback capacity unavailable."}),
             ),
             (
-                Method::GET,
+                Method::PATCH,
                 "/api/channels/recordings/17/",
                 StatusCode::SERVICE_UNAVAILABLE,
                 json!({"error":"Recording intake closed"}),
+            ),
+            (
+                Method::OPTIONS,
+                "/api/channels/recordings/17/",
+                StatusCode::SERVICE_UNAVAILABLE,
+                json!({"error":"Recording intake closed"}),
+            ),
+            (
+                Method::GET,
+                "/api/channels/recordings/17/",
+                StatusCode::SERVICE_UNAVAILABLE,
+                json!({"detail":"Recording playback capacity unavailable."}),
             ),
         ] {
             let mut request = Request::builder()

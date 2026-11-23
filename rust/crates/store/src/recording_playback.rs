@@ -4,9 +4,9 @@
 use crate::{channels, recording_http, AuthService, RestReadLimits, StoreError, User};
 use axum::{
     extract::{ConnectInfo, Path, Request, State},
-    http::{HeaderMap, Method},
+    http::{header, HeaderMap, HeaderValue, Method},
     response::{IntoResponse, Response},
-    routing::get,
+    routing::{any, get},
     Router,
 };
 use dispatcharr_contracts::PlaybackRequest;
@@ -53,14 +53,30 @@ impl RecordingPlayback {
         }
     }
     pub fn router(self) -> Router {
+        self.clone().library_alias_router().merge(
+            Router::new()
+                .route(
+                    "/api/channels/recordings/",
+                    get(library_read).head(list_recordings),
+                )
+                .route("/api/channels/recordings/{id}/", any(library_get))
+                .route("/api/channels/recordings/{id}", any(library_get))
+                .route(recording_http::recurring::COLLECTION, get(recurring_rules))
+                .route(recording_http::recurring::PATH, get(recurring_rule))
+                .route("/api/channels/recordings/{id}/file/", get(handle))
+                .route("/api/channels/recordings/{id}/hls/{*segment}", get(handle))
+                .with_state(self),
+        )
+    }
+
+    pub(super) fn library_alias_router(self) -> Router {
         Router::new()
-            .route("/api/channels/recordings/", get(list_recordings))
-            .route(recording_http::recurring::COLLECTION, get(recurring_rules))
-            .route(recording_http::recurring::PATH, get(recurring_rule))
-            .route("/api/channels/recordings/{id}/file/", get(handle))
-            .route("/api/channels/recordings/{id}/hls/{*segment}", get(handle))
+            .route("/api/channels/recordings.json", any(library_get))
+            .route("/api/channels/recordings.json/", any(library_get))
+            .route("/api/channels/series-rules/", any(library_get))
             .with_state(self)
     }
+
     /// Called only by the combined normal recording route dispatcher. It enters
     /// the identical owned handler used by this service's isolated router.
     pub(crate) async fn dispatch(&self, peer: SocketAddr, request: Request) -> Response {
@@ -139,6 +155,93 @@ async fn recurring_rule(
     })
     .await
     .map_err(|_| StoreError::UnhandledRestFault)?
+}
+
+async fn library_get(
+    state: State<RecordingPlayback>,
+    peer: ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    if request.method() != Method::GET {
+        return Err(StoreError::NotFound);
+    }
+    library_read(state, peer, request).await
+}
+
+const RECORDINGS: &str = "/api/channels/recordings/";
+
+#[derive(Debug, PartialEq, Eq)]
+pub(super) enum LibraryRead<'a> {
+    Collection,
+    Detail(&'a str),
+    SeriesRules,
+}
+
+impl<'a> LibraryRead<'a> {
+    pub(super) fn from_path(path: &'a str) -> Option<Self> {
+        match path {
+            RECORDINGS | "/api/channels/recordings.json" | "/api/channels/recordings.json/" => {
+                return Some(Self::Collection)
+            }
+            "/api/channels/series-rules/" => return Some(Self::SeriesRules),
+            _ => {}
+        }
+        let tail = path.strip_prefix(RECORDINGS)?;
+        let segment = tail.strip_suffix('/').unwrap_or(tail);
+        let id = match segment.strip_suffix(".json") {
+            Some(id) => id,
+            None => tail.strip_suffix('/')?,
+        };
+        (!id.is_empty() && !id.contains(['.', '/'])).then_some(Self::Detail(id))
+    }
+
+    fn allow(&self) -> &'static str {
+        match self {
+            Self::Collection => "GET, POST, HEAD, OPTIONS",
+            Self::Detail(_) => "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            Self::SeriesRules => "GET, POST, DELETE, HEAD, OPTIONS",
+        }
+    }
+}
+
+pub(super) async fn library_read(
+    State(api): State<RecordingPlayback>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    let target = LibraryRead::from_path(request.uri().path()).ok_or(StoreError::NotFound)?;
+    let allow = target.allow();
+    let owner = api.admit()?;
+    let result = tokio::spawn(async move {
+        crate::epg_program_http::json_negotiation(request.headers(), request.uri())?;
+        let auth = api.inner.auth.clone().with_retained_scope(owner.clone());
+        let user = auth
+            .account_user(peer, request.headers().clone(), false)
+            .await?;
+        let target = LibraryRead::from_path(request.uri().path()).ok_or(StoreError::NotFound)?;
+        recording_http::access(&user, false)?;
+        let value = match target {
+            LibraryRead::Collection => recording_http::list_value(&auth, &user).await?,
+            LibraryRead::Detail(id) => {
+                recording_http::detail_value(&auth, &user, &percent_decode(id)?).await?
+            }
+            LibraryRead::SeriesRules => {
+                recording_http::series_rules_value(&auth, owner.clone()).await?
+            }
+        };
+        recording_http::reply(200, value, owner)
+    })
+    .await
+    .map_err(|_| StoreError::UnhandledRestFault)?;
+    let mut response = result.unwrap_or_else(IntoResponse::into_response);
+    response
+        .headers_mut()
+        .insert(header::ALLOW, HeaderValue::from_static(allow));
+    // Main's response middleware appends the Source CORS variation.
+    response
+        .headers_mut()
+        .insert(header::VARY, HeaderValue::from_static("Accept"));
+    Ok(response)
 }
 
 async fn list_recordings(
