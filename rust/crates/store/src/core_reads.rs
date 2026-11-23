@@ -99,6 +99,17 @@ impl Resource {
         }
         Ok(value)
     }
+
+    fn read_json(self, mut value: Value) -> Json<Value> {
+        let fields = match self {
+            Self::Settings => return Json(value),
+            Self::UserAgents => USER_AGENT_FIELDS,
+            Self::StreamProfiles => STREAM_PROFILE_FIELDS,
+            Self::OutputProfiles => OUTPUT_PROFILE_FIELDS,
+        };
+        order_profile_value(&mut value, fields);
+        Json(value)
+    }
 }
 
 pub(crate) fn settings_value(id: i64, key: String, name: String, value: Value) -> Value {
@@ -190,11 +201,12 @@ async fn read_resource(
         .into_iter()
         .map(|row| resource.serialize(row))
         .collect::<Result<Vec<_>, _>>()?;
-    Ok(Json(if id.is_some() {
+    let value = if id.is_some() {
         values.pop().ok_or_else(|| resource.missing())?
     } else {
         Value::Array(values)
-    }))
+    };
+    Ok(resource.read_json(value))
 }
 
 macro_rules! endpoints {
@@ -240,7 +252,18 @@ const STREAM_PROFILE_FIELDS: &[&str] = &[
     "locked",
 ];
 
+const OUTPUT_PROFILE_FIELDS: &[&str] =
+    &["id", "name", "command", "parameters", "is_active", "locked"];
+
 fn order_profile_fields(fields: &mut Map<String, Value>, source_order: &[&str]) {
+    if source_order.is_empty()
+        || fields
+            .keys()
+            .map(String::as_str)
+            .eq(source_order.iter().copied())
+    {
+        return;
+    }
     let mut ordered = Map::with_capacity(fields.len());
     for key in source_order {
         if let Some((name, value)) = fields.shift_remove_entry(*key) {
@@ -944,6 +967,44 @@ mod direct_profile_wire_tests {
         http::{Method, StatusCode},
     };
     use tower::ServiceExt;
+
+    #[test]
+    fn successful_profile_json_uses_source_field_order_for_objects_and_arrays() {
+        let shape = [
+            (
+                Resource::UserAgents,
+                json!({"id":4,"name":"Owned","is_active":true,"user_agent":"Owned/1.0",
+                    "description":"","created_at":"2026-01-03T12:00:00Z","updated_at":"2026-01-03T12:00:00Z"}),
+                r#"{"id":4,"name":"Owned","user_agent":"Owned/1.0","description":"","is_active":true,"created_at":"2026-01-03T12:00:00Z","updated_at":"2026-01-03T12:00:00Z"}"#,
+            ),
+            (
+                Resource::StreamProfiles,
+                json!({"id":6,"name":"Owned stream","is_active":true,"command":"","parameters":"",
+                    "locked":false,"user_agent":4}),
+                r#"{"id":6,"name":"Owned stream","command":"","parameters":"","is_active":true,"user_agent":4,"locked":false}"#,
+            ),
+            (
+                Resource::OutputProfiles,
+                json!({"id":3,"name":"Owned output","is_active":true,"command":"ffmpeg",
+                    "parameters":"","locked":false}),
+                r#"{"id":3,"name":"Owned output","command":"ffmpeg","parameters":"","is_active":true,"locked":false}"#,
+            ),
+        ];
+        for (resource, payload, expected) in shape {
+            let object = resource.read_json(payload.clone()).0;
+            assert_eq!(serde_json::to_string(&object).unwrap(), expected);
+            let list = resource.read_json(Value::Array(vec![payload, object])).0;
+            assert_eq!(
+                serde_json::to_string(&list).unwrap(),
+                format!("[{expected},{expected}]")
+            );
+        }
+        let setting = json!({"id":1,"key":"owned","name":"Owned setting","value":{"z":0,"a":1}});
+        assert_eq!(
+            serde_json::to_string(&Resource::Settings.read_json(setting.clone()).0).unwrap(),
+            serde_json::to_string(&setting).unwrap()
+        );
+    }
 
     #[tokio::test]
     async fn direct_profile_routes_share_ordered_get_headers_with_empty_head() {

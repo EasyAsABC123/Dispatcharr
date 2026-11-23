@@ -14,7 +14,7 @@ use axum::{
     Json, Router,
 };
 use md5::{Digest, Md5};
-use serde_json::{json, Value};
+use serde_json::{json, Map, Value};
 use sqlx::{Postgres, QueryBuilder};
 use std::{
     collections::HashMap,
@@ -175,6 +175,26 @@ pub(crate) fn serialize(mut row: Value, origin: &str) -> Value {
     }
     row
 }
+fn serialize_read(row: Value, origin: &str) -> Value {
+    let mut row = serialize(row, origin);
+    let fields = row.as_object_mut().expect("SQL logo object");
+    let mut ordered = Map::with_capacity(fields.len());
+    for name in [
+        "id",
+        "name",
+        "url",
+        "cache_url",
+        "channel_count",
+        "is_used",
+        "channel_names",
+    ] {
+        if let Some((key, value)) = fields.shift_remove_entry(name) {
+            ordered.insert(key, value);
+        }
+    }
+    ordered.extend(std::mem::take(fields));
+    Value::Object(ordered)
+}
 pub(crate) async fn lookup(auth: &AuthService, raw: &str, uri: &Uri) -> Result<Value, StoreError> {
     let id = raw.parse::<i64>().map_err(|_| missing())?;
     let mut query=QueryBuilder::new(format!("SELECT json_build_object('id',l.id,'name',l.name,'url',l.url,'channel_count',(SELECT count(*) FROM dispatcharr_channels_channel c WHERE c.logo_id=l.id),'channel_names',COALESCE((SELECT json_agg('Channel: '||n.name) FROM (SELECT c.name FROM dispatcharr_channels_channel c WHERE c.logo_id=l.id LIMIT 5)n),'[]'::json)){FROM}"));
@@ -286,7 +306,7 @@ async fn read(
     // Filesystem metadata is evaluated on a blocking worker, away from HTTP IO.
     let rows = tokio::task::spawn_blocking(move || {
         rows.into_iter()
-            .map(|v| serialize(v, &origin))
+            .map(|v| serialize_read(v, &origin))
             .collect::<Vec<_>>()
     })
     .await
@@ -404,6 +424,22 @@ pub(crate) fn router(auth: AuthService) -> Router {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn logo_read_orders_cache_and_usage_fields_in_detail_and_paginated_entity() {
+        let payload = json!({
+            "id":1,"name":"Owned","url":"","channel_count":1,"channel_names":["Channel: Owned"],
+        });
+        let detail = serialize_read(payload.clone(), "http://localhost");
+        let row = r#"{"id":1,"name":"Owned","url":"","cache_url":"http://localhost/api/channels/logos/1/cache/?v=d41d8cd9","channel_count":1,"is_used":true,"channel_names":["Channel: Owned"]}"#;
+        assert_eq!(serde_json::to_string(&detail).unwrap(), row);
+        let list = json!({"count":1,"next":null,"previous":null,"results":[detail]});
+        let expected = format!(r#"{{"count":1,"next":null,"previous":null,"results":[{row}]}}"#);
+        assert_eq!(serde_json::to_string(&list).unwrap(), expected);
+        let original_serialization = serialize(payload, "http://localhost");
+        assert_eq!(original_serialization, list["results"][0]);
+        assert_ne!(serde_json::to_string(&original_serialization).unwrap(), row);
+    }
+
     #[test]
     fn original_id_filter_ignores_invalid_but_digit_conversion_failure_empties() {
         let parse = |v: &[&str]| ids(v.iter().map(|v| (*v).to_owned()));
