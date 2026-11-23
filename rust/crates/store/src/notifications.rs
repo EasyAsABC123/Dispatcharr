@@ -634,9 +634,8 @@ pub(crate) fn include_dismissed(raw: Option<&str>) -> bool {
         .is_some_and(|(_, value)| value.to_lowercase() == "true")
 }
 
-// Original SystemNotificationSerializer field order applies to the observed UI
-// list. Move its existing keys without rebuilding any row or nested JSON value.
-fn notification_list_json(mut notifications: Vec<Value>) -> Value {
+// Original SystemNotificationSerializer supplies the GET list and detail order.
+fn order_notification_fields(notice: &mut Value) {
     const FIELDS: [&str; 13] = [
         "id",
         "notification_key",
@@ -652,14 +651,18 @@ fn notification_list_json(mut notifications: Vec<Value>) -> Value {
         "is_dismissed",
         "source",
     ];
-    for notice in &mut notifications {
-        if let Some(fields) = notice.as_object_mut() {
-            for field in FIELDS {
-                if let Some((key, value)) = fields.shift_remove_entry(field) {
-                    fields.insert(key, value);
-                }
+    if let Some(fields) = notice.as_object_mut() {
+        for field in FIELDS {
+            if let Some((key, value)) = fields.shift_remove_entry(field) {
+                fields.insert(key, value);
             }
         }
+    }
+}
+
+fn notification_list_json(mut notifications: Vec<Value>) -> Value {
+    for notice in &mut notifications {
+        order_notification_fields(notice);
     }
     let count = notifications.len();
     json!({"notifications": notifications, "count": count, "unread_count": count})
@@ -688,12 +691,12 @@ async fn detail(
 ) -> Result<Json<Value>, StoreError> {
     let user = authenticated_user(&auth, peer, headers).await?;
     let id = key(raw)?;
-    Ok(Json(
-        visible(&auth, &user, Some(id))
-            .await?
-            .pop()
-            .ok_or_else(missing)?,
-    ))
+    let mut notice = visible(&auth, &user, Some(id))
+        .await?
+        .pop()
+        .ok_or_else(missing)?;
+    order_notification_fields(&mut notice);
+    Ok(Json(notice))
 }
 async fn count(
     State(auth): State<AuthService>,
@@ -2054,6 +2057,17 @@ mod special_cache_representation_tests {
         let raw = crate::django_pickle::encode(&object).unwrap();
         assert_eq!(decode_settings_cache(&raw), Some(object));
         assert!(decode_settings_cache(&vec![b'x'; 65537]).is_none());
+    }
+
+    #[test]
+    fn notification_detail_preserves_original_json_field_order() {
+        let produced = r#"{"id":21,"notification_key":"notice","notification_type":"info","priority":"normal","title":"Title","message":"Message","source":"system","is_active":true,"admin_only":false,"action_data":{"z":2,"a":1},"created_at":"2024-01-01T12:00:00.123456Z","expires_at":null,"is_dismissed":true}"#;
+        let expected = r#"{"id":21,"notification_key":"notice","notification_type":"info","priority":"normal","title":"Title","message":"Message","action_data":{"z":2,"a":1},"is_active":true,"admin_only":false,"expires_at":null,"created_at":"2024-01-01T12:00:00.123456Z","is_dismissed":true,"source":"system"}"#;
+        let mut notice: Value = serde_json::from_str(produced).unwrap();
+        let before = notice.clone();
+        order_notification_fields(&mut notice);
+        assert_eq!(serde_json::to_string(&notice).unwrap(), expected);
+        assert_eq!(notice, before);
     }
 
     #[test]
