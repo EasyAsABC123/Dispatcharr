@@ -9,7 +9,8 @@ use crate::{
 };
 use axum::{
     extract::{
-        rejection::JsonRejection, ConnectInfo, FromRequestParts, OriginalUri, Path, Request, State,
+        rejection::JsonRejection, ConnectInfo, FromRequest, FromRequestParts, OriginalUri, Path,
+        Request, State,
     },
     http::{header, request::Parts, HeaderMap, HeaderValue, Method, StatusCode, Uri},
     response::{IntoResponse, Response},
@@ -18,7 +19,7 @@ use axum::{
 };
 use chrono::{DateTime, SecondsFormat, Utc};
 use serde_json::{json, Map, Value};
-use sqlx::{postgres::PgRow, Row};
+use sqlx::{postgres::PgRow, PgExecutor, Row};
 use std::net::SocketAddr;
 
 #[path = "core_profile_html.rs"]
@@ -114,10 +115,17 @@ impl AuthService {
     }
 }
 pub(crate) async fn user_agent_value(auth: &AuthService, id: i64) -> Result<Value, StoreError> {
+    user_agent_value_at(auth.store.pool(), id).await
+}
+
+pub(crate) async fn user_agent_value_at<'a>(
+    executor: impl PgExecutor<'a>,
+    id: i64,
+) -> Result<Value, StoreError> {
     let resource = Resource::UserAgents;
     let row = sqlx::query(resource.query())
         .bind(Some(id))
-        .fetch_optional(auth.store.pool())
+        .fetch_optional(executor)
         .await?
         .ok_or_else(|| resource.missing())?;
     Ok(resource.serialize(row)?)
@@ -497,20 +505,95 @@ async fn direct_streamprofile(
             Json(value),
         ));
     }
-    let choices: Vec<(i64, String)> =
-        sqlx::query_as("SELECT id::bigint AS id, name FROM core_useragent LIMIT $1")
-            .bind(core_profile_html::MAXIMUM_ROWS + 1)
-            .fetch_all(auth.store.pool())
-            .await?;
-    if choices.len() > core_profile_html::MAXIMUM_ROWS as usize {
-        return Err(core_profile_html::unavailable());
-    }
     order_profile_value(&mut value, STREAM_PROFILE_FIELDS);
     core_profile_html::response(
         core_profile_html::Page::ProfileDetail(uri.path()),
         &headers,
         &user.username,
         &value,
+        &profile_choices(auth.store.pool()).await?,
+        direct_profile_allow(true),
+    )
+}
+
+async fn profile_choices<'a>(
+    executor: impl PgExecutor<'a>,
+) -> Result<Vec<(i64, String)>, StoreError> {
+    let choices = sqlx::query_as("SELECT id::bigint AS id, name FROM core_useragent LIMIT $1")
+        .bind(core_profile_html::MAXIMUM_ROWS + 1)
+        .fetch_all(executor)
+        .await?;
+    bounded_profile_choices(choices)
+}
+
+fn bounded_profile_choices(choices: Vec<(i64, String)>) -> Result<Vec<(i64, String)>, StoreError> {
+    if choices.len() > core_profile_html::MAXIMUM_ROWS as usize {
+        return Err(core_profile_html::unavailable());
+    }
+    Ok(choices)
+}
+
+async fn direct_create_useragent(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    OriginalUri(uri): OriginalUri,
+    request: Request,
+) -> Result<Response, StoreError> {
+    if !core_profile_html::selected_write(request.method(), &uri, request.headers()) {
+        return crate::user_agent_writes::create(State(auth), ConnectInfo(peer), request).await;
+    }
+    crate::user_agent_writes::create_html(auth, peer, request).await
+}
+
+pub(crate) fn agent_created_html(
+    headers: &HeaderMap,
+    actor: &str,
+    mut entity: Value,
+) -> Result<Response, StoreError> {
+    order_profile_value(&mut entity, USER_AGENT_FIELDS);
+    core_profile_html::response(
+        core_profile_html::Page::AgentCreated,
+        headers,
+        actor,
+        &entity,
+        &[],
+        direct_profile_allow(false),
+    )
+}
+
+async fn direct_put_streamprofile(
+    auth: State<AuthService>,
+    id: Path<String>,
+    peer: ConnectInfo<SocketAddr>,
+    OriginalUri(uri): OriginalUri,
+    request: Request,
+) -> Result<Response, StoreError> {
+    let headers = request.headers().clone();
+    if !core_profile_html::multipart(&headers) {
+        let body = Json::<Value>::from_request(request, &()).await;
+        return crate::core_stream_writes::put(auth, id, peer, headers, body)
+            .await
+            .map(IntoResponse::into_response);
+    }
+    let html_path =
+        core_profile_html::selected_write(request.method(), &uri, &headers).then_some(uri.path());
+    crate::core_stream_writes::put_multipart(&auth, peer.0, id.0, request, html_path).await
+}
+
+pub(crate) async fn profile_updated_html<'a>(
+    executor: impl PgExecutor<'a>,
+    path: &str,
+    headers: &HeaderMap,
+    actor: &str,
+    entity: &mut Value,
+) -> Result<Response, StoreError> {
+    let choices = profile_choices(executor).await?;
+    order_profile_value(entity, STREAM_PROFILE_FIELDS);
+    core_profile_html::response(
+        core_profile_html::Page::ProfileUpdated(path),
+        headers,
+        actor,
+        entity,
         &choices,
         direct_profile_allow(true),
     )
@@ -593,7 +676,7 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             "/api/core/useragents/",
             get(direct_useragents)
                 .options(useragents_options)
-                .post(crate::user_agent_writes::create),
+                .post(direct_create_useragent),
         )
         .route(
             "/api/core/useragents/{id}/",
@@ -614,7 +697,7 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(direct_streamprofile)
                 .options(streamprofile_options)
                 .patch(crate::core_stream_writes::patch)
-                .put(crate::core_stream_writes::put)
+                .put(direct_put_streamprofile)
                 .delete(crate::core_stream_writes::delete),
         )
         .route("/api/core/outputprofiles/", get(outputprofiles))
@@ -875,6 +958,87 @@ mod direct_profile_options_tests {
             assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
             assert!(!response.headers().contains_key(header::SET_COOKIE));
         }
+    }
+
+    #[tokio::test]
+    async fn protected_core_html_writes_require_authentication_at_direct_and_alias_routes() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://localhost/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-core-multipart-test-key".into()).unwrap(),
+        );
+        for (method, path, accept) in [
+            (
+                Method::POST,
+                "/api/core/useragents/",
+                "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+            ),
+            (
+                Method::POST,
+                "/api/core/useragents.json",
+                "application/json",
+            ),
+            (
+                Method::PUT,
+                "/api/core/streamprofiles/6/",
+                "text/html; q=1.0, */*",
+            ),
+            (
+                Method::PUT,
+                "/api/core/streamprofiles/6/",
+                "application/json",
+            ),
+            (
+                Method::PUT,
+                "/api/core/streamprofiles/6.json",
+                "application/json",
+            ),
+        ] {
+            let request = Request::builder()
+                .method(method)
+                .uri(path)
+                .header(header::ACCEPT, accept)
+                .header(header::CONTENT_TYPE, "multipart/form-data")
+                .header(header::AUTHORIZATION, "Bearer malformed")
+                .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                .body(Body::empty())
+                .unwrap();
+            let response = router(auth.clone()).oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+            assert!(!response.headers().contains_key(header::SET_COOKIE));
+        }
+    }
+
+    #[test]
+    fn core_profile_html_choice_and_render_capacity_fail_closed() {
+        let at_bound = vec![(1, "Owned choice".into()); core_profile_html::MAXIMUM_ROWS as usize];
+        assert!(bounded_profile_choices(at_bound.clone()).is_ok());
+        let mut beyond = at_bound;
+        beyond.push((2, "Overflow choice".into()));
+        assert!(matches!(
+            bounded_profile_choices(beyond),
+            Err(StoreError::Unsupported(_))
+        ));
+
+        // Within the multipart text limit, but escaping the text in the rendered
+        // profile exceeds the HTML response limit.
+        let value = serde_json::json!({
+            "id": 6, "name": "Owned profile", "command": "", "parameters": "&".repeat(240_000),
+            "is_active": false, "user_agent": null, "locked": false,
+        });
+        assert!(matches!(
+            core_profile_html::response(
+                core_profile_html::Page::ProfileUpdated("/api/core/streamprofiles/6/"),
+                &HeaderMap::new(),
+                "fixture actor",
+                &value,
+                &[],
+                direct_profile_allow(true)
+            ),
+            Err(StoreError::Unsupported(_))
+        ));
     }
 
     #[tokio::test]

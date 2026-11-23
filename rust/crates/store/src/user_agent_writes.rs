@@ -11,6 +11,7 @@ use axum::{
     Json,
 };
 use serde_json::{json, Map, Value};
+use sqlx::PgExecutor;
 use std::{
     net::SocketAddr,
     time::{SystemTime, UNIX_EPOCH},
@@ -120,35 +121,73 @@ async fn invalidate(auth: &AuthService) -> Result<(), StoreError> {
         .to_string();
     cache.invalidate_user_agent(&version).await
 }
+async fn insert_agent<'a>(
+    executor: impl PgExecutor<'a>,
+    values: &Map<String, Value>,
+) -> Result<i64, StoreError> {
+    Ok(sqlx::query_scalar("INSERT INTO core_useragent(name,user_agent,description,is_active,created_at,updated_at) VALUES($1,$2,$3,$4,NOW(),NOW()) RETURNING id")
+        .bind(values["name"].as_str().unwrap())
+        .bind(values["user_agent"].as_str().unwrap())
+        .bind(values.get("description").and_then(Value::as_str).unwrap_or(""))
+        .bind(values.get("is_active").and_then(Value::as_bool).unwrap_or(true))
+        .fetch_one(executor)
+        .await?)
+}
+
 async fn run_create(
     auth: AuthService,
     body: Map<String, Value>,
-    html: bool,
+    form: bool,
+    browse: Option<(HeaderMap, String)>,
     _permit: OwnedSemaphorePermit,
 ) -> Result<Response, StoreError> {
-    let values = validate(&auth, body, None, false, html).await?;
-    let id:i64=sqlx::query_scalar("INSERT INTO core_useragent(name,user_agent,description,is_active,created_at,updated_at) VALUES($1,$2,$3,$4,NOW(),NOW()) RETURNING id").bind(values["name"].as_str().unwrap()).bind(values["user_agent"].as_str().unwrap()).bind(values.get("description").and_then(Value::as_str).unwrap_or("")).bind(values.get("is_active").and_then(Value::as_bool).unwrap_or(true)).fetch_one(auth.store.pool()).await?;
+    let values = validate(&auth, body, None, false, form).await?;
+    if let Some((headers, actor)) = browse {
+        let mut tx = auth.store.pool().begin().await?;
+        let id = insert_agent(&mut *tx, &values).await?;
+        let value = crate::core_reads::user_agent_value_at(&mut *tx, id).await?;
+        let response = crate::core_reads::agent_created_html(&headers, &actor, value)?;
+        tx.commit().await?;
+        invalidate(&auth).await?;
+        return Ok(response);
+    }
+    let id = insert_agent(auth.store.pool(), &values).await?;
     invalidate(&auth).await?;
-    Ok((
-        StatusCode::CREATED,
-        Json(crate::core_reads::user_agent_value(&auth, id).await?),
-    )
-        .into_response())
+    let value = crate::core_reads::user_agent_value(&auth, id).await?;
+    Ok((StatusCode::CREATED, Json(value)).into_response())
 }
+
+async fn create_response(
+    auth: AuthService,
+    peer: SocketAddr,
+    request: Request,
+    html: bool,
+) -> Result<Response, StoreError> {
+    let headers = request.headers().clone();
+    let user = auth.account_user(peer, headers.clone(), true).await?;
+    let permit = reserve(&auth)?;
+    let (body, form) = crate::logo_writes::mutation_fields(request).await?;
+    let browse = html.then_some((headers, user.username));
+    // Keep mutation and post-save invalidation behind the existing owned permit.
+    tokio::spawn(run_create(auth, body, form, browse, permit))
+        .await
+        .map_err(|_| unavailable())?
+}
+
+pub(crate) async fn create_html(
+    auth: AuthService,
+    peer: SocketAddr,
+    request: Request,
+) -> Result<Response, StoreError> {
+    create_response(auth, peer, request, true).await
+}
+
 pub(crate) async fn create(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Result<Response, StoreError> {
-    auth.account_user(peer, request.headers().clone(), true)
-        .await?;
-    let permit = reserve(&auth)?;
-    let (body, html) = crate::logo_writes::mutation_fields(request).await?;
-    // Model mutation + post-save invalidation outlive an abandoned HTTP caller,
-    // behind four owned permits. No unbounded detached mutation tasks are spawned.
-    tokio::spawn(run_create(auth, body, html, permit))
-        .await
-        .map_err(|_| unavailable())?
+    create_response(auth, peer, request, false).await
 }
 async fn run_update(
     auth: AuthService,

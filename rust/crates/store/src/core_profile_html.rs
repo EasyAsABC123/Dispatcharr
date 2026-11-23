@@ -8,7 +8,7 @@ use crate::{
 };
 use axum::{
     body::Body,
-    http::{header, HeaderMap, Method, Uri},
+    http::{header, HeaderMap, Method, StatusCode, Uri},
     response::Response,
 };
 use serde::Serialize;
@@ -23,18 +23,63 @@ pub(super) const MAXIMUM_ROWS: i64 = 1000;
 #[derive(Clone, Copy)]
 pub(super) enum Page<'a> {
     AgentList,
+    AgentCreated,
     ProfileDetail(&'a str),
+    ProfileUpdated(&'a str),
 }
 
-pub(super) fn selected(method: &Method, uri: &Uri, headers: &HeaderMap) -> bool {
+impl Page<'_> {
+    fn method(self) -> &'static str {
+        match self {
+            Self::AgentList | Self::ProfileDetail(_) => "GET",
+            Self::AgentCreated => "POST",
+            Self::ProfileUpdated(_) => "PUT",
+        }
+    }
+
+    fn status(self) -> StatusCode {
+        match self {
+            Self::AgentCreated => StatusCode::CREATED,
+            _ => StatusCode::OK,
+        }
+    }
+}
+
+const NAVIGATION_ACCEPT: &str = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+const AJAX_ACCEPT: &str = "text/html; q=1.0, */*";
+
+pub(super) fn multipart(headers: &HeaderMap) -> bool {
+    headers
+        .get(header::CONTENT_TYPE)
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.split(';').next())
+        .is_some_and(|media| media.trim() == "multipart/form-data")
+}
+
+pub(super) fn selected_write(method: &Method, uri: &Uri, headers: &HeaderMap) -> bool {
+    let expected = match *method {
+        Method::POST if uri.path() == "/api/core/useragents/" => NAVIGATION_ACCEPT,
+        Method::PUT
+            if uri.path().starts_with("/api/core/streamprofiles/") && uri.path().ends_with('/') =>
+        {
+            AJAX_ACCEPT
+        }
+        _ => return false,
+    };
+    uri.query().is_none() && multipart(headers) && accepts_signed_html(headers, expected)
+}
+
+fn accepts_signed_html(headers: &HeaderMap, expected: &str) -> bool {
     let mut accepts = headers.get_all(header::ACCEPT).iter();
-    method == Method::GET
-        && uri.query().is_none()
-        && accepts.next().is_some_and(|value| value == "text/html")
+    accepts.next().is_some_and(|value| value == expected)
         && accepts.next().is_none()
         && headers
             .get(header::AUTHORIZATION)
             .is_some_and(|value| value.as_bytes().starts_with(b"Bearer "))
+}
+
+pub(super) fn selected(method: &Method, uri: &Uri, headers: &HeaderMap) -> bool {
+    method == Method::GET && uri.query().is_none() && accepts_signed_html(headers, "text/html")
 }
 
 pub(super) fn unavailable() -> StoreError {
@@ -53,6 +98,7 @@ pub(super) fn response(
     let (_, mask, cookie) = source_browsable_csrf(incoming.as_deref());
     let data = render(page, actor, entity, choices, [&mask, &mask])?;
     Response::builder()
+        .status(page.status())
         .header(header::CONTENT_TYPE, "text/html; charset=utf-8")
         .header(header::ALLOW, allow)
         .header(header::VARY, "Accept, origin, Cookie")
@@ -114,10 +160,14 @@ fn render(
     let bytes = pretty.into_data();
     let json = std::str::from_utf8(&bytes).map_err(|_| unavailable())?;
     let (mut template, path) = match page {
-        Page::AgentList => (AGENT_LIST, ""),
-        Page::ProfileDetail(path) => (PROFILE_DETAIL, path),
+        Page::AgentList | Page::AgentCreated => (AGENT_LIST, ""),
+        Page::ProfileDetail(path) | Page::ProfileUpdated(path) => (PROFILE_DETAIL, path),
     };
     let text = |field: &str| entity[field].as_str().ok_or_else(unavailable);
+    let agent_field = |field: &str| match page {
+        Page::AgentCreated => text(field),
+        _ => Ok(""),
+    };
     let checked = |field: &str| {
         entity[field]
             .as_bool()
@@ -133,6 +183,18 @@ fn render(
         match &slot[..end] {
             "@@CORE_ACTOR@@" => escaped(&mut output, actor)?,
             "@@CORE_PATH@@" => escaped(&mut output, path)?,
+            "@@CORE_METHOD@@" => emit(&mut output, page.method())?,
+            "@@CORE_STATUS@@" => emit(
+                &mut output,
+                if page.status() == StatusCode::CREATED {
+                    "201 Created"
+                } else {
+                    "200 OK"
+                },
+            )?,
+            "@@CORE_AGENT_NAME@@" => escaped(&mut output, agent_field("name")?)?,
+            "@@CORE_AGENT_VALUE@@" => escaped(&mut output, agent_field("user_agent")?)?,
+            "@@CORE_AGENT_DESCRIPTION@@" => escaped(&mut output, agent_field("description")?)?,
             "@@CORE_MASK_0@@" => emit(&mut output, masks[0])?,
             "@@CORE_MASK_1@@" => emit(&mut output, masks[1])?,
             "@@CORE_DISPLAY@@" => {
@@ -150,7 +212,14 @@ fn render(
             }
             "@@CORE_COMMAND@@" => escaped(&mut output, text("command")?)?,
             "@@CORE_PARAMETERS@@" => escaped(&mut output, text("parameters")?)?,
-            "@@CORE_ACTIVE@@" => emit(&mut output, checked("is_active")?)?,
+            "@@CORE_ACTIVE@@" => emit(
+                &mut output,
+                if matches!(page, Page::AgentList) {
+                    ""
+                } else {
+                    checked("is_active")?
+                },
+            )?,
             "@@CORE_LOCKED@@" => emit(&mut output, checked("locked")?)?,
             "@@CORE_CHOICES@@" => {
                 choice_options(&mut output, choices, entity["user_agent"].as_i64())?
@@ -189,6 +258,110 @@ mod tests {
             "application/json, text/html;q=0.5".parse().unwrap(),
         );
         assert!(!selected(&Method::GET, &path, &request));
+    }
+
+    #[test]
+    fn selected_write_requires_the_observed_canonical_multipart_headers() {
+        let agent: Uri = "/api/core/useragents/".parse().unwrap();
+        let alias: Uri = "/api/core/useragents.json".parse().unwrap();
+        let profile: Uri = "/api/core/streamprofiles/6/".parse().unwrap();
+        let with_query: Uri = "/api/core/streamprofiles/6/?format=json".parse().unwrap();
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            header::CONTENT_TYPE,
+            "multipart/form-data; boundary=fixture".parse().unwrap(),
+        );
+        headers.insert(header::ACCEPT, NAVIGATION_ACCEPT.parse().unwrap());
+        assert!(!selected_write(&Method::POST, &agent, &headers));
+        headers.insert(header::AUTHORIZATION, "Bearer fixture".parse().unwrap());
+        assert!(selected_write(&Method::POST, &agent, &headers));
+        assert!(!selected_write(&Method::POST, &alias, &headers));
+        assert!(!selected_write(&Method::PUT, &profile, &headers));
+        headers.insert(header::ACCEPT, AJAX_ACCEPT.parse().unwrap());
+        assert!(selected_write(&Method::PUT, &profile, &headers));
+        assert!(!selected_write(&Method::PUT, &with_query, &headers));
+        headers.append(header::ACCEPT, "application/json".parse().unwrap());
+        assert!(!selected_write(&Method::PUT, &profile, &headers));
+        headers.insert(header::ACCEPT, AJAX_ACCEPT.parse().unwrap());
+        headers.insert(header::CONTENT_TYPE, "application/json".parse().unwrap());
+        assert!(!selected_write(&Method::PUT, &profile, &headers));
+    }
+
+    #[test]
+    fn captured_core_write_bytes_match_after_exact_csrf_normalization() {
+        for (method, source) in [
+            (
+                "POST",
+                include_str!("../datasets/core-profile-html/agent-create-witness.json"),
+            ),
+            (
+                "PUT",
+                include_str!("../datasets/core-profile-html/profile-update-witness.json"),
+            ),
+        ] {
+            let witness: Value = serde_json::from_str(source).unwrap();
+            let page = if method == "POST" {
+                Page::AgentCreated
+            } else {
+                Page::ProfileUpdated(witness["path"].as_str().unwrap())
+            };
+            let choices: Vec<_> = witness["choices"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|row| {
+                    (
+                        row[0].as_i64().unwrap(),
+                        row[1].as_str().unwrap().to_owned(),
+                    )
+                })
+                .collect();
+            let rendered = render(
+                page,
+                witness["actor"].as_str().unwrap(),
+                &witness["entity"],
+                &choices,
+                ["@@CORE_BROWSE_CSRF_SLOT_0@@", "@@CORE_BROWSE_CSRF_SLOT_1@@"],
+            )
+            .unwrap();
+            assert_eq!(
+                format!("{:x}", Sha256::digest(rendered)),
+                witness["normalized_sha256"].as_str().unwrap()
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn browsable_write_status_and_cookie_match_the_rendered_mask() {
+        let mut request = HeaderMap::new();
+        let (old_cookie, _, _) = source_browsable_csrf(None);
+        request.insert(
+            header::COOKIE,
+            format!("csrftoken={old_cookie}").parse().unwrap(),
+        );
+        let reply = response(Page::AgentCreated, &request, "fixture actor",
+            &serde_json::json!({"id":9,"name":"Owned & Viewer","user_agent":"Fixture/1.0","description":"form","is_active":true}),
+            &[], "GET, POST, HEAD, OPTIONS").unwrap();
+        let (head, body) = reply.into_parts();
+        assert_eq!(head.status, StatusCode::CREATED);
+        let raw = axum::body::to_bytes(body, MAXIMUM_HTML).await.unwrap();
+        let body = std::str::from_utf8(&raw).unwrap();
+        assert!(body.contains("HTTP 201 Created"));
+        assert!(body.contains("Owned &amp; Viewer"));
+        let mask = body
+            .split_once(r#""csrfToken": ""#)
+            .unwrap()
+            .1
+            .split('"')
+            .next()
+            .unwrap();
+        let (matched_cookie, _, _) = source_browsable_csrf(Some(mask));
+        assert_eq!(matched_cookie, old_cookie);
+        assert!(head.headers[header::SET_COOKIE]
+            .to_str()
+            .unwrap()
+            .starts_with(&format!("csrftoken={old_cookie};")));
+        assert!(body.contains(&format!(r#"name="csrfmiddlewaretoken" value="{mask}""#)));
     }
 
     #[tokio::test]

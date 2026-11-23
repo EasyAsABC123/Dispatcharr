@@ -6,8 +6,9 @@ use crate::{
     AuthService, StoreError,
 };
 use axum::{
-    extract::{rejection::JsonRejection, ConnectInfo, Path, State},
+    extract::{rejection::JsonRejection, ConnectInfo, Path, Request, State},
     http::{HeaderMap, StatusCode},
+    response::{IntoResponse, Response},
     Json,
 };
 use serde_json::{json, Map, Value};
@@ -28,10 +29,9 @@ fn key(raw: String) -> Result<i64, StoreError> {
 }
 async fn validated(
     auth: &AuthService,
-    body: Body,
+    body: Map<String, Value>,
     partial: bool,
 ) -> Result<Map<String, Value>, StoreError> {
-    let body = body_object(body)?;
     let mut out = Map::new();
     let mut errors = Map::new();
     for field in [
@@ -112,21 +112,40 @@ pub(crate) async fn create(
     body: Body,
 ) -> Result<(StatusCode, Json<Value>), StoreError> {
     auth.account_user(peer, headers, true).await?;
-    let value = merge(None, validated(&auth, body, false).await?)?;
+    let value = merge(None, validated(&auth, body_object(body)?, false).await?)?;
     let mut tx = auth.store.pool().begin().await?;
     let value = save(&mut tx, None, &value).await?;
     tx.commit().await?;
     Ok((StatusCode::CREATED, Json(value)))
 }
+enum ProfileUpdate {
+    Json(Body),
+    Multipart(Request),
+}
+
+async fn multipart_fields(request: Request) -> Result<Map<String, Value>, StoreError> {
+    let (mut fields, _) = crate::logo_writes::mutation_fields(request).await?;
+    for field in ["is_active", "locked"] {
+        if fields.get(field).and_then(Value::as_str) == Some("") {
+            fields.shift_remove(field);
+        } else {
+            fields.entry(field).or_insert(Value::Bool(false));
+        }
+    }
+    Ok(fields)
+}
+
 async fn change(
-    auth: AuthService,
+    auth: &AuthService,
     peer: SocketAddr,
     headers: HeaderMap,
     raw: String,
-    body: Body,
+    body: ProfileUpdate,
     partial: bool,
-) -> Result<Json<Value>, StoreError> {
-    auth.account_user(peer, headers, true).await?;
+    html_path: Option<&str>,
+) -> Result<(Value, Option<Response>), StoreError> {
+    let browse = html_path.map(|path| (path, headers.clone()));
+    let user = auth.account_user(peer, headers, true).await?;
     let id = key(raw)?;
     // Resolve before validation, as DRF UpdateModelMixin does. Validate FK
     // fields before taking a transaction connection, so bounded pools cannot
@@ -136,7 +155,11 @@ async fn change(
         .fetch_optional(auth.store.pool())
         .await?
         .ok_or_else(missing)?;
-    let changes = validated(&auth, body, partial).await?;
+    let fields = match body {
+        ProfileUpdate::Json(body) => body_object(body)?,
+        ProfileUpdate::Multipart(request) => multipart_fields(request).await?,
+    };
+    let changes = validated(auth, fields, partial).await?;
     let mut tx = auth.store.pool().begin().await?;
     let old: Value = sqlx::query_scalar(&format!("{SELECT} FOR UPDATE"))
         .bind(id)
@@ -144,10 +167,46 @@ async fn change(
         .await?
         .ok_or_else(missing)?;
     let value = merge(Some(old), changes)?;
-    let value = save(&mut tx, Some(id), &value).await?;
+    let mut value = save(&mut tx, Some(id), &value).await?;
+    // A rejected choice lookup or bounded render must roll the profile back.
+    let html = if let Some((path, headers)) = browse {
+        Some(
+            crate::core_reads::profile_updated_html(
+                &mut *tx,
+                path,
+                &headers,
+                &user.username,
+                &mut value,
+            )
+            .await?,
+        )
+    } else {
+        None
+    };
     tx.commit().await?;
-    Ok(Json(value))
+    Ok((value, html))
 }
+
+pub(crate) async fn put_multipart(
+    auth: &AuthService,
+    peer: SocketAddr,
+    id: String,
+    request: Request,
+    html_path: Option<&str>,
+) -> Result<Response, StoreError> {
+    let (value, html) = change(
+        auth,
+        peer,
+        request.headers().clone(),
+        id,
+        ProfileUpdate::Multipart(request),
+        false,
+        html_path,
+    )
+    .await?;
+    Ok(html.unwrap_or_else(|| Json(value).into_response()))
+}
+
 pub(crate) async fn patch(
     State(auth): State<AuthService>,
     Path(raw): Path<String>,
@@ -155,7 +214,17 @@ pub(crate) async fn patch(
     headers: HeaderMap,
     body: Body,
 ) -> Result<Json<Value>, StoreError> {
-    change(auth, peer, headers, raw, body, true).await
+    change(
+        &auth,
+        peer,
+        headers,
+        raw,
+        ProfileUpdate::Json(body),
+        true,
+        None,
+    )
+    .await
+    .map(|(value, _)| Json(value))
 }
 pub(crate) async fn put(
     State(auth): State<AuthService>,
@@ -164,7 +233,17 @@ pub(crate) async fn put(
     headers: HeaderMap,
     body: Body,
 ) -> Result<Json<Value>, StoreError> {
-    change(auth, peer, headers, raw, body, false).await
+    change(
+        &auth,
+        peer,
+        headers,
+        raw,
+        ProfileUpdate::Json(body),
+        false,
+        None,
+    )
+    .await
+    .map(|(value, _)| Json(value))
 }
 pub(crate) async fn delete(
     State(auth): State<AuthService>,
@@ -210,6 +289,34 @@ pub(crate) async fn delete(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn profile_put_multipart_uses_shared_parser_and_full_form_checkbox_rules() {
+        let body = concat!(
+            "--fixture\r\nContent-Disposition: form-data; name=\"name\"\r\n\r\nProfile\r\n",
+            "--fixture\r\nContent-Disposition: form-data; name=\"command\"\r\n\r\n\r\n",
+            "--fixture\r\nContent-Disposition: form-data; name=\"user_agent\"\r\n\r\n5\r\n",
+            "--fixture--\r\n"
+        );
+        let request = |content_type| {
+            Request::builder()
+                .header(axum::http::header::CONTENT_TYPE, content_type)
+                .body(axum::body::Body::from(body))
+                .unwrap()
+        };
+        let fields = multipart_fields(request("multipart/form-data; boundary=fixture"))
+            .await
+            .unwrap();
+        assert_eq!(fields["name"], "Profile");
+        assert_eq!(fields["command"], "");
+        assert_eq!(fields["user_agent"], "5");
+        assert_eq!(fields["is_active"], false);
+        assert_eq!(fields["locked"], false);
+        assert!(matches!(
+            multipart_fields(request("multipart/form-data")).await,
+            Err(StoreError::InvalidInput(_)) | Err(StoreError::StatusBody(400, _))
+        ));
+    }
+
     #[test]
     fn locked_profile_only_accepts_user_agent() {
         let old = json!({"id":12,"name":"locked","command":"cmd","parameters":"p","is_active":true,"locked":true,"user_agent":null});
