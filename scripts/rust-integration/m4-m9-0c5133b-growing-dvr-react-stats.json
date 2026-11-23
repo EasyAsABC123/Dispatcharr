@@ -1,0 +1,122 @@
+{
+  "candidate": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "growing_DVR": {
+    "proof_sha256": "009141562d303b4a4ab51ba291aeb61f6370d22d3c6187c0a29ce3a2eb0ce2f8",
+    "receipt": {
+      "candidate_image": "sha256:e6d40f935400adfc8ccd64d31211b556cf3bf8dffc39f7fd823fbb5688d0f2dd",
+      "candidate_revision": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+      "checks": {
+        "native": {
+          "hls-heartbeat": {
+            "actual_ttl_seconds": 19,
+            "owned_heartbeat_active": true
+          },
+          "hls-playlist-bearer": {
+            "actual_status": 200,
+            "expected_media_or_manifest_exact": true,
+            "headers_match": true,
+            "response_bytes": 154,
+            "response_sha256": "9a234fba9a6c3d7a4a6bd2185171cd93e43d91c10709eb924698db3b5b6ac650"
+          },
+          "hls-playlist-grown-bearer": {
+            "actual_status": 200,
+            "expected_media_or_manifest_exact": true,
+            "headers_match": true,
+            "response_bytes": 235,
+            "response_sha256": "e1856f81d51b9a647cd061e76082bfdb724359cab626cc2924e812226256f3cc"
+          },
+          "hls-segment-appended-bearer": {
+            "actual_status": 200,
+            "expected_media_or_manifest_exact": true,
+            "headers_match": true,
+            "response_bytes": 103212,
+            "response_sha256": "e83d02cc962dbcc8fdb3955195e4e13ea84e019913ef32325ea161861a449931"
+          },
+          "hls-segment-bearer": {
+            "actual_status": 200,
+            "expected_media_or_manifest_exact": true,
+            "headers_match": true,
+            "response_bytes": 96444,
+            "response_sha256": "bd8873ae5791b4ca7526fd2ec7b1ed927d83add6a7d6bd97fa93086045d7d4b8"
+          },
+          "hls-two-segment-decode": {
+            "audio_stream_required": true,
+            "decoder_exit": 0,
+            "video_frames": 100
+          }
+        },
+        "source": {
+          "hls-heartbeat": {
+            "actual_ttl_seconds": 19,
+            "owned_heartbeat_active": true
+          },
+          "hls-playlist-bearer": {
+            "actual_status": 200,
+            "expected_media_or_manifest_exact": true,
+            "headers_match": true,
+            "response_bytes": 154,
+            "response_sha256": "965e339b390cc56a9d8d5050cbea1390ec10d70de8442fa55fb5cd004ef126a9"
+          },
+          "hls-playlist-grown-bearer": {
+            "actual_status": 200,
+            "expected_media_or_manifest_exact": true,
+            "headers_match": true,
+            "response_bytes": 235,
+            "response_sha256": "07dbeb34fe2c7c583a1678bd4a7af7e4e72549a58e794991ac77ae42cf0dc54a"
+          },
+          "hls-segment-appended-bearer": {
+            "actual_status": 200,
+            "expected_media_or_manifest_exact": true,
+            "headers_match": true,
+            "response_bytes": 103212,
+            "response_sha256": "e83d02cc962dbcc8fdb3955195e4e13ea84e019913ef32325ea161861a449931"
+          },
+          "hls-segment-bearer": {
+            "actual_status": 200,
+            "expected_media_or_manifest_exact": true,
+            "headers_match": true,
+            "response_bytes": 96444,
+            "response_sha256": "bd8873ae5791b4ca7526fd2ec7b1ed927d83add6a7d6bd97fa93086045d7d4b8"
+          },
+          "hls-two-segment-decode": {
+            "audio_stream_required": true,
+            "decoder_exit": 0,
+            "video_frames": 100
+          }
+        }
+      },
+      "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+      "performance_verified": false,
+      "recording_checks": 24,
+      "roles_exactly_retired": 4,
+      "scope": "paired_owned_HLS_DVR_playback_with_two_atomic_playlist_publications",
+      "synthetic_publisher": true,
+      "whole_M4_verified": false
+    }
+  },
+  "image": "sha256:e6d40f935400adfc8ccd64d31211b556cf3bf8dffc39f7fd823fbb5688d0f2dd",
+  "live_React_Stats": {
+    "cleanup": {
+      "Chromium_groups_absent": true,
+      "cleanup_sha256": "efeff2293468587a8305e6f1742f5ea94c4e21ee64f044da7858216f1473877a",
+      "exact_owned_absence": true,
+      "frontend_donor": 1,
+      "project_roles": 4
+    },
+    "literal_controller_exit": 2,
+    "node": "package/live-react-stats",
+    "proof": {
+      "active_channel_stats_HTTP_200": true,
+      "actual_advancing_video": true,
+      "entrypoint": "production-Main",
+      "exact_static_assets": 112,
+      "full_required_workflow": true,
+      "normal_UI_player_close": true,
+      "paired_browser_arms": 2,
+      "semantic_assertions_passed": true
+    },
+    "proof_sha256": "096c165d01945be57ba49f510670e219615b051811c1f074f2642b6df175015b",
+    "whole_127_pass": false
+  },
+  "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}

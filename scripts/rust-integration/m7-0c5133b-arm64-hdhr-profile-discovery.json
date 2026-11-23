@@ -1,0 +1,298 @@
+{
+  "actual_exit": 0,
+  "actual_pair_receipt_sha256": "264ea5edb461e462a210441c4d655b4ec6b8cc81b691bb3d07b15f37d0beff8c",
+  "advertised_stream_urls_verified": true,
+  "api_lineup_alias_equal": true,
+  "application_revision": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "application_tree_sha256": "37367020363f670cf6cd3da8b26540d25e91181031f4abdfc373b30455117e04",
+  "architecture": "linux/arm64",
+  "automatic_LAN_discovery_qualified": false,
+  "earlier_fixture_failures": [
+    {
+      "attempt": "m7-hdhr-discovery-0c-r1",
+      "command_ledger_sha256": "ca836d9bdf9d64011be8404fb04c0d062ea14c24ecb1e4c8137cb9be4234f9cb",
+      "compose_down_literal_exit": 0,
+      "compose_up_literal_exit": 1,
+      "confirmed_host_fixture_permission_defect": true,
+      "exact_cleanup": true,
+      "guest_bind_modes": {
+        "tools": "0755",
+        "tools/probe.py": "0600",
+        "tools/seed.py": "0600"
+      },
+      "native_started": false,
+      "original_app_started": false,
+      "original_seed_exit": 1,
+      "physical_exit": 1,
+      "physical_receipt_sha256": "a015c938ff350ec975bf928cf222bdfb7b7a6d88ef164853d272d353d44a25c3",
+      "probe_started": false,
+      "retired": {
+        "container": 5,
+        "network": 1,
+        "volume": 2
+      },
+      "seed_trace_retained": false,
+      "seed_uid": "65532:65532"
+    },
+    {
+      "attempt": "m7-hdhr-discovery-0c-r2",
+      "command_ledger_sha256": "918dacaaca3c3bfe529d0d853b439134d8e491e33d65843bc8e17bd178e05e2e",
+      "compose_down_literal_exit": 0,
+      "compose_up_literal_exit": 1,
+      "exact_cleanup": true,
+      "exception": "django.db.utils.IntegrityError",
+      "failed_fixture_step": "seed tried to create a membership populated by the stock post-save hook",
+      "guest_bind_modes": {
+        "tools": "0755",
+        "tools/probe.py": "0644",
+        "tools/seed.py": "0644"
+      },
+      "key_fields": [
+        "channel_profile_id",
+        "channel_id"
+      ],
+      "native_started": false,
+      "original_app_started": false,
+      "original_seed_exit": 1,
+      "physical_exit": 1,
+      "physical_receipt_sha256": "4c9089f2eae784e9ca434961a13c2a2ca5474e02d87c7393a975ab3abf8521bd",
+      "probe_started": false,
+      "retired": {
+        "container": 5,
+        "network": 1,
+        "volume": 2
+      },
+      "seed_log_sha256": "a87746af2453257caab203a273777909b9dabf4c79422817c229f93fddebbfe1"
+    },
+    {
+      "attempt": "m7-hdhr-discovery-0c-r3",
+      "commands_sha256": "c8fc6cc3fbca0f8721453fa9fbf6ca83241b605313f5ab42b79a01aaae97bebd",
+      "exact_cleanup": true,
+      "exception": "core.models.OutputProfile.DoesNotExist",
+      "failed_fixture_step": "OutputProfile ORM create with preassigned primary key invokes existing-row protection",
+      "native_started": false,
+      "original_seed_exit": 1,
+      "original_started": false,
+      "physical_exit": 1,
+      "physical_receipt_sha256": "b1f00efeb4f31dd7c73752c63732d20f0a18c773f07de14aa8d4d756fab94371",
+      "probe_started": false,
+      "retired": {
+        "container": 5,
+        "network": 1,
+        "volume": 2
+      },
+      "scope": "full configured profile fixture",
+      "seed_log_sha256": "de5b651318f8299b994e30f951ee6f1615da1ecffd7cfffda3cb209e61413889"
+    }
+  ],
+  "host": "lappy",
+  "image": "sha256:8d26782ba4a364efc735e55c86e7c4790f38e4ab339727158f3d3a9ab02c95a9",
+  "independent_physical_audit_exit": 0,
+  "original_authors_retain_full_credit": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "package_manifest_sha256": "750aed6d8c6912ab4e891cd1fee132838fc14a7e7cecdc724c70aeeb7e10d3fb",
+  "performance_claim": false,
+  "physical_scopes": {
+    "native": {
+      "app_exit": 0,
+      "command_ledger_sha256": "7c997b19f6266737965a18e4575cf82a2a0ca38b4d5cf9c3e658b8248563c7d7",
+      "exact_cleanup": true,
+      "literal_exit": 0,
+      "observed_app_and_db_oom_killed": false,
+      "probe_exit": 0,
+      "raw_probe_stdout_sha256": "5b6b8db14f5c8b7767f974cbff9c538749a0c059a432d42b0e6b9612ca230af3",
+      "receipt_sha256": "3178a6cae267dfa5069b6ebcc62b8200bb1f0893cbd68158064bfda9b82cf04f",
+      "retired": {
+        "container": 6,
+        "network": 1,
+        "volume": 2
+      },
+      "stable_app_and_db_generations": true
+    },
+    "original": {
+      "app_exit": 0,
+      "command_ledger_sha256": "62cf0a20e28b692ad2c40d1afd6e58036010768e51a937525cefc634488ab9e1",
+      "exact_cleanup": true,
+      "literal_exit": 0,
+      "observed_app_and_db_oom_killed": false,
+      "probe_exit": 0,
+      "raw_probe_stdout_sha256": "51639bf3eeac6ea8ada28194b08f3e045f51d240af4aaa239a5ff9e04f0265c3",
+      "receipt_sha256": "91e668b2fd302072a320c9a59684d3137c5bf9a4e3a795509c41996a68066a19",
+      "retired": {
+        "container": 6,
+        "network": 1,
+        "volume": 2
+      },
+      "stable_app_and_db_generations": true
+    }
+  },
+  "playback_or_transcoding_exercised": false,
+  "previous_minimal_pair_sha256": "21139850014a3fcb9b92994e8ae98920c329e6221a67b5a91fc0391ba9f7de33",
+  "qualified_discover_follow_and_status_variants": {
+    "api-alias": {
+      "advertised_lineup_path_followed": "/hdhr/lineup.json",
+      "discovery": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "guide_numbers": [
+        "2.5",
+        "12"
+      ],
+      "lineup": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "model_sha256": "747a1b7f5355fb624512038581f27cc05134753973376f0994534dcf8b9e2d30",
+      "output_profile": 3,
+      "status": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      }
+    },
+    "bare": {
+      "advertised_lineup_path_followed": "/hdhr/lineup.json",
+      "discovery": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "guide_numbers": [
+        "2.5",
+        "12"
+      ],
+      "lineup": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "model_sha256": "747a1b7f5355fb624512038581f27cc05134753973376f0994534dcf8b9e2d30",
+      "output_profile": 3,
+      "status": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      }
+    },
+    "inactive-explicit": {
+      "advertised_lineup_path_followed": "/hdhr/output_profile/5/lineup.json",
+      "discovery": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "guide_numbers": [
+        "2.5",
+        "12"
+      ],
+      "lineup": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "model_sha256": "9484ae0f040d00018274c6872a83dd6b4e3243e09ea13f480c956f959e0aa448",
+      "output_profile": null,
+      "status": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      }
+    },
+    "named-explicit": {
+      "advertised_lineup_path_followed": "/hdhr/owned-hdhr/output_profile/4/lineup.json",
+      "discovery": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "guide_numbers": [
+        "2.5"
+      ],
+      "lineup": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "model_sha256": "a025693f01309a6d65a0f01218d0490483541980b610ec9a5c8238ae0f023138",
+      "output_profile": 4,
+      "status": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      }
+    },
+    "named-profile": {
+      "advertised_lineup_path_followed": "/hdhr/owned-hdhr/lineup.json",
+      "discovery": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "guide_numbers": [
+        "2.5"
+      ],
+      "lineup": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "model_sha256": "222615a1976cd5632e8b100b02206daf6dae83f40441b4642ead44ad294647c1",
+      "output_profile": 3,
+      "status": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      }
+    },
+    "unassigned-profile": {
+      "advertised_lineup_path_followed": "/hdhr/owned-no-lineup/lineup.json",
+      "discovery": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "guide_numbers": [],
+      "lineup": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "model_sha256": "25ee6a531a0025aae0e60b82da03778b73785a24daf3ffa4512e300afc3fd049",
+      "output_profile": null,
+      "status": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      }
+    }
+  },
+  "qualified_http_cases_per_arm": 9,
+  "runtime_telemetry_scope": "HTTP status and process-generation/OOM observations; no app logs or resource samples",
+  "scope": "configured HTTP discovery with channel and output-profile variants, scan status and device XML",
+  "scoped_result": true,
+  "seeded_profile_ids": {
+    "default": 3,
+    "explicit": 4,
+    "inactive": 5
+  },
+  "stable_migrations": 184,
+  "stable_table_count": 8,
+  "stage_seal_sha256": "06a417819decaa5b6ecc20f08f76058c902bc40a7ae4e1fefe22a5055f35871b",
+  "xml_descriptors": {
+    "/api/hdhr": {
+      "allow": "GET, HEAD, OPTIONS",
+      "content_type": "application/xml",
+      "sha256": "312e970a3e02afd0658a9992d7a8f6b542e1f6e3415d246e2273ddc3bada816f",
+      "status": 200
+    },
+    "/hdhr": {
+      "allow": "GET, HEAD, OPTIONS",
+      "content_type": "application/xml",
+      "sha256": "312e970a3e02afd0658a9992d7a8f6b542e1f6e3415d246e2273ddc3bada816f",
+      "status": 200
+    }
+  }
+}
