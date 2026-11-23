@@ -1,5 +1,5 @@
 //! Existing signed Django ChannelGroup changelist, for the public ingress GET.
-use std::fmt::Write;
+use std::{collections::HashMap, fmt::Write};
 
 use axum::{
     body::Body,
@@ -117,7 +117,11 @@ pub(super) async fn handle(
     match sessions.channel_group_page(key, selection.query()).await {
         Ok(DjangoChannelGroupPageResult::View(page)) => {
             let csrf = Csrf::for_response(cookie(headers, "csrftoken"));
-            html_response(StatusCode::OK, render(&page, &selection, &csrf.token), Some(&csrf))
+            html_response(
+                StatusCode::OK,
+                render(&page, &selection, &csrf.token, uri.query()),
+                Some(&csrf),
+            )
         }
         Ok(DjangoChannelGroupPageResult::Denied(DjangoChannelGroupRead::Forbidden)) => {
             html_response(
@@ -136,7 +140,7 @@ pub(super) async fn handle(
     }
 }
 
-fn cookie<'a>(headers: &'a HeaderMap, wanted: &str) -> Option<&'a str> {
+pub(super) fn cookie<'a>(headers: &'a HeaderMap, wanted: &str) -> Option<&'a str> {
     let mut found = None;
     for header in headers.get_all(header::COOKIE) {
         for pair in header.to_str().ok()?.split(';') {
@@ -168,11 +172,11 @@ fn redirect(location: &str) -> Response {
     response
 }
 
-fn http_date(time: chrono::DateTime<Utc>) -> String {
+pub(super) fn http_date(time: chrono::DateTime<Utc>) -> String {
     time.format("%a, %d %b %Y %H:%M:%S GMT").to_string()
 }
 
-fn html_response(status: StatusCode, html: String, csrf: Option<&Csrf>) -> Response {
+pub(super) fn html_response(status: StatusCode, html: String, csrf: Option<&Csrf>) -> Response {
     let now = Utc::now();
     // The view's CSRF decorator varies signed pages on Cookie before CORS.
     // For redirects and denials the outer session middleware adds Cookie last.
@@ -210,13 +214,13 @@ fn html_response(status: StatusCode, html: String, csrf: Option<&Csrf>) -> Respo
     response
 }
 
-struct Csrf {
+pub(super) struct Csrf {
     secret: String,
-    token: String,
+    pub(super) token: String,
 }
 
 impl Csrf {
-    fn for_response(existing: Option<&str>) -> Self {
+    pub(super) fn for_response(existing: Option<&str>) -> Self {
         let secret = existing
             .filter(|value| {
                 value.len() == TOKEN_LEN && value.bytes().all(|b| b.is_ascii_alphanumeric())
@@ -248,7 +252,7 @@ fn mask(secret: &str, mut mask: String) -> String {
     mask
 }
 
-fn escape(value: &str) -> String {
+pub(super) fn escape(value: &str) -> String {
     let mut html = String::with_capacity(value.len());
     for char in value.chars() {
         match char {
@@ -263,7 +267,45 @@ fn escape(value: &str) -> String {
     html
 }
 
-fn render(page: &DjangoChannelGroupPage, selection: &Selection, token: &str) -> String {
+fn django_urlencode<'a>(pairs: impl IntoIterator<Item = (&'a str, &'a str)>) -> String {
+    // Python quote_plus leaves ~ literal and escapes *, unlike WHATWG form encoding.
+    form_urlencoded::Serializer::new(String::new())
+        .extend_pairs(pairs)
+        .finish()
+        .replace('*', "%2A")
+        .replace("%7E", "~")
+}
+
+fn preserved_change_query(raw_query: Option<&str>) -> String {
+    let mut positions = HashMap::new();
+    let mut groups = Vec::new();
+    // QueryDict orders its keys by first appearance and groups values for each key.
+    for (key, value) in form_urlencoded::parse(raw_query.unwrap_or_default().as_bytes()) {
+        let position = *positions.entry(key.clone()).or_insert_with(|| {
+            let position = groups.len();
+            groups.push((key, Vec::new()));
+            position
+        });
+        groups[position].1.push(value);
+    }
+    let query = django_urlencode(groups.iter().flat_map(|(key, values)| {
+        values
+            .iter()
+            .map(move |value| (key.as_ref(), value.as_ref()))
+    }));
+    if query.is_empty() {
+        return String::new();
+    }
+    let filter = django_urlencode([("_changelist_filters", query.as_str())]);
+    format!("?{filter}")
+}
+
+fn render(
+    page: &DjangoChannelGroupPage,
+    selection: &Selection,
+    token: &str,
+    raw_query: Option<&str>,
+) -> String {
     let mut html = String::from(
         "<!doctype html><html lang=\"en-us\"><head><meta charset=\"utf-8\">\
          <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\
@@ -328,10 +370,11 @@ fn render(page: &DjangoChannelGroupPage, selection: &Selection, token: &str) -> 
             <th class=\"sortable column-name\"><div class=\"text\"><a href=\"{}\">Name</a></div></th>\
             </tr></thead><tbody>", escape(&selection.link(None, id_sort, selection.all)),
             escape(&selection.link(None, name_sort, selection.all))).unwrap();
+        let change_query = escape(&preserved_change_query(raw_query));
         for (id, name) in &page.rows {
             write!(
                 html,
-                "<tr><th class=\"field-id\"><a href=\"{PATH}{id}/change/\">{id}</a></th>\
+                "<tr><th class=\"field-id\"><a href=\"{PATH}{id}/change/{change_query}\">{id}</a></th>\
                 <td class=\"field-name\">{}</td></tr>",
                 escape(name)
             )
@@ -414,7 +457,8 @@ mod tests {
 
     #[test]
     fn signed_view_escapes_rows_and_query_and_preserves_scope() {
-        let selection = Selection::parse(Some("q=%3Cb%3Ea%26b%3C%2Fb%3E&o=1"));
+        let raw_query = Some("q=%3Cb%3Ea%26b%3C%2Fb%3E&o=1");
+        let selection = Selection::parse(raw_query);
         let page = DjangoChannelGroupPage {
             username: "Example <viewer>".to_owned(),
             rows: vec![(12, "<b>a&b</b>".to_owned()), (7, "Second".to_owned())],
@@ -425,14 +469,20 @@ mod tests {
             show_all: false,
         };
         let csrf = Csrf::for_response(None);
-        let html = render(&page, &selection, &csrf.token);
+        let html = render(&page, &selection, &csrf.token, raw_query);
         assert!(html.contains("id=\"result_list\"") && html.contains("name=\"q\""));
         assert!(
             html.contains("Example &lt;viewer&gt;") && html.contains("&lt;b&gt;a&amp;b&lt;/b&gt;")
         );
         assert!(!html.contains("<b>a&b</b>"));
         assert!(html.contains("class=\"sortable column-name\""));
-        assert!(html.find("/12/change/").unwrap() < html.find("/7/change/").unwrap());
+        let first = format!(
+            "href=\"{PATH}12/change/?_changelist_filters=q%3D%253Cb%253Ea%2526b%253C%252Fb%253E%26o%3D1\""
+        );
+        let second = first.replace("/12/change/", "/7/change/");
+        assert!(html.find(&first).unwrap() < html.find(&second).unwrap());
+        let unfiltered = render(&page, &Selection::default(), &csrf.token, None);
+        assert!(unfiltered.contains(&format!("href=\"{PATH}12/change/\"")));
         assert!(html.contains("&amp;p=2") && html.contains("&amp;all="));
         assert!(!html.contains("_selected_action") && !html.contains("delete_selected"));
         assert!(!html.contains("/jsi18n/") && !html.contains("/channelgroup/add/"));
@@ -447,6 +497,29 @@ mod tests {
             .to_str()
             .unwrap()
             .contains("Max-Age=31449600; Path=/; SameSite=Lax"));
+    }
+
+    #[test]
+    fn changelist_change_links_preserve_django_query_encoding() {
+        assert_eq!(preserved_change_query(None), "");
+        assert_eq!(preserved_change_query(Some("")), "");
+        assert_eq!(
+            preserved_change_query(Some("p=99999999")),
+            "?_changelist_filters=p%3D99999999"
+        );
+        assert_eq!(
+            preserved_change_query(Some(
+                "q=M%C3%BCnchen%20%7e%2A+%22%26&p=99999999&q=entertainment&all"
+            )),
+            concat!(
+                "?_changelist_filters=q%3DM%25C3%25BCnchen%2B~%252A%2B%2522%2526",
+                "%26q%3Dentertainment%26p%3D99999999%26all%3D"
+            )
+        );
+        assert_eq!(
+            preserved_change_query(Some("all&q=100%257E&q=entertainment&o=1")),
+            "?_changelist_filters=all%3D%26q%3D100%25257E%26q%3Dentertainment%26o%3D1"
+        );
     }
 
     #[tokio::test]

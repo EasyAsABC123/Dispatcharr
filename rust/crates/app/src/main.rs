@@ -1,6 +1,7 @@
 //! Derivative Dispatcharr backend port. Original project credit: ATTRIBUTION.md.
 mod admin_channelgroup;
 mod admin_channelgroup_assets;
+mod admin_dedicated;
 mod admin_ingress;
 mod backup_config;
 mod combined_statistics;
@@ -1238,6 +1239,18 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let listener = tokio::net::TcpListener::bind(bind)
         .await
         .map_err(|_| "Cannot bind HTTP listener")?;
+    let private_admin = match admin_dedicated::configured_bind()? {
+        Some(address) => {
+            let listener = tokio::net::TcpListener::bind(address)
+                .await
+                .map_err(|_| "Cannot bind dedicated loopback admin listener")?;
+            Some((
+                listener,
+                admin_dedicated::router(admin_sessions.clone(), auth.clone()),
+            ))
+        }
+        None => None,
+    };
     let selected_jobs = if selected_jobs_enabled {
         let bus = realtime_bus
             .as_ref()
@@ -1532,6 +1545,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     };
     if preready_stop {
         drop(listener);
+        drop(private_admin);
         drop(app);
         stop_service_admission(&services);
         return tokio::time::timeout(shutdown_timeout, shutdown_components(services))
@@ -1542,7 +1556,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             })?;
     }
     let signal_services = services.clone();
-    let server = axum::serve(
+    let dedicated_enabled = private_admin.is_some();
+    let (stop_admin, mut admin_stop) = tokio::sync::watch::channel(false);
+    let public_server = axum::serve(
         listener,
         app.into_make_service_with_connect_info::<SocketAddr>(),
     )
@@ -1551,12 +1567,25 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             Some(mut signal) => signal.wait().await,
             None => shutdown_signal().await,
         }
+        let _ = stop_admin.send(true);
         stop_service_admission(&signal_services);
         let cleanup = tokio::spawn(shutdown_components(signal_services));
         let _ = shutdown_started.send(cleanup);
         // Return immediately: Axum stops accepting while cleanup runs.
     })
     .into_future();
+    let server = async move {
+        if let Some((listener, router)) = private_admin {
+            let private_server = axum::serve(listener, router)
+                .with_graceful_shutdown(async move {
+                    let _ = admin_stop.wait_for(|stop| *stop).await;
+                })
+                .into_future();
+            tokio::try_join!(public_server, private_server).map(|_| ())
+        } else {
+            public_server.await
+        }
+    };
     tokio::pin!(server);
     let shutdown_mode = if refresh_enabled && !selected_jobs_enabled {
         "Refresh worker"
@@ -1570,7 +1599,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         "Selected"
     };
     let shutdown_requires_drain = || {
-        refresh_enabled
+        dedicated_enabled
+            || refresh_enabled
             || original_m3u_refresh_all.is_some()
             || manual_backup_enabled
             || core_scheduled_jobs_enabled

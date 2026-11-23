@@ -1,16 +1,19 @@
 //! Existing Django database session admission for the ChannelGroup admin read.
 //! Original Dispatcharr and Django authors retain full credit.
-use std::sync::Arc;
+use std::{fmt::Write as _, io::Write as _, sync::Arc};
 
 use base64::{engine::general_purpose::URL_SAFE_NO_PAD, Engine as _};
-use flate2::{Decompress, FlushDecompress, Status};
+use flate2::{write::ZlibEncoder, Compression, Decompress, FlushDecompress, Status};
 use hmac::{Hmac, Mac};
+use rand::{rngs::OsRng, Rng};
 use serde::Deserialize;
+use serde_json::{Map, Value};
 use sha2::{Digest, Sha256};
 use sqlx::{PgConnection, Row};
 use subtle::ConstantTimeEq;
+use unicode_normalization::UnicodeNormalization;
 
-use crate::{Store, StoreError};
+use crate::{AuthService, Store, StoreError};
 
 const MAX_SIGNED_ROW: usize = 32 * 1024;
 const MAX_SESSION_JSON: usize = 64 * 1024;
@@ -110,7 +113,7 @@ const PAGE_SIZE: i64 = 100;
 const MAX_SHOW_ALL: i64 = 200;
 
 /// Verifies ordinary Django database sessions with a current signing key.
-/// Configured fallback and session writes require a separate owner.
+/// Configured fallback remains outside the default-key owner.
 #[derive(Clone)]
 pub struct DjangoAdminSessions {
     store: Store,
@@ -212,6 +215,211 @@ impl DjangoAdminSessions {
         }))
     }
 
+    /// Validate a current staff session for the dedicated login/logout surface.
+    pub async fn signed_staff(&self, session_key: &str) -> Result<bool, StoreError> {
+        if !issued_session_key(session_key) {
+            return Ok(false);
+        }
+        let mut tx = self.store.pool().begin().await?;
+        let signed = self.locked_staff(&mut tx, session_key).await?;
+        tx.commit().await?;
+        Ok(signed)
+    }
+
+    async fn locked_staff(
+        &self,
+        connection: &mut PgConnection,
+        session_key: &str,
+    ) -> Result<bool, StoreError> {
+        let Some((encoded, active)) = lock_session(connection, session_key).await? else {
+            return Ok(false);
+        };
+        let Some(session) = active
+            .then(|| decode_session(&encoded, &self.signing_key))
+            .flatten()
+        else {
+            return Ok(false);
+        };
+        let account = sqlx::query_as::<_, (String, bool, bool)>(
+            "SELECT password, is_active, is_staff FROM accounts_user WHERE id = $1 FOR SHARE",
+        )
+        .bind(session.user_id)
+        .fetch_optional(&mut *connection)
+        .await?;
+        Ok(account.is_some_and(|(password, active, staff)| {
+            active
+                && staff
+                && session.auth_hash.as_ref().is_some_and(|hash| {
+                    bool::from(
+                        current_auth_hash(&self.signing_key, &password)
+                            .as_bytes()
+                            .ct_eq(hash.as_bytes()),
+                    )
+                })
+        }))
+    }
+
+    /// Issue an ordinary current-key admin session after the dedicated origin verifies CSRF.
+    pub async fn login(
+        &self,
+        auth: &AuthService,
+        username: &str,
+        password: String,
+        previous_key: Option<&str>,
+    ) -> Result<Option<String>, StoreError> {
+        if !auth.uses_store_pool(&self.store) {
+            return Err(StoreError::Unsupported(
+                "Django admin must share the configured account store",
+            ));
+        }
+        let username: String = username.trim().nfkc().collect();
+        if username.is_empty()
+            || username.chars().count() > 150
+            || password.is_empty()
+            || password.len() > crate::passwords::MAX_CREDENTIAL_BYTES
+        {
+            return Ok(None);
+        }
+        let observed = sqlx::query_as::<_, (i64, String)>(
+            "SELECT id, password FROM accounts_user WHERE username = $1",
+        )
+        .bind(&username)
+        .fetch_optional(self.store.pool())
+        .await?;
+        let (matched, legacy_upgrade) = auth
+            .verify_local_password(password, observed.as_ref().map(|(_, hash)| hash.clone()))
+            .await?;
+        let Some((actor, password_field)) =
+            observed.filter(|_| matched && legacy_upgrade.is_none())
+        else {
+            return Ok(None);
+        };
+        let _writer = auth.task_sql_writer()?;
+        let mut tx = self.store.pool().begin().await?;
+        let previous = match previous_key.filter(|key| issued_session_key(key)) {
+            Some(key) => lock_session(&mut tx, key)
+                .await?
+                .map(|record| (key, record)),
+            None => None,
+        };
+        let current = sqlx::query_as::<_, (String, bool, bool)>(
+            "SELECT password, is_active, is_staff FROM accounts_user
+             WHERE id = $1 AND username = $2 FOR UPDATE",
+        )
+        .bind(actor)
+        .bind(username)
+        .fetch_optional(&mut *tx)
+        .await?;
+        if !current
+            .is_some_and(|(current, active, staff)| current == password_field && active && staff)
+        {
+            tx.rollback().await?;
+            return Ok(None);
+        }
+        let hash = current_auth_hash(&self.signing_key, &password_field);
+        let mut fields = Map::new();
+        let mut retire = None;
+        let mut retain = None;
+        if let Some((old_key, (encoded, true))) = previous {
+            if let Some(payload) = verified_session_json(&encoded, &self.signing_key) {
+                let prior_fields: Map<String, Value> = serde_json::from_slice(&payload)
+                    .map_err(|_| StoreError::Unsupported("Unsupported Django session object"))?;
+                if prior_fields.contains_key("_session_expiry") {
+                    return Err(StoreError::Unsupported(
+                        "Custom Django session expiry is outside the current admin scope",
+                    ));
+                }
+                if prior_fields.contains_key("_auth_user_id") {
+                    let previous_owner = decode_session(&encoded, &self.signing_key);
+                    if previous_owner.is_some_and(|previous| {
+                        previous.user_id == actor
+                            && previous.auth_hash.as_ref().is_some_and(|value| {
+                                bool::from(value.as_bytes().ct_eq(hash.as_bytes()))
+                            })
+                    }) {
+                        fields = prior_fields;
+                        retain = Some(old_key);
+                    }
+                } else {
+                    fields = prior_fields;
+                }
+                if retain.is_none() {
+                    retire = Some(old_key);
+                }
+            }
+        }
+        fields.insert("_auth_user_id".into(), Value::String(actor.to_string()));
+        fields.insert(
+            "_auth_user_backend".into(),
+            Value::String(MODEL_BACKEND.into()),
+        );
+        fields.insert("_auth_user_hash".into(), Value::String(hash));
+        let timestamp = chrono::Utc::now();
+        let encoded = encode_session(&fields, &self.signing_key, timestamp.timestamp() as u64)?;
+        let expires = timestamp + chrono::Duration::days(14);
+        let key = if let Some(key) = retain {
+            sqlx::query("UPDATE django_session SET session_data = $2, expire_date = $3 WHERE session_key = $1")
+                .bind(key).bind(&encoded).bind(expires).execute(&mut *tx).await?;
+            key.to_owned()
+        } else {
+            let mut issued = None;
+            for _ in 0..8 {
+                let key = session_key();
+                let inserted = sqlx::query(
+                    "INSERT INTO django_session (session_key, session_data, expire_date)
+                    VALUES ($1, $2, $3) ON CONFLICT (session_key) DO NOTHING",
+                )
+                .bind(&key)
+                .bind(&encoded)
+                .bind(expires)
+                .execute(&mut *tx)
+                .await?;
+                if inserted.rows_affected() == 1 {
+                    issued = Some(key);
+                    break;
+                }
+            }
+            issued.ok_or(StoreError::Unsupported("Django session allocation failed"))?
+        };
+        if let Some(old_key) = retire {
+            sqlx::query("DELETE FROM django_session WHERE session_key = $1")
+                .bind(old_key)
+                .execute(&mut *tx)
+                .await?;
+        }
+        sqlx::query("UPDATE accounts_user SET last_login = $2 WHERE id = $1")
+            .bind(actor)
+            .bind(timestamp)
+            .execute(&mut *tx)
+            .await?;
+        tx.commit().await?;
+        Ok(Some(key))
+    }
+
+    /// Retire exactly the active staff session on the already CSRF-verified dedicated POST.
+    pub async fn logout(&self, auth: &AuthService, session_key: &str) -> Result<bool, StoreError> {
+        if !issued_session_key(session_key) {
+            return Ok(false);
+        }
+        if !auth.uses_store_pool(&self.store) {
+            return Err(StoreError::Unsupported(
+                "Django admin must share the configured account store",
+            ));
+        }
+        let _writer = auth.task_sql_writer()?;
+        let mut tx = self.store.pool().begin().await?;
+        if !self.locked_staff(&mut tx, session_key).await? {
+            tx.rollback().await?;
+            return Ok(false);
+        }
+        sqlx::query("DELETE FROM django_session WHERE session_key = $1")
+            .bind(session_key)
+            .execute(&mut *tx)
+            .await?;
+        tx.commit().await?;
+        Ok(true)
+    }
+
     async fn admission(
         &self,
         session_key: &str,
@@ -248,6 +456,95 @@ impl DjangoAdminSessions {
             model_permission: row.try_get("has_channel_group_permission")?,
         };
         Ok(authorize(&session, &actor, &self.signing_key))
+    }
+}
+
+async fn lock_session(
+    connection: &mut PgConnection,
+    session_key: &str,
+) -> Result<Option<(String, bool)>, StoreError> {
+    Ok(sqlx::query_as(
+        "SELECT session_data, expire_date > statement_timestamp() FROM django_session
+         WHERE session_key = $1 AND octet_length(session_data) <= $2 FOR UPDATE",
+    )
+    .bind(session_key)
+    .bind(MAX_SIGNED_ROW as i32)
+    .fetch_optional(connection)
+    .await?)
+}
+
+fn current_auth_hash(secret: &[u8], password: &str) -> String {
+    let key = salted_hmac(secret, USER_HASH_SALT, password.as_bytes()).finalize();
+    format!("{:x}", key.into_bytes())
+}
+
+fn session_key() -> String {
+    const ALPHABET: &[u8] = b"abcdefghijklmnopqrstuvwxyz0123456789";
+    let mut rng = OsRng;
+    (0..32)
+        .map(|_| char::from(ALPHABET[rng.gen_range(0..ALPHABET.len())]))
+        .collect()
+}
+
+fn encode_session(
+    fields: &Map<String, Value>,
+    secret: &[u8],
+    timestamp: u64,
+) -> Result<String, StoreError> {
+    let json = serde_json::to_string(fields)
+        .map_err(|_| StoreError::Unsupported("Django session JSON encoding failed"))?;
+    let mut ascii = String::with_capacity(json.len());
+    for ch in json.chars() {
+        if ch.is_ascii() {
+            ascii.push(ch);
+        } else {
+            let mut buffer = [0; 2];
+            for unit in ch.encode_utf16(&mut buffer) {
+                write!(ascii, "\\u{unit:04x}").expect("writing to session string");
+            }
+        }
+    }
+    if ascii.len() > MAX_SESSION_JSON {
+        return Err(StoreError::Unsupported(
+            "Django session exceeds the supported size",
+        ));
+    }
+    let mut compressor = ZlibEncoder::new(Vec::new(), Compression::default());
+    compressor
+        .write_all(ascii.as_bytes())
+        .map_err(|_| StoreError::Unsupported("Django session compression failed"))?;
+    let compressed = compressor
+        .finish()
+        .map_err(|_| StoreError::Unsupported("Django session compression failed"))?;
+    let packed = if compressed.len() + 1 < ascii.len() {
+        format!(".{}", URL_SAFE_NO_PAD.encode(compressed))
+    } else {
+        URL_SAFE_NO_PAD.encode(ascii)
+    };
+    let signed = format!("{packed}:{}", base62(timestamp));
+    let signature = URL_SAFE_NO_PAD.encode(
+        salted_hmac(secret, STORE_SALT, signed.as_bytes())
+            .finalize()
+            .into_bytes(),
+    );
+    let encoded = format!("{signed}:{signature}");
+    if encoded.len() > MAX_SIGNED_ROW {
+        return Err(StoreError::Unsupported(
+            "Django signed session exceeds the supported size",
+        ));
+    }
+    Ok(encoded)
+}
+
+fn base62(mut value: u64) -> String {
+    const ALPHABET: &[u8] = b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+    let mut digits = Vec::new();
+    loop {
+        digits.push(char::from(ALPHABET[(value % 62) as usize]));
+        value /= 62;
+        if value == 0 {
+            return digits.into_iter().rev().collect();
+        }
     }
 }
 
@@ -291,7 +588,7 @@ fn salted_hmac(secret: &[u8], salt: &[u8], message: &[u8]) -> Hmac<Sha256> {
     mac
 }
 
-fn decode_session(encoded: &str, current_secret: &[u8]) -> Option<DecodedSession> {
+fn verified_session_json(encoded: &str, current_secret: &[u8]) -> Option<Vec<u8>> {
     if encoded.len() > MAX_SIGNED_ROW {
         return None;
     }
@@ -318,7 +615,12 @@ fn decode_session(encoded: &str, current_secret: &[u8]) -> Option<DecodedSession
     if content.len() > MAX_SESSION_JSON {
         return None;
     }
-    let fields: AuthFields = serde_json::from_slice(&content).ok()?;
+    Some(content)
+}
+
+fn decode_session(encoded: &str, current_secret: &[u8]) -> Option<DecodedSession> {
+    let fields: AuthFields =
+        serde_json::from_slice(&verified_session_json(encoded, current_secret)?).ok()?;
     if fields.backend != MODEL_BACKEND {
         return None;
     }
@@ -352,8 +654,7 @@ fn authorize(session: &DecodedSession, actor: &Actor, secret: &[u8]) -> DjangoCh
     if !actor.active {
         return LoginRequired;
     }
-    let expected = salted_hmac(secret, USER_HASH_SALT, actor.password.as_bytes()).finalize();
-    let expected = format!("{:x}", expected.into_bytes());
+    let expected = current_auth_hash(secret, &actor.password);
     if !session
         .auth_hash
         .as_ref()
@@ -426,6 +727,29 @@ mod tests {
                 }
             );
         }
+    }
+
+    #[test]
+    fn native_issuer_roundtrips_django_auth_and_ascii_escaped_session_values() {
+        let (fixture, key) = fixtures();
+        let original = verified_session_json(&fixture.compressed, key.as_bytes()).unwrap();
+        let mut fields: Map<String, Value> = serde_json::from_slice(&original).unwrap();
+        fields.insert("owned_preference".into(), Value::String("café ☀".into()));
+        let signed = encode_session(&fields, key.as_bytes(), 1770000000).unwrap();
+        let bytes = verified_session_json(&signed, key.as_bytes()).unwrap();
+        assert!(bytes.is_ascii());
+        assert_eq!(
+            serde_json::from_slice::<Map<String, Value>>(&bytes).unwrap(),
+            fields
+        );
+        let session = decode_session(&signed, key.as_bytes()).unwrap();
+        assert_eq!(session.user_id, fixture.actor_id);
+        assert_eq!(
+            authorize(&session, &default_actor(&fixture), key.as_bytes()),
+            DjangoChannelGroupRead::Allowed {
+                user_id: fixture.actor_id
+            },
+        );
     }
 
     #[test]
@@ -650,6 +974,50 @@ mod tests {
             read.channel_group_read(&cookie).await.unwrap(),
             DjangoChannelGroupRead::LoginRequired
         );
+        sqlx::query("ALTER TABLE accounts_user ADD COLUMN last_login timestamptz")
+            .execute(&pool)
+            .await
+            .unwrap();
+        let synthetic_password = "ordinary temporary form input";
+        let encoded_password = crate::passwords::encode_password(synthetic_password).unwrap();
+        sqlx::query("UPDATE accounts_user SET password = $1 WHERE id = $2")
+            .bind(encoded_password)
+            .bind(fixture.actor_id)
+            .execute(&pool)
+            .await
+            .unwrap();
+        let auth = AuthService::new(
+            Store::from_pool(pool.clone()),
+            crate::AuthConfig::new(key).unwrap(),
+        );
+        let fresh = read
+            .login(&auth, "owned-viewer", synthetic_password.into(), None)
+            .await
+            .unwrap()
+            .expect("owned active staff login");
+        assert!(read.signed_staff(&fresh).await.unwrap());
+        assert_eq!(read.channel_group_read(&fresh).await.unwrap(), allowed);
+        assert!(sqlx::query_scalar::<_, bool>(
+            "SELECT last_login IS NOT NULL FROM accounts_user WHERE id = $1"
+        )
+        .bind(fixture.actor_id)
+        .fetch_one(&pool)
+        .await
+        .unwrap());
+        let repeated = read
+            .login(
+                &auth,
+                "owned-viewer",
+                synthetic_password.into(),
+                Some(&fresh),
+            )
+            .await
+            .unwrap()
+            .expect("same actor repeat");
+        assert_eq!(fresh, repeated);
+        assert!(read.logout(&auth, &fresh).await.unwrap());
+        assert!(!read.signed_staff(&fresh).await.unwrap());
+
         pool.close().await;
     }
 }

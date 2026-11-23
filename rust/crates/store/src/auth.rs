@@ -512,6 +512,14 @@ impl AuthService {
         .await
     }
 
+    pub(crate) async fn verify_local_password(
+        &self,
+        password: String,
+        encoded: Option<String>,
+    ) -> Result<(bool, Option<String>), StoreError> {
+        verify_with_password_workers(&self.password_workers, password, encoded).await
+    }
+
     pub(crate) async fn hash_password(&self, password: String) -> Result<String, StoreError> {
         hash_for_workers(&self.password_workers, password).await
     }
@@ -809,6 +817,26 @@ impl LoginEffects for PostgresLogin<'_> {
     }
 }
 
+async fn verify_with_password_workers(
+    workers: &Arc<tokio::sync::Semaphore>,
+    password: String,
+    encoded: Option<String>,
+) -> Result<(bool, Option<String>), StoreError> {
+    let encoded = encoded.unwrap_or_else(|| {
+        "pbkdf2_sha256$1200000$missing$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=".to_owned()
+    });
+    let worker = workers
+        .clone()
+        .try_acquire_owned()
+        .map_err(|_| StoreError::RateLimited(1))?;
+    tokio::task::spawn_blocking(move || {
+        let _worker = worker;
+        crate::passwords::verify_and_upgrade(&password, &encoded)
+    })
+    .await
+    .map_err(|_| StoreError::Unsupported("password verification worker failed"))
+}
+
 async fn login_after_admission(
     effects: &impl LoginEffects,
     workers: &Arc<tokio::sync::Semaphore>,
@@ -860,22 +888,8 @@ async fn login_after_admission(
     let username = values["username"].as_str().unwrap();
     let password = values["password"].as_str().unwrap().to_owned();
     let user = effects.user_by_name(username).await?;
-    let encoded = user
-        .as_ref()
-        .map(|user| user.password.clone())
-        .unwrap_or_else(|| {
-            "pbkdf2_sha256$1200000$missing$AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=".to_owned()
-        });
-    let worker = workers
-        .clone()
-        .try_acquire_owned()
-        .map_err(|_| StoreError::RateLimited(1))?;
-    let (matched, upgraded_hash) = tokio::task::spawn_blocking(move || {
-        let _worker = worker;
-        crate::passwords::verify_and_upgrade(&password, &encoded)
-    })
-    .await
-    .map_err(|_| StoreError::Unsupported("password verification worker failed"))?;
+    let encoded = user.as_ref().map(|user| user.password.clone());
+    let (matched, upgraded_hash) = verify_with_password_workers(workers, password, encoded).await?;
     if let (Some(user), Some(upgraded_hash)) = (user.as_ref(), upgraded_hash) {
         // Avoid overwriting a password changed concurrently after lookup.
         // No other user fields or timestamps are changed by Django's setter.
