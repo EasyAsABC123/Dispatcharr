@@ -1,0 +1,122 @@
+{
+  "application": "964c6d159057d14048d8bb3a31c0e012e28c763e",
+  "application_shutdown": {
+    "actual_exit": 0,
+    "oom_killed": false,
+    "stop_command_seconds": 0.425,
+    "typed_selected_shutdown_records": 0,
+    "unsettled_selected_shutdown_records": 0
+  },
+  "application_tree_sha256": "4f830edb77529554c6eac6126b3de47ce13049d1b3a72e4bcac8a0899c16aac6",
+  "business": {
+    "actual_enabled_one_off_tasks": 1,
+    "actual_provider_slots": 1,
+    "actual_recorder": 1,
+    "actual_upstreams": 1,
+    "booking_http": 201,
+    "durable_stopped": true,
+    "final_codecs": {
+      "audio": "aac",
+      "video": "h264"
+    },
+    "final_decode_exit": 0,
+    "final_decoder_stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "final_file_bytes": 1909576,
+    "final_frames": {
+      "audio": 618,
+      "video": 331
+    },
+    "final_mkv_sha256": "7c0a2e0520b29cb6bbc55824bb917308122877041f765907ff8dd311c9ebc81e",
+    "hls_segments": [
+      {
+        "bytes": 617580,
+        "sha256": "751ef5c4cd6dd4f61dcc62d29a7af154df60ebbc1f3270e693d6ddccb23b4515"
+      },
+      {
+        "bytes": 617768,
+        "sha256": "c0981c44aef9b9be4c30e3ef210c4edc26b79012832376f4107a4fd1391f2aac"
+      }
+    ],
+    "playlist": {
+      "bytes": 315,
+      "sha256": "91fb399ea38cbafd1050f5f5f940d748d704ffc93977de0ecc9fe38752572421"
+    },
+    "received_frames": {
+      "audio": 376,
+      "video": 200
+    },
+    "remux_success": true,
+    "scheduled_window_seconds": 70,
+    "segments_matched_encoder_files": true,
+    "signed_hls_playlist_http": 200,
+    "signed_hls_segments_http": 200,
+    "signed_stop_http": 200,
+    "stop_response": {
+      "status": "stopped",
+      "success": true
+    }
+  },
+  "cleanup": {
+    "all_host_command_groups_settled": true,
+    "all_original_owned_process_generations_absent": true,
+    "cleanup_marker_absent": true,
+    "exact_scoped_container_ids_absent": 3,
+    "scoped_project_container_network_volume_inventories_empty": true
+  },
+  "image": "sha256:4ddb2667a04748feebf98ae013950a6375b8ebdd9e24ff59271fc5068577e348",
+  "ordinary_aio": {
+    "both_lanes_accepting": true,
+    "core_saved_scheduler_observed": true,
+    "ordinary_aio": true
+  },
+  "package_manifest_sha256": "4e5c79de482fb54550e9062ca62b9b1e28836ef0b1de58d7389c01be3d1fea8c",
+  "package_phase_actual_exits": {
+    "ordinary-build": 0,
+    "ordinary-verify": 0,
+    "outer": 0,
+    "preflight": 0
+  },
+  "physical_receipts_sha256": {
+    "application_exit": "1b920cb08762a62b79cc9cac0c25f18350a0ee13d220ab1815d30923ef2684f3",
+    "controller": "127058d71f37afeec45e77c915160fc10deea51a06cc176b087b227148bbdba8",
+    "exact_owned_cleanup": "d41f0460897fcfc33335e9c96f5257c61e21038f16004db5819159273a1335e8",
+    "executed_browserless_http_scenario": "cdb6a1afe707242c07b05044466f556ec32dc4c0281597efe045c764b5c1a6d7",
+    "graceful_stop_command": "759c2d03e34dd0dd7e245dd2c5a3163c6f5f648ec02eb226ec782ce0674d0f83",
+    "proof": "3122a9efc342150d2bdd4ddd35c9e2beb2a0d9c41507db74182e10b74fd6c19b",
+    "recorder_witness": "cb01a30fbfadc7d6142aaad02c80a414b40ae826b4dacb02687e6ce4747f7124",
+    "shutdown_stderr": "3cd88426d8bc4c1454c6e638b75f26121d06ec61adc76884d2d193ea30e3ec3f"
+  },
+  "platform": "linux/amd64",
+  "recorder": {
+    "active_redis_marker_retired": true,
+    "exact_child_generation_reaped_while_same_main_live": true,
+    "exact_recorder_lease_retired": true,
+    "first_exact_generation_absence_after_persisted_stop_ms": 2338.132,
+    "first_exact_generation_absence_after_request_ms": 2437.714,
+    "leftover_explicit_stop_marker": false,
+    "owned_hls_directory_retired": true,
+    "provider_slots_after": 0,
+    "retirement_observation_after_request_ms": 23911.939,
+    "samples": 122,
+    "signed_stop_response_after_request_ms": 162.876,
+    "upstreams_after": 0
+  },
+  "scope": "one actual ordinary AMD64 Selected AIO Native-only signed scheduled DVR STOP smoke",
+  "scope_limits": {
+    "exact_disconnect_order_qualified": false,
+    "explicit_application_disconnect_observed": false,
+    "fresh_original_arm": false,
+    "internal_stderr_join_timing_observed": false,
+    "live_viewer_or_sibling_recording_control": false,
+    "milestone_acceptance": false,
+    "parity_credit": false,
+    "performance_credit": false
+  },
+  "smoke_phase_actual_exits": {
+    "campaign": 0,
+    "cleanup": 0,
+    "preflight": 0,
+    "proof": 0,
+    "run": 0
+  }
+}

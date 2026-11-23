@@ -1,0 +1,128 @@
+{
+  "JSON_no_CSRF_cookie": true,
+  "M0_formal_accepted": false,
+  "Native_PG_rollback_controls": {
+    "choice_count": 1001,
+    "choice_overflow": {
+      "equal_state_sha256": "3032d2a80d07fe41923baf7af018f04dad0ba25997afa79790fc6841a39e301b",
+      "error": "profile-response-capacity",
+      "exact_state_unchanged": true,
+      "request_bytes": 482,
+      "status": 501
+    },
+    "oversized_HTML": {
+      "equal_state_sha256": "1edd7c1cbd505f2ede5c49722479e9dd0475c966ce4cfbcc712da8af771b2147",
+      "error": "profile-response-capacity",
+      "exact_state_unchanged": true,
+      "request_bytes": 240469,
+      "status": 501
+    },
+    "restored_base_sha256": "1edd7c1cbd505f2ede5c49722479e9dd0475c966ce4cfbcc712da8af771b2147"
+  },
+  "Original": {
+    "image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff"
+  },
+  "actual_raw_receipt_sha256": "a4e244e4272e99663943a8e2049c32a42cc828760a7b6614a0536a5e0308074e",
+  "actual_role_levels": {
+    "administrator": 10,
+    "standard": 1
+  },
+  "attribution": "Original Dispatcharr, Django, Django REST Framework, React and dependency authors and contributors retain full credit.",
+  "baseline_sha256": "1edd7c1cbd505f2ede5c49722479e9dd0475c966ce4cfbcc712da8af771b2147",
+  "both_SQL_broker_baselines_restored": true,
+  "candidate": {
+    "direct_parent": "964c6d159057d14048d8bb3a31c0e012e28c763e",
+    "focused_store_tests_passed": 17,
+    "image": "sha256:212432b13a1e0d8aa5aaf1ece7c34748c427d06e6a094cd385529e43f33527d6",
+    "inputs": 2170,
+    "literal_build_phases": {
+      "ordinary-build": 0,
+      "ordinary-verify": 0,
+      "preflight": 0
+    },
+    "main_check_exit": 0,
+    "manifest_sha256": "01103d3bb13f2e3fddd934a9ad287e04e87751e5c4112825f22c5d931835e650",
+    "package_seal_sha256": "ae4dd1b779ef98a1b60e353c8faa01d138c358410b7a61f70c9290e3fa999994",
+    "platform": "linux/amd64",
+    "protected_unchanged": 497,
+    "published_ancestor": "e9548a8db609cb8f84bdc8c0d47d873c6b8c6d9f",
+    "revision": "d2c5e6113efe947551c17bf877e8c6b2c964190c",
+    "source_archive_sha256": "341b4a60fe769260d1d0cb2744dbc8a5bc47644d6fdea0ad949b733e9f8bf060",
+    "source_tree_sha256": "93ba156b05eabcfcd64184ae834ae9c1373f5fff4770e3bb8cc3e4080a8fc862"
+  },
+  "canonical_and_alias_JSON_reads_each_arm_HTTP200": 4,
+  "canonical_and_alias_signed_standard_denials_each_arm_HTTP403": 4,
+  "cases": [
+    {
+      "Native_body_bytes": 15292,
+      "Native_mask_normalized_sha256": "c9b6aecf436e844e9cc49b50eb1b2135f92b8b61db275caf8eb00bef0bdca693",
+      "Original_body_bytes": 15292,
+      "Original_mask_normalized_sha256": "fd279049a88ea4641caf4300850fcd5544c334a5081372f734b717a046fa87d3",
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_verified_slots": [
+        "form-csrf",
+        "script-csrf"
+      ],
+      "exact_SQL_mutation": true,
+      "matching_normalized_HTML_sha256": "164ff567ff7755405c12ea6222cf8082cca45cf6877fc5b8fab248c308ad14bc",
+      "method": "POST",
+      "path": "/api/core/useragents/",
+      "status": 201,
+      "unrelated_SQL_and_broker_unchanged": true,
+      "vary": "Accept, origin, Cookie"
+    },
+    {
+      "Native_body_bytes": 17896,
+      "Native_mask_normalized_sha256": "991cdf52837c9a219c881ba72aff5893315b133100f59199740b1bc878af7b6d",
+      "Original_body_bytes": 17896,
+      "Original_mask_normalized_sha256": "cec3485c6ca4ce54b3b3e4daab364fcd0f7cbbb29e669ce54912eaade074d03c",
+      "accept": "text/html; q=1.0, */*",
+      "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_verified_slots": [
+        "script-csrf"
+      ],
+      "exact_SQL_mutation": true,
+      "matching_normalized_HTML_sha256": "95b96062d272743695e9d8d17b238c3d4cff4857557b93040faac0ad44797f0e",
+      "method": "PUT",
+      "path": "/api/core/streamprofiles/6/",
+      "status": 200,
+      "unrelated_SQL_and_broker_unchanged": true,
+      "vary": "Accept, origin, Cookie"
+    }
+  ],
+  "cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "cleanup_sha256": "94116b19e3366d7f5bdcb0ffa4d508997fc50b9d31f1ba1888382099e235bb4e",
+  "distinct_fresh_generated_keys_verified": true,
+  "earlier_original_layout_authority_sha256": "3d0a337a30c8ef983a4c81ec2514baf355a33a35ec69f232027c8c6d7dde85cf",
+  "fixture_seal_sha256": "3305b5e35d4f4f267655aaf00f335827e4664c459a3dda98dfc7323dad80c24e",
+  "fresh_case_per_arm": 2,
+  "literal_owner_exits": {
+    "campaign": 0,
+    "cleanup": 0,
+    "outer": 0,
+    "preflight": 0,
+    "proof": 0,
+    "run": 0
+  },
+  "performance_measured": false,
+  "scope": "ordinary AMD64 direct multipart Core POST and PUT",
+  "typed_proof_sha256": "61c7f613b827ac28357989e106acc9b4a37cf3905a82eb18e6790128988d41c3"
+}

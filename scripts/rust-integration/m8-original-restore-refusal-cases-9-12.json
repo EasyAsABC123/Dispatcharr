@@ -1,0 +1,97 @@
+{
+  "milestone": "M8",
+  "scope": "Original pinned restore archive refusals, frozen four HTTP cases and two signed status controls",
+  "Original_git_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "freeze_sha256": "c8487c14a00b787db69d8709484acef5b0c78cf0d59203d1e38d05997dbba64d",
+  "actual_exits": {
+    "outer": 0,
+    "controller": 0,
+    "fixture": 0,
+    "evaluator": 0
+  },
+  "cases": [
+    {
+      "admission_index": 9,
+      "status_case_index": 10,
+      "admission_HTTP": 202,
+      "admission_body_sha256": "40c1496597d0257a970759d4c9f4073e755081b2a251aaaa7e6a02ad494e2fa3",
+      "filename": "owned-no-metadata.zip",
+      "business_terminal": {
+        "status": "failed",
+        "error": "Invalid backup: missing metadata.json"
+      },
+      "literal_query": {
+        "key": "task_token",
+        "HTTP": 401,
+        "body": {
+          "detail": "Authentication required"
+        }
+      },
+      "ordinary_signed_control": {
+        "key": "token",
+        "HTTP": 200,
+        "body": {
+          "state": "failed",
+          "error": "Invalid backup: missing metadata.json"
+        }
+      },
+      "SQL_unchanged": true,
+      "worker": {
+        "prerun_postrun_joined": true,
+        "same_prefork_generation": true,
+        "private_signal_receipt_sha256": "ec28b27ae5e0716bac70603647f744478ffe424839da19de29acef7fb2e93b19"
+      },
+      "redis_terminal_state": "SUCCESS"
+    },
+    {
+      "admission_index": 11,
+      "status_case_index": 12,
+      "admission_HTTP": 202,
+      "admission_body_sha256": "4b1442cac530ac3c75007f612e2deb364155db885a3229e55dd59a3da75da777",
+      "filename": "owned-wrong-type.zip",
+      "business_terminal": {
+        "status": "failed",
+        "error": "Database type mismatch: backup is sqlite, but current database is postgresql"
+      },
+      "literal_query": {
+        "key": "task_token",
+        "HTTP": 401,
+        "body": {
+          "detail": "Authentication required"
+        }
+      },
+      "ordinary_signed_control": {
+        "key": "token",
+        "HTTP": 200,
+        "body": {
+          "state": "failed",
+          "error": "Database type mismatch: backup is sqlite, but current database is postgresql"
+        }
+      },
+      "SQL_unchanged": true,
+      "worker": {
+        "prerun_postrun_joined": true,
+        "same_prefork_generation": true,
+        "private_signal_receipt_sha256": "fd2afe684d2072cbd74767819b8d5e4db6e33263f586cc60871eb941cd6b124f"
+      },
+      "redis_terminal_state": "SUCCESS"
+    }
+  ],
+  "actual_restore_jobs": 2,
+  "distinct_joined_worker_task_ids": 2,
+  "exact_copied_database": true,
+  "beat_retired_before_restore": true,
+  "exact_cleanup": {
+    "containers_and_old_host_process_generations": 2,
+    "networks_by_name_and_id": 1,
+    "empty_project_inventories": true
+  },
+  "raw_receipt_sha256": "78c3f93dc47f412302809b0dcc15e5ac4eef340ee90e2cfecf774a17fa59367d",
+  "raw_broker_journal_sha256": "d9ab0a437d73e29831a972636f9f4e19a16b742b9a6ca61ca8c37a8720c59af7",
+  "formal_Source16_accepted": false,
+  "native_executed": false,
+  "full_M8_passed": false,
+  "performance_verified": false,
+  "credit": "Dispatcharr's original authors and contributors retain full application and React UI credit."
+}

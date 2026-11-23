@@ -1,0 +1,105 @@
+{
+  "actual_campaign_sha256": "186e3058212c656ad034b87c42b9820440f987f151d57fa6cbbc612c66f621f1",
+  "already_failed_headroom": {
+    "boundary_bytes": 90596966,
+    "charge_at_channels_ready_entry": 91967488,
+    "first_observed_crossing": {
+      "edge": "after",
+      "memory_current": 90918912,
+      "memory_peak": 90918912,
+      "phase": "models",
+      "scope": "apps.channels"
+    },
+    "zero_cost_channels_ready_could_not_erase_prior_lifetime_breach": true
+  },
+  "application": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "audit_receipt_sha256": "0dcf4d8d8d90c66c4eb26552620b29c24faec0fb6bac42e68ec65c7684a7328f",
+  "audit_seal_sha256": "821ced4318ce05b97d6a329fb974c97f064ec5d1f4ed21a3b40afe2ed1df0c29",
+  "classification": "confirmed publication cgroup OOM; no prepared, anchor or media readers",
+  "diagnostic_actual_exit": 1,
+  "largest_completed_interval": {
+    "charged_delta_bytes": 16777216,
+    "exclusive_allocator_attribution": false,
+    "increasing_module_families": {
+      "OpenSSL": 5,
+      "cryptography": 56,
+      "daphne": 7,
+      "service_identity": 5,
+      "twisted": 101
+    },
+    "phase": "config_create",
+    "scope": "daphne"
+  },
+  "last_completed_django_callback": {
+    "charge_after": 91967488,
+    "charge_before": 91443200,
+    "phase": "ready",
+    "scope": "apps.backups",
+    "source_exception_class": null
+  },
+  "memory": {
+    "actual_samples": 6,
+    "effective_limits": {
+      "cpu_fraction": 0.5,
+      "memory_max": 100663296,
+      "pids_max": 32,
+      "swap_max": 0
+    },
+    "last_retained_kernel_peak_bytes": 100110336,
+    "last_sample_events": {
+      "high": 0,
+      "low": 0,
+      "max": 1,
+      "oom": 0,
+      "oom_group_kill": 0,
+      "oom_kill": 0,
+      "sock_throttled": 0
+    },
+    "maximum_sampled_charge_bytes": 97972224,
+    "swap_current": 0,
+    "terminal_lifetime_peak": "not retained; do not infer from last sample",
+    "terminal_memory_events": "not retained; sampled oom counters0 do not negate actual Docker OOMKilled=true",
+    "terminal_oom_proof": {
+      "exit": 137,
+      "oom": true,
+      "status": "exited"
+    }
+  },
+  "open_callback_at_last_record": {
+    "edge": "before",
+    "memory_current": 91967488,
+    "memory_events": {
+      "high": 0,
+      "low": 0,
+      "max": 0,
+      "oom": 0,
+      "oom_group_kill": 0,
+      "oom_kill": 0,
+      "sock_throttled": 0
+    },
+    "memory_peak": 91967488,
+    "monotonic_ns": 36789519516,
+    "phase": "ready",
+    "scope": "apps.channels"
+  },
+  "operation_exits": {
+    "cleanup_literal_exit": 0,
+    "collect_literal_exit": 1
+  },
+  "performance_accepted": false,
+  "platform": "linux/arm64",
+  "trace": {
+    "closed_coverage": false,
+    "complete_events": 129,
+    "in_progress_is_not_proven_allocator": true,
+    "partial_tail_error": null,
+    "trace_status": "not retained after OOM"
+  },
+  "typed_cleanup": {
+    "containers": 6,
+    "literal_exit": 0,
+    "negative_inspect_checks": 16,
+    "networks": 1,
+    "volumes": 2
+  }
+}

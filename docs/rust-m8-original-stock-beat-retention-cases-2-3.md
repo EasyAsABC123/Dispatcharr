@@ -1,0 +1,7 @@
+# Original scheduled backup and retention
+
+Stock Original accepted the scheduled backup PUT and GET with HTTP 200 in one disposable Compose fixture against the same copied PostgreSQL database. The PUT armed the real DatabaseScheduler for 11:25 UTC on 2026-11-23 with retention two. Beat published exactly one backup task about 1.8 ms after its due timestamp. The actual worker completed that task, and the Redis result matched its broker identity. The subsequent GET returned the same saved schedule. [Sanitized run and raw evidence digests](../scripts/rust-integration/m8-original-stock-beat-retention-cases-2-3.json)
+
+Four exact copies of the retained Original archive seeded the private backup directory. After the scheduled task created a valid PostgreSQL v2 ZIP, Original retained that file and the newest seed, removing the three older seed names. The recorded task run count moved from zero to one. Unrelated scoped SQL remained unchanged. Beat exited zero and retired. Both captured container IDs and host process generations, the private network name and ID, and all owned Compose resources were verified absent. The outer controller and evaluator all exited zero.
+
+This qualifies Original schedule cases 2 and 3. The earlier six Original results keep their separate owners and results. Restore worker cases 9–16 and the combined stateful 16-case gate remain open. The original Dispatcharr authors and contributors retain full application and React UI credit.

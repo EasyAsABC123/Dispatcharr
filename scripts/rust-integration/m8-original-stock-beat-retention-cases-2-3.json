@@ -1,0 +1,87 @@
+{
+  "milestone": "M8",
+  "scope": "Original stock DatabaseScheduler backup schedule cases 2 and 3 on one copied database",
+  "Original_git_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "fixture_freeze_sha256": "17e01f8e1a3541e653db2a459db7252bee135f1711a6f2420e11c25880bb929c",
+  "actual_exits": {
+    "outer": 0,
+    "controller": 0,
+    "fixture": 0,
+    "evaluator": 0
+  },
+  "wire": [
+    {
+      "index": 2,
+      "method": "PUT",
+      "path": "/api/backups/schedule/update/",
+      "request_sha256": "2b278bdc66ef9003026c5ccf8d4558e8a1eb956ca9cf94b766cae6ce49c2a3d2",
+      "response_sha256": "ec005c235d926e0d2d67065a19fb3abc8224121a1ab37d2efdc1f3e5692773ff",
+      "status": 200,
+      "body": {
+        "enabled": true,
+        "frequency": "daily",
+        "time": "11:25",
+        "day_of_week": 2,
+        "retention_count": 2,
+        "cron_expression": ""
+      }
+    },
+    {
+      "index": 3,
+      "method": "GET",
+      "path": "/api/backups/schedule/",
+      "request_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "response_sha256": "ec005c235d926e0d2d67065a19fb3abc8224121a1ab37d2efdc1f3e5692773ff",
+      "status": 200,
+      "body": {
+        "enabled": true,
+        "frequency": "daily",
+        "time": "11:25",
+        "day_of_week": 2,
+        "retention_count": 2,
+        "cron_expression": ""
+      }
+    }
+  ],
+  "retention": 2,
+  "original_private_retention_seed_sha256": "93fdf1efa16194c6815a1edeb23f8a298a7cc0da1a987f0cd635057e3d7e78f2",
+  "archive_seeds": [
+    "dispatcharr-backup-2020.01.01.00.00.00.zip",
+    "dispatcharr-backup-2020.01.02.00.00.00.zip",
+    "dispatcharr-backup-2020.01.03.00.00.00.zip",
+    "dispatcharr-backup-2020.01.04.00.00.00.zip"
+  ],
+  "archives_retained": [
+    "dispatcharr-backup-2020.01.04.00.00.00.zip",
+    "dispatcharr-backup-2026.11.23.11.25.00.zip"
+  ],
+  "archives_removed": [
+    "dispatcharr-backup-2020.01.01.00.00.00.zip",
+    "dispatcharr-backup-2020.01.02.00.00.00.zip",
+    "dispatcharr-backup-2020.01.03.00.00.00.zip"
+  ],
+  "observed_Celery_backup_publications": 1,
+  "joined_redis_worker_result": "SUCCESS",
+  "due_UTC_epoch": 1795433100.0,
+  "publication_UTC_epoch": 1795433100.001772,
+  "durable_runs_before_after": [
+    0,
+    1
+  ],
+  "scoped_SQL_unchanged": true,
+  "same_owner_Beat_exit": 0,
+  "exact_cleanup": {
+    "containers_and_old_host_process_generations": 2,
+    "networks_by_name_and_ID": 1,
+    "empty_project_inventories": true
+  },
+  "raw_receipt_sha256": "771fff5a647ae02873ab14d4ed2c99d6f86b7df0a17de3dbfa525a488b5105cd",
+  "raw_broker_journal_sha256": "11279981e7c823b43d4878f04d688481b95cd4f35cb6bf67790f47946c6c17b7",
+  "formal_Source16_accepted": false,
+  "native_executed": false,
+  "full_M8_passed": false,
+  "performance_measured": false,
+  "credit": "Dispatcharr's original authors and contributors retain full application and React UI credit."
+}

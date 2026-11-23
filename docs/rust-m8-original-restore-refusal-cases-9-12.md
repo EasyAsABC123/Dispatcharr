@@ -1,0 +1,7 @@
+# Original restore archive refusals
+
+Stock Original accepted two restore requests with HTTP 202 against a disposable copied PostgreSQL database. Its real Celery worker rejected a ZIP missing metadata and a backup declared as SQLite while the target used PostgreSQL. Both task backend records were Celery SUCCESS with a typed failed restore result. Broker publications, actual prefork prerun and postrun, and the Redis result joined to the same distinct task UUID for each request. Scoped SQL stayed unchanged.
+
+The frozen case 10 and 12 paths supplied task_token as a query parameter and returned 401. Original supplies task_token as an admission field and expects that value under the token query key. Two separate anonymous signed status controls used that key, returned 200 and reported the typed failure from the same worker job. The fixture made four frozen requests and two status controls, and published exactly two restore jobs. [Sanitized evidence and raw receipt digests](../scripts/rust-integration/m8-original-restore-refusal-cases-9-12.json)
+
+Beat retired before restores. The controller, fixture, evaluator and outer owner exited zero. Independent teardown verified two exact containers and host process generations, the fixture network by name and ID, and empty owned inventories. This Original scope preserves cases 9–12 as physical evidence. Positive Original restore cases and the combined stateful 16-case gate remain open. Dispatcharr’s original authors and contributors retain full application and React UI credit.

@@ -1,0 +1,135 @@
+{
+  "milestone": "M8",
+  "scope": "Exact six scoped Original HTTP business cases from the restore and schedule plan",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "fixture_freeze_sha256": "d8e8f9bae5352da9ff4c271bb1c3fe7d67c45638f929fdc90a9552a428306e1b",
+  "actual_exits": {
+    "outer": 0,
+    "controller": 0,
+    "evaluator": 0,
+    "fixture": 0
+  },
+  "cases": [
+    {
+      "index": 1,
+      "method": "GET",
+      "path": "/api/backups/schedule/",
+      "request_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "status": 200,
+      "media": "application/json",
+      "body_bytes": 108,
+      "body_sha256": "7324caa2bf16db07c1f28f0d7ab87b4415b931a8a0652ec5339c549e67ac35ca",
+      "body": {
+        "enabled": true,
+        "frequency": "daily",
+        "time": "03:00",
+        "day_of_week": 0,
+        "retention_count": 3,
+        "cron_expression": ""
+      }
+    },
+    {
+      "index": 4,
+      "method": "PUT",
+      "path": "/api/backups/schedule/update/",
+      "request_body_sha256": "93fe35fce424be3f59f6a2cb0ff3b2dd9ae65f4fa8b9c17049fda52e3a7c4384",
+      "status": 400,
+      "media": "application/json",
+      "body_bytes": 50,
+      "body_sha256": "9a341d70553c478baa2e93a6a4b45633f183b32a4549d0d502ffd5de25ee0518",
+      "body": {
+        "detail": "frequency must be 'daily' or 'weekly'"
+      }
+    },
+    {
+      "index": 5,
+      "method": "PUT",
+      "path": "/api/backups/schedule/update/",
+      "request_body_sha256": "cae4a578900b48d2f283edb34051ebfcde1c71d84b5c0800fc3e37f17b721f34",
+      "status": 400,
+      "media": "application/json",
+      "body_bytes": 41,
+      "body_sha256": "de5c228f9ac3a6a523fb122b43d65c2b937653176560bcac239bd5cd7aebba93",
+      "body": {
+        "detail": "time must be in HH:MM format"
+      }
+    },
+    {
+      "index": 6,
+      "method": "PUT",
+      "path": "/api/backups/schedule/update/",
+      "request_body_sha256": "2d2f150a263f5b3f5c5a6b9096d9e2a54c2c35b0ff79d545b2c9f333bccadc21",
+      "status": 200,
+      "media": "application/json",
+      "body_bytes": 108,
+      "body_sha256": "6d6e39c6d19a0ce779940e09baa11fe1c7285af526b246c4360f32a28cb776f4",
+      "body": {
+        "enabled": true,
+        "frequency": "daily",
+        "time": "99:99",
+        "day_of_week": 0,
+        "retention_count": 3,
+        "cron_expression": ""
+      }
+    },
+    {
+      "index": 7,
+      "method": "PUT",
+      "path": "/api/backups/schedule/update/",
+      "request_body_sha256": "186af27e4fbe13250fc6114e40afd078bdef467685ab4f8ee353a8fda99e6d49",
+      "status": 200,
+      "media": "application/json",
+      "body_bytes": 109,
+      "body_sha256": "d9d2382a951f3ac2fb33800d91ef819dba6c6ef8327d0e5cbbebfce77ef9071b",
+      "body": {
+        "enabled": false,
+        "frequency": "daily",
+        "time": "03:30",
+        "day_of_week": 0,
+        "retention_count": 3,
+        "cron_expression": ""
+      }
+    },
+    {
+      "index": 8,
+      "method": "POST",
+      "path": "/api/backups/owned-missing.zip/restore/",
+      "request_body_sha256": "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+      "status": 404,
+      "media": "application/json",
+      "body_bytes": 34,
+      "body_sha256": "70907c6c121634a5917b172b0f6b6a876fb6c394920df4c580961505236325ff",
+      "body": {
+        "detail": "Backup file not found"
+      }
+    }
+  ],
+  "numeric_time": {
+    "settings_row_retained": true,
+    "task_identity_retained": true,
+    "replaced_cron_hour_minute": [
+      "99",
+      "99"
+    ]
+  },
+  "disable": {
+    "named_task_and_orphan_cron_removed": true,
+    "unrelated_SQL_cache_queues_unchanged": true
+  },
+  "cleanup": {
+    "exact_containers_and_host_generations_retired": 2,
+    "exact_network_names_and_ids_retired": 1,
+    "owned_docker_volumes": 0,
+    "empty_inventory": true
+  },
+  "full_M8_passed": false,
+  "formal_Source16_accepted": false,
+  "native_executed": false,
+  "beat_or_worker_executed": false,
+  "performance_verified": false,
+  "raw_receipt_sha256": "4e27dd7412464a5430ffa588a8f869d38b30537b09a511a9485e2a458ccb7506",
+  "evaluator_sha256": "1b989b7b6a44bc0fc20f59da5fb25ef7042cc52a06178d0a8cf11da2feaf6354",
+  "credit": "Dispatcharr's original authors and contributors retain full credit for the application and React UI."
+}
