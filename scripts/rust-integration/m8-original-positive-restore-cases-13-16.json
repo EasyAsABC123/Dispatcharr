@@ -1,0 +1,72 @@
+{
+  "milestone": "M8",
+  "scope": "Original positive copied-database restore cases 13\u201316, exact retained archive and case16 metadata-only variant",
+  "Original_git_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "freeze_sha256": "e1cd63452fa6cb8009127484228bdd7631ea0e8320fddac56c6993bad91199cf",
+  "actual_exits": {
+    "outer": 0,
+    "controller": 0,
+    "fixture": 0,
+    "evaluator": 0
+  },
+  "cases": [
+    {
+      "index": 13,
+      "HTTP": 202,
+      "admission_body_sha256": "0b6f0a50b44b8d9d57e022139cba86cb01921b86ae71c8e2f123b520a72ad8c2"
+    },
+    {
+      "index": 14,
+      "HTTP": 401,
+      "literal_query": "task_token",
+      "ordinary_control_HTTP": 200,
+      "ordinary_query": "token",
+      "worker_state": "completed"
+    },
+    {
+      "index": 15,
+      "HTTP": 200,
+      "archived_actor_sha256": "bf7013793c8fb927fb1b555c1e3c5605c1e52b8c83d05b033cf1aa4fc1d41093",
+      "schedule_response_sha256": "7324caa2bf16db07c1f28f0d7ab87b4415b931a8a0652ec5339c549e67ac35ca"
+    },
+    {
+      "index": 16,
+      "HTTP": 202,
+      "admission_body_sha256": "28705bb18616a0d45b94bede12fa7e7d959fe091ba9e8e929cd37d44a513c2dd"
+    }
+  ],
+  "actual_distinct_worker_results": 2,
+  "same_scope_postgres_command_targets": 2,
+  "scoped_default_database_unchanged": true,
+  "independent_file_unchanged": true,
+  "both_archive_hashes_unchanged": true,
+  "sentinels_removed": 2,
+  "actual_worker_exit": 0,
+  "retired_worker_log_summary": {
+    "stdout": {
+      "sha256": "425f4abc96bdd3409d123bd4da29df8581f9c15dfc0b8c0619e0bb39f6ce5827",
+      "warnings": 0
+    },
+    "stderr": {
+      "sha256": "9648d3f3a762c85a57dd090471214bb852f2fa0ac20277f205a6efaff15345ce",
+      "warnings": 0
+    }
+  },
+  "exact_cleanup": {
+    "containers_and_old_host_process_generations": 2,
+    "networks_by_name_and_ID": 1,
+    "empty_project_inventories": true
+  },
+  "raw_receipt_sha256": "64146fa756acf7a83b42472a0b6f3e01db857e182796ab38f2cc26f750c24bbd",
+  "raw_worker_receipt_sha256": [
+    "0a45bc4781ba7cf87d3d58d54c8f8246a6ff029fa2da52de2aa38179a8f4db8e",
+    "256b00e612c8291c77f6ff549d63cc7413165343d6dbe491418df05ab3bf4c1a"
+  ],
+  "raw_broker_journal_sha256": "26dd8497a8eeb41ba601f7f9697c8c166ece5a1e197627a6393421004d5e3f39",
+  "formal_Source16_accepted": false,
+  "native_executed": false,
+  "full_M8_passed": false,
+  "performance_verified": false,
+  "credit": "Dispatcharr's original authors and contributors retain full application and React UI credit."
+}

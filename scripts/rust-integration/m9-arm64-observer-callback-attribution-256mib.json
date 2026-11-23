@@ -1,0 +1,80 @@
+{
+  "schema": "dispatcharr-owned-detailed256-sanitized-result/1",
+  "memory": {
+    "actual_samples": 11,
+    "diagnostic256_headroom_passed": true,
+    "effective_limits": {
+      "cpu_fraction": 0.5,
+      "memory_max": 268435456,
+      "pids_max": 32,
+      "swap_max": 0
+    },
+    "events_zero": true,
+    "first_charge_bytes": 16723968,
+    "formal96_limit_and86_4_headroom_passed": false,
+    "last_charge_bytes": 119889920,
+    "last_charged_categories": {
+      "active_file": 225280,
+      "anon": 107257856,
+      "file": 3997696,
+      "file_mapped": 12288,
+      "inactive_file": 3760128,
+      "kernel": 5754880,
+      "pagetables": 475136,
+      "shmem": 0,
+      "slab": 5143288,
+      "sock": 16384
+    },
+    "maximum_sampled_charge_bytes": 119898112,
+    "process_rss_high_water_kib": 135580,
+    "same_boot_cgroup_pid1_and_setup_generation_verified": true,
+    "setup_charge_growth_bytes": 85520384,
+    "setup_disposal_proven": true,
+    "setup_kernel_high_water_bytes": 119918592,
+    "swap_current": 0,
+    "whole_lifetime_high_water_including_disposal_bytes": 119918592
+  },
+  "trace_closure": {
+    "actual_callback_counts": {
+      "config_create": 29,
+      "logging": 1,
+      "models": 29,
+      "ready": 29,
+      "settings": 1
+    },
+    "actual_events": 180,
+    "bytes": 201034,
+    "complete": true,
+    "created_configs": 29,
+    "extra_processes": 0,
+    "extra_threads": 0,
+    "gaps": [],
+    "hooks_restored": true,
+    "max_bytes": 524288,
+    "max_events": 256,
+    "qualified": false,
+    "schema": "dispatcharr-owned-app-setup-trace-status/1",
+    "setup_completed_normally": true,
+    "source_setup_exception_class": null
+  },
+  "reference_nohook256": {
+    "actual_exit": 0,
+    "attributable_exclusively_to_trace": false,
+    "campaign_sha256": "df4a2bb85f7533aa8f2881563faed7fe728953822e228ea429f0b1b771d1c89c",
+    "context_boot_cache_guide_differences_not_perf_pair": true,
+    "exact_cleanup": true,
+    "process_rss_high_water_kib": 135824,
+    "sampled_peak_bytes": 115212288,
+    "setup_kernel_high_water_bytes": 115249152,
+    "setup_peak_current_minus_reference_bytes": 4669440,
+    "whole_lifetime_high_water_bytes": 115470336,
+    "whole_peak_current_minus_reference_bytes": 4448256
+  },
+  "interval_uncertainty": "endpoint charge deltas are inclusive windows, not exclusive/permanent heaps; normalized only from pinned class.name or identical observed names; no nested/peak double count",
+  "formal96_frozen_budget_replaced": false,
+  "performance_accepted": false,
+  "diagnostic_actual_exit": 0,
+  "audit_actual_exit": 0,
+  "source_sha256": "4313dd92e33e2a726ad2861bd255525a4e60d06b287429bafd509ab9abf87998",
+  "evidence_stage_sha256": "c9e6ae27c4abb85df8d7096435b1723290d56f5e9e2521008fc25d2a03b2da79"
+}
