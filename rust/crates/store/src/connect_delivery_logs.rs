@@ -2,7 +2,7 @@
 //! Dispatcharr authors and contributors retain all application credit.
 use super::{capacity, RESPONSE_LIMIT};
 use crate::{
-    vod_api_draft::vod_api_pagination::{last_query, ordinary_with_limits, page_url},
+    vod_api_draft::vod_api_pagination::{last_query, ordinary_with_limits, page_url, Page},
     Store, StoreError,
 };
 use axum::http::{header, uri::Authority, HeaderMap, Uri};
@@ -101,11 +101,18 @@ fn request_origin(headers: &HeaderMap) -> Result<String, StoreError> {
     Ok(format!("{scheme}://{host}"))
 }
 
+pub(super) struct LogPage {
+    pub(super) payload: String,
+    pub(super) page: Page,
+    pub(super) query: Vec<(String, String)>,
+    pub(super) origin: String,
+}
+
 pub(super) async fn list(
     store: &Store,
     headers: &HeaderMap,
     uri: &Uri,
-) -> Result<String, StoreError> {
+) -> Result<LogPage, StoreError> {
     let query = url::form_urlencoded::parse(uri.query().unwrap_or_default().as_bytes())
         .into_owned()
         .collect::<Vec<_>>();
@@ -154,7 +161,7 @@ pub(super) async fn list(
             )::text END FROM size_bound
             "#
         );
-        sqlx::query_scalar::<_, Option<String>>(&page_sql)
+        let payload = sqlx::query_scalar::<_, Option<String>>(&page_sql)
             .bind(integration_id)
             .bind(kind)
             .bind(outside_integer_range)
@@ -165,14 +172,19 @@ pub(super) async fn list(
             .bind(previous.as_deref())
             .bind(RESPONSE_LIMIT)
             .fetch_one(&mut *transaction)
-            .await
-            .map_err(StoreError::from)
+            .await?;
+        Ok::<_, StoreError>((payload, page, origin))
     }
     .await;
     match result {
-        Ok(result) => {
+        Ok((payload, page, origin)) => {
             transaction.commit().await?;
-            result.ok_or_else(capacity)
+            Ok(LogPage {
+                payload: payload.ok_or_else(capacity)?,
+                page,
+                query,
+                origin,
+            })
         }
         Err(error) => {
             transaction.rollback().await?;

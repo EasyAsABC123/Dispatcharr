@@ -18,6 +18,8 @@ use tokio::sync::OwnedSemaphorePermit;
 mod create_integration;
 #[path = "connect_delivery_logs.rs"]
 mod delivery_logs;
+#[path = "connect_log_browsable.rs"]
+mod log_browsable;
 #[path = "connect_subscription_manage.rs"]
 mod subscription_manage;
 #[path = "connect_subscriptions.rs"]
@@ -80,6 +82,8 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route("/api/connect/logs/", get(logs))
         .route("/api/connect/logs.json", get(fixed_json_logs))
         .route("/api/connect/logs.json/", get(fixed_json_logs))
+        .route("/api/connect/logs.api", get(browsable_logs))
+        .route("/api/connect/logs.api/", get(browsable_logs))
         .route("/api/connect/logs/{id}/", get(retrieve_log))
         .route("/api/connect/logs/{id}", get(retrieve_log))
         .route(
@@ -305,11 +309,7 @@ async fn fixed_json_logs(
             .await
             .into_response()
     } else {
-        StoreError::StatusBody(
-            StatusCode::NOT_ACCEPTABLE.as_u16(),
-            json!({"detail":"Could not satisfy the request Accept header."}),
-        )
-        .into_response()
+        unacceptable_log_media()
     };
     response
         .headers_mut()
@@ -317,7 +317,39 @@ async fn fixed_json_logs(
     response
 }
 
+async fn browsable_logs(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Response {
+    let mut response = if accepts_log_media(&headers, "text/*", "text/html") {
+        execute(auth, peer, headers, ConnectRequest::BrowsableLogs(uri))
+            .await
+            .into_response()
+    } else {
+        unacceptable_log_media()
+    };
+    response
+        .headers_mut()
+        .entry(header::VARY)
+        .or_insert(HeaderValue::from_static("Accept"));
+    response
+}
+
+fn unacceptable_log_media() -> Response {
+    StoreError::StatusBody(
+        StatusCode::NOT_ACCEPTABLE.as_u16(),
+        json!({"detail":"Could not satisfy the request Accept header."}),
+    )
+    .into_response()
+}
+
 fn accepts_log_json(headers: &HeaderMap) -> bool {
+    accepts_log_media(headers, "application/*", "application/json")
+}
+
+fn accepts_log_media(headers: &HeaderMap, wildcard: &str, media_type: &str) -> bool {
     let accepts = headers.get_all(header::ACCEPT);
     let mut values = accepts.iter().peekable();
     if values.peek().is_none() {
@@ -328,8 +360,8 @@ fn accepts_log_json(headers: &HeaderMap) -> bool {
         value.split(',').any(|media| {
             let kind = media.split(';').next().unwrap_or("").trim();
             kind == "*/*"
-                || kind.eq_ignore_ascii_case("application/*")
-                || kind.eq_ignore_ascii_case("application/json")
+                || kind.eq_ignore_ascii_case(wildcard)
+                || kind.eq_ignore_ascii_case(media_type)
         })
     })
 }
@@ -344,6 +376,7 @@ enum ConnectRequest {
     WriteSubscription(String, Request, bool),
     DeleteSubscription(String),
     Logs(Uri),
+    BrowsableLogs(Uri),
     Log(String, Uri),
     Create(Request),
     Update(String, Request, bool),
@@ -420,6 +453,7 @@ async fn execute(
     headers: HeaderMap,
     request: ConnectRequest,
 ) -> Result<Response, StoreError> {
+    let fixed_json_log = uses_fixed_json_log_response(&request);
     let permit = Arc::new(
         auth.user_agent_workers
             .clone()
@@ -430,9 +464,13 @@ async fn execute(
     // The established Store permit survives client cancellation and remains
     // with the returned body until Hyper consumes or discards it.
     tokio::spawn(async move {
-        auth.retained_rest_reads(RestReadLimits::default())?
+        let subject = auth
+            .retained_rest_reads(RestReadLimits::default())?
             .account_user(peer, headers.clone(), true)
             .await?;
+        let username = matches!(&request, ConnectRequest::BrowsableLogs(_))
+            .then(|| subject.user().username.clone());
+        drop(subject);
         let (status, payload) = match request {
             ConnectRequest::Integrations => (
                 StatusCode::OK,
@@ -475,8 +513,20 @@ async fn execute(
             }
             ConnectRequest::Logs(uri) => (
                 StatusCode::OK,
-                delivery_logs::list(&auth.store, &headers, &uri).await?,
+                delivery_logs::list(&auth.store, &headers, &uri)
+                    .await?
+                    .payload,
             ),
+            ConnectRequest::BrowsableLogs(uri) => {
+                let page = delivery_logs::list(&auth.store, &headers, &uri).await?;
+                return log_browsable::response(
+                    &headers,
+                    &uri,
+                    username.as_deref().ok_or_else(capacity)?,
+                    page,
+                    permit,
+                );
+            }
             ConnectRequest::Log(id, uri) => (
                 StatusCode::OK,
                 delivery_logs::retrieve(&auth.store, &id, &uri).await?,
@@ -499,31 +549,112 @@ async fn execute(
                 subscriptions::replace(&auth.store, id, request).await?,
             ),
         };
-        // Keep the projection and allocation intact, including config JSON
-        // numbers outside primitive Rust ranges.
-        let bytes = payload.into_bytes();
-        if bytes.len() > RESPONSE_LIMIT as usize {
-            return Err(capacity());
-        }
-        let length = bytes.len();
-        let body = Body::from(Bytes::from_owner(RetainedResponse {
-            bytes,
-            _permit: permit,
-        }));
-        Response::builder()
-            .status(status)
-            .header(header::CONTENT_TYPE, "application/json")
-            .header(header::CONTENT_LENGTH, length)
-            .body(body)
-            .map_err(|_| StoreError::UnhandledRestFault)
+        json_response(status, payload, permit, fixed_json_log)
     })
     .await
     .map_err(|_| capacity())?
 }
 
+fn uses_fixed_json_log_response(request: &ConnectRequest) -> bool {
+    matches!(request, ConnectRequest::Logs(uri)
+        if matches!(uri.path(), "/api/connect/logs.json" | "/api/connect/logs.json/"))
+}
+
+fn compact_projected_json(bytes: &mut Vec<u8>) {
+    // The bounded PostgreSQL projection is already valid JSON. Remove only
+    // whitespace outside string tokens, preserving field order and numeric
+    // lexemes without allocating a second document.
+    let (mut quoted, mut escaped) = (false, false);
+    bytes.retain(|&byte| {
+        if quoted {
+            if escaped {
+                escaped = false;
+            } else if byte == b'\\' {
+                escaped = true;
+            } else if byte == b'"' {
+                quoted = false;
+            }
+        } else if byte == b'"' {
+            quoted = true;
+        } else if matches!(byte, b' ' | b'\t' | b'\r' | b'\n') {
+            return false;
+        }
+        true
+    });
+}
+
+fn json_response(
+    status: StatusCode,
+    payload: String,
+    permit: Arc<OwnedSemaphorePermit>,
+    fixed_json_log: bool,
+) -> Result<Response, StoreError> {
+    let mut bytes = payload.into_bytes();
+    if bytes.len() > RESPONSE_LIMIT as usize {
+        return Err(capacity());
+    }
+    let mut response = Response::builder()
+        .status(status)
+        .header(header::CONTENT_TYPE, "application/json");
+    if fixed_json_log && status == StatusCode::OK {
+        compact_projected_json(&mut bytes);
+        response = response.header(header::ALLOW, "GET, HEAD, OPTIONS");
+    }
+    response
+        .header(header::CONTENT_LENGTH, bytes.len())
+        .body(Body::from(Bytes::from_owner(RetainedResponse {
+            bytes,
+            _permit: permit,
+        })))
+        .map_err(|_| StoreError::UnhandledRestFault)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn fixed_json_log_success_keeps_order_and_literal_spaces_with_method_metadata() {
+        let projected = r#"{ "count" : 1, "next" : null, "previous" : null, "results" : [{"id" : 3, "subscription" : {"id" : 7, "enabled" : true}, "status" : "success", "request_payload" : {"z": "literal  spaces, : \"quoted\" \\ end", "a": 900719925474099312345}, "response_payload" : [" a b ", {}], "error_message" : "", "created_at" : "2026-04-05T06:07:08Z"}] }"#;
+        let compact = r#"{"count":1,"next":null,"previous":null,"results":[{"id":3,"subscription":{"id":7,"enabled":true},"status":"success","request_payload":{"z":"literal  spaces, : \"quoted\" \\ end","a":900719925474099312345},"response_payload":[" a b ",{}],"error_message":"","created_at":"2026-04-05T06:07:08Z"}]}"#;
+        let owner = Arc::new(tokio::sync::Semaphore::new(1));
+        for (uri, status, fixed) in [
+            ("/api/connect/logs.json", StatusCode::OK, true),
+            ("/api/connect/logs.json/", StatusCode::OK, true),
+            ("/api/connect/logs/", StatusCode::OK, false),
+            ("/api/connect/logs.json", StatusCode::NOT_ACCEPTABLE, false),
+        ] {
+            let request = ConnectRequest::Logs(uri.parse().unwrap());
+            let response = json_response(
+                status,
+                projected.to_owned(),
+                Arc::new(owner.clone().try_acquire_owned().unwrap()),
+                uses_fixed_json_log_response(&request),
+            )
+            .unwrap();
+            let expected = if fixed { compact } else { projected };
+            assert_eq!(response.status(), status);
+            assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+            assert_eq!(
+                response.headers()[header::CONTENT_LENGTH].to_str().unwrap(),
+                expected.len().to_string(),
+            );
+            assert_eq!(
+                response
+                    .headers()
+                    .get(header::ALLOW)
+                    .and_then(|v| v.to_str().ok()),
+                fixed.then_some("GET, HEAD, OPTIONS"),
+            );
+            assert_eq!(owner.available_permits(), 0);
+            let body = axum::body::to_bytes(response.into_body(), projected.len())
+                .await
+                .unwrap();
+            assert_eq!(&body[..], expected.as_bytes());
+            drop(body);
+            assert_eq!(owner.available_permits(), 1);
+        }
+    }
 
     #[test]
     fn fixed_json_accept_matches_normal_drf_media_types() {
@@ -596,7 +727,7 @@ mod tests {
         }
         for (uri, code) in [
             ("/api/connect/logs/", StatusCode::UNAUTHORIZED),
-            ("/api/connect/logs.api", StatusCode::NOT_FOUND),
+            ("/api/connect/logs.api", StatusCode::UNAUTHORIZED),
         ] {
             let request = Request::builder()
                 .uri(uri)
