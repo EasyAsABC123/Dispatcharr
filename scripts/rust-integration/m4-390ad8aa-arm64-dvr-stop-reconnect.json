@@ -1,0 +1,83 @@
+{
+  "exact_stage_sha256": "14030a65d082cbfc28bc7a4cbfc4dc5b7f79feaada370e43386b0d317cfeffc9",
+  "final_mkv": {
+    "exact_ordered_match": {
+      "first_flow": "ccbc1fd5b34347fc",
+      "first_flow_vcl_consumed": 281,
+      "second_flow": "e352ad87fa19658e",
+      "second_flow_vcl_consumed": 151
+    },
+    "normalized_h264_slices": 432,
+    "sha256": "2e8baa8131263a2e7f3061ed024a095542d60689fdce28b56f56c0d8de046ee9",
+    "strict_decoded_audio_frames": 810,
+    "strict_decoded_video_frames": 430
+  },
+  "flow_media": {
+    "ccbc1fd5b34347fc": {
+      "body_vcl": 281,
+      "complete_body": true,
+      "first_origin_slice": 0,
+      "http": 200,
+      "retained_bytes": 2814548,
+      "retained_sha256": "5c5f69eccba5c94e2b70886b9d041f9303f7ab99d1cd15147b857681145c7e4f",
+      "strict_decode_actual_exit": 0
+    },
+    "e352ad87fa19658e": {
+      "body_vcl": 168,
+      "complete_body": false,
+      "first_origin_slice": 128,
+      "http": 200,
+      "retained_bytes": 1682412,
+      "retained_sha256": "f1bc2356a00a0e35a3b9dce10c6acb44c6844bcefcfe92c971260c7e2e41af33",
+      "strict_decode_actual_exit": 0,
+      "tcp_reset": true,
+      "trailing_partial_ts_bytes": 146
+    }
+  },
+  "kernel_delivered_frames": 8966,
+  "kernel_dropped_frames": 0,
+  "malformed_frames": 0,
+  "missing_timestamps": 0,
+  "native_counterpart_started": false,
+  "ordinary_scenario_passed": true,
+  "origin": {
+    "exact_synthetic_bytes": 45001748,
+    "sha256": "b994dfd68f54cdf58ed169f2da7b4e4843d1632acad4b9a178408bdad1f450c0",
+    "strict_decode_actual_exit": 0
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_credit": false,
+  "physical_evidence": {
+    "cleanup_marker_absent": true,
+    "diagnostic_sha256": "86c1baf9021f9fea6fb75a09dcda623a3bbc899f4c65093f3332e0d922b89598",
+    "exact_cleanup_sha256": "4175ea5ca76476b43c32facc0bb1a3c55b190af2d098dd5dceca85626d0b1ad7",
+    "execution_sha256": "aa53d62bb36a0eceaa0a916359b857c711b1fd867905eb280b365cc790d08040",
+    "fd_probe_stderr_sha256": "30dfda86796f8e014fcb931cfefb163b30e1c2ebea03e0b53c47797abf4a0061",
+    "ordinary_scenario_sha256": "7fa526c3c8eea178a7e465fed14ccb7fa214341d7519c0f4e50736d41e6da488",
+    "scoped_container_network_volume_role_exit_and_process_generations_independently_verified": true
+  },
+  "physical_original_actual_exit": 1,
+  "provenance": {
+    "clean_take_did_not_reproduce_previous_2066_byte_truncation": true,
+    "fd_probe_permission_error": true,
+    "kernel_socket_to_pid_binding_proven": false,
+    "no_single_flow_selected": true,
+    "one_sampled_recorder_spanning_both_flow_windows": true
+  },
+  "scope": "distinct clean stock ARM64 scheduled DVR Tap2 observation",
+  "scoped_lane_failure": "UpstreamCaptureNotQualified",
+  "stop_timing": {
+    "actual_reconnect_streamed_true": true,
+    "actual_reconnect_true": true,
+    "db_stop_ns": 1795428429959857000,
+    "first_flow_last_packet_ms_from_db_stop": 36.648303,
+    "second_flow_first_reply_ms_from_db_stop": 36.607678,
+    "second_flow_first_syn_ms_from_db_stop": 29.75372,
+    "second_flow_last_packet_ms_from_db_stop": 648.225887
+  },
+  "strict_application_final_mkv_actual_exit": 0,
+  "strict_full_hls_actual_exit": 0,
+  "tap_actual_exit": 0,
+  "truncation_frames": 0,
+  "whole_m4_verified": false
+}
