@@ -1,0 +1,270 @@
+{
+  "application_inputs": 2161,
+  "candidate": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "changed_paths": [
+    "rust/crates/app/src/main.rs",
+    "rust/crates/clients/src/hls.rs",
+    "rust/crates/clients/src/scripts.rs",
+    "rust/crates/hls-http/src/gateway.rs",
+    "rust/crates/store/src/auth.rs",
+    "rust/crates/store/src/lib.rs",
+    "rust/crates/vod-http/src/engine.rs",
+    "rust/crates/vod-http/src/generation_scope.rs",
+    "rust/crates/vod-http/src/recovery_generation.rs",
+    "rust/crates/vod-http/src/resolver.rs",
+    "rust/crates/vod-http/src/session_stop_owned.rs",
+    "rust/crates/vod-http/src/sessions.rs"
+  ],
+  "engine_calls": 0,
+  "fork_base": "d6b2338c299900d56792e98cb0952c5aa00abdc0",
+  "full_M3_passed": false,
+  "full_M4_passed": false,
+  "guard_evidence_sha256": "21765270adebee5d0f3afe078218650fe5485b74e6af7a05cec7ead6e523acd5",
+  "hls": {
+    "owner-loss": {
+      "attempt": 1,
+      "compared_response_timeline": [
+        {
+          "marker": null,
+          "offset": 0,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 3,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 8,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 15,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 25,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 35,
+          "status": 200
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 45,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 55,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 65,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 75,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 90,
+          "status": 404
+        }
+      ],
+      "exact_cleanup": true,
+      "physical_actual_exit": 0,
+      "proof_actual_exit": 0,
+      "proof_sha256": "07457710e584266f1ca7e6c07ed29e1a030dcc5f0d2b28fd997b79466e3d077a",
+      "raw_sha256": "58b36f0be752d2bf05064d4a2b0a092a5c87c1c7e684b7f31e501c891710d9d9",
+      "stage": "m3-m4-0c5133b62dc9-ordinary-hls-owner-loss-2",
+      "stage_seal_sha256": "6fe67d292fc5ea40464965f550117946631105146711ae1245103112c04aef4c"
+    },
+    "sharing": {
+      "attempt": 1,
+      "matched_regular_TS_segments": true,
+      "observations": {
+        "Native": {
+          "cleanup_verified": true,
+          "exact_loopback_mappings_verified": true,
+          "image_id": "sha256:e6d40f935400adfc8ccd64d31211b556cf3bf8dffc39f7fd823fbb5688d0f2dd",
+          "matched_viewers": 2,
+          "ordinary_stop_statuses": [
+            204,
+            204
+          ],
+          "peak_active_upstream": 1,
+          "profile_and_origin_exactly_retired": true,
+          "profile_processes": 1,
+          "real_decodes": {
+            "one": {
+              "actual_exit": 0,
+              "settled": true,
+              "streams": {
+                "audio": {
+                  "codec": "aac",
+                  "frames": 192
+                },
+                "video": {
+                  "codec": "h264",
+                  "frames": 100
+                }
+              }
+            },
+            "two": {
+              "actual_exit": 0,
+              "settled": true,
+              "streams": {
+                "audio": {
+                  "codec": "aac",
+                  "frames": 192
+                },
+                "video": {
+                  "codec": "h264",
+                  "frames": 100
+                }
+              }
+            }
+          },
+          "segments_each_viewer": [
+            {
+              "bytes": 320164,
+              "sequence": 2,
+              "sha256": "862ca83ce5b7f78b5113e2713cf633e1fcc40237a85902105cddb8c81b07db10"
+            },
+            {
+              "bytes": 301740,
+              "sequence": 3,
+              "sha256": "1000449dfc5a79b43fbf5fa36f143ec50a18ae00ca26bce9dbc17164a8687454"
+            }
+          ],
+          "upstream_connections": 1
+        },
+        "Original": {
+          "cleanup_verified": true,
+          "exact_loopback_mappings_verified": true,
+          "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+          "matched_viewers": 2,
+          "ordinary_stop_statuses": [
+            204,
+            204
+          ],
+          "peak_active_upstream": 1,
+          "profile_and_origin_exactly_retired": true,
+          "profile_processes": 1,
+          "real_decodes": {
+            "one": {
+              "actual_exit": 0,
+              "settled": true,
+              "streams": {
+                "audio": {
+                  "codec": "aac",
+                  "frames": 192
+                },
+                "video": {
+                  "codec": "h264",
+                  "frames": 100
+                }
+              }
+            },
+            "two": {
+              "actual_exit": 0,
+              "settled": true,
+              "streams": {
+                "audio": {
+                  "codec": "aac",
+                  "frames": 192
+                },
+                "video": {
+                  "codec": "h264",
+                  "frames": 100
+                }
+              }
+            }
+          },
+          "segments_each_viewer": [
+            {
+              "bytes": 320164,
+              "sequence": 2,
+              "sha256": "862ca83ce5b7f78b5113e2713cf633e1fcc40237a85902105cddb8c81b07db10"
+            },
+            {
+              "bytes": 301740,
+              "sequence": 3,
+              "sha256": "1000449dfc5a79b43fbf5fa36f143ec50a18ae00ca26bce9dbc17164a8687454"
+            }
+          ],
+          "upstream_connections": 1
+        }
+      },
+      "physical_actual_exit": 0,
+      "proof_actual_exit": 0,
+      "proof_sha256": "0bc5de186c7c6ae50d9fc3e6d18b4b4c9d2982bd04dea4f0c964ec3b42cd66d1",
+      "raw_sha256": "920aea4472d8e1237c5a9aee92e8928572aa3a6329d75f3fd928cb581343e1b1",
+      "stage": "m3-m4-0c5133b62dc9-ordinary-hls-sharing-2",
+      "stage_seal_sha256": "738ec28106ab38bd53c6a457e694c6b331d42beacb491b3dd3f747e6b050194e"
+    }
+  },
+  "ordinary_package": {
+    "build_manifest_file": "/home/justin/github/Dispatcharr/artifacts/rust/m3-m4-9f29dbe-ordinary-successor-package-1/actual-package-1/package/build.json",
+    "build_manifest_sha256": "72c01c185cad19e515090807006f3f98fc034fb0459a981cebc759700278ee12",
+    "git": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+    "image_id": "sha256:e6d40f935400adfc8ccd64d31211b556cf3bf8dffc39f7fd823fbb5688d0f2dd",
+    "source_tree_sha256": "37367020363f670cf6cd3da8b26540d25e91181031f4abdfc373b30455117e04"
+  },
+  "performance_verified": false,
+  "protected_inputs": 497,
+  "scope": "combined guarded publication",
+  "vod": {
+    "attempt": 1,
+    "exact_redis_controls_sha256": "856139ab33111bd78055287dfbcd45b7625f3bc46aa1b1e99e6657dd0266877b",
+    "literal_exits": {
+      "cleanup": 0,
+      "reducer": 0,
+      "run": 0
+    },
+    "observations": {
+      "original": {
+        "both_origin_offsets_matched": true,
+        "first_body_bytes": 278528,
+        "first_body_open": true,
+        "initial_http": 200,
+        "old_body_post_reopen_bytes": 8192,
+        "reopen_http": 200,
+        "same_id_reopen_prefix_bytes": 8192
+      },
+      "rust": {
+        "both_origin_offsets_matched": true,
+        "first_body_bytes": 278528,
+        "first_body_open": true,
+        "initial_http": 200,
+        "old_body_post_reopen_bytes": 8192,
+        "reopen_http": 200,
+        "same_id_reopen_prefix_bytes": 8192
+      }
+    },
+    "proof_sha256": "58f534b47629e0b02928b43ffeb6b6b5f95d9865fc726c5f9a5d9e86447bc4fe",
+    "raw_sha256": "9e5a73c89a4b4dc22b236fb905ed85395564bb81c515ecf88f07eff928bf13d3",
+    "redis_controls_exact_cleanup": true,
+    "redis_controls_tests": [
+      {
+        "actual_exit": 0,
+        "exact_one_pass": true,
+        "name": "ordinary_current_enter_rebinds_stale_origin_before_success"
+      },
+      {
+        "actual_exit": 0,
+        "exact_one_pass": true,
+        "name": "ordinary_current_enter_lost_reply_compensates_only_selected_generation"
+      }
+    ]
+  }
+}
