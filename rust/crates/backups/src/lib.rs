@@ -92,6 +92,7 @@ pub struct Runtime {
 pub enum Error {
     Io,
     Zip,
+    MissingMetadata,
     Metadata,
     Capacity,
     Busy,
@@ -102,6 +103,7 @@ pub enum Error {
         code: Option<i32>,
     },
     WrongDatabaseType,
+    SqliteDatabaseTypeMismatch,
     UnsafeMember,
     FixtureAuthorization,
     WorkerPanic,
@@ -685,8 +687,12 @@ fn stage_restore_dump(
     preflight(&mut file, limits)?;
     let mut zip = ZipArchive::new(file)?;
     let mut metadata = Vec::new();
+    let metadata_member = zip.by_name("metadata.json").map_err(|error| match error {
+        zip::result::ZipError::FileNotFound => Error::MissingMetadata,
+        other => Error::from(other),
+    })?;
     copy(
-        zip.by_name("metadata.json")?,
+        metadata_member,
         &mut metadata,
         limits.metadata_bytes,
         cancel,
@@ -723,8 +729,10 @@ fn stage_restore_dump(
         .get("database_type")
         .map_or(Some("postgresql"), serde_json::Value::as_str)
         .ok_or(Error::Metadata)?;
-    if kind != "postgresql" {
-        return Err(Error::WrongDatabaseType);
+    match kind {
+        "postgresql" => {}
+        "sqlite" => return Err(Error::SqliteDatabaseTypeMismatch),
+        _ => return Err(Error::WrongDatabaseType),
     }
     Ok(PreparedDump { scratch, dump })
 }
@@ -1064,6 +1072,55 @@ fn parse_migration_copy(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn restore_distinguishes_missing_metadata_and_sqlite_before_database_dispatch() {
+        let fixture = OwnedDirectory::new(&std::env::temp_dir()).unwrap();
+        let archive = fixture.0.join("owned-fixture.zip");
+        let scratch = fixture.0.join("scratch");
+        let stage = |members: &[(&str, &[u8])]| {
+            let mut writer = ZipWriter::new(File::create(&archive).unwrap());
+            for &(name, value) in members {
+                writer
+                    .start_file(name, SimpleFileOptions::default())
+                    .unwrap();
+                writer.write_all(value).unwrap();
+            }
+            writer.finish().unwrap();
+            stage_restore_dump(
+                &archive,
+                &scratch,
+                &Limits::default(),
+                &Cancellation::default(),
+            )
+        };
+
+        assert!(matches!(
+            stage(&[("owned.txt", b"owned fixture")]),
+            Err(Error::MissingMetadata)
+        ));
+        assert!(matches!(
+            stage(&[
+                (
+                    "metadata.json",
+                    br#"{"database_type":"sqlite","database_file":"database.sqlite3"}"#,
+                ),
+                ("database.sqlite3", b"owned inert fixture"),
+            ]),
+            Err(Error::SqliteDatabaseTypeMismatch)
+        ));
+        assert!(matches!(
+            stage(&[
+                (
+                    "metadata.json",
+                    br#"{"database_type":"unknown","database_file":"database.dump"}"#,
+                ),
+                ("database.dump", b"owned inert fixture"),
+            ]),
+            Err(Error::WrongDatabaseType)
+        ));
+    }
+
     #[test]
     fn current_restore_graph_uses_real_copy_projection_not_executable_sql() {
         let raw=b"-- pg_restore projection\nSET statement_timeout = 0;\nCOPY public.django_migrations (id, app, name, applied) FROM stdin;\n1\taccounts\t0001_initial\t2026-01-01 00:00:00+00\n2\tauth\t0001_initial\t2026-01-01 00:00:00+00\n\\.\nSELECT irrelevant();\n";

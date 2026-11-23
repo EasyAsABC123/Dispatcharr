@@ -22,8 +22,12 @@ fn archive_failure(error: ArchiveError) -> Result<Value, Error> {
     match error {
         ArchiveError::Cancelled|ArchiveError::Timeout|ArchiveError::WorkerPanic => Err(Error::Supervisor),
         ArchiveError::Zip => Ok(failed("Native restore archive is not a readable ZIP backup")),
+        ArchiveError::MissingMetadata => Ok(failed("Invalid backup: missing metadata.json")),
         ArchiveError::Metadata => Ok(failed("Native restore requires valid current-schema metadata and disabled plugins without task history")),
         ArchiveError::WrongDatabaseType => Ok(failed("Database type mismatch: current database is postgresql")),
+        ArchiveError::SqliteDatabaseTypeMismatch => Ok(failed(
+            "Database type mismatch: backup is sqlite, but current database is postgresql",
+        )),
         ArchiveError::Capacity => Ok(failed("Native restore archive capacity exceeded")),
         _ => Ok(failed("Native PostgreSQL restore failed")),
     }
@@ -168,5 +172,26 @@ impl Executor {
             return Err(Error::Supervisor);
         }
         Ok(value.unwrap_or_else(|| json!({"status":"completed","filename":filename})))
+    }
+}
+
+#[cfg(test)]
+mod archive_failure_tests {
+    use super::*;
+
+    #[test]
+    fn normal_restore_reports_the_two_observed_source_refusals() {
+        for (error, message) in [
+            (ArchiveError::MissingMetadata, "Invalid backup: missing metadata.json"),
+            (
+                ArchiveError::SqliteDatabaseTypeMismatch,
+                "Database type mismatch: backup is sqlite, but current database is postgresql",
+            ),
+        ] {
+            assert_eq!(
+                archive_failure(error).unwrap(),
+                json!({"status":"failed","error":message}),
+            );
+        }
     }
 }
