@@ -5,13 +5,13 @@ use crate::{
         channel_options_headers, channel_options_indentation, options_json_response,
         serialize_options_json,
     },
-    AuthService, StoreError,
+    AuthService, StoreError, User,
 };
 use axum::{
     extract::{
         rejection::JsonRejection, ConnectInfo, FromRequestParts, OriginalUri, Path, Request, State,
     },
-    http::{header, request::Parts, HeaderMap, HeaderValue, StatusCode, Uri},
+    http::{header, request::Parts, HeaderMap, HeaderValue, Method, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::get,
     Json, Router,
@@ -20,6 +20,9 @@ use chrono::{DateTime, SecondsFormat, Utc};
 use serde_json::{json, Map, Value};
 use sqlx::{postgres::PgRow, Row};
 use std::net::SocketAddr;
+
+#[path = "core_profile_html.rs"]
+mod core_profile_html;
 
 #[derive(Clone, Copy)]
 enum Resource {
@@ -126,10 +129,28 @@ async fn read(
     resource: Resource,
     id: Option<String>,
 ) -> Result<Json<Value>, StoreError> {
+    read_actor(&auth, peer, headers).await?;
+    read_resource(&auth, resource, id, false).await
+}
+
+async fn read_actor(
+    auth: &AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+) -> Result<User, StoreError> {
     let user = auth.account_user(peer, headers, false).await?;
     if user.user_level < 1 {
         return Err(StoreError::PermissionDenied);
     }
+    Ok(user)
+}
+
+async fn read_resource(
+    auth: &AuthService,
+    resource: Resource,
+    id: Option<String>,
+    bounded_html: bool,
+) -> Result<Json<Value>, StoreError> {
     // DRF applies permissions before looking up an object, including malformed IDs.
     let id = id
         .map(|value| {
@@ -138,10 +159,23 @@ async fn read(
                 .map_err(|_| StoreError::StatusBody(404, json!({"detail":"Not found."})))
         })
         .transpose()?;
-    let rows = sqlx::query(resource.query())
-        .bind(id)
-        .fetch_all(auth.store.pool())
-        .await?;
+    let rows = if bounded_html && id.is_none() {
+        let sql = format!("{} LIMIT $2", resource.query());
+        let rows = sqlx::query(&sql)
+            .bind(id)
+            .bind(core_profile_html::MAXIMUM_ROWS + 1)
+            .fetch_all(auth.store.pool())
+            .await?;
+        if rows.len() > core_profile_html::MAXIMUM_ROWS as usize {
+            return Err(core_profile_html::unavailable());
+        }
+        rows
+    } else {
+        sqlx::query(resource.query())
+            .bind(id)
+            .fetch_all(auth.store.pool())
+            .await?
+    };
     let mut values = rows
         .into_iter()
         .map(|row| resource.serialize(row))
@@ -215,14 +249,8 @@ fn direct_profile_allow(detail: bool) -> &'static str {
     }
 }
 
-fn direct_profile_response(
-    detail: bool,
-    source_order: &[&str],
-    Json(mut value): Json<Value>,
-) -> Response {
-    // Axum's GET route also calls this for HEAD. It computes the length
-    // from the ordered GET representation and strips the HEAD entity body.
-    match &mut value {
+fn order_profile_value(value: &mut Value, source_order: &[&str]) {
+    match value {
         Value::Array(rows) => {
             for fields in rows.iter_mut().filter_map(Value::as_object_mut) {
                 order_profile_fields(fields, source_order);
@@ -231,6 +259,16 @@ fn direct_profile_response(
         Value::Object(fields) => order_profile_fields(fields, source_order),
         _ => {}
     }
+}
+
+fn direct_profile_response(
+    detail: bool,
+    source_order: &[&str],
+    Json(mut value): Json<Value>,
+) -> Response {
+    // Axum's GET route also calls this for HEAD. It computes the length
+    // from the ordered GET representation and strips the HEAD entity body.
+    order_profile_value(&mut value, source_order);
     let allow = direct_profile_allow(detail);
     // Main's existing response middleware appends the origin token to Vary.
     (
@@ -394,7 +432,7 @@ macro_rules! direct_profile_reads {
     };
 }
 direct_profile_reads!(
-    direct_useragents,
+    direct_useragents_json,
     direct_useragent,
     useragents,
     useragent,
@@ -402,11 +440,81 @@ direct_profile_reads!(
 );
 direct_profile_reads!(
     direct_streamprofiles,
-    direct_streamprofile,
+    direct_streamprofile_json,
     streamprofiles,
     streamprofile,
     STREAM_PROFILE_FIELDS
 );
+
+async fn direct_useragents(
+    auth: State<AuthService>,
+    peer: ConnectInfo<SocketAddr>,
+    method: Method,
+    OriginalUri(uri): OriginalUri,
+    headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    if !core_profile_html::selected(&method, &uri, &headers) {
+        return direct_useragents_json(auth, peer, headers).await;
+    }
+    let user = read_actor(&auth, peer.0, headers.clone()).await?;
+    let Json(mut value) =
+        read_resource(&auth, Resource::UserAgents, None, user.user_level >= 10).await?;
+    if user.user_level < 10 {
+        return Ok(direct_profile_response(
+            false,
+            USER_AGENT_FIELDS,
+            Json(value),
+        ));
+    }
+    order_profile_value(&mut value, USER_AGENT_FIELDS);
+    core_profile_html::response(
+        core_profile_html::Page::AgentList,
+        &headers,
+        &user.username,
+        &value,
+        &[],
+        direct_profile_allow(false),
+    )
+}
+
+async fn direct_streamprofile(
+    auth: State<AuthService>,
+    id: Path<String>,
+    peer: ConnectInfo<SocketAddr>,
+    method: Method,
+    OriginalUri(uri): OriginalUri,
+    headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    if !core_profile_html::selected(&method, &uri, &headers) {
+        return direct_streamprofile_json(auth, id, peer, headers).await;
+    }
+    let user = read_actor(&auth, peer.0, headers.clone()).await?;
+    let Json(mut value) = read_resource(&auth, Resource::StreamProfiles, Some(id.0), false).await?;
+    if user.user_level < 10 {
+        return Ok(direct_profile_response(
+            true,
+            STREAM_PROFILE_FIELDS,
+            Json(value),
+        ));
+    }
+    let choices: Vec<(i64, String)> =
+        sqlx::query_as("SELECT id::bigint AS id, name FROM core_useragent LIMIT $1")
+            .bind(core_profile_html::MAXIMUM_ROWS + 1)
+            .fetch_all(auth.store.pool())
+            .await?;
+    if choices.len() > core_profile_html::MAXIMUM_ROWS as usize {
+        return Err(core_profile_html::unavailable());
+    }
+    order_profile_value(&mut value, STREAM_PROFILE_FIELDS);
+    core_profile_html::response(
+        core_profile_html::Page::ProfileDetail(uri.path()),
+        &headers,
+        &user.username,
+        &value,
+        &choices,
+        direct_profile_allow(true),
+    )
+}
 
 struct JsonProfileId(String);
 
@@ -743,6 +851,30 @@ mod direct_profile_options_tests {
         let body: Value = serde_json::from_slice(&raw).unwrap();
         assert_eq!(body["name"], "User Agent Instance");
         assert!(body.get("actions").is_none());
+    }
+
+    #[tokio::test]
+    async fn direct_profile_html_gets_use_normal_router_authentication_without_issuing_a_cookie() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://localhost/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-core-html-test-signing-key".into()).unwrap(),
+        );
+        for path in ["/api/core/useragents/", "/api/core/streamprofiles/6/"] {
+            let request = Request::builder()
+                .method(Method::GET)
+                .uri(path)
+                .header(header::ACCEPT, "text/html")
+                .header(header::AUTHORIZATION, "Bearer malformed-test-header")
+                .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                .body(Body::empty())
+                .unwrap();
+            let response = router(auth.clone()).oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+            assert!(!response.headers().contains_key(header::SET_COOKIE));
+        }
     }
 
     #[tokio::test]
