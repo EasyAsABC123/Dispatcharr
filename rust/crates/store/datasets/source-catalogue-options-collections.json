@@ -1,0 +1,209 @@
+{
+  "output_profile": {
+    "name": "Output Profile List",
+    "description": "API endpoint that allows output profiles to be viewed, created, edited, or deleted.",
+    "renders": [
+      "application/json",
+      "text/html"
+    ],
+    "parses": [
+      "application/json",
+      "application/x-www-form-urlencoded",
+      "multipart/form-data"
+    ],
+    "actions": {
+      "POST": {
+        "id": {
+          "type": "integer",
+          "required": false,
+          "read_only": true,
+          "label": "ID"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "read_only": false,
+          "label": "Name",
+          "help_text": "Display name for this output profile",
+          "max_length": 255
+        },
+        "command": {
+          "type": "string",
+          "required": true,
+          "read_only": false,
+          "label": "Command",
+          "help_text": "Executable to run (e.g. 'ffmpeg')",
+          "max_length": 255
+        },
+        "parameters": {
+          "type": "string",
+          "required": true,
+          "read_only": false,
+          "label": "Parameters",
+          "help_text": "Command-line parameters. Must read from pipe:0 (stdin) and write to pipe:1 (stdout)."
+        },
+        "is_active": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Is active",
+          "help_text": "Whether this profile is available for use"
+        },
+        "locked": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Locked",
+          "help_text": "Protected - can't be deleted or modified"
+        }
+      }
+    }
+  },
+  "channel_profile": {
+    "name": "Channel Profile List",
+    "description": "",
+    "renders": [
+      "application/json",
+      "text/html"
+    ],
+    "parses": [
+      "application/json",
+      "application/x-www-form-urlencoded",
+      "multipart/form-data"
+    ],
+    "actions": {
+      "POST": {
+        "id": {
+          "type": "integer",
+          "required": false,
+          "read_only": true,
+          "label": "ID"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "read_only": false,
+          "label": "Name",
+          "max_length": 100
+        },
+        "channels": {
+          "type": "field",
+          "required": false,
+          "read_only": true,
+          "label": "Channels"
+        },
+        "start_empty": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Start empty"
+        }
+      }
+    }
+  },
+  "server_group": {
+    "name": "Server Group List",
+    "description": "Handles CRUD operations for Server Groups",
+    "renders": [
+      "application/json",
+      "text/html"
+    ],
+    "parses": [
+      "application/json",
+      "application/x-www-form-urlencoded",
+      "multipart/form-data"
+    ],
+    "actions": {
+      "POST": {
+        "id": {
+          "type": "integer",
+          "required": false,
+          "read_only": true,
+          "label": "ID"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "read_only": false,
+          "label": "Name",
+          "help_text": "Unique name for this server group.",
+          "max_length": 100
+        }
+      }
+    }
+  },
+  "programme": {
+    "name": "Program List",
+    "description": "Handles CRUD operations for EPG programs",
+    "renders": [
+      "application/json",
+      "text/html"
+    ],
+    "parses": [
+      "application/json",
+      "application/x-www-form-urlencoded",
+      "multipart/form-data"
+    ],
+    "actions": {
+      "POST": {
+        "id": {
+          "type": "integer",
+          "required": false,
+          "read_only": true,
+          "label": "ID"
+        },
+        "start_time": {
+          "type": "datetime",
+          "required": true,
+          "read_only": false,
+          "label": "Start time"
+        },
+        "end_time": {
+          "type": "datetime",
+          "required": true,
+          "read_only": false,
+          "label": "End time"
+        },
+        "title": {
+          "type": "string",
+          "required": true,
+          "read_only": false,
+          "label": "Title",
+          "max_length": 255
+        },
+        "sub_title": {
+          "type": "string",
+          "required": false,
+          "read_only": false,
+          "label": "Sub title"
+        },
+        "description": {
+          "type": "string",
+          "required": false,
+          "read_only": false,
+          "label": "Description"
+        },
+        "tvg_id": {
+          "type": "string",
+          "required": false,
+          "read_only": false,
+          "label": "Tvg id",
+          "max_length": 255
+        }
+      }
+    }
+  },
+  "epg_data": {
+    "name": "Epg Data List",
+    "description": "API endpoint that allows EPGData objects to be viewed.",
+    "renders": [
+      "application/json",
+      "text/html"
+    ],
+    "parses": [
+      "application/json",
+      "application/x-www-form-urlencoded",
+      "multipart/form-data"
+    ]
+  }
+}

@@ -17,6 +17,7 @@ pub use rest_reads::sqlite::RetainedSqliteRestReads;
 pub use rest_reads::{RestReadLimits, RetainedRestReads, RetainedRestSubject};
 mod auth_throttle;
 mod cache_codec;
+mod catalogue_options;
 mod channel_groups;
 mod channel_memberships;
 mod channel_profiles;

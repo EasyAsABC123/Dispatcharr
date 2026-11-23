@@ -1,6 +1,7 @@
 //! Core read contracts ported from Dispatcharr's core serializers and permission map.
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
 use crate::{
+    catalogue_options,
     channels::{
         channel_options_headers, channel_options_indentation, options_json_response,
         serialize_options_json,
@@ -13,6 +14,7 @@ use axum::{
         Request, State,
     },
     http::{header, request::Parts, HeaderMap, HeaderValue, Method, StatusCode, Uri},
+    middleware::from_fn_with_state,
     response::{IntoResponse, Response},
     routing::get,
     Json, Router,
@@ -700,25 +702,38 @@ pub(crate) async fn profile_updated_html<'a>(
     )
 }
 
-struct JsonProfileId(String);
+pub(crate) struct JsonReadId(pub(crate) String);
 
-fn literal_json_profile_id(path: &str) -> Option<&str> {
+fn literal_json_read_id(path: &str) -> Option<&str> {
     let (_, final_segment) = path.rsplit_once('/')?;
     let key = final_segment.strip_suffix(".json")?;
     (!key.is_empty() && key.bytes().all(|byte| byte.is_ascii_digit())).then_some(key)
 }
 
-impl<S: Send + Sync> FromRequestParts<S> for JsonProfileId {
+impl<S: Send + Sync> FromRequestParts<S> for JsonReadId {
     type Rejection = StoreError;
 
     async fn from_request_parts(parts: &mut Parts, _state: &S) -> Result<Self, Self::Rejection> {
-        literal_json_profile_id(parts.uri.path())
+        literal_json_read_id(parts.uri.path())
             .map(|id| Self(id.to_owned()))
             .ok_or(StoreError::NotFound)
     }
 }
 
-async fn omitted_json_method() -> StoreError {
+pub(crate) fn negotiate_literal_json_alias(headers: &HeaderMap) -> Result<(), StoreError> {
+    // A literal JSON suffix fixes the renderer before the query is read.
+    crate::epg_program_http::json_negotiation(headers, &Uri::from_static("/?format=json")).map_err(
+        |error| match error {
+            StoreError::Unsupported(_) => StoreError::StatusBody(
+                406,
+                json!({"detail":"Could not satisfy the request Accept header."}),
+            ),
+            error => error,
+        },
+    )
+}
+
+pub(crate) async fn omitted_json_method() -> StoreError {
     StoreError::NotFound
 }
 
@@ -726,7 +741,7 @@ macro_rules! json_reader {
     ($alias:ident, $canonical:ident) => {
         async fn $alias(
             auth: State<AuthService>,
-            JsonProfileId(id): JsonProfileId,
+            JsonReadId(id): JsonReadId,
             peer: ConnectInfo<SocketAddr>,
             headers: HeaderMap,
         ) -> Result<Json<Value>, StoreError> {
@@ -743,7 +758,7 @@ macro_rules! useragent_json_writer {
         async fn $alias(
             auth: State<AuthService>,
             peer: ConnectInfo<SocketAddr>,
-            JsonProfileId(id): JsonProfileId,
+            JsonReadId(id): JsonReadId,
             payload: $payload,
         ) -> Result<Response, StoreError> {
             crate::user_agent_writes::$canonical(auth, peer, Path(id), payload).await
@@ -756,7 +771,7 @@ useragent_json_writer!(delete_useragent_json, delete, HeaderMap);
 
 async fn put_streamprofile_json(
     auth: State<AuthService>,
-    JsonProfileId(id): JsonProfileId,
+    JsonReadId(id): JsonReadId,
     peer: ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     body: Result<Json<Value>, JsonRejection>,
@@ -801,8 +816,24 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
                 .put(direct_put_streamprofile)
                 .delete(crate::core_stream_writes::delete),
         )
-        .route("/api/core/outputprofiles/", get(outputprofiles))
-        .route("/api/core/outputprofiles/{id}/", get(outputprofile))
+        .route(
+            "/api/core/outputprofiles/",
+            get(outputprofiles)
+                .layer(from_fn_with_state(
+                    catalogue_options::COLLECTION_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
+                .options(catalogue_options::output_profile),
+        )
+        .route(
+            "/api/core/outputprofiles/{id}/",
+            get(outputprofile)
+                .layer(from_fn_with_state(
+                    catalogue_options::DETAIL_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
+                .options(catalogue_options::output_profile),
+        )
         .route(
             "/api/core/useragents.json",
             get(useragents)
@@ -813,6 +844,10 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
         .route(
             "/api/core/useragents/{json_id}",
             get(useragent_json)
+                .layer(from_fn_with_state(
+                    catalogue_options::DETAIL_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
                 .patch(patch_useragent_json)
                 .put(put_useragent_json)
                 .delete(delete_useragent_json)
@@ -822,6 +857,10 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
         .route(
             "/api/core/streamprofiles.json",
             get(streamprofiles)
+                .layer(from_fn_with_state(
+                    catalogue_options::COLLECTION_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
                 .post(crate::core_stream_writes::create)
                 .head(omitted_json_method)
                 .fallback(omitted_json_method),
@@ -836,12 +875,20 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
         .route(
             "/api/core/outputprofiles.json",
             get(outputprofiles)
+                .layer(from_fn_with_state(
+                    catalogue_options::COLLECTION_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
                 .head(omitted_json_method)
                 .fallback(omitted_json_method),
         )
         .route(
             "/api/core/outputprofiles/{json_id}",
             get(outputprofile_json)
+                .layer(from_fn_with_state(
+                    catalogue_options::DETAIL_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
                 .head(omitted_json_method)
                 .fallback(omitted_json_method),
         );
@@ -1290,7 +1337,7 @@ mod json_profile_tests {
     #[test]
     fn literal_decimal_suffixes_are_independent_of_canonical_routes() {
         assert_eq!(
-            literal_json_profile_id("/api/core/useragents/0001.json"),
+            literal_json_read_id("/api/core/useragents/0001.json"),
             Some("0001")
         );
         for path in [
@@ -1302,7 +1349,7 @@ mod json_profile_tests {
             "/api/core/useragents/12.2.json",
             "/api/core/useragents/.json",
         ] {
-            assert_eq!(literal_json_profile_id(path), None, "{path}");
+            assert_eq!(literal_json_read_id(path), None, "{path}");
         }
     }
 
@@ -1318,7 +1365,7 @@ mod json_profile_tests {
             )
             .route(
                 "/api/core/useragents/{json_id}",
-                get(|JsonProfileId(id): JsonProfileId| async move {
+                get(|JsonReadId(id): JsonReadId| async move {
                     assert_eq!(id, "12");
                     StatusCode::ACCEPTED
                 })

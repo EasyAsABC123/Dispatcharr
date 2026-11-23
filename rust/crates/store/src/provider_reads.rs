@@ -1,7 +1,9 @@
 //! Existing M3U/EPG management read contracts from original Dispatcharr views,
 //! serializers and models. Original authors retain full credit; ATTRIBUTION.md.
 use crate::{
+    catalogue_options,
     channels::{float, timestamp},
+    core_reads::{negotiate_literal_json_alias, omitted_json_method, JsonReadId},
     AuthService, StoreError,
 };
 use axum::{
@@ -427,6 +429,35 @@ endpoints!(accounts, account_detail, Accounts);
 endpoints!(server_groups, server_group, ServerGroups);
 endpoints!(epg_sources, epg_source, EpgSources);
 endpoints!(epg_data, epg_entry, EpgData);
+macro_rules! provider_json_aliases {
+    ($list_alias:ident, $list:ident, $detail_alias:ident, $detail:ident) => {
+        async fn $list_alias(
+            auth: State<AuthService>,
+            peer: ConnectInfo<SocketAddr>,
+            headers: HeaderMap,
+        ) -> Result<Json<Value>, StoreError> {
+            negotiate_literal_json_alias(&headers)?;
+            $list(auth, peer, headers).await
+        }
+        async fn $detail_alias(
+            auth: State<AuthService>,
+            JsonReadId(id): JsonReadId,
+            peer: ConnectInfo<SocketAddr>,
+            headers: HeaderMap,
+        ) -> Result<Json<Value>, StoreError> {
+            negotiate_literal_json_alias(&headers)?;
+            $detail(auth, Path(id), peer, headers).await
+        }
+    };
+}
+provider_json_aliases!(
+    server_groups_json,
+    server_groups,
+    server_group_json,
+    server_group
+);
+provider_json_aliases!(epg_data_json, epg_data, epg_entry_json, epg_entry);
+
 struct ProviderJsonFormatter;
 impl serde_json::ser::Formatter for ProviderJsonFormatter {
     fn write_string_fragment<W>(&mut self, writer: &mut W, fragment: &str) -> std::io::Result<()>
@@ -768,8 +799,8 @@ async fn account_collection_headers(
     }
     response
 }
-const EPG_SOURCE_LIST_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
-const EPG_SOURCE_DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
+const CRUD_LIST_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
+const CRUD_DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
 const EPG_DATA_ALLOW: &str = "GET, HEAD, OPTIONS";
 
 async fn epg_library_json_headers(
@@ -842,12 +873,43 @@ pub(crate) fn router(auth: AuthService) -> Router {
                 .delete(crate::provider_mutations::delete_filter),
         )
         .route(
+            "/api/m3u/server-groups.json",
+            get(server_groups_json)
+                .layer(from_fn_with_state(
+                    CRUD_LIST_ALLOW,
+                    epg_library_json_headers,
+                ))
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/m3u/server-groups/{json_id}",
+            get(server_group_json)
+                .layer(from_fn_with_state(
+                    CRUD_DETAIL_ALLOW,
+                    epg_library_json_headers,
+                ))
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
             "/api/m3u/server-groups/",
-            get(server_groups).post(crate::provider_mutations::create_server_group),
+            get(server_groups)
+                .layer(from_fn_with_state(
+                    catalogue_options::COLLECTION_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
+                .post(crate::provider_mutations::create_server_group)
+                .options(catalogue_options::server_group),
         )
         .route(
             "/api/m3u/server-groups/{id}/",
             get(server_group)
+                .layer(from_fn_with_state(
+                    catalogue_options::DETAIL_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
+                .options(catalogue_options::server_group)
                 .patch(crate::provider_mutations::patch_server_group)
                 .put(crate::provider_mutations::put_server_group)
                 .delete(crate::provider_mutations::delete_server_group),
@@ -856,7 +918,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/epg/sources/",
             get(epg_sources)
                 .layer(from_fn_with_state(
-                    EPG_SOURCE_LIST_ALLOW,
+                    CRUD_LIST_ALLOW,
                     epg_library_json_headers,
                 ))
                 .post(crate::sd_source_http::create),
@@ -873,7 +935,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/epg/sources/{id}/",
             get(epg_source)
                 .layer(from_fn_with_state(
-                    EPG_SOURCE_DETAIL_ALLOW,
+                    CRUD_DETAIL_ALLOW,
                     epg_library_json_headers,
                 ))
                 .patch(crate::epg_source_writes::patch)
@@ -881,12 +943,36 @@ pub(crate) fn router(auth: AuthService) -> Router {
                 .delete(crate::epg_source_writes::delete),
         )
         .route(
+            "/api/epg/epgdata.json",
+            get(epg_data_json)
+                .layer(from_fn_with_state(EPG_DATA_ALLOW, epg_library_json_headers))
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/epg/epgdata/{json_id}",
+            get(epg_entry_json)
+                .layer(from_fn_with_state(EPG_DATA_ALLOW, epg_library_json_headers))
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
             "/api/epg/epgdata/",
-            get(epg_data).layer(from_fn_with_state(EPG_DATA_ALLOW, epg_library_json_headers)),
+            get(epg_data)
+                .layer(from_fn_with_state(
+                    catalogue_options::READ_ONLY_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
+                .options(catalogue_options::epg_data),
         )
         .route(
             "/api/epg/epgdata/{id}/",
-            get(epg_entry).layer(from_fn_with_state(EPG_DATA_ALLOW, epg_library_json_headers)),
+            get(epg_entry)
+                .layer(from_fn_with_state(
+                    catalogue_options::READ_ONLY_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
+                .options(catalogue_options::epg_data),
         )
         .with_state(auth)
 }
@@ -950,11 +1036,11 @@ mod tests {
         let app = Router::new()
             .route(
                 "/source",
-                get(|| async { Json(json!([])) }).layer(headers(EPG_SOURCE_LIST_ALLOW)),
+                get(|| async { Json(json!([])) }).layer(headers(CRUD_LIST_ALLOW)),
             )
             .route(
                 "/detail",
-                get(|| async { Json(json!({})) }).layer(headers(EPG_SOURCE_DETAIL_ALLOW)),
+                get(|| async { Json(json!({})) }).layer(headers(CRUD_DETAIL_ALLOW)),
             )
             .route(
                 "/data",
@@ -971,13 +1057,13 @@ mod tests {
                 "/source",
                 Method::GET,
                 StatusCode::OK,
-                Some(EPG_SOURCE_LIST_ALLOW),
+                Some(CRUD_LIST_ALLOW),
             ),
             (
                 "/detail",
                 Method::GET,
                 StatusCode::OK,
-                Some(EPG_SOURCE_DETAIL_ALLOW),
+                Some(CRUD_DETAIL_ALLOW),
             ),
             ("/data", Method::GET, StatusCode::OK, Some(EPG_DATA_ALLOW)),
             ("/data", Method::HEAD, StatusCode::OK, None),

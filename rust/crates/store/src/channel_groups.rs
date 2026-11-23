@@ -2,16 +2,19 @@
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
 use crate::{
     admin_writes::{body_object, character},
+    catalogue_options,
     channels::{
         channel_options_headers, channel_options_indentation, float, options_json_response,
         serialize_options_json, timestamp, truthy,
     },
+    core_reads::{negotiate_literal_json_alias, omitted_json_method, JsonReadId},
     AuthService, StoreError, User,
 };
 use axum::{
     body::Bytes,
     extract::{rejection::JsonRejection, ConnectInfo, OriginalUri, Path, State},
     http::{header, HeaderMap, HeaderValue, Method, StatusCode, Uri},
+    middleware::from_fn_with_state,
     response::{IntoResponse, Response},
     routing::{get, post},
     Json, Router,
@@ -354,6 +357,21 @@ async fn retrieve(
         Err(error) => Err(error),
     }
 }
+async fn retrieve_json_alias(
+    auth: State<AuthService>,
+    JsonReadId(id): JsonReadId,
+    peer: ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Result<Response, StoreError> {
+    negotiate_literal_json_alias(&headers)?;
+    let mut response = retrieve(auth, Path(id), peer, Method::GET, headers).await?;
+    if response.status() == StatusCode::OK {
+        response
+            .headers_mut()
+            .insert(header::VARY, HeaderValue::from_static("Accept"));
+    }
+    Ok(response)
+}
 fn name(body: Map<String, Value>, partial: bool) -> Result<Option<String>, StoreError> {
     match body.get("name") {
         Some(value) => character("name", value, None, false).map(Some),
@@ -525,8 +543,18 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route("/api/channels/groups/cleanup/", post(cleanup))
         .route(
+            "/api/channels/groups/{json_id}",
+            get(retrieve_json_alias)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
             "/api/channels/groups/{id}/",
             get(retrieve)
+                .layer(from_fn_with_state(
+                    DETAIL_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
                 .patch(patch_group)
                 .put(put_group)
                 .delete(delete)

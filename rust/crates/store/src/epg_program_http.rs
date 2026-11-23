@@ -1,9 +1,13 @@
 //! Stored programme JSON routes derived from Original Dispatcharr.
 //! Original Dispatcharr authors and contributors retain full credit.
-use crate::{AuthService, EpgReadResource, StoreError};
+use crate::{
+    catalogue_options,
+    core_reads::{negotiate_literal_json_alias, omitted_json_method, JsonReadId},
+    AuthService, EpgReadResource, StoreError,
+};
 use axum::{
     body::Body,
-    extract::{ConnectInfo, Path, State},
+    extract::{ConnectInfo, OriginalUri, Path, State},
     http::{header, HeaderMap, HeaderValue, Method, Uri},
     response::{IntoResponse, Response},
     routing::get,
@@ -368,10 +372,23 @@ impl EpgProgramReads {
     }
     pub fn router(self) -> Router {
         Router::new()
-            .route("/api/epg/programs/", get(list))
+            .route("/api/epg/programs/", get(list).options(programme_options))
+            .route(
+                "/api/epg/programs.json",
+                get(list_json_alias)
+                    .head(omitted_json_method)
+                    .fallback(omitted_json_method),
+            )
+            .route(
+                "/api/epg/programs/{json_id}",
+                get(detail_json_alias)
+                    .head(omitted_json_method)
+                    .fallback(omitted_json_method),
+            )
             .route(
                 "/api/epg/programs/{id}/",
                 get(detail)
+                    .options(programme_options)
                     .patch(mutations::patch)
                     .put(mutations::replace)
                     .delete(mutations::delete),
@@ -656,6 +673,66 @@ async fn respond(
     };
     Ok(response.body(body).expect("valid programme headers"))
 }
+async fn respond_json_alias(
+    state: EpgProgramReads,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    id: Option<String>,
+    uri: Uri,
+) -> Result<Response, StoreError> {
+    negotiate_literal_json_alias(&headers)?;
+    let selected = programme_media(&Method::GET, &Uri::from_static("/"), &headers);
+    let indentation = match selected {
+        Some(ProgrammeMedia::ExplicitJson { indentation }) => indentation,
+        _ => 0,
+    };
+    respond(
+        state,
+        peer,
+        headers,
+        Method::GET,
+        id,
+        uri,
+        Some(ProgrammeMedia::ExplicitJson { indentation }),
+    )
+    .await
+}
+
+async fn list_json_alias(
+    State(state): State<EpgProgramReads>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Result<Response, StoreError> {
+    respond_json_alias(state, peer, headers, None, uri).await
+}
+
+async fn detail_json_alias(
+    State(state): State<EpgProgramReads>,
+    JsonReadId(id): JsonReadId,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Result<Response, StoreError> {
+    respond_json_alias(state, peer, headers, Some(id), uri).await
+}
+
+async fn programme_options(
+    State(state): State<EpgProgramReads>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    catalogue_options::respond(
+        state.auth(),
+        peer,
+        headers,
+        uri,
+        catalogue_options::Kind::Programme,
+    )
+    .await
+}
+
 async fn list(
     State(state): State<EpgProgramReads>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -743,6 +820,84 @@ mod tests {
         "text/html,application/xhtml+xml,application/xml;q=0.9,",
         "image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
     );
+
+    #[tokio::test]
+    async fn seven_catalogue_json_aliases_use_protected_get_without_forcing_canonical_changes() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-catalogue-alias-fixture".into()).unwrap(),
+        );
+        let reads = EpgProgramReads::new(auth.clone(), EpgProgramReadLimits::default()).unwrap();
+        let peer: SocketAddr = "127.0.0.1:12345".parse().unwrap();
+        let router = reads
+            .router()
+            .merge(crate::channel_groups::router(auth.clone()))
+            .merge(crate::provider_reads::router(auth))
+            .layer(Extension(ConnectInfo(peer)));
+        for path in [
+            "/api/channels/groups/1.json",
+            "/api/m3u/server-groups.json",
+            "/api/m3u/server-groups/1.json",
+            "/api/epg/programs.json",
+            "/api/epg/programs/1.json",
+            "/api/epg/epgdata.json",
+            "/api/epg/epgdata/1.json",
+        ] {
+            for (method, accept, query, expected) in [
+                (
+                    Method::GET,
+                    "application/json",
+                    "",
+                    StatusCode::UNAUTHORIZED,
+                ),
+                (
+                    Method::GET,
+                    "application/json",
+                    "?format=api",
+                    StatusCode::UNAUTHORIZED,
+                ),
+                (Method::GET, "text/html", "", StatusCode::NOT_ACCEPTABLE),
+                (Method::HEAD, "application/json", "", StatusCode::NOT_FOUND),
+                (
+                    Method::OPTIONS,
+                    "application/json",
+                    "",
+                    StatusCode::NOT_FOUND,
+                ),
+                (Method::POST, "application/json", "", StatusCode::NOT_FOUND),
+            ] {
+                let request = Request::builder()
+                    .method(method.clone())
+                    .uri(format!("{path}{query}"))
+                    .header(header::ACCEPT, accept)
+                    .body(Body::empty())
+                    .unwrap();
+                let response = router.clone().oneshot(request).await.unwrap();
+                assert_eq!(response.status(), expected, "{method} {path}{query}");
+                assert!(!response.headers().contains_key(header::SET_COOKIE));
+            }
+        }
+        for path in [
+            "/api/channels/groups/1",
+            "/api/channels/groups/1%2Ejson",
+            "/api/m3u/server-groups/1.JSON",
+            "/api/m3u/server-groups/1.json.json",
+            "/api/epg/programs/1",
+            "/api/epg/programs/1.csv",
+            "/api/epg/epgdata/.json",
+            "/api/epg/epgdata/-1.json",
+        ] {
+            let request = Request::builder()
+                .uri(path)
+                .header(header::ACCEPT, "application/json")
+                .body(Body::empty())
+                .unwrap();
+            let response = router.clone().oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::NOT_FOUND, "{path}");
+        }
+    }
 
     #[tokio::test]
     async fn programme_json_get_authorization_headers_are_route_and_representation_specific() {

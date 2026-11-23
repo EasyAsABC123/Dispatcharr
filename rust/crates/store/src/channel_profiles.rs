@@ -2,11 +2,12 @@
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
 use crate::{
     admin_writes::{body_object, boolean, character},
-    AuthService, StoreError, User,
+    catalogue_options, AuthService, StoreError, User,
 };
 use axum::{
     extract::{rejection::JsonRejection, ConnectInfo, Path, State},
     http::{header, HeaderMap, StatusCode, Uri},
+    middleware::from_fn_with_state,
     response::{IntoResponse, Response},
     routing::{get, post},
     Json, Router,
@@ -421,14 +422,36 @@ async fn omitted_profile_read_method() -> StoreError {
 pub(crate) fn router(auth: AuthService) -> Router {
     let memberships = crate::channel_memberships::router(auth.clone());
     Router::new()
-        .route("/api/channels/profiles/", get(list).post(create))
+        .route(
+            "/api/channels/profiles/",
+            get(list)
+                .layer(from_fn_with_state(
+                    catalogue_options::COLLECTION_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
+                .post(create)
+                .options(catalogue_options::channel_profile),
+        )
         .route(
             "/api/channels/profiles/{id}/",
-            get(retrieve).patch(patch).put(put).delete(delete),
+            get(retrieve)
+                .layer(from_fn_with_state(
+                    catalogue_options::DETAIL_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
+                .patch(patch)
+                .put(put)
+                .delete(delete)
+                .options(catalogue_options::channel_profile),
         )
         .route(
             "/api/channels/profiles.json",
-            get(list).fallback(omitted_profile_read_method),
+            get(list)
+                .layer(from_fn_with_state(
+                    catalogue_options::COLLECTION_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
+                .fallback(omitted_profile_read_method),
         )
         .route(
             "/api/channels/profiles.json/",
@@ -436,7 +459,12 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/channels/profiles/{id}",
-            get(retrieve).fallback(omitted_profile_read_method),
+            get(retrieve)
+                .layer(from_fn_with_state(
+                    catalogue_options::DETAIL_ALLOW,
+                    catalogue_options::typed_read_headers,
+                ))
+                .fallback(omitted_profile_read_method),
         )
         .route("/api/channels/profiles/{id}/duplicate/", post(duplicate))
         .with_state(auth)
