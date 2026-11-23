@@ -1,0 +1,5853 @@
+{
+  "actual_database_attempts": 0,
+  "actual_exits": {
+    "cleanup": 0,
+    "evaluate": 0,
+    "inspect": 0,
+    "outer": 0,
+    "preflight": 0,
+    "run": 0
+  },
+  "actual_routed_calls": 0,
+  "actual_runtime_process_exit": 0,
+  "classification_counts": {
+    "asgi_or_websocket_route": 1,
+    "django_admin_delegated": 171,
+    "function_without_explicit_method_evidence": 6,
+    "procedural_method_branch": 5,
+    "stock_class_dispatch_metadata": 139
+  },
+  "credit": "Original Dispatcharr, Django, Django REST Framework and dependency authors retain full credit and licensing.",
+  "empty_owned_project_inventories": true,
+  "existing_action_bound_roster_size": 270,
+  "existing_operation_ids_unchanged": true,
+  "formal_M0_accepted": false,
+  "framework": {
+    "APIView.as_view": {
+      "file_name": "views.py",
+      "line": 122,
+      "owner": "rest_framework.views.APIView.as_view",
+      "source_sha256": "07d663e11faac813dd0965c337ade1cf3d6596314a37a57a21dd8e30fa56b8be"
+    },
+    "APIView.dispatch": {
+      "file_name": "views.py",
+      "line": 490,
+      "owner": "rest_framework.views.APIView.dispatch",
+      "source_sha256": "07d663e11faac813dd0965c337ade1cf3d6596314a37a57a21dd8e30fa56b8be"
+    },
+    "View.dispatch": {
+      "file_name": "base.py",
+      "line": 135,
+      "owner": "django.views.generic.base.View.dispatch",
+      "source_sha256": "e90c49034c40718f68d60f80acabf8d5485b7ca590709a3cec9214faed72007a"
+    },
+    "View.setup": {
+      "file_name": "base.py",
+      "line": 127,
+      "owner": "django.views.generic.base.View.setup",
+      "source_sha256": "e90c49034c40718f68d60f80acabf8d5485b7ca590709a3cec9214faed72007a"
+    },
+    "ViewSetMixin.as_view": {
+      "file_name": "viewsets.py",
+      "line": 57,
+      "owner": "rest_framework.viewsets.ViewSetMixin.as_view",
+      "source_sha256": "b04849914e1733f41cf33496b597ff8c1f30eb769436fa321e06f9e240b0b9a3"
+    },
+    "csrf_exempt": {
+      "file_name": "csrf.py",
+      "line": 51,
+      "owner": "django.views.decorators.csrf.csrf_exempt",
+      "source_sha256": "f24dd84cca4b5cb212085386920fc425fe01a2925da6dbb7780c35232046b6b8"
+    },
+    "require_http_methods": {
+      "file_name": "http.py",
+      "line": 21,
+      "owner": "django.views.decorators.http.require_http_methods",
+      "source_sha256": "7ff6cc107d4e866d7a52bb97c77b6149f552392581d98afc89a4616865cccb82"
+    }
+  },
+  "framework_implicit_head_rows": 56,
+  "framework_metadata_breakdown": {
+    "django.views.generic.base.View.dispatch": 11,
+    "rest_framework.views.APIView.dispatch": 128
+  },
+  "framework_metadata_rows": 139,
+  "full_resolver_roster_size": 592,
+  "historical_roster_sha256": "ee4a7d841782761cf8e93c1cd94a41eba9fe752019a1224627f938d64920827b",
+  "inferred_HTTP_results": 0,
+  "inferred_roles": 0,
+  "method_placeholders_observed": 322,
+  "no_external_network": true,
+  "observations": [
+    {
+      "classification": "procedural_method_branch",
+      "handler": "apps.accounts.api_views.initialize_superuser",
+      "literal_request_method_comparisons": [
+        "POST"
+      ],
+      "method_placeholder": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 3,
+      "pattern": "api/accounts/initialize-superuser/",
+      "route_id": "route-1486c7d150ac1a2ebe13"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.accounts.api_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 4,
+      "pattern": "api/accounts/permissions/",
+      "route_id": "route-74d9c31060dfc7c91063"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.accounts.api_views.TokenObtainPairView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-f7c174fdedb4d5f479b2:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 5,
+      "pattern": "api/accounts/token/",
+      "route_id": "route-f7c174fdedb4d5f479b2"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.accounts.api_views.TokenRefreshView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 6,
+      "pattern": "api/accounts/token/refresh/",
+      "route_id": "route-f0653886908640416ded"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.accounts.api_views.UserAppDataCollectionView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-c64b218c4c1ac556d865:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 7,
+      "pattern": "api/accounts/users/me/app-data/",
+      "route_id": "route-c64b218c4c1ac556d865"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.accounts.api_views.UserAppDataKeyView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-0b5cb5ae6ca3b2e0f085:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 8,
+      "pattern": "api/accounts/users/me/app-data/<str:key>/",
+      "route_id": "route-0b5cb5ae6ca3b2e0f085"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.accounts.api_views.UserAppDataCollectionView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 9,
+      "pattern": "api/accounts/users/<int:user_id>/app-data/",
+      "route_id": "route-4a50fcc0d000739bc60c"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.accounts.api_views.UserAppDataKeyView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 10,
+      "pattern": "api/accounts/users/<int:user_id>/app-data/<str:key>/",
+      "route_id": "route-f7f70739debd2202db5e"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-2f0ebbed429f07494c01:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 27,
+      "pattern": "api/accounts/",
+      "route_id": "route-2f0ebbed429f07494c01"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-3972b5c042ea0642f404:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 28,
+      "pattern": "api/accounts/<drf_format_suffix:format>",
+      "route_id": "route-3972b5c042ea0642f404"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.BulkDeleteStreamsAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-ff58759b7c3b1d8432cf:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 29,
+      "pattern": "api/channels/streams/bulk-delete/",
+      "route_id": "route-ff58759b7c3b1d8432cf"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.BulkDeleteChannelsAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-99cc3cf082e4249b1f20:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 30,
+      "pattern": "api/channels/channels/bulk-delete/",
+      "route_id": "route-99cc3cf082e4249b1f20"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.BulkDeleteLogosAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-d85cdff747a519071e0a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 31,
+      "pattern": "api/channels/logos/bulk-delete/",
+      "route_id": "route-d85cdff747a519071e0a"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.CleanupUnusedLogosAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-dba4ac27cbba42657db0:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 32,
+      "pattern": "api/channels/logos/cleanup/",
+      "route_id": "route-dba4ac27cbba42657db0"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.GetChannelStreamsAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-0b72bd315e20d1d33a91:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 33,
+      "pattern": "api/channels/channels/<int:channel_id>/streams/",
+      "route_id": "route-0b72bd315e20d1d33a91"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.GetChannelStreamStatsAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-c76c9a38c97d5c51b40a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 34,
+      "pattern": "api/channels/channels/<int:channel_id>/streams/stats/",
+      "route_id": "route-c76c9a38c97d5c51b40a"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.UpdateChannelMembershipAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-63f8a1ec8ecb0eb78339:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 35,
+      "pattern": "api/channels/profiles/<int:profile_id>/channels/<int:channel_id>/",
+      "route_id": "route-63f8a1ec8ecb0eb78339"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "PATCH"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.BulkUpdateChannelMembershipAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-72c1afa7f15b12ae2b62:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 36,
+      "pattern": "api/channels/profiles/<int:profile_id>/channels/bulk-update/",
+      "route_id": "route-72c1afa7f15b12ae2b62"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.SeriesRulesAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-b0a5c844dd8860509aa9:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 37,
+      "pattern": "api/channels/series-rules/",
+      "route_id": "route-b0a5c844dd8860509aa9"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.SeriesRulePreviewAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-569dac0f9ffcf316a970:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 38,
+      "pattern": "api/channels/series-rules/preview/",
+      "route_id": "route-569dac0f9ffcf316a970"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.EvaluateSeriesRulesAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-1e49650facb06d7eb915:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 39,
+      "pattern": "api/channels/series-rules/evaluate/",
+      "route_id": "route-1e49650facb06d7eb915"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.BulkRemoveSeriesRecordingsAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-5fb7bc1498c1f48f786b:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 40,
+      "pattern": "api/channels/series-rules/bulk-remove/",
+      "route_id": "route-5fb7bc1498c1f48f786b"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.BulkDeleteUpcomingRecordingsAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-8622fcfadd81428963af:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 41,
+      "pattern": "api/channels/recordings/bulk-delete-upcoming/",
+      "route_id": "route-8622fcfadd81428963af"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.channels.api_views.ComskipConfigAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-8463af6be513da4deb1c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 43,
+      "pattern": "api/channels/dvr/comskip-config/",
+      "route_id": "route-8463af6be513da4deb1c"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-6b777e58c3150f35aa9c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 143,
+      "pattern": "api/channels/",
+      "route_id": "route-6b777e58c3150f35aa9c"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-482aac7e9cad73e20e87:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 144,
+      "pattern": "api/channels/<drf_format_suffix:format>",
+      "route_id": "route-482aac7e9cad73e20e87"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.epg.api_grid.EPGGridAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-f513447db1b88aa96c34:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 145,
+      "pattern": "api/epg/grid/",
+      "route_id": "route-f513447db1b88aa96c34"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.epg.api_views.EPGImportAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-4572aed84f826eed1b79:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 146,
+      "pattern": "api/epg/import/",
+      "route_id": "route-4572aed84f826eed1b79"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.epg.api_views.CurrentProgramsAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-3efd3bc586265b0ce5da:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 147,
+      "pattern": "api/epg/current-programs/",
+      "route_id": "route-3efd3bc586265b0ce5da"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-42bf7668924bcaacce2c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 171,
+      "pattern": "api/epg/",
+      "route_id": "route-42bf7668924bcaacce2c"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-8062d0712308caa75291:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 172,
+      "pattern": "api/epg/<drf_format_suffix:format>",
+      "route_id": "route-8062d0712308caa75291"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.DiscoverAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-a26a14ed63fd710b3c15:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 173,
+      "pattern": "api/hdhr/discover.json",
+      "route_id": "route-a26a14ed63fd710b3c15"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.LineupAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-e8188f6c24990880a1c7:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 174,
+      "pattern": "api/hdhr/lineup.json",
+      "route_id": "route-e8188f6c24990880a1c7"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.LineupStatusAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-0209fd1e400c2bb59dc1:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 175,
+      "pattern": "api/hdhr/lineup_status.json",
+      "route_id": "route-0209fd1e400c2bb59dc1"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.HDHRDeviceXMLAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-211f6f72b66012a44e2f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 176,
+      "pattern": "api/hdhr/device.xml",
+      "route_id": "route-211f6f72b66012a44e2f"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-09a570c962f59367a91f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 181,
+      "pattern": "api/hdhr/",
+      "route_id": "route-09a570c962f59367a91f"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-57610369344cb452225c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 182,
+      "pattern": "api/hdhr/<drf_format_suffix:format>",
+      "route_id": "route-57610369344cb452225c"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.m3u.api_views.RefreshM3UAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-c991f2de07ac41a62a0a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 183,
+      "pattern": "api/m3u/refresh/",
+      "route_id": "route-c991f2de07ac41a62a0a"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.m3u.api_views.RefreshSingleM3UAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-c7d88007daf59544f9ea:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 184,
+      "pattern": "api/m3u/refresh/<int:account_id>/",
+      "route_id": "route-c7d88007daf59544f9ea"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.m3u.api_views.RefreshAccountInfoAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-9cb7dd67ad065054f258:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 185,
+      "pattern": "api/m3u/refresh-account-info/<int:profile_id>/",
+      "route_id": "route-9cb7dd67ad065054f258"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-6ef4eb2b70aebf6471ee:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 210,
+      "pattern": "api/m3u/",
+      "route_id": "route-6ef4eb2b70aebf6471ee"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-0ef353e279c00a9bea3c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 211,
+      "pattern": "api/m3u/<drf_format_suffix:format>",
+      "route_id": "route-0ef353e279c00a9bea3c"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "core.api_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-46e4e7d942da8497bfd6:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 212,
+      "pattern": "api/core/settings/env/",
+      "route_id": "route-46e4e7d942da8497bfd6"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "core.api_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-5bebee38a2a56b0dd8e1:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 213,
+      "pattern": "api/core/version/",
+      "route_id": "route-5bebee38a2a56b0dd8e1"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "core.api_views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-71e69b54795410954f68:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 214,
+      "pattern": "api/core/rehash-streams/",
+      "route_id": "route-71e69b54795410954f68"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "core.api_views.TimezoneListView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-723154c0bb4c22d1e1d4:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 215,
+      "pattern": "api/core/timezones/",
+      "route_id": "route-723154c0bb4c22d1e1d4"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "core.api_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-11307f60cca29fe0e061:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 216,
+      "pattern": "api/core/system-events/",
+      "route_id": "route-11307f60cca29fe0e061"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "core.log_files.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-cfe08a1b9dd2ea9583c3:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 217,
+      "pattern": "api/core/logs/",
+      "route_id": "route-cfe08a1b9dd2ea9583c3"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "core.log_files.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-54a5519b46ae18bea548:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 218,
+      "pattern": "api/core/logs/<str:name>/download/",
+      "route_id": "route-54a5519b46ae18bea548"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "core.log_files.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-209e806f3f1d6d576eec:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 219,
+      "pattern": "api/core/logs/<str:name>/",
+      "route_id": "route-209e806f3f1d6d576eec"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-5a09390ffbfb3917778e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 248,
+      "pattern": "api/core/",
+      "route_id": "route-5a09390ffbfb3917778e"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-d87402d3d74780c4b662:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 249,
+      "pattern": "api/core/<drf_format_suffix:format>",
+      "route_id": "route-d87402d3d74780c4b662"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginsListAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-9be5d727b2ce873dae8b:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 250,
+      "pattern": "api/plugins/plugins/",
+      "route_id": "route-9be5d727b2ce873dae8b"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginReloadAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-90e37ed54488270f934a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 251,
+      "pattern": "api/plugins/plugins/reload/",
+      "route_id": "route-90e37ed54488270f934a"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginImportAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-de2533f00a1782f1ab38:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 252,
+      "pattern": "api/plugins/plugins/import/",
+      "route_id": "route-de2533f00a1782f1ab38"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginDeleteAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-6a79090e69a577418ef0:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 253,
+      "pattern": "api/plugins/plugins/<str:key>/delete/",
+      "route_id": "route-6a79090e69a577418ef0"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginSettingsAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-641200fe8fe215f6ccde:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 254,
+      "pattern": "api/plugins/plugins/<str:key>/settings/",
+      "route_id": "route-641200fe8fe215f6ccde"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginRunAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-16118c4074350fea8840:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 255,
+      "pattern": "api/plugins/plugins/<str:key>/run/",
+      "route_id": "route-16118c4074350fea8840"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginEnabledAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-aab68794de2c4ac4d715:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 256,
+      "pattern": "api/plugins/plugins/<str:key>/enabled/",
+      "route_id": "route-aab68794de2c4ac4d715"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginLogoAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-9ff2ea23ea752426d5fb:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 257,
+      "pattern": "api/plugins/plugins/<str:key>/logo/",
+      "route_id": "route-9ff2ea23ea752426d5fb"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginRepoListCreateAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-e906572127d879858b21:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 258,
+      "pattern": "api/plugins/repos/",
+      "route_id": "route-e906572127d879858b21"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.AvailablePluginsAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-352ac21f542db133f7bd:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 259,
+      "pattern": "api/plugins/repos/available/",
+      "route_id": "route-352ac21f542db133f7bd"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginDetailManifestAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-8a9bddccb51c420549d2:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 260,
+      "pattern": "api/plugins/repos/plugin-detail/",
+      "route_id": "route-8a9bddccb51c420549d2"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginInstallFromRepoAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-792b07c3870b7d79dbbd:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 261,
+      "pattern": "api/plugins/repos/install/",
+      "route_id": "route-792b07c3870b7d79dbbd"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginRepoSettingsAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-8ac946974be6a8f08e27:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 262,
+      "pattern": "api/plugins/repos/settings/",
+      "route_id": "route-8ac946974be6a8f08e27"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginRepoPreviewAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-6341bfe67df8f5e35bd9:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 263,
+      "pattern": "api/plugins/repos/preview/",
+      "route_id": "route-6341bfe67df8f5e35bd9"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "OPTIONS",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "OPTIONS",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginRepoDetailAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-2893312784054a3f5856:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 264,
+      "pattern": "api/plugins/repos/<int:pk>/",
+      "route_id": "route-2893312784054a3f5856"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.plugins.api_views.PluginRepoRefreshAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-3401d1e3590d5d19427d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 265,
+      "pattern": "api/plugins/repos/<int:pk>/refresh/",
+      "route_id": "route-3401d1e3590d5d19427d"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-071cc4ed86bb92480c20:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 316,
+      "pattern": "api/vod/",
+      "route_id": "route-071cc4ed86bb92480c20"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-9a06cadab4a398087cb0:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 317,
+      "pattern": "api/vod/<drf_format_suffix:format>",
+      "route_id": "route-9a06cadab4a398087cb0"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.timeshift.api_views.CatchupSessionCreateAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-8b3e86c9937f71e220f6:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 318,
+      "pattern": "api/catchup/sessions/",
+      "route_id": "route-8b3e86c9937f71e220f6"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.timeshift.api_views.CatchupSessionPositionAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-ddfdcc09fe41740289ef:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 319,
+      "pattern": "api/catchup/sessions/<str:session_id>/position/",
+      "route_id": "route-ddfdcc09fe41740289ef"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.timeshift.api_views.CatchupSessionDestroyAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-612adfcf0ee0b497f95a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 320,
+      "pattern": "api/catchup/sessions/<str:session_id>/",
+      "route_id": "route-612adfcf0ee0b497f95a"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.output.hls.api_views.HlsSessionDestroyAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-3482e1a6244893299bd9:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 321,
+      "pattern": "api/proxy/hls/sessions/<str:token>/",
+      "route_id": "route-3482e1a6244893299bd9"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.backups.api_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-694377e0a528f94c81f6:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 322,
+      "pattern": "api/backups/",
+      "route_id": "route-694377e0a528f94c81f6"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.backups.api_views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-22064715e1618d3171fb:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 323,
+      "pattern": "api/backups/create/",
+      "route_id": "route-22064715e1618d3171fb"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.backups.api_views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-40071bf3f16849a49ed0:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 324,
+      "pattern": "api/backups/upload/",
+      "route_id": "route-40071bf3f16849a49ed0"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.backups.api_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-e01e7d71e156c75f2ab4:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 325,
+      "pattern": "api/backups/schedule/",
+      "route_id": "route-e01e7d71e156c75f2ab4"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.backups.api_views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "PUT"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-1ba31223e53478b40057:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 326,
+      "pattern": "api/backups/schedule/update/",
+      "route_id": "route-1ba31223e53478b40057"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.backups.api_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-4fb52127b9819ead6d7e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 327,
+      "pattern": "api/backups/status/<str:task_id>/",
+      "route_id": "route-4fb52127b9819ead6d7e"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.backups.api_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-579fad53359dc319d56d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 328,
+      "pattern": "api/backups/<str:filename>/download-token/",
+      "route_id": "route-579fad53359dc319d56d"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.backups.api_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-44d437b502b88a3bee58:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 329,
+      "pattern": "api/backups/<str:filename>/download/",
+      "route_id": "route-44d437b502b88a3bee58"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.backups.api_views.WrappedAPIView",
+      "http_method_names": [
+        "DELETE",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-2c440797f4dc2f744611:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 330,
+      "pattern": "api/backups/<str:filename>/delete/",
+      "route_id": "route-2c440797f4dc2f744611"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.backups.api_views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-b6769611fe6ef4f0cae4:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 331,
+      "pattern": "api/backups/<str:filename>/restore/",
+      "route_id": "route-b6769611fe6ef4f0cae4"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-0b9461af78ded81781c0:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 350,
+      "pattern": "api/connect/",
+      "route_id": "route-0b9461af78ded81781c0"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-057f3d60fbf41f71fa3b:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 351,
+      "pattern": "api/connect/<drf_format_suffix:format>",
+      "route_id": "route-057f3d60fbf41f71fa3b"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.api.schema_views.LockedSpectacularAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-926efc2599602af7af63:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 352,
+      "pattern": "api/schema/",
+      "route_id": "route-926efc2599602af7af63"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "drf_spectacular.views.SpectacularSwaggerView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-e201262b696130b5fc03:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 353,
+      "pattern": "api/^swagger/?$",
+      "route_id": "route-e201262b696130b5fc03"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "drf_spectacular.views.SpectacularRedocView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-fbaf2af16ea86a04db90:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 354,
+      "pattern": "api/redoc/",
+      "route_id": "route-fbaf2af16ea86a04db90"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.api.schema_views.LockedSpectacularAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-dba1ebd8350074a04d89:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 355,
+      "pattern": "api/swagger.json",
+      "route_id": "route-dba1ebd8350074a04d89"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.RedirectView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-68b6a7cd32852847fbac:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 356,
+      "pattern": "api",
+      "route_id": "route-68b6a7cd32852847fbac"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.RedirectView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-1ea205065ca448747dc4:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 357,
+      "pattern": "swagger/",
+      "route_id": "route-1ea205065ca448747dc4"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.RedirectView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-56d8ba2fbf23fb8f8782:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 358,
+      "pattern": "swagger",
+      "route_id": "route-56d8ba2fbf23fb8f8782"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.RedirectView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-a8e38eb578a375c74d07:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 359,
+      "pattern": "redoc/",
+      "route_id": "route-a8e38eb578a375c74d07"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.RedirectView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-bed3b7b9133e8aef5a15:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 360,
+      "pattern": "redoc",
+      "route_id": "route-bed3b7b9133e8aef5a15"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.RedirectView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-0fb126331c7afef383b5:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 361,
+      "pattern": "output",
+      "route_id": "route-0fb126331c7afef383b5"
+    },
+    {
+      "classification": "procedural_method_branch",
+      "handler": "apps.output.views.m3u_endpoint",
+      "literal_request_method_comparisons": [
+        "HEAD"
+      ],
+      "method_placeholder": "route-b4a3f38e76ae962a071f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 362,
+      "pattern": "output/^m3u(?:/(?P<profile_name>[^/]+))?/?$",
+      "route_id": "route-b4a3f38e76ae962a071f"
+    },
+    {
+      "classification": "procedural_method_branch",
+      "handler": "apps.output.views.epg_endpoint",
+      "literal_request_method_comparisons": [
+        "HEAD"
+      ],
+      "method_placeholder": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 363,
+      "pattern": "output/^epg(?:/(?P<profile_name>[^/]+))?/?$",
+      "route_id": "route-a41fa134f8e99a70d993"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.RedirectView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-2e08393b29d6155d4506:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 364,
+      "pattern": "hdhr",
+      "route_id": "route-2e08393b29d6155d4506"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.DiscoverAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-df81d30aae6627c5eaeb:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 365,
+      "pattern": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/discover.json",
+      "route_id": "route-df81d30aae6627c5eaeb"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.LineupAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-2960384fdec3b1438421:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 366,
+      "pattern": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/lineup.json",
+      "route_id": "route-2960384fdec3b1438421"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.LineupStatusAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-297391598b8fe8aadca2:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 367,
+      "pattern": "hdhr/<str:channel_profile>/output_profile/<int:output_profile_id>/lineup_status.json",
+      "route_id": "route-297391598b8fe8aadca2"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.DiscoverAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-ca744a4278edd228bc65:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 368,
+      "pattern": "hdhr/output_profile/<int:output_profile_id>/discover.json",
+      "route_id": "route-ca744a4278edd228bc65"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.LineupAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-d4a2134fc211ce9343d4:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 369,
+      "pattern": "hdhr/output_profile/<int:output_profile_id>/lineup.json",
+      "route_id": "route-d4a2134fc211ce9343d4"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.LineupStatusAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-0a17f9d2246f62ed48d7:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 370,
+      "pattern": "hdhr/output_profile/<int:output_profile_id>/lineup_status.json",
+      "route_id": "route-0a17f9d2246f62ed48d7"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.DiscoverAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-174bbfec5d24c6c52d7b:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 371,
+      "pattern": "hdhr/<str:channel_profile>/discover.json",
+      "route_id": "route-174bbfec5d24c6c52d7b"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.LineupAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-7850f9793043afebdf5a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 372,
+      "pattern": "hdhr/<str:channel_profile>/lineup.json",
+      "route_id": "route-7850f9793043afebdf5a"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.LineupStatusAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-ffc697ca6f835d388f08:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 373,
+      "pattern": "hdhr/<str:channel_profile>/lineup_status.json",
+      "route_id": "route-ffc697ca6f835d388f08"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.DiscoverAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-738f58384c1fa0b26ef6:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 374,
+      "pattern": "hdhr/discover.json",
+      "route_id": "route-738f58384c1fa0b26ef6"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.LineupAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-fbe7149a6bd50bc271b2:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 375,
+      "pattern": "hdhr/lineup.json",
+      "route_id": "route-fbe7149a6bd50bc271b2"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.LineupStatusAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-9198a3509e35fbb64b8e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 376,
+      "pattern": "hdhr/lineup_status.json",
+      "route_id": "route-9198a3509e35fbb64b8e"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.hdhr.api_views.HDHRDeviceXMLAPIView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-759c1dc8400b4ffc3c20:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 377,
+      "pattern": "hdhr/device.xml",
+      "route_id": "route-759c1dc8400b4ffc3c20"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-6f82f9fae4deeebd0cf0:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 382,
+      "pattern": "hdhr/",
+      "route_id": "route-6f82f9fae4deeebd0cf0"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "rest_framework.routers.APIRootView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-dc4da9ca250036ec34bc:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 383,
+      "pattern": "hdhr/<drf_format_suffix:format>",
+      "route_id": "route-dc4da9ca250036ec34bc"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.stats_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-43b83939000362e7c549:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 384,
+      "pattern": "proxy/stats/",
+      "route_id": "route-43b83939000362e7c549"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-c75171aee6eb93b36a3c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 385,
+      "pattern": "proxy/ts/stream/<str:channel_id>",
+      "route_id": "route-c75171aee6eb93b36a3c"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-211afdb7c19d0ea91286:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 386,
+      "pattern": "proxy/ts/change_stream/<str:channel_id>",
+      "route_id": "route-211afdb7c19d0ea91286"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-df815bdf71ef9a7e0991:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 387,
+      "pattern": "proxy/ts/status",
+      "route_id": "route-df815bdf71ef9a7e0991"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-c5355f0ef3ea403e2a2f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 388,
+      "pattern": "proxy/ts/status/<str:channel_id>",
+      "route_id": "route-c5355f0ef3ea403e2a2f"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "DELETE",
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-085345eee60898a2f608:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 389,
+      "pattern": "proxy/ts/stop/<str:channel_id>",
+      "route_id": "route-085345eee60898a2f608"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-d11609e20f7f2969ef50:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 390,
+      "pattern": "proxy/ts/stop_client/<str:channel_id>",
+      "route_id": "route-d11609e20f7f2969ef50"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-4f3214a211cfdcab18e8:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 391,
+      "pattern": "proxy/ts/next_stream/<str:channel_id>",
+      "route_id": "route-4f3214a211cfdcab18e8"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.timeshift.stats_views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-328c9877b46f48b23fb6:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 392,
+      "pattern": "proxy/catchup/stats/",
+      "route_id": "route-328c9877b46f48b23fb6"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.timeshift.stats_views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-c94d8b06a95a74d55d3c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 393,
+      "pattern": "proxy/catchup/programs/",
+      "route_id": "route-c94d8b06a95a74d55d3c"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.timeshift.stats_views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-eaa9c5fb2c44840164e3:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 394,
+      "pattern": "proxy/catchup/stop_client/",
+      "route_id": "route-eaa9c5fb2c44840164e3"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.timeshift.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-7df44f10109a32b49bac:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 395,
+      "pattern": "proxy/catchup/<uuid:channel_id>",
+      "route_id": "route-7df44f10109a32b49bac"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.output.hls.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-aca0aad8afd5bb8b3ad9:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 396,
+      "pattern": "proxy/hls/<str:token>/index.m3u8",
+      "route_id": "route-aca0aad8afd5bb8b3ad9"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.output.hls.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-92f33fb807d060637433:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 397,
+      "pattern": "proxy/hls/<str:token>/<int:seq>.ts",
+      "route_id": "route-92f33fb807d060637433"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-3a8ec6e112801f3eefc1:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 398,
+      "pattern": "proxy/vod/<str:content_type>/<uuid:content_id>/<str:session_id>",
+      "route_id": "route-3a8ec6e112801f3eefc1"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-96391910b341255d0479:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 399,
+      "pattern": "proxy/vod/<str:content_type>/<uuid:content_id>/<str:session_id>/<int:profile_id>/",
+      "route_id": "route-96391910b341255d0479"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-8b36b8a06cbc1772e58c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 400,
+      "pattern": "proxy/vod/<str:content_type>/<uuid:content_id>",
+      "route_id": "route-8b36b8a06cbc1772e58c"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-c0eb97456a3910a2d90a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 401,
+      "pattern": "proxy/vod/<str:content_type>/<uuid:content_id>/<int:profile_id>/",
+      "route_id": "route-c0eb97456a3910a2d90a"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-3f97315e0a8b4d4e4e58:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 402,
+      "pattern": "proxy/vod/stats/",
+      "route_id": "route-3f97315e0a8b4d4e4e58"
+    },
+    {
+      "class_handlers": [
+        "OPTIONS",
+        "POST"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "OPTIONS",
+        "POST"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "OPTIONS",
+        "POST"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-4d905eb7a7b8071e69a7:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 403,
+      "pattern": "proxy/vod/stop_client/",
+      "route_id": "route-4d905eb7a7b8071e69a7"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.RedirectView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-afdb2c58084f0e064dfb:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 404,
+      "pattern": "proxy",
+      "route_id": "route-afdb2c58084f0e064dfb"
+    },
+    {
+      "classification": "function_without_explicit_method_evidence",
+      "handler": "apps.output.views.xc_player_api",
+      "method_placeholder": "route-2246bed35607b85b6f84:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 405,
+      "pattern": "player_api.php",
+      "route_id": "route-2246bed35607b85b6f84"
+    },
+    {
+      "classification": "function_without_explicit_method_evidence",
+      "handler": "apps.output.views.xc_panel_api",
+      "method_placeholder": "route-1e43eda45f64f14ba3de:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 406,
+      "pattern": "panel_api.php",
+      "route_id": "route-1e43eda45f64f14ba3de"
+    },
+    {
+      "classification": "function_without_explicit_method_evidence",
+      "handler": "apps.output.views.xc_get",
+      "method_placeholder": "route-56d9c31dd9fc91261e25:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 407,
+      "pattern": "get.php",
+      "route_id": "route-56d9c31dd9fc91261e25"
+    },
+    {
+      "classification": "function_without_explicit_method_evidence",
+      "handler": "apps.output.views.xc_xmltv",
+      "method_placeholder": "route-7b6640a47b04c4dcf62e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 408,
+      "pattern": "xmltv.php",
+      "route_id": "route-7b6640a47b04c4dcf62e"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-9075d4e584abb111bb98:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 409,
+      "pattern": "live/<str:username>/<str:password>/<str:channel_id>",
+      "route_id": "route-9075d4e584abb111bb98"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.live_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-203e37771a6f3e3d4056:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 410,
+      "pattern": "<str:username>/<str:password>/<str:channel_id>",
+      "route_id": "route-203e37771a6f3e3d4056"
+    },
+    {
+      "classification": "function_without_explicit_method_evidence",
+      "handler": "apps.timeshift.views.timeshift_proxy",
+      "method_placeholder": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 411,
+      "pattern": "timeshift/<str:username>/<str:password>/<str:duration>/<str:timestamp>/<str:channel_id>",
+      "route_id": "route-96eaf62e9698df611d43"
+    },
+    {
+      "classification": "function_without_explicit_method_evidence",
+      "handler": "apps.timeshift.views.timeshift_proxy_query",
+      "method_placeholder": "route-65fd01892db0a2d662ac:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 412,
+      "pattern": "streaming/timeshift.php",
+      "route_id": "route-65fd01892db0a2d662ac"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-003ffce2bb702836db0a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 413,
+      "pattern": "movie/<str:username>/<str:password>/<str:stream_id>.<str:extension>",
+      "route_id": "route-003ffce2bb702836db0a"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "rest_framework.views.APIView.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "apps.proxy.vod_proxy.views.WrappedAPIView",
+      "http_method_names": [
+        "GET",
+        "OPTIONS"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-607c7709efce75e5591a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 414,
+      "pattern": "series/<str:username>/<str:password>/<str:stream_id>.<str:extension>",
+      "route_id": "route-607c7709efce75e5591a"
+    },
+    {
+      "class_handlers": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.RedirectView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": false,
+      "method_placeholder": "route-ec4b7ed3e78db15cac67:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 415,
+      "pattern": "admin",
+      "route_id": "route-ec4b7ed3e78db15cac67"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.sites.AdminSite.index",
+      "method_placeholder": "route-ee87e8ee9aef5a2e933d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 416,
+      "pattern": "admin/",
+      "route_id": "route-ee87e8ee9aef5a2e933d"
+    },
+    {
+      "classification": "procedural_method_branch",
+      "handler": "apps.accounts.admin._rate_limited_admin_login",
+      "literal_request_method_comparisons": [
+        "POST"
+      ],
+      "method_placeholder": "route-4f51a66d89cfc07cda5f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 417,
+      "pattern": "admin/login/",
+      "route_id": "route-4f51a66d89cfc07cda5f"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.sites.AdminSite.logout",
+      "method_placeholder": "route-96911b319eecedadfc1e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 418,
+      "pattern": "admin/logout/",
+      "route_id": "route-96911b319eecedadfc1e"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.sites.AdminSite.password_change",
+      "method_placeholder": "route-fa4b2d8afc4a46fcd708:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 419,
+      "pattern": "admin/password_change/",
+      "route_id": "route-fa4b2d8afc4a46fcd708"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.sites.AdminSite.password_change_done",
+      "method_placeholder": "route-eb125afe58de6b190727:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 420,
+      "pattern": "admin/password_change/done/",
+      "route_id": "route-eb125afe58de6b190727"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.sites.AdminSite.autocomplete_view",
+      "method_placeholder": "route-7f0fbe4ad6f56718c9fb:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 421,
+      "pattern": "admin/autocomplete/",
+      "route_id": "route-7f0fbe4ad6f56718c9fb"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.sites.AdminSite.i18n_javascript",
+      "method_placeholder": "route-94980d22021781d6d201:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 422,
+      "pattern": "admin/jsi18n/",
+      "route_id": "route-94980d22021781d6d201"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.contenttypes.views.shortcut",
+      "method_placeholder": "route-caafd2fc3aff7c9bad9b:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 423,
+      "pattern": "admin/r/<path:content_type_id>/<path:object_id>/",
+      "route_id": "route-caafd2fc3aff7c9bad9b"
+    },
+    {
+      "classification": "procedural_method_branch",
+      "handler": "django.contrib.auth.admin.UserAdmin.user_change_password",
+      "literal_request_method_comparisons": [
+        "POST"
+      ],
+      "method_placeholder": "route-896114f1ef3c364f1f1e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 424,
+      "pattern": "admin/accounts/user/<id>/password/",
+      "route_id": "route-896114f1ef3c364f1f1e"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-5c091d9a07e64f219ff1:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 425,
+      "pattern": "admin/accounts/user/",
+      "route_id": "route-5c091d9a07e64f219ff1"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.auth.admin.UserAdmin.add_view",
+      "method_placeholder": "route-5b2c307f77a959464bd3:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 426,
+      "pattern": "admin/accounts/user/add/",
+      "route_id": "route-5b2c307f77a959464bd3"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-c365dabb71a230bab130:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 427,
+      "pattern": "admin/accounts/user/<path:object_id>/history/",
+      "route_id": "route-c365dabb71a230bab130"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-4b474c98e7a34c42479c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 428,
+      "pattern": "admin/accounts/user/<path:object_id>/delete/",
+      "route_id": "route-4b474c98e7a34c42479c"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-ff6b53908d4fc9679a42:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 429,
+      "pattern": "admin/accounts/user/<path:object_id>/change/",
+      "route_id": "route-ff6b53908d4fc9679a42"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-d351a84198e6e425c4fa:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 430,
+      "pattern": "admin/accounts/user/<path:object_id>/",
+      "route_id": "route-d351a84198e6e425c4fa"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-8367f0a4bafadacc8759:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 431,
+      "pattern": "admin/auth/group/",
+      "route_id": "route-8367f0a4bafadacc8759"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-1cebdaf023c93413a0bc:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 432,
+      "pattern": "admin/auth/group/add/",
+      "route_id": "route-1cebdaf023c93413a0bc"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-db1d57de6685a832321f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 433,
+      "pattern": "admin/auth/group/<path:object_id>/history/",
+      "route_id": "route-db1d57de6685a832321f"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-f04db7225d5106b16c90:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 434,
+      "pattern": "admin/auth/group/<path:object_id>/delete/",
+      "route_id": "route-f04db7225d5106b16c90"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-8baa3bef4ea333f882f8:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 435,
+      "pattern": "admin/auth/group/<path:object_id>/change/",
+      "route_id": "route-8baa3bef4ea333f882f8"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-86b95a2f63248eb00e4c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 436,
+      "pattern": "admin/auth/group/<path:object_id>/",
+      "route_id": "route-86b95a2f63248eb00e4c"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-f20a10dec9735626aee6:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 437,
+      "pattern": "admin/dispatcharr_channels/stream/",
+      "route_id": "route-f20a10dec9735626aee6"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-671533c13c076fac3d1d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 438,
+      "pattern": "admin/dispatcharr_channels/stream/add/",
+      "route_id": "route-671533c13c076fac3d1d"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-abdc380de5eab7be1fe6:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 439,
+      "pattern": "admin/dispatcharr_channels/stream/<path:object_id>/history/",
+      "route_id": "route-abdc380de5eab7be1fe6"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-e4385cc9e8ba342ad694:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 440,
+      "pattern": "admin/dispatcharr_channels/stream/<path:object_id>/delete/",
+      "route_id": "route-e4385cc9e8ba342ad694"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-901bc003a16558695a72:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 441,
+      "pattern": "admin/dispatcharr_channels/stream/<path:object_id>/change/",
+      "route_id": "route-901bc003a16558695a72"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-cd126c003844573e7f4a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 442,
+      "pattern": "admin/dispatcharr_channels/stream/<path:object_id>/",
+      "route_id": "route-cd126c003844573e7f4a"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-8fc6eba83180c2c34159:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 443,
+      "pattern": "admin/dispatcharr_channels/channel/",
+      "route_id": "route-8fc6eba83180c2c34159"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-5ca818cf695fdff2e0f3:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 444,
+      "pattern": "admin/dispatcharr_channels/channel/add/",
+      "route_id": "route-5ca818cf695fdff2e0f3"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-a66a654e22405cee728f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 445,
+      "pattern": "admin/dispatcharr_channels/channel/<path:object_id>/history/",
+      "route_id": "route-a66a654e22405cee728f"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-0daf1b9daf311d11bc8d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 446,
+      "pattern": "admin/dispatcharr_channels/channel/<path:object_id>/delete/",
+      "route_id": "route-0daf1b9daf311d11bc8d"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-a673568cc23963155054:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 447,
+      "pattern": "admin/dispatcharr_channels/channel/<path:object_id>/change/",
+      "route_id": "route-a673568cc23963155054"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-ff8069fc44df4939d752:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 448,
+      "pattern": "admin/dispatcharr_channels/channel/<path:object_id>/",
+      "route_id": "route-ff8069fc44df4939d752"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-a5b8698834c56384ef41:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 449,
+      "pattern": "admin/dispatcharr_channels/channelgroup/",
+      "route_id": "route-a5b8698834c56384ef41"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-92308261af84c6f52fda:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 450,
+      "pattern": "admin/dispatcharr_channels/channelgroup/add/",
+      "route_id": "route-92308261af84c6f52fda"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-c7b48b1060795c51e721:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 451,
+      "pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/history/",
+      "route_id": "route-c7b48b1060795c51e721"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-0d61178d509a67594a0e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 452,
+      "pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/delete/",
+      "route_id": "route-0d61178d509a67594a0e"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-2761318fe3e368167295:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 453,
+      "pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/change/",
+      "route_id": "route-2761318fe3e368167295"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-3668a816ef549e34959c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 454,
+      "pattern": "admin/dispatcharr_channels/channelgroup/<path:object_id>/",
+      "route_id": "route-3668a816ef549e34959c"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-a6b1208e24baf41219aa:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 455,
+      "pattern": "admin/epg/epgsource/",
+      "route_id": "route-a6b1208e24baf41219aa"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-6b1d4d4954a6c0ee7f3c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 456,
+      "pattern": "admin/epg/epgsource/add/",
+      "route_id": "route-6b1d4d4954a6c0ee7f3c"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-1136fc2362211c7d319e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 457,
+      "pattern": "admin/epg/epgsource/<path:object_id>/history/",
+      "route_id": "route-1136fc2362211c7d319e"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-d87c79784f20fac7f1ec:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 458,
+      "pattern": "admin/epg/epgsource/<path:object_id>/delete/",
+      "route_id": "route-d87c79784f20fac7f1ec"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-41abd99ecb8c577d9801:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 459,
+      "pattern": "admin/epg/epgsource/<path:object_id>/change/",
+      "route_id": "route-41abd99ecb8c577d9801"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-957cd067e4b6938fcd14:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 460,
+      "pattern": "admin/epg/epgsource/<path:object_id>/",
+      "route_id": "route-957cd067e4b6938fcd14"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-c007525492332fdcf3ed:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 461,
+      "pattern": "admin/epg/programdata/",
+      "route_id": "route-c007525492332fdcf3ed"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-45b5868955756d1bb107:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 462,
+      "pattern": "admin/epg/programdata/add/",
+      "route_id": "route-45b5868955756d1bb107"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-48e0bb2e5522492eeae1:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 463,
+      "pattern": "admin/epg/programdata/<path:object_id>/history/",
+      "route_id": "route-48e0bb2e5522492eeae1"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-294f23fa979d80ddc263:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 464,
+      "pattern": "admin/epg/programdata/<path:object_id>/delete/",
+      "route_id": "route-294f23fa979d80ddc263"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-0ce7f843890fdf888d76:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 465,
+      "pattern": "admin/epg/programdata/<path:object_id>/change/",
+      "route_id": "route-0ce7f843890fdf888d76"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-fff6fa9aaabcd0694e0d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 466,
+      "pattern": "admin/epg/programdata/<path:object_id>/",
+      "route_id": "route-fff6fa9aaabcd0694e0d"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-6e6cd5627ca14d73d423:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 467,
+      "pattern": "admin/hdhr/hdhrdevice/",
+      "route_id": "route-6e6cd5627ca14d73d423"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-09a705366769a47d8256:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 468,
+      "pattern": "admin/hdhr/hdhrdevice/add/",
+      "route_id": "route-09a705366769a47d8256"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-c6e765f96d017041ddd9:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 469,
+      "pattern": "admin/hdhr/hdhrdevice/<path:object_id>/history/",
+      "route_id": "route-c6e765f96d017041ddd9"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-97e392582e55a48ef739:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 470,
+      "pattern": "admin/hdhr/hdhrdevice/<path:object_id>/delete/",
+      "route_id": "route-97e392582e55a48ef739"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-090f71a88010d591e725:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 471,
+      "pattern": "admin/hdhr/hdhrdevice/<path:object_id>/change/",
+      "route_id": "route-090f71a88010d591e725"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-3586e5cd0357453a4860:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 472,
+      "pattern": "admin/hdhr/hdhrdevice/<path:object_id>/",
+      "route_id": "route-3586e5cd0357453a4860"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-3ff88c19479cab7df6c3:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 473,
+      "pattern": "admin/m3u/m3uaccount/",
+      "route_id": "route-3ff88c19479cab7df6c3"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-91c1a735f21577094824:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 474,
+      "pattern": "admin/m3u/m3uaccount/add/",
+      "route_id": "route-91c1a735f21577094824"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-1ea13f70e2a87c7065af:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 475,
+      "pattern": "admin/m3u/m3uaccount/<path:object_id>/history/",
+      "route_id": "route-1ea13f70e2a87c7065af"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-a3c05c83840db19d00c1:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 476,
+      "pattern": "admin/m3u/m3uaccount/<path:object_id>/delete/",
+      "route_id": "route-a3c05c83840db19d00c1"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-66555b628a3f80496e9b:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 477,
+      "pattern": "admin/m3u/m3uaccount/<path:object_id>/change/",
+      "route_id": "route-66555b628a3f80496e9b"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-25c18841a4515a052dd9:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 478,
+      "pattern": "admin/m3u/m3uaccount/<path:object_id>/",
+      "route_id": "route-25c18841a4515a052dd9"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-be3499f4e3fb827773f7:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 479,
+      "pattern": "admin/m3u/m3ufilter/",
+      "route_id": "route-be3499f4e3fb827773f7"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-69bb5bc53dcff214110b:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 480,
+      "pattern": "admin/m3u/m3ufilter/add/",
+      "route_id": "route-69bb5bc53dcff214110b"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-038c316b256a6a110ab7:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 481,
+      "pattern": "admin/m3u/m3ufilter/<path:object_id>/history/",
+      "route_id": "route-038c316b256a6a110ab7"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-0ec6365ff777aabf84dd:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 482,
+      "pattern": "admin/m3u/m3ufilter/<path:object_id>/delete/",
+      "route_id": "route-0ec6365ff777aabf84dd"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-bcce4c6cd5fbd737b392:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 483,
+      "pattern": "admin/m3u/m3ufilter/<path:object_id>/change/",
+      "route_id": "route-bcce4c6cd5fbd737b392"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-38a1892f9e4b2ca92831:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 484,
+      "pattern": "admin/m3u/m3ufilter/<path:object_id>/",
+      "route_id": "route-38a1892f9e4b2ca92831"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-9be40186b684012ccf36:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 485,
+      "pattern": "admin/m3u/servergroup/",
+      "route_id": "route-9be40186b684012ccf36"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-7d6ce10709e493abffdd:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 486,
+      "pattern": "admin/m3u/servergroup/add/",
+      "route_id": "route-7d6ce10709e493abffdd"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-6f206f81536346c82700:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 487,
+      "pattern": "admin/m3u/servergroup/<path:object_id>/history/",
+      "route_id": "route-6f206f81536346c82700"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-22e3c01ebd345257611a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 488,
+      "pattern": "admin/m3u/servergroup/<path:object_id>/delete/",
+      "route_id": "route-22e3c01ebd345257611a"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-b06865f43d7273c5e68d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 489,
+      "pattern": "admin/m3u/servergroup/<path:object_id>/change/",
+      "route_id": "route-b06865f43d7273c5e68d"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-23cdd581cda6953c7ba5:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 490,
+      "pattern": "admin/m3u/servergroup/<path:object_id>/",
+      "route_id": "route-23cdd581cda6953c7ba5"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-bc280e2e44efc286250c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 491,
+      "pattern": "admin/m3u/m3uaccountprofile/",
+      "route_id": "route-bc280e2e44efc286250c"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-cb4f57f4f9898e406f71:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 492,
+      "pattern": "admin/m3u/m3uaccountprofile/add/",
+      "route_id": "route-cb4f57f4f9898e406f71"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-4a6e1f5254fe6e74e965:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 493,
+      "pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/history/",
+      "route_id": "route-4a6e1f5254fe6e74e965"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-9661c94b6f1488ba1c4d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 494,
+      "pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/delete/",
+      "route_id": "route-9661c94b6f1488ba1c4d"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-96601c0fd831be339e88:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 495,
+      "pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/change/",
+      "route_id": "route-96601c0fd831be339e88"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-0e726cfa8133a6ff795a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 496,
+      "pattern": "admin/m3u/m3uaccountprofile/<path:object_id>/",
+      "route_id": "route-0e726cfa8133a6ff795a"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-81cf0f77d941073f9776:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 497,
+      "pattern": "admin/vod/vodcategory/",
+      "route_id": "route-81cf0f77d941073f9776"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-32ca959c97f7d9a9a9f3:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 498,
+      "pattern": "admin/vod/vodcategory/add/",
+      "route_id": "route-32ca959c97f7d9a9a9f3"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-6e4d2a7652d79940f5a6:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 499,
+      "pattern": "admin/vod/vodcategory/<path:object_id>/history/",
+      "route_id": "route-6e4d2a7652d79940f5a6"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-99888579bf3250e24a7b:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 500,
+      "pattern": "admin/vod/vodcategory/<path:object_id>/delete/",
+      "route_id": "route-99888579bf3250e24a7b"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-3533967e5d8c0cd2b8eb:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 501,
+      "pattern": "admin/vod/vodcategory/<path:object_id>/change/",
+      "route_id": "route-3533967e5d8c0cd2b8eb"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-8017b687eb6727b343ea:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 502,
+      "pattern": "admin/vod/vodcategory/<path:object_id>/",
+      "route_id": "route-8017b687eb6727b343ea"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-4b59773cf78a372b48af:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 503,
+      "pattern": "admin/vod/series/",
+      "route_id": "route-4b59773cf78a372b48af"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-4b350c37b5c44c29fa4e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 504,
+      "pattern": "admin/vod/series/add/",
+      "route_id": "route-4b350c37b5c44c29fa4e"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-d42a2a2bfdff4637393b:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 505,
+      "pattern": "admin/vod/series/<path:object_id>/history/",
+      "route_id": "route-d42a2a2bfdff4637393b"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-65515aac8f096c5e5391:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 506,
+      "pattern": "admin/vod/series/<path:object_id>/delete/",
+      "route_id": "route-65515aac8f096c5e5391"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-88b08440b0a344b3ee5e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 507,
+      "pattern": "admin/vod/series/<path:object_id>/change/",
+      "route_id": "route-88b08440b0a344b3ee5e"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-2a962b71364bec213a23:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 508,
+      "pattern": "admin/vod/series/<path:object_id>/",
+      "route_id": "route-2a962b71364bec213a23"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-8ef0521afc33c8da138f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 509,
+      "pattern": "admin/vod/movie/",
+      "route_id": "route-8ef0521afc33c8da138f"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-571426a94492058183a7:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 510,
+      "pattern": "admin/vod/movie/add/",
+      "route_id": "route-571426a94492058183a7"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-7fec72328d793b977aa8:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 511,
+      "pattern": "admin/vod/movie/<path:object_id>/history/",
+      "route_id": "route-7fec72328d793b977aa8"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-f3e0ba8b22869145a32d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 512,
+      "pattern": "admin/vod/movie/<path:object_id>/delete/",
+      "route_id": "route-f3e0ba8b22869145a32d"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-ffb7acf7d5bc21942c35:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 513,
+      "pattern": "admin/vod/movie/<path:object_id>/change/",
+      "route_id": "route-ffb7acf7d5bc21942c35"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-5b8290da42341d034cde:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 514,
+      "pattern": "admin/vod/movie/<path:object_id>/",
+      "route_id": "route-5b8290da42341d034cde"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-86576893cc9043464a49:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 515,
+      "pattern": "admin/vod/episode/",
+      "route_id": "route-86576893cc9043464a49"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-be0cc7f95ea1c69881f8:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 516,
+      "pattern": "admin/vod/episode/add/",
+      "route_id": "route-be0cc7f95ea1c69881f8"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-e584f288e95db15fd771:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 517,
+      "pattern": "admin/vod/episode/<path:object_id>/history/",
+      "route_id": "route-e584f288e95db15fd771"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-348a8373f63b5e5e1872:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 518,
+      "pattern": "admin/vod/episode/<path:object_id>/delete/",
+      "route_id": "route-348a8373f63b5e5e1872"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-aa568fe9cd77d14c612a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 519,
+      "pattern": "admin/vod/episode/<path:object_id>/change/",
+      "route_id": "route-aa568fe9cd77d14c612a"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-9ed628d7192e4b5c8607:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 520,
+      "pattern": "admin/vod/episode/<path:object_id>/",
+      "route_id": "route-9ed628d7192e4b5c8607"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-6920775bd43a2208dc11:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 521,
+      "pattern": "admin/vod/m3umovierelation/",
+      "route_id": "route-6920775bd43a2208dc11"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-e075d5e8f9d344fa0670:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 522,
+      "pattern": "admin/vod/m3umovierelation/add/",
+      "route_id": "route-e075d5e8f9d344fa0670"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-5b315dc1974aba99350c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 523,
+      "pattern": "admin/vod/m3umovierelation/<path:object_id>/history/",
+      "route_id": "route-5b315dc1974aba99350c"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-0a322b42663caca999b2:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 524,
+      "pattern": "admin/vod/m3umovierelation/<path:object_id>/delete/",
+      "route_id": "route-0a322b42663caca999b2"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-73fa58abe7585327f798:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 525,
+      "pattern": "admin/vod/m3umovierelation/<path:object_id>/change/",
+      "route_id": "route-73fa58abe7585327f798"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-589053e92509a33aa6e7:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 526,
+      "pattern": "admin/vod/m3umovierelation/<path:object_id>/",
+      "route_id": "route-589053e92509a33aa6e7"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-357ac3accd93287f8251:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 527,
+      "pattern": "admin/vod/m3useriesrelation/",
+      "route_id": "route-357ac3accd93287f8251"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-4cb27a0f6cde217bf977:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 528,
+      "pattern": "admin/vod/m3useriesrelation/add/",
+      "route_id": "route-4cb27a0f6cde217bf977"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-f8e850a4fd215aa195f5:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 529,
+      "pattern": "admin/vod/m3useriesrelation/<path:object_id>/history/",
+      "route_id": "route-f8e850a4fd215aa195f5"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-4e93168724931ecc8eac:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 530,
+      "pattern": "admin/vod/m3useriesrelation/<path:object_id>/delete/",
+      "route_id": "route-4e93168724931ecc8eac"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-7ba9347cd0125c72780e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 531,
+      "pattern": "admin/vod/m3useriesrelation/<path:object_id>/change/",
+      "route_id": "route-7ba9347cd0125c72780e"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-7959ad3e6811064dd118:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 532,
+      "pattern": "admin/vod/m3useriesrelation/<path:object_id>/",
+      "route_id": "route-7959ad3e6811064dd118"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-5903b274c578e7988cd7:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 533,
+      "pattern": "admin/vod/m3uepisoderelation/",
+      "route_id": "route-5903b274c578e7988cd7"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-81978795a1f814abf8be:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 534,
+      "pattern": "admin/vod/m3uepisoderelation/add/",
+      "route_id": "route-81978795a1f814abf8be"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-e7df9dcb0652c59f6989:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 535,
+      "pattern": "admin/vod/m3uepisoderelation/<path:object_id>/history/",
+      "route_id": "route-e7df9dcb0652c59f6989"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-4a28414e299a5556cf23:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 536,
+      "pattern": "admin/vod/m3uepisoderelation/<path:object_id>/delete/",
+      "route_id": "route-4a28414e299a5556cf23"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-d63260ce13795dc139f5:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 537,
+      "pattern": "admin/vod/m3uepisoderelation/<path:object_id>/change/",
+      "route_id": "route-d63260ce13795dc139f5"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-cdfff1a96f1eea680c2a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 538,
+      "pattern": "admin/vod/m3uepisoderelation/<path:object_id>/",
+      "route_id": "route-cdfff1a96f1eea680c2a"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-ce0c994dd63aefe40a2e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 539,
+      "pattern": "admin/core/useragent/",
+      "route_id": "route-ce0c994dd63aefe40a2e"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-cf7071d568431fc0b587:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 540,
+      "pattern": "admin/core/useragent/add/",
+      "route_id": "route-cf7071d568431fc0b587"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-7e96f03aa039499fa89d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 541,
+      "pattern": "admin/core/useragent/<path:object_id>/history/",
+      "route_id": "route-7e96f03aa039499fa89d"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-8cf3aff432416e18e116:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 542,
+      "pattern": "admin/core/useragent/<path:object_id>/delete/",
+      "route_id": "route-8cf3aff432416e18e116"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-32cf1aadb61b98cfda0e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 543,
+      "pattern": "admin/core/useragent/<path:object_id>/change/",
+      "route_id": "route-32cf1aadb61b98cfda0e"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-29343fc9f8903b738645:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 544,
+      "pattern": "admin/core/useragent/<path:object_id>/",
+      "route_id": "route-29343fc9f8903b738645"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-7e0fafc9a3c875397537:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 545,
+      "pattern": "admin/core/streamprofile/",
+      "route_id": "route-7e0fafc9a3c875397537"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-a75af30030d311d82500:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 546,
+      "pattern": "admin/core/streamprofile/add/",
+      "route_id": "route-a75af30030d311d82500"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-52967d8fb9ceb7545ec5:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 547,
+      "pattern": "admin/core/streamprofile/<path:object_id>/history/",
+      "route_id": "route-52967d8fb9ceb7545ec5"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-03d6154cf3dfc70b2123:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 548,
+      "pattern": "admin/core/streamprofile/<path:object_id>/delete/",
+      "route_id": "route-03d6154cf3dfc70b2123"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-f0458e80bf451af080c7:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 549,
+      "pattern": "admin/core/streamprofile/<path:object_id>/change/",
+      "route_id": "route-f0458e80bf451af080c7"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-d02924ca61e39c6d74eb:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 550,
+      "pattern": "admin/core/streamprofile/<path:object_id>/",
+      "route_id": "route-d02924ca61e39c6d74eb"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-8155486783175b286fb4:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 551,
+      "pattern": "admin/core/coresettings/",
+      "route_id": "route-8155486783175b286fb4"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-d791760748c66e296001:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 552,
+      "pattern": "admin/core/coresettings/add/",
+      "route_id": "route-d791760748c66e296001"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-5021dd27c20e673cb70c:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 553,
+      "pattern": "admin/core/coresettings/<path:object_id>/history/",
+      "route_id": "route-5021dd27c20e673cb70c"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-1c8b4fa7787d1caa1c2f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 554,
+      "pattern": "admin/core/coresettings/<path:object_id>/delete/",
+      "route_id": "route-1c8b4fa7787d1caa1c2f"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-7af6cb531f698a4abd73:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 555,
+      "pattern": "admin/core/coresettings/<path:object_id>/change/",
+      "route_id": "route-7af6cb531f698a4abd73"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-dc48f124ea4ab711148f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 556,
+      "pattern": "admin/core/coresettings/<path:object_id>/",
+      "route_id": "route-dc48f124ea4ab711148f"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django_celery_beat.admin.PeriodicTaskAdmin.changelist_view",
+      "method_placeholder": "route-6d42dcbfa30f2b797b4a:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 557,
+      "pattern": "admin/django_celery_beat/periodictask/",
+      "route_id": "route-6d42dcbfa30f2b797b4a"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-34936962b1d2c22b6cd9:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 558,
+      "pattern": "admin/django_celery_beat/periodictask/add/",
+      "route_id": "route-34936962b1d2c22b6cd9"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-33a1d9ce41095a926ef3:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 559,
+      "pattern": "admin/django_celery_beat/periodictask/<path:object_id>/history/",
+      "route_id": "route-33a1d9ce41095a926ef3"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-5d605ec541128ca2a482:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 560,
+      "pattern": "admin/django_celery_beat/periodictask/<path:object_id>/delete/",
+      "route_id": "route-5d605ec541128ca2a482"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-a060cb2f0b931aa5a0bf:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 561,
+      "pattern": "admin/django_celery_beat/periodictask/<path:object_id>/change/",
+      "route_id": "route-a060cb2f0b931aa5a0bf"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-9b75ced4650a4a7f4255:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 562,
+      "pattern": "admin/django_celery_beat/periodictask/<path:object_id>/",
+      "route_id": "route-9b75ced4650a4a7f4255"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-739e614a7c2da9c6d7f2:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 563,
+      "pattern": "admin/django_celery_beat/clockedschedule/",
+      "route_id": "route-739e614a7c2da9c6d7f2"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-51495b11f4b4c9cc740f:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 564,
+      "pattern": "admin/django_celery_beat/clockedschedule/add/",
+      "route_id": "route-51495b11f4b4c9cc740f"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-cd01830f8cb95d29be7e:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 565,
+      "pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/history/",
+      "route_id": "route-cd01830f8cb95d29be7e"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-1e73985130fd9851a7a8:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 566,
+      "pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/delete/",
+      "route_id": "route-1e73985130fd9851a7a8"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-ce8e28c9f6b548d34e88:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 567,
+      "pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/change/",
+      "route_id": "route-ce8e28c9f6b548d34e88"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-13aa219940c10df092cb:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 568,
+      "pattern": "admin/django_celery_beat/clockedschedule/<path:object_id>/",
+      "route_id": "route-13aa219940c10df092cb"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-a0e522bd839e05bb35b7:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 569,
+      "pattern": "admin/django_celery_beat/crontabschedule/",
+      "route_id": "route-a0e522bd839e05bb35b7"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-2f8ef06110a5ffd61b71:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 570,
+      "pattern": "admin/django_celery_beat/crontabschedule/add/",
+      "route_id": "route-2f8ef06110a5ffd61b71"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-ee14c0bc185a96d86558:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 571,
+      "pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/history/",
+      "route_id": "route-ee14c0bc185a96d86558"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-250e897ed680aed29e42:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 572,
+      "pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/delete/",
+      "route_id": "route-250e897ed680aed29e42"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-fcf3fbe4915aa097a741:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 573,
+      "pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/change/",
+      "route_id": "route-fcf3fbe4915aa097a741"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-74d54cc3d7d075615a35:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 574,
+      "pattern": "admin/django_celery_beat/crontabschedule/<path:object_id>/",
+      "route_id": "route-74d54cc3d7d075615a35"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-90fe51dfe2a7908a1420:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 575,
+      "pattern": "admin/django_celery_beat/solarschedule/",
+      "route_id": "route-90fe51dfe2a7908a1420"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-cc91f938b4cf3b4e93fd:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 576,
+      "pattern": "admin/django_celery_beat/solarschedule/add/",
+      "route_id": "route-cc91f938b4cf3b4e93fd"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-7c10852159b0623f0c35:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 577,
+      "pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/history/",
+      "route_id": "route-7c10852159b0623f0c35"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-9280b92ad1b37181be60:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 578,
+      "pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/delete/",
+      "route_id": "route-9280b92ad1b37181be60"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-342857a65f05d27b54ac:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 579,
+      "pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/change/",
+      "route_id": "route-342857a65f05d27b54ac"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-f5b425a56db11fa34013:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 580,
+      "pattern": "admin/django_celery_beat/solarschedule/<path:object_id>/",
+      "route_id": "route-f5b425a56db11fa34013"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.changelist_view",
+      "method_placeholder": "route-0b9bb6292c466244e6ba:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 581,
+      "pattern": "admin/django_celery_beat/intervalschedule/",
+      "route_id": "route-0b9bb6292c466244e6ba"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.add_view",
+      "method_placeholder": "route-74675f81bba31a6d0c57:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 582,
+      "pattern": "admin/django_celery_beat/intervalschedule/add/",
+      "route_id": "route-74675f81bba31a6d0c57"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.history_view",
+      "method_placeholder": "route-f396b717a0dbe68d4298:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 583,
+      "pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/history/",
+      "route_id": "route-f396b717a0dbe68d4298"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.delete_view",
+      "method_placeholder": "route-0f560824bf03f3882120:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 584,
+      "pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/delete/",
+      "route_id": "route-0f560824bf03f3882120"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.options.ModelAdmin.change_view",
+      "method_placeholder": "route-436e0a00f4a2a4e82e3d:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 585,
+      "pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/change/",
+      "route_id": "route-436e0a00f4a2a4e82e3d"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.views.generic.base.RedirectView",
+      "method_placeholder": "route-860aebac4398d96a61d4:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 586,
+      "pattern": "admin/django_celery_beat/intervalschedule/<path:object_id>/",
+      "route_id": "route-860aebac4398d96a61d4"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.sites.AdminSite.app_index",
+      "method_placeholder": "route-aacd547468dcab9a99a2:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 587,
+      "pattern": "admin/^(?P<app_label>accounts|auth|dispatcharr_channels|epg|hdhr|m3u|vod|core|django_celery_beat)/$",
+      "route_id": "route-aacd547468dcab9a99a2"
+    },
+    {
+      "classification": "django_admin_delegated",
+      "handler": "django.contrib.admin.sites.AdminSite.catch_all_view",
+      "method_placeholder": "route-5effc64e702691947191:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 588,
+      "pattern": "admin/(?P<url>.*)$",
+      "route_id": "route-5effc64e702691947191"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.TemplateView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-a21d90b60c8d5e9c908b:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 589,
+      "pattern": "",
+      "route_id": "route-a21d90b60c8d5e9c908b"
+    },
+    {
+      "class_handlers": [
+        "GET",
+        "OPTIONS"
+      ],
+      "classification": "stock_class_dispatch_metadata",
+      "framework_dispatch": "django.views.generic.base.View.dispatch",
+      "framework_dispatch_methods": [
+        "GET",
+        "HEAD",
+        "OPTIONS"
+      ],
+      "framework_handler_return_observed": false,
+      "handler": "django.views.generic.base.TemplateView",
+      "http_method_names": [
+        "DELETE",
+        "GET",
+        "HEAD",
+        "OPTIONS",
+        "PATCH",
+        "POST",
+        "PUT",
+        "TRACE"
+      ],
+      "implicit_HEAD_through_View_setup": true,
+      "method_placeholder": "route-d9112bd8c31ab7b27518:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 590,
+      "pattern": "<path:unused_path>",
+      "route_id": "route-d9112bd8c31ab7b27518"
+    },
+    {
+      "classification": "asgi_or_websocket_route",
+      "handler": "dispatcharr.consumers.MyWebSocketConsumer",
+      "method_placeholder": "route-1156f2f1488d795754d5:METHOD_UNRESOLVED",
+      "operation_method_promoted": false,
+      "ordinal": 591,
+      "pattern": "ws/",
+      "route_id": "route-1156f2f1488d795754d5"
+    }
+  ],
+  "owned_container_retired": true,
+  "performance_measured": false,
+  "physical_receipts_sha256": {
+    "cleanup.json": "a8a6027cacdc5790224000ab5b4b6bd5588cff3c831860a0dc4a9847dd49fbac",
+    "container-terminal.json": "07b4f779fabe96a2cf1e97cd0387af24ce21b0c475b7a6b2612b524061c786ad",
+    "method-census.json": "d8e15c532d961540f1be741e03a3318f2b99106ba15a361457fbedb10f8b0b42",
+    "result.json": "64dd7020c10f0f70b851aa84b09a0b2b24c4d1a8570b20ba317d6b55c0c99085",
+    "source-before.json": "78a1927742ef80eabcb9f982dd2ff94ff1b6afc6cdcedeb7caca49b00a1c8b1f"
+  },
+  "pinned_original_image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "pinned_original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "raw_observation_json_sha256": "4f8d37fbe1ca1565480390f5da68463e5f532e61ce95408346981e7deed84024",
+  "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "versions": {
+    "DRF": "3.18.3",
+    "Django": "6.0.9"
+  }
+}

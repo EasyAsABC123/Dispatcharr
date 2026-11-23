@@ -1,0 +1,11 @@
+# M7 public EPG import to Connect delivery on 7c604a6c
+
+Pinned Original `1241b3f7` and the exact ordinary AMD64 Native package `7c604a6c` each completed one public EPG import that produced an actual Connect webhook and durable delivery history. The physical pair and independent retained-receipt replay exited 0. The reviewed publication head `0156a6a6` provides context for this evidence. The Native runtime tested was `7c604a6c`.
+
+Each arm returned 401 for anonymous import, 403 for the standard user, and 202 for the administrator. The accepted refresh reached its worker's terminal SUCCESS. The owned internal receiver observed one guide GET that returned 404 and one form-encoded webhook POST that returned 200. Each arm persisted one `epg_error` audit before one successful DeliveryLog linked to the owned subscription. The captured form and stored request payload agreed. The administrator's public history GET returned 200 and matched the independently queried SQL row. Both selected projections matched after normalizing generated identities and timestamps.
+
+Original's prefork worker and Native's selected Refresh consumer ran in separate projects, with no published ports and with both Native Beat owners disabled. The original worker, Native Main, and each PostgreSQL/Redis foundation exited zero without OOM. Original retired three containers and one network, with 17 recorded host process generations absent. Native retired four containers, one network and one volume, with 14 recorded host process generations absent. Both project inventories were empty and both scratch directories were gone.
+
+The preceding attempt remains exit 1 and passed exact cleanup. Original made and persisted its webhook, then the observer timed out while scanning the unprefixed Redis result key pattern. Native's volume initializer exited 1 before Main started. The retained attempt contains no initializer stderr. The passing rerun used the shared prefixed Redis key and the retained package's minimal volume initializer.
+
+This receipt covers the plain webhook case on the named pair. Formal M7 closure and comparative performance remain open. Original Dispatcharr and dependency authors and contributors retain full credit. [Machine-readable receipt](m7-7c604a6c-connect-delivery.json)

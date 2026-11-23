@@ -1,0 +1,118 @@
+{
+  "actual": {
+    "Native": {
+      "allow": "OPTIONS, GET",
+      "artifacts": {
+        "cleanup_sha256": "1513a43583f958f786d2c98af248eee43d8bf5f74565d214200babcc362d8225",
+        "probe_stdout_sha256": "274f28bcff3586eed8bb5726c8da7ba7a0c3bec6188ef70204caed8f7cda3408",
+        "receipt_sha256": "5c43d1e1c06bf6e64e1356cff2cae971cc55bdcd93a5925e27a40f30f51bff05"
+      },
+      "exact_retired_roles": 4,
+      "files_sql_broker_unchanged": true,
+      "literal_cleanup_exit": 0,
+      "literal_probe_exit": 0,
+      "local_zip_bytes": 39069,
+      "local_zip_sha256": "bde767cabbdfeb929fa023854dda1cacd336bc568e8a2482bc953fca2d62d56a",
+      "phases": {
+        "cleanup": 0,
+        "probe": 0,
+        "ready-Native": 0,
+        "ready-Original": 0,
+        "start-Native": 0,
+        "start-Original-foundation": 0,
+        "stop-Original-HTTP": 0
+      }
+    },
+    "Original": {
+      "allow": "GET, OPTIONS",
+      "artifacts": {
+        "cleanup_sha256": "eb3a85227a324c39930f8a0505f46dc7c9c46a3c6ca988deb41e816388351bfb",
+        "probe_stdout_sha256": "d8bc7abe6b00566b0371125a8249fbb4af6ed8aac17f19cf2bcca32ca6e3a121",
+        "receipt_sha256": "6b1110b464428a19d3e3dd84aa4e32bdf561cd0c13c686b04fd1de19e8332256"
+      },
+      "exact_retired_roles": 2,
+      "files_sql_broker_unchanged": true,
+      "literal_cleanup_exit": 0,
+      "literal_probe_exit": 0,
+      "local_zip_bytes": 39057,
+      "local_zip_sha256": "9955453918ef232e0d75866a22ef82a0fb1ca591a537dc36f92b16d222e34614",
+      "phases": {
+        "cleanup": 0,
+        "probe": 0,
+        "ready-Original": 0,
+        "start-Original-foundation": 0
+      }
+    }
+  },
+  "actual_physical_exits": {
+    "campaign": 0,
+    "paired": 0,
+    "preflight": 0,
+    "reduce": 0,
+    "run": 0
+  },
+  "allow_method_set": [
+    "GET",
+    "OPTIONS"
+  ],
+  "application": "1b490f5d964dc4df34f27837e110c6eb755f79cf",
+  "application_source_archive_sha256": "957730704a24b8a115f2f69ac0336a9324bffa9bcd6a6508bd4c7a8e0accf421",
+  "application_tree_sha256": "ccdcbf46befb54c51639e92a0949d3cb02e58de36aa5f311adbb23409bd32826",
+  "both_download_paths_match_their_own_zip": true,
+  "credit": "Original Dispatcharr, React, Django, Django REST Framework and dependency authors retain full credit.",
+  "declared_routes": 3,
+  "exact_cleanup": true,
+  "expected_and_returned_inventory_timestamp_utc": "2026-11-09T12:34:56.123457+00:00",
+  "fixture_file_mtime_nanoseconds": 1794227696123456789,
+  "fixture_seal_sha256": "e6b72cb8b871ec4f06ad0c6913fb9d52c59c2c3c79db22c04dbb48e418bcce52",
+  "formal_M0_accepted": false,
+  "formal_M8_accepted": false,
+  "image": "sha256:76a95726884e7c5f8f49454fdf44dc0d8ce340d541e9be3365ae60ec04a2afd4",
+  "literal_vary": "Accept, origin",
+  "manifest_sha256": "147d784d7747d35d0210abf8f9733139cd78cab865e15fde905ff13bcada3667",
+  "ordinary_gets_per_backend": 8,
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "paired_receipt_sha256": "8765e05e192325721c1b315d3326d2ff175c4af1b5c3269e4fd9a922aa3a2eea",
+  "performance_measured": false,
+  "platform": "linux/amd64",
+  "proof_sha256": "6b652bd5dc07fc9f49a2d1f2f2bb9551adf007b4009c745ba95b69deb1358fcf",
+  "raw_allow_order_differs": true,
+  "retained_sensitive_raw_data": false,
+  "scope": "ordinary signed backup inventory, first-party token and direct archive download",
+  "selected_header_cases_match": 8,
+  "status_and_media": {
+    "download-direct-admin": {
+      "media": "application/zip",
+      "status": 200
+    },
+    "download-direct-standard": {
+      "media": "application/json",
+      "status": 401
+    },
+    "download-issued-token": {
+      "media": "application/zip",
+      "status": 200
+    },
+    "inventory-admin": {
+      "media": "application/json",
+      "status": 200
+    },
+    "inventory-admin-repeat": {
+      "media": "application/json",
+      "status": 200
+    },
+    "inventory-standard": {
+      "media": "application/json",
+      "status": 403
+    },
+    "issue-token-admin": {
+      "media": "application/json",
+      "status": 200
+    },
+    "issue-token-standard": {
+      "media": "application/json",
+      "status": 403
+    }
+  }
+}

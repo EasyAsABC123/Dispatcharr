@@ -1,0 +1,87 @@
+{
+  "actual_pair_exit": 0,
+  "arms": {
+    "Native": {
+      "closure": {
+        "graceful_roles": [
+          "baseline",
+          "candidate"
+        ],
+        "recorded_process_generations_absent": 14,
+        "resources_retired": {
+          "container": 4,
+          "network": 1,
+          "volume": 1
+        },
+        "scratch_absent": true
+      },
+      "evidence_sha256": {
+        "closure.json": "a3fe0508fc081d55c5acc0ed023753b25b9c548abe333ec1849d9455ff994d8c",
+        "observations.json": "c141f84bce48222adc515b47aa132cc9755e0e68af332e91d2207bbe9f8d3f91",
+        "receipt.json": "5c15a31d7590e20fc8833bb0f2a79eb178e1868de1709a714daae030d50c3b97",
+        "wire.jsonl": "a586e85deb3352e0b0e87593e2529d2947be8bb1913124e02c3684a2a4892ddf"
+      },
+      "normalized_webhook_sha256": "2fee98a7650591ebeec8886e22db8306611837c5e78f8a2f96986dfbd5a06a6f"
+    },
+    "Original": {
+      "closure": {
+        "graceful_roles": [
+          "baseline",
+          "worker"
+        ],
+        "recorded_process_generations_absent": 17,
+        "resources_retired": {
+          "container": 3,
+          "network": 1,
+          "volume": 0
+        },
+        "scratch_absent": true
+      },
+      "evidence_sha256": {
+        "closure.json": "2bac9ba4fe2099bd91d3b66166b6275c08c549fb3506a329c7969b9678316afa",
+        "observations.json": "f3d495d5215a5935ae39d0cb2f9720db593ad74ede528b4c086194b94f24dcea",
+        "receipt.json": "e813f230126cca0deef6c9b927598918fcee66261b4ba1dc2a0e0445d5770227",
+        "wire.jsonl": "3386f8c8b211a396735451630514031bc4064f26fe5e3df1c781c4588e09ce61"
+      },
+      "normalized_webhook_sha256": "2fee98a7650591ebeec8886e22db8306611837c5e78f8a2f96986dfbd5a06a6f"
+    }
+  },
+  "credit": "Original Dispatcharr and dependency authors and contributors retain full credit.",
+  "delivery_accepted": true,
+  "exact_closure": true,
+  "formal_m7_complete": false,
+  "native_image": "sha256:f568f190f8f67df75788a242c33fa4be9e7a3936109e26f4dfdb32c2bb4b0f88",
+  "native_platform": "linux/amd64",
+  "owner_freeze_sha256": "cc9932d5a338a56b0b064d0ad21d3cd0227deae320d7b7e6f25b7e9382351fec",
+  "paired_receipt_sha256": "0d72576ed4aa43233f1587df902363e5d329503695c3f3d24b2b774d840a6fb6",
+  "performance_measured": false,
+  "prior_exit": {
+    "Native": "data-init exited 1 before candidate start; initializer stderr unavailable",
+    "Original": "actual delivery recorded; unprefixed Redis result observer timed out",
+    "actual_exit": 1,
+    "exact_closure": true,
+    "receipt_sha256": "7a137806a29c2d8b2bd1b45bef3c06677354caecebf57f16d7df53721c2791f7"
+  },
+  "reviewed_publication": "0156a6a6",
+  "revisions": {
+    "Native": "7c604a6c77fb791c8d4b3b1e30fc58148875f04e",
+    "Original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "scope": "M7 public EPG import to one plain Connect webhook",
+  "selected_projection_equal": true,
+  "stages_each": {
+    "admin_import_http": 202,
+    "anonymous_import_http": 401,
+    "create_integration_http": 201,
+    "delivery_history_http": 200,
+    "epg_error_audits": 1,
+    "guide_get_http": 404,
+    "guide_gets": 1,
+    "set_subscription_http": 200,
+    "standard_import_http": 403,
+    "successful_delivery_rows": 1,
+    "webhook_http": 200,
+    "webhook_posts": 1,
+    "worker_terminal": "SUCCESS"
+  }
+}

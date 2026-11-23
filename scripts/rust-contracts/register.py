@@ -314,7 +314,7 @@ def build(bindings_path=None,deep_evidence=False):
     executable_Source_non_HTTP_mapping=source_contracts.apply_non_HTTP(ROOT,non_http)
     import retained_channel_task_effects
     retained_channel_task_effects.apply(ROOT,non_http)
-    return {'format_version':1,'scope':'Contract work register linking runtime discovery and explicit mapping gaps; not executable parity acceptance',
+    report = {'format_version':1,'scope':'Contract work register linking runtime discovery and explicit mapping gaps; not executable parity acceptance',
         'credit':'All application/algorithm credit belongs to original Dispatcharr authors and contributors; AGPL retained.',
         'baseline_ref':static['baseline_ref'],'input_sha256':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest()for p in [runtime_path,static_path,*([methods_path]if dispatch is not None else[]),*([bindings_path]if case_bindings is not None else[]),*attestation_paths,ROOT/RECORDING_HLS_RESOLVER['path'],*(ROOT/path for path in retained_channel_task_effects.INPUT_SHA256),*(ROOT/path for path in retained_react_profile_group_contracts.INPUT_SHA256),*([ROOT/'scripts/rust-contracts/executable-source-inputs.json', *[ROOT/item['path'] for item in executable_Source_mapping.get('inputs',[])]] if (ROOT/'scripts/rust-contracts/executable-source-inputs.json').exists() else [])]},
         'Source_resolver_dispositions': recording_hls_resolver_dispositions(rows),
@@ -332,6 +332,9 @@ def build(bindings_path=None,deep_evidence=False):
         'observations_for_methods_not_declared_in_discovery':case_bindings.get('observations_for_methods_not_declared_in_discovery',[])if case_bindings is not None else[],
         'unrepresented_contract_families':['Environment defaults and precedence','Periodic schedule trigger/crash semantics','Plugin context/capability APIs','Admin workflows and CSRF/session behavior','Signals and background startup/shutdown hooks'],
         'runtime_routes':rows,'openapi_operations':operations,'non_HTTP_candidates':non_http}
+    from runtime_dispatch_metadata import attach
+    return attach(ROOT, report)
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,default=ROOT/'docs/rust-contract-register.json');parser.add_argument('--bindings',type=Path,default=ROOT/'scripts/rust-contracts/case-bindings.json');parser.add_argument('--deep-evidence',action='store_true',help='Revalidate private raw captures/build matrix; default validates committed sanitized attestations');args=parser.parse_args();value=build(args.bindings,args.deep_evidence);data=(json.dumps(value,indent=2,ensure_ascii=False)+'\n').encode();args.output.write_bytes(data)
     print(json.dumps({'written':str(args.output),'counts':value['counts'],'sha256':hashlib.sha256(data).hexdigest(),'parity_acceptance':False}))
