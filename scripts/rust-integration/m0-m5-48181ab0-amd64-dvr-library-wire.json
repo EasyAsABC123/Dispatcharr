@@ -1,0 +1,203 @@
+{
+  "Original": {
+    "actual_receipt_sha256": "ae2453cd05e5c60f8ae4c0fd75129ab5d2c230db0be729b60972dd0b9882e842",
+    "cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "literal_exits": {
+      "campaign": 0,
+      "cleanup": 0,
+      "physical_controller": 0,
+      "preflight": 0,
+      "proof": 0,
+      "run": 0
+    },
+    "proof_sha256": "0decb97fb45cbf59ee03385562d801f130d628587ade9c333ef961e8e4382cc5",
+    "retired_exact_roles": 2
+  },
+  "Rust": {
+    "actual_receipt_sha256": "0d87acda337e6dc2b3fed0e680a92d2c7acd4e420ba6381c2949ab8a8f09cec0",
+    "cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "literal_exits": {
+      "campaign": 0,
+      "cleanup": 0,
+      "physical_controller": 0,
+      "preflight": 0,
+      "proof": 0,
+      "run": 0
+    },
+    "proof_sha256": "c907197eacb6d456b771882388ee6fbc00f809b794a2214a8950e76d682dcdef",
+    "retired_exact_roles": 4
+  },
+  "actual_observations": 10,
+  "candidate": "48181ab0067d85c628bab46a93af717c1b5759c0",
+  "cases": [
+    {
+      "bytes_each": 255,
+      "contract_id": "route-f11670971b47e9fa9cdc:GET",
+      "raw_body_matched": true,
+      "raw_body_sha256": "1c7f2536f7e7dfcdea3d86b391248b09dc3c60551771e7d809c28e0560a7d377",
+      "role": "standard",
+      "route": "/api/channels/recordings/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 507,
+      "contract_id": "route-f11670971b47e9fa9cdc:GET",
+      "raw_body_matched": true,
+      "raw_body_sha256": "0f0fed96f994d417aeb3f05b217fe4ec679cf8b2f5ca1ee0c9c6b8bf6253e29b",
+      "role": "admin",
+      "route": "/api/channels/recordings/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 255,
+      "contract_id": "route-7083b0daee9897e8ed81:GET",
+      "raw_body_matched": true,
+      "raw_body_sha256": "1c7f2536f7e7dfcdea3d86b391248b09dc3c60551771e7d809c28e0560a7d377",
+      "role": "standard",
+      "route": "/api/channels/recordings.json",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 507,
+      "contract_id": "route-7083b0daee9897e8ed81:GET",
+      "raw_body_matched": true,
+      "raw_body_sha256": "0f0fed96f994d417aeb3f05b217fe4ec679cf8b2f5ca1ee0c9c6b8bf6253e29b",
+      "role": "admin",
+      "route": "/api/channels/recordings.json",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 253,
+      "contract_id": "route-b406c782172baf90cd51:GET",
+      "raw_body_matched": true,
+      "raw_body_sha256": "4da32704763a0b5a86d9b1b774aa7d348bb9ada7f43eec09677e96fdd5ae446e",
+      "role": "standard",
+      "route": "/api/channels/recordings/{id}/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 253,
+      "contract_id": "route-b406c782172baf90cd51:GET",
+      "raw_body_matched": true,
+      "raw_body_sha256": "4da32704763a0b5a86d9b1b774aa7d348bb9ada7f43eec09677e96fdd5ae446e",
+      "role": "admin",
+      "route": "/api/channels/recordings/{id}/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 253,
+      "contract_id": "route-cb2f8fac46d19480e674:GET",
+      "raw_body_matched": true,
+      "raw_body_sha256": "4da32704763a0b5a86d9b1b774aa7d348bb9ada7f43eec09677e96fdd5ae446e",
+      "role": "standard",
+      "route": "/api/channels/recordings/{id}.json",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 253,
+      "contract_id": "route-cb2f8fac46d19480e674:GET",
+      "raw_body_matched": true,
+      "raw_body_sha256": "4da32704763a0b5a86d9b1b774aa7d348bb9ada7f43eec09677e96fdd5ae446e",
+      "role": "admin",
+      "route": "/api/channels/recordings/{id}.json",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 96,
+      "contract_id": null,
+      "raw_body_matched": true,
+      "raw_body_sha256": "3c611455d9f0eb7dce9f4219a355816f4ae1557346c95b5516363ab00ea39c2f",
+      "role": "standard",
+      "route": "/api/channels/series-rules/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 96,
+      "contract_id": null,
+      "raw_body_matched": true,
+      "raw_body_sha256": "3c611455d9f0eb7dce9f4219a355816f4ae1557346c95b5516363ab00ea39c2f",
+      "role": "admin",
+      "route": "/api/channels/series-rules/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    }
+  ],
+  "credentials_or_raw_bodies_published": false,
+  "credits": "Original Dispatcharr authors and contributors retain full application and protocol credit.",
+  "declared_GET_observations": 8,
+  "direct_parent": "a5d155ff5da320962833da6491b6d07d4e3bf22f",
+  "fixture_seal_sha256": "1bf2415a34bce330fa9e59784e5405d4ece47de0740174e211ce3d01e1234b08",
+  "fresh_native_runtime": true,
+  "full_M0_passed": false,
+  "full_M5_passed": false,
+  "known_recording_raw_field_order_divergences": 0,
+  "manifest_sha256": "18b677fe7d7fa5ddd482e6b6892e95999e93a0a2db8cdec3f8cc82b5baf020c9",
+  "mixed_method_row_GET_observations": 2,
+  "ordinary_amd64_image": "sha256:c0d7a5a98311ffe8becb1a8e729a1dbee4e1fd1704b212cab5826ade45fabb3e",
+  "original_ordinary_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_reference_reused": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "package_verifier_sha256": "6c5bbc3387d6e847b99c912f247c62b28edec595b31858bf605f54357a3660c5",
+  "performance_verified": false,
+  "prior_application": "009cc8dda306ba1f4848ab937107dc2722f84f5b",
+  "protected_fixture_SQL_and_broker_unchanged": true,
+  "raw_body_matches": 10,
+  "recording_field_order": [
+    "id",
+    "start_time",
+    "end_time",
+    "task_id",
+    "custom_properties",
+    "channel"
+  ],
+  "registered_GET_contracts": 4,
+  "schema": "m0-m5-amd64-dvr-library-signed-read-scoped-proof/1",
+  "source_archive_sha256": "cc041f10713752ddb72686525d4cd6fdec7d52ee67b12ae9a9349fc7f47c442b",
+  "source_tree_sha256": "8ca2054749df9905a14f3925fa2567436f90eb8a6f2df661de0d51d533a77a35",
+  "status": "passed",
+  "typed_and_selected_header_matches": 10
+}
