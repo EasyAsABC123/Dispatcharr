@@ -108,7 +108,7 @@ impl RecordingJobs for Bridge {
                     .map_err(cleanup_error)?;
             if !deleted {
                 self.control
-                    .revoke_one(&task, owner)
+                    .revoke_recording_task(&task, owner)
                     .await
                     .map_err(|_| Effect::Unsettled)?;
             }
@@ -209,7 +209,7 @@ impl RecordingJobs for Bridge {
             .map_err(cleanup_error)?;
             if !deleted {
                 self.control
-                    .revoke_one(&task, owner)
+                    .revoke_recording_task(&task, owner)
                     .await
                     .map_err(|_| Effect::Unsettled)?;
             }
@@ -226,7 +226,7 @@ impl RecordingJobs for Bridge {
         // deadlock pool1 or erase a newly-created unrelated schedule.
         Box::pin(async move {
             self.control
-                .revoke_one(proof.task_key(), owner)
+                .revoke_recording_task(proof.task_key(), owner)
                 .await
                 .map(|_| ())
                 .map_err(|_| Effect::Unsettled)
@@ -239,7 +239,7 @@ impl RecordingJobs for Bridge {
     ) -> BoxFuture<'_, Result<(), Effect>> {
         Box::pin(async move {
             self.control
-                .revoke_one(proof.task_key(), owner)
+                .revoke_recording_task(proof.task_key(), owner)
                 .await
                 .map(|_| ())
                 .map_err(series_revoke_error)
@@ -401,13 +401,13 @@ mod series_revoke_tests {
             .await
             .unwrap();
         let not_ready = control
-            .revoke_one("owned-recording-revoke", Arc::new(()))
+            .revoke_recording_task("owned-recording-revoke", Arc::new(()))
             .await
             .unwrap_err();
         assert_eq!(not_ready, ControlError::NotReady);
         assert!(control.shutdown(Duration::from_secs(1)).await);
         let closed = control
-            .revoke_one("owned-recording-revoke", Arc::new(()))
+            .revoke_recording_task("owned-recording-revoke", Arc::new(()))
             .await
             .unwrap_err();
         assert_eq!(closed, ControlError::Closed);

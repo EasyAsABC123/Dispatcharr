@@ -19,18 +19,33 @@ pub(super) fn topic(database: i64) -> Result<String, Error> {
     }
     Ok(format!("/{database}.celery.pidbox"))
 }
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(super) enum RevokeEnvelope {
+    ControlSingle,
+    ControlMany,
+    AsyncResult,
+}
+
 pub(super) fn encode(
     keys: &[String],
-    single: bool,
+    envelope: RevokeEnvelope,
     clock: u64,
     now: f64,
 ) -> Result<Vec<u8>, Error> {
+    let single = envelope != RevokeEnvelope::ControlMany;
     if !valid_keys(keys) || (single && keys.len() != 1) || !now.is_finite() {
         return Err(Error::Capacity);
     }
     let task_id = if single { json!(keys[0]) } else { json!(keys) };
+    // AsyncResult.revoke forwards explicit None for timeout and signal.
+    let (expires, signal) = match envelope {
+        RevokeEnvelope::AsyncResult => (json!(0), Value::Null),
+        RevokeEnvelope::ControlSingle | RevokeEnvelope::ControlMany => {
+            (json!(now + 1.0), json!("SIGTERM"))
+        }
+    };
     let body = serde_json::to_vec(&json!({
-        "method":"revoke", "arguments":{"task_id":task_id,"terminate":false,"signal":"SIGTERM"},
+        "method":"revoke", "arguments":{"task_id":task_id,"terminate":false,"signal":signal},
         "destination":null,"pattern":null,"matcher":null
     }))
     .map_err(|_| Error::Protocol)?;
@@ -39,7 +54,7 @@ pub(super) fn encode(
     }
     let frame = serde_json::to_vec(&json!({
         "body":STANDARD.encode(body), "content-encoding":"utf-8","content-type":"application/json",
-        "headers":{"clock":clock,"expires":now+1.0},
+        "headers":{"clock":clock,"expires":expires},
         "properties":{"delivery_mode":2,"delivery_info":{"exchange":"celery.pidbox","routing_key":""},
             "priority":0,"body_encoding":"base64","delivery_tag":uuid::Uuid::new_v4().to_string()}
     })).map_err(|_| Error::Protocol)?;
@@ -307,7 +322,7 @@ mod tests {
             "dvr-recover-42".into(),
             "00000000-0000-4000-8000-000000000001".into(),
         ];
-        let frame = encode(&keys, false, 3, 100.0).unwrap();
+        let frame = encode(&keys, RevokeEnvelope::ControlMany, 3, 100.0).unwrap();
         let decoded = decode(&frame, 100.5).unwrap();
         assert_eq!(decoded.clock, 3);
         assert_eq!(decoded.keys.unwrap(), keys);
@@ -315,7 +330,7 @@ mod tests {
         assert!(opted.pause_default.is_none());
         assert_eq!(opted.keys.unwrap(), keys);
         assert!(decode(&frame, 102.0).unwrap().keys.is_none());
-        let single = encode(&keys[..1], true, 4, 100.0).unwrap();
+        let single = encode(&keys[..1], RevokeEnvelope::ControlSingle, 4, 100.0).unwrap();
         let outer: Value = serde_json::from_slice(&single).unwrap();
         let body: Value =
             serde_json::from_slice(&STANDARD.decode(outer["body"].as_str().unwrap()).unwrap())
@@ -324,9 +339,30 @@ mod tests {
         assert_eq!(body["arguments"]["terminate"], false);
     }
     #[test]
+    fn recording_async_result_revoke_uses_zero_expiry_and_null_signal() {
+        let keys = vec!["dvr-now-7-0123456789abcdef0123456789abcdef".into()];
+        let frame = encode(&keys, RevokeEnvelope::AsyncResult, 5, 100.0).unwrap();
+        let outer: Value = serde_json::from_slice(&frame).unwrap();
+        let body: Value =
+            serde_json::from_slice(&STANDARD.decode(outer["body"].as_str().unwrap()).unwrap())
+                .unwrap();
+        assert_eq!(outer["headers"], json!({"clock":5,"expires":0}));
+        assert_eq!(
+            body,
+            json!({"method":"revoke",
+                   "arguments":{"task_id":keys[0],"terminate":false,"signal":null},
+                   "destination":null,"pattern":null,"matcher":null})
+        );
+        let settled = decode_for(&frame, 105.0, Some(("default@owned", 104.0))).unwrap();
+        assert_eq!(settled.keys.unwrap(), keys);
+        assert!(settled.pause_default.is_none());
+        assert!(encode(&[], RevokeEnvelope::AsyncResult, 5, 100.0).is_err());
+    }
+
+    #[test]
     fn control_does_not_accept_termination_or_oversized_identity_as_revoke() {
         let keys = vec!["dvr-now-7-0123456789abcdef0123456789abcdef".into()];
-        let frame = encode(&keys, true, 1, 100.0).unwrap();
+        let frame = encode(&keys, RevokeEnvelope::ControlSingle, 1, 100.0).unwrap();
         let mut outer: Value = serde_json::from_slice(&frame).unwrap();
         let mut body: Value =
             serde_json::from_slice(&STANDARD.decode(outer["body"].as_str().unwrap()).unwrap())
@@ -337,7 +373,7 @@ mod tests {
             decode(&serde_json::to_vec(&outer).unwrap(), 100.5).err(),
             Some(Error::Unsupported)
         );
-        assert!(encode(&["x".repeat(256)], true, 1, 100.0).is_err());
+        assert!(encode(&["x".repeat(256)], RevokeEnvelope::ControlSingle, 1, 100.0).is_err());
         assert!(decode(&vec![b' '; MAX_FRAME + 1], 100.0).is_err());
     }
 }

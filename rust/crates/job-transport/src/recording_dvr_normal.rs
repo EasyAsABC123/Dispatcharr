@@ -1386,7 +1386,7 @@ impl crate::normal_recording_recovery::RecoveryMedia for NormalDvr {
                     // all workers have already applied the revoke command.
                     inner
                         .control
-                        .revoke_one(key, owner)
+                        .revoke_recording_task(key, owner)
                         .await
                         .map_err(|_| R::Unsettled)?;
                 }

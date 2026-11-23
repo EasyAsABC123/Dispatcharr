@@ -309,22 +309,41 @@ impl Control {
         key: &str,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<RevokeReceipt, Error> {
+        self.publish_single(key, wire::RevokeEnvelope::ControlSingle, owner)
+            .await
+    }
+    /// Match the recording signals' Celery AsyncResult.revoke() fallback.
+    pub async fn revoke_recording_task(
+        &self,
+        key: &str,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<RevokeReceipt, Error> {
+        self.publish_single(key, wire::RevokeEnvelope::AsyncResult, owner)
+            .await
+    }
+    async fn publish_single(
+        &self,
+        key: &str,
+        envelope: wire::RevokeEnvelope,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<RevokeReceipt, Error> {
         if key.is_empty() || key.len() > 255 || !key.bytes().all(|v| v.is_ascii_graphic()) {
             return Err(Error::Capacity);
         }
-        self.publish(&[key.into()], true, owner).await
+        self.publish(&[key.into()], envelope, owner).await
     }
     pub async fn revoke_many(
         &self,
         keys: &[String],
         owner: Arc<dyn Send + Sync>,
     ) -> Result<RevokeReceipt, Error> {
-        self.publish(keys, false, owner).await
+        self.publish(keys, wire::RevokeEnvelope::ControlMany, owner)
+            .await
     }
     async fn publish(
         &self,
         keys: &[String],
-        single: bool,
+        envelope: wire::RevokeEnvelope,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<RevokeReceipt, Error> {
         if self.inner.stop.load(Ordering::Acquire) {
@@ -358,7 +377,7 @@ impl Control {
             .fetch_update(Ordering::AcqRel, Ordering::Acquire, |v| v.checked_add(1))
             .map_err(|_| Error::Capacity)?
             + 1;
-        let raw = wire::encode(keys, single, clock, now()?)?;
+        let raw = wire::encode(keys, envelope, clock, now()?)?;
         let guard = Arc::new(SenderOwner {
             _queued: queued,
             _active: active,
