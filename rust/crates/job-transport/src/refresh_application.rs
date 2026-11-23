@@ -364,6 +364,9 @@ impl RefreshApplication {
             return source_500();
         };
         let id = object.get("id").unwrap_or(&Value::Null);
+        if matches!(id, Value::Array(_) | Value::Object(_)) {
+            return source_500();
+        }
         // The Source view forwards these other scalar forms unchanged. They
         // need separate typed protocol/execution support; do not fake a202.
         let Some(source_id) = id.as_i64().filter(|id| *id > 0) else {
