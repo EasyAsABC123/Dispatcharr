@@ -1,0 +1,9 @@
+# Signed notification read-method comparison on 1b490f5d
+
+The exact ordinary AMD64 Rust package completed all 20 signed JSON notification read-method requests. It matched all 14 Original GET and HEAD statuses and their typed projections, including the Standard user's 404 when reading an administrator-only detail. All seven Native HEAD replies had zero actual body bytes.
+
+All six Native OPTIONS requests returned 405. Stock Original returned 200 with JSON metadata for Administrator and 403 for Standard. The two backends also differed in Allow and Vary on all seven HEAD replies, all three detail GET replies and all six OPTIONS replies. Ordinary successful collection and count GET already matched these headers. Actual declared-length differences remain recorded. The fixtures seeded notification rows independently, so the comparison does not assign every length difference to a serialization problem.
+
+The Native child, run and cleanup exited 0. The differential proof and campaign exited 1. Three independent read-only PostgreSQL observations found identical scoped SQL before the requests, after the requests and after Native exited. Independent review verified all 20 request receipts, the SQL receipts and exact teardown of three owned container generations with empty inventories. [Sanitized method differential](../scripts/rust-integration/m0-1b490f5d-notification-methods-differential.json)
+
+The earlier [14-request signed Notification Center workflow](rust-m0-1b490f5d-signed-notification-wire.md) keeps its verified response bytes and durable dismissal effects. The new method comparison exposes additional GET, HEAD and OPTIONS wire work. Full M0, M5 and performance remain open. Original Dispatcharr, React, Django, Django REST Framework and nginx authors retain full credit and licenses.

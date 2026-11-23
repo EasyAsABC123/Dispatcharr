@@ -1,0 +1,902 @@
+{
+  "actual_native_bodyless_HEAD": 7,
+  "actual_native_completed_calls": 20,
+  "application_revision": "1b490f5d964dc4df34f27837e110c6eb755f79cf",
+  "candidate_image": "sha256:76a95726884e7c5f8f49454fdf44dc0d8ce340d541e9be3365ae60ec04a2afd4",
+  "candidate_manifest_sha256": "147d784d7747d35d0210abf8f9733139cd78cab865e15fde905ff13bcada3667",
+  "candidate_source_tree_sha256": "ccdcbf46befb54c51639e92a0949d3cb02e58de36aa5f311adbb23409bd32826",
+  "cases": [
+    {
+      "case": [
+        "admin",
+        "collection",
+        "GET"
+      ],
+      "entity_bytes": [
+        733,
+        719
+      ],
+      "index": 1,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {
+        "owned_notice_visibility": [
+          "general",
+          "hidden"
+        ]
+      },
+      "same_entity_sha256": false,
+      "selected_field_differences": {
+        "Content-Length": {
+          "native": [
+            "719"
+          ],
+          "original": "733"
+        }
+      },
+      "source_semantic_projection": {
+        "owned_notice_visibility": [
+          "general",
+          "hidden"
+        ]
+      },
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "admin",
+        "collection",
+        "HEAD"
+      ],
+      "entity_bytes": [
+        0,
+        0
+      ],
+      "index": 2,
+      "native_raw_HEAD_empty": true,
+      "native_semantic_projection": {},
+      "same_entity_sha256": true,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [],
+          "original": "GET, POST, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "719"
+          ],
+          "original": "733"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {},
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "admin",
+        "collection",
+        "OPTIONS"
+      ],
+      "entity_bytes": [
+        2110,
+        0
+      ],
+      "index": 3,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {},
+      "same_entity_sha256": false,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [
+            "GET,HEAD,POST"
+          ],
+          "original": "GET, POST, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "0"
+          ],
+          "original": "2110"
+        },
+        "Content-Type": {
+          "native": [],
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {
+        "json_renderer": true,
+        "metadata_action_keys": [
+          "POST"
+        ]
+      },
+      "status": [
+        200,
+        405
+      ],
+      "typed_equal": false
+    },
+    {
+      "case": [
+        "admin",
+        "count",
+        "GET"
+      ],
+      "entity_bytes": [
+        18,
+        18
+      ],
+      "index": 4,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {
+        "unread_count": 2
+      },
+      "same_entity_sha256": true,
+      "selected_field_differences": {},
+      "source_semantic_projection": {
+        "unread_count": 2
+      },
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "admin",
+        "count",
+        "HEAD"
+      ],
+      "entity_bytes": [
+        0,
+        0
+      ],
+      "index": 5,
+      "native_raw_HEAD_empty": true,
+      "native_semantic_projection": {},
+      "same_entity_sha256": true,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [],
+          "original": "GET, HEAD, OPTIONS"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {},
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "admin",
+        "count",
+        "OPTIONS"
+      ],
+      "entity_bytes": [
+        205,
+        0
+      ],
+      "index": 6,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {},
+      "same_entity_sha256": false,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [
+            "GET,HEAD"
+          ],
+          "original": "GET, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "0"
+          ],
+          "original": "205"
+        },
+        "Content-Type": {
+          "native": [],
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {
+        "json_renderer": true,
+        "metadata_action_keys": []
+      },
+      "status": [
+        200,
+        405
+      ],
+      "typed_equal": false
+    },
+    {
+      "case": [
+        "admin",
+        "detail",
+        "GET"
+      ],
+      "entity_bytes": [
+        342,
+        335
+      ],
+      "index": 7,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {
+        "owned_notice_visibility": [
+          "general"
+        ]
+      },
+      "same_entity_sha256": false,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [],
+          "original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "335"
+          ],
+          "original": "342"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {
+        "owned_notice_visibility": [
+          "general"
+        ]
+      },
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "admin",
+        "detail",
+        "HEAD"
+      ],
+      "entity_bytes": [
+        0,
+        0
+      ],
+      "index": 8,
+      "native_raw_HEAD_empty": true,
+      "native_semantic_projection": {},
+      "same_entity_sha256": true,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [],
+          "original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "335"
+          ],
+          "original": "342"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {},
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "admin",
+        "detail",
+        "OPTIONS"
+      ],
+      "entity_bytes": [
+        2113,
+        0
+      ],
+      "index": 9,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {},
+      "same_entity_sha256": false,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [
+            "GET,HEAD,PUT,PATCH,DELETE"
+          ],
+          "original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "0"
+          ],
+          "original": "2113"
+        },
+        "Content-Type": {
+          "native": [],
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {
+        "json_renderer": true,
+        "metadata_action_keys": [
+          "PUT"
+        ]
+      },
+      "status": [
+        200,
+        405
+      ],
+      "typed_equal": false
+    },
+    {
+      "case": [
+        "standard",
+        "collection",
+        "GET"
+      ],
+      "entity_bytes": [
+        389,
+        382
+      ],
+      "index": 10,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {
+        "owned_notice_visibility": [
+          "general"
+        ]
+      },
+      "same_entity_sha256": false,
+      "selected_field_differences": {
+        "Content-Length": {
+          "native": [
+            "382"
+          ],
+          "original": "389"
+        }
+      },
+      "source_semantic_projection": {
+        "owned_notice_visibility": [
+          "general"
+        ]
+      },
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "standard",
+        "collection",
+        "HEAD"
+      ],
+      "entity_bytes": [
+        0,
+        0
+      ],
+      "index": 11,
+      "native_raw_HEAD_empty": true,
+      "native_semantic_projection": {},
+      "same_entity_sha256": true,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [],
+          "original": "GET, POST, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "382"
+          ],
+          "original": "389"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {},
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "standard",
+        "collection",
+        "OPTIONS"
+      ],
+      "entity_bytes": [
+        63,
+        0
+      ],
+      "index": 12,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {},
+      "same_entity_sha256": false,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [
+            "GET,HEAD,POST"
+          ],
+          "original": "GET, POST, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "0"
+          ],
+          "original": "63"
+        },
+        "Content-Type": {
+          "native": [],
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {
+        "typed_detail": true
+      },
+      "status": [
+        403,
+        405
+      ],
+      "typed_equal": false
+    },
+    {
+      "case": [
+        "standard",
+        "count",
+        "GET"
+      ],
+      "entity_bytes": [
+        18,
+        18
+      ],
+      "index": 13,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {
+        "unread_count": 1
+      },
+      "same_entity_sha256": true,
+      "selected_field_differences": {},
+      "source_semantic_projection": {
+        "unread_count": 1
+      },
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "standard",
+        "count",
+        "HEAD"
+      ],
+      "entity_bytes": [
+        0,
+        0
+      ],
+      "index": 14,
+      "native_raw_HEAD_empty": true,
+      "native_semantic_projection": {},
+      "same_entity_sha256": true,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [],
+          "original": "GET, HEAD, OPTIONS"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {},
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "standard",
+        "count",
+        "OPTIONS"
+      ],
+      "entity_bytes": [
+        63,
+        0
+      ],
+      "index": 15,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {},
+      "same_entity_sha256": false,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [
+            "GET,HEAD"
+          ],
+          "original": "GET, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "0"
+          ],
+          "original": "63"
+        },
+        "Content-Type": {
+          "native": [],
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {
+        "typed_detail": true
+      },
+      "status": [
+        403,
+        405
+      ],
+      "typed_equal": false
+    },
+    {
+      "case": [
+        "standard",
+        "detail",
+        "GET"
+      ],
+      "entity_bytes": [
+        342,
+        335
+      ],
+      "index": 16,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {
+        "owned_notice_visibility": [
+          "general"
+        ]
+      },
+      "same_entity_sha256": false,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [],
+          "original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "335"
+          ],
+          "original": "342"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {
+        "owned_notice_visibility": [
+          "general"
+        ]
+      },
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "standard",
+        "detail",
+        "HEAD"
+      ],
+      "entity_bytes": [
+        0,
+        0
+      ],
+      "index": 17,
+      "native_raw_HEAD_empty": true,
+      "native_semantic_projection": {},
+      "same_entity_sha256": true,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [],
+          "original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "335"
+          ],
+          "original": "342"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {},
+      "status": [
+        200,
+        200
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "standard",
+        "detail",
+        "OPTIONS"
+      ],
+      "entity_bytes": [
+        63,
+        0
+      ],
+      "index": 18,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {},
+      "same_entity_sha256": false,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [
+            "GET,HEAD,PUT,PATCH,DELETE"
+          ],
+          "original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": [
+            "0"
+          ],
+          "original": "63"
+        },
+        "Content-Type": {
+          "native": [],
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {
+        "typed_detail": true
+      },
+      "status": [
+        403,
+        405
+      ],
+      "typed_equal": false
+    },
+    {
+      "case": [
+        "standard",
+        "denied-detail",
+        "GET"
+      ],
+      "entity_bytes": [
+        59,
+        59
+      ],
+      "index": 19,
+      "native_raw_HEAD_empty": null,
+      "native_semantic_projection": {
+        "typed_detail": true
+      },
+      "same_entity_sha256": true,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [],
+          "original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {
+        "typed_detail": true
+      },
+      "status": [
+        404,
+        404
+      ],
+      "typed_equal": true
+    },
+    {
+      "case": [
+        "standard",
+        "denied-detail",
+        "HEAD"
+      ],
+      "entity_bytes": [
+        0,
+        0
+      ],
+      "index": 20,
+      "native_raw_HEAD_empty": true,
+      "native_semantic_projection": {},
+      "same_entity_sha256": true,
+      "selected_field_differences": {
+        "Allow": {
+          "native": [],
+          "original": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        },
+        "Vary": {
+          "native": [
+            "origin"
+          ],
+          "original": "Accept, origin"
+        }
+      },
+      "source_semantic_projection": {},
+      "status": [
+        404,
+        404
+      ],
+      "typed_equal": true
+    }
+  ],
+  "cases_with_Allow_and_Vary_difference": [
+    2,
+    3,
+    5,
+    6,
+    7,
+    8,
+    9,
+    11,
+    12,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "content_length_difference_cases": [
+    1,
+    2,
+    3,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    15,
+    16,
+    17,
+    18
+  ],
+  "content_length_note": "Separate synthetic database rows, ids or timestamps can change entity sizes. Actual differences are retained without attributing every size delta to a product issue.",
+  "credit": "Original Dispatcharr, React, Django, Django REST Framework and nginx authors retain full credit and licenses.",
+  "exact_native_cleanup": true,
+  "formal_M0_accepted": false,
+  "formal_M5_accepted": false,
+  "independent_audit_engine_calls": 0,
+  "native_application_exit": 0,
+  "native_command_receipts_sha256": [
+    "5460dee2f2ff3561c48411324d90f2f6fabb14b356f802055f702a124fe87907",
+    "6a083faa3a62782d5b99a6736f02d1e3a2a3281ce6d34dfa2ae3a56c2bf7c3dc",
+    "98dd5b8b560830c6322ef9888eed5a80e8acbbee5061daf7d908e965bca8b5a4",
+    "8e4db9618ce5dee128124d3f3e5313f8ee1c5b9cd91a12f31782ad5932d2491f",
+    "66914059145872eb3bdc1f22d92b62e438c1743a70676efa83946649bf822e83",
+    "77a92e93a7a7a873e91965566eecf1f3902d6fd2ee0b626755447c1e9ac558b0",
+    "abfab06182091724ff0777308fe5deab192758081b2c26eb7be52301cdd7dc7b",
+    "4bb5bcd5a17e8b86fbb17496e985e5ee22da70151a0705f938d878865e578263",
+    "59c4dc88b65933406b20bd0630cd180b766bddebe362151dce15cc9d58040330",
+    "2bd6b6b6bba3132329e40e1f20607bab103d8a386309880131c49011a7bc3c11",
+    "4243ed9ab1c3db7a958abe6a6cec42be91326b752bd1da9a991acdb97b8d25bc",
+    "cc9ac2a5c7bdabb8a8925a82459dd7163f20ac006196d0e73e2ff1c5541f97ce",
+    "5f75f3f42fcdbee7af34f38a2a1722923713917e2a415021d60be5018dda0432",
+    "89e2dc6759d9b6f0e6ed421bba3100ed75ca6add6274a5eb25f8b79463c0cf5e",
+    "e41ed58b7c550e780464269fb387e30262557dcca5bbdc074af9c1a1cd353d72",
+    "efb4ef010f67ad74e5e23b80eb924c9e1dbe5bbffe1ded84bada1d1f35adc509",
+    "c946696570983d540711de3264cf3fc5267268844aea2818c9227063b62cf12d",
+    "4f587008bc5997bc9288be8a617dabd9a7eb99e0b61c740e58a4ce2a4102e419",
+    "44f153df598edcdff7e69823fe6f4e540b66c4e20f00c5cc46eb3f5e0be340fb",
+    "3f67f91ae13b76a6926f86d74c893c4103b108a0dcf0ba6b82c24268716d0823",
+    "91dd09d74b4d994180d5fa928b5e37c09c879cbedc9547b3af210d4e6a930668",
+    "625d5a0ffe2bec1ae25b92b32fcdfe5f049e6c26f93c9a14ce02f0aded97b0dc",
+    "bf22cecc605972a79a67fb73e9257d1ab700ed74b5bcd1d00feb2526193b983a"
+  ],
+  "native_container_generations_retired": 3,
+  "notification_14_call_dismissal_workflow_scope_unchanged": true,
+  "options_returned_native_405": 6,
+  "physical_actual_exits": {
+    "campaign": 1,
+    "cleanup": 0,
+    "preflight": 0,
+    "proof": 1,
+    "run": 0
+  },
+  "scope": "exact packaged AMD64 Native signed notification read-method differential against stock Original",
+  "source_physical_receipts_sha256": {
+    "actual-exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "corrected-fixture-receipt.json": "bfa720226db3953cb52721c5fae478575c88171fcdd1f5d463edc2060a9b94bf",
+    "image-identity.json": "929cdbf3fed810261bb827243caafbd89db4777ddfa57d22eadb706086fcfdff",
+    "independent-cleanup.json": "1ea39352aca6265bf4da48695e735940b1a11b33060f4c68594dfb4320abd16e",
+    "receipt.json": "deca793f78b079cf201c1766372039e264ba3eaaaf86d0419fa436df0b0f11ac"
+  },
+  "source_register_scope_sha256": "938362e0edf91f0e32e2eed4959772615c1e970dfd435a49e2ccbd4218c30576",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "source_stock_manifest": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3",
+  "typed_body_projection_matches": 14,
+  "whole_wire_parity": false
+}

@@ -1,0 +1,21 @@
+# Bounded payload admission for registered MPEG-TS viewers
+
+A private ARM64 trace associated two HTTP 200 responses that ended before either viewer received media with a Rust payload error prior to lease release. That trace did not identify the exact payload error variant. The ordinary package was configured to reserve up to 32 MiB for each payload read against a shared 256 MiB budget. Tests reproduce saturation at eight concurrent maximum-size reservations.
+
+The `e4b8f39d` streaming change gives registered profiled MPEG-TS viewers a bounded FIFO queue for that existing byte budget. Only the head attempts the shared reservation. Immediate HLS and fragmented MP4 reads can continue using the same available credits. Client or source closure cancels a waiting request before it starts Redis work. Once a physical Redis operation starts, its byte credit and ownership guards stay retained until the operation settles. A delivered frame keeps only its actual byte charge. Under sustained contention, a queued read can still time out after the existing command-duration limit.
+
+Formatting and strict workspace Clippy passed. The exact workspace test run passed 1,733 enabled tests with zero failures and 821 ignored. Twelve additional cases against an isolated real Redis passed, including cancelled and timed-out command ownership, stale-generation fencing, and profiled HLS/fMP4 owner transitions. Deterministic tests cover eight held reservations, FIFO ordering, queue bounds, immediate format access to released bytes, and cancellation at the head.
+
+The first queue design allowed the weighted semaphore to hold released credit for waiting TS reads, which could make available bytes inaccessible to an immediate HLS or fMP4 read. The revised design queues TS readers separately while preserving the same aggregate byte cap. The earlier failures remain in the [ARM64 diagnostics](rust-m9-arm64-profiled-ts-close-diagnostic.md).
+
+Original Dispatcharr authors and contributors retain full project credit. The candidate preserves the attribution, license and React files, including their Git modes.
+
+## ARM64 package and first viewing replay
+
+The ordinary Linux ARM64 package, signed startup and exact teardown all passed. Its [sanitized package evidence](../scripts/rust-integration/m9-e4b8f39d-arm64-package.json) records the image, verified source and five container, one network and one volume retirement. The first independent audit lacked the already verified host receipt at its required path. After copying the matching receipt from the sealed sibling capsule, the independent audit passed without rebuilding or restarting the package.
+
+In the first trace-free replay, ten signed readers started in 6.297–6.326 seconds and remained healthy through 25 samples across the 120-second window. Every sample verified a single upstream connection, provider slot and encoder with ten registered clients. All ten readers joined on close and exact fixture teardown retired four containers and two networks. The guide job failed the signed HTTP acceptance assertion. The initial fixture did not record that HTTP response, so the reason remained unclassified at that point. The run exited 1 before the strict clip-decode and post-run descriptor gates. Paired performance and formal M9 remain open.
+
+The ordinary AMD64 image likewise built and verified with the default build feature selection. Its image is `sha256:8a02fee95306ac1784644493155d2c4abf3c88026a0b6c163b700e4ec7909f47` with manifest digest `e56a988b7ce95d96c6d7279091547a0b56f34d7633357253fd659de5c4bbe41c`. These builds qualify their exact scoped local tests.
+
+A second viewing attempt stopped at the first idle sample because the baseline process generation changed during its descriptor census. Exact teardown passed. A separate guide-only diagnostic found the same 404 JSON response with either signed token path. Docker inspection showed that the inherited streaming fixture omitted `DISPATCHARR_ENV`, which the ordinary Compose file assigns to `aio` to enable the worker graph. The next focused attempt enabled standard AIO and reached its startup queue gate, where the fixture required ordinary startup jobs to settle before seeding the guide. These outcomes remain scoped fixture evidence.
