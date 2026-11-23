@@ -1,0 +1,79 @@
+{
+  "Native_manifest_sha256": "a07614a0d6b42efa27f3ee229fc61d28e331cbd81d51c829d6a26655ea0743cf",
+  "Native_revision": "e7dda7fec25918644a29de56454bad7f9a63fd83",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "arms": {
+    "Native": {
+      "decode": {
+        "error_class": "AssertionError",
+        "status": "failed"
+      },
+      "exact_cleanup": true,
+      "fresh_request_count": 1,
+      "http": {
+        "bytes": 295596,
+        "ended": true,
+        "error_class": "TimeoutError",
+        "harness_close_error_class": null,
+        "mime": "video/mp4",
+        "request_attempts": 1,
+        "response_seconds": 0.01,
+        "status": 200,
+        "terminal": "transport_error"
+      },
+      "image_id": "sha256:abcbbe219c822e8320d77810f4305831d832a0be0f0c72600af809c90fb4535d",
+      "origin_connections_delta": 1,
+      "outcome": "transport_error"
+    },
+    "Original": {
+      "decode": {
+        "actual_exit": 0,
+        "clip_sha256": "76ad940aaa68935059df6759dd24b2b418bb4f3204b0d54484531cccaa8125a9",
+        "codecs": {
+          "audio": "aac",
+          "video": "h264"
+        },
+        "cut_bytes": 8192,
+        "fragments": [
+          "bd1fc006f8353e4c381b20f688de8bca162ecddb0bcac9dc69cab4855ad4e100",
+          "e9dc92408c215acc62267336466d8dc6400430d5b383c1544d5e86589ecc9c7b",
+          "f6f8496f85180f2461979756bcf55153e6c0ac24f6234247e881c27c438d4177",
+          "1fe819a8f54db748373a2d0a4d16ddf7232de175074a0d48e52d646599c55136",
+          "8c5310325520ee76303988e134e648a6bbce63fd01e68617b64a093150f21d15",
+          "0a5ea671c219c29db8a69e3a0f310515517ba9e3dce639cb22dca16a8a7a6799"
+        ],
+        "fragments_not_in_old_captures": 0,
+        "fragments_overlapping_old_captures": 6,
+        "frames": 74,
+        "init_matches_old_capture": true,
+        "init_sha256": "035fd74f7c130b4fb0f1be5144ae402dabefa46d873e8a9456e825a13c46d39c",
+        "original_bytes": 1741732,
+        "playable_bytes": 1733540,
+        "process_group_settled": true,
+        "status": "decoded",
+        "stderr_EOF": true,
+        "stderr_bytes": 0,
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stdout_EOF": true
+      },
+      "exact_cleanup": true,
+      "fresh_request_count": 1,
+      "http": {
+        "bytes": 1741732,
+        "ended": true,
+        "error_class": null,
+        "mime": "video/mp4",
+        "request_attempts": 1,
+        "response_seconds": 7.304,
+        "status": 200,
+        "terminal": "harness_close"
+      },
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "origin_connections_delta": 1,
+      "outcome": "decoded_media"
+    }
+  },
+  "full_M3_passed": false,
+  "paired_receipt_sha256": "a264878bf63eaf68c151c25dd06c11ae75d939e31736cd255d2dd99517363b47",
+  "scope": "one fresh viewer after bounded abrupt retirement"
+}

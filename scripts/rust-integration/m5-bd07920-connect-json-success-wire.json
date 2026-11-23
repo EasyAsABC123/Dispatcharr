@@ -1,0 +1,296 @@
+{
+  "actual_exit": 0,
+  "candidate": {
+    "expected": "successor",
+    "image_id": "sha256:6f9b0d9b070a09080a19ab1a4f615abfa5d78be72638cb746d3f4618bfe42402",
+    "manifest_sha256": "29ca4548b53ad25cccb2e7ec6deef39b4ebe26f639c66b1dc29c429acf004bea",
+    "revision": "bd07920a487d4384461b8d56e1fa1492e7109376",
+    "source_tree_sha256": "2f32bb99fe3fbfcda7e2b08f2d353f04a16866e2b89797a6069e7c524b2e3572",
+    "tag": "dispatcharr-rust-candidate:e7-connect-log-json-accept-ordinary-bd07920a487d"
+  },
+  "comparison": {
+    "allow": {
+      "Native": {
+        "plain": [],
+        "trailing": []
+      },
+      "Original": {
+        "plain": [
+          [
+            "GET",
+            "HEAD",
+            "OPTIONS"
+          ]
+        ],
+        "trailing": [
+          [
+            "GET",
+            "HEAD",
+            "OPTIONS"
+          ]
+        ]
+      }
+    },
+    "both_return_exact_fixed_clock_text": true,
+    "content_length_matches_raw": true,
+    "original_compact_and_native_matches_postgres_spacing": true,
+    "raw_bytes": {
+      "Native": {
+        "plain": 373,
+        "trailing": 373
+      },
+      "Original": {
+        "plain": 327,
+        "trailing": 327
+      }
+    },
+    "same_compact_ordered_normalized": true,
+    "same_field_order": true,
+    "same_typed_normalized_shape": true,
+    "serialization_spacing_accounts_for_normalized_body_gap": true,
+    "slash_does_not_change_raw_body_within_either_backend": true
+  },
+  "exact_cleanup": {
+    "Native": {
+      "exact_retired_roles": 4,
+      "receipt_sha256": "3ee0363987b483ea0c8d9d43689ba9e17e749133a5bf37df7a7cc4ff57e2c047"
+    },
+    "Original": {
+      "exact_retired_roles": 2,
+      "receipt_sha256": "fe53629fff67aa8da3184bbb31893992bb0de24610fcf1a0c95e68c730a0b3a9"
+    }
+  },
+  "formal_nodes_promoted": 0,
+  "observations": {
+    "Native": {
+      "plain": {
+        "allow_fields": [],
+        "body_bytes": 373,
+        "body_sha256": "23942e751f004fa138afe021d0f500f14a43cd2af2585077f4392c6e5142e1d3",
+        "content_length": 373,
+        "shape": {
+          "absolute_url_values_present": false,
+          "compact_bytes": 327,
+          "compact_ordered_normalized_sha256": "f0b8458e2f912996ce528818a3431d48a6ba807fc62b0f452769e809f004cadd",
+          "duration_field_present": false,
+          "exact_owned_nonclock_fields": true,
+          "object_field_order": {
+            "page": [
+              "count",
+              "next",
+              "previous",
+              "results"
+            ],
+            "request_payload": [
+              "fixture"
+            ],
+            "response_payload": [],
+            "result": [
+              "id",
+              "subscription",
+              "status",
+              "request_payload",
+              "response_payload",
+              "error_message",
+              "created_at"
+            ],
+            "subscription": [
+              "id",
+              "event",
+              "enabled",
+              "payload_template",
+              "integration"
+            ]
+          },
+          "owned_ids_checked_and_normalized": true,
+          "raw_is_compact": false,
+          "raw_is_postgres_spacing": true,
+          "timestamp": {
+            "equals_fixture_seed_instant": true,
+            "equals_fixture_seed_text": true,
+            "fractional_digits": 0,
+            "utc_z_suffix": true
+          },
+          "typed_normalized_sha256": "9564ca8276fa942be1caa55ee7ad7eb6f546c26d161448b50b0fb96d1ec99809"
+        },
+        "state_unchanged": true,
+        "status": 200
+      },
+      "trailing": {
+        "allow_fields": [],
+        "body_bytes": 373,
+        "body_sha256": "23942e751f004fa138afe021d0f500f14a43cd2af2585077f4392c6e5142e1d3",
+        "content_length": 373,
+        "shape": {
+          "absolute_url_values_present": false,
+          "compact_bytes": 327,
+          "compact_ordered_normalized_sha256": "f0b8458e2f912996ce528818a3431d48a6ba807fc62b0f452769e809f004cadd",
+          "duration_field_present": false,
+          "exact_owned_nonclock_fields": true,
+          "object_field_order": {
+            "page": [
+              "count",
+              "next",
+              "previous",
+              "results"
+            ],
+            "request_payload": [
+              "fixture"
+            ],
+            "response_payload": [],
+            "result": [
+              "id",
+              "subscription",
+              "status",
+              "request_payload",
+              "response_payload",
+              "error_message",
+              "created_at"
+            ],
+            "subscription": [
+              "id",
+              "event",
+              "enabled",
+              "payload_template",
+              "integration"
+            ]
+          },
+          "owned_ids_checked_and_normalized": true,
+          "raw_is_compact": false,
+          "raw_is_postgres_spacing": true,
+          "timestamp": {
+            "equals_fixture_seed_instant": true,
+            "equals_fixture_seed_text": true,
+            "fractional_digits": 0,
+            "utc_z_suffix": true
+          },
+          "typed_normalized_sha256": "9564ca8276fa942be1caa55ee7ad7eb6f546c26d161448b50b0fb96d1ec99809"
+        },
+        "state_unchanged": true,
+        "status": 200
+      }
+    },
+    "Original": {
+      "plain": {
+        "allow_fields": [
+          [
+            "GET",
+            "HEAD",
+            "OPTIONS"
+          ]
+        ],
+        "body_bytes": 327,
+        "body_sha256": "25d30ef12e8fce3be70f2961cfe954a6826898bb2240c5600768dec5e5f945f9",
+        "content_length": 327,
+        "shape": {
+          "absolute_url_values_present": false,
+          "compact_bytes": 327,
+          "compact_ordered_normalized_sha256": "f0b8458e2f912996ce528818a3431d48a6ba807fc62b0f452769e809f004cadd",
+          "duration_field_present": false,
+          "exact_owned_nonclock_fields": true,
+          "object_field_order": {
+            "page": [
+              "count",
+              "next",
+              "previous",
+              "results"
+            ],
+            "request_payload": [
+              "fixture"
+            ],
+            "response_payload": [],
+            "result": [
+              "id",
+              "subscription",
+              "status",
+              "request_payload",
+              "response_payload",
+              "error_message",
+              "created_at"
+            ],
+            "subscription": [
+              "id",
+              "event",
+              "enabled",
+              "payload_template",
+              "integration"
+            ]
+          },
+          "owned_ids_checked_and_normalized": true,
+          "raw_is_compact": true,
+          "raw_is_postgres_spacing": false,
+          "timestamp": {
+            "equals_fixture_seed_instant": true,
+            "equals_fixture_seed_text": true,
+            "fractional_digits": 0,
+            "utc_z_suffix": true
+          },
+          "typed_normalized_sha256": "9564ca8276fa942be1caa55ee7ad7eb6f546c26d161448b50b0fb96d1ec99809"
+        },
+        "state_unchanged": true,
+        "status": 200
+      },
+      "trailing": {
+        "allow_fields": [
+          [
+            "GET",
+            "HEAD",
+            "OPTIONS"
+          ]
+        ],
+        "body_bytes": 327,
+        "body_sha256": "25d30ef12e8fce3be70f2961cfe954a6826898bb2240c5600768dec5e5f945f9",
+        "content_length": 327,
+        "shape": {
+          "absolute_url_values_present": false,
+          "compact_bytes": 327,
+          "compact_ordered_normalized_sha256": "f0b8458e2f912996ce528818a3431d48a6ba807fc62b0f452769e809f004cadd",
+          "duration_field_present": false,
+          "exact_owned_nonclock_fields": true,
+          "object_field_order": {
+            "page": [
+              "count",
+              "next",
+              "previous",
+              "results"
+            ],
+            "request_payload": [
+              "fixture"
+            ],
+            "response_payload": [],
+            "result": [
+              "id",
+              "subscription",
+              "status",
+              "request_payload",
+              "response_payload",
+              "error_message",
+              "created_at"
+            ],
+            "subscription": [
+              "id",
+              "event",
+              "enabled",
+              "payload_template",
+              "integration"
+            ]
+          },
+          "owned_ids_checked_and_normalized": true,
+          "raw_is_compact": true,
+          "raw_is_postgres_spacing": false,
+          "timestamp": {
+            "equals_fixture_seed_instant": true,
+            "equals_fixture_seed_text": true,
+            "fractional_digits": 0,
+            "utc_z_suffix": true
+          },
+          "typed_normalized_sha256": "9564ca8276fa942be1caa55ee7ad7eb6f546c26d161448b50b0fb96d1ec99809"
+        },
+        "state_unchanged": true,
+        "status": 200
+      }
+    }
+  },
+  "retained_prior_pair_sha256": "30b60a20c11772f51a2a30bbb9bf942823e334207645c6094b3bf678d62fbdb0",
+  "scope": "Connect fixed JSON successful wire shape and selected headers"
+}
