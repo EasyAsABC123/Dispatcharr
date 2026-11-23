@@ -26,6 +26,7 @@ use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 
 pub(super) mod recurring;
+mod series_bulk_remove;
 pub use recurring::{
     execute_recurring_purge, preflight_recurring_purge, CONFIGURED_REBUILD_HORIZON_DAYS,
 };
@@ -222,7 +223,7 @@ fn iso(time: DateTime<Utc>) -> String {
         true,
     )
 }
-fn python_iso(time: DateTime<Utc>) -> String {
+pub(super) fn python_iso(time: DateTime<Utc>) -> String {
     time.to_rfc3339_opts(
         if time.timestamp_subsec_micros() == 0 {
             SecondsFormat::Secs
@@ -331,6 +332,7 @@ impl RecordingHttp {
                 axum::routing::get(recurring::collection),
             )
             .route(recurring::PATH, any(recurring::handle))
+            .route(series_bulk_remove::PATH, any(series_bulk_remove::handle))
             .with_state(self)
     }
     /// Keep one pair of outer paths: matchit's sibling catchall cannot merge
@@ -349,6 +351,10 @@ impl RecordingHttp {
                 axum::routing::get(recurring::collection_with_playback),
             )
             .route(recurring::PATH, any(recurring::with_playback))
+            .route(
+                series_bulk_remove::PATH,
+                any(series_bulk_remove::with_playback),
+            )
             .with_state((self, playback))
             .merge(library)
     }
@@ -680,7 +686,7 @@ async fn list(
     }.await;
     settle(connection, result).await
 }
-fn python_int(value: Option<&Value>) -> Result<Option<i64>, StoreError> {
+pub(super) fn python_int(value: Option<&Value>) -> Result<Option<i64>, StoreError> {
     let Some(value) = value else {
         return Ok(None);
     };

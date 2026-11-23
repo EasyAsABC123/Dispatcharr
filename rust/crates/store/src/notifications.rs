@@ -1,11 +1,15 @@
 //! Original Dispatcharr notification reads and personal dismissal contracts.
 //! Original application authors retain full credit; see ATTRIBUTION.md.
-use crate::{channels::truthy, django_pickle, AuthService, StoreError, User};
+use crate::{
+    channels::{channel_options_headers, truthy},
+    django_pickle, AuthService, StoreError, User,
+};
 use axum::{
     body::Bytes,
-    extract::{ConnectInfo, Path, RawQuery, State},
-    http::HeaderMap,
-    routing::{get, post},
+    extract::{ConnectInfo, Path, RawQuery, Request, State},
+    http::{HeaderMap, HeaderValue, Method, StatusCode},
+    middleware::{self, Next},
+    routing::{get, post, MethodRouter},
     Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
@@ -626,6 +630,37 @@ pub(crate) fn include_dismissed(raw: Option<&str>) -> bool {
         .is_some_and(|(_, value)| value.to_lowercase() == "true")
 }
 
+// Original SystemNotificationSerializer field order applies to the observed UI
+// list. Move its existing keys without rebuilding any row or nested JSON value.
+fn notification_list_json(mut notifications: Vec<Value>) -> Value {
+    const FIELDS: [&str; 13] = [
+        "id",
+        "notification_key",
+        "notification_type",
+        "priority",
+        "title",
+        "message",
+        "action_data",
+        "is_active",
+        "admin_only",
+        "expires_at",
+        "created_at",
+        "is_dismissed",
+        "source",
+    ];
+    for notice in &mut notifications {
+        if let Some(fields) = notice.as_object_mut() {
+            for field in FIELDS {
+                if let Some((key, value)) = fields.shift_remove_entry(field) {
+                    fields.insert(key, value);
+                }
+            }
+        }
+    }
+    let count = notifications.len();
+    json!({"notifications": notifications, "count": count, "unread_count": count})
+}
+
 async fn list(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -639,9 +674,7 @@ async fn list(
         .into_iter()
         .filter(|value| include || value["is_dismissed"] != true)
         .collect();
-    Ok(Json(
-        json!({"count":values.len(),"unread_count":values.len(),"notifications":values}),
-    ))
+    Ok(Json(notification_list_json(values)))
 }
 async fn detail(
     State(auth): State<AuthService>,
@@ -1141,21 +1174,171 @@ async fn destroy(
     }
     Ok(axum::http::StatusCode::NO_CONTENT)
 }
+const LIST_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
+const COUNT_ALLOW: &str = "GET, HEAD, OPTIONS";
+const DISMISS_ALLOW: &str = "POST, OPTIONS";
+
+fn notification_ui_route<S>(
+    route: MethodRouter<S>,
+    method: Method,
+    allow: &'static str,
+) -> MethodRouter<S>
+where
+    S: Clone + Send + Sync + 'static,
+{
+    route.route_layer(middleware::from_fn(move |request: Request, next: Next| {
+        let observed = request.method() == method;
+        async move {
+            let response = next.run(request).await;
+            if observed && response.status() == StatusCode::OK {
+                // Main's CORS middleware appends origin to Accept.
+                channel_options_headers(response, HeaderValue::from_static(allow))
+            } else {
+                response
+            }
+        }
+    }))
+}
+
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
-        .route("/api/core/notifications/", get(list).post(create))
-        .route("/api/core/notifications/count/", get(count))
-        .route("/api/core/notifications/dismiss-all/", post(dismiss_all))
+        .route(
+            "/api/core/notifications/",
+            notification_ui_route(get(list), Method::GET, LIST_ALLOW).post(create),
+        )
+        .route(
+            "/api/core/notifications/count/",
+            notification_ui_route(get(count), Method::GET, COUNT_ALLOW),
+        )
+        .route(
+            "/api/core/notifications/dismiss-all/",
+            notification_ui_route(post(dismiss_all), Method::POST, DISMISS_ALLOW),
+        )
         .route(
             "/api/core/notifications/{id}/",
             get(detail).put(update).patch(update).delete(destroy),
         )
-        .route("/api/core/notifications/{id}/dismiss/", post(dismiss))
+        .route(
+            "/api/core/notifications/{id}/dismiss/",
+            notification_ui_route(post(dismiss), Method::POST, DISMISS_ALLOW),
+        )
         .with_state(auth)
 }
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn successful_notification_ui_methods_have_drf_headers_on_every_qualified_route() {
+        use axum::{
+            body::{to_bytes, Body},
+            http::header,
+        };
+        use tower::ServiceExt;
+
+        async fn success() -> &'static str {
+            "same body"
+        }
+        async fn denied() -> StatusCode {
+            StatusCode::UNAUTHORIZED
+        }
+
+        let router = Router::new()
+            .route(
+                "/api/core/notifications/",
+                notification_ui_route(get(success), Method::GET, LIST_ALLOW).post(success),
+            )
+            .route(
+                "/api/core/notifications/count/",
+                notification_ui_route(get(success), Method::GET, COUNT_ALLOW),
+            )
+            .route(
+                "/api/core/notifications/dismiss-all/",
+                notification_ui_route(post(success), Method::POST, DISMISS_ALLOW),
+            )
+            .route(
+                "/api/core/notifications/{id}/dismiss/",
+                notification_ui_route(post(success), Method::POST, DISMISS_ALLOW),
+            )
+            .route(
+                "/denied",
+                notification_ui_route(get(denied), Method::GET, COUNT_ALLOW),
+            );
+        let cases = [
+            (
+                Method::GET,
+                "/api/core/notifications/",
+                StatusCode::OK,
+                Some(LIST_ALLOW),
+            ),
+            (
+                Method::GET,
+                "/api/core/notifications/count/",
+                StatusCode::OK,
+                Some(COUNT_ALLOW),
+            ),
+            (
+                Method::POST,
+                "/api/core/notifications/dismiss-all/",
+                StatusCode::OK,
+                Some(DISMISS_ALLOW),
+            ),
+            (
+                Method::POST,
+                "/api/core/notifications/42/dismiss/",
+                StatusCode::OK,
+                Some(DISMISS_ALLOW),
+            ),
+            (
+                Method::POST,
+                "/api/core/notifications/",
+                StatusCode::OK,
+                None,
+            ),
+            (
+                Method::HEAD,
+                "/api/core/notifications/",
+                StatusCode::OK,
+                None,
+            ),
+            (Method::GET, "/denied", StatusCode::UNAUTHORIZED, None),
+        ];
+        for (method, path, status, allow) in cases {
+            let head = method == Method::HEAD;
+            let response = router
+                .clone()
+                .oneshot(
+                    Request::builder()
+                        .method(method)
+                        .uri(path)
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), status);
+            assert_eq!(
+                response
+                    .headers()
+                    .get(header::ALLOW)
+                    .map(|v| v.to_str().unwrap()),
+                allow
+            );
+            assert_eq!(
+                response
+                    .headers()
+                    .get(header::VARY)
+                    .map(|v| v.to_str().unwrap()),
+                allow.map(|_| "Accept")
+            );
+            if status == StatusCode::OK && !head {
+                assert_eq!(
+                    to_bytes(response.into_body(), 9).await.unwrap().as_ref(),
+                    b"same body"
+                );
+            }
+        }
+    }
     #[test]
     fn update_put_requires_fields_but_does_not_apply_optional_model_defaults() {
         let (_, errors) = update_fields(&Map::new(), false).unwrap();
@@ -1673,5 +1856,20 @@ mod special_cache_representation_tests {
         let raw = crate::django_pickle::encode(&object).unwrap();
         assert_eq!(decode_settings_cache(&raw), Some(object));
         assert!(decode_settings_cache(&vec![b'x'; 65537]).is_none());
+    }
+
+    #[test]
+    fn notification_list_preserves_original_json_field_order() {
+        let old = r#"{"id":21,"notification_key":"notice","notification_type":"info","priority":"normal","title":"Title","message":"Message","source":"system","is_active":true,"admin_only":false,"action_data":{"z":2,"a":1},"created_at":"2024-01-01T12:00:00Z","expires_at":null,"is_dismissed":true}"#;
+        let expected = r#"{"notifications":[{"id":21,"notification_key":"notice","notification_type":"info","priority":"normal","title":"Title","message":"Message","action_data":{"z":2,"a":1},"is_active":true,"admin_only":false,"expires_at":null,"created_at":"2024-01-01T12:00:00Z","is_dismissed":true,"source":"system"}],"count":1,"unread_count":1}"#;
+        let notice: Value = serde_json::from_str(old).unwrap();
+        assert_eq!(
+            serde_json::to_string(&notification_list_json(vec![notice])).unwrap(),
+            expected
+        );
+        assert_eq!(
+            serde_json::to_string(&notification_list_json(vec![])).unwrap(),
+            r#"{"notifications":[],"count":0,"unread_count":0}"#
+        );
     }
 }

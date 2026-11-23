@@ -555,3 +555,104 @@ async fn backup_options_advertises_the_route_method_and_parser_classes() {
         );
     }
 }
+
+#[tokio::test]
+async fn ordinary_backup_get_headers_use_main_cors_on_scoped_router_errors() {
+    use axum::http::header;
+    use tower::ServiceExt;
+
+    let pool = sqlx::postgres::PgPoolOptions::new()
+        .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+    let auth = AuthService::new(
+        crate::Store::from_pool(pool),
+        crate::AuthConfig::new("owned-backup-header-test".into()).unwrap(),
+    );
+    let files = BackupFiles::new(
+        auth,
+        PathBuf::from("/unused-owned-backup-header-test"),
+        "owned-backup-header-test".into(),
+    )
+    .unwrap();
+    // The real router still settles and decorates a response, with no database
+    // or filesystem admission for this focused transport-only test.
+    files.workers.close();
+    let router = files
+        .router()
+        .layer(axum::middleware::from_fn(response_headers::apply));
+    let peer = ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 44_000)));
+    for (method, path, scoped) in [
+        (Method::GET, "/api/backups/", true),
+        (
+            Method::GET,
+            "/api/backups/fixture.zip/download-token/",
+            true,
+        ),
+        (Method::GET, "/api/backups/fixture.zip/download/", true),
+        (Method::GET, "/api/backups/schedule/", false),
+        (Method::GET, "/api/backups/status/download/", false),
+        (Method::GET, "/api/backups/status/download-token/", false),
+        (Method::GET, "/api/backups/fixture.zip/download", false),
+        (Method::HEAD, "/api/backups/", false),
+        (Method::OPTIONS, "/api/backups/fixture.zip/download/", false),
+        (Method::POST, "/api/backups/create/", false),
+    ] {
+        let mut request = Request::builder()
+            .method(method)
+            .uri(path)
+            .body(Body::empty())
+            .unwrap();
+        request.extensions_mut().insert(peer);
+        let response = router.clone().oneshot(request).await.unwrap();
+        assert_eq!(response.status(), StatusCode::SERVICE_UNAVAILABLE, "{path}");
+        let headers = response.headers();
+        assert_eq!(headers.get_all(header::VARY).iter().count(), 1, "{path}");
+        assert_eq!(
+            headers[header::VARY],
+            if scoped { "Accept, origin" } else { "origin" },
+            "{path}",
+        );
+        assert_eq!(
+            headers
+                .get(header::ALLOW)
+                .map(|value| value.to_str().unwrap()),
+            scoped.then_some("OPTIONS, GET"),
+            "{path}",
+        );
+    }
+}
+
+#[test]
+fn backup_inventory_timestamp_matches_original_stat_utc_microsecond_projection() {
+    for (seconds, nanos, expected) in [
+        (1_794_227_696, 0, "2026-11-09T12:34:56+00:00"),
+        (
+            1_794_227_696,
+            123_456_499,
+            "2026-11-09T12:34:56.123456+00:00",
+        ),
+        (
+            1_794_227_696,
+            123_456_500,
+            "2026-11-09T12:34:56.123456+00:00",
+        ),
+        (
+            1_794_227_696,
+            123_456_789,
+            "2026-11-09T12:34:56.123457+00:00",
+        ),
+        (1_794_227_696, 999_999_499, "2026-11-09T12:34:57+00:00"),
+        (-2, 123_456_789, "1969-12-31T23:59:58.123457+00:00"),
+        (-1, 0, "1969-12-31T23:59:59+00:00"),
+        (-1, 999_999_499, "1969-12-31T23:59:59.999999+00:00"),
+        (-1, 999_999_500, "1970-01-01T00:00:00+00:00"),
+        (0, 500, "1970-01-01T00:00:00.000001+00:00"),
+        (0, 1500, "1970-01-01T00:00:00.000002+00:00"),
+    ] {
+        let input = chrono::DateTime::from_timestamp(seconds, nanos).unwrap();
+        assert_eq!(
+            backup_inventory_timestamp(input).unwrap(),
+            expected,
+            "{seconds}s {nanos}ns"
+        );
+    }
+}

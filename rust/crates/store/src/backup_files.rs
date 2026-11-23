@@ -136,6 +136,22 @@ fn reply(status: u16, detail: impl Into<String>) -> Response {
     );
     response
 }
+fn backup_inventory_timestamp(created: chrono::DateTime<chrono::Utc>) -> std::io::Result<String> {
+    // Original formats datetime.fromtimestamp(stat().st_mtime, UTC).
+    // Python's stat first projects nanoseconds onto a fractional-second float.
+    let timestamp = created.timestamp() as f64 + f64::from(created.timestamp_subsec_nanos()) * 1e-9;
+    let seconds = timestamp.trunc();
+    let fraction = ((timestamp - seconds) * 1_000_000.0).round_ties_even() as i64;
+    let rounded = chrono::DateTime::from_timestamp_micros(seconds as i64 * 1_000_000 + fraction)
+        .ok_or_else(|| std::io::Error::other("backup timestamp outside supported range"))?;
+    let precision = if rounded.timestamp_subsec_micros() == 0 {
+        chrono::SecondsFormat::Secs
+    } else {
+        chrono::SecondsFormat::Micros
+    };
+    Ok(rounded.to_rfc3339_opts(precision, false))
+}
+
 fn schedule_payload(raw: Option<&Value>) -> Result<Value, String> {
     let settings = raw.and_then(Value::as_object);
     let get = |name: &str, default: Value| {
@@ -636,14 +652,7 @@ impl BackupFiles {
                         }
                         let metadata = std::fs::metadata(entry.path())?;
                         let created: chrono::DateTime<chrono::Utc> = metadata.modified()?.into();
-                        let created = created.to_rfc3339_opts(
-                            if created.timestamp_subsec_micros() == 0 {
-                                chrono::SecondsFormat::Secs
-                            } else {
-                                chrono::SecondsFormat::Micros
-                            },
-                            false,
-                        );
+                        let created = backup_inventory_timestamp(created)?;
                         values.push(json!({"name":name,"size":metadata.len(),"created":created}));
                     }
                     Ok(json!(values))
@@ -1043,14 +1052,38 @@ fn backup_options(kind: &str, method: &Method) -> Response {
     channel_options_headers(response, HeaderValue::from_static(allow))
 }
 
+fn ordinary_backup_get(method: &Method, path: &str) -> bool {
+    if method != Method::GET {
+        return false;
+    }
+    let Some(tail) = path.strip_prefix("/api/backups/") else {
+        return false;
+    };
+    tail.is_empty()
+        || tail.split_once('/').is_some_and(|(filename, action)| {
+            // The fixed status route takes precedence over the filename routes.
+            !filename.is_empty()
+                && filename != "status"
+                && matches!(action, "download-token/" | "download/")
+        })
+}
+
 async fn handle(
     State(state): State<BackupFiles>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Response {
-    match state.serve(peer, request).await {
-        Ok(value) => value,
-        Err(error) => error.into_response(),
+    let ordinary_get = ordinary_backup_get(request.method(), request.uri().path());
+    let response = state
+        .serve(peer, request)
+        .await
+        .unwrap_or_else(IntoResponse::into_response);
+    if ordinary_get {
+        // DRF finalizes both the ordinary response and handled errors. Main
+        // merges origin into this route's existing Accept variation.
+        channel_options_headers(response, HeaderValue::from_static("OPTIONS, GET"))
+    } else {
+        response
     }
 }
 

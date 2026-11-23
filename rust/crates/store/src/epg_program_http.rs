@@ -32,6 +32,7 @@ use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
 
 mod mutations;
 mod programme_html;
+mod series_preview;
 
 #[derive(Clone, Copy, Debug)]
 pub struct EpgProgramReadLimits {
@@ -373,6 +374,10 @@ impl EpgProgramReads {
     pub fn router(self) -> Router {
         Router::new()
             .route("/api/epg/programs/", get(list).options(programme_options))
+            .route(
+                series_preview::PATH,
+                axum::routing::post(series_preview::handle),
+            )
             .route(
                 "/api/epg/programs.json",
                 get(list_json_alias)
