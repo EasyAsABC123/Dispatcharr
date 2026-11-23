@@ -1,0 +1,77 @@
+{
+  "architecture": "linux/amd64",
+  "first_group_literal_exits": {
+    "cleanup": 1,
+    "reduce": 1,
+    "run": 2
+  },
+  "full_M9_verified": false,
+  "image_id": "sha256:d12d5765e165555db6abfbe31a204851b6c8e1151819aa41dff99552fae2f287",
+  "manifest_sha256": "9e0ec746b2dcf1c06ede741c0911386554473cc26920d06db807342dc95ff7db",
+  "per_fixture": {
+    "package/auth-hash": {
+      "actual_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "checks_passed": 34,
+      "exact_cleanup": true,
+      "receipt_sha256": "0c4673f33ebc7be7770d43ab873c917896ea02248241c4d6a8bcb88f7922fd3e"
+    },
+    "package/shipped-createsuperuser22": {
+      "actual_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "checks_passed": 22,
+      "exact_cleanup": true,
+      "receipt_sha256": "4b052d763fda5f7601c886d505a2e04e0f7738c0e03336cc2ecfda787a2b4149"
+    },
+    "package/shipped-safe17": {
+      "actual_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "checks_passed": 17,
+      "exact_cleanup": true,
+      "receipt_sha256": "ce376b18709327cdb5fb9d66eebb02487d11aa5ae279a68dc6db8ac6d56926ea"
+    }
+  },
+  "performance_verified": false,
+  "revision": "5fdaaba33be23b0d3d4677f2df96db05080f10d8",
+  "second_group_aggregate_failure": "Createsuperuser22 internal project declared two external port mappings that were never published",
+  "second_group_concurrent_running_samples": 29,
+  "second_group_exact_cleanup": true,
+  "second_group_literal_exits": {
+    "cleanup": 0,
+    "reduce": 1,
+    "run": 2
+  },
+  "third_group": {
+    "createsuperuser22_host_ports": 0,
+    "createsuperuser22_service_labels": [
+      "baseline",
+      "operator",
+      "origin"
+    ],
+    "literal_exits": {
+      "cleanup": 0,
+      "reduce": 0,
+      "run": 2
+    },
+    "max_concurrent_projects": 3,
+    "new_required_rows_credited": 0,
+    "owner_actual_exit": 0,
+    "physical_concurrent_samples": 29,
+    "physical_reduce_sha256": "2e77ccb88b6b2108eb687dc82207a014d6fdd1b29ff92f607e1841e577626ada",
+    "port_mappings_verified": true,
+    "scoped_fixtures_passed": [
+      "package/auth-hash",
+      "package/shipped-createsuperuser22",
+      "package/shipped-safe17"
+    ]
+  }
+}

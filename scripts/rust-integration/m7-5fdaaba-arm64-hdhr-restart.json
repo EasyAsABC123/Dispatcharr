@@ -1,0 +1,86 @@
+{
+  "actual_exit": 0,
+  "candidate_engine_exit": 0,
+  "distinct_process_generation": true,
+  "exact_cleanup": true,
+  "full_required_workflow": false,
+  "image": "sha256:6c744530615e6ef96feb43a13fb45ff7e79e6127f8860632a34ea78f7e812eed",
+  "original_authors_retain_credit": true,
+  "package_sha256": "0cd9701eef779ad53186d68b89e49a5eebfb0da3a921ba46d65735d2d6f82baf",
+  "performance_certified": false,
+  "physical_receipt_sha256": "359e99fff0453639639962fdb81fb2250421e70d47e8c80f6bd6977df63d659f",
+  "planned_stop": {
+    "exit_code": 0,
+    "status": "exited"
+  },
+  "read_after_restart": {
+    "cases": [
+      {
+        "attempted": true,
+        "body_bytes": 185,
+        "content_length": "185",
+        "content_type": "application/json",
+        "exact_synthetic_lineup": true,
+        "lineup_rows": 1,
+        "passed": true,
+        "path": "/hdhr/lineup.json",
+        "sha256": "742f63507d20dd955ad0300965eb6bc7d7762a454bcaa0076773e5c7be6c91ec",
+        "status": 200
+      },
+      {
+        "attempted": true,
+        "body_bytes": 858,
+        "content_length": "858",
+        "content_type": "text/html; charset=utf-8",
+        "exact_React_index": true,
+        "passed": true,
+        "path": "/",
+        "sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      }
+    ],
+    "guest_architecture": "aarch64",
+    "guest_uid": 65532,
+    "passed": true
+  },
+  "read_before_restart": {
+    "cases": [
+      {
+        "attempted": true,
+        "body_bytes": 185,
+        "content_length": "185",
+        "content_type": "application/json",
+        "exact_synthetic_lineup": true,
+        "lineup_rows": 1,
+        "passed": true,
+        "path": "/hdhr/lineup.json",
+        "sha256": "742f63507d20dd955ad0300965eb6bc7d7762a454bcaa0076773e5c7be6c91ec",
+        "status": 200
+      },
+      {
+        "attempted": true,
+        "body_bytes": 858,
+        "content_length": "858",
+        "content_type": "text/html; charset=utf-8",
+        "exact_React_index": true,
+        "passed": true,
+        "path": "/",
+        "sha256": "b48dbb556b1bbe0ac3af50a9afbc528fc438eac114f4c924c5699a366d19d10a",
+        "status": 200
+      }
+    ],
+    "guest_architecture": "aarch64",
+    "guest_uid": 65532,
+    "passed": true
+  },
+  "readiness_after_status": 200,
+  "readiness_before_status": 200,
+  "revision": "5fdaaba33be23b0d3d4677f2df96db05080f10d8",
+  "scope": "one normal HDHR lineup across a planned Main stop/start",
+  "source_cardinality": {
+    "application_inputs": 2161,
+    "protected_inputs": 497
+  },
+  "source_tree": "977a45478d1be7c06667a3d4a0f80e147151bb1438ce54c7c417d40718793fb3",
+  "unchanged_SQL_and_React_after_normal_restart": true
+}
