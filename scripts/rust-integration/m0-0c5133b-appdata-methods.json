@@ -1,0 +1,236 @@
+{
+  "campaign_actual_exit": 0,
+  "read": {
+    "candidate": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+    "canonical_operations": [
+      "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+      "route-f7f70739debd2202db5e:METHOD_UNRESOLVED"
+    ],
+    "current_exact_0c": true,
+    "current_scope_only": true,
+    "exact_NO_SQL_write_and_same_scoped_state": true,
+    "exact_cleanup": true,
+    "formal_rows_promoted": [],
+    "fresh_original_and_native": true,
+    "fresh_receipt_sha256": "a4c5065ce5a040feeb36f0adb0fe51b72035b09db21ce514e35f81e63f63de12",
+    "known_204_framing_differences": [],
+    "literal_exit": 0,
+    "manifest_sha256": "72c01c185cad19e515090807006f3f98fc034fb0459a981cebc759700278ee12",
+    "method": "GET",
+    "preflight_run_cleanup_proof_exits": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "proof_sha256": "223a35ad6a88da8763d8931fde844c2473fd95cf58d1bc51bffc5dd9e12b1d36",
+    "roles_and_statuses_each": [
+      [
+        "owner",
+        200
+      ],
+      [
+        "admin",
+        200
+      ],
+      [
+        "other_standard",
+        403
+      ]
+    ],
+    "selected_AppData_header_parity": true,
+    "valid_Bearer_identities_verified": true,
+    "wire_cases": [
+      {
+        "Allow": "GET, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "GET",
+        "role": "owner",
+        "status": 200
+      },
+      {
+        "Allow": "GET, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "GET",
+        "role": "admin",
+        "status": 200
+      },
+      {
+        "Allow": "GET, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "GET",
+        "role": "other_standard",
+        "status": 403
+      },
+      {
+        "Allow": "GET, PUT, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "GET",
+        "role": "owner",
+        "status": 200
+      },
+      {
+        "Allow": "GET, PUT, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "GET",
+        "role": "admin",
+        "status": 200
+      },
+      {
+        "Allow": "GET, PUT, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "GET",
+        "role": "other_standard",
+        "status": 403
+      }
+    ]
+  },
+  "write": {
+    "candidate": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+    "canonical_operations": [
+      "route-f7f70739debd2202db5e:METHOD_UNRESOLVED"
+    ],
+    "current_exact_0c": true,
+    "current_scope_only": true,
+    "exact_cleanup": true,
+    "exact_scoped_restoration_and_unchanged_unrelated_state": true,
+    "formal_rows_promoted": [],
+    "fresh_original_and_native": true,
+    "fresh_receipt_sha256": "e03410daf16d893c15012c029dc1fbcfd40aea2a434a88754f71a72a2349068e",
+    "known_204_framing_differences": [
+      {
+        "Native_Content_Length": null,
+        "Original_Content_Length": "0",
+        "body_bytes": 0,
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "method": "DELETE",
+        "role": "owner",
+        "status": 204
+      },
+      {
+        "Native_Content_Length": null,
+        "Original_Content_Length": "0",
+        "body_bytes": 0,
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "method": "DELETE",
+        "role": "admin",
+        "status": 204
+      }
+    ],
+    "literal_exit": 0,
+    "manifest_sha256": "72c01c185cad19e515090807006f3f98fc034fb0459a981cebc759700278ee12",
+    "methods": [
+      "PUT",
+      "DELETE"
+    ],
+    "preflight_run_cleanup_proof_exits": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "proof_sha256": "e285bc2de4fec2aca86884ceba85693183ccc39fcce53db79c1e21317f1a2901",
+    "role_method_statuses": [
+      [
+        "other_standard",
+        "PUT",
+        403
+      ],
+      [
+        "other_standard",
+        "DELETE",
+        403
+      ],
+      [
+        "owner",
+        "PUT",
+        200
+      ],
+      [
+        "owner",
+        "DELETE",
+        204
+      ],
+      [
+        "admin",
+        "PUT",
+        200
+      ],
+      [
+        "admin",
+        "DELETE",
+        204
+      ]
+    ],
+    "selected_AppData_header_parity": true,
+    "valid_Bearer_identities_verified": true,
+    "wire_cases": [
+      {
+        "Allow": "GET, PUT, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "PUT",
+        "role": "other_standard",
+        "status": 403
+      },
+      {
+        "Allow": "GET, PUT, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "DELETE",
+        "role": "other_standard",
+        "status": 403
+      },
+      {
+        "Allow": "GET, PUT, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "PUT",
+        "role": "owner",
+        "status": 200
+      },
+      {
+        "Allow": "GET, PUT, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "DELETE",
+        "role": "owner",
+        "status": 204
+      },
+      {
+        "Allow": "GET, PUT, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "PUT",
+        "role": "admin",
+        "status": 200
+      },
+      {
+        "Allow": "GET, PUT, DELETE, HEAD, OPTIONS",
+        "Vary": "Accept, origin",
+        "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+        "literal_body_equal": true,
+        "method": "DELETE",
+        "role": "admin",
+        "status": 204
+      }
+    ]
+  }
+}
