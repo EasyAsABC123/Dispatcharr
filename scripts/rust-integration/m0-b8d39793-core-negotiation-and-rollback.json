@@ -1,0 +1,552 @@
+{
+  "schema": "dispatcharr-core-negotiation-and-rollback-pair/1",
+  "candidate": "b8d3979366981f0372794f8e04b01763a233bae7",
+  "build_manifest_sha256": "654a678fbb369613d9e2cac184035969ad46c05b20440656cca818ee757a96f2",
+  "image_id": "sha256:25414ab4350b0eb74f0e7c8efb0343676a88961bae38880bc758181c0496d155",
+  "read_proof_sha256": "30641ee161906f74144f80d1f63eef85041e9215dd206b0bc41bfb5865d199c6",
+  "write_proof_sha256": "0c5287d1751b5d4dc2bbab1ee7bfe8225e6573532009df5ccdeb5090dd8fcc72",
+  "actual_read_exits": {
+    "preflight": 0,
+    "run": 0,
+    "cleanup": 0,
+    "proof": 0,
+    "campaign": 0
+  },
+  "actual_write_exits": {
+    "preflight": 0,
+    "run": 0,
+    "cleanup": 0,
+    "proof": 0,
+    "campaign": 0
+  },
+  "read": {
+    "scope_passed": true,
+    "all_18_observed": true,
+    "required_six_shapes": 6,
+    "exact_cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "cells": [
+      {
+        "family": "agent-list",
+        "case": "anchor",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 16505,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "16505"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 16505,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "16505"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "agent-list",
+        "case": "navigation",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 16505,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "16505"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 16505,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "16505"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "agent-list",
+        "case": "ajax",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 16505,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "16505"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 16505,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "16505"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "agent-list",
+        "case": "force-browsable",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 16593,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "16593"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 16593,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "16593"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": true
+      },
+      {
+        "family": "agent-list",
+        "case": "browsable-explicit-json",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 406,
+          "body_kind": "json",
+          "body_bytes": 57,
+          "content_type": "application/json",
+          "content_length": "57"
+        },
+        "Native": {
+          "status": 406,
+          "body_kind": "json",
+          "body_bytes": 57,
+          "content_type": "application/json",
+          "content_length": "57"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": true
+      },
+      {
+        "family": "agent-list",
+        "case": "force-json",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "json",
+          "body_bytes": 877,
+          "content_type": "application/json",
+          "content_length": "877"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "json",
+          "body_bytes": 877,
+          "content_type": "application/json",
+          "content_length": "877"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "agent-list",
+        "case": "head-navigation",
+        "role": "admin",
+        "method": "HEAD",
+        "Original": {
+          "status": 200,
+          "body_kind": "empty-head",
+          "body_bytes": 0,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "16506"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "empty-head",
+          "body_bytes": 0,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "16506"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "agent-list",
+        "case": "options-navigation",
+        "role": "admin",
+        "method": "OPTIONS",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 17636,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17636"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 17636,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17636"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "agent-list",
+        "case": "standard-navigation",
+        "role": "standard",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 11780,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "11780"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 11780,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "11780"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": true
+      },
+      {
+        "family": "profile-detail",
+        "case": "anchor",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 17764,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17764"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 17764,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17764"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "profile-detail",
+        "case": "navigation",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 17764,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17764"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 17764,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17764"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "profile-detail",
+        "case": "ajax",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 17764,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17764"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 17764,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17764"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "profile-detail",
+        "case": "force-browsable",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 17874,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17874"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 17874,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17874"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": true
+      },
+      {
+        "family": "profile-detail",
+        "case": "browsable-explicit-json",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 406,
+          "body_kind": "json",
+          "body_bytes": 57,
+          "content_type": "application/json",
+          "content_length": "57"
+        },
+        "Native": {
+          "status": 406,
+          "body_kind": "json",
+          "body_bytes": 57,
+          "content_type": "application/json",
+          "content_length": "57"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": true
+      },
+      {
+        "family": "profile-detail",
+        "case": "force-json",
+        "role": "admin",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "json",
+          "body_bytes": 127,
+          "content_type": "application/json",
+          "content_length": "127"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "json",
+          "body_bytes": 127,
+          "content_type": "application/json",
+          "content_length": "127"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "profile-detail",
+        "case": "head-navigation",
+        "role": "admin",
+        "method": "HEAD",
+        "Original": {
+          "status": 200,
+          "body_kind": "empty-head",
+          "body_bytes": 0,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17765"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "empty-head",
+          "body_bytes": 0,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "17765"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "profile-detail",
+        "case": "options-navigation",
+        "role": "admin",
+        "method": "OPTIONS",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 20442,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "20442"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 20442,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "20442"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": null
+      },
+      {
+        "family": "profile-detail",
+        "case": "standard-navigation",
+        "role": "standard",
+        "method": "GET",
+        "Original": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 10600,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "10600"
+        },
+        "Native": {
+          "status": 200,
+          "body_kind": "html",
+          "body_bytes": 10600,
+          "content_type": "text/html; charset=utf-8",
+          "content_length": "10600"
+        },
+        "status_representation_match": true,
+        "selected_header_match": true,
+        "payload_match": true,
+        "required_shape_match": true
+      }
+    ]
+  },
+  "write": {
+    "scope_passed": true,
+    "writes_per_backend": 2,
+    "exact_cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "Original": [
+      {
+        "family": "agent-list",
+        "method": "POST",
+        "status": 201,
+        "response_masks_verified_count": 2,
+        "exact_SQL_delta": true,
+        "unrelated_SQL_broker_unchanged": true,
+        "normalized_HTML_sha256": "164ff567ff7755405c12ea6222cf8082cca45cf6877fc5b8fab248c308ad14bc"
+      },
+      {
+        "family": "profile-detail",
+        "method": "PUT",
+        "status": 200,
+        "response_masks_verified_count": 1,
+        "exact_SQL_delta": true,
+        "unrelated_SQL_broker_unchanged": true,
+        "normalized_HTML_sha256": "95b96062d272743695e9d8d17b238c3d4cff4857557b93040faac0ad44797f0e"
+      }
+    ],
+    "Native": [
+      {
+        "family": "agent-list",
+        "method": "POST",
+        "status": 201,
+        "response_masks_verified_count": 2,
+        "exact_SQL_delta": true,
+        "unrelated_SQL_broker_unchanged": true,
+        "normalized_HTML_sha256": "164ff567ff7755405c12ea6222cf8082cca45cf6877fc5b8fab248c308ad14bc"
+      },
+      {
+        "family": "profile-detail",
+        "method": "PUT",
+        "status": 200,
+        "response_masks_verified_count": 1,
+        "exact_SQL_delta": true,
+        "unrelated_SQL_broker_unchanged": true,
+        "normalized_HTML_sha256": "95b96062d272743695e9d8d17b238c3d4cff4857557b93040faac0ad44797f0e"
+      }
+    ],
+    "Native_capacity_rollbacks": {
+      "choice_count": 1001,
+      "choice_overflow": {
+        "equal_state_sha256": "e53771d9546f9b1c5158b0237ff378ab6626657c7574b41e851a41493b9ad83d",
+        "error": "profile-response-capacity",
+        "exact_state_unchanged": true,
+        "request_bytes": 482,
+        "status": 501
+      },
+      "oversized_HTML": {
+        "equal_state_sha256": "716ab75f37e59041a6aec3df45b839141f60c97fa30db4f2fcf1cdd55faedd1e",
+        "error": "profile-response-capacity",
+        "exact_state_unchanged": true,
+        "request_bytes": 240469,
+        "status": 501
+      }
+    }
+  },
+  "formal_M0_accepted": false,
+  "performance_measured": false
+}
