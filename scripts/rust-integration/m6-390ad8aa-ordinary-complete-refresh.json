@@ -1,0 +1,161 @@
+{
+  "actual_source_reference_age_seconds": 19.933133840560913,
+  "arms": {
+    "Native": {
+      "all_process_groups_and_both_pipes_settled": true,
+      "candidate_shutdown": {
+        "exit_code": 0,
+        "oom_killed": false,
+        "running": false
+      },
+      "cleanup_inventory": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "copied_nonempty_tables": 26,
+      "default_database_unchanged": true,
+      "exact_owned_cleanup": true,
+      "linked_import_terminals": 6,
+      "ordinary_aio_verified": true,
+      "other_unparented_success_entries": 1,
+      "passed_assertions": 40,
+      "phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "precleanup_result_backend_entries": 7,
+      "project": "dispatcharr-refresh-workflow-original-ab5801e06d",
+      "two_iterations": [
+        {
+          "file_sha256": "846340275baaf335c7555c4dded1c6642b9a45974ce6a21dbd89a9eb0d0d7643",
+          "http_status": 202,
+          "iteration": 1,
+          "ordered_event_count": 11,
+          "owned_guide_source_id": 1,
+          "parent_relationships_verified": true,
+          "programme_id": 1,
+          "three_successful_job_families": [
+            "apps.epg.tasks.refresh_epg_data",
+            "apps.epg.tasks.build_programme_index_task",
+            "apps.channels.tasks.evaluate_series_rules"
+          ],
+          "title_in_current_and_guide": "Owned first import"
+        },
+        {
+          "file_sha256": "f5d369eeae8aafd10a26d17b623bf864f2764f5d99de4de8da91afde451dc316",
+          "http_status": 202,
+          "iteration": 2,
+          "ordered_event_count": 11,
+          "owned_guide_source_id": 1,
+          "parent_relationships_verified": true,
+          "programme_id": 2,
+          "three_successful_job_families": [
+            "apps.epg.tasks.refresh_epg_data",
+            "apps.epg.tasks.build_programme_index_task",
+            "apps.channels.tasks.evaluate_series_rules"
+          ],
+          "title_in_current_and_guide": "Owned second import"
+        }
+      ]
+    },
+    "Original": {
+      "all_process_groups_and_both_pipes_settled": true,
+      "cleanup_inventory": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "copied_nonempty_tables": 26,
+      "default_database_unchanged": true,
+      "exact_owned_cleanup": true,
+      "linked_import_terminals": 6,
+      "other_unparented_success_entries": 0,
+      "passed_assertions": 40,
+      "phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "precleanup_result_backend_entries": 6,
+      "project": "dispatcharr-refresh-workflow-original-94de78c73c",
+      "two_iterations": [
+        {
+          "file_sha256": "846340275baaf335c7555c4dded1c6642b9a45974ce6a21dbd89a9eb0d0d7643",
+          "http_status": 202,
+          "iteration": 1,
+          "ordered_event_count": 11,
+          "owned_guide_source_id": 1,
+          "parent_relationships_verified": true,
+          "programme_id": 1,
+          "three_successful_job_families": [
+            "apps.epg.tasks.refresh_epg_data",
+            "apps.epg.tasks.build_programme_index_task",
+            "apps.channels.tasks.evaluate_series_rules"
+          ],
+          "title_in_current_and_guide": "Owned first import"
+        },
+        {
+          "file_sha256": "f5d369eeae8aafd10a26d17b623bf864f2764f5d99de4de8da91afde451dc316",
+          "http_status": 202,
+          "iteration": 2,
+          "ordered_event_count": 11,
+          "owned_guide_source_id": 1,
+          "parent_relationships_verified": true,
+          "programme_id": 2,
+          "three_successful_job_families": [
+            "apps.epg.tasks.refresh_epg_data",
+            "apps.epg.tasks.build_programme_index_task",
+            "apps.channels.tasks.evaluate_series_rules"
+          ],
+          "title_in_current_and_guide": "Owned second import"
+        }
+      ]
+    }
+  },
+  "coordinator_reducer_sha256": "2cdf346741e4892978e07285fbbfeeba1ed1e72f64419cbe78e436af44d5b5b0",
+  "credit": "Original Dispatcharr, React, Django, Celery, Redis, Channels and dependency authors retain full credit.",
+  "exact_cleanup": true,
+  "exact_paired_projection": true,
+  "formal_M6_pass": false,
+  "formal_required_nodes": 127,
+  "formal_shard_dependencies_remain": true,
+  "formal_shard_dispatched": false,
+  "literal_coordinator_exit": 2,
+  "literal_reducer_exit": 0,
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "package": {
+    "archived_source_inputs": 2161,
+    "build_manifest_sha256": "2de6a7abd447ddc75e75c78f6fe1ced430a5ee1642dc37331483a51a3b083c1c",
+    "git_revision": "390ad8aa16f07de7cbc7364a86f1eb2254faa4c8",
+    "image_id": "sha256:deb3ab0d832adf093c67b12eb1655baf23aeaf74bd55164643d9af38147127d0",
+    "platform": "linux/amd64",
+    "source_archive_sha256": "82536b2599f822c333614c694a0aa1bb7f648e96a5aabd4d1b36f5c1952915a4",
+    "source_tree_sha256": "02ed574d6ddeb6083ec43eeb88834e1d40adc87136859007418d86ff08db0057"
+  },
+  "paired_lease": {
+    "native": "package/complete-refresh",
+    "one_global_slot": true,
+    "source": "package/complete-refresh-original"
+  },
+  "performance_measured": false,
+  "physical_evidence_sha256": {
+    "package/complete-refresh": {
+      "cleanup_sha256": "e1380a84e643dcbb95532cb2ef53a12529e0abbeb61b0d3404c09901fe0b26ba",
+      "integration_sha256": "105a099c395d131677136d6b62455042518ac648fa66eacfa2306ae453027aa1",
+      "package_result_sha256": "e0ce0bfceca56dfaf4fd2d1992fda50d7b8f2a7c9fff5f68a226a7a42260fe43",
+      "raw_workflow_sha256": "27a0e1f05959e2b692d6ab7105ffef181db4b1c707a89ef25d5aff23a0b021ac"
+    },
+    "package/complete-refresh-original": {
+      "cleanup_sha256": "0b915c21c8a53b054bd99143e668460a15ea4690d7d13355307c2450c0ac2d6a",
+      "integration_sha256": "ce5ad7893df497da080f9cd5523e0f2fc14548343840236119f71696f3ef1302",
+      "package_result_sha256": "747a166b3eae804c19de128b61254268e865a50cecda6ad3da6b707dadcb8455",
+      "raw_workflow_sha256": "f460cc77003ec073b2dca25334f7756793b9915875fa89ad99d0ee8c150e6eaf"
+    }
+  },
+  "raw_coordinator_report_sha256": "f338aa767b2a925e7201e9b071b93f6a4e9e016da0b0661ca4dbc98d6f143bdf",
+  "second_import_typed_checker_replay_passed": true,
+  "source_reference_budget_seconds": 900
+}

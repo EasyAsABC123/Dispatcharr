@@ -1,0 +1,184 @@
+{
+  "audit_operations": {
+    "Git_writes": 0,
+    "engine_calls": 0,
+    "network_calls": 0
+  },
+  "defaults_review": {
+    "ARM_Xtream_VOD_response_workflow_covered": false,
+    "inherited_intentional_behavior": "Ordinary Xtream VOD-info enabled when flag absent, reviewed at27531; not a new390ad8 delta.",
+    "unchanged": "Compose/deployment configuration and build defaults"
+  },
+  "hashes": {
+    "auth": "df5cd04030f5ae1c4d296f2d70e1245c013034d29f72abfca7d56aba5901463a",
+    "auth_literal_exit_journal": "d51f67f3bb604ec2d308d5f8e2f6909e9d9da8649bbdb48d0f2570d27eeaaad6",
+    "binding": "6928ee140254aff2b5e5db6911415400ee711969d141628a63662baadd072000",
+    "build": "1b69a08e8a388048738bda724c5f72194b219cf42df9e74b159cc153648eadf4",
+    "coordinator_lock": "8c329f166f5d5d6306cba4f463bcfa38a8d34d306171f0a5f1f78ec5c16c48c4",
+    "delta_object_manifest": "4e19c1fe786aca58452c1f8fa0d829b504012d5ffed4e03134f95fd4b63fe4a8",
+    "image_identity": "ba23a111a0548009a1229f9504b3254ed696c8794f51e3c771bb629c14f823b9",
+    "independent_private_audit": "083c84f4e46d5e5afd79c46f0f311675e3d1e07356960a7de642ce540e9cbc1f",
+    "owner_proof": "add465f7e2be20cc5df8e148131b5fac020e4ef0d40687a585fd1f69ac6ae004",
+    "package_literal_exit_journal": "180b139d92de8acb6af053af8447cd8c1b0d89afb19c84b04225611ac13a7bb8",
+    "package_receipt": "bb3c14637e834af033d59b02b799ffb1c9d64d630b99415303671a431eb08953",
+    "plan": "73d4a1e5d6132073d519145f7ec1d1cc7ddc0df7a44844155fc859dbddf23a62",
+    "reviewed_scope": "7828d440d2aae846346c0ec8830118e37296b7da544061418979a6cc7f4ffcd3",
+    "source_test_manifest": "10579393424ba0bc1996a49e5abdd7208d4cbaa42be9ed0b0f97e053b137935c"
+  },
+  "independent_evidence_sha256": "93595042bd85875d1a6ef636bbfe2b7d00037e647d9ebf62774ede88ca19d357",
+  "journal_counts": {
+    "auth_absence_exit1": 15,
+    "auth_records": 57,
+    "package_absence_exit1": 4,
+    "package_records": 26
+  },
+  "limitations": [
+    "This audit used retained artifacts and local Git reads; no new engine inventory or physical run.",
+    "Retirement is supported by sealed executor checks, typed receipts and literal operation/exit journals. Raw per-resource-ID inspect stdout/stderr was not retained.",
+    "Host regression provenance is the transferred source-bound coordinator envelopes and hash-verified streams, not a local Cargo rerun.",
+    "This evidence does not adopt the separate strict wire pair or certify ARM store response workflows, broad RBAC, media/jobs, performance, full Compose or full M10.",
+    "No registry publish, deployment, operational default switch or Git delivery was performed."
+  ],
+  "owner_literal_exits": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "package": {
+    "ARM64_manifest": "sha256:c6633ad6bad847ca9dd5dd64f7c8177601ad724ff3b5f9809fa93f1d82c2dc31",
+    "config_digest_from_BuildKit_log": "sha256:8b6c5ec38179301e2ede52ba65c04486796645e804df65669c3f20101e517fee",
+    "default_features": true,
+    "image_OCI_index": "sha256:c664b1bcd90252bf49d6a792c455b6490dce1eb65a695bf9e664f01b3ed0512c",
+    "native_dynamic_closures_verified": true,
+    "outputs": {
+      "usr/local/bin/dispatcharr-operator": {
+        "ELF": "ELF64 little-endian AArch64",
+        "assembly_mode": "0755",
+        "bytes": 9706600,
+        "sha256": "a1e0f637110f1b7fd059db9e58a57aadf3784fc3f9b3038b52c645554bbc8781"
+      },
+      "usr/local/bin/dispatcharr-rs": {
+        "ELF": "ELF64 little-endian AArch64",
+        "assembly_mode": "0755",
+        "bytes": 102485672,
+        "sha256": "4950a797d8942b14c3efb22e6e024f2e72ade90fdb108ba5804f075f2dcdf2fc"
+      }
+    },
+    "platform": "linux/arm64",
+    "runtime": "Pinned ordinary runtime; six retained base layers and two binary COPY layers",
+    "sqlite_build_args_both_zero": true,
+    "toolchain": "Rust1.90.0 locked/offline release jobs2",
+    "uid": "65532:65532"
+  },
+  "publication_status": "sanitized evidence for the migration branch",
+  "recorded_retirement": {
+    "auth_containers_retired": 5,
+    "candidate_exit": 0,
+    "content_container_absent": true,
+    "no_shared_cleanup": true,
+    "owned_network_and_volume_absent": true,
+    "temporary_auth_config_removed": true
+  },
+  "retirement_audit_method": "Verified sealed executor checks, typed receipts and operation/exit journals. Raw resource-ID inspect stdout/stderr was not retained by this executor; no new engine inventory performed.",
+  "roles_and_effects": {
+    "accounts_after": 1,
+    "accounts_before": 0,
+    "active_admin_login_rows": 1,
+    "group_rows_before_and_after": 0,
+    "guest_uid": 65532,
+    "mutating_guest_runs": 1,
+    "scope": "clean first-admin, JWT login, protected group read; no broad RBAC matrix"
+  },
+  "schema": "dispatcharr-sanitized-native-arm64-package-evidence/1",
+  "signed_auth": {
+    "authenticated_channel_groups": 200,
+    "channel_groups": 0,
+    "empty_setup": 200,
+    "first_admin_creation": 200,
+    "jwt_login": 200,
+    "jwt_pair_type_checked": true,
+    "setup_closed": 200
+  },
+  "source": {
+    "anchor_revision": "585fde95b5ed61ed2cd714f1d93c2214c6deaad9",
+    "application_files": 2161,
+    "application_revision": "390ad8aa16f07de7cbc7364a86f1eb2254faa4c8",
+    "application_tree_sha256": "02ed574d6ddeb6083ec43eeb88834e1d40adc87136859007418d86ff08db0057",
+    "archive_sha256": "8d71eb2a00a7a176a3afa8db66ddf1c86a617290a7af22249f943ed47a9a0fa1",
+    "changed_paths": [
+      "rust/crates/store/src/core_reads.rs"
+    ],
+    "direct_parent": "d9eee1e5293e8893f8c2832ce480fe36d6188d4a",
+    "exact_custody_object_files": 9,
+    "leaf_postimage_sha256": "656609f7611f851682462d14483e320070f249a5c6efe438caea6b57918f3400",
+    "leaf_preimage_sha256": "654ae489bb033e17263ef867e78c33305877dd08a535e6c73b918a878875f050",
+    "materialized_context_files": 16978,
+    "protected_files": 497,
+    "protected_tree_sha256": "1a74175c6e698b04b2d2bc0d44b92210893113161a959e319fe919c6faedf716",
+    "vendor_support_and_modes_match_proven_anchor": true
+  },
+  "source_bound_host_checks": {
+    "Main_cargo_check_passed": true,
+    "additional_ignored_cases": [],
+    "focused_Rust_tests_passed": 1,
+    "physical_ARM_strict_wire_pair_coverage": false,
+    "receipts": {
+      "main": {
+        "actual_exit": 0,
+        "argv": [
+          "cargo",
+          "+1.90.0",
+          "check",
+          "--offline",
+          "--locked",
+          "-j",
+          "2",
+          "-p",
+          "dispatcharr-rs",
+          "--bin",
+          "dispatcharr-rs"
+        ],
+        "cases": [
+          "dispatcharr-rs binary type-check"
+        ],
+        "receipt_sha256": "46d00a000bf16277cc9fe6a9dd2624c82f76ea1864104671ea50becd93fbcced",
+        "stderr_sha256": "970bc96296ed908f16fa6c8c89c3289bc86134eb6fb32c85667356a859b30172",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "store": {
+        "actual_exit": 0,
+        "argv": [
+          "cargo",
+          "+1.90.0",
+          "test",
+          "--offline",
+          "--locked",
+          "-j",
+          "2",
+          "-p",
+          "dispatcharr-store",
+          "--lib",
+          "core_reads::direct_profile_wire_tests::successful_direct_profile_gets_use_original_wire_order_and_headers",
+          "--",
+          "--exact"
+        ],
+        "cases": [
+          "core_reads::direct_profile_wire_tests::successful_direct_profile_gets_use_original_wire_order_and_headers"
+        ],
+        "receipt_sha256": "b4e6f9a49b7858a1a93833704cca1ea7af3b0bbac7e0a1b470d9d904073f8943",
+        "stderr_sha256": "eddac970f1e258435417db241b587f106d0aa365b2ade8ef56c3d25f382003b1",
+        "stdout_sha256": "999c7b5c572c2cb97c119e0f7cab4d3019ce1321c02173931712e29ec3ad2fd0"
+      }
+    }
+  },
+  "startup": {
+    "guest_architecture": "aarch64",
+    "guest_uid": 65532,
+    "migrations": 184,
+    "react_html": 200,
+    "ready": 200,
+    "tables": 62
+  },
+  "status": "independently_audited_retained_physical_pass"
+}

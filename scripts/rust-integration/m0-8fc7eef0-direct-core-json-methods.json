@@ -1,0 +1,534 @@
+{
+  "HTML_negotiation_measured": false,
+  "actual": {
+    "actors": [
+      {
+        "level": 1,
+        "role": "standard"
+      },
+      {
+        "level": 10,
+        "role": "admin"
+      }
+    ],
+    "cases_per_backend": 16,
+    "credentials_retained": false,
+    "distinct_signed_fixture_actors_verified": true,
+    "internal_compose_network": true,
+    "owned_profile_references_owned_agent": true,
+    "owner_exits": {
+      "campaign": 0,
+      "cleanup": 0,
+      "preflight": 0,
+      "proof": 0,
+      "run": 0
+    },
+    "paired": true,
+    "published_host_ports": false,
+    "scoped_SQL_broker_before_after_sha256_both_arms": "e8495716cea2e655ab09cee665c6868e1513b32de1f5820b2514dd996c06804d"
+  },
+  "candidate": {
+    "application_archive_sha256": "a58ce9c4d35074804b05dec3f14c17706af76d6984083f23a443ec5a02276c72",
+    "application_input_count": 2162,
+    "application_parent": "0fe91f168eb37f037759302d4a2e5fa491080523",
+    "application_revision": "8fc7eef0a702b57d3c6b20dac171478b38e0196e",
+    "application_source_tree_sha256": "e1efe250b05f506daa6ca972492e05c6c37c4d62fb2a7a21e91c7acca1fd362b",
+    "image": "sha256:87aa72b586d4836135f5fba988ad966c37edffa1dca4494e34cf98d4de735a9c",
+    "ordinary_build_manifest_sha256": "bfe1e896447d3d9d4c345f20f524faaad68d2eb573dbd72fbaea2694c534c1b7",
+    "package_owner_exits": {
+      "ordinary-build": 0,
+      "ordinary-verify": 0,
+      "owner": 0,
+      "preflight": 0,
+      "prove-package": 0
+    },
+    "platform": "linux/amd64",
+    "protected_frontend_license_attribution_inputs": 497
+  },
+  "cases": [
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 851,
+        "body_sha256": "c622ff47e72ed083a57c08e2205c6f18af3334ca07839ad060ce9543eed1dee6",
+        "content_length": "851",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 851,
+        "body_sha256": "c622ff47e72ed083a57c08e2205c6f18af3334ca07839ad060ce9543eed1dee6",
+        "content_length": "851",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "agent-list",
+      "method": "GET",
+      "path": "/api/core/useragents/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-b85d3ade7ecfee8953a1",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 851,
+        "body_sha256": "c622ff47e72ed083a57c08e2205c6f18af3334ca07839ad060ce9543eed1dee6",
+        "content_length": "851",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "851",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "agent-list",
+      "method": "HEAD",
+      "path": "/api/core/useragents/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-b85d3ade7ecfee8953a1",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1146,
+        "body_sha256": "ad0cec372d97d09bd47156e90bd9d1a6d69f880ae9786e9f33b5b80f6e60958e",
+        "content_length": "1146",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1146,
+        "body_sha256": "ad0cec372d97d09bd47156e90bd9d1a6d69f880ae9786e9f33b5b80f6e60958e",
+        "content_length": "1146",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "agent-list",
+      "method": "OPTIONS",
+      "path": "/api/core/useragents/",
+      "required_contract_met": true,
+      "role": "admin",
+      "route_id": "route-b85d3ade7ecfee8953a1",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_length": "63",
+        "content_type": "application/json",
+        "status": 403,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_length": "63",
+        "content_type": "application/json",
+        "status": 403,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "agent-list",
+      "method": "OPTIONS",
+      "path": "/api/core/useragents/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-b85d3ade7ecfee8953a1",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 206,
+        "body_sha256": "f6a961eefdb13c8c0497d4f2ed6f9394ca345d45065d47e8eb12f5383eb3cf78",
+        "content_length": "206",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 206,
+        "body_sha256": "f6a961eefdb13c8c0497d4f2ed6f9394ca345d45065d47e8eb12f5383eb3cf78",
+        "content_length": "206",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "agent-detail",
+      "method": "GET",
+      "path": "/api/core/useragents/4/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-ba1955652b652c310e20",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 206,
+        "body_sha256": "f6a961eefdb13c8c0497d4f2ed6f9394ca345d45065d47e8eb12f5383eb3cf78",
+        "content_length": "206",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "206",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "agent-detail",
+      "method": "HEAD",
+      "path": "/api/core/useragents/4/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-ba1955652b652c310e20",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 1149,
+        "body_sha256": "c4c059688fcb282c8b710da846253225a497287b015244fd519727daef897f42",
+        "content_length": "1149",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 1149,
+        "body_sha256": "c4c059688fcb282c8b710da846253225a497287b015244fd519727daef897f42",
+        "content_length": "1149",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "agent-detail",
+      "method": "OPTIONS",
+      "path": "/api/core/useragents/4/",
+      "required_contract_met": true,
+      "role": "admin",
+      "route_id": "route-ba1955652b652c310e20",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_length": "63",
+        "content_type": "application/json",
+        "status": 403,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_length": "63",
+        "content_type": "application/json",
+        "status": 403,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "agent-detail",
+      "method": "OPTIONS",
+      "path": "/api/core/useragents/4/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-ba1955652b652c310e20",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1064,
+        "body_sha256": "201ca60213ca8a7fcc23fa3ef51255bdf89b7aa8cee2f048c3770c11877d661f",
+        "content_length": "1064",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1064,
+        "body_sha256": "201ca60213ca8a7fcc23fa3ef51255bdf89b7aa8cee2f048c3770c11877d661f",
+        "content_length": "1064",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "profile-list",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-fdca87537cd595a20d06",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1064,
+        "body_sha256": "201ca60213ca8a7fcc23fa3ef51255bdf89b7aa8cee2f048c3770c11877d661f",
+        "content_length": "1064",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "1064",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "profile-list",
+      "method": "HEAD",
+      "path": "/api/core/streamprofiles/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-fdca87537cd595a20d06",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1283,
+        "body_sha256": "4c861b46c4ae91c0aba0d294485afc5f041a030e415b28c8e80a7253a7e2a674",
+        "content_length": "1283",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1283,
+        "body_sha256": "4c861b46c4ae91c0aba0d294485afc5f041a030e415b28c8e80a7253a7e2a674",
+        "content_length": "1283",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "profile-list",
+      "method": "OPTIONS",
+      "path": "/api/core/streamprofiles/",
+      "required_contract_met": true,
+      "role": "admin",
+      "route_id": "route-fdca87537cd595a20d06",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_length": "63",
+        "content_type": "application/json",
+        "status": 403,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_length": "63",
+        "content_type": "application/json",
+        "status": 403,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "profile-list",
+      "method": "OPTIONS",
+      "path": "/api/core/streamprofiles/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-fdca87537cd595a20d06",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 118,
+        "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+        "content_length": "118",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 118,
+        "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+        "content_length": "118",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "profile-detail",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-0d2bf3aa82ca7c57fc62",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 118,
+        "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+        "content_length": "118",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "118",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "profile-detail",
+      "method": "HEAD",
+      "path": "/api/core/streamprofiles/6/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-0d2bf3aa82ca7c57fc62",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 1286,
+        "body_sha256": "26a5dd4e4bec25e01255321dfcced919c5fb6cfbb701f464fff27c807573bea5",
+        "content_length": "1286",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 1286,
+        "body_sha256": "26a5dd4e4bec25e01255321dfcced919c5fb6cfbb701f464fff27c807573bea5",
+        "content_length": "1286",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "profile-detail",
+      "method": "OPTIONS",
+      "path": "/api/core/streamprofiles/6/",
+      "required_contract_met": true,
+      "role": "admin",
+      "route_id": "route-0d2bf3aa82ca7c57fc62",
+      "wire_scope_matched": true
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_length": "63",
+        "content_type": "application/json",
+        "status": 403,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "content_length": "63",
+        "content_type": "application/json",
+        "status": 403,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json",
+      "family": "profile-detail",
+      "method": "OPTIONS",
+      "path": "/api/core/streamprofiles/6/",
+      "required_contract_met": true,
+      "role": "standard",
+      "route_id": "route-0d2bf3aa82ca7c57fc62",
+      "wire_scope_matched": true
+    }
+  ],
+  "cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "credit": "Original Dispatcharr, React and dependency authors and contributors retain full credit.",
+  "formal_M0_accepted": false,
+  "head_body_policy": {
+    "Original_direct_uWSGI_entity_equals_GET_as_diagnostic": true,
+    "Rust_all_entities_empty": true,
+    "Stock_AIO_nginx_witness_is_separate": true,
+    "compared_cross_listener_entity_bodies": false
+  },
+  "original": {
+    "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "performance_measured": false,
+  "retained_sha256": {
+    "ordinary_package_verification": "faf9eeae5523ef88e0f64a33e7a9b041bba131dfe976bcf492c7ecf39a9442b8",
+    "pair_inputs_seal": "a5c55981f2807b45a9971c826cb88f56e557cbd48d8f44d7bf63450fa600a33c",
+    "physical_cleanup_proof": "b3f7abd4c2e7358170efc7743cc5767683bc4779903e033a1dbaa4bb441c2b72",
+    "physical_independent_proof": "3e884cecb7a6ad9d7516905dc13a2b44352c4f621cb3e75375d38cd632793cac",
+    "raw_methods_receipt": "9105bce25f517919dea1ab8893fcdf88c9c6c462a1582854838d938a7926ebc2"
+  },
+  "scope": "Direct Core User-Agent and Stream Profile JSON GET, HEAD and OPTIONS"
+}

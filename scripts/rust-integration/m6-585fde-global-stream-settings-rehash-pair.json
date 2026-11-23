@@ -1,0 +1,173 @@
+{
+  "Native": {
+    "build_manifest_sha256": "328762af67efd3a1d84c5d3b25e4a842800a55351e1725138cc1a8605c4c7bfe",
+    "image_id": "sha256:bb3bdbc5197780f3e49978a1c55650333d633e168b5c44ea663854571d2c2670",
+    "ordinary_AIO": true,
+    "platform": "linux/amd64",
+    "revision": "585fde95b5ed61ed2cd714f1d93c2214c6deaad9"
+  },
+  "Original": {
+    "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "application": "Dispatcharr",
+  "arms": {
+    "Native": {
+      "Native_exit": 0,
+      "OOM_killed": false,
+      "actual_claims": 1,
+      "actual_relay_wait_seconds": 0.008150943031068891,
+      "cleanup_sha256": "f9b490c163c599d0d31770f3852fe9fa093732b01b271cae0d7bcb060484b101",
+      "command_rewrites": 0,
+      "complete_SQL_effects_validated": true,
+      "events_order": [
+        "starting",
+        "processing",
+        "completed"
+      ],
+      "exact_containers_retired": 3,
+      "exact_receiver_sha256": "172855beaa286dec4d8362ecbd917403674d4e698fdd7bc0f0a9bf77af6279f6",
+      "final_queue_or_reserved": 0,
+      "final_refresh_locks": 0,
+      "held_receiver_matches_exact_delivered_receiver": true,
+      "literal_exits": {
+        "cleanup": 0,
+        "proof": 0,
+        "run": 0
+      },
+      "owned_rehash_journals_empty": true,
+      "raw_event_sha256": [
+        "2c089fc190fa8c5885aa6d5c5ad09fb28a8e3cfff3be4fe13711bee57d1b409e",
+        "ce8545452fe44aa191d8e2b374c3a1d49cb9984bbe93b3b1b6c9c686d380396d",
+        "d4257b8fc08bb1b4349776858042f509ebd32c2b68c727d6940ba369dbb44c9b"
+      ],
+      "raw_messages_decode_to_exact_literal_receiver": true,
+      "reply_rewrites": 0,
+      "retained_rehash_temp_tables_absent": true,
+      "terminal_linked_to_settled_actual_Redis_read": true,
+      "terminal_result": "Successfully rehashed 4 streams",
+      "terminal_status": "SUCCESS",
+      "warm_capture_seconds": 0.09000886703142896,
+      "watchdog_releases": 0
+    },
+    "Original": {
+      "cleanup_sha256": "e207c0fd5c019553bf73f3a13a66c0319b6ce6e6b106b35a0f7c95ec3f3d5eb8",
+      "complete_SQL_effects_validated": true,
+      "events_order": [
+        "starting",
+        "processing",
+        "completed"
+      ],
+      "exact_containers_retired": 2,
+      "exact_receiver_sha256": "de5035230693fe7b7662788c333af90651ef56876ed45515fecb990c17ad6daf",
+      "final_queue_or_reserved": 0,
+      "final_refresh_locks": 0,
+      "literal_exits": {
+        "cleanup": 0,
+        "proof": 0,
+        "run": 0
+      },
+      "raw_event_sha256": [
+        "ff81b082e2df61c6765093041840f89c829d4be02d4a9679eacb695fc1097d96",
+        "79d83bd8bc9d589d8c0ad6887d24536f29e9b8a917310d1eeb0e68562b112592",
+        "923683f41690e533371a9982abf517434804463cd91a14e7fe3c042cba4f76e7"
+      ],
+      "raw_messages_decode_to_exact_literal_receiver": true,
+      "terminal_linked_to_settled_actual_Redis_read": true,
+      "terminal_result": "Successfully rehashed 4 streams",
+      "terminal_status": "SUCCESS"
+    }
+  },
+  "case": {
+    "account_id_omitted": true,
+    "account_override_rows_unchanged": true,
+    "actor": "real signed disposable Admin",
+    "after": "name",
+    "before": "name,url",
+    "duplicates_merged": 2,
+    "eligible_accounts": 2,
+    "exact_hash_and_link_identity_order_effects": true,
+    "exact_held_locks_and_payload_admission_checked": true,
+    "explicit_override_control": true,
+    "field": "m3u_hash_key",
+    "final_eligible_streams": 2,
+    "full_per_arm_SQL_and_readback_checked": true,
+    "methods": [
+      "GET",
+      "PATCH",
+      "GET"
+    ],
+    "no_result_or_rehash_event_before_release": true,
+    "one_real_global_task_per_arm": true,
+    "other_setting_values_preserved": true,
+    "route": "/api/core/settings/{owned-id}/",
+    "statuses": [
+      200,
+      200,
+      200
+    ],
+    "streams_processed": 4
+  },
+  "credit": "All original Dispatcharr application and algorithm credit is retained; React, LICENSE and ATTRIBUTION.md remain intact. Django/DRF, Celery/Kombu, Redis/Channels, PostgreSQL, FFmpeg, Docker and dependency/tool authors retain their respective credit.",
+  "evidence": [
+    {
+      "private_artifact": "artifacts/rust/paseo-resume-698ce81e/owned-585fde95-m6-bounded-global-rehash-post-maintenance-1/phases.json",
+      "role": "coordinator phases",
+      "sha256": "578b4bd209933bcdbc710ba3d4842f1ee31efbc772a60bb75c240976547e96af"
+    },
+    {
+      "private_artifact": "artifacts/rust/paseo-resume-698ce81e/owned-585fde95-m6-bounded-global-rehash-post-maintenance-1/proof.json",
+      "role": "coordinator comparison",
+      "sha256": "dd3b649ac2761dbb35c93b8b6cc680ee35ba0ec794fa678f71a368724bf79f55"
+    },
+    {
+      "private_artifact": "artifacts/rust/paseo-async-f960875-1/release-matrix/m6-585fde-global-rehash-bounded-hold-6/actual-native-1/campaign.json",
+      "role": "Native campaign",
+      "sha256": "4a4eaa97fe22ec938422074e1f877935df29412577f39870d456c8fe3fda22bb"
+    },
+    {
+      "private_artifact": "artifacts/rust/paseo-async-f960875-1/release-matrix/m6-585fde-global-rehash-bounded-hold-6/actual-native-1/comparison-proof.json",
+      "role": "Native comparison",
+      "sha256": "ba94c6e5319032dcf47709254d67cccbac4fecb0a99634850b897e513c396702"
+    },
+    {
+      "private_artifact": "artifacts/rust/paseo-async-f960875-1/release-matrix/m6-original-global-stream-rehash-retry-4-role-roster/owner-1/proof.json",
+      "role": "Original owner proof",
+      "sha256": "3c76b80550e4e127be77a18d91b47be89561d09ed0b311370345b421909d756b"
+    },
+    {
+      "private_artifact": "artifacts/rust/paseo-async-f960875-1/release-matrix/m6-original-global-stream-rehash-retry-4-role-roster/actual-source-1/Original/business/oracle.json",
+      "role": "Original focused oracle",
+      "sha256": "b25bf955012ebc174ca088a9a974f2cd690dcb78eb338d3f02e4ad49a0ca73c4"
+    },
+    {
+      "private_artifact": "artifacts/rust/paseo-async-f960875-1/release-matrix/m6-585fde-global-rehash-bounded-hold-6/seal.json",
+      "role": "sealed bounded fixture inputs",
+      "sha256": "40f15d4be1ea1cac5d2928c50774fbd096d08e49d329143a5895f92b9ed550ca"
+    }
+  ],
+  "family": "stream-rehash-settings-callback",
+  "format_version": 1,
+  "milestone": "M6",
+  "publication_base": "0fe91f168eb37f037759302d4a2e5fa491080523",
+  "scope_limits": {
+    "canonical_row_qualified": false,
+    "default_switch": false,
+    "full_M6_accepted": false,
+    "other_image_credit": false,
+    "performance_result": false,
+    "permissions_matrix_complete": false,
+    "predecessor_qualified": false,
+    "release_accepted": false
+  },
+  "status": "focused_actual_Original_Native_pair_passed",
+  "transport_contract": {
+    "Native": "ordinary combined AIO; unchanged byte relay holds actual compare/pop claim below existing logical deadline, then actual matching script/RPOP and natural terminal/drain",
+    "Native_command_deadline_seconds_unchanged": 2,
+    "Source": "real owned consumer stop/restart and actual matching delivery-tag unacked retirement",
+    "maximum_relay_hold_seconds": 1.25,
+    "maximum_warm_capture_seconds": 1.0,
+    "no_fabricated_task_result_or_ACK": true,
+    "watchdog_release_cannot_qualify": true
+  }
+}

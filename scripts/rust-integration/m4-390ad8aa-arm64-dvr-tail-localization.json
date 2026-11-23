@@ -1,0 +1,410 @@
+{
+  "application": "390ad8aa16f07de7cbc7364a86f1eb2254faa4c8",
+  "independent_decoder_localization": {
+    "bad_video_packet_index_in_complete_playlist_and_mkv": 255,
+    "bad_video_packet_index_within_segment": 55,
+    "decoder_and_origin_receipt_sha256": {
+      "decoder-result.json": "92a9ea00626ac33621cf2e1ce7063296a42a68bf4fe8c784171eb998fafa5de7",
+      "origin-custody.json": "f56849ee60feadbab52ba778b8cf7d8209d6f8b6bd8e05899a93f69ff49291bb"
+    },
+    "first_256_normalized_video_payloads_match_historical_native": true,
+    "introduction_point_proved": false,
+    "normalized_malformed_slice_sha256": "3a9c4c82b6f003c4e1b06a5592fc2aaae0d32fe4fe9ee1494c96c5db94fc3f04",
+    "normalizing_annex_b_without_timestamps_still_failed": true,
+    "origin": {
+      "bytes": 4850776,
+      "connections": 1,
+      "eof_connections": 0,
+      "fault_requests": 0,
+      "fixture_bytes": 45001748,
+      "fixture_sha256": "b994dfd68f54cdf58ed169f2da7b4e4843d1632acad4b9a178408bdad1f450c0"
+    },
+    "original_bad_segment": "seg_00002.ts",
+    "same_slice_in_earlier_native_MKV": true
+  },
+  "original_followup": {
+    "actual_exit": 1,
+    "closure": {
+      "cleanup_marker_absent": true,
+      "cleanup_sha256": "ae5c24a59f094aacff2696f25581a6ead48ed98f9035bddf8433fc18d79d091d",
+      "controller_sha256": "dbbc77966e857f1a4163916d9d9ab793b37edefc4dbe22619ac4170fbb09d7f8",
+      "exact_cleanup": true,
+      "original_roles_exit_0": true,
+      "owned_vm_generations": {
+        "30460": {
+          "last_start_ticks_after": null,
+          "start_ticks_before": "386364"
+        },
+        "30555": {
+          "last_start_ticks_after": null,
+          "start_ticks_before": "386370"
+        }
+      },
+      "process_group_absent": 17844,
+      "project": "dispatcharr-normal-dvr-5ca66ee9d4",
+      "project_and_probe_rosters_empty": true,
+      "retired_cids": [
+        "b5123e3c076bed6b21c1205e756f2b12a7e3d6274ca131974ca5c55dbfc677de",
+        "dc2dbb3ccebceb58df6fc0f7069eb9c3a9fe12ed72251fc5082dc25d5cc1e6d4",
+        "f24af5e9bc53aeddb26c51f932da31e0de9c77c437cfc98eba06ac3dad8f026d"
+      ],
+      "retired_network": "dispatcharr-normal-dvr-5ca66ee9d4_default",
+      "vm_boot_id": "2b806dd3-2a0a-45e3-80aa-011afca305f8"
+    },
+    "earlier_comparison": {
+      "native_corrupt_final_h264_packet_pts_seconds": "10.221",
+      "native_revision": "585fde95",
+      "native_strict_decode_exit": 183,
+      "same_first_corrupt_slice_or_root_cause_proven": false,
+      "same_observed_failure_class": true
+    },
+    "fixture": "Original r3",
+    "media": {
+      "actual_mkv": {
+        "audio_blocks": 762,
+        "audio_blocks_sha256": "b501a4be855a446124a67da27e5c5ecccaefc648c01506075f5f602d08116901",
+        "bytes": 2347280,
+        "sha256": "b6049ce3670151ba250ce04293fa7d5beaa8a8cc16ea9aa8ef49dee6a95e65a1",
+        "terminal_video_vcl_sha256": "c31215f62817ce58b258ec6bf71e00f813130c5d6f2816331d6a508f80ee8c1a",
+        "video_blocks": 407,
+        "video_blocks_sha256": "2baa040db3d22f9b5dbbabcc1f26066bd9820330f52f5b98e3b1571622755bd0"
+      },
+      "actual_mkv_video_vcl_nals": 407,
+      "business_passed": false,
+      "diagnostic_sha256": "2f41e7e7c3ae00e7e196906ed26f14860727465e9587ca224bbcebcde4329d65",
+      "ended_playlist_sha256": "44a837b46e6bc972a9c2cf2f5dacdd583adbc3a4f5898d8919eba512647135b2",
+      "exact_vcl_gap_or_rewrite": [],
+      "final_recording_decode": {
+        "actual_exit": 183,
+        "actual_file_bytes": 2347280,
+        "audio_frames": 762,
+        "decoder_stderr_sha256": "01f64477fcd327a89bdd2d19a28782d8d02fd22f0c7f19093639c4a34b78e236",
+        "file_sha256": "b6049ce3670151ba250ce04293fa7d5beaa8a8cc16ea9aa8ef49dee6a95e65a1",
+        "internal_damage_detected": true,
+        "process_group_settled": true,
+        "stderr_EOF": true,
+        "stdout_EOF": true,
+        "video_frames": 407
+      },
+      "finished_playlist_has_exact_same_ordered_vcl_as_product_mkv": true,
+      "finished_playlist_video_vcl_nals": 407,
+      "last_segment_decode_exit": 0,
+      "last_ts_all_vcl_match_product_suffix": true,
+      "operations": [
+        [
+          "booking",
+          201
+        ],
+        [
+          "playlist",
+          200
+        ],
+        [
+          "segment",
+          200
+        ],
+        [
+          "segment",
+          200
+        ],
+        [
+          "stop",
+          200
+        ]
+      ],
+      "phase_exception_sha256": "a0287f1fcb44ac121895960d89b848f019942c7402e6af9247f26a307f74dba2",
+      "physical_segments": [
+        {
+          "bytes": 617580,
+          "file": "seg_00000.ts",
+          "first_vcl_index": 0,
+          "h264_vcl_nals": 100,
+          "last_vcl_index": 99,
+          "sha256": "924ec0b70eb373ac2eeabe5b82b3626aa80861039cb2d7c042d3ec835c292666",
+          "source": "actual HTTP response",
+          "terminal_video_vcl_sha256": "42fdcc83b5a189674f303c9f3be4e120a3abc6959f6c38f222e4466d3eabf80a",
+          "transport_packets": 3285,
+          "video_pes_starts": 100,
+          "video_vcl_sequence_sha256": "cb7f4c08030b30822553593bc91e1e6e02cc1866aa0d73bb2621aa4d2b994cb8"
+        },
+        {
+          "bytes": 617768,
+          "file": "seg_00001.ts",
+          "first_vcl_index": 100,
+          "h264_vcl_nals": 100,
+          "last_vcl_index": 199,
+          "sha256": "74eeeeb26981eead4f94736993269f213fde5330ce1bd121f9d735bdbfdaff4c",
+          "source": "actual HTTP response",
+          "terminal_video_vcl_sha256": "0ee083b58ac78150b6fa22ee2a4399bb762ba0e6737bfa7fdccabb098ce858d8",
+          "transport_packets": 3286,
+          "video_pes_starts": 100,
+          "video_vcl_sequence_sha256": "40ea49fc3caeda653bfce9304fb3ac055446a15f9aee5749ce65b00c2feae58d"
+        },
+        {
+          "bytes": 450824,
+          "file": "seg_00002.ts",
+          "first_vcl_index": 200,
+          "h264_vcl_nals": 78,
+          "last_vcl_index": 277,
+          "sha256": "68095eebb092c4340400a60cdf26a0768a93cbe0e40fafceeb30f9b7ca9a73fe",
+          "source": "tail observer",
+          "terminal_video_vcl_sha256": "deee840d9cbd6817764f1c3c2f49c6f10ed980b81db88d4e84dc53302d98a9a2",
+          "transport_packets": 2398,
+          "video_pes_starts": 78,
+          "video_vcl_sequence_sha256": "c2b9550ce412ca678f751a0c14175f43e1ed5ba5978704bb2cd8fb4ba3a053fe"
+        },
+        {
+          "bytes": 317344,
+          "file": "seg_00003.ts",
+          "first_vcl_index": 278,
+          "h264_vcl_nals": 50,
+          "last_vcl_index": 327,
+          "sha256": "ffa5131fa92ee3a2670869ac9854dd7c075b1c4121e9a834525edb1f38cd933f",
+          "source": "tail observer",
+          "terminal_video_vcl_sha256": "0ee083b58ac78150b6fa22ee2a4399bb762ba0e6737bfa7fdccabb098ce858d8",
+          "transport_packets": 1688,
+          "video_pes_starts": 50,
+          "video_vcl_sequence_sha256": "95dbd8b75342d2decf6f5983522fd4b4842dcaccd60758d7834aa30c7cfc34a3"
+        },
+        {
+          "bytes": 283316,
+          "file": "seg_00004.ts",
+          "first_vcl_index": 328,
+          "h264_vcl_nals": 50,
+          "last_vcl_index": 377,
+          "sha256": "066c03cb9e7584f34eeeb7b8527017e95762ba72884feb012d0c7cb936a276dd",
+          "source": "tail observer",
+          "terminal_video_vcl_sha256": "a167e932905e9de08382aebadfed08fdf19e3a5cc0c54b94a0588eea7c87825a",
+          "transport_packets": 1507,
+          "video_pes_starts": 50,
+          "video_vcl_sequence_sha256": "9d458e75489a32c778e8c0a6c44445a18e2dff8f304574c9fba038f02897fecc"
+        },
+        {
+          "bytes": 172208,
+          "file": "seg_00005.ts",
+          "first_vcl_index": 378,
+          "h264_vcl_nals": 29,
+          "last_vcl_index": 406,
+          "sha256": "7fb12b68aea6b686d84de89d20123a25dd7a848e94718ad38dd1a0ae0037911f",
+          "source": "tail observer",
+          "terminal_video_vcl_sha256": "c31215f62817ce58b258ec6bf71e00f813130c5d6f2816331d6a508f80ee8c1a",
+          "transport_packets": 916,
+          "video_pes_starts": 29,
+          "video_vcl_sequence_sha256": "2c4967597637e0d8b1c44dd073edd41bed68afe6baccdf63f335a24308cf1661"
+        }
+      ],
+      "recorded_http_operation_count": 67,
+      "retained_decoder_error": {
+        "artifact": "command-0156.stderr",
+        "h264_messages": [
+          "Invalid level prefix",
+          "error while decoding MB 16 7",
+          "corrupt decoded frame"
+        ],
+        "raw_sha256": "01f64477fcd327a89bdd2d19a28782d8d02fd22f0c7f19093639c4a34b78e236"
+      },
+      "sampled_capture_count": 1,
+      "sampled_remux_count": 1,
+      "scenario_sha256": "87a986fd55d97cf7ad3ac7eb5923fecf7fc7fbd432ddd217e0ca677b2f4649bb",
+      "scope": "H.264 VCL NAL payloads from Annex B segments and length-prefixed Matroska blocks; trailing zero syntax removed",
+      "terminal_remux_claimed_success": true
+    }
+  },
+  "performance_measured": false,
+  "source_audit_sha256": {
+    "original_followup": "636029c37030fa2e237152bfbbc20d56fc3cd615b97491e1b009ea509888dd66",
+    "successful_pair_closure": "0ab6b801df12dc1e44ffa0346a10a0dcf08f1ed30b1fbd7ac0bc4015a3cd0166",
+    "successful_pair_media": "abf22d5a5a0721c2e6dabe50994a398a356b3e1ee59a42589f0376df0bd1d04b"
+  },
+  "successful_pair_closure": {
+    "native": {
+      "all_original_process_generations_absent": true,
+      "cleanup_sha256": "ae88756e6d1a47a3ea2e4862b0ced1f234736f9d132a046fe0c824292b771646",
+      "closure_verified": true,
+      "controller_exit": 0,
+      "diagnostic_summary_sha256": "382d6090d492dd80385e99446b4698119704248b8b93e83d2b477752e77fffbc",
+      "exact_container_absence": [
+        "23560d269a3e37b5f42a33d7b4e4ce01165d787014ae59c2933430094ffceaee",
+        "8cb08c409e70075ab9c6b39aee6153835772077da71755368e97ac2162dea9ee",
+        "faba49994cb2636aa463b104caaba10022df6ee561a436fbbb2b6382d13b4c03"
+      ],
+      "exact_container_names_absent": [
+        "dispatcharr-normal-dvr-26b313fdab-baseline-1",
+        "dispatcharr-normal-dvr-26b313fdab-origin-1",
+        "dispatcharr-normal-dvr-26b313fdab-vm-pid",
+        "dispatcharr-normal-dvr-26b313fdab-native-11d6f"
+      ],
+      "exact_network_name_absent": "dispatcharr-normal-dvr-26b313fdab_default",
+      "execution_sha256": "2b81d9113bd1c7b1ce687e69001d974ad955cf07bfe3c645ad25b0d5f685bec2",
+      "observer_and_controller_groups_settled": true,
+      "owned_project_inventory_empty": [
+        "dispatcharr-normal-dvr-26b313fdab",
+        "dispatcharr-normal-dvr-26b313fdab-vm-pid"
+      ],
+      "receipt_sha256": "8f4ee7f517e243171f4f6889410906fd1d6ecc2c322b0ae2e2c36ed0da3ead14"
+    },
+    "original": {
+      "all_original_process_generations_absent": true,
+      "cleanup_sha256": "77dbe790e10ba2602bc9a8d075c666cbc4988c42d88ec3fabb52e1d67e99fbe9",
+      "closure_verified": true,
+      "controller_exit": 0,
+      "diagnostic_summary_sha256": "6e6aeafad031458a55e7fbbe0e22fd478b10a137ff5dd668f0550e212cda2de4",
+      "exact_container_absence": [
+        "b1e698b8d14621b45878a027fd0290c0d1ac005bab2658f22f45489195897fcd",
+        "538cb433cc31084a398c76f00f492c3307202aad95ef0c319773b093ea13726e"
+      ],
+      "exact_container_names_absent": [
+        "dispatcharr-normal-dvr-19028d6dba-baseline-1",
+        "dispatcharr-normal-dvr-19028d6dba-origin-1",
+        "dispatcharr-normal-dvr-19028d6dba-vm-pid"
+      ],
+      "exact_network_name_absent": "dispatcharr-normal-dvr-19028d6dba_default",
+      "execution_sha256": "febcd14e6fed94b2b2fb86c89fef282209d67776447d09f89206d83ccc178325",
+      "observer_and_controller_groups_settled": true,
+      "owned_project_inventory_empty": [
+        "dispatcharr-normal-dvr-19028d6dba",
+        "dispatcharr-normal-dvr-19028d6dba-vm-pid"
+      ],
+      "receipt_sha256": "35fd8bec9f4c04cd55d90565fc1fb879eda130a4aa9ecb88ff77211ac327eab5"
+    }
+  },
+  "successful_pair_media": {
+    "matches_business_projection": true,
+    "native": {
+      "actual_mkv_decode": 0,
+      "both_mkvs_have_exact_packet_payloads": true,
+      "decoded_frames": {
+        "audio": 522,
+        "video": 281
+      },
+      "diagnostic_complete": false,
+      "endlist_segment_count": 3,
+      "observed_process_counts": {
+        "captures_seen": 0,
+        "remuxes_seen": 0
+      },
+      "playlist_copy_mkv": {
+        "audio_blocks": 522,
+        "audio_blocks_sha256": "c8233e33af7f49ed45a92ed69e800d6010d8d57f2012c7ac732ddd89275e60da",
+        "bytes": 1625921,
+        "sha256": "0db97fee2c2e8b5a9dca2977cb96de89cf00e4258105bce3ebcdaff549761561",
+        "terminal_video_vcl_sha256": "5bd863903bb4149b95e0eec73f4c5fba5ea419da8d8deb4d254402c59a6842b1",
+        "video_blocks": 281,
+        "video_blocks_sha256": "e50649cca37833bb88fdc48a414093645a226de5640d8775e7ab8431888ac146"
+      },
+      "product_mkv": {
+        "audio_blocks": 522,
+        "audio_blocks_sha256": "c8233e33af7f49ed45a92ed69e800d6010d8d57f2012c7ac732ddd89275e60da",
+        "bytes": 1625921,
+        "sha256": "a4da5174a3c1698b22ef0f1a0c967f4bb1612c33a842b00b1136ea3ded30d644",
+        "terminal_video_vcl_sha256": "5bd863903bb4149b95e0eec73f4c5fba5ea419da8d8deb4d254402c59a6842b1",
+        "video_blocks": 281,
+        "video_blocks_sha256": "e50649cca37833bb88fdc48a414093645a226de5640d8775e7ab8431888ac146"
+      },
+      "projection": {
+        "HLS_retired": true,
+        "active_provider_slots": 1,
+        "active_recorders": 1,
+        "active_upstreams": 1,
+        "booking_status": 201,
+        "clocked_one_off": true,
+        "final_AV_decode_passed": true,
+        "final_remux_success": true,
+        "final_status": "stopped",
+        "natural_active_status": "recording",
+        "provider_retired": true,
+        "received_AV_decode_passed": true,
+        "received_bytes_match_encoder_files": true,
+        "recorders_retired": true,
+        "signed_HLS_status": 200,
+        "signed_segment_reads": 2,
+        "stop_body": {
+          "status": "stopped",
+          "success": true
+        },
+        "stop_status": 200
+      },
+      "receipt_sha256": "8f4ee7f517e243171f4f6889410906fd1d6ecc2c322b0ae2e2c36ed0da3ead14",
+      "retained_segment_count": 3,
+      "strict_decodes": {
+        "last_segment": 0,
+        "remux": 0,
+        "remuxed_strict_decode": 0
+      },
+      "terminal_segment": {
+        "bytes": 466992,
+        "file": "seg_00002.ts",
+        "h264_vcl_nals": 81,
+        "sha256": "37dd39e6a9f1fb318e1e3c2815bb30222a5d05334657318c93c2a218505faf07",
+        "terminal_video_vcl_sha256": "5bd863903bb4149b95e0eec73f4c5fba5ea419da8d8deb4d254402c59a6842b1",
+        "transport_packets": 2484,
+        "video_pes_starts": 81,
+        "video_vcl_sequence_sha256": "99429225424856b431dadffd594e846455c0bb465e954f7ec5ea29cc37c5f429"
+      },
+      "terminal_ts_video_nals_match_mkv_suffix": true
+    },
+    "original": {
+      "actual_mkv_decode": 0,
+      "decoded_frames": {
+        "audio": 810,
+        "video": 430
+      },
+      "diagnostic_complete": true,
+      "endlist_segment_count": 6,
+      "observed_process_counts": {
+        "captures_seen": 1,
+        "remuxes_seen": 1
+      },
+      "product_mkv": {
+        "audio_blocks": 810,
+        "audio_blocks_sha256": "7f434b9f12b0ab11e057e478283562fa5ef44f13912e2b904e20d55e077a0fb8",
+        "bytes": 2487245,
+        "sha256": "d2e41d39203e11a997823dbcaec582e36b2d1e75083638f45f4eedf10170e02c",
+        "terminal_video_vcl_sha256": "c31215f62817ce58b258ec6bf71e00f813130c5d6f2816331d6a508f80ee8c1a",
+        "video_blocks": 432,
+        "video_blocks_sha256": "2150e00798d4403ecb1f0276cede41d365fa45e60c4bdee4cc4c4e0cd88756df"
+      },
+      "projection": {
+        "HLS_retired": true,
+        "active_provider_slots": 1,
+        "active_recorders": 1,
+        "active_upstreams": 1,
+        "booking_status": 201,
+        "clocked_one_off": true,
+        "final_AV_decode_passed": true,
+        "final_remux_success": true,
+        "final_status": "stopped",
+        "natural_active_status": "recording",
+        "provider_retired": true,
+        "received_AV_decode_passed": true,
+        "received_bytes_match_encoder_files": true,
+        "recorders_retired": true,
+        "signed_HLS_status": 200,
+        "signed_segment_reads": 2,
+        "stop_body": {
+          "status": "stopped",
+          "success": true
+        },
+        "stop_status": 200
+      },
+      "receipt_sha256": "35fd8bec9f4c04cd55d90565fc1fb879eda130a4aa9ecb88ff77211ac327eab5",
+      "retained_segment_count": 4,
+      "strict_decodes": {
+        "last_segment": 0
+      },
+      "terminal_segment": {
+        "bytes": 172208,
+        "file": "seg_00005.ts",
+        "h264_vcl_nals": 29,
+        "sha256": "f91764e1a3bfb553e566a79b9913b6a3aba2ae857fc72dea460cd2b316517126",
+        "terminal_video_vcl_sha256": "c31215f62817ce58b258ec6bf71e00f813130c5d6f2816331d6a508f80ee8c1a",
+        "transport_packets": 916,
+        "video_pes_starts": 29,
+        "video_vcl_sequence_sha256": "2c4967597637e0d8b1c44dd073edd41bed68afe6baccdf63f335a24308cf1661"
+      },
+      "terminal_ts_video_nals_match_mkv_suffix": true
+    },
+    "terminal_vcl_matches_cross_arm": false
+  },
+  "whole_m4_passed": false
+}
