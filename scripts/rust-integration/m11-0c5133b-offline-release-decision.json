@@ -1,0 +1,44 @@
+{
+  "application": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "gates": [
+    {
+      "id": "offline-source-and-protected-inputs",
+      "status": "passed"
+    },
+    {
+      "id": "m9-integrated-release",
+      "status": "open"
+    },
+    {
+      "id": "m10-platform-and-distribution",
+      "status": "open"
+    },
+    {
+      "id": "m10-rollback",
+      "status": "bounded_pass"
+    },
+    {
+      "id": "m10-controlled-rollout",
+      "status": "blocked_on_m9_release_and_m10_platform"
+    },
+    {
+      "id": "m11-default-and-handoff",
+      "status": "blocked_on_m10_rollout"
+    },
+    {
+      "id": "m11-fallback-retirement",
+      "status": "blocked_on_m11_and_retention"
+    }
+  ],
+  "offline_provenance": "passed",
+  "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "protected_package_inputs": 497,
+  "publication": "f37bdfb21a56e291eb035c55f1f3198f5191ec77",
+  "raw_audit_sha256": "d5b03115bd2371020b81f5d9dcf421d74a73a5e61a4c0f00589401d018236c54",
+  "raw_local_rollback_receipts_verified": true,
+  "recorded_remote_receipt_verified": true,
+  "release_gate": "open",
+  "release_oci_digest_verified": false,
+  "runtime_executed": false,
+  "source_inputs_rehashed_from_git": 2161
+}
