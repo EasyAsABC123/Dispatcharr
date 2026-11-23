@@ -1510,6 +1510,11 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 
 ## Latest scoped runtime evidence for 63ee09fc
 
+- **M4** Original again missed the archive retirement window. The decoder exited zero, while the downstream socket observer encountered an ambiguous match. [Archive socket scope](rust-m4-d41abbb9-original-decoder-socket-scope.md)
+- **M6** Seven signed guide cases passed the same-image worker qualification on 63ee09fc. [Same-image guide cases](rust-m6-63ee09fc-seven-guide-cells.md)
+- **M8** Ordinary ARM64 verified signed PostgreSQL restore, matching identity, password, schema and media, plus 546 installed PostgreSQL files. [ARM64 restore readback](rust-m8-63ee09fc-arm64-restore-readback.md)
+- **M9** The ARM64 31cc8a3f paired workload stopped after the Original arm exceeded the idle memory growth limit. [Original idle memory audit](rust-m9-31cc8a3f-arm64-original-idle-growth.md)
+
 - **M2** Three packaged Main reply cases passed independent validation of delay, dropped-reply PostgreSQL fallback and shutdown with exact cleanup. The wrapper's separate reducer import failed after the runtime cases. [Packaged Main reply cases](rust-m2-63ee09fc-proxy-health-replies.md)
 - **M7** The exact 63ee09fc output pair matched 24 selected XC response projections and verified the same cold/warm named XMLTV bytes across two Native process generations. [Native output hash and guide grammar](rust-m7-63ee09fc-native-output-hash-grammar.md)
 

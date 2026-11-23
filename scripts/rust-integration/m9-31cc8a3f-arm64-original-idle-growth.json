@@ -1,0 +1,60 @@
+{
+  "actual_status": {
+    "Native": "not_started",
+    "Original_independent_audit": 1,
+    "Original_owner": 0,
+    "coordinator": 1
+  },
+  "attribution_bounds": {
+    "OS_or_outside_Docker_noise": "not exhaustively observed; cannot prove absence or assign cause",
+    "after_idle_before_reference_and_capture_decoding": true,
+    "attributed_to_owned_baseline_charge": true,
+    "gate_aggregate": "sum non-origin roles; in Original only baseline, origin and observer excluded",
+    "leak_vs_normal_retention": "unknown from this single case",
+    "per_process_or_anon_file_slab_source": "unknown; breakdown not persisted",
+    "working_definition": "max(0,memory.current-memory.stat.inactive_file)"
+  },
+  "candidate_package_preflight": "31cc8a3fbf975d06e86a3fd742f6a64ffe1adf04",
+  "credit": "Original Dispatcharr and upstream contributors retain full credit.",
+  "favorable_min_after_minus_max_before_bytes": 92233728,
+  "full_scan_regression": "deferred",
+  "gate_growth_bytes": 155099136,
+  "gate_limit_bytes": 67108864,
+  "paired_percentages_emitted": false,
+  "per_role_median_changes": {
+    "baseline": {
+      "charged_bytes": 155934720,
+      "working_bytes": 155099136
+    },
+    "observer": {
+      "charged_bytes": -20480,
+      "working_bytes": -20480
+    },
+    "origin": {
+      "charged_bytes": -31854592,
+      "working_bytes": 1732608
+    }
+  },
+  "qualified_original_observations": {
+    "all_decode_exit0_empty_stderr_min5": true,
+    "captured_independent_decode_reports": 20,
+    "guide_trees": 2,
+    "startup_signed_readers": 10
+  },
+  "retained_exact_retirement": {
+    "VM_reader_retired": true,
+    "application_stop_exit": 0,
+    "cleanup_exit": 0,
+    "host_CLI_groups_settled": true,
+    "recovery_exact_absence": {
+      "Native": true,
+      "Original": true
+    },
+    "typed_absence_counts": {
+      "container": 3,
+      "network": 2
+    },
+    "typed_absence_exit1_all": true
+  },
+  "verified_metadata_sha256": "ce24434137763488f11478b8525b002b261096985020a8100ec03faf3b75e0e9"
+}
