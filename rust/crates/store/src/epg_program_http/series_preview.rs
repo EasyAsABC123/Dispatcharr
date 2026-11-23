@@ -21,6 +21,9 @@ use std::{
 };
 use tokio::sync::oneshot;
 
+#[path = "series_evaluate.rs"]
+pub mod evaluate;
+
 pub(super) const PATH: &str = "/api/channels/series-rules/preview/";
 
 pub(super) async fn handle(
@@ -213,17 +216,7 @@ impl Preview {
         let epg_ids = if self.tvg_id.is_empty() {
             None
         } else {
-            let (found, mapped): (bool, Vec<i64>) = sqlx::query_as(
-                "SELECT count(*) > 0, coalesce(array_agg(e.id) FILTER (WHERE
-                   EXISTS (SELECT 1 FROM dispatcharr_channels_channel c WHERE c.epg_data_id=e.id)
-                   OR EXISTS (SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.epg_data_id=e.id)
-                 ), ARRAY[]::bigint[]) FROM epg_epgdata e
-                 WHERE e.tvg_id=$1 AND ($2::bigint IS NULL OR e.epg_source_id=$2)",
-            )
-            .bind(&self.tvg_id)
-            .bind(self.source_id)
-            .fetch_one(&mut *connection)
-            .await?;
+            let (found, mapped) = mapped_epg_ids(connection, &self.tvg_id, self.source_id).await?;
             if mapped.is_empty() {
                 let status = if found {
                     "no_channel_for_epg"
@@ -297,6 +290,24 @@ impl Preview {
             json!({"matches":matches,"total":total,"limit":self.limit,"epg_found":true,"warn":total>50}),
         )
     }
+}
+
+async fn mapped_epg_ids(
+    connection: &mut PgConnection,
+    tvg_id: &str,
+    source_id: Option<i64>,
+) -> Result<(bool, Vec<i64>), sqlx::Error> {
+    sqlx::query_as(
+        "SELECT count(*) > 0, coalesce(array_agg(e.id::bigint) FILTER (WHERE
+           EXISTS (SELECT 1 FROM dispatcharr_channels_channel c WHERE c.epg_data_id=e.id)
+           OR EXISTS (SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.epg_data_id=e.id)
+         ), ARRAY[]::bigint[]) FROM epg_epgdata e
+         WHERE e.tvg_id=$1 AND ($2::bigint IS NULL OR e.epg_source_id=$2)",
+    )
+    .bind(tvg_id)
+    .bind(source_id)
+    .fetch_one(connection)
+    .await
 }
 
 fn programme_query_error(error: sqlx::Error) -> StoreError {

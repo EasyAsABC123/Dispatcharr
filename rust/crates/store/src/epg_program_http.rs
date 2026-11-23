@@ -32,7 +32,7 @@ use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
 
 mod mutations;
 mod programme_html;
-mod series_preview;
+pub(crate) mod series_preview;
 
 #[derive(Clone, Copy, Debug)]
 pub struct EpgProgramReadLimits {

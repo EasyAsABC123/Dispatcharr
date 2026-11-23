@@ -27,6 +27,7 @@ use uuid::Uuid;
 
 pub(super) mod recurring;
 mod series_bulk_remove;
+mod series_evaluate_http;
 pub use recurring::{
     execute_recurring_purge, preflight_recurring_purge, CONFIGURED_REBUILD_HORIZON_DAYS,
 };
@@ -57,6 +58,18 @@ pub enum RecordingEffectError {
 /// Concrete job/media ports avoid a Store→job-transport dependency cycle.
 /// Implementations reread real rows/publish real commands; no frame mint here.
 pub trait RecordingJobs: Send + Sync {
+    fn evaluate_series(
+        &self,
+        _tvg_id: Option<String>,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<crate::series_evaluate::Report, StoreError>> {
+        Box::pin(async {
+            Err(StoreError::Unsupported(
+                "Synchronous Series evaluator unavailable",
+            ))
+        })
+    }
+
     /// Check actual scheduling capability before any recording mutation/revoke.
     /// Legacy fixture ports retain their declared behavior; Main binds a real guard.
     fn admit_scheduling(
@@ -135,6 +148,13 @@ pub trait RecordingJobs: Send + Sync {
         proof: RecordingTaskAbsent,
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), RecordingEffectError>>;
+    fn revoke_series_observed_absent(
+        &self,
+        proof: RecordingTaskAbsent,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
+        self.revoke_observed_absent(proof, owner)
+    }
     fn stop_clients(
         &self,
         channel: Uuid,
@@ -333,6 +353,10 @@ impl RecordingHttp {
             )
             .route(recurring::PATH, any(recurring::handle))
             .route(series_bulk_remove::PATH, any(series_bulk_remove::handle))
+            .route(
+                series_evaluate_http::PATH,
+                any(series_evaluate_http::handle),
+            )
             .with_state(self)
     }
     /// Keep one pair of outer paths: matchit's sibling catchall cannot merge
@@ -354,6 +378,10 @@ impl RecordingHttp {
             .route(
                 series_bulk_remove::PATH,
                 any(series_bulk_remove::with_playback),
+            )
+            .route(
+                series_evaluate_http::PATH,
+                any(series_evaluate_http::with_playback),
             )
             .with_state((self, playback))
             .merge(library)
@@ -579,7 +607,7 @@ async fn execute(
         json!({"detail":format!("Method \"{method}\" not allowed.")}),
     ))
 }
-async fn settle<T>(
+pub(super) async fn settle<T>(
     mut connection: sqlx::pool::PoolConnection<Postgres>,
     result: Result<T, StoreError>,
 ) -> Result<T, StoreError> {
@@ -1598,6 +1626,12 @@ mod recording_jobs_binding_tests {
                 "/api/channels/recordings/17/comskip/",
                 StatusCode::NOT_IMPLEMENTED,
                 json!({"error":"Comskip intake closed"}),
+            ),
+            (
+                Method::POST,
+                "/api/channels/series-rules/evaluate/",
+                StatusCode::SERVICE_UNAVAILABLE,
+                json!({"error":"Recording intake closed"}),
             ),
             (
                 Method::GET,

@@ -149,22 +149,7 @@ impl NormalRecordingPublisher {
             // already present or the capture window ended. Status alone skips
             // eligible artwork, never presence of a previous capture task.
             let artwork = if row.artwork {
-                let publisher = inner
-                    .booking_artwork
-                    .lock()
-                    .map_err(|_| Error::Supervisor)?
-                    .clone()
-                    .ok_or(Error::Unsupported(
-                        "booking root artwork publisher not composed",
-                    ))?;
-                let raw = booking_lineage(artwork_frame(recording, reply_oid(&inner)?)?, parent)?;
-                Some(
-                    publisher
-                        .publish_when_ready(&raw, owner, &inner.booking_backpressure_closed)
-                        .await
-                        .map_err(Error::Transport)?
-                        .task_id,
-                )
+                Some(publish_booking_artwork(&inner, recording, parent, owner).await?)
             } else {
                 None
             };
@@ -173,6 +158,36 @@ impl NormalRecordingPublisher {
         .await
         .map_err(|_| Error::Supervisor)?
     }
+    /// The explicit second artwork call in synchronous Series evaluation.
+    /// The preceding save signal independently schedules from this committed row.
+    pub async fn publish_series_evaluation_artwork(
+        &self,
+        recording: i64,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Uuid, Error> {
+        if self.inner.closed.load(Ordering::Acquire) {
+            return Err(Error::Closed);
+        }
+        let slot = self
+            .inner
+            .slot
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| Error::Capacity)?;
+        let owner = Arc::new(Owner {
+            _slot: slot,
+            _caller: caller,
+            _producer: self.inner.clone(),
+        });
+        let inner = self.inner.clone();
+        tokio::spawn(async move {
+            booking_row(inner.pool.clone(), recording, false, owner.clone()).await?;
+            publish_booking_artwork(&inner, recording, None, owner).await
+        })
+        .await
+        .map_err(|_| Error::Supervisor)?
+    }
+
     /// Cache-authoritative Source DVR group for the HTTP serializer's EPG padding.
     /// A bare SQL setting read is deliberately insufficient. Use the same Store
     /// and Redis URL as Main; all transferred policy operations physically settle.
@@ -396,6 +411,28 @@ async fn assign(
     })
     .await
     .map_err(|_| Error::Supervisor)?
+}
+
+async fn publish_booking_artwork(
+    inner: &Inner,
+    recording: i64,
+    parent: Option<Uuid>,
+    owner: Arc<Owner>,
+) -> Result<Uuid, Error> {
+    let publisher = inner
+        .booking_artwork
+        .lock()
+        .map_err(|_| Error::Supervisor)?
+        .clone()
+        .ok_or(Error::Unsupported(
+            "booking root artwork publisher not composed",
+        ))?;
+    let raw = booking_lineage(artwork_frame(recording, reply_oid(inner)?)?, parent)?;
+    Ok(publisher
+        .publish_when_ready(&raw, owner, &inner.booking_backpressure_closed)
+        .await
+        .map_err(Error::Transport)?
+        .task_id)
 }
 
 fn artwork_frame(recording: i64, reply: Uuid) -> Result<Vec<u8>, Error> {

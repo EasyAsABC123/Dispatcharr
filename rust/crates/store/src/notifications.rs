@@ -1,14 +1,18 @@
 //! Original Dispatcharr notification reads and personal dismissal contracts.
 //! Original application authors retain full credit; see ATTRIBUTION.md.
 use crate::{
-    channels::{channel_options_headers, truthy},
+    channels::{
+        channel_options_headers, channel_options_indentation, options_json_response,
+        serialize_options_json, truthy,
+    },
     django_pickle, AuthService, StoreError, User,
 };
 use axum::{
     body::Bytes,
-    extract::{ConnectInfo, Path, RawQuery, Request, State},
-    http::{HeaderMap, HeaderValue, Method, StatusCode},
+    extract::{ConnectInfo, OriginalUri, Path, RawQuery, Request, State},
+    http::{HeaderMap, HeaderValue, Method, StatusCode, Uri},
     middleware::{self, Next},
+    response::{IntoResponse, Response},
     routing::{get, post, MethodRouter},
     Json, Router,
 };
@@ -1176,21 +1180,26 @@ async fn destroy(
 }
 const LIST_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
 const COUNT_ALLOW: &str = "GET, HEAD, OPTIONS";
+const DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
 const DISMISS_ALLOW: &str = "POST, OPTIONS";
 
 fn notification_ui_route<S>(
     route: MethodRouter<S>,
     method: Method,
     allow: &'static str,
+    include_not_found: bool,
 ) -> MethodRouter<S>
 where
     S: Clone + Send + Sync + 'static,
 {
     route.route_layer(middleware::from_fn(move |request: Request, next: Next| {
-        let observed = request.method() == method;
+        let observed =
+            request.method() == method || method == Method::GET && request.method() == Method::HEAD;
         async move {
             let response = next.run(request).await;
-            if observed && response.status() == StatusCode::OK {
+            let qualified = response.status() == StatusCode::OK
+                || include_not_found && response.status() == StatusCode::NOT_FOUND;
+            if observed && qualified {
                 // Main's CORS middleware appends origin to Accept.
                 channel_options_headers(response, HeaderValue::from_static(allow))
             } else {
@@ -1200,27 +1209,136 @@ where
     }))
 }
 
+enum NotificationOptions {
+    Collection,
+    Count,
+    Detail(String),
+}
+
+impl NotificationOptions {
+    fn allow(&self) -> &'static str {
+        match self {
+            Self::Collection => LIST_ALLOW,
+            Self::Count => COUNT_ALLOW,
+            Self::Detail(_) => DETAIL_ALLOW,
+        }
+    }
+
+    fn entity(&self) -> &'static [u8] {
+        match self {
+            Self::Collection => include_bytes!("../datasets/notifications-options-collection.json"),
+            Self::Count => include_bytes!("../datasets/notifications-options-count.json"),
+            Self::Detail(_) => include_bytes!("../datasets/notifications-options-detail.json"),
+        }
+    }
+}
+
+fn render_notification_options(
+    entity: &'static [u8],
+    indentation: usize,
+    show_actions: bool,
+) -> Result<Response, StoreError> {
+    let bytes = if indentation == 0 && show_actions {
+        Bytes::from_static(entity)
+    } else {
+        let mut data: Map<String, Value> =
+            serde_json::from_slice(entity).map_err(|_| StoreError::UnhandledRestFault)?;
+        if !show_actions {
+            data.shift_remove("actions");
+        }
+        serialize_options_json(&data, indentation).ok_or(StoreError::UnhandledRestFault)?
+    };
+    options_json_response(bytes)
+}
+
+async fn notification_options(
+    target: NotificationOptions,
+    auth: AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Response {
+    let allow = target.allow();
+    let result = async {
+        // The stock metadata action applies the same IsAdmin and UI-network
+        // permission as the notification management routes.
+        let admin = auth.account_user(peer, headers.clone(), true).await?;
+        let indentation = channel_options_indentation(&uri, &headers)?;
+        let show_actions = if let NotificationOptions::Detail(raw) = &target {
+            // DRF omits PUT serializer metadata when its object lookup fails.
+            match key(raw.clone()) {
+                Ok(id) => !visible(&auth, &admin, Some(id)).await?.is_empty(),
+                Err(StoreError::NotFound | StoreError::StatusBody(404, _)) => false,
+                Err(error) => return Err(error),
+            }
+        } else {
+            true
+        };
+        render_notification_options(target.entity(), indentation, show_actions)
+    }
+    .await;
+    channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        HeaderValue::from_static(allow),
+    )
+}
+
+async fn collection_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    notification_options(NotificationOptions::Collection, auth, peer, headers, uri).await
+}
+
+async fn count_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    notification_options(NotificationOptions::Count, auth, peer, headers, uri).await
+}
+
+async fn detail_options(
+    State(auth): State<AuthService>,
+    Path(raw): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    notification_options(NotificationOptions::Detail(raw), auth, peer, headers, uri).await
+}
+
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route(
             "/api/core/notifications/",
-            notification_ui_route(get(list), Method::GET, LIST_ALLOW).post(create),
+            notification_ui_route(get(list), Method::GET, LIST_ALLOW, false)
+                .post(create)
+                .options(collection_options),
         )
         .route(
             "/api/core/notifications/count/",
-            notification_ui_route(get(count), Method::GET, COUNT_ALLOW),
+            notification_ui_route(get(count), Method::GET, COUNT_ALLOW, false)
+                .options(count_options),
         )
         .route(
             "/api/core/notifications/dismiss-all/",
-            notification_ui_route(post(dismiss_all), Method::POST, DISMISS_ALLOW),
+            notification_ui_route(post(dismiss_all), Method::POST, DISMISS_ALLOW, false),
         )
         .route(
             "/api/core/notifications/{id}/",
-            get(detail).put(update).patch(update).delete(destroy),
+            notification_ui_route(get(detail), Method::GET, DETAIL_ALLOW, true)
+                .put(update)
+                .patch(update)
+                .delete(destroy)
+                .options(detail_options),
         )
         .route(
             "/api/core/notifications/{id}/dismiss/",
-            notification_ui_route(post(dismiss), Method::POST, DISMISS_ALLOW),
+            notification_ui_route(post(dismiss), Method::POST, DISMISS_ALLOW, false),
         )
         .with_state(auth)
 }
@@ -1229,7 +1347,39 @@ mod tests {
     use super::*;
 
     #[tokio::test]
-    async fn successful_notification_ui_methods_have_drf_headers_on_every_qualified_route() {
+    async fn notification_options_keeps_source_entity_and_omits_missing_action() {
+        use axum::body::to_bytes;
+        use axum::http::header;
+        for target in [
+            NotificationOptions::Collection,
+            NotificationOptions::Count,
+            NotificationOptions::Detail("42".into()),
+        ] {
+            let entity = target.entity();
+            let reply = render_notification_options(entity, 0, true).unwrap();
+            assert_eq!(reply.status(), StatusCode::OK);
+            assert_eq!(reply.headers()[header::CONTENT_TYPE], "application/json");
+            assert_eq!(
+                reply.headers()[header::CONTENT_LENGTH],
+                entity.len().to_string()
+            );
+            assert_eq!(
+                to_bytes(reply.into_body(), 8192).await.unwrap().as_ref(),
+                entity
+            );
+        }
+        let detail = NotificationOptions::Detail("42".into());
+        let base: Value = serde_json::from_slice(detail.entity()).unwrap();
+        assert!(base["actions"].get("PUT").is_some());
+        let missing = render_notification_options(detail.entity(), 0, false).unwrap();
+        let wire = to_bytes(missing.into_body(), 8192).await.unwrap();
+        let parsed: Value = serde_json::from_slice(&wire).unwrap();
+        assert!(parsed.get("actions").is_none());
+        assert_eq!(parsed["name"], base["name"]);
+    }
+
+    #[tokio::test]
+    async fn qualified_notification_ui_methods_have_drf_headers() {
         use axum::{
             body::{to_bytes, Body},
             http::header,
@@ -1243,26 +1393,38 @@ mod tests {
             StatusCode::UNAUTHORIZED
         }
 
+        async fn missing_detail() -> (StatusCode, &'static str) {
+            (StatusCode::NOT_FOUND, "same body")
+        }
+
         let router = Router::new()
             .route(
                 "/api/core/notifications/",
-                notification_ui_route(get(success), Method::GET, LIST_ALLOW).post(success),
+                notification_ui_route(get(success), Method::GET, LIST_ALLOW, false).post(success),
             )
             .route(
                 "/api/core/notifications/count/",
-                notification_ui_route(get(success), Method::GET, COUNT_ALLOW),
+                notification_ui_route(get(success), Method::GET, COUNT_ALLOW, false),
             )
             .route(
                 "/api/core/notifications/dismiss-all/",
-                notification_ui_route(post(success), Method::POST, DISMISS_ALLOW),
+                notification_ui_route(post(success), Method::POST, DISMISS_ALLOW, false),
             )
             .route(
                 "/api/core/notifications/{id}/dismiss/",
-                notification_ui_route(post(success), Method::POST, DISMISS_ALLOW),
+                notification_ui_route(post(success), Method::POST, DISMISS_ALLOW, false),
+            )
+            .route(
+                "/api/core/notifications/42/",
+                notification_ui_route(get(success), Method::GET, DETAIL_ALLOW, true).put(success),
+            )
+            .route(
+                "/api/core/notifications/43/",
+                notification_ui_route(get(missing_detail), Method::GET, DETAIL_ALLOW, true),
             )
             .route(
                 "/denied",
-                notification_ui_route(get(denied), Method::GET, COUNT_ALLOW),
+                notification_ui_route(get(denied), Method::GET, COUNT_ALLOW, false),
             );
         let cases = [
             (
@@ -1299,7 +1461,43 @@ mod tests {
                 Method::HEAD,
                 "/api/core/notifications/",
                 StatusCode::OK,
+                Some(LIST_ALLOW),
+            ),
+            (
+                Method::HEAD,
+                "/api/core/notifications/count/",
+                StatusCode::OK,
+                Some(COUNT_ALLOW),
+            ),
+            (
+                Method::GET,
+                "/api/core/notifications/42/",
+                StatusCode::OK,
+                Some(DETAIL_ALLOW),
+            ),
+            (
+                Method::HEAD,
+                "/api/core/notifications/42/",
+                StatusCode::OK,
+                Some(DETAIL_ALLOW),
+            ),
+            (
+                Method::PUT,
+                "/api/core/notifications/42/",
+                StatusCode::OK,
                 None,
+            ),
+            (
+                Method::GET,
+                "/api/core/notifications/43/",
+                StatusCode::NOT_FOUND,
+                Some(DETAIL_ALLOW),
+            ),
+            (
+                Method::HEAD,
+                "/api/core/notifications/43/",
+                StatusCode::NOT_FOUND,
+                Some(DETAIL_ALLOW),
             ),
             (Method::GET, "/denied", StatusCode::UNAUTHORIZED, None),
         ];
@@ -1331,11 +1529,11 @@ mod tests {
                     .map(|v| v.to_str().unwrap()),
                 allow.map(|_| "Accept")
             );
-            if status == StatusCode::OK && !head {
-                assert_eq!(
-                    to_bytes(response.into_body(), 9).await.unwrap().as_ref(),
-                    b"same body"
-                );
+            let body = to_bytes(response.into_body(), 9).await.unwrap();
+            if head {
+                assert!(body.is_empty());
+            } else if status == StatusCode::OK || status == StatusCode::NOT_FOUND {
+                assert_eq!(body.as_ref(), b"same body");
             }
         }
     }

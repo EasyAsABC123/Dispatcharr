@@ -124,7 +124,7 @@ async fn remove(
                 match owner
                     .state
                     .jobs
-                    .revoke_observed_absent(
+                    .revoke_series_observed_absent(
                         RecordingTaskAbsent::from_collector(task),
                         owner.clone(),
                     )

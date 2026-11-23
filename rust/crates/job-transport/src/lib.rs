@@ -233,6 +233,7 @@ pub mod tvg_programme_application;
 
 pub mod configured_series_application;
 pub mod refresh_series_handoff;
+pub mod synchronous_series;
 
 pub mod version_application;
 mod version_compare;

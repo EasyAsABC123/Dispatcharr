@@ -39,6 +39,7 @@ mod epg_reads;
 mod epg_source_writes;
 pub use epg_reads::EpgReadResource;
 mod epg_program_http;
+pub use epg_program_http::series_preview::evaluate as series_evaluate;
 pub use epg_program_http::{EpgProgramReadLimits, EpgProgramReads};
 mod epg_current;
 mod epg_current_http;

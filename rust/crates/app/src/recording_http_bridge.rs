@@ -2,12 +2,12 @@
 //! Original Dispatcharr and dependency authors retain all application credit.
 use dispatcharr_contracts::BoxFuture;
 use dispatcharr_job_transport::{
-    normal_control::Control,
+    normal_control::{Control, Error as ControlError},
     normal_recording_publication::{Error, NormalRecordingPublisher},
 };
 use dispatcharr_store::{
     recording_http::{RecordingChannelId, RecordingEffectError as Effect, RecordingJobs},
-    Store,
+    Store, StoreError,
 };
 use dispatcharr_stream_http::StreamEngine;
 use serde_json::Value;
@@ -19,6 +19,7 @@ pub fn port(
     control: Arc<Control>,
     engine: StreamEngine,
     dvr: Arc<dispatcharr_job_transport::recording_dvr_normal::NormalDvr>,
+    series: Arc<dispatcharr_job_transport::synchronous_series::SynchronousSeries>,
 ) -> Arc<dyn RecordingJobs> {
     Arc::new(Bridge {
         store,
@@ -27,6 +28,7 @@ pub fn port(
         control,
         engine,
         dvr,
+        series,
     })
 }
 struct Bridge {
@@ -36,8 +38,17 @@ struct Bridge {
     control: Arc<Control>,
     engine: StreamEngine,
     dvr: Arc<dispatcharr_job_transport::recording_dvr_normal::NormalDvr>,
+    series: Arc<dispatcharr_job_transport::synchronous_series::SynchronousSeries>,
 }
 impl RecordingJobs for Bridge {
+    fn evaluate_series(
+        &self,
+        tvg_id: Option<String>,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<dispatcharr_store::series_evaluate::Report, StoreError>> {
+        Box::pin(self.series.clone().evaluate(tvg_id, owner))
+    }
+
     fn admit_scheduling(&self, owner: Arc<dyn Send + Sync>) -> BoxFuture<'_, Result<(), Effect>> {
         Box::pin(async move {
             let _owner = owner;
@@ -221,6 +232,19 @@ impl RecordingJobs for Bridge {
                 .map_err(|_| Effect::Unsettled)
         })
     }
+    fn revoke_series_observed_absent(
+        &self,
+        proof: dispatcharr_store::recording_http::RecordingTaskAbsent,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), Effect>> {
+        Box::pin(async move {
+            self.control
+                .revoke_one(proof.task_key(), owner)
+                .await
+                .map(|_| ())
+                .map_err(series_revoke_error)
+        })
+    }
     fn stop_clients(
         &self,
         channel: RecordingChannelId,
@@ -348,5 +372,57 @@ fn cleanup_error(error: dispatcharr_store::recording_beat_cleanup::Error) -> Eff
             Effect::SettledFailure
         }
         _ => Effect::Unsettled,
+    }
+}
+
+fn series_revoke_error(error: ControlError) -> Effect {
+    match error {
+        // These errors return before the control writer is invoked. Original
+        // treats a failed immediate revoke as best effort in this collector.
+        ControlError::Capacity | ControlError::Closed | ControlError::NotReady => {
+            Effect::SettledFailure
+        }
+        // Control maps all writer-command errors to Io. A late publish can
+        // still happen, so do not swallow that error or send a second revoke.
+        _ => Effect::Unsettled,
+    }
+}
+
+#[cfg(test)]
+mod series_revoke_tests {
+    use super::*;
+    use dispatcharr_job_transport::normal_revocation::Revoked;
+
+    #[tokio::test]
+    async fn series_revoke_continues_only_on_proven_early_nonpublication() {
+        // This constructor only parses the URL. The test never starts the
+        // control listener or establishes a broker connection.
+        let control = Control::connect("redis://127.0.0.1:1/0", Revoked::new())
+            .await
+            .unwrap();
+        let not_ready = control
+            .revoke_one("owned-recording-revoke", Arc::new(()))
+            .await
+            .unwrap_err();
+        assert_eq!(not_ready, ControlError::NotReady);
+        assert!(control.shutdown(Duration::from_secs(1)).await);
+        let closed = control
+            .revoke_one("owned-recording-revoke", Arc::new(()))
+            .await
+            .unwrap_err();
+        assert_eq!(closed, ControlError::Closed);
+        for no_publish in [not_ready, closed, ControlError::Capacity] {
+            assert!(matches!(
+                series_revoke_error(no_publish),
+                Effect::SettledFailure
+            ));
+        }
+        for unknown in [
+            ControlError::Io,
+            ControlError::Protocol,
+            ControlError::Timeout,
+        ] {
+            assert!(matches!(series_revoke_error(unknown), Effect::Unsettled));
+        }
     }
 }

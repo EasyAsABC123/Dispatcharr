@@ -453,6 +453,14 @@ impl SelectedJobs {
             auth.clone(),
             dispatcharr_output_http::source_output_origin,
         );
+        let synchronous_series = Arc::new(jobs::synchronous_series::SynchronousSeries::new(
+            store.clone(),
+            cache.clone(),
+            locks.clone(),
+            publisher.clone(),
+            events.clone(),
+            dvr.clone(),
+        ));
         let recording_jobs = crate::recording_http_bridge::port(
             store.clone(),
             cache.clone(),
@@ -460,6 +468,7 @@ impl SelectedJobs {
             control.clone(),
             engine.clone(),
             dvr.clone(),
+            synchronous_series,
         );
         auth.bind_recording_jobs(recording_jobs.clone())
             .map_err(|_| "Selected recording HTTP Collector binding failed")?;
