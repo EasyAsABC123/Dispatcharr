@@ -1,16 +1,18 @@
 //! Original Dispatcharr authors retain application/algorithm/license credit.
 //! Candidate hostname/HTTPS transport for the measured Source16 domain.
-//! Not registered or accepted: DNS driver cancellation/physical closure, complete
-//! trust-store parity, codecs and production integration still need batch tests.
+//! DNS driver closure, complete trust-store parity, and production integration
+//! require separate physical acceptance.
 use super::{address_allowed, Failure, TransportUse, INACTIVITY, RAW_LIMIT};
+use dispatcharr_upstream_http::{body_limited, ResourceLimitExceeded, WireLimitExceeded};
 use futures_util::StreamExt;
-use reqwest::{header, redirect::Policy, Client, Url};
+use reqwest::{header, redirect::Policy, Client, ClientBuilder, Response, Url};
 use std::{net::IpAddr, path::Path, time::Duration};
 
 const MAX_DNS_ADDRESSES: usize = 64;
 const MAX_CA_BYTES: usize = 1024 * 1024;
 const MAX_TARGET_BYTES: usize = 8192;
 const MAX_HEADER_BYTES: usize = 65536;
+const MANIFEST_BODY_LIMIT: &str = "Manifest body capacity unavailable";
 pub(super) const UNQUALIFIED_DNS: &str = "Platform DNS error rendering remains unqualified";
 
 /// Source validates all DNS answers first, then requests resolves independently.
@@ -238,10 +240,21 @@ mod task_resolution {
 }
 
 fn client(ca_bundle: Option<&Path>) -> Result<Client, Failure> {
-    client_with_timeout(ca_bundle, INACTIVITY)
+    // Count coded entity bytes before content decoding, even if a different
+    // workspace crate ever enables reqwest's automatic decoders.
+    let builder = Client::builder()
+        .no_gzip()
+        .no_brotli()
+        .no_zstd()
+        .no_deflate();
+    client_with_timeout(builder, ca_bundle, INACTIVITY)
 }
-fn client_with_timeout(ca_bundle: Option<&Path>, timeout: Duration) -> Result<Client, Failure> {
-    let mut builder = Client::builder()
+fn client_with_timeout(
+    builder: ClientBuilder,
+    ca_bundle: Option<&Path>,
+    timeout: Duration,
+) -> Result<Client, Failure> {
+    let mut builder = builder
         .no_proxy()
         .redirect(Policy::none())
         .pool_max_idle_per_host(0)
@@ -325,41 +338,75 @@ pub(super) async fn one_get(
         drop(client);
         return Ok((status, location, Vec::new()));
     }
-    if response.headers().contains_key(header::TRANSFER_ENCODING)
-        || response
-            .headers()
-            .get(header::CONTENT_ENCODING)
-            .is_some_and(|v| v.as_bytes() != b"identity")
-    {
-        return Err(Failure::Unqualified(
-            "Chunked/compressed manifest transport remains unqualified",
-        ));
+    let body = manifest_body(response).await?;
+    drop(client);
+    Ok((status, location, body))
+}
+
+fn manifest_framing(headers: &header::HeaderMap) -> Result<(), Failure> {
+    let mut transfer = headers.get_all(header::TRANSFER_ENCODING).iter();
+    if let Some(value) = transfer.next() {
+        // Hyper removes chunk framing from body frames. Admit only that
+        // single transfer coding with no competing Content-Length.
+        if !value.as_bytes().eq_ignore_ascii_case(b"chunked")
+            || transfer.next().is_some()
+            || headers.contains_key(header::CONTENT_LENGTH)
+        {
+            return Err(Failure::Unqualified(
+                "Manifest transfer coding remains unqualified",
+            ));
+        }
     }
+    let mut content = headers.get_all(header::CONTENT_ENCODING).iter();
+    if let Some(value) = content.next() {
+        let known = [b"identity".as_slice(), b"gzip", b"x-gzip", b"deflate"]
+            .into_iter()
+            .any(|coding| value.as_bytes().eq_ignore_ascii_case(coding));
+        if !known || content.next().is_some() {
+            return Err(Failure::Unqualified(
+                "Manifest content coding remains unqualified",
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn manifest_body_failure(error: std::io::Error) -> Failure {
+    match error.get_ref() {
+        Some(cause) if cause.is::<WireLimitExceeded>() => Failure::Unqualified(MANIFEST_BODY_LIMIT),
+        Some(cause) if cause.is::<ResourceLimitExceeded>() => {
+            Failure::Unqualified("Manifest content decoding capacity unavailable")
+        }
+        // Keep the prior stream error class. The task layer does not persist a
+        // guessed Python error class after a partial/invalid download.
+        _ => Failure::Connect,
+    }
+}
+
+async fn manifest_body(response: Response) -> Result<Vec<u8>, Failure> {
+    manifest_framing(response.headers())?;
     if response
         .content_length()
         .is_some_and(|n| n > RAW_LIMIT as u64)
     {
-        return Err(Failure::Unqualified("Manifest body capacity unavailable"));
+        return Err(Failure::Unqualified(MANIFEST_BODY_LIMIT));
     }
-    let mut stream = response.bytes_stream();
-    let mut body = Vec::new();
+    let mut stream = body_limited(response, RAW_LIMIT).map_err(manifest_body_failure)?;
     let collect = async {
+        let mut body = Vec::new();
         while let Some(chunk) = stream.next().await {
-            let chunk = chunk.map_err(|_| Failure::Connect)?;
+            let chunk = chunk.map_err(manifest_body_failure)?;
             if body.len().saturating_add(chunk.len()) > RAW_LIMIT {
-                return Err(Failure::Unqualified("Manifest body capacity unavailable"));
+                return Err(Failure::Unqualified(MANIFEST_BODY_LIMIT));
             }
-            body.extend_from_slice(&chunk);
+            crate::image_proxy::append_bounded(&mut body, &chunk, RAW_LIMIT);
         }
-        Ok(())
+        Ok(body)
     };
     // Explicit finite capacity guard; Source timeout is per inactivity interval.
     tokio::time::timeout(Duration::from_secs(120), collect)
         .await
-        .map_err(|_| Failure::Unqualified("Manifest actor lifetime capacity unavailable"))??;
-    drop(stream);
-    drop(client);
-    Ok((status, location, body))
+        .map_err(|_| Failure::Unqualified("Manifest actor lifetime capacity unavailable"))?
 }
 
 /// Stream a managed ZIP using the SAME validated HTTPS/DNS/NO_PROXY port and
@@ -375,7 +422,7 @@ pub(super) async fn download_one(
     use tokio::io::AsyncWriteExt;
     validate(url, TransportUse::Request).await?;
     super::proxy_environment::enforce(url, proxy_port)?;
-    let client = client_with_timeout(ca_bundle, Duration::from_secs(60))?;
+    let client = client_with_timeout(Client::builder(), ca_bundle, Duration::from_secs(60))?;
     let response = client
         .get(url.clone())
         .header(header::ACCEPT, "*/*")
@@ -445,4 +492,158 @@ pub(super) async fn download_one(
     drop(stream);
     drop(client);
     result
+}
+
+#[cfg(test)]
+mod manifest_body_tests {
+    use super::*;
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
+
+    const PLAIN: &[u8] = br#"{"plugins":[]}"#;
+    const GZIP: &[u8] = &[
+        31, 139, 8, 0, 0, 0, 0, 0, 2, 255, 171, 86, 42, 200, 41, 77, 207, 204, 43, 86, 178, 138,
+        142, 173, 5, 0, 68, 80, 108, 13, 14, 0, 0, 0,
+    ];
+    const ZLIB: &[u8] = &[
+        120, 156, 171, 86, 42, 200, 41, 77, 207, 204, 43, 86, 178, 138, 142, 173, 5, 0, 39, 109, 5,
+        49,
+    ];
+    const RAW_DEFLATE: &[u8] = &[
+        171, 86, 42, 200, 41, 77, 207, 204, 43, 86, 178, 138, 142, 173, 5, 0,
+    ];
+    const GZIP_OVERSIZED: &[u8] = &[
+        31, 139, 8, 0, 0, 0, 0, 0, 2, 255, 237, 193, 129, 0, 0, 0, 0, 128, 32, 149, 253, 41, 23,
+        169, 10, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 170, 1, 1, 180, 186, 30, 1, 0, 1, 0,
+    ];
+
+    fn chunked(encoding: &str, body: &[u8]) -> Vec<u8> {
+        let mut wire = format!(
+            "HTTP/1.1 200 OK\r\nTransfer-Encoding: chunked\r\nContent-Encoding: {encoding}\r\nConnection: close\r\n\r\n"
+        )
+        .into_bytes();
+        for chunk in body.chunks(8192) {
+            wire.extend_from_slice(format!("{:x}\r\n", chunk.len()).as_bytes());
+            wire.extend_from_slice(chunk);
+            wire.extend_from_slice(b"\r\n");
+        }
+        wire.extend_from_slice(b"0\r\n\r\n");
+        wire
+    }
+
+    async fn read_owned_response(wire: Vec<u8>) -> Result<Vec<u8>, Failure> {
+        let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+        let address = listener.local_addr().unwrap();
+        let server = tokio::spawn(async move {
+            let (mut socket, _) = listener.accept().await.unwrap();
+            let mut request = Vec::new();
+            let mut part = [0; 1024];
+            while !request.ends_with(b"\r\n\r\n") {
+                let read = socket.read(&mut part).await.unwrap();
+                assert!(read > 0 && request.len() + read <= 4096);
+                request.extend_from_slice(&part[..read]);
+            }
+            socket.write_all(&wire).await.unwrap();
+        });
+        // Exercise the real HTTP decoder with an owned response. Production
+        // URL validation and TLS remain covered by their independent cases.
+        let client = Client::builder()
+            .no_proxy()
+            .http1_only()
+            .no_gzip()
+            .no_deflate()
+            .read_timeout(Duration::from_secs(2))
+            .build()
+            .unwrap();
+        let response = client
+            .get(format!("http://{address}/manifest.json"))
+            .send()
+            .await
+            .unwrap();
+        let result = manifest_body(response).await;
+        tokio::time::timeout(Duration::from_secs(2), server)
+            .await
+            .unwrap()
+            .unwrap();
+        result
+    }
+
+    #[test]
+    fn manifest_accepts_one_supported_coding_per_transport_layer() {
+        use header::{CONTENT_ENCODING, CONTENT_LENGTH, TRANSFER_ENCODING};
+
+        let mut headers = header::HeaderMap::new();
+        headers.insert(TRANSFER_ENCODING, "Chunked".parse().unwrap());
+        headers.insert(CONTENT_ENCODING, "GZip".parse().unwrap());
+        assert!(manifest_framing(&headers).is_ok());
+
+        headers.insert(CONTENT_LENGTH, "12".parse().unwrap());
+        assert!(matches!(
+            manifest_framing(&headers),
+            Err(Failure::Unqualified(_))
+        ));
+        headers.remove(CONTENT_LENGTH);
+        headers.insert(TRANSFER_ENCODING, "gzip, chunked".parse().unwrap());
+        assert!(matches!(
+            manifest_framing(&headers),
+            Err(Failure::Unqualified(_))
+        ));
+        headers.remove(TRANSFER_ENCODING);
+        headers.append(CONTENT_ENCODING, "deflate".parse().unwrap());
+        assert!(matches!(
+            manifest_framing(&headers),
+            Err(Failure::Unqualified(_))
+        ));
+        headers.insert(CONTENT_ENCODING, "br".parse().unwrap());
+        assert!(matches!(
+            manifest_framing(&headers),
+            Err(Failure::Unqualified(_))
+        ));
+    }
+
+    #[tokio::test]
+    async fn manifest_decodes_owned_chunked_identity_gzip_and_requests_deflate_variants() {
+        for (encoding, bytes) in [
+            ("identity", PLAIN),
+            ("gZip", GZIP),
+            ("x-gzip", GZIP),
+            ("deflate", ZLIB),
+            ("deflate", RAW_DEFLATE),
+        ] {
+            assert_eq!(
+                read_owned_response(chunked(encoding, bytes)).await.unwrap(),
+                PLAIN
+            );
+        }
+        let mut wire = format!(
+            "HTTP/1.1 200 OK\r\nContent-Encoding: gzip\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+            GZIP.len()
+        )
+        .into_bytes();
+        wire.extend_from_slice(GZIP);
+        assert_eq!(read_owned_response(wire).await.unwrap(), PLAIN);
+    }
+
+    #[tokio::test]
+    async fn manifest_rejects_coded_and_decoded_overflow_and_partial_transport() {
+        assert!(matches!(
+            read_owned_response(chunked("identity", &vec![b' '; RAW_LIMIT + 1])).await,
+            Err(Failure::Unqualified(MANIFEST_BODY_LIMIT))
+        ));
+        assert!(matches!(
+            read_owned_response(chunked("gzip", GZIP_OVERSIZED)).await,
+            Err(Failure::Unqualified(MANIFEST_BODY_LIMIT))
+        ));
+        let mut truncated = chunked("identity", PLAIN);
+        truncated.truncate(truncated.len() - 5);
+        assert!(matches!(
+            read_owned_response(truncated).await,
+            Err(Failure::Connect)
+        ));
+        assert!(matches!(
+            read_owned_response(chunked("gzip", b"invalid compressed body")).await,
+            Err(Failure::Connect)
+        ));
+    }
 }
