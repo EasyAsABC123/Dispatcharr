@@ -1,0 +1,71 @@
+{
+  "actual_exit": 0,
+  "actual_intake_receipt_sha256": "d3936ebb06426798f742b8d4702b5e6029f0bc8e8885897cfb7a3032aa3df09b",
+  "arm_child_manifest": "sha256:7c4fd0becb2bb28699400975f1e6a137e8dd309f5ef7c67af14c92fb1a9cb497",
+  "arm_config": "sha256:6a415b26b4aa91e22330c05d8cfd937795b5bce409644e4bdbcea8f437ea3d1b",
+  "candidate": "8fc7eef0a702b57d3c6b20dac171478b38e0196e",
+  "checkpoint_sha256": "d5692243fd33d6836834b311798a295e8f1f3736480aa08c8367a31b2a45c8cf",
+  "cold_copy_observation_sha256": "3b6a5be1fcf92ea1161bd1d6a8bdddfc199020882471926ea1e5d61ff5ff88f7",
+  "controls": {
+    "exact_current_receipt_replayed": true,
+    "rejections": [
+      {
+        "control": "actual-390-scoped-evidence",
+        "guard": "stale-fallback-candidate",
+        "rejected": true
+      },
+      {
+        "control": "receipt-replaced-by-390-summary",
+        "guard": "receipt-digest-mismatch",
+        "rejected": true
+      },
+      {
+        "control": "receipt-replaced-by-equivalent-reencoding",
+        "guard": "receipt-digest-mismatch",
+        "rejected": true
+      },
+      {
+        "control": "return-restore-manifest-drift",
+        "guard": "restored-manifest-mismatch",
+        "rejected": true
+      },
+      {
+        "control": "retention-missing",
+        "guard": "retention-authority",
+        "rejected": true
+      },
+      {
+        "control": "operator-packet-incomplete",
+        "guard": "missing-evidence",
+        "rejected": true
+      }
+    ]
+  },
+  "engine_calls": 0,
+  "m11_fallback_component_issued": false,
+  "open_gates": [
+    "formal_m9_acceptance",
+    "formal_m10_operator_handoff_and_rollout",
+    "approved_local_retention",
+    "same_configuration_compatibility",
+    "operator_signoffs_runbook_monitoring",
+    "separate_release_authorization"
+  ],
+  "operator_approved": false,
+  "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "platform": "linux/arm64",
+  "restore_manifest_equality_verified": true,
+  "retired_counts": {
+    "container": 16,
+    "network": 1,
+    "volume": 6
+  },
+  "schema": "dispatcharr-m11-real-fallback-intake/1",
+  "seal_sha256": "2391127195ce0fb7de8da24bd94732768b221a9a54c64035cad1d19b30fe02c0",
+  "source_receipt_sha256": "1496152421c27f02a3c72068017167c363a8579c7ad934a653dd586e67ee3e36",
+  "verified_ingress": {
+    "signed": 10,
+    "source_issued": 8,
+    "total": 14
+  }
+}

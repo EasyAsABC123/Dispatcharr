@@ -1,0 +1,170 @@
+{
+  "candidate_family_scope": "390ad8aa comparator stage; Native arm did not run",
+  "capture": {
+    "kernel_loss": 0,
+    "kernel_packets": 8891,
+    "pid": 863,
+    "records_ordinal_mapping": [
+      {
+        "consumed_slices": 256,
+        "flow_id": "0062ba6f603aafa6",
+        "retained_slices": 256
+      },
+      {
+        "consumed_slices": 151,
+        "flow_id": "e93d43a9c3a99677",
+        "retained_slices": 164
+      }
+    ],
+    "start_ticks": "111660",
+    "two_origin_matched_proxy_replies": true
+  },
+  "capture_boundary": {
+    "drain_started_realtime_ns": 1795430295498234837,
+    "frames_processed_during_drain": 0,
+    "kernel_delivered_frames": 8891,
+    "kernel_dropped_frames": 0,
+    "malformed_frames": 0,
+    "matching_frames_without_timestamp": 0,
+    "matching_port_frames_during_drain": 0,
+    "observed_candidate_flow_count": 2,
+    "queue_drain_mechanism": "nonblocking recvmsg EAGAIN",
+    "queue_empty_realtime_ns": 1795430295498261004,
+    "termination": "owner_requested_and_receive_queue_drained",
+    "transport_clean": true,
+    "truncated_frames": 0
+  },
+  "exact_raw_first_body_is_origin_prefix": true,
+  "exact_raw_second_body": {
+    "all_retained_input_bytes_equal_to_same_origin_slice": true,
+    "matched_contiguous_bytes": 1642180,
+    "raw_mpeg_ts_packet_offset": 6805,
+    "source_offset_zero_based_bytes": 1279340,
+    "source_seek_aligned": true
+  },
+  "first_proxy_http": {
+    "acknowledged_byte_count": 2558920,
+    "body_bytes": 2558680,
+    "body_complete": true,
+    "body_sha256": "d744586092413f54e64c0ce0ee4af7f75d56ac3675b86f54f97a941ae37bf8b0",
+    "contains_bad_final_access_unit": true,
+    "last_access_unit_index": 255,
+    "last_server_payload_minus_stop_ns": -727428159,
+    "server_fin_minus_stop_ns": 278485925,
+    "server_fin_observed": true,
+    "status": 200,
+    "strict_exit": 183
+  },
+  "hls": {
+    "actual_strict_decodes": {
+      "full_playlist_strict_decode": 183,
+      "last_segment": 0,
+      "remux": 0,
+      "remuxed_strict_decode": 183
+    },
+    "bad_unit_location": {
+      "file": "seg_00002.ts",
+      "zero_based_in_playlist": 255,
+      "zero_based_in_segment": 55
+    },
+    "physical_endlist_sha256": "44a837b46e6bc972a9c2cf2f5dacdd583adbc3a4f5898d8919eba512647135b2"
+  },
+  "independent_cleanup": {
+    "Darwin_group": 41297,
+    "cleanup_sha256": "f9b968d139d1ce961bba147aa374fee8448dc39ec55bcc863cfafb9c1698e996",
+    "exact_typed_absence": true,
+    "ids": [
+      "0d3df28128fc7388379517a8c81a1735a238bb899e4a20e728ef392d9489a5a5",
+      "9d73188ce3f587398f8abd0c25b9ccf5bc6aac833ee75355af7aed08cbb30f90",
+      "b7e5fee9cb8e27159e4476dc242fe2bbdbf7d4b4bbd8ad25ad50186ac7654b27"
+    ],
+    "marker_absent": true,
+    "pids": {
+      "17629": "107408",
+      "17725": "107414"
+    },
+    "project": "dispatcharr-normal-dvr-0d81a12bf3",
+    "role_exits": {
+      "beat": 0,
+      "celery": 0,
+      "dvr": 0,
+      "web": 0
+    },
+    "vm": "e3f99770-a4a2-4609-a174-3204c2e2be39"
+  },
+  "literal_original_actual_exit": 1,
+  "mkv": {
+    "bad_access_unit_index": 255,
+    "final_strict_exit": 183,
+    "h264_video_slices": 407,
+    "sha256": "e3fdc8d739cb5816fabdb1e5876ee7ae50a7aa68f0340323ff3b1a214745f2c3"
+  },
+  "native_eligible": false,
+  "origin": {
+    "bound_analyzed_bytes": 6291420,
+    "full_bytes": 45001748,
+    "full_sha256": "b994dfd68f54cdf58ed169f2da7b4e4843d1632acad4b9a178408bdad1f450c0",
+    "healthy_access_unit_index": 255,
+    "healthy_nal_sha256": "7300718713bed362b20d4d4e6336e357f6c5638a96c011229c9298a97d849c23",
+    "origin_connections": 1,
+    "sent_bytes": 4850776,
+    "strict_exit": 0
+  },
+  "origin_and_bodies_kept_private_on_lappy": true,
+  "paired_native_started": false,
+  "performance_credit": false,
+  "receipt_digests": {
+    "diagnostic": "9e6700c01ac5fa2b7e7c8c7f65b976faabb94f1a0436ac686a1e254d6d4f6093",
+    "local_typed_closure_reduction": "4ac92a6d614b78a5049382e50663d1f8a74316d6b3354c48df57761b41a442d2",
+    "ordinary_business": "71b1b1625c740931762efc67e141d4bf8dc18ee0b38b1da843d0eee3becb33a0"
+  },
+  "same_generation": {
+    "argv_sha256": "a737b23805a3ccbae02e3b21d60cbe55e52f6ba3997db93ac080f81d31ae5d55",
+    "pid": 863,
+    "same_generation_windows": {
+      "0062ba6f603aafa6": {
+        "first_ns": 1795430262054123127,
+        "last_ns": 1795430273391057925,
+        "samples": 397,
+        "socket_inode": 92949
+      },
+      "e93d43a9c3a99677": {
+        "first_ns": 1795430273416775633,
+        "last_ns": 1795430274418419217,
+        "samples": 36,
+        "socket_inode": 92107
+      }
+    },
+    "start_ticks": "111660"
+  },
+  "scope": "observed Original ARM64 signed scheduled DVR proxy HTTP response boundary",
+  "second_proxy_http": {
+    "aligned_prefix_only": true,
+    "body_aus": 164,
+    "body_aus_consumed": 151,
+    "body_bytes": 1642180,
+    "body_sha256": "8d3f82f6ae2fd35534ac63346eca903d82cf823e89f3e60c2bdbcafc236cec12",
+    "opening_au_matches_origin_index": 128,
+    "status": 200,
+    "strict_exit": 0,
+    "syn_minus_first_server_fin_ns": 117958,
+    "syn_minus_stop_ns": 278603883
+  },
+  "shared_invalid_normalized_h264_vcl": {
+    "healthy_origin_size_bytes": 5170,
+    "matches_earlier_truncated_slice": true,
+    "missing_tail_bytes": 2066,
+    "sha256": "3a9c4c82b6f003c4e1b06a5592fc2aaae0d32fe4fe9ee1494c96c5db94fc3f04",
+    "truncated_proxy_size_bytes": 3104,
+    "zero_based_access_unit_indexes": {
+      "final_mkv": 255,
+      "first_proxy_body": 255,
+      "hls_playlist": 255,
+      "hls_seg_00002_ts": 55,
+      "origin": 255
+    }
+  },
+  "stage_sha256": "814696e1d04a31aa0d1c0d7bdab05925bbbcfb5f8057cfeb367900ecedc98ab5",
+  "stock_application_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "whole_m4_verified": false
+}
