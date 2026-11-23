@@ -140,6 +140,44 @@ impl ProfileStore {
     pub async fn state(&self, channel: &str) -> Result<Option<String>, Error> {
         self.store.state(channel, &self.format).await
     }
+
+    /// Bound producers must match the current raw-input generation atomically.
+    /// Unbound legacy producers retain baseline active-owner READ admission;
+    /// this never adopts metadata or grants permission to reclaim their lease.
+    pub async fn snapshot_ready_for_reader(
+        &self,
+        channel: &str,
+    ) -> Result<Option<Snapshot>, Error> {
+        let keys = keys(channel, &self.format)?;
+        let mut read_keys = keys.to_vec();
+        read_keys.push(format!("live:channel:{channel}:owner"));
+        read_keys.push(profile_binding_key(&keys[0]));
+        let maximum = self.store.inner.config.max_segments.to_string();
+        let (ready, owner, index, descriptor, segments): (
+            u8,
+            String,
+            u64,
+            String,
+            Vec<(u64, f64)>,
+        ) = self
+            .store
+            .invoke(PROFILE_ACTIVE_SNAPSHOT, &read_keys, &[maximum.as_bytes()])
+            .await?;
+        match ready {
+            0 => Ok(None),
+            1 => Ok(Some(Snapshot {
+                owner: Some(owner),
+                index,
+                descriptor: if descriptor.is_empty() {
+                    None
+                } else {
+                    Some(serde_json::from_str(&descriptor).map_err(|_| Error::Corrupt)?)
+                },
+                segments,
+            })),
+            _ => Err(Error::Corrupt),
+        }
+    }
 }
 #[derive(Debug)]
 pub struct Snapshot {
@@ -190,6 +228,9 @@ fn keys(channel: &str, format: &str) -> Result<[String; 7], Error> {
         format!("{prefix}:init"),
         format!("{prefix}:state"),
     ])
+}
+fn profile_binding_key(owner_key: &str) -> String {
+    format!("{owner_key}:rust_input_binding")
 }
 fn valid_token(token: &str) -> bool {
     !token.is_empty()
@@ -321,26 +362,46 @@ impl OutputStore {
             self.inner.config.owner_ttl
         };
         let ttl = owner_ttl.as_millis().to_string();
-        let profiled_hls = format.starts_with("hls:p");
-        let mut claim_keys = vec![keys[0].clone(), keys[6].clone()];
-        if raw_owner.is_some() {
+        let (result, guard): (i64, G) = if raw_owner.is_some() {
+            let mut claim_keys = keys.to_vec();
             claim_keys.push(format!("live:channel:{channel}:owner"));
-        }
-        let raw = raw_owner.unwrap_or("");
-        let reset_state = if profiled_hls { b"1" } else { b"0" };
-        let (result, guard): (i64, G) = self
-            .command(
-                CLAIM,
+            claim_keys.push(profile_binding_key(&keys[0]));
+            let maximum = self.inner.config.max_segments.to_string();
+            self.command(
+                CLAIM_PROFILE,
                 &claim_keys,
                 &[
                     token.as_bytes(),
                     ttl.as_bytes(),
-                    raw.as_bytes(),
-                    reset_state,
+                    raw_owner.unwrap_or("").as_bytes(),
+                    maximum.as_bytes(),
                 ],
                 guard,
             )
-            .await?;
+            .await?
+        } else if format.starts_with("fmp4:p") {
+            let maximum = self.inner.config.max_segments.to_string();
+            self.command(
+                CLAIM_PROFILED_FMP4,
+                &keys,
+                &[token.as_bytes(), ttl.as_bytes(), maximum.as_bytes()],
+                guard,
+            )
+            .await?
+        } else {
+            let reset_state = if format.starts_with("hls:p") {
+                b"1"
+            } else {
+                b"0"
+            };
+            self.command(
+                CLAIM,
+                &[keys[0].clone(), keys[6].clone()],
+                &[token.as_bytes(), ttl.as_bytes(), b"", reset_state],
+                guard,
+            )
+            .await?
+        };
         Ok((
             (result == 1).then(|| OutputLease {
                 store: self.clone(),
@@ -539,13 +600,25 @@ impl OutputLease {
     pub async fn renew_retained<G: Send + 'static>(&self, guard: G) -> Result<G, Error> {
         let keys = keys(&self.channel, &self.format)?;
         let ttl = self.owner_ttl.as_millis().to_string();
-        let mut renew_keys = vec![keys[0].clone()];
-        if self.input_owner.is_some() {
-            renew_keys.push(format!("live:channel:{}:owner", self.channel));
-            renew_keys.push(keys[6].clone());
-        }
-        let raw = self.input_owner.as_deref().unwrap_or("");
-        let (result, guard):(i64,G)=self.store.command("if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end if ARGV[3]~='' and redis.call('GET',KEYS[2])~=ARGV[3] then return 0 end redis.call('PEXPIRE',KEYS[1],ARGV[2]);if ARGV[3]~='' then redis.call('PEXPIRE',KEYS[3],ARGV[2]) end return 1",&renew_keys,&[self.token.as_bytes(),ttl.as_bytes(),raw.as_bytes()],guard).await?;
+        let (result, guard): (i64, G) = if let Some(raw) = self.input_owner.as_deref() {
+            let renew_keys = [
+                keys[0].clone(),
+                format!("live:channel:{}:owner", self.channel),
+                keys[6].clone(),
+                profile_binding_key(&keys[0]),
+            ];
+            self.store
+                .command(
+                    RENEW_PROFILE,
+                    &renew_keys,
+                    &[self.token.as_bytes(), ttl.as_bytes(), raw.as_bytes()],
+                    guard,
+                )
+                .await?
+        } else {
+            self.store.command("if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end redis.call('PEXPIRE',KEYS[1],ARGV[2]);return 1",
+                &[keys[0].clone()], &[self.token.as_bytes(), ttl.as_bytes()], guard).await?
+        };
         if result == 1 {
             Ok(guard)
         } else {
@@ -661,7 +734,10 @@ impl OutputLease {
             .map(|(released, ())| released)
     }
     pub async fn release_retained<G: Send + 'static>(&self, guard: G) -> Result<(bool, G), Error> {
-        let keys = keys(&self.channel, &self.format)?;
+        let mut keys = keys(&self.channel, &self.format)?.to_vec();
+        if self.input_owner.is_some() {
+            keys.push(profile_binding_key(&keys[0]));
+        }
         let maximum = self.store.inner.config.max_segments.to_string();
         let (result, guard): (i64, G) = self
             .store
@@ -735,5 +811,73 @@ const RELEASE: &str = r#"
 if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end
 if redis.call('ZCARD',KEYS[4])>tonumber(ARGV[2]) then return redis.error_reply('CORRUPT cardinality') end
 local members=redis.call('ZRANGE',KEYS[4],0,-1);for _,member in ipairs(members) do redis.call('DEL',KEYS[5]..member) end
-redis.call('DEL',KEYS[1],KEYS[2],KEYS[3],KEYS[4],KEYS[6],KEYS[7]);return 1
+redis.call('DEL',KEYS[1],KEYS[2],KEYS[3],KEYS[4],KEYS[6],KEYS[7]);if KEYS[8] then redis.call('DEL',KEYS[8]) end return 1
+"#;
+
+// Binding is to BOTH producer token and raw generation. Never adopt an unknown
+// old token: another version may own it without publishing this Rust metadata.
+const CLAIM_PROFILE: &str = r#"
+if redis.call('STRLEN',KEYS[1])>128 or redis.call('STRLEN',KEYS[8])>256 then return redis.error_reply('CORRUPT profile owner') end
+if redis.call('GET',KEYS[8])~=ARGV[3] then return 0 end
+local kind=redis.call('TYPE',KEYS[9]).ok
+if kind~='none' and kind~='hash' then return 0 end
+if kind=='hash' and (redis.call('HLEN',KEYS[9])~=2 or redis.call('HSTRLEN',KEYS[9],'profile')>128 or redis.call('HSTRLEN',KEYS[9],'raw')>256) then return 0 end
+local old=redis.call('GET',KEYS[1])
+if old then
+ local bound_profile=redis.call('HGET',KEYS[9],'profile');local bound_raw=redis.call('HGET',KEYS[9],'raw')
+ if bound_profile~=old or not bound_raw or bound_raw=='' then return 0 end
+ if old==ARGV[1] then
+  if bound_raw~=ARGV[3] then return 0 end
+  redis.call('PEXPIRE',KEYS[1],ARGV[2]);redis.call('PEXPIRE',KEYS[7],ARGV[2]);redis.call('PEXPIRE',KEYS[9],ARGV[2]);return 1
+ end
+ if bound_raw==ARGV[3] then return 0 end
+end
+if redis.call('ZCARD',KEYS[4])>tonumber(ARGV[4]) then return redis.error_reply('CORRUPT profile cardinality') end
+local members=redis.call('ZRANGE',KEYS[4],0,-1)
+for _,member in ipairs(members) do if not string.match(member,'^%d+$') or tonumber(member)>9007199254740000 then return redis.error_reply('CORRUPT profile sequence') end end
+for _,member in ipairs(members) do redis.call('DEL',KEYS[5]..member) end
+redis.call('DEL',KEYS[2],KEYS[3],KEYS[4],KEYS[6],KEYS[7],KEYS[9])
+redis.call('SET',KEYS[1],ARGV[1],'PX',ARGV[2]);redis.call('SET',KEYS[7],'initializing','PX',ARGV[2])
+redis.call('HSET',KEYS[9],'profile',ARGV[1],'raw',ARGV[3]);redis.call('PEXPIRE',KEYS[9],ARGV[2]);return 1
+"#;
+const RENEW_PROFILE: &str = r#"
+if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('GET',KEYS[2])~=ARGV[3] then return 0 end
+if redis.call('HGET',KEYS[4],'profile')~=ARGV[1] or redis.call('HGET',KEYS[4],'raw')~=ARGV[3] then return 0 end
+redis.call('PEXPIRE',KEYS[1],ARGV[2]);redis.call('PEXPIRE',KEYS[3],ARGV[2]);redis.call('PEXPIRE',KEYS[4],ARGV[2]);return 1
+"#;
+// A new profiled remux generation cannot advertise its predecessor's init/tail.
+// Repeated claims by the SAME owner only renew, preserving retained-reader data.
+const CLAIM_PROFILED_FMP4: &str = r#"
+if redis.call('STRLEN',KEYS[1])>128 then return redis.error_reply('CORRUPT fmp4 owner') end
+local old=redis.call('GET',KEYS[1]);if old and old~=ARGV[1] then return 0 end
+if old then redis.call('PEXPIRE',KEYS[1],ARGV[2]);return 1 end
+if redis.call('ZCARD',KEYS[4])>tonumber(ARGV[3]) then return redis.error_reply('CORRUPT fmp4 cardinality') end
+local members=redis.call('ZRANGE',KEYS[4],0,-1)
+for _,member in ipairs(members) do if not string.match(member,'^%d+$') or tonumber(member)>9007199254740000 then return redis.error_reply('CORRUPT fmp4 sequence') end end
+for _,member in ipairs(members) do redis.call('DEL',KEYS[5]..member) end
+redis.call('DEL',KEYS[2],KEYS[3],KEYS[4],KEYS[6],KEYS[7])
+redis.call('SET',KEYS[1],ARGV[1],'PX',ARGV[2]);redis.call('SET',KEYS[7],'initializing','EX',3600);return 1
+"#;
+const PROFILE_ACTIVE_SNAPSHOT: &str = r#"
+if redis.call('STRLEN',KEYS[1])>128 or redis.call('STRLEN',KEYS[8])>256 then return redis.error_reply('CORRUPT profile owner') end
+local owner=redis.call('GET',KEYS[1]);local raw=redis.call('GET',KEYS[8])
+if not owner or owner=='' or redis.call('GET',KEYS[7])~='active' then return {0,'',0,'',{}} end
+local kind=redis.call('TYPE',KEYS[9]).ok
+if kind=='hash' then
+ if redis.call('HLEN',KEYS[9])~=2 then return {0,'',0,'',{}} end
+ if redis.call('HSTRLEN',KEYS[9],'profile')>128 or redis.call('HSTRLEN',KEYS[9],'raw')>256 then return redis.error_reply('CORRUPT profile binding') end
+ local bound_profile=redis.call('HGET',KEYS[9],'profile');local bound_raw=redis.call('HGET',KEYS[9],'raw')
+ if not bound_profile or bound_profile=='' or not bound_raw or bound_raw=='' then return {0,'',0,'',{}} end
+ if bound_profile==owner and (not raw or raw=='' or bound_raw~=raw) then return {0,'',0,'',{}} end
+ -- A record for a DIFFERENT token cannot describe the current producer. Read it
+ -- as legacy, but leave that record untouched; CLAIM_PROFILE still refuses it.
+elseif kind~='none' then return {0,'',0,'',{}} end
+-- No binding for this token: preserve the old active-owner read contract only.
+-- No metadata adoption, renewal, deletion, or takeover occurs in this script.
+if redis.call('STRLEN',KEYS[2])>32 or redis.call('STRLEN',KEYS[3])>65536 then return redis.error_reply('CORRUPT metadata') end
+local index=redis.call('GET',KEYS[2]) or '0';if not tonumber(index) or tonumber(index)<0 or tonumber(index)>9007199254740000 then return redis.error_reply('CORRUPT index') end
+if redis.call('ZCARD',KEYS[4])>tonumber(ARGV[1]) then return redis.error_reply('CORRUPT cardinality') end
+local all=redis.call('ZRANGE',KEYS[4],0,-1,'WITHSCORES');local entries={}
+for i=1,#all,2 do if not tonumber(all[i]) then return redis.error_reply('CORRUPT sequence') end table.insert(entries,{all[i],all[i+1]}) end
+return {1,owner,index,redis.call('GET',KEYS[3]) or '',entries}
 "#;
