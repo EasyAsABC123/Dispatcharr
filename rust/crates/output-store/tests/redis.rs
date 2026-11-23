@@ -528,3 +528,354 @@ async fn profile_cursor_read_atomically_rejects_successor_sequence_while_handed_
         .await
         .unwrap();
 }
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn raw_generation_reclaims_only_bound_stale_profile_and_fences_old_lease() {
+    let store = OutputStore::connect(&url(), OutputConfig::default())
+        .await
+        .unwrap();
+    let profile = store.profile(7).unwrap();
+    let channel = channel();
+    let raw_key = format!("live:channel:{channel}:owner");
+    let mut redis = redis::Client::open(url())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let _: () = redis::cmd("SET")
+        .arg(&raw_key)
+        .arg("raw-one")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    let old = profile
+        .claim_retained(&channel, "raw-one", "profile-one", ())
+        .await
+        .unwrap()
+        .0
+        .unwrap();
+    old.set_state("active").await.unwrap();
+    assert_eq!(old.put(b"old-ts", now()).await.unwrap(), 1);
+    assert!(profile
+        .snapshot_ready_for_reader(&channel)
+        .await
+        .unwrap()
+        .is_some());
+    assert!(profile
+        .claim_retained(&channel, "raw-one", "other-profile", ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    let _: () = redis::cmd("SET")
+        .arg(&raw_key)
+        .arg("raw-two")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert!(profile
+        .snapshot_ready_for_reader(&channel)
+        .await
+        .unwrap()
+        .is_none());
+    assert!(profile
+        .claim_retained(&channel, "raw-one", "foreign-request", ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    let next = profile
+        .claim_retained(&channel, "raw-two", "profile-two", ())
+        .await
+        .unwrap()
+        .0
+        .unwrap();
+    assert!(profile
+        .snapshot_ready_for_reader(&channel)
+        .await
+        .unwrap()
+        .is_none());
+    assert!(profile.get(&channel, 1).await.unwrap().is_none());
+    assert_eq!(old.put(b"late", now()).await, Err(Error::LostOwnership));
+    assert_eq!(old.renew().await, Err(Error::LostOwnership));
+    assert_eq!(old.set_state("active").await, Err(Error::LostOwnership));
+    assert!(!old.release().await.unwrap());
+    assert!(profile
+        .claim_retained(&channel, "raw-two", "third-profile", ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    assert_eq!(next.put(b"new-ts", now()).await.unwrap(), 1);
+    next.set_state("active").await.unwrap();
+    assert_eq!(
+        profile
+            .snapshot_ready_for_reader(&channel)
+            .await
+            .unwrap()
+            .unwrap()
+            .owner
+            .as_deref(),
+        Some("profile-two")
+    );
+    assert_eq!(
+        profile.get(&channel, 1).await.unwrap().unwrap().as_ref(),
+        b"new-ts"
+    );
+    assert!(next.release().await.unwrap());
+    let _: usize = redis::cmd("DEL")
+        .arg(raw_key)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn unbound_legacy_profile_remains_readable_without_adoption_or_reclaim() {
+    let store = OutputStore::connect(&url(), OutputConfig::default())
+        .await
+        .unwrap();
+    let profile = store.profile(7).unwrap();
+    let channel = channel();
+    let raw_key = format!("live:channel:{channel}:owner");
+    let owner_key = format!("live:channel:{channel}:output:mpegts:p7:owner");
+    let state_key = format!("live:channel:{channel}:output:mpegts:p7:state");
+    let mut redis = redis::Client::open(url())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    for (key, value) in [
+        (&raw_key, "raw-current"),
+        (&owner_key, "legacy-profile"),
+        (&state_key, "active"),
+    ] {
+        let _: () = redis::cmd("SET")
+            .arg(key)
+            .arg(value)
+            .query_async(&mut redis)
+            .await
+            .unwrap();
+    }
+    assert!(profile
+        .claim_retained(&channel, "raw-current", "next-profile", ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    assert_eq!(
+        profile
+            .snapshot_ready_for_reader(&channel)
+            .await
+            .unwrap()
+            .unwrap()
+            .owner
+            .as_deref(),
+        Some("legacy-profile")
+    );
+    let owner: String = redis::cmd("GET")
+        .arg(&owner_key)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert_eq!(owner, "legacy-profile");
+    let _: usize = redis::cmd("DEL")
+        .arg(raw_key)
+        .arg(owner_key)
+        .arg(state_key)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn new_profiled_fmp4_owner_cannot_read_predecessor_init_or_fragments() {
+    let store = OutputStore::connect(
+        &url(),
+        OutputConfig {
+            owner_ttl: Duration::from_millis(100),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let channel = channel();
+    let old = store
+        .claim(&channel, "fmp4:p7", "old-remux")
+        .await
+        .unwrap()
+        .unwrap();
+    old.put_init(b"old-init").await.unwrap();
+    old.put(b"old-fragment", now()).await.unwrap();
+    old.set_state("active").await.unwrap();
+    assert!(store
+        .claim(&channel, "fmp4:p7", "competitor")
+        .await
+        .unwrap()
+        .is_none());
+    // Same-owner retry preserves an active generation's retained body bytes.
+    assert!(store
+        .claim(&channel, "fmp4:p7", "old-remux")
+        .await
+        .unwrap()
+        .is_some());
+    assert_eq!(
+        store
+            .get_init(&channel, "fmp4:p7")
+            .await
+            .unwrap()
+            .unwrap()
+            .as_ref(),
+        b"old-init"
+    );
+    tokio::time::sleep(Duration::from_millis(130)).await;
+    let next = store
+        .claim(&channel, "fmp4:p7", "new-remux")
+        .await
+        .unwrap()
+        .unwrap();
+    assert!(store.get_init(&channel, "fmp4:p7").await.unwrap().is_none());
+    assert!(store.get(&channel, "fmp4:p7", 1).await.unwrap().is_none());
+    let snapshot = store.snapshot(&channel, "fmp4:p7").await.unwrap();
+    assert_eq!(snapshot.index, 0);
+    assert!(snapshot.segments.is_empty());
+    assert_eq!(
+        store.state(&channel, "fmp4:p7").await.unwrap().as_deref(),
+        Some("initializing")
+    );
+    assert_eq!(old.put_init(b"late-init").await, Err(Error::LostOwnership));
+    assert!(!old.release().await.unwrap());
+    next.put_init(b"new-init").await.unwrap();
+    assert_eq!(next.put(b"new-fragment", now()).await.unwrap(), 1);
+    assert!(next.release().await.unwrap());
+}
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn healthy_legacy_readers_survive_old_renewals_without_adoption_or_takeover() {
+    let store = OutputStore::connect(&url(), OutputConfig::default())
+        .await
+        .unwrap();
+    let profile = store.profile(7).unwrap();
+    let channel = channel();
+    let prefix = format!("live:channel:{channel}:output:mpegts:p7");
+    let raw_key = format!("live:channel:{channel}:owner");
+    let owner_key = format!("{prefix}:owner");
+    let state_key = format!("{prefix}:state");
+    let binding_key = format!("{owner_key}:rust_input_binding");
+    let mut redis = redis::Client::open(url())
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    for (key, value) in [
+        (&raw_key, "raw-legacy"),
+        (&owner_key, "legacy-profile"),
+        (&state_key, "active"),
+    ] {
+        let _: () = redis::cmd("SET")
+            .arg(key)
+            .arg(value)
+            .query_async(&mut redis)
+            .await
+            .unwrap();
+    }
+    // Exact 5fdaaba renewal script: an old replica never creates the new hash.
+    let old_renew = "if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end if ARGV[3]~='' and redis.call('GET',KEYS[2])~=ARGV[3] then return 0 end redis.call('PEXPIRE',KEYS[1],ARGV[2]);if ARGV[3]~='' then redis.call('PEXPIRE',KEYS[3],ARGV[2]) end return 1";
+    for _ in 0..3 {
+        let renewed: i64 = redis::cmd("EVAL")
+            .arg(old_renew)
+            .arg(3)
+            .arg(&owner_key)
+            .arg(&raw_key)
+            .arg(&state_key)
+            .arg("legacy-profile")
+            .arg(3600000)
+            .arg("raw-legacy")
+            .query_async(&mut redis)
+            .await
+            .unwrap();
+        assert_eq!(renewed, 1);
+        assert_eq!(
+            profile
+                .snapshot_ready_for_reader(&channel)
+                .await
+                .unwrap()
+                .unwrap()
+                .owner
+                .as_deref(),
+            Some("legacy-profile")
+        );
+        assert!(profile
+            .claim_retained(&channel, "raw-legacy", "upgraded-producer", ())
+            .await
+            .unwrap()
+            .0
+            .is_none());
+        let bound: bool = redis::cmd("EXISTS")
+            .arg(&binding_key)
+            .query_async(&mut redis)
+            .await
+            .unwrap();
+        assert!(!bound, "reads must never adopt a legacy producer");
+    }
+    // An old writer may take over after a patched writer retires and leave a
+    // companion record that names a DIFFERENT producer token. It is not a
+    // binding for the current legacy owner and cannot block healthy readers.
+    let _: usize = redis::cmd("HSET")
+        .arg(&binding_key)
+        .arg("profile")
+        .arg("retired-patched-profile")
+        .arg("raw")
+        .arg("retired-raw")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert_eq!(
+        profile
+            .snapshot_ready_for_reader(&channel)
+            .await
+            .unwrap()
+            .unwrap()
+            .owner
+            .as_deref(),
+        Some("legacy-profile")
+    );
+    assert!(profile
+        .claim_retained(&channel, "raw-legacy", "upgraded-producer", ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    let still_old: String = redis::cmd("HGET")
+        .arg(&binding_key)
+        .arg("profile")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert_eq!(still_old, "retired-patched-profile");
+    // If the record DOES describe this token, current-raw fencing is mandatory.
+    let _: usize = redis::cmd("HSET")
+        .arg(&binding_key)
+        .arg("profile")
+        .arg("legacy-profile")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert!(profile
+        .snapshot_ready_for_reader(&channel)
+        .await
+        .unwrap()
+        .is_none());
+    let _: usize = redis::cmd("DEL")
+        .arg(raw_key)
+        .arg(owner_key)
+        .arg(state_key)
+        .arg(binding_key)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+}

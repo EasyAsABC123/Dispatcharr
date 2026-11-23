@@ -348,17 +348,10 @@ impl StreamEngine {
             .map_err(store_error)?;
         let deadline = Instant::now() + Duration::from_secs(5);
         let first = loop {
-            let snapshot = store
-                .snapshot(&source.channel_id)
+            if let Some(snapshot) = store
+                .snapshot_ready_for_reader(&source.channel_id)
                 .await
-                .map_err(store_error)?;
-            if snapshot.owner.is_some()
-                && store
-                    .state(&source.channel_id)
-                    .await
-                    .map_err(store_error)?
-                    .as_deref()
-                    == Some("active")
+                .map_err(store_error)?
             {
                 break snapshot;
             }
