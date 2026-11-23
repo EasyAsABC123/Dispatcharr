@@ -387,6 +387,10 @@ impl RefreshApplication {
             .or_else(|| scalar.map(|_| PositiveRefreshScalar::SOURCE_ID))
             .or_else(|| missing.map(|source| source.lookup().unwrap_or(0)))
         else {
+            // Django prepares its IntegerField dummy-source lookup before publishing.
+            if invalid_integer_source_string(id) {
+                return source_500();
+            }
             return unqualified_import_id();
         };
         if let Some(source) = missing {
@@ -488,6 +492,11 @@ impl dispatcharr_store::sd_source_http::InitialXmltvRefresh for RefreshApplicati
     }
 }
 
+fn invalid_integer_source_string(id: &Value) -> bool {
+    id.as_str()
+        .is_some_and(|text| dispatcharr_ingest_core::source_integer_literal(text).is_none())
+}
+
 fn unqualified_import_id() -> Response {
     (
         StatusCode::NOT_IMPLEMENTED,
@@ -536,6 +545,60 @@ async fn import(
             "Refresh publication remains unconfirmed",
         )
             .into_response(),
+    }
+}
+
+#[cfg(test)]
+mod integer_source_tests {
+    use super::{invalid_integer_source_string, json};
+
+    #[test]
+    fn rejects_only_strings_that_fail_python_integer_conversion() {
+        for text in [
+            "bad",
+            "",
+            "  ",
+            "+",
+            "1.0",
+            "1e0",
+            "0x1",
+            "1__2",
+            "1_",
+            "1\0",
+            "1\u{1c}",
+            "\u{1f}1",
+            "\u{200b}1",
+            "−1",
+            "²",
+        ] {
+            assert!(invalid_integer_source_string(&json!(text)), "{text:?}");
+        }
+        for text in [
+            "1",
+            "01",
+            "+1",
+            "0",
+            "-1",
+            " 1\t",
+            "١_٢",
+            "１",
+            "\u{85}1\u{a0}",
+            "9999999999999999999999999999",
+        ] {
+            assert!(!invalid_integer_source_string(&json!(text)), "{text:?}");
+        }
+        assert!(!invalid_integer_source_string(&json!("1".repeat(4300))));
+        assert!(invalid_integer_source_string(&json!("1".repeat(4301))));
+        for other in [
+            json!(null),
+            json!(true),
+            json!(1),
+            json!(1.25),
+            json!([]),
+            json!({}),
+        ] {
+            assert!(!invalid_integer_source_string(&other));
+        }
     }
 }
 
