@@ -1,0 +1,80 @@
+{
+  "actual_exit": 0,
+  "actual_receipt_sha256": "233c37786af700d269571df0ab40a94a1ba5a8b328b66c5db4020d98fdcd1184",
+  "actual_review_sha256": "7ad895b144fb6e0ccfff2a98e02d5935d514d756dde4ceb22358f1de19a7be10",
+  "application_tasks_or_writes_exercised": false,
+  "candidate_child": "sha256:1c0a72079a9873bd9dd71fd81df67a107f883078b9cedb93f901813ddf7e3fc1",
+  "candidate_config": "sha256:929d39f7bf7e087e3ecf2f79306ad9615ea1aebc0733f0324a9e2ede4abcbaea",
+  "candidate_image": "sha256:8d26782ba4a364efc735e55c86e7c4790f38e4ab339727158f3d3a9ab02c95a9",
+  "candidate_started": false,
+  "cgroup": {
+    "events": {
+      "max": 0,
+      "oom": 0,
+      "oom_group_kill": 0,
+      "oom_kill": 0
+    },
+    "lifetime_headroom_limit_bytes": 90596966,
+    "memory_cap_bytes": 100663296,
+    "observed_peak_through_disposal_bytes": 24817664,
+    "swap_bytes": 0
+  },
+  "complete_pre_window_history_proven": false,
+  "django_loaded": false,
+  "exact_cleanup": true,
+  "formal_m9_qualified": false,
+  "literal_exits": {
+    "cut_literal_exit": 0,
+    "down_exit": 0,
+    "postexit_literal_exit": 0,
+    "stop_exit": 0
+  },
+  "native_platform": "linux/arm64",
+  "original_equivalence_proven": false,
+  "package_build_sha256": "750aed6d8c6912ab4e891cd1fee132838fc14a7e7cecdc724c70aeeb7e10d3fb",
+  "prior_attempts": [
+    {
+      "actual_exit": 1,
+      "creation_attempted": false,
+      "guard": "owned-volume-list",
+      "receipt_sha256": "0aa0ab2d743ff263264ed433b4c57785a8e1feb8de34faba8fef3af47e2433ab"
+    },
+    {
+      "actual_exit": 1,
+      "creation_attempted": true,
+      "guard": "cut-django-or-app-loaded",
+      "receipt_sha256": "090d6247a04cffc298f717bb338c892fcec0c6c9b7cb11090ac87e443a7d3eab"
+    }
+  ],
+  "redis_census": {
+    "observer_db": 0,
+    "priority_lanes": 8,
+    "queued": 0,
+    "result_keys": 0,
+    "unacked": 0,
+    "unacked_index": 0,
+    "unknown_priority_keys": 0
+  },
+  "retired": {
+    "container": 4,
+    "network": 1,
+    "volume": 1
+  },
+  "schema": "dispatcharr-0c-arm64-held-census-audit/1",
+  "scope": "Native held pre-consumer census",
+  "selected_worker_result_policy_proven": false,
+  "signed_http_proven": false,
+  "sql": {
+    "database_scope_verified": true,
+    "migration_catalog_present": false,
+    "read_only": true
+  },
+  "terminal_exit_by_role": {
+    "baseline": 0,
+    "candidate": 0,
+    "data-init": 0,
+    "publication-observer": 137
+  },
+  "source_audit_seal_sha256": "83c0eaf6ecd076b40edc80d2852628d2f9f5666a6c0b9e10c73a27b5f972d9dd",
+  "shutdown_observer_137_non_oom": true
+}

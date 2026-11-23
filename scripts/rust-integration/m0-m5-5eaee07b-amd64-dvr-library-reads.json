@@ -1,0 +1,396 @@
+{
+  "schema": "dispatcharr-dvr-library-read-differential/1",
+  "candidate": "5eaee07b9c5ee730726dfb6e25e7ffa416071873",
+  "manifest_sha256": "875800a56fec22639c5af57e48e259ac994060d05c8c09aedc488ba759e5ff5b",
+  "actual_receipt_sha256": "02880ff2ab0ebaf3493da180c38f40cc52b36400ccf4df956bc3e0ca20f7d500",
+  "source_proof_sha256": "0decb97fb45cbf59ee03385562d801f130d628587ade9c333ef961e8e4382cc5",
+  "native_proof_sha256": "e6ba8e7c9e9d6ba4d3f7e2c3efdb90fc27a3d939ce43c4992a16c602c4936faa",
+  "all_GET_observations": 10,
+  "declared_GET_observations": 8,
+  "exact_matches": 0,
+  "exact_cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "unchanged_fixture_state": true,
+  "formal_M0": false,
+  "formal_M5": false,
+  "literal_original_exits": {
+    "preflight": 0,
+    "run": 0,
+    "cleanup": 0,
+    "proof": 0,
+    "campaign": 0
+  },
+  "literal_native_exits": {
+    "preflight": 0,
+    "run": 1,
+    "cleanup": 0,
+    "proof": 1,
+    "campaign": 1
+  },
+  "cases": [
+    {
+      "contract_id": "route-f11670971b47e9fa9cdc:GET",
+      "family": "recording-list",
+      "role": "standard",
+      "differing_axes": [
+        "allow",
+        "vary"
+      ],
+      "Original": {
+        "status": 200,
+        "allow": [
+          "GET",
+          "POST",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "vary": [
+          "Accept",
+          "origin"
+        ],
+        "typed_JSON_sha256": "5de7ba668a1f05c9c320bfb3b131fefe5e9c60fb096891aeb17f313f980124a5"
+      },
+      "Native": {
+        "status": 200,
+        "allow": [],
+        "vary": [
+          "origin"
+        ],
+        "typed_JSON_sha256": "5de7ba668a1f05c9c320bfb3b131fefe5e9c60fb096891aeb17f313f980124a5"
+      }
+    },
+    {
+      "contract_id": "route-f11670971b47e9fa9cdc:GET",
+      "family": "recording-list",
+      "role": "admin",
+      "differing_axes": [
+        "allow",
+        "vary"
+      ],
+      "Original": {
+        "status": 200,
+        "allow": [
+          "GET",
+          "POST",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "vary": [
+          "Accept",
+          "origin"
+        ],
+        "typed_JSON_sha256": "b0332e7a2d3dc180e67b315070936be287950eb26e732cd775d88d269e0299fb"
+      },
+      "Native": {
+        "status": 200,
+        "allow": [],
+        "vary": [
+          "origin"
+        ],
+        "typed_JSON_sha256": "b0332e7a2d3dc180e67b315070936be287950eb26e732cd775d88d269e0299fb"
+      }
+    },
+    {
+      "contract_id": "route-7083b0daee9897e8ed81:GET",
+      "family": "recording-list",
+      "role": "standard",
+      "differing_axes": [
+        "status",
+        "typed_JSON_sha256",
+        "allow",
+        "vary",
+        "content_length",
+        "owned_SQL_entity_matches"
+      ],
+      "Original": {
+        "status": 200,
+        "allow": [
+          "GET",
+          "POST",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "vary": [
+          "Accept",
+          "origin"
+        ],
+        "typed_JSON_sha256": "5de7ba668a1f05c9c320bfb3b131fefe5e9c60fb096891aeb17f313f980124a5"
+      },
+      "Native": {
+        "status": 404,
+        "allow": [],
+        "vary": [
+          "origin"
+        ],
+        "typed_JSON_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de"
+      }
+    },
+    {
+      "contract_id": "route-7083b0daee9897e8ed81:GET",
+      "family": "recording-list",
+      "role": "admin",
+      "differing_axes": [
+        "status",
+        "typed_JSON_sha256",
+        "allow",
+        "vary",
+        "content_length",
+        "owned_SQL_entity_matches"
+      ],
+      "Original": {
+        "status": 200,
+        "allow": [
+          "GET",
+          "POST",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "vary": [
+          "Accept",
+          "origin"
+        ],
+        "typed_JSON_sha256": "b0332e7a2d3dc180e67b315070936be287950eb26e732cd775d88d269e0299fb"
+      },
+      "Native": {
+        "status": 404,
+        "allow": [],
+        "vary": [
+          "origin"
+        ],
+        "typed_JSON_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de"
+      }
+    },
+    {
+      "contract_id": "route-b406c782172baf90cd51:GET",
+      "family": "recording-detail",
+      "role": "standard",
+      "differing_axes": [
+        "status",
+        "typed_JSON_sha256",
+        "allow",
+        "vary",
+        "content_length",
+        "owned_SQL_entity_matches"
+      ],
+      "Original": {
+        "status": 200,
+        "allow": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "vary": [
+          "Accept",
+          "origin"
+        ],
+        "typed_JSON_sha256": "a19e8f4d99ee267409dc5c4822e44ed33445b4d647cdf17b71126d88c2f83663"
+      },
+      "Native": {
+        "status": 404,
+        "allow": [],
+        "vary": [
+          "origin"
+        ],
+        "typed_JSON_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de"
+      }
+    },
+    {
+      "contract_id": "route-b406c782172baf90cd51:GET",
+      "family": "recording-detail",
+      "role": "admin",
+      "differing_axes": [
+        "status",
+        "typed_JSON_sha256",
+        "allow",
+        "vary",
+        "content_length",
+        "owned_SQL_entity_matches"
+      ],
+      "Original": {
+        "status": 200,
+        "allow": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "vary": [
+          "Accept",
+          "origin"
+        ],
+        "typed_JSON_sha256": "a19e8f4d99ee267409dc5c4822e44ed33445b4d647cdf17b71126d88c2f83663"
+      },
+      "Native": {
+        "status": 404,
+        "allow": [],
+        "vary": [
+          "origin"
+        ],
+        "typed_JSON_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de"
+      }
+    },
+    {
+      "contract_id": "route-cb2f8fac46d19480e674:GET",
+      "family": "recording-detail",
+      "role": "standard",
+      "differing_axes": [
+        "status",
+        "typed_JSON_sha256",
+        "allow",
+        "vary",
+        "content_length",
+        "owned_SQL_entity_matches"
+      ],
+      "Original": {
+        "status": 200,
+        "allow": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "vary": [
+          "Accept",
+          "origin"
+        ],
+        "typed_JSON_sha256": "a19e8f4d99ee267409dc5c4822e44ed33445b4d647cdf17b71126d88c2f83663"
+      },
+      "Native": {
+        "status": 404,
+        "allow": [],
+        "vary": [
+          "origin"
+        ],
+        "typed_JSON_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de"
+      }
+    },
+    {
+      "contract_id": "route-cb2f8fac46d19480e674:GET",
+      "family": "recording-detail",
+      "role": "admin",
+      "differing_axes": [
+        "status",
+        "typed_JSON_sha256",
+        "allow",
+        "vary",
+        "content_length",
+        "owned_SQL_entity_matches"
+      ],
+      "Original": {
+        "status": 200,
+        "allow": [
+          "GET",
+          "PUT",
+          "PATCH",
+          "DELETE",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "vary": [
+          "Accept",
+          "origin"
+        ],
+        "typed_JSON_sha256": "a19e8f4d99ee267409dc5c4822e44ed33445b4d647cdf17b71126d88c2f83663"
+      },
+      "Native": {
+        "status": 404,
+        "allow": [],
+        "vary": [
+          "origin"
+        ],
+        "typed_JSON_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de"
+      }
+    },
+    {
+      "contract_id": null,
+      "family": "series-rules",
+      "role": "standard",
+      "differing_axes": [
+        "status",
+        "typed_JSON_sha256",
+        "allow",
+        "vary",
+        "content_length",
+        "owned_SQL_entity_matches"
+      ],
+      "Original": {
+        "status": 200,
+        "allow": [
+          "GET",
+          "POST",
+          "DELETE",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "vary": [
+          "Accept",
+          "origin"
+        ],
+        "typed_JSON_sha256": "3c611455d9f0eb7dce9f4219a355816f4ae1557346c95b5516363ab00ea39c2f"
+      },
+      "Native": {
+        "status": 404,
+        "allow": [],
+        "vary": [
+          "origin"
+        ],
+        "typed_JSON_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de"
+      }
+    },
+    {
+      "contract_id": null,
+      "family": "series-rules",
+      "role": "admin",
+      "differing_axes": [
+        "status",
+        "typed_JSON_sha256",
+        "allow",
+        "vary",
+        "content_length",
+        "owned_SQL_entity_matches"
+      ],
+      "Original": {
+        "status": 200,
+        "allow": [
+          "GET",
+          "POST",
+          "DELETE",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "vary": [
+          "Accept",
+          "origin"
+        ],
+        "typed_JSON_sha256": "3c611455d9f0eb7dce9f4219a355816f4ae1557346c95b5516363ab00ea39c2f"
+      },
+      "Native": {
+        "status": 404,
+        "allow": [],
+        "vary": [
+          "origin"
+        ],
+        "typed_JSON_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de"
+      }
+    }
+  ]
+}

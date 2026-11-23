@@ -1,0 +1,271 @@
+{
+  "actual_audit_exit": 0,
+  "arm_child": "sha256:675b5606dc5ba0cad7a5acfa0ecf177e9f2b6c65702366803a868d6c20421b2f",
+  "arm_config": "sha256:2f265a1372924d4db602b9f904ef0eb1c4211f15630aa568dd64ccb64d6e7411",
+  "arms": {
+    "native": {
+      "blocked_http": 0,
+      "blocked_websocket": 0,
+      "browser_exit": 0,
+      "browser_failure": null,
+      "browser_temp_retired": true,
+      "browser_workflow_steps": [
+        "normal-setup-render",
+        "setup.submit",
+        "signin.submit",
+        "authenticated-render",
+        "account-dialog-read",
+        "normal-sign-out",
+        "standard-owned-ui"
+      ],
+      "cleanup": {
+        "owned_compose_down_actual_exit": 0,
+        "post_down_owned_inventory_codes": [
+          0,
+          0,
+          0
+        ],
+        "retired_containers": 6,
+        "retired_networks": 2,
+        "retired_volume": 1,
+        "typed_absence_codes": {
+          "containers_1": 6,
+          "networks_1": 2,
+          "volumes_1": 1
+        }
+      },
+      "exact_standard_workload": true,
+      "failure_checkpoint": null,
+      "failure_class": null,
+      "frontend_assets": 112,
+      "literal_arm_exit": 0,
+      "observed_admin_origin_http_statuses": {
+        "login": [
+          200
+        ],
+        "own_profile": [
+          200
+        ],
+        "provision": [
+          201
+        ]
+      },
+      "page_errors": 0,
+      "react_asset_manifest_sha256": "4ced0b74d143c633d2e72a077591ac9487d32ea2164dcf19b29b2f46a9915f67",
+      "receipt_sha256": {
+        "browser-result.json": "ed6681e6672d75b9afbed710ffce896f641682e6d7b216ac989d581b9cfc731a",
+        "cleanup.json": "2601014d41f6c16542407510e58fc03499a3e1b984d7ccdd056034995dc30240",
+        "command-failures.jsonl": "a767f2addaaed9730627c62fe39f0a8687c1bc7d598dfad8cf5d122744b67cfc",
+        "exits.jsonl": "8176115d5f189ae389666cbea19b9a95d91fb5c7bad90c2c0f680265b9a0b510",
+        "receipt.json": "0922391d466c5d6655d33046f1add4531c9eef5a1c343f5bb6dcba38e23904fd"
+      },
+      "runtime_scope": "native",
+      "scoped_final_census": "2|1|0|1",
+      "standard_facts": {
+        "admin_controls_absent": true,
+        "admin_list_requests": 0,
+        "allowed_channels": true,
+        "app_mutations": 0,
+        "auth_lifecycle": {
+          "other_writes": 0,
+          "password_login_200": 1,
+          "signed_logout_200": 1,
+          "pre_login_proxy_availability_401": 1,
+          "pre_login_unsigned_logout_401": 1
+        },
+        "auth_request_inventory": [
+          {
+            "http_status": 401,
+            "kind": "proxy-availability",
+            "ordinal": 1,
+            "session": "no-session"
+          },
+          {
+            "http_status": 401,
+            "kind": "logout",
+            "ordinal": 2,
+            "session": "no-session"
+          },
+          {
+            "http_status": 200,
+            "kind": "password-login",
+            "ordinal": 4,
+            "session": "no-session"
+          },
+          {
+            "http_status": 200,
+            "kind": "logout",
+            "ordinal": 23,
+            "session": "signed-session"
+          }
+        ],
+        "bearer_own_profile_status": 200,
+        "channel_ids_status": 200,
+        "create_status": 201,
+        "exact_standard_role": true,
+        "observed_checkpoints": [
+          "password-login-http-200",
+          "signed-token-pair",
+          "signed-own-profile-standard",
+          "channels-http-and-view",
+          "role-specific-navigation",
+          "signed-logout-http-200",
+          "read-only-scope"
+        ],
+        "page_errors": 0,
+        "sign_out_observed": true,
+        "standard_context_closed": true,
+        "token_status": 200
+      },
+      "unchanged_migrations": true,
+      "unchanged_settings": true
+    },
+    "original": {
+      "blocked_http": 0,
+      "blocked_websocket": 0,
+      "browser_exit": 0,
+      "browser_failure": null,
+      "browser_temp_retired": true,
+      "browser_workflow_steps": [
+        "normal-setup-render",
+        "setup.submit",
+        "signin.submit",
+        "authenticated-render",
+        "account-dialog-read",
+        "normal-sign-out",
+        "standard-owned-ui"
+      ],
+      "cleanup": {
+        "owned_compose_down_actual_exit": 0,
+        "post_down_owned_inventory_codes": [
+          0,
+          0,
+          0
+        ],
+        "retired_containers": 7,
+        "retired_networks": 2,
+        "retired_volume": 1,
+        "typed_absence_codes": {
+          "containers_1": 7,
+          "networks_1": 2,
+          "volumes_1": 1
+        }
+      },
+      "exact_standard_workload": true,
+      "failure_checkpoint": null,
+      "failure_class": null,
+      "frontend_assets": 112,
+      "literal_arm_exit": 0,
+      "observed_admin_origin_http_statuses": {
+        "login": [
+          200
+        ],
+        "own_profile": [
+          200
+        ],
+        "provision": [
+          201
+        ]
+      },
+      "original_role_witness": {
+        "app_mount_matches_read_only_source": true,
+        "configured_entrypoint_matches": true,
+        "image_matches_pinned": true,
+        "no_application_port_bindings": true,
+        "no_docker_socket_mount": true,
+        "project_label_matches": true,
+        "runs_as_expected_nonroot_user": true
+      },
+      "page_errors": 0,
+      "react_asset_manifest_sha256": "4ced0b74d143c633d2e72a077591ac9487d32ea2164dcf19b29b2f46a9915f67",
+      "receipt_sha256": {
+        "browser-result.json": "d0d6140d0367d51f8a2a038b63fe5d2b9f520d9d13d70b6474cce13feb751a0c",
+        "cleanup.json": "03cc697ffae849e9ad71e2e806d43dfe50c02c9cfca2c2aefe36e31f0f004a06",
+        "command-failures.jsonl": "47a2af76f8ecec617c5b6b1f3e295fcd9c7c616823aa02bfd9eeccd68a92db58",
+        "exits.jsonl": "69972193905d57cb9bd80fc26fd17505054036e8add27055dba44ecaa56713d3",
+        "original-candidate-role-witness.json": "4e9337dcb2d56fb5fcb895a6ad55960384756827816928339e0df02e3e1cef27",
+        "receipt.json": "550a40a48e097c67588213891b10eec27a9d56415f588f8bba9232f44f00fdd0"
+      },
+      "runtime_scope": "original",
+      "scoped_final_census": "2|1|0|1",
+      "standard_facts": {
+        "admin_controls_absent": true,
+        "admin_list_requests": 0,
+        "allowed_channels": true,
+        "app_mutations": 0,
+        "auth_lifecycle": {
+          "other_writes": 0,
+          "password_login_200": 1,
+          "signed_logout_200": 1,
+          "pre_login_proxy_availability_401": 1,
+          "pre_login_unsigned_logout_401": 1
+        },
+        "auth_request_inventory": [
+          {
+            "http_status": 401,
+            "kind": "proxy-availability",
+            "ordinal": 1,
+            "session": "no-session"
+          },
+          {
+            "http_status": 401,
+            "kind": "logout",
+            "ordinal": 2,
+            "session": "no-session"
+          },
+          {
+            "http_status": 200,
+            "kind": "password-login",
+            "ordinal": 4,
+            "session": "no-session"
+          },
+          {
+            "http_status": 200,
+            "kind": "logout",
+            "ordinal": 22,
+            "session": "signed-session"
+          }
+        ],
+        "bearer_own_profile_status": 200,
+        "channel_ids_status": 200,
+        "create_status": 201,
+        "exact_standard_role": true,
+        "observed_checkpoints": [
+          "password-login-http-200",
+          "signed-token-pair",
+          "signed-own-profile-standard",
+          "channels-http-and-view",
+          "role-specific-navigation",
+          "signed-logout-http-200",
+          "read-only-scope"
+        ],
+        "page_errors": 0,
+        "sign_out_observed": true,
+        "standard_context_closed": true,
+        "token_status": 200
+      },
+      "unchanged_migrations": true,
+      "unchanged_settings": true
+    }
+  },
+  "candidate": "8a547cf00cd33a94fe4ccb982272be1861d52e73",
+  "engine_calls_by_audit": 0,
+  "exact_cleanup": true,
+  "image_index": "sha256:bb497d7f606e5550c0fd48deac938c9e1e517f96191c4ddd7f1f96b8f58b1e28",
+  "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "package_build_sha256": "ca566d42a506aa5ba5ee6455558dc8cab0cee05af2d2308ab19bbda64bc26cf1",
+  "pair_receipt_sha256": "3f5b5265e50e61fe950cc65189f54660a7df3977e442c77000e87e53c5b2f275",
+  "physical_full_pair_passed": true,
+  "physical_owner_actual_exit": 0,
+  "platform": "linux/arm64",
+  "raw_assets_or_credentials_transferred": false,
+  "signed_auth_sha256": "4f1323623f026162d1105a688818d91465105db7a6d0260282cd7f4caff7a503",
+  "stage_seal_sha256": "82b4bc9a1eb4569076a75f54cd7c3b373e473e5eb959fbbf1355a0f87a2f467e",
+  "local_owner_actual_exit": 0,
+  "independent_audit_actual_exit": 0,
+  "owner_stdout_sha256": "7aba83b9334a1b6c89b4d9fbd37cf72fe8ed59eb51a88fab9e9e30a739a197cb",
+  "independent_audit_stdout_sha256": "da636c2e76af93ea463ae5eb0a861a5bedd8a829ffae7d4fbf79d604ef214038",
+  "qualification": "ordinary_standard_account_role_and_React",
+  "performance_claim": false,
+  "formal_m5_complete": false
+}
