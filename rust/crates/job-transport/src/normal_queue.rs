@@ -125,7 +125,11 @@ impl DefaultQueueControl {
                 return false;
             }
             accepted = true;
-            let next = if pause { DefaultAdmission::Paused } else { DefaultAdmission::Running };
+            let next = if pause {
+                DefaultAdmission::Paused
+            } else {
+                DefaultAdmission::Running
+            };
             let changed = *state != next;
             *state = next;
             changed
@@ -138,7 +142,10 @@ impl DefaultQueueControl {
     }
 }
 
-fn admitting<T>(control: Option<&watch::Receiver<DefaultAdmission>>, action: impl FnOnce() -> T) -> Option<T> {
+fn admitting<T>(
+    control: Option<&watch::Receiver<DefaultAdmission>>,
+    action: impl FnOnce() -> T,
+) -> Option<T> {
     if let Some(control) = control {
         let state = control.borrow();
         if matches!(*state, DefaultAdmission::Paused | DefaultAdmission::Closed) {
@@ -447,7 +454,9 @@ fn selected_schedule_availability(
             .any(|state| matches!(state, State::Fault(_) | State::Stopped))
     {
         Terminal
-    } else if (celery.ready() || matches!(celery, State::PauseRequested | State::Paused)) && dvr.ready() {
+    } else if (celery.ready() || matches!(celery, State::PauseRequested | State::Paused))
+        && dvr.ready()
+    {
         Ready
     } else {
         Waiting
@@ -1445,12 +1454,18 @@ async fn celery_lane(
         if fault.is_some() && tasks.is_empty() {
             break;
         }
-        let requested = default_control.as_mut().map(|state| *state.borrow_and_update());
-        let held = matches!(requested, Some(DefaultAdmission::Paused | DefaultAdmission::Closed));
+        let requested = default_control
+            .as_mut()
+            .map(|state| *state.borrow_and_update());
+        let held = matches!(
+            requested,
+            Some(DefaultAdmission::Paused | DefaultAdmission::Closed)
+        );
         if requested == Some(DefaultAdmission::Paused) && !*stop.borrow() && fault.is_none() {
-            let drained = tasks.is_empty() && handlers.values().all(|handler| {
-                handler.0.slot.available_permits() == handler.0.inner.maximum_concurrency()
-            });
+            let drained = tasks.is_empty()
+                && handlers.values().all(|handler| {
+                    handler.0.slot.available_permits() == handler.0.inner.maximum_concurrency()
+                });
             lane.state.send_if_modified(|state| {
                 if drained && !matches!(state, State::Paused) {
                     *state = State::Paused;
@@ -1465,7 +1480,9 @@ async fn celery_lane(
         }
         if !held && !*stop.borrow() && fault.is_none() {
             for handler in handlers.values() {
-                let Some(maintenance) = admitting(default_control.as_ref(), || handler.maintenance(caller.clone())) else {
+                let Some(maintenance) = admitting(default_control.as_ref(), || {
+                    handler.maintenance(caller.clone())
+                }) else {
                     break;
                 };
                 if let Err(error) = maintenance.await {
@@ -1500,7 +1517,12 @@ async fn celery_lane(
                 });
             }
         }
-        if !held && !*stop.borrow() && fault.is_none() && tasks.len() < maximum && backoff.can_peek() {
+        if !held
+            && !*stop.borrow()
+            && fault.is_none()
+            && tasks.len() < maximum
+            && backoff.can_peek()
+        {
             let peek = admitting(default_control.as_ref(), || head.peek(caller.clone()));
             // A pause racing with the physical peek must be rechecked before
             // its result can be turned into an admitted claim.
@@ -1534,7 +1556,8 @@ async fn celery_lane(
                                     let owned = handler.clone();
                                     let owner = caller.clone();
                                     tasks.spawn(async move {
-                                        let result = owned.run_selected(selected.clone(), owner).await;
+                                        let result =
+                                            owned.run_selected(selected.clone(), owner).await;
                                         (selected, result)
                                     });
                                     lane.state.send_replace(State::Working(tasks.len()));
@@ -1986,10 +2009,30 @@ mod tests {
     fn configured_default_pause_keeps_scheduler_publication_available_only_with_live_dvr() {
         for state in [State::PauseRequested, State::Paused] {
             assert!(!state.ready());
-            assert!(selected_schedules_ready(false, true, &state, &State::Working(0)));
-            assert!(!selected_schedules_ready(false, true, &state, &State::Stopped));
-            assert!(!selected_schedules_ready(false, true, &state, &State::Starting));
-            assert!(!selected_schedules_ready(true, true, &state, &State::Working(0)));
+            assert!(selected_schedules_ready(
+                false,
+                true,
+                &state,
+                &State::Working(0)
+            ));
+            assert!(!selected_schedules_ready(
+                false,
+                true,
+                &state,
+                &State::Stopped
+            ));
+            assert!(!selected_schedules_ready(
+                false,
+                true,
+                &state,
+                &State::Starting
+            ));
+            assert!(!selected_schedules_ready(
+                true,
+                true,
+                &state,
+                &State::Working(0)
+            ));
         }
     }
 
@@ -1997,9 +2040,14 @@ mod tests {
     fn default_failure_blocks_scheduler_even_with_live_dvr() {
         let dvr = State::Working(0);
         assert_eq!(
-            selected_schedule_availability(false, true, &State::Fault(
-                Disposition::Operational("owned default receiver fault".into()),
-            ), &dvr),
+            selected_schedule_availability(
+                false,
+                true,
+                &State::Fault(Disposition::Operational(
+                    "owned default receiver fault".into()
+                ),),
+                &dvr
+            ),
             SelectedScheduleAvailability::Terminal
         );
         assert_eq!(
@@ -2034,8 +2082,13 @@ mod tests {
         assert!(control.configure());
         assert!(control.enable());
         let running = tokio::spawn(celery_lane(
-            lane.clone(), head.clone(), BTreeMap::from([(Family::Artwork, handler)]),
-            Arc::new(()), rx, Duration::from_millis(2), control.receiver_if_configured(),
+            lane.clone(),
+            head.clone(),
+            BTreeMap::from([(Family::Artwork, handler)]),
+            Arc::new(()),
+            rx,
+            Duration::from_millis(2),
+            control.receiver_if_configured(),
         ));
         until(|| due.started.load(Ordering::Acquire)).await;
         assert!(control.request(true));
@@ -2077,7 +2130,9 @@ mod tests {
         release: Semaphore,
     }
     impl Head for HeldDefaultPeek {
-        fn queue(&self) -> Queue { Queue::Celery }
+        fn queue(&self) -> Queue {
+            Queue::Celery
+        }
         fn peek(
             &self,
             _owner: Arc<dyn Send + Sync>,
@@ -2098,7 +2153,10 @@ mod tests {
         });
         // HeldDueTask panics if it is asked to run a source FIFO claim.
         let handler = FamilyAdapter(Arc::new(OwnedFamily {
-            inner: Arc::new(HeldDueTask { started: AtomicBool::new(true), finish: Semaphore::new(0) }),
+            inner: Arc::new(HeldDueTask {
+                started: AtomicBool::new(true),
+                finish: Semaphore::new(0),
+            }),
             slot: Arc::new(Semaphore::new(1)),
             closed: AtomicBool::new(false),
         }));
@@ -2117,8 +2175,13 @@ mod tests {
         assert!(control.configure());
         assert!(control.enable());
         let running = tokio::spawn(celery_lane(
-            lane.clone(), head.clone(), BTreeMap::from([(Family::Artwork, handler)]),
-            Arc::new(()), rx, Duration::from_millis(2), control.receiver_if_configured(),
+            lane.clone(),
+            head.clone(),
+            BTreeMap::from([(Family::Artwork, handler)]),
+            Arc::new(()),
+            rx,
+            Duration::from_millis(2),
+            control.receiver_if_configured(),
         ));
         until(|| head.entered.load(Ordering::SeqCst)).await;
         assert!(control.request(true));

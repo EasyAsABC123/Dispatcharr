@@ -77,7 +77,11 @@ pub(super) fn decode_for(
     let clock = outer["headers"]["clock"].as_u64().unwrap_or(0);
     let expires = outer["headers"]["expires"].as_f64().unwrap_or(0.0);
     if expires != 0.0 && expires < now {
-        return Ok(Decoded { clock, keys: None, pause_default: None });
+        return Ok(Decoded {
+            clock,
+            keys: None,
+            pause_default: None,
+        });
     }
     let encoded = outer["body"].as_str().ok_or(Error::Protocol)?;
     if encoded.len() > MAX_BODY.div_ceil(3) * 4 {
@@ -99,21 +103,35 @@ pub(super) fn decode_for(
             && expires >= enabled_at + SOURCE_TIMEOUT
             && clock > 0
             && body.as_object().is_some_and(|map| {
-                map.len() == 5 && ["method", "arguments", "destination", "pattern", "matcher"]
-                    .iter().all(|key| map.contains_key(*key))
+                map.len() == 5
+                    && ["method", "arguments", "destination", "pattern", "matcher"]
+                        .iter()
+                        .all(|key| map.contains_key(*key))
             })
             && body["destination"] == json!([target])
-            && body["pattern"].is_null() && body["matcher"].is_null()
+            && body["pattern"].is_null()
+            && body["matcher"].is_null()
         {
             let pause_default = match body["method"].as_str() {
-                Some("cancel_consumer") if body["arguments"] == json!({"queue": "celery"}) => Some(true),
-                Some("add_consumer") if body["arguments"] == json!({
-                    "queue": "celery", "exchange": null, "exchange_type": "direct", "routing_key": null
-                }) => Some(false),
+                Some("cancel_consumer") if body["arguments"] == json!({"queue": "celery"}) => {
+                    Some(true)
+                }
+                Some("add_consumer")
+                    if body["arguments"]
+                        == json!({
+                            "queue": "celery", "exchange": null, "exchange_type": "direct", "routing_key": null
+                        }) =>
+                {
+                    Some(false)
+                }
                 _ => None,
             };
             if pause_default.is_some() {
-                return Ok(Decoded { clock, keys: None, pause_default });
+                return Ok(Decoded {
+                    clock,
+                    keys: None,
+                    pause_default,
+                });
             }
         }
     }
@@ -125,7 +143,11 @@ pub(super) fn decode_for(
         || !body["matcher"].is_null()
         || !body["reply_to"].is_null()
     {
-        return Ok(Decoded { clock, keys: None, pause_default: None });
+        return Ok(Decoded {
+            clock,
+            keys: None,
+            pause_default: None,
+        });
     }
     if body["arguments"]["terminate"].as_bool() != Some(false) {
         return Err(Error::Unsupported);
@@ -163,32 +185,76 @@ mod tests {
             "properties":{"body_encoding":"base64"},
             "headers":{"clock":7,"expires":expires},
             "body":STANDARD.encode(serde_json::to_vec(&body).unwrap()),
-        })).unwrap()
+        }))
+        .unwrap()
     }
 
     #[test]
     fn exact_no_reply_original_caller_shapes_are_scoped_to_one_receiver() {
-        let cancel = source_frame("cancel_consumer", json!({"queue":"celery"}), json!(["default@owned"]), 101.0);
-        let add = source_frame("add_consumer", json!({"queue":"celery","exchange":null,
-                        "exchange_type":"direct","routing_key":null}), json!(["default@owned"]), 101.0);
+        let cancel = source_frame(
+            "cancel_consumer",
+            json!({"queue":"celery"}),
+            json!(["default@owned"]),
+            101.0,
+        );
+        let add = source_frame(
+            "add_consumer",
+            json!({"queue":"celery","exchange":null,
+                        "exchange_type":"direct","routing_key":null}),
+            json!(["default@owned"]),
+            101.0,
+        );
         for (frame, expected) in [(&cancel, true), (&add, false)] {
-            let decoded = decode_for(frame,100.5,Some(("default@owned", 100.0))).unwrap();
+            let decoded = decode_for(frame, 100.5, Some(("default@owned", 100.0))).unwrap();
             assert_eq!(decoded.pause_default, Some(expected));
             assert!(decoded.keys.is_none());
-            assert!(decode_for(frame,100.5,None).unwrap().pause_default.is_none());
-            assert!(decode_for(frame,100.5,Some(("default@elsewhere", 100.0))).unwrap().pause_default.is_none());
-            assert!(decode_for(frame,102.0,Some(("default@owned", 100.0))).unwrap().pause_default.is_none());
+            assert!(decode_for(frame, 100.5, None)
+                .unwrap()
+                .pause_default
+                .is_none());
+            assert!(decode_for(frame, 100.5, Some(("default@elsewhere", 100.0)))
+                .unwrap()
+                .pause_default
+                .is_none());
+            assert!(decode_for(frame, 102.0, Some(("default@owned", 100.0)))
+                .unwrap()
+                .pause_default
+                .is_none());
         }
         for (method, arguments, destination, expires) in [
-            ("cancel_consumer",json!({"queue":"dvr"}),json!(["default@owned"]),101.0),
-            ("cancel_consumer",json!({"queue":"celery"}),json!(null),101.0),
-            ("cancel_consumer",json!({"queue":"celery"}),json!(["default@owned","default@elsewhere"]),101.0),
-            ("cancel_consumer",json!({"queue":"celery"}),json!(["default@owned"]),0.0),
-            ("add_consumer",json!({"queue":"celery","exchange":"other","exchange_type":"direct","routing_key":null}),
-                json!(["default@owned"]),101.0),
+            (
+                "cancel_consumer",
+                json!({"queue":"dvr"}),
+                json!(["default@owned"]),
+                101.0,
+            ),
+            (
+                "cancel_consumer",
+                json!({"queue":"celery"}),
+                json!(null),
+                101.0,
+            ),
+            (
+                "cancel_consumer",
+                json!({"queue":"celery"}),
+                json!(["default@owned", "default@elsewhere"]),
+                101.0,
+            ),
+            (
+                "cancel_consumer",
+                json!({"queue":"celery"}),
+                json!(["default@owned"]),
+                0.0,
+            ),
+            (
+                "add_consumer",
+                json!({"queue":"celery","exchange":"other","exchange_type":"direct","routing_key":null}),
+                json!(["default@owned"]),
+                101.0,
+            ),
         ] {
-            let raw = source_frame(method,arguments,destination,expires);
-            let decoded = decode_for(&raw,100.5,Some(("default@owned", 100.0))).unwrap();
+            let raw = source_frame(method, arguments, destination, expires);
+            let decoded = decode_for(&raw, 100.5, Some(("default@owned", 100.0))).unwrap();
             assert!(decoded.pause_default.is_none());
             assert!(decoded.keys.is_none());
         }
@@ -199,9 +265,15 @@ mod tests {
         let target = Some(("default@owned", 100.25));
         for (expires, expected) in [(101.0, None), (101.5, Some(true)), (102.5, None)] {
             let frame = source_frame(
-                "cancel_consumer", json!({"queue":"celery"}), json!(["default@owned"]), expires,
+                "cancel_consumer",
+                json!({"queue":"celery"}),
+                json!(["default@owned"]),
+                expires,
             );
-            assert_eq!(decode_for(&frame, 100.5, target).unwrap().pause_default, expected);
+            assert_eq!(
+                decode_for(&frame, 100.5, target).unwrap().pause_default,
+                expected
+            );
         }
     }
 
@@ -213,7 +285,10 @@ mod tests {
         });
         for (key, value) in [
             ("ticket", json!("a-reply-ticket")),
-            ("reply_to", json!({"exchange":"pidbox.reply", "routing_key":"owned"})),
+            (
+                "reply_to",
+                json!({"exchange":"pidbox.reply", "routing_key":"owned"}),
+            ),
             ("pattern", json!("default@*")),
             ("arguments", json!({"queue":"celery", "exchange":"extra"})),
         ] {

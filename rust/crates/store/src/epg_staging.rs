@@ -72,13 +72,17 @@ impl Deref for GuideSqlConnection {
     type Target = PgConnection;
 
     fn deref(&self) -> &Self::Target {
-        self.connection.as_ref().expect("owned guide SQL connection")
+        self.connection
+            .as_ref()
+            .expect("owned guide SQL connection")
     }
 }
 
 impl DerefMut for GuideSqlConnection {
     fn deref_mut(&mut self) -> &mut Self::Target {
-        self.connection.as_mut().expect("owned guide SQL connection")
+        self.connection
+            .as_mut()
+            .expect("owned guide SQL connection")
     }
 }
 

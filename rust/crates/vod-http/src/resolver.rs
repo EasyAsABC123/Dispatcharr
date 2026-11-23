@@ -77,6 +77,8 @@ pub struct VodSource {
     pub limit_policy: UserLimitPolicy,
 }
 
+type VodAuthorization = (Option<User>, Option<RequestAuthMethod>);
+
 pub trait VodResolver: Send + Sync {
     /// DRF authenticates before rejecting a method, without entering the view's
     /// STREAMS/network/provider/session logic. In-memory resolvers may be public.
@@ -95,7 +97,7 @@ pub trait VodResolver: Send + Sync {
     fn authorize_entry<'a>(
         &'a self,
         request: &'a VodRequest,
-    ) -> BoxFuture<'a, Result<(Option<User>, Option<RequestAuthMethod>), StoreError>> {
+    ) -> BoxFuture<'a, Result<VodAuthorization, StoreError>> {
         Box::pin(async move { self.authorize(request).await.map(|user| (user, None)) })
     }
     fn resolve<'a>(
@@ -135,10 +137,7 @@ impl SqlVodResolver {
     pub fn new(store: Store, auth: AuthService) -> Self {
         Self { store, auth }
     }
-    async fn authenticated(
-        &self,
-        request: &VodRequest,
-    ) -> Result<(Option<User>, Option<RequestAuthMethod>), StoreError> {
+    async fn authenticated(&self, request: &VodRequest) -> Result<VodAuthorization, StoreError> {
         if let Some((user, method)) = self
             .auth
             .authenticate_with_method(&request.playback)
@@ -234,7 +233,7 @@ impl VodResolver for SqlVodResolver {
     fn authorize_entry<'a>(
         &'a self,
         request: &'a VodRequest,
-    ) -> BoxFuture<'a, Result<(Option<User>, Option<RequestAuthMethod>), StoreError>> {
+    ) -> BoxFuture<'a, Result<VodAuthorization, StoreError>> {
         Box::pin(async move {
             // DRF authenticates before entering the view, then the native VOD
             // route applies STREAMS globally before its user VOD flag.

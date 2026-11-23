@@ -262,7 +262,10 @@ mod archive_failure_tests {
     #[test]
     fn normal_restore_reports_the_two_observed_source_refusals() {
         for (error, message) in [
-            (ArchiveError::MissingMetadata, "Invalid backup: missing metadata.json"),
+            (
+                ArchiveError::MissingMetadata,
+                "Invalid backup: missing metadata.json",
+            ),
             (
                 ArchiveError::SqliteDatabaseTypeMismatch,
                 "Database type mismatch: backup is sqlite, but current database is postgresql",

@@ -386,9 +386,13 @@ async fn handle_with_playback(
     if *request.method() == Method::GET
         && crate::recording_playback::LibraryRead::from_path(request.uri().path()).is_some()
     {
-        return crate::recording_playback::library_read(State(playback), ConnectInfo(peer), request)
-            .await
-            .into_response();
+        return crate::recording_playback::library_read(
+            State(playback),
+            ConnectInfo(peer),
+            request,
+        )
+        .await
+        .into_response();
     }
     let eligible = matches!(*request.method(), Method::GET | Method::HEAD)
         && request
@@ -1460,7 +1464,11 @@ mod recording_jobs_binding_tests {
             project_series_rules(&json!({"series_rules":[first, 1, null, [], second]})),
             json!({"rules":[first, second]})
         );
-        for value in [Value::Null, json!({}), json!({"series_rules":{"title":"invalid"}})] {
+        for value in [
+            Value::Null,
+            json!({}),
+            json!({"series_rules":{"title":"invalid"}}),
+        ] {
             assert_eq!(project_series_rules(&value), json!({"rules":[]}));
         }
     }
@@ -1479,12 +1487,30 @@ mod recording_jobs_binding_tests {
             ("/api/channels/recordings/", "GET, POST, HEAD, OPTIONS"),
             ("/api/channels/recordings.json", "GET, POST, HEAD, OPTIONS"),
             ("/api/channels/recordings.json/", "GET, POST, HEAD, OPTIONS"),
-            ("/api/channels/recordings/17/", "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
-            ("/api/channels/recordings/17.json", "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
-            ("/api/channels/recordings/17.json/", "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
-            ("/api/channels/series-rules/", "GET, POST, DELETE, HEAD, OPTIONS"),
+            (
+                "/api/channels/recordings/17/",
+                "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            ),
+            (
+                "/api/channels/recordings/17.json",
+                "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            ),
+            (
+                "/api/channels/recordings/17.json/",
+                "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+            ),
+            (
+                "/api/channels/series-rules/",
+                "GET, POST, DELETE, HEAD, OPTIONS",
+            ),
         ] {
-            for method in [Method::GET, Method::OPTIONS, Method::POST, Method::PATCH, Method::DELETE] {
+            for method in [
+                Method::GET,
+                Method::OPTIONS,
+                Method::POST,
+                Method::PATCH,
+                Method::DELETE,
+            ] {
                 let is_get = method == Method::GET;
                 let mut request = Request::builder()
                     .method(method)
@@ -1529,7 +1555,10 @@ mod recording_jobs_binding_tests {
             let response = router.clone().oneshot(request).await.unwrap();
             assert_eq!(response.status(), status, "{path}");
             assert!(!response.headers().contains_key(header::ALLOW), "{path}");
-            assert!(to_bytes(response.into_body(), 4096).await.unwrap().is_empty());
+            assert!(to_bytes(response.into_body(), 4096)
+                .await
+                .unwrap()
+                .is_empty());
         }
     }
 

@@ -146,7 +146,9 @@ pub fn main_configuration() -> Result<(bool, Beat), String> {
         configuration()?
     };
     if env::var_os(DEFAULT_QUEUE_CONTROL).is_some() && configuration != (true, Beat::Core) {
-        return Err("Default queue maintenance control requires the Selected Core queue graph".into());
+        return Err(
+            "Default queue maintenance control requires the Selected Core queue graph".into(),
+        );
     }
     Ok(configuration)
 }
