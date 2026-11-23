@@ -1,0 +1,178 @@
+{
+  "application_revision": "0596767d65b889424d529670cc7301b02564071b",
+  "arm64_default_startup_scope": {
+    "actual_viewer_count": 0,
+    "candidate_image": "sha256:5d2856ca77a5b4e4d7b1725407e58e8f35659d14c984181f5244be9462327acd",
+    "guide_cases": [
+      {
+        "families": [
+          "apps.channels.tasks.evaluate_series_rules",
+          "apps.epg.tasks.build_programme_index_task",
+          "apps.epg.tasks.refresh_epg_data"
+        ],
+        "index": 0,
+        "index_present": true,
+        "literal_terminal_exit": 0,
+        "private_terminal_projection_sha256": "8f79dc07f0921820bc49acb998c60833015e228c3cd38c05adacdb970a08b0bf",
+        "programme_exact": true,
+        "queue_and_locks_drained": true,
+        "recordings_unchanged": true,
+        "refresh_token_exchange_exit": 0,
+        "signed_http_status": 202,
+        "signed_operator_role": true,
+        "source_success": true,
+        "three_success_tasks_same_tree": true
+      },
+      {
+        "families": [
+          "apps.channels.tasks.evaluate_series_rules",
+          "apps.epg.tasks.build_programme_index_task",
+          "apps.epg.tasks.refresh_epg_data"
+        ],
+        "index": 1,
+        "index_present": true,
+        "literal_terminal_exit": 0,
+        "private_terminal_projection_sha256": "cc9345b2cee6d6b4ccec5990884c80500274eb70a9a74d6559ab9ee2d7e1628f",
+        "programme_exact": true,
+        "queue_and_locks_drained": true,
+        "recordings_unchanged": true,
+        "refresh_token_exchange_exit": null,
+        "signed_http_status": 202,
+        "signed_operator_role": true,
+        "source_success": true,
+        "three_success_tasks_same_tree": true
+      }
+    ],
+    "guide_result_sha256": "68cf3909c5fc65f7a06b45e0bb305b72ef3efacacb17705eb6b24df302dd2566",
+    "harness_sha256": "cc026c2c488849260650669caaedda879b091f1386ae01c36193bdb366b0db13",
+    "literal_guide_run_exit": 0,
+    "literal_owner_phases": {
+      "actual-exit": 0,
+      "preflight.actual-exit": 0,
+      "run.actual-exit": 0
+    },
+    "named_volumes": 0,
+    "network_id_and_name_aliases": 2,
+    "observer_and_fixture_close": {
+      "app_process_generations_retired": true,
+      "cleanup_sha256": "67ac45c4d188abc09190f03d65ceca255accdafbb3a9c221daaba6f87545740a",
+      "down": {
+        "actual_exit": 0,
+        "process_group_settled": true,
+        "stderr_EOF": true,
+        "stdout_EOF": true
+      },
+      "exact_inventory_empty": true,
+      "exact_observer_retired": true,
+      "scopes": 2,
+      "typed_identities": {
+        "container": 4,
+        "network": 2
+      }
+    },
+    "ordinary_mode": {
+      "exact_entrypoint_no_args": true,
+      "ordinary_aio": true,
+      "plugin_autodiscovery_skip_absent": true,
+      "trace_plugin_absent": true,
+      "trace_stream_absent": true
+    },
+    "plugin_startup": {
+      "actual_startup_plugin_eta_observed": true,
+      "default_official_repository_enabled": true,
+      "owned_repository_fetch_clock_advanced": true,
+      "queues_empty": true,
+      "stored_result": null,
+      "stored_status": "SUCCESS",
+      "terminal_correlated_to_owned_eta": true
+    },
+    "plugin_startup_sha256": "0e83fc9144b6dcfe2e0784869f535f20b95910c1ea61fd385433aacef2a95dc8",
+    "prior_default_ready_before_http": 200,
+    "prior_default_ready_fault_http": 503,
+    "prior_diagnostic_classification": {
+      "after_ack_execute": "unsupported_contract",
+      "manifest_fetch": "response_framing"
+    },
+    "provider_status_or_coding_retained": false,
+    "repo_last_fetch_status_retained": false
+  },
+  "formal_m9_accepted": false,
+  "host": {
+    "focused_manifest_tests": 3,
+    "literal_phases": {
+      "clippy": 0,
+      "format": 0,
+      "own": 0,
+      "targeted": 0,
+      "tests": 0
+    },
+    "safe_gate_sha256": "2a3a427f4c5c071b61be33e92ef8c278a924b4cc7d6a592818dffff2cd467ab9",
+    "workspace": {
+      "failed": 0,
+      "groups": 181,
+      "ignored": 821,
+      "passed": 1747
+    }
+  },
+  "packages": {
+    "linux/amd64": {
+      "actual_archive_file_roster_verified": true,
+      "build_manifest_sha256": "31b96706c8c5581f46a725ea41356e7bdb0f4b8696de1b65c7f7d47aebbc8ea7",
+      "image": "sha256:e34bcd9b550bb4feb6a20636e4bf4436ed7ddee3ea7f56515f67d80e08fd2cbe",
+      "literal_phases": {
+        "actual-exit": 0,
+        "cold-preflight.actual-exit": 0,
+        "materialize.actual-exit": 0,
+        "ordinary-build.actual-exit": 0,
+        "ordinary-verify.actual-exit": 0,
+        "preflight.actual-exit": 0
+      },
+      "package_process_settled": true,
+      "signed_auth_in_this_owner": false,
+      "source_archive_sha256": "4aa5ce438addd2b09bcaf3638e8484dd08c172e86acd86ca09972fb2b0f27c6e"
+    },
+    "linux/arm64": {
+      "build_manifest_sha256": "4569aca45a232d580871464b8beaa10545fab87e16f5d41365810357820b88e7",
+      "exact_retirement": {
+        "network_lookups_absent": 2,
+        "raw_ids_retained": false,
+        "scoped_inventories_empty": true,
+        "verified_full_ids_count": 5,
+        "volumes_absent": 1
+      },
+      "image": "sha256:5d2856ca77a5b4e4d7b1725407e58e8f35659d14c984181f5244be9462327acd",
+      "literal_phases": {
+        "owner": 0,
+        "package_run": 0,
+        "physical_build": 0,
+        "preflight": 0,
+        "proof": 0,
+        "signed_auth": 0
+      },
+      "package_audit_sha256": "b9e947976ebe3cd93b0ee6c13bf9a576b8c14e6c23309e483e5463a24ee35087",
+      "react_html_http": 200,
+      "ready_http": 200,
+      "signed_auth": {
+        "authenticated_channel_groups": 200,
+        "channel_groups": 0,
+        "empty_setup": 200,
+        "first_admin_creation": 200,
+        "jwt_login": 200,
+        "jwt_pair_type_checked": true,
+        "setup_closed": 200
+      },
+      "signed_auth_sha256": "12a40142f1268991fc70c719fa04c7794f4c7825cc40d12f489808adf7cb36dc",
+      "source_archive_sha256": "93b298777bb866fc8f0ad9797b47dce8a9704eea12590412c4f174b6b257f537"
+    }
+  },
+  "paired_performance_verified": false,
+  "release_or_deployment_verified": false,
+  "schema": "dispatcharr-0596767d-scoped-package-and-arm64-default-startup-recovery/1",
+  "source_cardinality": {
+    "application": 2187,
+    "protected": 497,
+    "protected_tree_sha256": "1a74175c6e698b04b2d2bc0d44b92210893113161a959e319fe919c6faedf716",
+    "rust": 1690
+  },
+  "source_tree_sha256": "0e83fbb98ab3c549a1763decdb9ae7c0de97fe8faa376e944a184e2656b35743"
+}
