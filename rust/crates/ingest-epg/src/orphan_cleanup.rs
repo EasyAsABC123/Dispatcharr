@@ -4,6 +4,7 @@
 //! Authority: Source orphan79. Only observed nonconcurrent collector shapes and
 //! settled PostgreSQL P0001 faults are supported; other faults stay operational.
 use crate::cache_policy::PolicyClock;
+use dispatcharr_coordination::MissingRefreshSource;
 use sqlx::{pool::PoolConnection, PgPool, Postgres, Row};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
@@ -102,6 +103,23 @@ impl Drop for Retained {
         self.inner.changed.notify_waiters();
     }
 }
+#[derive(Clone, Copy)]
+enum Source {
+    ExistingDomain(i64),
+    MissingApi(MissingRefreshSource),
+}
+impl Source {
+    fn task_name(self) -> String {
+        let suffix = match self {
+            Self::ExistingDomain(id) => id.to_string(),
+            Self::MissingApi(id) => id.source_spelling().to_owned(),
+        };
+        format!("epg_source-refresh-{suffix}")
+    }
+}
+fn matches_missing_source_args(args: &str, target: MissingRefreshSource) -> bool {
+    serde_json::from_str::<[Option<i64>; 1]>(args).ok() == Some([target.lookup()])
+}
 impl OrphanCleanup {
     pub fn new(
         pool: PgPool,
@@ -137,6 +155,22 @@ impl OrphanCleanup {
         if source_id <= 0 {
             return Err(CleanupError::InvalidSource);
         }
+        self.cleanup_target(Source::ExistingDomain(source_id), caller)
+            .await
+    }
+    pub(crate) async fn cleanup_missing_api(
+        &self,
+        source_id: MissingRefreshSource,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<CleanupReport, CleanupError> {
+        self.cleanup_target(Source::MissingApi(source_id), caller)
+            .await
+    }
+    async fn cleanup_target(
+        &self,
+        source: Source,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<CleanupReport, CleanupError> {
         if self.inner.stopping.load(Ordering::Acquire) {
             return Err(CleanupError::Stopping);
         }
@@ -153,7 +187,7 @@ impl OrphanCleanup {
             _caller: Some(caller),
         };
         tokio::spawn(async move {
-            let result = retained.inner.run(source_id).await;
+            let result = retained.inner.run(source).await;
             drop(retained);
             result
         })
@@ -178,7 +212,7 @@ impl OrphanCleanup {
     }
 }
 impl Inner {
-    async fn run(&self, source_id: i64) -> Result<CleanupReport, CleanupError> {
+    async fn run(&self, source: Source) -> Result<CleanupReport, CleanupError> {
         let mut conn = self
             .pool
             .acquire()
@@ -187,10 +221,27 @@ impl Inner {
                 phase: Phase::Lookup,
                 cause,
             })?;
+        if let Source::MissingApi(target) = source {
+            if let Some(id) = target.lookup() {
+                let present = sqlx::query_scalar::<_, bool>(
+                    "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE id=$1)",
+                )
+                .bind(id)
+                .fetch_one(&mut *conn)
+                .await
+                .map_err(|cause| CleanupError::Operational {
+                    phase: Phase::Lookup,
+                    cause,
+                })?;
+                if present {
+                    return Err(CleanupError::ConcurrentGraph);
+                }
+            }
+        }
         let row = sqlx::query(
             "SELECT id, interval_id FROM django_celery_beat_periodictask WHERE name=$1",
         )
-        .bind(format!("epg_source-refresh-{source_id}"))
+        .bind(source.task_name())
         .fetch_optional(&mut *conn)
         .await
         .map_err(|cause| CleanupError::Operational {
@@ -272,7 +323,7 @@ impl Inner {
                     break;
                 }
             }
-            let (next, result) = self.phase(conn, phase, task, interval).await;
+            let (next, result) = self.phase(conn, phase, task, interval, source).await;
             match next {
                 Some(value) => conn = value,
                 None => {
@@ -342,8 +393,41 @@ impl Inner {
         phase: Phase,
         task: i32,
         interval: Option<i32>,
+        source: Source,
     ) -> Result<(), sqlx::Error> {
         self.marker(conn).await?;
+        if let (Phase::TaskCollector, Source::MissingApi(target)) = (phase, source) {
+            let args: Option<String> = sqlx::query_scalar(
+                "SELECT args FROM django_celery_beat_periodictask p
+                 WHERE p.id=$1 AND p.name=$2 AND p.task='apps.epg.tasks.refresh_epg_data'
+                   AND NOT p.enabled AND NOT p.one_off AND p.interval_id=$3
+                   AND p.clocked_id IS NULL AND p.crontab_id IS NULL AND p.solar_id IS NULL
+                   AND octet_length(p.args)<=64 AND btrim(p.kwargs)='{}'
+                 FOR UPDATE OF p",
+            )
+            .bind(task)
+            .bind(source.task_name())
+            .bind(interval)
+            .fetch_optional(&mut **conn)
+            .await?;
+            let still_orphan: bool = sqlx::query_scalar(
+                "SELECT NOT EXISTS(SELECT 1 FROM epg_epgsource WHERE refresh_task_id=$1 OR id=$2)
+                    AND NOT EXISTS(SELECT 1 FROM m3u_m3uaccount WHERE refresh_task_id=$1)",
+            )
+            .bind(task)
+            .bind(target.lookup())
+            .fetch_one(&mut **conn)
+            .await?;
+            if !args
+                .as_deref()
+                .is_some_and(|args| matches_missing_source_args(args, target))
+                || !still_orphan
+            {
+                return Err(sqlx::Error::Protocol(
+                    "unqualified missing-source schedule".into(),
+                ));
+            }
+        }
         match phase {
             Phase::TaskCollector => {
                 sqlx::query(
@@ -380,12 +464,16 @@ impl Inner {
         phase: Phase,
         task: i32,
         interval: Option<i32>,
+        source: Source,
     ) -> (Option<PoolConnection<Postgres>>, Result<(), PhaseFailure>) {
         if let Err(cause) = sqlx::query("BEGIN").execute(&mut *conn).await {
             let _ = conn.close().await;
             return (None, Err(PhaseFailure::Operational(cause)));
         }
-        let result = match self.statements(&mut conn, phase, task, interval).await {
+        let result = match self
+            .statements(&mut conn, phase, task, interval, source)
+            .await
+        {
             Ok(()) => sqlx::query("COMMIT").execute(&mut *conn).await.map(|_| ()),
             Err(cause) => Err(cause),
         };
@@ -623,4 +711,19 @@ async fn native_orphan_cleanup_peer() {
         "NATIVE_ORPHAN_JSON={}",
         serde_json::json!({"helper_return":report.helper_return,"found":report.found,"task_committed":report.task_committed,"model_marker_committed":report.model_marker_committed,"interval_committed":report.interval_committed,"failure":failure,"physical_jobs":0})
     );
+}
+
+#[cfg(test)]
+#[test]
+fn missing_source_cleanup_accepts_only_the_exact_broker_argument() {
+    use MissingRefreshSource::*;
+    assert!(matches_missing_source_args("[null]", Null));
+    assert!(matches_missing_source_args("[ 0 ]", Zero));
+    assert!(matches_missing_source_args("[-1]", MinusOne));
+    for args in ["[0]", "[-1]", r#"["None"]"#, "[false]", "[null,null]", "[]"] {
+        assert!(!matches_missing_source_args(args, Null));
+    }
+    for args in ["[null]", "[0.0]", "[false]", r#"["0"]"#, "[-1]"] {
+        assert!(!matches_missing_source_args(args, Zero));
+    }
 }

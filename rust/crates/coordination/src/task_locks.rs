@@ -18,6 +18,30 @@ const RELEASE: &str =
     "if redis.call('GET',KEYS[1])==ARGV[1] then return redis.call('DEL',KEYS[1]) else return 0 end";
 const RENEW: &str = "if redis.call('GET',KEYS[1])==ARGV[1] then return redis.call('EXPIRE',KEYS[1],ARGV[2]) else return 0 end";
 
+/// Immediate API source forms with a qualified missing-source task outcome.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum MissingRefreshSource {
+    Null,
+    Zero,
+    MinusOne,
+}
+impl MissingRefreshSource {
+    pub fn lookup(self) -> Option<i64> {
+        match self {
+            Self::Null => None,
+            Self::Zero => Some(0),
+            Self::MinusOne => Some(-1),
+        }
+    }
+    pub fn source_spelling(self) -> &'static str {
+        match self {
+            Self::Null => "None",
+            Self::Zero => "0",
+            Self::MinusOne => "-1",
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct TaskLockConfig {
     pub ttl: Duration,
@@ -236,6 +260,24 @@ impl TaskLocks {
     ) -> Result<TaskLease, TaskLockDetailedError> {
         self.acquire_impl(task, id, Some(caller), true).await
     }
+    /// Use Source's typed lock suffix for the qualified immediate missing-source roots.
+    pub async fn acquire_missing_refresh_source(
+        &self,
+        source: MissingRefreshSource,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<TaskLease, TaskLockError> {
+        self.acquire_suffix_impl(
+            "refresh_epg_data",
+            source.source_spelling(),
+            Some(caller),
+            true,
+            true,
+            false,
+        )
+        .await
+        .map_err(TaskLockDetailedError::coarse)
+    }
+
     /// Prepare the same lock manager before the ordinary XMLTV programme SET.
     /// Redis may close this otherwise idle connection while playback continues.
     pub async fn acquire_epg_programmes_retained(

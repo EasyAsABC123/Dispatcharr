@@ -3,8 +3,8 @@
 mod scripts;
 mod task_locks;
 pub use task_locks::{
-    TaskLease, TaskLockCleanupOutcome, TaskLockConfig, TaskLockDetailedError, TaskLockError,
-    TaskLockRedisCause, TaskLocks,
+    MissingRefreshSource, TaskLease, TaskLockCleanupOutcome, TaskLockConfig, TaskLockDetailedError,
+    TaskLockError, TaskLockRedisCause, TaskLocks,
 };
 
 use redis::{

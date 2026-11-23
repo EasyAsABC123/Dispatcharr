@@ -15,7 +15,7 @@ use crate::{
     SwapPolicyProvider,
 };
 use dispatcharr_contracts::BoxFuture;
-use dispatcharr_coordination::{TaskLease, TaskLockError, TaskLocks};
+use dispatcharr_coordination::{MissingRefreshSource, TaskLease, TaskLockError, TaskLocks};
 use dispatcharr_ingest_core::{
     extract_xmltv_owned, source_integer_literal, xmltv_file_handle_is_complete, UploadLimits,
 };
@@ -342,30 +342,7 @@ impl FileJobRunner {
         dispatcher: Arc<dyn GuideTaskDispatcher>,
         hooks: Option<dispatcharr_store::epg_task_hooks::EpgTaskHooks>,
     ) -> Result<FileJobReport, ImportError> {
-        if self.inner.stopping.load(Ordering::Acquire) {
-            return Err(ImportError::Stopping);
-        }
-        let permit = self
-            .inner
-            .admission
-            .clone()
-            .try_acquire_owned()
-            .map_err(|_| ImportError::Busy)?;
-        let job = Arc::new(Job {
-            id: self.inner.next.fetch_add(1, Ordering::Relaxed),
-            inner: Arc::downgrade(&self.inner),
-            cancelled: request.cancelled.clone(),
-            caller: Some(caller),
-            permit: Some(permit),
-        });
-        {
-            let mut jobs = self.inner.jobs.lock().unwrap();
-            if self.inner.stopping.load(Ordering::Acquire) {
-                drop(jobs);
-                return Err(ImportError::Stopping);
-            }
-            jobs.insert(job.id, Arc::downgrade(&job));
-        }
+        let job = self.admit(request.cancelled.clone(), caller)?;
         let mut cancel = Cancel {
             flag: request.cancelled.clone(),
             armed: true,
@@ -395,6 +372,100 @@ impl FileJobRunner {
         cancel.armed = false;
         result
     }
+    fn admit(
+        &self,
+        cancelled: Arc<AtomicBool>,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<Arc<Job>, ImportError> {
+        if self.inner.stopping.load(Ordering::Acquire) {
+            return Err(ImportError::Stopping);
+        }
+        let permit = self
+            .inner
+            .admission
+            .clone()
+            .try_acquire_owned()
+            .map_err(|_| ImportError::Busy)?;
+        let job = Arc::new(Job {
+            id: self.inner.next.fetch_add(1, Ordering::Relaxed),
+            inner: Arc::downgrade(&self.inner),
+            cancelled,
+            caller: Some(caller),
+            permit: Some(permit),
+        });
+        {
+            let mut jobs = self.inner.jobs.lock().unwrap();
+            if self.inner.stopping.load(Ordering::Acquire) {
+                drop(jobs);
+                return Err(ImportError::Stopping);
+            }
+            jobs.insert(job.id, Arc::downgrade(&job));
+        }
+        Ok(job)
+    }
+
+    /// The measured missing-only API roots share the ordinary worker budget,
+    /// retained lease and orphan collector. They never launch importer work.
+    pub async fn run_missing_api_source(
+        &self,
+        source: MissingRefreshSource,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<FileJobOutcome, ImportError> {
+        let cancelled = Arc::new(AtomicBool::new(false));
+        let job = self.admit(cancelled.clone(), caller)?;
+        let mut cancel = Cancel {
+            flag: cancelled.clone(),
+            armed: true,
+        };
+        let inner = self.inner.clone();
+        let result = tokio::spawn(async move {
+            let lease = match inner
+                .services
+                .locks
+                .acquire_missing_refresh_source(source, job.clone())
+                .await
+            {
+                Ok(lease) => lease,
+                Err(TaskLockError::Held) => return Ok(FileJobOutcome::AlreadyRunning),
+                Err(_) => return Err(ImportError::Worker),
+            };
+            let watch = LossWatch::new(&lease, cancelled.clone());
+            let (guard, released) = RetainedLease::new(lease, job);
+            let context = SwapPolicyContext {
+                cancelled,
+                retained: Arc::new(LeaseContext {
+                    _watch: watch,
+                    _guard: guard,
+                }),
+            };
+            let result = async {
+                context.ensure_active()?;
+                let cleanup = inner
+                    .orphans
+                    .cleanup_missing_api(source, context.retained.clone())
+                    .await
+                    .map_err(|_| ImportError::Worker)?;
+                if cleanup.settled_failure.is_some() {
+                    return Err(ImportError::Worker);
+                }
+                Ok(FileJobOutcome::MissingSource(format!(
+                    "EPG source {} does not exist, task cleaned up",
+                    source.source_spelling()
+                )))
+            }
+            .await;
+            drop(context);
+            match released.wait_detailed(inner.config.release_timeout).await {
+                ReleaseWait::Complete(ReleaseOutcome::Released) => result,
+                _ => Err(ImportError::Worker),
+            }
+        })
+        .await
+        .map_err(|_| ImportError::Worker)?;
+        cancel.armed = false;
+        result
+    }
+
     pub async fn shutdown(&self, timeout: Duration) -> bool {
         self.inner.stopping.store(true, Ordering::Release);
         let jobs = self

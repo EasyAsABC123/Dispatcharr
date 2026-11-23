@@ -359,7 +359,7 @@ impl Jobs {
         if !self.allows_refresh() {
             return Err(Error::UnsupportedTask);
         }
-        if message.source_id <= 0
+        if message.source_id <= 0 && message.missing_api_source().is_none()
             || children.len() > 64
             || message.parent.is_none() && message.root != message.task_id
         {
@@ -369,7 +369,7 @@ impl Jobs {
             crate::refresh_worker::NormalReturn::Null => serde_json::Value::Null,
             crate::refresh_worker::NormalReturn::MissingSource => serde_json::json!(format!(
                 "EPG source {} does not exist, task cleaned up",
-                message.source_id
+                message.source_spelling()
             )),
         };
         if let Some(trail) = observed_trail {

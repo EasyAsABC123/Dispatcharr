@@ -2,10 +2,12 @@
 //! HTTP publication and ordered shutdown. Original Dispatcharr authors retain
 //! full application/algorithm credit. No scheduler or generic task consumer.
 //! Source/native HTTP/import/shutdown gates are captured separately from each
-//! packaged application build. Non-integer IDs and other FIFO families remain
-//! explicit unsupported scope; no whole-job-system acceptance is implied.
+//! packaged application build. Other argument shapes and FIFO families retain
+//! separate bounds; no whole-job-system acceptance is implied.
 use crate::{
-    refresh_protocol::{canonical_decimal_source_id, RefreshCall, RefreshMessage},
+    refresh_protocol::{
+        canonical_decimal_source_id, missing_source_argument, RefreshCall, RefreshMessage,
+    },
     refresh_worker::{RefreshExecutor, ServiceExecutor},
     scheduled_refresh_driver::{Config as DriverConfig, ScheduledRefreshDriver},
     transport::{Config as JobsConfig, Jobs},
@@ -367,18 +369,37 @@ impl RefreshApplication {
         if matches!(id, Value::Array(_) | Value::Object(_)) {
             return source_500();
         }
+        let observed_unforced = object
+            .get("force")
+            .is_none_or(|value| value == &Value::Bool(false));
         let decimal = id
             .as_str()
             .and_then(canonical_decimal_source_id)
-            .filter(|_| {
-                object
-                    .get("force")
-                    .is_none_or(|value| value == &Value::Bool(false))
-            });
-        let Some(source_id) = id.as_i64().filter(|id| *id > 0).or(decimal) else {
+            .filter(|_| observed_unforced);
+        let missing = missing_source_argument(id).filter(|_| observed_unforced);
+        let Some(source_id) = id
+            .as_i64()
+            .filter(|id| *id > 0)
+            .or(decimal)
+            .or_else(|| missing.map(|source| source.lookup().unwrap_or(0)))
+        else {
             return unqualified_import_id();
         };
-        if decimal.is_some() {
+        if let Some(source) = missing {
+            if let Some(id) = source.lookup() {
+                let occupied = sqlx::query_scalar::<_, bool>(
+                    "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE id=$1)",
+                )
+                .bind(id)
+                .fetch_one(self.inner.store.pool())
+                .await;
+                match occupied {
+                    Ok(false) => {}
+                    Ok(true) => return unqualified_import_id(),
+                    Err(_) => return source_500(),
+                }
+            }
+        } else if decimal.is_some() {
             // Only the existing active XMLTV case has signed, end-to-end Source evidence.
             let eligible = sqlx::query_scalar::<_, bool>(
                 "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE id=$1 AND is_active AND source_type='xmltv')",

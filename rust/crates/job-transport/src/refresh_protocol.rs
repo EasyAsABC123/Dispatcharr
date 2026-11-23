@@ -6,6 +6,7 @@ use crate::{
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::{DateTime, Datelike, Timelike, Utc};
+use dispatcharr_coordination::MissingRefreshSource;
 use serde_json::{json, Map, Value};
 use uuid::Uuid;
 pub(crate) const NAME: &str = "apps.epg.tasks.refresh_epg_data";
@@ -30,7 +31,29 @@ pub struct RefreshMessage {
     pub eta: Option<DateTime<Utc>>,
     pub call: RefreshCall,
 }
+pub(crate) fn missing_source_argument(value: &Value) -> Option<MissingRefreshSource> {
+    if value.is_null() {
+        return Some(MissingRefreshSource::Null);
+    }
+    match value.as_i64()? {
+        0 => Some(MissingRefreshSource::Zero),
+        -1 => Some(MissingRefreshSource::MinusOne),
+        _ => None,
+    }
+}
+
 impl RefreshMessage {
+    pub(crate) fn missing_api_source(&self) -> Option<MissingRefreshSource> {
+        self.call.missing_api_source()
+    }
+
+    pub(crate) fn source_spelling(&self) -> String {
+        self.missing_api_source().map_or_else(
+            || self.source_id.to_string(),
+            |source| source.source_spelling().to_owned(),
+        )
+    }
+
     /// Exact immediate import API arguments, after protocol parsing has
     /// established the actual published message fields.
     pub(crate) fn has_explicit_api_arguments(&self) -> bool {
@@ -44,7 +67,8 @@ impl RefreshMessage {
                 && self.parent.is_none()
                 && self.root == self.task_id
                 && argument.as_str().and_then(canonical_decimal_source_id) == Some(self.source_id));
-        !self.call.list_args
+        self.source_id > 0
+            && !self.call.list_args
             && source_matches
             && self.call.kwargs.len() == 1
             && self.call.kwargs.get("force").and_then(Value::as_bool) == Some(self.force)
@@ -86,7 +110,29 @@ impl RefreshCall {
         self.args.first().is_some_and(Value::is_string)
     }
 
+    fn missing_api_source(&self) -> Option<MissingRefreshSource> {
+        let [value] = self.args.as_slice() else {
+            return None;
+        };
+        if self.list_args
+            || self.kwargs.len() != 1
+            || self.kwargs.get("force") != Some(&Value::Bool(false))
+        {
+            return None;
+        }
+        missing_source_argument(value)
+    }
+
+    fn immediate_only(&self) -> bool {
+        self.has_decimal_source() || self.missing_api_source().is_some()
+    }
+
     pub fn resolve(&self) -> Result<(i64, bool, u32), ProtocolError> {
+        if let Some(source) = self.missing_api_source() {
+            // The legacy numeric field is only used to verify the wire message
+            // here. The caller resolves the typed argument before any SQL lookup.
+            return Ok((source.lookup().unwrap_or(0), false, 0));
+        }
         if self.has_decimal_source() {
             if self.list_args
                 || self.args.len() != 1
@@ -131,7 +177,9 @@ impl RefreshCall {
     fn repr(&self) -> Result<(String, String), ProtocolError> {
         self.resolve()?;
         let literal = |v: &Value| {
-            if let Some(b) = v.as_bool() {
+            if v.is_null() {
+                "None".to_owned()
+            } else if let Some(b) = v.as_bool() {
                 if b {
                     "True".to_owned()
                 } else {
@@ -171,7 +219,7 @@ pub fn encode(
     let resolved = message.call.resolve()?;
     if resolved != (message.source_id, message.force, message.retry)
         || message.parent.is_none() && message.root != message.task_id
-        || message.call.has_decimal_source() && (message.parent.is_some() || message.eta.is_some())
+        || message.call.immediate_only() && (message.parent.is_some() || message.eta.is_some())
     {
         return Err(invalid());
     }
@@ -267,7 +315,7 @@ pub fn parse(bytes: &[u8]) -> Result<RefreshMessage, ProtocolError> {
         list_args: h["argsrepr"].as_str().is_some_and(|v| v.starts_with('[')),
     };
     let (source_id, force, retry) = call.resolve()?;
-    if call.has_decimal_source() && (periodic.is_some() || parent.is_some() || eta.is_some()) {
+    if call.immediate_only() && (periodic.is_some() || parent.is_some() || eta.is_some()) {
         return Err(invalid());
     }
     let (args, kwargs) = call.repr()?;
@@ -398,6 +446,96 @@ mod tests {
         message.parent = Some(reply);
         assert!(encode(&message, reply, delivery, "gen1@localhost").is_err());
     }
+    #[test]
+    fn qualified_missing_api_roots_roundtrip_the_exact_source_argument() {
+        for (wire, source, argsrepr) in [
+            (Value::Null, MissingRefreshSource::Null, "(None,)"),
+            (json!(0), MissingRefreshSource::Zero, "(0,)"),
+            (json!(-1), MissingRefreshSource::MinusOne, "(-1,)"),
+        ] {
+            let task = Uuid::new_v4();
+            let mut message = RefreshMessage {
+                task_id: task,
+                root: task,
+                parent: None,
+                eta: None,
+                source_id: source.lookup().unwrap_or(0),
+                force: false,
+                retry: 0,
+                call: RefreshCall {
+                    args: vec![wire.clone()],
+                    kwargs: json!({"force":false}).as_object().unwrap().clone(),
+                    list_args: false,
+                },
+            };
+            let packed = |value: &RefreshMessage| {
+                encode(value, Uuid::new_v4(), Uuid::new_v4(), "owned-test")
+            };
+            let raw = packed(&message).unwrap();
+            assert_eq!(parse(&raw).unwrap(), message);
+            assert_eq!(message.missing_api_source(), Some(source));
+            assert_eq!(message.source_spelling(), source.source_spelling());
+            assert!(!message.has_explicit_api_arguments());
+            let mut frame: Value = serde_json::from_slice(&raw).unwrap();
+            assert_eq!(frame["headers"]["argsrepr"], argsrepr);
+            let decoded = STANDARD.decode(frame["body"].as_str().unwrap()).unwrap();
+            let arguments: Value = serde_json::from_slice(&decoded).unwrap();
+            assert_eq!(arguments[0], json!([wire]));
+            assert_eq!(arguments[1], json!({"force":false}));
+
+            frame["headers"]["periodic_task_name"] = json!("owned period");
+            assert!(parse(&serde_json::to_vec(&frame).unwrap()).is_err());
+            message.parent = Some(Uuid::new_v4());
+            assert!(packed(&message).is_err());
+            message.parent = None;
+            message.eta = Some(
+                DateTime::parse_from_rfc3339("2026-01-01T00:00:00Z")
+                    .unwrap()
+                    .with_timezone(&Utc),
+            );
+            assert!(packed(&message).is_err());
+        }
+    }
+
+    #[test]
+    fn missing_api_roots_do_not_admit_unmeasured_force_or_id_shapes() {
+        let exact_force = json!({"force":false}).as_object().unwrap().clone();
+        for value in [
+            json!(-2),
+            json!(true),
+            json!(0.0),
+            json!("0"),
+            json!("-1"),
+            json!([]),
+        ] {
+            let call = RefreshCall {
+                args: vec![value],
+                kwargs: exact_force.clone(),
+                list_args: false,
+            };
+            assert!(call.resolve().is_err());
+        }
+        for kwargs in [
+            json!({}),
+            json!({"force": true}),
+            json!({"force":null}),
+            json!({"force":false,"_file_defer_retry":1}),
+        ] {
+            let call = RefreshCall {
+                args: vec![Value::Null],
+                kwargs: kwargs.as_object().unwrap().clone(),
+                list_args: false,
+            };
+            assert!(call.resolve().is_err());
+        }
+        let list = RefreshCall {
+            args: vec![json!(-1)],
+            kwargs: exact_force,
+            list_args: true,
+        };
+        assert!(list.resolve().is_err());
+    }
+
     #[test]
     fn argument_types_duplicates_unknowns_and_bounds_are_rejected() {
         for (args, kwargs) in [

@@ -596,6 +596,29 @@ impl RefreshExecutor for ServiceExecutor {
         publisher: ChildPublisher,
         owner: Arc<dyn Send + Sync>,
     ) -> ExecuteFuture<'a> {
+        if let Some(source) = message.missing_api_source() {
+            return Box::pin(async move {
+                let outcome = self
+                    .runner
+                    .run_missing_api_source(source, owner)
+                    .await
+                    .map_err(|_| Error::Execution)?;
+                publisher.close_native_trail()?;
+                match outcome {
+                    FileJobOutcome::AlreadyRunning => Ok(NormalReturn::Null),
+                    FileJobOutcome::MissingSource(value)
+                        if value
+                            == format!(
+                                "EPG source {} does not exist, task cleaned up",
+                                source.source_spelling()
+                            ) =>
+                    {
+                        Ok(NormalReturn::MissingSource)
+                    }
+                    _ => Err(Error::Execution),
+                }
+            });
+        }
         self.execute_source(
             message.source_id,
             message.force,
