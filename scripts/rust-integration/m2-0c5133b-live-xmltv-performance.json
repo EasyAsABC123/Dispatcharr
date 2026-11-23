@@ -1,0 +1,134 @@
+{
+  "Rust_over_Original_ratios": {
+    "backend_and_infrastructure": {
+      "cpu_core_seconds": 0.4574190931217885,
+      "peak_charged_bytes": 0.41281446961986895,
+      "peak_working_set_bytes": 0.21799041347489137
+    },
+    "observer": {
+      "cpu_core_seconds": 0.5469980102084956,
+      "peak_charged_bytes": 0.9960146029814421,
+      "peak_working_set_bytes": 1.007737128665584
+    },
+    "origin": {
+      "cpu_core_seconds": 0.9507243053912517,
+      "peak_charged_bytes": 0.6721281564735075,
+      "peak_working_set_bytes": 1.0124348649928943
+    },
+    "whole_fixture": {
+      "cpu_core_seconds": 0.5233399189948936,
+      "peak_charged_bytes": 0.6031658119996242,
+      "peak_working_set_bytes": 0.39883082508273604
+    }
+  },
+  "actual_runs": {
+    "baseline": {
+      "exact_cleanup": true,
+      "literal_cleanup_exit": 0,
+      "literal_execution_exit": 0,
+      "maximum_counter_read_skew_seconds": 0.0006335479556582868,
+      "maximum_sample_lag_seconds": 0.00538634299300611,
+      "media_readers": 10,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 3.10604,
+          "peak_charged_bytes": 917618688,
+          "peak_working_set_bytes": 914350080
+        },
+        "observer": {
+          "cpu_core_seconds": 1.248372,
+          "peak_charged_bytes": 403906560,
+          "peak_working_set_bytes": 171524096
+        },
+        "origin": {
+          "cpu_core_seconds": 0.409979,
+          "peak_charged_bytes": 336740352,
+          "peak_working_set_bytes": 103759872
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 4.764391,
+          "peak_charged_bytes": 1656610816,
+          "peak_working_set_bytes": 1186926592
+        }
+      },
+      "peak_active_upstream": 1,
+      "physical_receipts_sha256": {
+        "actual-publications.json": "43b330411b2efd80e86a07cebb0437267e635ab76dd601b2542f72ee7d110fe7",
+        "independent-owned-cleanup.json": "6535d3f2d9ad209993472d19a15eccccc6966db90dec50bac02fe5021a0ead94",
+        "owned-xmltv-arm.json": "fbeb69b330fb9cebf026068b2c50fdef7285671a175d5b796c6a552ac49661e8",
+        "resource-samples.json": "132e58e3473e0b7be29553116c22b35024d6a74596ca245dde9d8485a4551238",
+        "shared-ts.json": "11f042b48a627b84f86d62795a4bbac7a9f86c17b9f76da7f6a2344d98a9608a",
+        "useful-media-complete.json": "e3e0d77d5d596c0f37857036db51280653ea8523e95539c3bd8592e7764554b6"
+      },
+      "samples": 61,
+      "terminal_families": [
+        "apps.channels.tasks.evaluate_series_rules",
+        "apps.epg.tasks.build_programme_index_task",
+        "apps.epg.tasks.refresh_epg_data"
+      ],
+      "xmltv_elapsed_seconds": 0.7389080820139498
+    },
+    "candidate": {
+      "exact_cleanup": true,
+      "literal_cleanup_exit": 0,
+      "literal_execution_exit": 0,
+      "maximum_counter_read_skew_seconds": 0.0005763560184277594,
+      "maximum_sample_lag_seconds": 0.005391393962781876,
+      "media_readers": 10,
+      "metrics": {
+        "backend_and_infrastructure": {
+          "cpu_core_seconds": 1.420762,
+          "peak_charged_bytes": 378806272,
+          "peak_working_set_bytes": 199319552
+        },
+        "observer": {
+          "cpu_core_seconds": 0.682857,
+          "peak_charged_bytes": 402296832,
+          "peak_working_set_bytes": 172851200
+        },
+        "origin": {
+          "cpu_core_seconds": 0.389777,
+          "peak_charged_bytes": 226332672,
+          "peak_working_set_bytes": 105050112
+        },
+        "whole_fixture": {
+          "cpu_core_seconds": 2.493396,
+          "peak_charged_bytes": 999211008,
+          "peak_working_set_bytes": 473382912
+        }
+      },
+      "peak_active_upstream": 1,
+      "physical_receipts_sha256": {
+        "actual-publications.json": "a326b85cb95e03768e6beaabf01746788e9aa5c225db254efb660ce9c290c9c2",
+        "independent-owned-cleanup.json": "d4ede89f53718d20eb06ceb3ada0beb2a6d95c14e1134ac24064957efe580568",
+        "owned-xmltv-arm.json": "36f81e942fac3f7de80a7fb7c720a986561b7addd06e44bdae3ba60352161dff",
+        "resource-samples.json": "f87dea3d70b96c47b917f15c2e35b9c6a07c4a518b218c27e4d28ae307e7233f",
+        "shared-ts.json": "492f08047bb17328bcf5ccd692f05ae77bcf44661136b216511dcf7eb9171a73",
+        "useful-media-complete.json": "8efb6bc9cfc81cdd56de55c6e5ccf37f2a027fdf77a9221782c0559ee7b3b9b7"
+      },
+      "samples": 61,
+      "terminal_families": [
+        "apps.channels.tasks.evaluate_series_rules",
+        "apps.epg.tasks.build_programme_index_task",
+        "apps.epg.tasks.refresh_epg_data"
+      ],
+      "xmltv_elapsed_seconds": 0.7282105259946547
+    }
+  },
+  "application_revision": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "architecture": "linux/amd64",
+  "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "controller_receipt_sha256": "75f93fa2e32ec84d9699b59dbbcb102998973b8872e82e33012d37cbde7b9cfc",
+  "image": "sha256:e6d40f935400adfc8ccd64d31211b556cf3bf8dffc39f7fd823fbb5688d0f2dd",
+  "manifest_sha256": "72c01c185cad19e515090807006f3f98fc034fb0459a981cebc759700278ee12",
+  "measured_pairs": 1,
+  "memory_swap_current": 0,
+  "memory_swap_max": 0,
+  "ordinary_release_performance_gate_passed": false,
+  "physical_proof_sha256": "dfd79628f52a82dc12ad74b1f8e2c7536448d9ac4ad19d51c08de8f8d787380b",
+  "role_profile": "Selected with Legacy Beat",
+  "scope": "one paired fixed ten-viewer synthetic TS and natural XMLTV graph",
+  "seconds_per_arm": 60,
+  "viewers": 10,
+  "xmltv_sha256": "8c3dc5f26ca195192b2f3f471febb876744d0b3089f64bc03968961aa0544ef1"
+}
