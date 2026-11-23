@@ -28,3 +28,17 @@ open. Original Dispatcharr, its React frontend, codec authors, and all
 dependencies retain their existing attribution and licenses.
 
 [Machine-readable receipt](../scripts/rust-integration/m2-0c5133b-arm64-ten-viewer-media.json)
+
+## Follow-up paired pass
+
+A fresh paired run passed with the fixed 50 ms gate and read-only observer
+step timings. Both arms returned literal exit 0 and verified exact teardown.
+Each had ten viewers, one upstream connection, one provider slot, and one
+stable VLC generation in all 61 observations. Each independently decoded
+twenty raw and certified captures against the same pinned content identity.
+The Original source and React audit passed. The two independently collected
+in-arm references retained their own valid local clock evidence.
+
+The renderer and provider scopes are qualified for this pair. The joined
+XMLTV and ARM64 resource benchmark remains open.
+[Paired receipt](../scripts/rust-integration/m2-0c5133b-arm64-ten-viewer-pair.json)
