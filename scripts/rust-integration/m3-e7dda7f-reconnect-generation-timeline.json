@@ -1,0 +1,42 @@
+{
+  "assessment": {
+    "dispatch_claim_attempt_directly_traced": false,
+    "new_or_existing_remux_initializing_with_retained_payload": true,
+    "no_transform_observed": true,
+    "profile_index_stayed_initial": true,
+    "profile_owner_stayed_initial": true,
+    "raw_buffer_progress_with_same_observed_owner": true,
+    "suspected_boundary_reproduced": true,
+    "trace_present": true
+  },
+  "bounded_diagnostic_complete": true,
+  "controller_actual_exit": 0,
+  "exact_owned_cleanup": true,
+  "fresh": {
+    "actual_request_attempts": 1,
+    "decode": {
+      "error_class": "AssertionError",
+      "status": "failed"
+    },
+    "http": {
+      "bytes": 295596,
+      "ended": true,
+      "error_class": "TimeoutError",
+      "harness_close_error_class": null,
+      "mime": "video/mp4",
+      "request_attempts": 1,
+      "response_seconds": 0.009,
+      "status": 200,
+      "terminal": "transport_error"
+    },
+    "origin_connections_delta_after_request": 1,
+    "outcome": "transport_error",
+    "request_timeout_seconds": 40
+  },
+  "full_M3_passed": false,
+  "manifest_sha256": "a07614a0d6b42efa27f3ee229fc61d28e331cbd81d51c829d6a26655ea0743cf",
+  "performance_verified": false,
+  "reducer_sha256": "7b68e7ee18e7d2826cd5b454420f7294627946880471a36d11aa402d0c3a3095",
+  "revision": "e7dda7fec25918644a29de56454bad7f9a63fd83",
+  "scope": "Native one normal GET; read-only raw/profile/remux correlation"
+}
