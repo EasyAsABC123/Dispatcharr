@@ -2,7 +2,7 @@
 //! Original Dispatcharr authors retain algorithm/application credit.
 use crate::{
     recording_active, recording_dvr_normal::Error, recording_files, recording_normal::NormalPaths,
-    recording_process,
+    recording_process, recording_stop_handoff,
 };
 use chrono::{DateTime, Utc};
 use dispatcharr_store::recording_capture::{CaptureStore, NormalRecordingState};
@@ -31,6 +31,7 @@ pub(crate) struct Context {
     pub shutdown: Arc<AtomicBool>,
     pub transcript: Arc<recording_process::Transcript>,
     pub confirmation: Option<recording_active::LiteralConfirmation>,
+    pub stop_generation: Option<Arc<recording_stop_handoff::Generation>>,
 }
 pub(crate) struct Outcome {
     pub reason: NormalStop,
@@ -74,6 +75,27 @@ fn interrupted(reason: NormalStop, last_error: &str, confirmed: bool) -> Option<
             format!("no_stream_data: {last_error}")
         }),
         _ => None,
+    }
+}
+
+fn observe_attempt_settlement(
+    context: &Context,
+    attempt: &Result<recording_process::NormalAttempt, recording_process::Error>,
+) {
+    let Some(generation) = &context.stop_generation else {
+        return;
+    };
+    let settled = match attempt {
+        // Constructing a NormalAttempt requires the child wait and
+        // stderr reader join. A reported read error does not leave a reader.
+        Ok(_) => true,
+        Err(recording_process::Error::Spawn(_)) => context.transcript.settled_spawn_failure(),
+        Err(_) => false,
+    };
+    if settled {
+        generation.attempt_settled();
+    } else {
+        generation.attempt_uncertain();
     }
 }
 
@@ -222,8 +244,12 @@ pub(crate) async fn capture(mut context: Context) -> Result<Outcome, Error> {
         let mut last_new = attempt_start;
         let mut last_count = start_number;
         let mut attempt_confirmed = false;
+        let generation = context.stop_generation.clone();
         let mut media = tokio::task::spawn_blocking(move || {
-            recording_process::capture_normal_attempt(
+            if generation.is_some_and(|generation| !generation.begin_attempt()) {
+                return None;
+            }
+            Some(recording_process::capture_normal_attempt(
                 channel,
                 recording,
                 paths,
@@ -233,7 +259,7 @@ pub(crate) async fn capture(mut context: Context) -> Result<Outcome, Error> {
                 shutdown,
                 owner,
                 transcript,
-            )
+            ))
         });
         let mut tick = tokio::time::interval(Duration::from_millis(500));
         tick.tick().await;
@@ -272,10 +298,26 @@ pub(crate) async fn capture(mut context: Context) -> Result<Outcome, Error> {
                             }
                         }Ok(())
                     }.await;
-                    if let Err(error)=monitoring {control.request(NormalStop::Shutdown);let _=media.await.map_err(|_|Error::Supervisor)?;return Err(error);}
+                    if let Err(error) = monitoring {
+                        control.request(NormalStop::Shutdown);
+                        let stopped = media.await.map_err(|_| Error::Supervisor)?;
+                        if let Some(stopped) = stopped {
+                            observe_attempt_settlement(&context, &stopped);
+                        }
+                        return Err(error);
+                    }
                 }
             }
         };
+        let Some(attempt) = attempt else {
+            return Ok(Outcome {
+                reason: NormalStop::Stopped,
+                interrupted_reason: None,
+                stream_confirmed: confirmed,
+                end,
+            });
+        };
+        observe_attempt_settlement(&context, &attempt);
         match attempt {
             Ok(actual) => {
                 trace(

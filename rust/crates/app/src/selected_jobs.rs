@@ -332,6 +332,9 @@ impl SelectedJobs {
             .await
             .map_err(|_| "Selected DVR configuration is unsupported or initialization failed")?,
         );
+        if env::var("DISPATCHARR_ENV").as_deref() == Ok("aio") {
+            dvr.enable_local_stop_handoff();
+        }
         let recovery_jobs = jobs::transport::RecoveryJobs::connect(&broker, &backend)
             .await
             .map_err(|_| "Selected recovery transport initialization failed")?;

@@ -272,6 +272,7 @@ mod recording_output_profile;
 mod recording_normal_task;
 
 mod recording_normal_capture;
+mod recording_stop_handoff;
 
 mod recording_artwork_root;
 

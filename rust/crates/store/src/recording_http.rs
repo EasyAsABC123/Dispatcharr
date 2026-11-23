@@ -140,6 +140,16 @@ pub trait RecordingJobs: Send + Sync {
         recording: i64,
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), RecordingEffectError>>;
+    /// Selected AIO supplies the owned local handoff. Other role/adapter
+    /// combinations retain their existing immediate stop behavior.
+    fn stop_after_local_recording(
+        &self,
+        _channel: Uuid,
+        _recording: i64,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> Option<BoxFuture<'_, Result<(), RecordingEffectError>>> {
+        None
+    }
     fn dvr_settings(
         &self,
         owner: Arc<dyn Send + Sync>,
@@ -822,6 +832,31 @@ fn object(value: &Value) -> Result<Map<String, Value>, StoreError> {
             .ok_or(StoreError::UnhandledRestFault)
     }
 }
+async fn stop_effects(
+    jobs: &dyn RecordingJobs,
+    channel: Uuid,
+    recording: i64,
+    task: Option<String>,
+    owner: Arc<dyn Send + Sync>,
+) -> bool {
+    let revoke = async {
+        match task {
+            Some(key) => jobs.revoke(key, owner.clone()).await,
+            None => Ok(()),
+        }
+    };
+    let (clients, revoke) = match jobs.stop_after_local_recording(channel, recording, owner.clone())
+    {
+        Some(handoff) => tokio::join!(handoff, revoke),
+        None => (
+            jobs.stop_clients(channel, recording, owner.clone()).await,
+            revoke.await,
+        ),
+    };
+    matches!(clients, Err(RecordingEffectError::Unsettled))
+        || matches!(revoke, Err(RecordingEffectError::Unsettled))
+}
+
 async fn stop(owner: Arc<Owner>, row: Recording) -> Result<Response, StoreError> {
     let status = row
         .properties
@@ -846,22 +881,15 @@ async fn stop(owner: Arc<Owner>, row: Recording) -> Result<Response, StoreError>
     .await;
     let held = owner.clone();
     tokio::spawn(async move {
-        let mut unsettled = false;
-        for result in [
-            held.state
-                .jobs
-                .stop_clients(row.uuid, row.id, held.clone())
-                .await,
-            match row.task {
-                Some(key) => held.state.jobs.revoke(key, held.clone()).await,
-                None => Ok(()),
-            },
-        ] {
-            if matches!(result, Err(RecordingEffectError::Unsettled)) {
-                unsettled = true;
-            }
-        }
-        if unsettled {
+        if stop_effects(
+            held.state.jobs.as_ref(),
+            row.uuid,
+            row.id,
+            row.task,
+            held.clone(),
+        )
+        .await
+        {
             held.state.closed.store(true, Ordering::Release);
             held.state
                 .uncertain
@@ -1105,10 +1133,17 @@ impl crate::AuthService {
 mod recording_jobs_binding_tests {
     use super::*;
     use std::sync::atomic::{AtomicUsize, Ordering};
+    #[derive(Default)]
+    struct StopProbe {
+        revoked: tokio::sync::Notify,
+        pending_revoke_completed: std::sync::atomic::AtomicBool,
+    }
+
     struct BackEdgeProbe {
         // Represents the real Engine -> Core/health -> pre-engine Auth edge.
         _pre_engine_auth: AuthService,
         dropped: Arc<AtomicUsize>,
+        stop: Option<Arc<StopProbe>>,
     }
     impl Drop for BackEdgeProbe {
         fn drop(&mut self) {
@@ -1125,10 +1160,18 @@ mod recording_jobs_binding_tests {
         }
         fn revoke(
             &self,
-            _: String,
+            task: String,
             _: Arc<dyn Send + Sync>,
         ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
-            Box::pin(async { Err(RecordingEffectError::Unsupported) })
+            Box::pin(async move {
+                let Some(stop) = self.stop.as_ref() else {
+                    return Err(RecordingEffectError::Unsupported);
+                };
+                assert_eq!(task, "dvr-recording-17");
+                stop.pending_revoke_completed.store(true, Ordering::Release);
+                stop.revoked.notify_one();
+                Ok(())
+            })
         }
         fn revoke_observed_absent(
             &self,
@@ -1144,6 +1187,20 @@ mod recording_jobs_binding_tests {
             _: Arc<dyn Send + Sync>,
         ) -> BoxFuture<'_, Result<(), RecordingEffectError>> {
             Box::pin(async { Err(RecordingEffectError::Unsupported) })
+        }
+        fn stop_after_local_recording(
+            &self,
+            channel: Uuid,
+            recording: i64,
+            _: Arc<dyn Send + Sync>,
+        ) -> Option<BoxFuture<'_, Result<(), RecordingEffectError>>> {
+            let stop = self.stop.as_ref()?;
+            Some(Box::pin(async move {
+                assert_eq!((channel, recording), (Uuid::nil(), 17));
+                stop.revoked.notified().await;
+                assert!(stop.pending_revoke_completed.load(Ordering::Acquire));
+                Ok(())
+            }))
         }
         fn dvr_settings(
             &self,
@@ -1173,6 +1230,32 @@ mod recording_jobs_binding_tests {
         )
     }
     #[tokio::test]
+    async fn pending_revoke_completes_while_local_recorder_handoff_waits() {
+        let state = Arc::new(StopProbe::default());
+        let jobs = BackEdgeProbe {
+            _pre_engine_auth: unbound_auth(),
+            dropped: Arc::new(AtomicUsize::new(0)),
+            stop: Some(state.clone()),
+        };
+        // A serial apply-wait-revoke call stalls forever under this causal
+        // fixture. Notify is fired only by the real stop-effect revoke arm.
+        let unsettled = tokio::time::timeout(
+            std::time::Duration::from_secs(1),
+            stop_effects(
+                &jobs,
+                Uuid::nil(),
+                17,
+                Some("dvr-recording-17".into()),
+                Arc::new(()),
+            ),
+        )
+        .await
+        .expect("pending revoke must not wait for the recorder handoff");
+        assert!(!unsettled);
+        assert!(state.pending_revoke_completed.load(Ordering::Acquire));
+    }
+
+    #[tokio::test]
     async fn actual_binding_has_no_auth_backedge_cycle_but_accepted_lookup_retains_bridge() {
         let auth = unbound_auth();
         let early = auth.clone();
@@ -1181,6 +1264,7 @@ mod recording_jobs_binding_tests {
         let bridge: Arc<dyn RecordingJobs> = Arc::new(BackEdgeProbe {
             _pre_engine_auth: early.clone(),
             dropped: dropped.clone(),
+            stop: None,
         });
         let weak = Arc::downgrade(&bridge);
         auth.bind_recording_jobs(bridge.clone()).unwrap();
@@ -1240,6 +1324,7 @@ mod recording_jobs_binding_tests {
             Arc::new(BackEdgeProbe {
                 _pre_engine_auth: auth.clone(),
                 dropped: Arc::new(AtomicUsize::new(0)),
+                stop: None,
             }),
             Arc::new(NoRouteEffects),
         );

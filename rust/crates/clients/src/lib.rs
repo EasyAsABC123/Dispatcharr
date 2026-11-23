@@ -642,6 +642,22 @@ return 1
         Ok(locally_processed)
     }
 
+    /// Retire one already-identified local lease, without leaving a shared
+    /// stop flag when the owner's connection has closed on its own.
+    pub async fn stop_local_client(&self, channel: &str, id: &str) -> Result<(), Error> {
+        let client = self
+            .inner
+            .clients
+            .lock()
+            .unwrap()
+            .get(id)
+            .and_then(Weak::upgrade);
+        if let Some(client) = client.filter(|client| client.channel == channel) {
+            release(&client).await?;
+        }
+        Ok(())
+    }
+
     pub async fn shutdown(&self) {
         self.inner.stopped.store(true, Ordering::Release);
         self.inner.slots.close();

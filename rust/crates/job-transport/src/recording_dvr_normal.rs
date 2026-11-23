@@ -1,16 +1,16 @@
 //! Additive normal DVR handler; captured constructors remain unchanged.
 //! Original Dispatcharr authors retain algorithm/application credit.
 //! Automatic postprocessing extension remains private pending Source characterization.
-pub use crate::recording_normal_task::TaskKey;
 use crate::{
     normal_named_recording::NormalNamedRecordingPublications,
     normal_recording_publication::{NormalRecordingPublications, NormalRecordingPublisher},
     normal_revocation::Revoked,
     recording_active, recording_cleanup, recording_events, recording_files, recording_normal,
     recording_normal_capture, recording_normal_policy, recording_normal_task, recording_process,
-    recording_settings,
+    recording_settings, recording_stop_handoff,
     transport::{Config, Jobs},
 };
+pub use crate::{recording_normal_task::TaskKey, recording_stop_handoff::LocalRecordingStop};
 use chrono::Utc;
 use dispatcharr_contracts::UpdateEventSink;
 use dispatcharr_store::{
@@ -20,7 +20,7 @@ use dispatcharr_store::{
 use serde_json::{json, Value};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
-    Arc, Mutex,
+    Arc, Mutex, OnceLock,
 };
 use std::time::Duration;
 use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
@@ -118,6 +118,7 @@ struct Inner {
     slot: Arc<Semaphore>,
     closed: AtomicBool,
     shutdown: Arc<AtomicBool>,
+    local_stop: OnceLock<recording_stop_handoff::Registry>,
     // At most20 admitted tasks retain their own unknown post-claim scopes. No
     // generic error->terminal metadata, lease cleanup, requeue or automatic retry.
     uncertain: Mutex<Vec<UncertainOwner>>,
@@ -202,6 +203,7 @@ impl NormalDvr {
                     slot: Arc::new(Semaphore::new(20)),
                     closed: AtomicBool::new(false),
                     shutdown: Arc::new(AtomicBool::new(false)),
+                    local_stop: OnceLock::new(),
                     uncertain: Mutex::new(Vec::with_capacity(20)),
                     transcript: Mutex::new(None),
                     active_trace: Mutex::new(Vec::new()),
@@ -264,6 +266,32 @@ impl NormalDvr {
     pub fn request_shutdown(&self) {
         self.inner.closed.store(true, Ordering::Release);
         self.inner.shutdown.store(true, Ordering::Release);
+        if let Some(registry) = self.inner.local_stop.get() {
+            registry.request_shutdown();
+        }
+    }
+    /// Bind only before starting the in-process AIO Recording worker and HTTP
+    /// router which share this instance. Remote workers cannot register here.
+    pub fn enable_local_stop_handoff(&self) {
+        self.inner
+            .local_stop
+            .get_or_init(recording_stop_handoff::Registry::default);
+    }
+    pub fn has_local_stop_handoff(&self) -> bool {
+        self.inner.local_stop.get().is_some()
+    }
+    pub fn begin_local_recording_stop(
+        &self,
+        channel: uuid::Uuid,
+        recording: i64,
+    ) -> Option<LocalRecordingStop> {
+        self.inner.local_stop.get()?.stop(channel, recording)
+    }
+    pub fn recording_stop_snapshot_is_current(&self, request: &LocalRecordingStop) -> bool {
+        self.inner
+            .local_stop
+            .get()
+            .is_some_and(|registry| registry.still_current(request))
     }
     pub fn require_recording_domain(&self) -> Result<(), Error> {
         self.inner.plugin_domain.require_supported()
@@ -636,6 +664,18 @@ async fn execute(
             metadata_written,
         });
     };
+    // The queued task was claimed and acquired the recording lease. Keep its
+    // private generation registered before prime or before any attempt can spawn.
+    // HTTP task_id can be a Beat schedule alias rather than this actual task ID.
+    let stop_registration = inner
+        .local_stop
+        .get()
+        .map(|registry| {
+            registry
+                .register(current.channel_uuid, message.recording_id())
+                .ok_or(Error::Unsettled)
+        })
+        .transpose()?;
     recording_events::send(
         inner.events.clone(),
         recording_events::started(&current.channel_name),
@@ -680,15 +720,54 @@ async fn execute(
         .map_err(Error::Files)?;
     let patch = recording_normal::prime_patch(message.recording_id(), &paths, started)
         .map_err(|_| Error::Unsupported("prime metadata"))?;
+    use dispatcharr_store::recording_capture::{Error as CaptureError, PrimeWriteOutcome};
     let prime_rejected = match inner
         .store
         .clone()
         .prime_normal_properties(message.recording_id(), patch, owner.clone())
         .await
-        .map_err(Error::Store)?
     {
-        dispatcharr_store::recording_capture::PrimeWriteOutcome::Applied(_) => false,
-        dispatcharr_store::recording_capture::PrimeWriteOutcome::Rejected(rejection) => {
+        Ok(PrimeWriteOutcome::Applied(_)) => false,
+        Err(
+            error @ CaptureError::Unsupported(
+                "prime status changed" | "recording changed during fresh merge",
+            ),
+        ) if stop_registration.is_some() => {
+            let recording = message.recording_id();
+            let state = inner
+                .store
+                .clone()
+                .normal_state(recording, owner.clone())
+                .await
+                .map_err(Error::Store)?;
+            if !state.is_some_and(|state| state.stopped) {
+                return Err(Error::Store(error));
+            }
+            // Durable STOP won the prime CAS. No HLS directory or child has
+            // been started, and only the original, unexpired literal receipt
+            // may retire this task's active scope.
+            let before_capture = confirmation
+                .take()
+                .ok_or(Error::Active(recording_active::Error::Uncertain))?;
+            let removed = inner
+                .active
+                .remove_captured61(recording, before_capture, owner.clone())
+                .await
+                .map_err(Error::Active)?;
+            trace(
+                &owner,
+                "stopped-before-prime",
+                removed.receipt(json!(removed.value)),
+            )?;
+            let metadata_written = message.clone().write(inner.jobs.clone(), owner).await?;
+            task.complete(&inner.publications, &inner.named_publications)?;
+            return Ok(Run::CompletedNoop {
+                task: message.key(),
+                metadata_written,
+            });
+        }
+        Err(error) => return Err(Error::Store(error)),
+        Ok(PrimeWriteOutcome::Rejected(rejection)) => {
             trace(
                 &owner,
                 "settled-prime-rejection",
@@ -744,6 +823,9 @@ async fn execute(
         shutdown: inner.shutdown.clone(),
         transcript: transcript.clone(),
         confirmation: confirmation.take(),
+        stop_generation: stop_registration
+            .as_ref()
+            .map(|guard| guard.generation().clone()),
     })
     .await?;
     if capture.reason == recording_process::NormalStop::Shutdown && Utc::now() < capture.end {

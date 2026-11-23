@@ -11,7 +11,7 @@ use dispatcharr_store::{
 };
 use dispatcharr_stream_http::StreamEngine;
 use serde_json::Value;
-use std::sync::Arc;
+use std::{sync::Arc, time::Duration};
 pub fn port(
     store: Store,
     cache: String,
@@ -234,6 +234,49 @@ impl RecordingJobs for Bridge {
                 .map(|_| ())
                 .map_err(|_| Effect::Unsettled)
         })
+    }
+    fn stop_after_local_recording(
+        &self,
+        channel: RecordingChannelId,
+        recording: i64,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Option<BoxFuture<'_, Result<(), Effect>>> {
+        if !self.dvr.has_local_stop_handoff() {
+            return None;
+        }
+        let request = self.dvr.begin_local_recording_stop(channel, recording);
+        Some(Box::pin(async move {
+            let _owner = owner;
+            let Some(request) = request else {
+                // Pending tasks are still revoked independently. A foreign
+                // worker or an expired marker cannot authorize a forced close.
+                return Ok(());
+            };
+            let channel = channel.to_string();
+            let handoff = async {
+                let clients = self
+                    .engine
+                    .snapshot_local_recording_clients(&channel, recording)
+                    .await
+                    .map_err(|_| Effect::Unsettled)?;
+                // A replacement could have registered during the snapshot.
+                if self.dvr.recording_stop_snapshot_is_current(&request) && request.settled().await
+                {
+                    self.engine
+                        .stop_local_recording_clients(&channel, clients)
+                        .await
+                        .map_err(|_| Effect::Unsettled)?;
+                }
+                Ok(())
+            };
+            match tokio::time::timeout(Duration::from_secs(12), handoff).await {
+                Ok(result) => result,
+                Err(_) => {
+                    eprintln!("Local DVR stop handoff exceeded its deadline");
+                    Ok(())
+                }
+            }
+        }))
     }
     fn dvr_settings(&self, owner: Arc<dyn Send + Sync>) -> BoxFuture<'_, Result<Value, Effect>> {
         Box::pin(async move {

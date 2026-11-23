@@ -967,6 +967,51 @@ impl StreamEngine {
         .map_err(|_| PlaybackError::new(503, "Recording client control supervisor failed"))?
     }
 
+    /// One bounded snapshot from this listener's client store. A deferred
+    /// handoff uses these identities once, independent of later reconnects.
+    pub async fn snapshot_local_recording_clients(
+        &self,
+        channel: &str,
+        recording: i64,
+    ) -> Result<Vec<String>, PlaybackError> {
+        if recording <= 0 || recording > i64::from(i32::MAX) {
+            return Err(PlaybackError::new(400, "Invalid recording identity"));
+        }
+        let clients = self
+            .inner
+            .clients
+            .as_ref()
+            .ok_or_else(|| PlaybackError::new(503, "Redis client metadata unavailable"))?;
+        let rows = clients
+            .channel_clients(channel)
+            .await
+            .map_err(|error| client_error(error, 0))?;
+        Ok(local_recording_client_ids(
+            &rows,
+            recording,
+            clients.worker_id(),
+        ))
+    }
+
+    pub async fn stop_local_recording_clients(
+        &self,
+        channel: &str,
+        ids: Vec<String>,
+    ) -> Result<(), PlaybackError> {
+        let clients = self
+            .inner
+            .clients
+            .as_ref()
+            .ok_or_else(|| PlaybackError::new(503, "Redis client metadata unavailable"))?;
+        for id in ids {
+            clients
+                .stop_local_client(channel, &id)
+                .await
+                .map_err(|error| client_error(error, 0))?;
+        }
+        Ok(())
+    }
+
     pub async fn stop_client(&self, channel: &str, id: &str) -> Result<bool, PlaybackError> {
         let clients = self
             .inner
@@ -978,6 +1023,58 @@ impl StreamEngine {
             .await
             .map_err(|error| client_error(error, 0))
     }
+}
+
+fn local_recording_client_ids(
+    rows: &[serde_json::Value],
+    recording: i64,
+    worker: &str,
+) -> Vec<String> {
+    let expected = format!("Dispatcharr-DVR/recording-{recording}");
+    rows.iter()
+        .filter(|row| {
+            row["user_agent"].as_str() == Some(expected.as_str())
+                && row["worker_id"].as_str() == Some(worker)
+                && row["output_format"].as_str() == Some("mpegts")
+                && row["ip_address"]
+                    .as_str()
+                    .and_then(|ip| ip.parse::<std::net::IpAddr>().ok())
+                    .is_some_and(|ip| ip.to_canonical().is_loopback())
+        })
+        .filter_map(|row| row["client_id"].as_str().map(str::to_owned))
+        .collect()
+}
+
+#[cfg(test)]
+#[test]
+fn local_recording_snapshot_excludes_live_sibling_and_foreign_clients() {
+    let row = |id, user_agent, worker, ip, format| {
+        serde_json::json!({
+            "client_id": id,
+            "user_agent": user_agent,
+            "worker_id": worker,
+            "ip_address": ip,
+            "output_format": format,
+        })
+    };
+    let dvr = "Dispatcharr-DVR/recording-17";
+    let rows = [
+        row("first-dvr", dvr, "local", "127.0.0.1", "mpegts"),
+        row("second-dvr", dvr, "local", "::1", "mpegts"),
+        row("foreign", dvr, "foreign", "127.0.0.1", "mpegts"),
+        row("remote", dvr, "local", "192.0.2.1", "mpegts"),
+        row("live", "live-client", "local", "127.0.0.1", "mpegts"),
+        row("hls", dvr, "local", "127.0.0.1", "hls"),
+        row(
+            "sibling-dvr",
+            "Dispatcharr-DVR/recording-18",
+            "local",
+            "::1",
+            "mpegts",
+        ),
+    ];
+    let ids = local_recording_client_ids(&rows, 17, "local");
+    assert_eq!(ids, ["first-dvr", "second-dvr"]);
 }
 
 fn client_error(error: dispatcharr_clients::Error, limit: u32) -> PlaybackError {
