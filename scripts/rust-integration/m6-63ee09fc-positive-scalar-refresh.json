@@ -1,0 +1,73 @@
+{
+  "amd64": {
+    "manifest_sha256": "262265e9cb7e95e3a4eb4d9669d47666e8738c39d551071313d10b1c21f10d6b",
+    "ordinary_image": "sha256:2ac376b08d4e684f90c98a7c29e0772f9dbd863bca01c45a83b5816f2192233d"
+  },
+  "arm64": {
+    "all_six_notices_verified": true,
+    "exact_cleanup": true,
+    "ordinary_audit_sha256": "3d053e261dd8f09afdda215c5f3c784315bd8e17cabf4cc2284c2027eb6f5cb7",
+    "phases": {
+      "owner": 0,
+      "package_run": 0,
+      "physical_build": 0,
+      "preflight": 0,
+      "proof": 0,
+      "signed_auth": 0
+    }
+  },
+  "benchmarked": false,
+  "candidate": "63ee09fcba02f79300ee249b77f1fc881d05657c",
+  "candidate_source_archive_sha256": "0277a5debf9060a2c9b89a5bfb5a3c9db561bb1f7b818f50c176bf1d81c8aab6",
+  "formal_required_nodes_added": 0,
+  "guide": {
+    "cases": [
+      {
+        "actual_redis_lock_order": [
+          "SET NX",
+          "DEL"
+        ],
+        "exact_database_retired": true,
+        "id_type": "bool",
+        "native_main_exit": 0,
+        "numeric_linked_index_id": 1,
+        "served_status": 202,
+        "terminal": "SUCCESS",
+        "typed_lock_suffix": "True",
+        "typed_successful_tasks": 5
+      },
+      {
+        "actual_redis_lock_order": [
+          "SET NX",
+          "DEL"
+        ],
+        "exact_database_retired": true,
+        "id_type": "float",
+        "native_main_exit": 0,
+        "numeric_linked_index_id": 1,
+        "served_status": 202,
+        "terminal": "SUCCESS",
+        "typed_lock_suffix": "1.0",
+        "typed_successful_tasks": 5
+      },
+      {
+        "actual_redis_lock_order": [
+          "SET NX",
+          "DEL"
+        ],
+        "exact_database_retired": true,
+        "id_type": "float",
+        "native_main_exit": 0,
+        "numeric_linked_index_id": 1,
+        "served_status": 202,
+        "terminal": "SUCCESS",
+        "typed_lock_suffix": "1.25",
+        "typed_successful_tasks": 5
+      }
+    ],
+    "exact_cleanup": true,
+    "qualification_sha256": "1ca35b60b9f9d41cdbc3fc8b944a086107440654921283ce443f27eff60998b1",
+    "retained_original_audit_sha256": "710254f417514c931f2b5157fbe7bdaa8d568fd92c2d711e860219c94cdda966"
+  },
+  "pinned_original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+}

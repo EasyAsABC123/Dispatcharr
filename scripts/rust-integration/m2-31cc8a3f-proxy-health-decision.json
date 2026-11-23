@@ -1,0 +1,72 @@
+{
+  "benchmarked": false,
+  "candidate": "31cc8a3fbf975d06e86a3fd742f6a64ffe1adf04",
+  "decision_window_seconds": [
+    9.1,
+    9.75
+  ],
+  "formal_required_nodes_added": 0,
+  "image": "sha256:2b4846e6aa0a05a2fda035a3d00a6cc65d4cc79e4049085c16ae6becc1f806bc",
+  "manifest_sha256": "ea67c2d89d2e1e0b640d95ddbe9fe2231088f5123615e104e6b0a6dbb8a171c1",
+  "native_arms": [
+    {
+      "actual_exit": 0,
+      "exact_cleanup": true,
+      "opted_in": false,
+      "passed": true,
+      "role": "default"
+    },
+    {
+      "actual_exit": 0,
+      "exact_cleanup": true,
+      "opted_in": true,
+      "passed": true,
+      "role": "dynamic"
+    }
+  ],
+  "paired_decision_passed": true,
+  "qualified_physical_observations": {
+    "default": {
+      "decision_samples": 6,
+      "healthy_at_decision_window": true,
+      "raw_receipt_sha256": "fa3f08983583f362b799706f82fda6d341bf7fac01cecd2663129e36ff471510",
+      "same_upstream_after_recovery": true,
+      "settings": {
+        "initial": {
+          "channel_init_grace_period": 60,
+          "connection_timeout": 10,
+          "stream_startup_timeout": 8
+        },
+        "patch_status": 200,
+        "persisted": {
+          "channel_init_grace_period": 5,
+          "connection_timeout": 4,
+          "stream_startup_timeout": 3
+        },
+        "read_status": 200,
+        "unchanged_other_fields": true
+      }
+    },
+    "dynamic": {
+      "decision_samples": 6,
+      "healthy_at_decision_window": false,
+      "raw_receipt_sha256": "3de1026d9d97b3f86915a1bdd09e7cfc00378bbd152990af2105bdb4892924ea",
+      "same_upstream_after_recovery": true,
+      "settings": {
+        "initial": {
+          "channel_init_grace_period": 60,
+          "connection_timeout": 10,
+          "stream_startup_timeout": 8
+        },
+        "patch_status": 200,
+        "persisted": {
+          "channel_init_grace_period": 5,
+          "connection_timeout": 4,
+          "stream_startup_timeout": 3
+        },
+        "read_status": 200,
+        "unchanged_other_fields": true
+      }
+    }
+  }
+}
