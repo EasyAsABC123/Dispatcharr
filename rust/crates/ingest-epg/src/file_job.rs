@@ -15,7 +15,9 @@ use crate::{
     SwapPolicyProvider,
 };
 use dispatcharr_contracts::BoxFuture;
-use dispatcharr_coordination::{MissingRefreshSource, TaskLease, TaskLockError, TaskLocks};
+use dispatcharr_coordination::{
+    MissingRefreshSource, PositiveRefreshScalar, TaskLease, TaskLockError, TaskLocks,
+};
 use dispatcharr_ingest_core::{
     extract_xmltv_owned, source_integer_literal, xmltv_file_handle_is_complete, UploadLimits,
 };
@@ -342,6 +344,29 @@ impl FileJobRunner {
         dispatcher: Arc<dyn GuideTaskDispatcher>,
         hooks: Option<dispatcharr_store::epg_task_hooks::EpgTaskHooks>,
     ) -> Result<FileJobReport, ImportError> {
+        self.run_report_with_dispatcher_scoped_source(request, caller, dispatcher, hooks, None)
+            .await
+    }
+
+    /// Selects the measured Python root lock spelling without changing the SQL or child ID.
+    pub async fn run_report_with_dispatcher_scoped_source(
+        &self,
+        request: FileJobRequest,
+        caller: Arc<dyn Send + Sync>,
+        dispatcher: Arc<dyn GuideTaskDispatcher>,
+        hooks: Option<dispatcharr_store::epg_task_hooks::EpgTaskHooks>,
+        scalar: Option<PositiveRefreshScalar>,
+    ) -> Result<FileJobReport, ImportError> {
+        if scalar.is_some()
+            && (request.source_id != PositiveRefreshScalar::SOURCE_ID
+                || request.force
+                || request.defer_retry != 0)
+        {
+            return Ok(FileJobReport {
+                outcome: FileJobOutcome::Unsupported("unqualified scalar refresh root"),
+                settled_exhaustion: None,
+            });
+        }
         let job = self.admit(request.cancelled.clone(), caller)?;
         let mut cancel = Cancel {
             flag: request.cancelled.clone(),
@@ -360,7 +385,7 @@ impl FileJobRunner {
             };
             let mut settled_exhaustion = None;
             let outcome = execution
-                .run_owned(request, job, dispatcher, &mut settled_exhaustion)
+                .run_owned(request, job, dispatcher, &mut settled_exhaustion, scalar)
                 .await?;
             Ok::<_, ImportError>(FileJobReport {
                 outcome,
@@ -517,13 +542,14 @@ impl Execution<'_> {
         job: Arc<Job>,
         dispatcher: Arc<dyn GuideTaskDispatcher>,
         settled_exhaustion: &mut Option<SettledExhaustion>,
+        scalar: Option<PositiveRefreshScalar>,
     ) -> Result<FileJobOutcome, ImportError> {
-        let lease = match self
-            .services
-            .locks
-            .acquire("refresh_epg_data", request.source_id)
-            .await
-        {
+        let locks = &self.services.locks;
+        let acquisition = match scalar {
+            Some(source) => locks.acquire_positive_refresh_scalar(source).await,
+            None => locks.acquire("refresh_epg_data", request.source_id).await,
+        };
+        let lease = match acquisition {
             Ok(v) => v,
             Err(TaskLockError::Held) => return Ok(FileJobOutcome::AlreadyRunning),
             Err(_) => return Err(ImportError::Worker),
@@ -543,6 +569,7 @@ impl Execution<'_> {
                 context.clone(),
                 dispatcher.as_ref(),
                 settled_exhaustion,
+                scalar,
             )
             .await;
         // Source performs terminal-state cleanup while refresh lease is held.
@@ -551,7 +578,13 @@ impl Execution<'_> {
             cancelled: Arc::new(AtomicBool::new(false)),
             retained: context.retained.clone(),
         };
-        let terminal = self.terminal(request.source_id, final_context).await;
+        let terminal = if scalar.is_some() && matches!(&result, Ok(FileJobOutcome::Unsupported(_)))
+        {
+            drop(final_context);
+            Ok(TerminalObservation::Verified)
+        } else {
+            self.terminal(request.source_id, final_context).await
+        };
         drop(context);
         let classified =
             settled_exhaustion.is_some() && matches!(&result, Ok(FileJobOutcome::Failed));
@@ -624,9 +657,20 @@ impl Execution<'_> {
         context: SwapPolicyContext,
         dispatcher: &dyn GuideTaskDispatcher,
         settled_exhaustion: &mut Option<SettledExhaustion>,
+        scalar: Option<PositiveRefreshScalar>,
     ) -> Result<FileJobOutcome, ImportError> {
         context.ensure_active()?;
-        let Some(source) = self.source(request.source_id).await? else {
+        let source = self.source(request.source_id).await?;
+        if scalar.is_some()
+            && !source
+                .as_ref()
+                .is_some_and(|row| row.active && row.kind == "xmltv")
+        {
+            return Ok(FileJobOutcome::Unsupported(
+                "scalar refresh requires active XMLTV source",
+            ));
+        }
+        let Some(source) = source else {
             // Source ignores the helper's caught failure boolean and returns
             // its cleanup string, including definite partial commits. Unknown
             // or ambiguous native SQL remains operational, never fake success.
@@ -664,6 +708,11 @@ impl Execution<'_> {
                 return Ok(FileJobOutcome::Failed);
             };
             if !number.starts_with('-') && number != "0" {
+                if scalar.is_some() {
+                    return Ok(FileJobOutcome::Unsupported(
+                        "scalar refresh parser deferral",
+                    ));
+                }
                 return self
                     .defer(
                         &source,
@@ -684,6 +733,9 @@ impl Execution<'_> {
         {
             Ok(v) => v,
             Err(TaskLockError::Held) => {
+                if scalar.is_some() {
+                    return Ok(FileJobOutcome::Unsupported("scalar refresh file deferral"));
+                }
                 return self
                     .defer(
                         &source,
@@ -693,7 +745,7 @@ impl Execution<'_> {
                         dispatcher,
                         settled_exhaustion,
                     )
-                    .await
+                    .await;
             }
             Err(_) => return Err(ImportError::Worker),
         };

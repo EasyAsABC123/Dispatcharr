@@ -6,7 +6,7 @@ use crate::{
 };
 use base64::{engine::general_purpose::STANDARD, Engine};
 use chrono::{DateTime, Datelike, Timelike, Utc};
-use dispatcharr_coordination::MissingRefreshSource;
+use dispatcharr_coordination::{MissingRefreshSource, PositiveRefreshScalar};
 use serde_json::{json, Map, Value};
 use uuid::Uuid;
 pub(crate) const NAME: &str = "apps.epg.tasks.refresh_epg_data";
@@ -42,12 +42,42 @@ pub(crate) fn missing_source_argument(value: &Value) -> Option<MissingRefreshSou
     }
 }
 
+pub(crate) fn positive_source_scalar(value: &Value) -> Option<PositiveRefreshScalar> {
+    match value {
+        Value::Bool(true) => Some(PositiveRefreshScalar::True),
+        // This crate enables serde_json arbitrary_precision, which retains the
+        // raw decimal spelling. Do not admit exponent or trailing-zero aliases.
+        Value::Number(number) if number.is_f64() => match number.to_string().as_str() {
+            "1.0" => Some(PositiveRefreshScalar::FloatOne),
+            "1.25" => Some(PositiveRefreshScalar::FloatOneQuarter),
+            _ => None,
+        },
+        _ => None,
+    }
+}
+
 impl RefreshMessage {
+    pub(crate) fn positive_api_scalar(&self) -> Option<PositiveRefreshScalar> {
+        if self.source_id != PositiveRefreshScalar::SOURCE_ID
+            || self.force
+            || self.retry != 0
+            || self.eta.is_some()
+            || self.parent.is_some()
+            || self.root != self.task_id
+        {
+            return None;
+        }
+        self.call.positive_api_scalar()
+    }
+
     pub(crate) fn missing_api_source(&self) -> Option<MissingRefreshSource> {
         self.call.missing_api_source()
     }
 
     pub(crate) fn source_spelling(&self) -> String {
+        if let Some(source) = self.positive_api_scalar() {
+            return source.source_spelling().to_owned();
+        }
         self.missing_api_source().map_or_else(
             || self.source_id.to_string(),
             |source| source.source_spelling().to_owned(),
@@ -61,6 +91,7 @@ impl RefreshMessage {
             return false;
         };
         let source_matches = argument.as_i64() == Some(self.source_id)
+            || self.positive_api_scalar().is_some()
             || (!self.force
                 && self.retry == 0
                 && self.eta.is_none()
@@ -123,8 +154,23 @@ impl RefreshCall {
         missing_source_argument(value)
     }
 
+    fn positive_api_scalar(&self) -> Option<PositiveRefreshScalar> {
+        let [value] = self.args.as_slice() else {
+            return None;
+        };
+        if self.list_args
+            || self.kwargs.len() != 1
+            || self.kwargs.get("force") != Some(&Value::Bool(false))
+        {
+            return None;
+        }
+        positive_source_scalar(value)
+    }
+
     fn immediate_only(&self) -> bool {
-        self.has_decimal_source() || self.missing_api_source().is_some()
+        self.has_decimal_source()
+            || self.missing_api_source().is_some()
+            || self.positive_api_scalar().is_some()
     }
 
     pub fn resolve(&self) -> Result<(i64, bool, u32), ProtocolError> {
@@ -132,6 +178,9 @@ impl RefreshCall {
             // The legacy numeric field is only used to verify the wire message
             // here. The caller resolves the typed argument before any SQL lookup.
             return Ok((source.lookup().unwrap_or(0), false, 0));
+        }
+        if self.positive_api_scalar().is_some() {
+            return Ok((PositiveRefreshScalar::SOURCE_ID, false, 0));
         }
         if self.has_decimal_source() {
             if self.list_args
@@ -447,6 +496,109 @@ mod tests {
         assert!(encode(&message, reply, delivery, "gen1@localhost").is_err());
     }
     #[test]
+    fn qualified_positive_scalar_roots_keep_typed_wire_and_numeric_index() {
+        use crate::refresh_dispatch::{encode_child, parse_native_child, ChildPublication};
+
+        let task = Uuid::from_u128(1);
+        let reply = Uuid::from_u128(2);
+        let delivery = Uuid::from_u128(3);
+        let index_id = Uuid::from_u128(4);
+        for (raw, spelling) in [("true", "True"), ("1.0", "1.0"), ("1.25", "1.25")] {
+            let value: Value = serde_json::from_str(raw).unwrap();
+            let message = RefreshMessage {
+                task_id: task,
+                source_id: 1,
+                force: false,
+                retry: 0,
+                root: task,
+                parent: None,
+                eta: None,
+                call: RefreshCall {
+                    args: vec![value.clone()],
+                    kwargs: json!({"force":false}).as_object().unwrap().clone(),
+                    list_args: false,
+                },
+            };
+            let wire = encode(&message, reply, delivery, "gen1@localhost").unwrap();
+            let envelope: Value = serde_json::from_slice(&wire).unwrap();
+            let body: Value = serde_json::from_slice(
+                &STANDARD.decode(envelope["body"].as_str().unwrap()).unwrap(),
+            )
+            .unwrap();
+            assert_eq!(body[0][0].to_string(), raw);
+            assert_eq!(body[1], json!({"force": false}));
+            assert_eq!(envelope["headers"]["argsrepr"], format!("({spelling},)"));
+            assert_eq!(envelope["headers"]["kwargsrepr"], "{'force': False}");
+            let parsed = parse(&wire).unwrap();
+            assert_eq!(parsed, message);
+            assert!(parsed.has_explicit_api_arguments());
+            assert_eq!(parsed.source_spelling(), spelling);
+            let child_wire = encode_child(
+                &ChildPublication::ProgrammeIndex {
+                    source_id: parsed.source_id,
+                },
+                index_id,
+                parsed.root,
+                parsed.task_id,
+                reply,
+                delivery,
+                "gen1@localhost",
+            )
+            .unwrap();
+            let child = parse_native_child(&child_wire).unwrap();
+            assert!(matches!(
+                child.child,
+                ChildPublication::ProgrammeIndex { source_id: 1 }
+            ));
+            assert_eq!((child.root, child.parent), (task, task));
+            let index_envelope: Value = serde_json::from_slice(&child_wire).unwrap();
+            let index_body: Value = serde_json::from_slice(
+                &STANDARD
+                    .decode(index_envelope["body"].as_str().unwrap())
+                    .unwrap(),
+            )
+            .unwrap();
+            assert_eq!(index_body[0][0].as_i64(), Some(1));
+            assert_eq!(index_envelope["headers"]["argsrepr"], "(1,)");
+
+            let mut wrong = message.clone();
+            wrong.source_id = 2;
+            assert!(encode(&wrong, reply, delivery, "gen1@localhost").is_err());
+            let mut wrong = message.clone();
+            wrong.parent = Some(reply);
+            assert!(encode(&wrong, reply, delivery, "gen1@localhost").is_err());
+            let mut wrong = message.clone();
+            wrong.eta = Some(DateTime::<Utc>::from_timestamp(0, 0).unwrap());
+            assert!(encode(&wrong, reply, delivery, "gen1@localhost").is_err());
+            let mut wrong = message;
+            wrong.force = true;
+            wrong.call.kwargs.insert("force".into(), json!(true));
+            assert!(encode(&wrong, reply, delivery, "gen1@localhost").is_err());
+        }
+    }
+
+    #[test]
+    fn scalar_admission_excludes_unmeasured_values_and_call_shapes() {
+        for raw in [
+            "false", "1", "0.0", "1.5", "2.0", "1e0", "1.250", "\"1.25\"", "null",
+        ] {
+            assert!(positive_source_scalar(&serde_json::from_str(raw).unwrap()).is_none());
+        }
+        let mut call = RefreshCall {
+            args: vec![json!(1.25)],
+            kwargs: Map::new(),
+            list_args: false,
+        };
+        assert!(call.resolve().is_err());
+        call.kwargs.insert("force".into(), json!(false));
+        call.list_args = true;
+        assert!(call.resolve().is_err());
+        call.list_args = false;
+        call.kwargs.insert("_file_defer_retry".into(), json!(1));
+        assert!(call.resolve().is_err());
+    }
+
+    #[test]
     fn qualified_missing_api_roots_roundtrip_the_exact_source_argument() {
         for (wire, source, argsrepr) in [
             (Value::Null, MissingRefreshSource::Null, "(None,)"),
@@ -502,7 +654,7 @@ mod tests {
         let exact_force = json!({"force":false}).as_object().unwrap().clone();
         for value in [
             json!(-2),
-            json!(true),
+            json!(false),
             json!(0.0),
             json!("0"),
             json!("-1"),

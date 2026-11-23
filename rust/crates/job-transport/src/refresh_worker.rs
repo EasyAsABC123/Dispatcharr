@@ -8,6 +8,7 @@ use crate::{
     refresh_protocol::RefreshMessage,
     transport::{Error as TransportError, Jobs},
 };
+use dispatcharr_coordination::PositiveRefreshScalar;
 use dispatcharr_ingest_epg::{
     file_job::{FileJobOutcome, FileJobRequest, FileJobRunner},
     ImportError, SwapPolicyContext,
@@ -444,6 +445,7 @@ impl ServiceExecutor {
         source_id: i64,
         force: bool,
         retry: u32,
+        scalar: Option<PositiveRefreshScalar>,
         publisher: ChildPublisher,
         owner: Arc<dyn Send + Sync>,
     ) -> ExecuteFuture<'a> {
@@ -477,7 +479,7 @@ impl ServiceExecutor {
             };
             let outcome = self
                 .runner
-                .run_report_with_dispatcher_scoped(
+                .run_report_with_dispatcher_scoped_source(
                     FileJobRequest {
                         source_id,
                         force,
@@ -487,6 +489,7 @@ impl ServiceExecutor {
                     owner,
                     dispatcher,
                     hooks.clone(),
+                    scalar,
                 )
                 .await;
             let report = match outcome {
@@ -623,6 +626,7 @@ impl RefreshExecutor for ServiceExecutor {
             message.source_id,
             message.force,
             message.retry,
+            message.positive_api_scalar(),
             publisher,
             owner,
         )
@@ -640,7 +644,7 @@ impl RefreshExecutor for ServiceExecutor {
             let mut scopes = Vec::new();
             for source_id in sources.into_ids() {
                 let scoped = publisher.inline_source();
-                self.execute_source(source_id, false, 0, scoped.clone(), owner.clone())
+                self.execute_source(source_id, false, 0, None, scoped.clone(), owner.clone())
                     .await?;
                 children.extend(scoped.completed_children()?);
                 series.extend(scoped.completed_series_children()?);

@@ -42,6 +42,26 @@ impl MissingRefreshSource {
     }
 }
 
+/// Source spellings for the three measured active XMLTV API roots at ID 1.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum PositiveRefreshScalar {
+    True,
+    FloatOne,
+    FloatOneQuarter,
+}
+
+impl PositiveRefreshScalar {
+    pub const SOURCE_ID: i64 = 1;
+
+    pub fn source_spelling(self) -> &'static str {
+        match self {
+            Self::True => "True",
+            Self::FloatOne => "1.0",
+            Self::FloatOneQuarter => "1.25",
+        }
+    }
+}
+
 #[derive(Clone, Debug)]
 pub struct TaskLockConfig {
     pub ttl: Duration,
@@ -271,6 +291,23 @@ impl TaskLocks {
             source.source_spelling(),
             Some(caller),
             true,
+            true,
+            false,
+        )
+        .await
+        .map_err(TaskLockDetailedError::coarse)
+    }
+
+    /// Keep the Python root suffix separate from the normalized SQL/child ID.
+    pub async fn acquire_positive_refresh_scalar(
+        &self,
+        source: PositiveRefreshScalar,
+    ) -> Result<TaskLease, TaskLockError> {
+        self.acquire_suffix_impl(
+            "refresh_epg_data",
+            source.source_spelling(),
+            None,
+            false,
             true,
             false,
         )

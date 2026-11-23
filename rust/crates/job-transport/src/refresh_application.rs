@@ -6,7 +6,8 @@
 //! separate bounds; no whole-job-system acceptance is implied.
 use crate::{
     refresh_protocol::{
-        canonical_decimal_source_id, missing_source_argument, RefreshCall, RefreshMessage,
+        canonical_decimal_source_id, missing_source_argument, positive_source_scalar, RefreshCall,
+        RefreshMessage,
     },
     refresh_worker::{RefreshExecutor, ServiceExecutor},
     scheduled_refresh_driver::{Config as DriverConfig, ScheduledRefreshDriver},
@@ -21,6 +22,7 @@ use axum::{
     Json, Router,
 };
 use dispatcharr_contracts::{BoxFuture, UpdateEventSink};
+use dispatcharr_coordination::PositiveRefreshScalar;
 use dispatcharr_ingest_epg::{
     cache_policy::{CachedSwapPolicy, PolicyClock},
     channels::{ChannelConfig, ChannelImporter},
@@ -376,11 +378,13 @@ impl RefreshApplication {
             .as_str()
             .and_then(canonical_decimal_source_id)
             .filter(|_| observed_unforced);
+        let scalar = positive_source_scalar(id).filter(|_| observed_unforced);
         let missing = missing_source_argument(id).filter(|_| observed_unforced);
         let Some(source_id) = id
             .as_i64()
             .filter(|id| *id > 0)
             .or(decimal)
+            .or_else(|| scalar.map(|_| PositiveRefreshScalar::SOURCE_ID))
             .or_else(|| missing.map(|source| source.lookup().unwrap_or(0)))
         else {
             return unqualified_import_id();
@@ -399,7 +403,7 @@ impl RefreshApplication {
                     Err(_) => return source_500(),
                 }
             }
-        } else if decimal.is_some() {
+        } else if decimal.is_some() || scalar.is_some() {
             // Only the existing active XMLTV case has signed, end-to-end Source evidence.
             let eligible = sqlx::query_scalar::<_, bool>(
                 "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE id=$1 AND is_active AND source_type='xmltv')",
