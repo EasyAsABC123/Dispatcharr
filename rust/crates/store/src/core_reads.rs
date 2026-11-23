@@ -308,20 +308,18 @@ impl ProfileOptions {
         }
     }
 
-    fn entity(
+    fn metadata(
         self,
         detail: bool,
         include_action: bool,
-        indentation: usize,
-    ) -> Result<Response, StoreError> {
+    ) -> Result<Map<String, Value>, StoreError> {
         let (key, detail_name, _) = self.template();
         let raw = include_str!("../datasets/source-core-profile-options.json");
         let mut source: Map<String, Value> =
             serde_json::from_str(raw).map_err(|_| StoreError::UnhandledRestFault)?;
-        let metadata = source
-            .get_mut(key)
-            .and_then(Value::as_object_mut)
-            .ok_or(StoreError::UnhandledRestFault)?;
+        let Some(Value::Object(mut metadata)) = source.shift_remove(key) else {
+            return Err(StoreError::UnhandledRestFault);
+        };
         if detail {
             *metadata
                 .get_mut("name")
@@ -339,10 +337,33 @@ impl ProfileOptions {
                 metadata.shift_remove("actions");
             }
         }
+        Ok(metadata)
+    }
+
+    fn entity(
+        self,
+        detail: bool,
+        include_action: bool,
+        indentation: usize,
+    ) -> Result<Response, StoreError> {
         options_json_response(
-            serialize_options_json(metadata, indentation).ok_or(StoreError::UnhandledRestFault)?,
+            serialize_options_json(&self.metadata(detail, include_action)?, indentation)
+                .ok_or(StoreError::UnhandledRestFault)?,
         )
     }
+}
+
+fn unsupported_profile_options(detail: bool) -> Response {
+    let prior_allow = if detail {
+        "GET,HEAD,PATCH,PUT,DELETE"
+    } else {
+        "GET,HEAD,POST"
+    };
+    (
+        StatusCode::METHOD_NOT_ALLOWED,
+        [(header::ALLOW, prior_allow)],
+    )
+        .into_response()
 }
 
 async fn direct_profile_options(
@@ -354,22 +375,32 @@ async fn direct_profile_options(
     id: Option<String>,
 ) -> Response {
     let detail = id.is_some();
-    let Ok(indentation) = channel_options_indentation(&uri, &headers) else {
-        // Keep the previous fallback for representations outside this JSON scope.
-        let prior_allow = if detail {
-            "GET,HEAD,PATCH,PUT,DELETE"
-        } else {
-            "GET,HEAD,POST"
+    let html_page = if core_profile_html::selected_options(&uri, &headers) {
+        match (kind, detail) {
+            (ProfileOptions::UserAgent, false) => Some(core_profile_html::Page::AgentOptions),
+            (ProfileOptions::StreamProfile, true) => {
+                Some(core_profile_html::Page::ProfileOptions(uri.path()))
+            }
+            _ => None,
+        }
+    } else {
+        None
+    };
+    let indentation = if html_page.is_some() {
+        0
+    } else {
+        let Ok(indentation) = channel_options_indentation(&uri, &headers) else {
+            return unsupported_profile_options(detail);
         };
-        return (
-            StatusCode::METHOD_NOT_ALLOWED,
-            [(header::ALLOW, prior_allow)],
-        )
-            .into_response();
+        indentation
     };
     let result = async {
         // The ViewSet metadata action falls through to the ordinary UI-admin policy.
-        auth.account_user(peer, headers, true).await?;
+        let signed = auth.account_user(peer, headers.clone(), true).await;
+        if html_page.is_some() && signed.is_err() {
+            return Ok(unsupported_profile_options(detail));
+        }
+        let user = signed?;
         let include_action = match id {
             None => true,
             Some(raw) => match raw.parse::<i64>() {
@@ -383,13 +414,37 @@ async fn direct_profile_options(
                 Err(_) => false,
             },
         };
+        if let Some(page) = html_page {
+            if !include_action {
+                return Ok(unsupported_profile_options(detail));
+            }
+            let data = Value::Object(kind.metadata(detail, true)?);
+            let choices = if detail {
+                profile_choices(auth.store.pool()).await?
+            } else {
+                Vec::new()
+            };
+            return core_profile_html::response(
+                page,
+                &headers,
+                &user.username,
+                &data,
+                &choices,
+                direct_profile_allow(detail),
+            );
+        }
         kind.entity(detail, include_action, indentation)
     }
-    .await;
-    channel_options_headers(
-        result.unwrap_or_else(IntoResponse::into_response),
-        HeaderValue::from_static(direct_profile_allow(detail)),
-    )
+    .await
+    .unwrap_or_else(IntoResponse::into_response);
+    if html_page.is_some() {
+        result
+    } else {
+        channel_options_headers(
+            result,
+            HeaderValue::from_static(direct_profile_allow(detail)),
+        )
+    }
 }
 
 macro_rules! profile_options_routes {
@@ -454,6 +509,13 @@ direct_profile_reads!(
     STREAM_PROFILE_FIELDS
 );
 
+fn profile_format_conflict(detail: bool) -> Response {
+    let body = Json(json!({"detail": "Could not satisfy the request Accept header."}));
+    let mut response = direct_profile_response(detail, &[], body);
+    *response.status_mut() = StatusCode::NOT_ACCEPTABLE;
+    response
+}
+
 async fn direct_useragents(
     auth: State<AuthService>,
     peer: ConnectInfo<SocketAddr>,
@@ -461,13 +523,22 @@ async fn direct_useragents(
     OriginalUri(uri): OriginalUri,
     headers: HeaderMap,
 ) -> Result<Response, StoreError> {
-    if !core_profile_html::selected(&method, &uri, &headers) {
+    let format_api = core_profile_html::selected_api_format(&method, &uri, &headers);
+    let conflict = core_profile_html::conflicts_with_api_format(&method, &uri, &headers);
+    let html = core_profile_html::selected(&method, &uri, &headers);
+    if !html && !format_api && !conflict {
         return direct_useragents_json(auth, peer, headers).await;
     }
     let user = read_actor(&auth, peer.0, headers.clone()).await?;
+    let admin = user.user_level >= 10;
+    if admin && conflict {
+        return Ok(profile_format_conflict(false));
+    }
+    let standard = user.user_level == 1
+        && core_profile_html::selected_standard_navigation(&method, &uri, &headers);
     let Json(mut value) =
-        read_resource(&auth, Resource::UserAgents, None, user.user_level >= 10).await?;
-    if user.user_level < 10 {
+        read_resource(&auth, Resource::UserAgents, None, admin || standard).await?;
+    if !admin && !standard {
         return Ok(direct_profile_response(
             false,
             USER_AGENT_FIELDS,
@@ -476,7 +547,15 @@ async fn direct_useragents(
     }
     order_profile_value(&mut value, USER_AGENT_FIELDS);
     core_profile_html::response(
-        core_profile_html::Page::AgentList,
+        if standard {
+            core_profile_html::Page::AgentStandard
+        } else if format_api {
+            core_profile_html::Page::AgentApiFormat
+        } else if method == Method::HEAD {
+            core_profile_html::Page::AgentHead
+        } else {
+            core_profile_html::Page::AgentList
+        },
         &headers,
         &user.username,
         &value,
@@ -493,12 +572,21 @@ async fn direct_streamprofile(
     OriginalUri(uri): OriginalUri,
     headers: HeaderMap,
 ) -> Result<Response, StoreError> {
-    if !core_profile_html::selected(&method, &uri, &headers) {
+    let format_api = core_profile_html::selected_api_format(&method, &uri, &headers);
+    let conflict = core_profile_html::conflicts_with_api_format(&method, &uri, &headers);
+    let html = core_profile_html::selected(&method, &uri, &headers);
+    if !html && !format_api && !conflict {
         return direct_streamprofile_json(auth, id, peer, headers).await;
     }
     let user = read_actor(&auth, peer.0, headers.clone()).await?;
+    let admin = user.user_level >= 10;
+    if admin && conflict {
+        return Ok(profile_format_conflict(true));
+    }
+    let standard = user.user_level == 1
+        && core_profile_html::selected_standard_navigation(&method, &uri, &headers);
     let Json(mut value) = read_resource(&auth, Resource::StreamProfiles, Some(id.0), false).await?;
-    if user.user_level < 10 {
+    if !admin && !standard {
         return Ok(direct_profile_response(
             true,
             STREAM_PROFILE_FIELDS,
@@ -506,12 +594,25 @@ async fn direct_streamprofile(
         ));
     }
     order_profile_value(&mut value, STREAM_PROFILE_FIELDS);
+    let choices = if admin {
+        profile_choices(auth.store.pool()).await?
+    } else {
+        Vec::new()
+    };
     core_profile_html::response(
-        core_profile_html::Page::ProfileDetail(uri.path()),
+        if standard {
+            core_profile_html::Page::ProfileStandard(uri.path())
+        } else if format_api {
+            core_profile_html::Page::ProfileApiFormat(uri.path())
+        } else if method == Method::HEAD {
+            core_profile_html::Page::ProfileHead(uri.path())
+        } else {
+            core_profile_html::Page::ProfileDetail(uri.path())
+        },
         &headers,
         &user.username,
         &value,
-        &profile_choices(auth.store.pool()).await?,
+        &choices,
         direct_profile_allow(true),
     )
 }
@@ -1039,6 +1140,80 @@ mod direct_profile_options_tests {
             ),
             Err(StoreError::Unsupported(_))
         ));
+    }
+
+    #[tokio::test]
+    async fn browser_head_and_options_use_the_protected_direct_read_router() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://localhost/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-core-browser-test-key".into()).unwrap(),
+        );
+        let browser = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
+        for path in ["/api/core/useragents/", "/api/core/streamprofiles/6/"] {
+            for (method, expected) in [
+                (Method::HEAD, StatusCode::UNAUTHORIZED),
+                (Method::OPTIONS, StatusCode::METHOD_NOT_ALLOWED),
+            ] {
+                let request = Request::builder()
+                    .method(method)
+                    .uri(path)
+                    .header(header::ACCEPT, browser)
+                    .header(header::AUTHORIZATION, "Bearer test-invalid")
+                    .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                    .body(Body::empty())
+                    .unwrap();
+                let response = router(auth.clone()).oneshot(request).await.unwrap();
+                assert_eq!(response.status(), expected);
+                assert!(!response.headers().contains_key(header::SET_COOKIE));
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn measured_format_conflict_response_keeps_exact_json_wire_and_authentication() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://localhost/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-format-conflict-test-key".into()).unwrap(),
+        );
+        for (uri, detail) in [
+            ("/api/core/useragents/?format=api", false),
+            ("/api/core/streamprofiles/6/?format=api", true),
+        ] {
+            let response = profile_format_conflict(detail);
+            assert_eq!(response.status(), StatusCode::NOT_ACCEPTABLE);
+            assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+            assert_eq!(
+                response.headers()[header::ALLOW],
+                direct_profile_allow(detail)
+            );
+            assert_eq!(response.headers()[header::VARY], "Accept");
+            assert!(!response.headers().contains_key(header::SET_COOKIE));
+            let bytes = axum::body::to_bytes(response.into_body(), 256)
+                .await
+                .unwrap();
+            assert_eq!(
+                bytes.as_ref(),
+                br#"{"detail":"Could not satisfy the request Accept header."}"#
+            );
+
+            let request = Request::builder()
+                .method(Method::GET)
+                .uri(uri)
+                .header(header::ACCEPT, "application/json")
+                .header(header::AUTHORIZATION, "Bearer test-invalid")
+                .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                .body(Body::empty())
+                .unwrap();
+            let response = router(auth.clone()).oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+            assert!(!response.headers().contains_key(header::SET_COOKIE));
+        }
     }
 
     #[tokio::test]

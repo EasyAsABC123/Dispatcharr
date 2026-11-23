@@ -1,0 +1,91 @@
+{
+  "normalized_sha256": "5e95ed1aaf9dae3aeb8de19ac1de06194350a9fb5b47f858df4a2087454752c7",
+  "entity": {
+    "name": "Stream Profile Instance",
+    "description": "API endpoint that allows stream profiles to be viewed, created, edited, or deleted.",
+    "renders": [
+      "application/json",
+      "text/html"
+    ],
+    "parses": [
+      "application/json",
+      "application/x-www-form-urlencoded",
+      "multipart/form-data"
+    ],
+    "actions": {
+      "PUT": {
+        "id": {
+          "type": "integer",
+          "required": false,
+          "read_only": true,
+          "label": "ID"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "read_only": false,
+          "label": "Name",
+          "help_text": "Name of the stream profile",
+          "max_length": 255
+        },
+        "command": {
+          "type": "string",
+          "required": false,
+          "read_only": false,
+          "label": "Command",
+          "help_text": "Command to execute (e.g., 'yt.sh', 'streamlink', or 'vlc')",
+          "max_length": 255
+        },
+        "parameters": {
+          "type": "string",
+          "required": false,
+          "read_only": false,
+          "label": "Parameters",
+          "help_text": "Command-line parameters. Use {userAgent}, {streamUrl}, and {channelId} as placeholders."
+        },
+        "is_active": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Is active",
+          "help_text": "Whether this profile is active"
+        },
+        "user_agent": {
+          "type": "field",
+          "required": false,
+          "read_only": false,
+          "label": "User agent",
+          "help_text": "Optional user agent to use. If not set, you can fall back to a default."
+        },
+        "locked": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Locked",
+          "help_text": "Protected - can't be deleted or modified"
+        }
+      }
+    }
+  },
+  "path": "/api/core/streamprofiles/6/",
+  "actor": "owned-stock-core-negotiation-admin",
+  "choices": [
+    [
+      2,
+      "VLC"
+    ],
+    [
+      3,
+      "Chrome"
+    ],
+    [
+      1,
+      "TiviMate"
+    ],
+    [
+      4,
+      "Owned negotiation User-Agent"
+    ]
+  ],
+  "declared_length": "20442"
+}

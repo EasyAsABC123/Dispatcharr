@@ -23,15 +23,30 @@ pub(super) const MAXIMUM_ROWS: i64 = 1000;
 #[derive(Clone, Copy)]
 pub(super) enum Page<'a> {
     AgentList,
+    AgentApiFormat,
+    AgentStandard,
+    AgentHead,
+    AgentOptions,
     AgentCreated,
     ProfileDetail(&'a str),
+    ProfileApiFormat(&'a str),
+    ProfileStandard(&'a str),
+    ProfileHead(&'a str),
+    ProfileOptions(&'a str),
     ProfileUpdated(&'a str),
 }
 
 impl Page<'_> {
     fn method(self) -> &'static str {
         match self {
-            Self::AgentList | Self::ProfileDetail(_) => "GET",
+            Self::AgentList
+            | Self::AgentApiFormat
+            | Self::AgentStandard
+            | Self::ProfileDetail(_)
+            | Self::ProfileApiFormat(_)
+            | Self::ProfileStandard(_) => "GET",
+            Self::AgentHead | Self::ProfileHead(_) => "HEAD",
+            Self::AgentOptions | Self::ProfileOptions(_) => "OPTIONS",
             Self::AgentCreated => "POST",
             Self::ProfileUpdated(_) => "PUT",
         }
@@ -66,12 +81,14 @@ pub(super) fn selected_write(method: &Method, uri: &Uri, headers: &HeaderMap) ->
         }
         _ => return false,
     };
-    uri.query().is_none() && multipart(headers) && accepts_signed_html(headers, expected)
+    uri.query().is_none() && multipart(headers) && accepts_signed_html(headers, &[expected])
 }
 
-fn accepts_signed_html(headers: &HeaderMap, expected: &str) -> bool {
+fn accepts_signed_html(headers: &HeaderMap, expected: &[&str]) -> bool {
     let mut accepts = headers.get_all(header::ACCEPT).iter();
-    accepts.next().is_some_and(|value| value == expected)
+    accepts
+        .next()
+        .is_some_and(|value| expected.iter().any(|candidate| value == *candidate))
         && accepts.next().is_none()
         && headers
             .get(header::AUTHORIZATION)
@@ -79,7 +96,38 @@ fn accepts_signed_html(headers: &HeaderMap, expected: &str) -> bool {
 }
 
 pub(super) fn selected(method: &Method, uri: &Uri, headers: &HeaderMap) -> bool {
-    method == Method::GET && uri.query().is_none() && accepts_signed_html(headers, "text/html")
+    let accepted: &[&str] = match *method {
+        Method::GET => &["text/html", NAVIGATION_ACCEPT, AJAX_ACCEPT],
+        Method::HEAD => &[NAVIGATION_ACCEPT],
+        _ => return false,
+    };
+    uri.query().is_none() && accepts_signed_html(headers, accepted)
+}
+
+pub(super) fn selected_api_format(method: &Method, uri: &Uri, headers: &HeaderMap) -> bool {
+    method == Method::GET
+        && uri.query() == Some("format=api")
+        && accepts_signed_html(headers, &[NAVIGATION_ACCEPT])
+}
+
+pub(super) fn conflicts_with_api_format(method: &Method, uri: &Uri, headers: &HeaderMap) -> bool {
+    method == Method::GET
+        && uri.query() == Some("format=api")
+        && accepts_signed_html(headers, &["application/json"])
+}
+
+pub(super) fn selected_standard_navigation(
+    method: &Method,
+    uri: &Uri,
+    headers: &HeaderMap,
+) -> bool {
+    method == Method::GET
+        && uri.query().is_none()
+        && accepts_signed_html(headers, &[NAVIGATION_ACCEPT])
+}
+
+pub(super) fn selected_options(uri: &Uri, headers: &HeaderMap) -> bool {
+    uri.query().is_none() && accepts_signed_html(headers, &[NAVIGATION_ACCEPT])
 }
 
 pub(super) fn unavailable() -> StoreError {
@@ -143,13 +191,7 @@ fn choice_options(
     emit(out, "      \n    ")
 }
 
-fn render(
-    page: Page<'_>,
-    actor: &str,
-    entity: &Value,
-    choices: &[(i64, String)],
-    masks: [&str; 2],
-) -> Result<Vec<u8>, StoreError> {
+fn pretty_json(entity: &Value) -> Result<String, StoreError> {
     let mut pretty = BoundedJson::new(MAXIMUM_HTML);
     entity
         .serialize(&mut Serializer::with_formatter(
@@ -157,19 +199,48 @@ fn render(
             PrettyFormatter::with_indent(b"    "),
         ))
         .map_err(|_| unavailable())?;
-    let bytes = pretty.into_data();
-    let json = std::str::from_utf8(&bytes).map_err(|_| unavailable())?;
+    String::from_utf8(pretty.into_data()).map_err(|_| unavailable())
+}
+
+fn render(
+    page: Page<'_>,
+    actor: &str,
+    entity: &Value,
+    choices: &[(i64, String)],
+    masks: [&str; 2],
+) -> Result<Vec<u8>, StoreError> {
+    let json = pretty_json(entity)?;
     let (mut template, path) = match page {
-        Page::AgentList | Page::AgentCreated => (AGENT_LIST, ""),
-        Page::ProfileDetail(path) | Page::ProfileUpdated(path) => (PROFILE_DETAIL, path),
+        Page::AgentList
+        | Page::AgentApiFormat
+        | Page::AgentStandard
+        | Page::AgentHead
+        | Page::AgentOptions
+        | Page::AgentCreated => (AGENT_LIST, ""),
+        Page::ProfileDetail(path)
+        | Page::ProfileApiFormat(path)
+        | Page::ProfileStandard(path)
+        | Page::ProfileHead(path)
+        | Page::ProfileOptions(path)
+        | Page::ProfileUpdated(path) => (PROFILE_DETAIL, path),
     };
-    let text = |field: &str| entity[field].as_str().ok_or_else(unavailable);
+    let query = if matches!(page, Page::AgentApiFormat | Page::ProfileApiFormat(_)) {
+        "?format=api"
+    } else {
+        ""
+    };
+    let editable = !matches!(page, Page::AgentStandard | Page::ProfileStandard(_));
+    let default_profile = matches!(page, Page::ProfileOptions(_)).then(|| serde_json::json!({
+        "name": "", "command": "", "parameters": "", "is_active": false, "user_agent": null, "locked": false,
+    }));
+    let form = default_profile.as_ref().unwrap_or(entity);
+    let text = |field: &str| form[field].as_str().ok_or_else(unavailable);
     let agent_field = |field: &str| match page {
         Page::AgentCreated => text(field),
         _ => Ok(""),
     };
     let checked = |field: &str| {
-        entity[field]
+        form[field]
             .as_bool()
             .map(|value| if value { "checked" } else { "" })
             .ok_or_else(unavailable)
@@ -181,6 +252,14 @@ fn render(
         emit(&mut output, prefix)?;
         let end = slot[2..].find("@@").ok_or_else(unavailable)? + 4;
         match &slot[..end] {
+            "@@CORE_MANAGEMENT_BEGIN@@" if !editable => {
+                const FINISH: &str = "@@CORE_MANAGEMENT_END@@";
+                let (_, tail) = slot[end..].split_once(FINISH).ok_or_else(unavailable)?;
+                template = tail;
+                continue;
+            }
+            "@@CORE_MANAGEMENT_BEGIN@@" | "@@CORE_MANAGEMENT_END@@" => {}
+            "@@CORE_QUERY@@" => emit(&mut output, query)?,
             "@@CORE_ACTOR@@" => escaped(&mut output, actor)?,
             "@@CORE_PATH@@" => escaped(&mut output, path)?,
             "@@CORE_METHOD@@" => emit(&mut output, page.method())?,
@@ -196,12 +275,14 @@ fn render(
             "@@CORE_AGENT_VALUE@@" => escaped(&mut output, agent_field("user_agent")?)?,
             "@@CORE_AGENT_DESCRIPTION@@" => escaped(&mut output, agent_field("description")?)?,
             "@@CORE_MASK_0@@" => emit(&mut output, masks[0])?,
-            "@@CORE_MASK_1@@" => emit(&mut output, masks[1])?,
+            "@@CORE_MASK_1@@" => emit(&mut output, if editable { masks[1] } else { masks[0] })?,
             "@@CORE_DISPLAY@@" => {
                 if display == 0 {
-                    source_browsable_content(&mut output, json).map_err(|_| unavailable())?;
+                    source_browsable_content(&mut output, &json).map_err(|_| unavailable())?;
+                } else if let Some(defaults) = default_profile.as_ref() {
+                    escaped(&mut output, &pretty_json(defaults)?)?;
                 } else {
-                    escaped(&mut output, json)?;
+                    escaped(&mut output, &json)?;
                 }
                 display += 1;
             }
@@ -214,7 +295,14 @@ fn render(
             "@@CORE_PARAMETERS@@" => escaped(&mut output, text("parameters")?)?,
             "@@CORE_ACTIVE@@" => emit(
                 &mut output,
-                if matches!(page, Page::AgentList) {
+                if matches!(
+                    page,
+                    Page::AgentList
+                        | Page::AgentApiFormat
+                        | Page::AgentStandard
+                        | Page::AgentHead
+                        | Page::AgentOptions
+                ) {
                     ""
                 } else {
                     checked("is_active")?
@@ -222,7 +310,7 @@ fn render(
             )?,
             "@@CORE_LOCKED@@" => emit(&mut output, checked("locked")?)?,
             "@@CORE_CHOICES@@" => {
-                choice_options(&mut output, choices, entity["user_agent"].as_i64())?
+                choice_options(&mut output, choices, form["user_agent"].as_i64())?
             }
             _ => return Err(unavailable()),
         }
@@ -258,6 +346,218 @@ mod tests {
             "application/json, text/html;q=0.5".parse().unwrap(),
         );
         assert!(!selected(&Method::GET, &path, &request));
+    }
+
+    #[test]
+    fn signed_browser_and_ajax_reads_select_the_measured_html_routes() {
+        let path: Uri = "/api/core/useragents/".parse().unwrap();
+        let override_path: Uri = "/api/core/useragents/?format=api".parse().unwrap();
+        let mut request = HeaderMap::new();
+        request.insert(header::AUTHORIZATION, "Bearer fixture".parse().unwrap());
+        request.insert(header::ACCEPT, NAVIGATION_ACCEPT.parse().unwrap());
+        assert!(selected(&Method::GET, &path, &request));
+        assert!(selected(&Method::HEAD, &path, &request));
+        assert!(selected_options(&path, &request));
+        assert!(!selected(&Method::HEAD, &override_path, &request));
+        assert!(!selected_options(&override_path, &request));
+        request.insert(header::ACCEPT, AJAX_ACCEPT.parse().unwrap());
+        assert!(selected(&Method::GET, &path, &request));
+        assert!(!selected(&Method::HEAD, &path, &request));
+        assert!(!selected_options(&path, &request));
+        request.remove(header::AUTHORIZATION);
+        assert!(!selected(&Method::GET, &path, &request));
+    }
+
+    #[test]
+    fn measured_stock_options_layouts_render_with_exact_metadata_and_empty_forms() {
+        for (detail, fixture) in [
+            (
+                false,
+                include_str!("../datasets/core-profile-html/agent-options-witness.json"),
+            ),
+            (
+                true,
+                include_str!("../datasets/core-profile-html/profile-options-witness.json"),
+            ),
+        ] {
+            let data: Value = serde_json::from_str(fixture).unwrap();
+            let choices: Vec<_> = data["choices"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|row| {
+                    (
+                        row[0].as_i64().unwrap(),
+                        row[1].as_str().unwrap().to_owned(),
+                    )
+                })
+                .collect();
+            let page = if detail {
+                Page::ProfileOptions(data["path"].as_str().unwrap())
+            } else {
+                Page::AgentOptions
+            };
+            let rendered = render(
+                page,
+                data["actor"].as_str().unwrap(),
+                &data["entity"],
+                &choices,
+                ["@@CORE_BROWSE_CSRF_SLOT_0@@", "@@CORE_BROWSE_CSRF_SLOT_1@@"],
+            )
+            .unwrap();
+            assert_eq!(
+                format!("{:x}", Sha256::digest(rendered)),
+                data["normalized_sha256"].as_str().unwrap()
+            );
+        }
+    }
+
+    #[test]
+    fn signed_format_and_standard_selectors_stay_within_measured_routes() {
+        let bare = "/api/core/useragents/".parse().unwrap();
+        let api = "/api/core/useragents/?format=api".parse().unwrap();
+        let json = "/api/core/useragents/?format=json".parse().unwrap();
+        let mut request = HeaderMap::new();
+        request.insert(header::AUTHORIZATION, "Bearer fixture".parse().unwrap());
+        request.insert(header::ACCEPT, NAVIGATION_ACCEPT.parse().unwrap());
+        assert!(selected_api_format(&Method::GET, &api, &request));
+        assert!(selected_standard_navigation(&Method::GET, &bare, &request));
+        assert!(!selected_api_format(&Method::HEAD, &api, &request));
+        assert!(!selected_api_format(&Method::GET, &json, &request));
+        assert!(!selected_standard_navigation(&Method::GET, &api, &request));
+        assert!(!selected_standard_navigation(
+            &Method::HEAD,
+            &bare,
+            &request
+        ));
+        request.insert(header::ACCEPT, "application/json".parse().unwrap());
+        assert!(conflicts_with_api_format(&Method::GET, &api, &request));
+        assert!(!conflicts_with_api_format(&Method::GET, &json, &request));
+        assert!(!conflicts_with_api_format(&Method::HEAD, &api, &request));
+        request.remove(header::AUTHORIZATION);
+        assert!(!conflicts_with_api_format(&Method::GET, &api, &request));
+    }
+
+    #[test]
+    fn measured_format_and_standard_templates_match_stock() {
+        for (detail, standard, fixture) in [
+            (
+                false,
+                false,
+                include_str!("../datasets/core-profile-html/agent-format-api-witness.json"),
+            ),
+            (
+                false,
+                true,
+                include_str!("../datasets/core-profile-html/agent-standard-witness.json"),
+            ),
+            (
+                true,
+                false,
+                include_str!("../datasets/core-profile-html/profile-format-api-witness.json"),
+            ),
+            (
+                true,
+                true,
+                include_str!("../datasets/core-profile-html/profile-standard-witness.json"),
+            ),
+        ] {
+            let data: Value = serde_json::from_str(fixture).unwrap();
+            let choices: Vec<_> = data["choices"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|row| {
+                    (
+                        row[0].as_i64().unwrap(),
+                        row[1].as_str().unwrap().to_owned(),
+                    )
+                })
+                .collect();
+            let path = data["path"].as_str().unwrap();
+            let page = match (detail, standard) {
+                (false, false) => Page::AgentApiFormat,
+                (false, true) => Page::AgentStandard,
+                (true, false) => Page::ProfileApiFormat(path),
+                (true, true) => Page::ProfileStandard(path),
+            };
+            let rendered = render(
+                page,
+                data["actor"].as_str().unwrap(),
+                &data["entity"],
+                &choices,
+                ["@@CORE_BROWSE_CSRF_SLOT_0@@", "@@CORE_BROWSE_CSRF_SLOT_1@@"],
+            )
+            .unwrap();
+            assert_eq!(
+                format!("{:x}", Sha256::digest(&rendered)),
+                data["normalized_sha256"].as_str().unwrap()
+            );
+            if standard {
+                let rendered = std::str::from_utf8(&rendered).unwrap();
+                assert!(!rendered.contains("name=\"csrfmiddlewaretoken\""));
+                assert!(!rendered.contains("data-method=\"OPTIONS\""));
+                assert!(!rendered.contains("data-method=\"DELETE\""));
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn ordinary_get_router_delivers_bodyless_browser_head_with_own_representation_length() {
+        use axum::{routing::get, Router};
+        use tower::ServiceExt;
+        let path = "/api/core/useragents/";
+        let app = Router::new().route(
+            path,
+            get(|method: Method| async move {
+                let page = if method == Method::HEAD {
+                    Page::AgentHead
+                } else {
+                    Page::AgentList
+                };
+                response(
+                    page,
+                    &HeaderMap::new(),
+                    "owned actor",
+                    &serde_json::json!([]),
+                    &[],
+                    "GET, POST, HEAD, OPTIONS",
+                )
+                .unwrap()
+            }),
+        );
+        let request = |method| {
+            axum::extract::Request::builder()
+                .uri(path)
+                .method(method)
+                .body(Body::empty())
+                .unwrap()
+        };
+        let get = app.clone().oneshot(request(Method::GET)).await.unwrap();
+        let head = app.oneshot(request(Method::HEAD)).await.unwrap();
+        let get_length: usize = get.headers()[header::CONTENT_LENGTH]
+            .to_str()
+            .unwrap()
+            .parse()
+            .unwrap();
+        let head_length: usize = head.headers()[header::CONTENT_LENGTH]
+            .to_str()
+            .unwrap()
+            .parse()
+            .unwrap();
+        assert_eq!(head.status(), StatusCode::OK);
+        assert_eq!(
+            head.headers()[header::CONTENT_TYPE],
+            "text/html; charset=utf-8"
+        );
+        assert_eq!(head.headers()[header::ALLOW], "GET, POST, HEAD, OPTIONS");
+        assert_eq!(head.headers()[header::VARY], "Accept, origin, Cookie");
+        assert!(head.headers().contains_key(header::SET_COOKIE));
+        assert_eq!(head_length, get_length + 1);
+        assert!(axum::body::to_bytes(head.into_body(), MAXIMUM_HTML)
+            .await
+            .unwrap()
+            .is_empty());
     }
 
     #[test]

@@ -1,0 +1,73 @@
+{
+  "normalized_sha256": "3ab699b4878e0f55b408ac110a185ff34757107e4177fc0383017ef4e76849d5",
+  "entity": {
+    "name": "User Agent List",
+    "description": "API endpoint that allows user agents to be viewed, created, edited, or deleted.",
+    "renders": [
+      "application/json",
+      "text/html"
+    ],
+    "parses": [
+      "application/json",
+      "application/x-www-form-urlencoded",
+      "multipart/form-data"
+    ],
+    "actions": {
+      "POST": {
+        "id": {
+          "type": "integer",
+          "required": false,
+          "read_only": true,
+          "label": "ID"
+        },
+        "name": {
+          "type": "string",
+          "required": true,
+          "read_only": false,
+          "label": "Name",
+          "help_text": "The User-Agent name.",
+          "max_length": 512
+        },
+        "user_agent": {
+          "type": "string",
+          "required": true,
+          "read_only": false,
+          "label": "User agent",
+          "help_text": "The complete User-Agent string sent by the client.",
+          "max_length": 512
+        },
+        "description": {
+          "type": "string",
+          "required": false,
+          "read_only": false,
+          "label": "Description",
+          "help_text": "An optional description of the client or device type.",
+          "max_length": 255
+        },
+        "is_active": {
+          "type": "boolean",
+          "required": false,
+          "read_only": false,
+          "label": "Is active",
+          "help_text": "Whether this user agent is currently allowed/recognized."
+        },
+        "created_at": {
+          "type": "datetime",
+          "required": false,
+          "read_only": true,
+          "label": "Created at"
+        },
+        "updated_at": {
+          "type": "datetime",
+          "required": false,
+          "read_only": true,
+          "label": "Updated at"
+        }
+      }
+    }
+  },
+  "path": "/api/core/useragents/",
+  "actor": "owned-stock-core-negotiation-admin",
+  "choices": [],
+  "declared_length": "17636"
+}
