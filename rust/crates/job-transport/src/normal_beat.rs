@@ -13,7 +13,7 @@ use dispatcharr_store::ProducerIdentitySource;
 use serde_json::{json, Value};
 use sqlx::{Connection, PgConnection, PgPool, Row};
 use std::{
-    collections::{BTreeMap, HashSet},
+    collections::{BTreeMap, HashMap},
     sync::{Arc, Mutex as StateMutex, OnceLock},
     time::Duration,
 };
@@ -83,10 +83,30 @@ struct Cached {
     when: f64,
     identity: Arc<()>,
 }
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+enum Checkpoint {
+    Required,
+    PublishedClockedDvr(i64),
+}
+
+impl Checkpoint {
+    fn after_publication(linked_clocked_dvr: bool, acknowledged: bool, periodic_id: i64) -> Self {
+        if linked_clocked_dvr && acknowledged {
+            Self::PublishedClockedDvr(periodic_id)
+        } else {
+            Self::Required
+        }
+    }
+
+    fn can_confirm_retirement(self, periodic_id: i64) -> bool {
+        self == Self::PublishedClockedDvr(periodic_id)
+    }
+}
+
 #[derive(Default)]
 struct Cache {
     entries: BTreeMap<String, Cached>,
-    dirty: HashSet<String>,
+    dirty: HashMap<String, Checkpoint>,
     loaded: bool,
     marker: Option<DateTime<Utc>>,
     last_full: Option<std::time::Instant>,
@@ -1293,25 +1313,66 @@ async fn disable(
     entry.entry.total_run_count = count;
     Ok(())
 }
+enum CheckpointResult {
+    Saved,
+    Missing,
+    Retired,
+}
+
+async fn save_checkpoint(
+    connection: &mut PgConnection,
+    entry: &Entry,
+    checkpoint: Checkpoint,
+) -> Result<CheckpointResult, sqlx::Error> {
+    let rows = sqlx::query("UPDATE django_celery_beat_periodictask SET last_run_at=CASE WHEN enabled THEN $2 ELSE NULL END,total_run_count=$3,date_changed=$4 WHERE id=$1")
+        .bind(entry.id).bind(entry.last_run_at).bind(entry.total_run_count).bind(Utc::now()).execute(&mut *connection).await?;
+    if rows.rows_affected() > 0 {
+        return Ok(CheckpointResult::Saved);
+    }
+    // The DVR receiver deletes its one-off row before capturing media. An
+    // acknowledged occurrence whose row is gone has no run count left to save.
+    if checkpoint.can_confirm_retirement(entry.id) {
+        let present: bool = sqlx::query_scalar(
+            "SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE id=$1 OR name=$2)",
+        )
+        .bind(entry.id)
+        .bind(&entry.name)
+        .fetch_one(&mut *connection)
+        .await?;
+        if !present {
+            return Ok(CheckpointResult::Retired);
+        }
+    }
+    Ok(CheckpointResult::Missing)
+}
+
 async fn sync(
     connection: &mut PgConnection,
     cache: &mut Cache,
     required: bool,
 ) -> Result<(usize, usize), Error> {
     let mut saved = 0;
-    let mut missing = HashSet::new();
-    while let Some(name) = cache.dirty.iter().next().cloned() {
+    let mut missing = HashMap::new();
+    while let Some((name, checkpoint)) = cache
+        .dirty
+        .iter()
+        .next()
+        .map(|(name, checkpoint)| (name.clone(), *checkpoint))
+    {
         cache.dirty.remove(&name);
         let Some(entry) = cache.entries.get(&name) else {
-            missing.insert(name);
+            missing.insert(name, checkpoint);
             continue;
         };
-        let result=sqlx::query("UPDATE django_celery_beat_periodictask SET last_run_at=CASE WHEN enabled THEN $2 ELSE NULL END,total_run_count=$3,date_changed=$4 WHERE id=$1")
-            .bind(entry.entry.id).bind(entry.entry.last_run_at).bind(entry.entry.total_run_count).bind(Utc::now()).execute(&mut *connection).await;
-        match result {
-            Ok(rows) if rows.rows_affected() > 0 => saved += 1,
-            Ok(_) => {
-                missing.insert(name);
+        if matches!(checkpoint, Checkpoint::PublishedClockedDvr(id) if id != entry.entry.id) {
+            missing.insert(name, checkpoint);
+            continue;
+        }
+        match save_checkpoint(connection, &entry.entry, checkpoint).await {
+            Ok(CheckpointResult::Saved) => saved += 1,
+            Ok(CheckpointResult::Retired) => {}
+            Ok(CheckpointResult::Missing) => {
+                missing.insert(name, checkpoint);
             }
             Err(sqlx::Error::Database(error)) if !required => {
                 // Source pops the attempted name before save. A DatabaseError does
@@ -1329,7 +1390,7 @@ async fn sync(
             }
             Err(error) => {
                 if required {
-                    cache.dirty.insert(name);
+                    cache.dirty.insert(name, checkpoint);
                 }
                 cache.dirty.extend(missing);
                 return Err(error.into());
@@ -1802,6 +1863,7 @@ async fn tick(
     // Reserve BEFORE serialization/publication, retaining the advanced cached
     // count even on a known rejection. An ambiguous actual reply is never retried.
     let mut snapshot = entry.entry.clone();
+    let linked_clocked_dvr = inner.scope.is_linked_clocked_dvr(&snapshot.task);
     let reservation = if inner.scope.is_linked_xmltv_task(&entry.entry.task) {
         let source_id = inner
             .scope
@@ -1845,7 +1907,7 @@ async fn tick(
             )
             .await?
         }
-    } else if inner.scope.is_linked_clocked_dvr(&snapshot.task) {
+    } else if linked_clocked_dvr {
         let binding = clocked_dvr(&snapshot, entry.clocked).ok_or(Error::Supervisor)?;
         reserve_current_clocked_dvr(connection, binding, &mut snapshot).await?
     } else {
@@ -1869,13 +1931,17 @@ async fn tick(
             return Ok(result);
         }
     }
-    cache.dirty.insert(name.clone());
+    cache.dirty.insert(name.clone(), Checkpoint::Required);
     let id = Uuid::new_v4();
     let publication = prepare_publication(&snapshot, id, &inner.identity);
     let published = match publication {
         Ok(publication) => inner.jobs.publish_normal_beat(&publication, owner).await,
         Err(_) => Err(transport::Error::Protocol),
     };
+    cache.dirty.insert(
+        name.clone(),
+        Checkpoint::after_publication(linked_clocked_dvr, published.is_ok(), snapshot.id),
+    );
     if cache
         .last_sync
         .is_none_or(|last| last.elapsed() > Duration::from_secs(180))
@@ -3083,6 +3149,95 @@ mod tests {
             shutdown_result(&Status::Fault(Arc::new(Error::Supervisor)), false),
             Err(Error::Drain)
         ));
+    }
+
+    #[test]
+    fn only_acknowledged_linked_clocked_dvr_can_confirm_retirement() {
+        for (linked_clocked_dvr, acknowledged) in [(false, false), (false, true), (true, false)] {
+            let checkpoint = Checkpoint::after_publication(linked_clocked_dvr, acknowledged, 7);
+            assert_eq!(checkpoint, Checkpoint::Required);
+            assert!(!checkpoint.can_confirm_retirement(7));
+        }
+        let published = Checkpoint::after_publication(true, true, 7);
+        assert!(published.can_confirm_retirement(7));
+        assert!(!published.can_confirm_retirement(8));
+    }
+
+    #[tokio::test]
+    #[ignore = "requires a disposable PostgreSQL connection in DISPATCHARR_BEAT_TEST_DATABASE_URL"]
+    async fn acknowledged_clocked_dvr_checkpoint_retires_after_worker_deletion() {
+        let url = std::env::var("DISPATCHARR_BEAT_TEST_DATABASE_URL").unwrap();
+        let mut connection = PgConnection::connect(&url).await.unwrap();
+        sqlx::query("CREATE TEMP TABLE django_celery_beat_periodictask(id bigint PRIMARY KEY,name text UNIQUE NOT NULL,enabled boolean NOT NULL,last_run_at timestamptz,total_run_count bigint NOT NULL,date_changed timestamptz)")
+            .execute(&mut connection).await.unwrap();
+        let mut entry = model(CLOCKED_DVR_TASK);
+        entry.name = "dvr-recording-17".into();
+        let name = entry.name.clone();
+        let id = entry.id;
+        let published = Checkpoint::after_publication(true, true, id);
+        let mut cache = Cache::default();
+        cache.entries.insert(
+            name.clone(),
+            Cached {
+                entry,
+                clocked: None,
+                saved_xc: false,
+                when: 0.0,
+                identity: Arc::new(()),
+            },
+        );
+
+        sqlx::query("INSERT INTO django_celery_beat_periodictask(id,name,enabled,total_run_count) VALUES($1,$2,true,0)")
+            .bind(id).bind(&name).execute(&mut connection).await.unwrap();
+        cache.dirty.insert(name.clone(), published);
+        assert_eq!(
+            sync(&mut connection, &mut cache, true).await.unwrap(),
+            (1, 0)
+        );
+        sqlx::query("DELETE FROM django_celery_beat_periodictask WHERE id=$1")
+            .bind(id)
+            .execute(&mut connection)
+            .await
+            .unwrap();
+
+        cache.dirty.insert(name.clone(), Checkpoint::Required);
+        assert_eq!(
+            sync(&mut connection, &mut cache, true).await.unwrap(),
+            (0, 1)
+        );
+        assert_eq!(cache.dirty.get(&name), Some(&Checkpoint::Required));
+
+        cache.dirty.insert(name.clone(), published);
+        assert_eq!(
+            sync(&mut connection, &mut cache, true).await.unwrap(),
+            (0, 0)
+        );
+        assert!(shutdown_result(&Status::Stopped, !cache.dirty.is_empty()).is_ok());
+
+        sqlx::query("INSERT INTO django_celery_beat_periodictask(id,name,enabled,total_run_count) VALUES($1,$2,true,0)")
+            .bind(id + 1).bind(&name).execute(&mut connection).await.unwrap();
+        cache.dirty.insert(name.clone(), published);
+        assert_eq!(
+            sync(&mut connection, &mut cache, true).await.unwrap(),
+            (0, 1)
+        );
+        cache.entries.get_mut(&name).unwrap().entry.id += 1;
+        assert_eq!(
+            sync(&mut connection, &mut cache, true).await.unwrap(),
+            (0, 1)
+        );
+        assert_eq!(cache.dirty.get(&name), Some(&published));
+
+        cache.entries.get_mut(&name).unwrap().entry.id = id;
+        sqlx::query("ALTER TABLE django_celery_beat_periodictask DROP COLUMN total_run_count")
+            .execute(&mut connection)
+            .await
+            .unwrap();
+        assert!(matches!(
+            sync(&mut connection, &mut cache, true).await,
+            Err(Error::Database(_))
+        ));
+        assert_eq!(cache.dirty.get(&name), Some(&published));
     }
 
     fn model(task: &str) -> Entry {
