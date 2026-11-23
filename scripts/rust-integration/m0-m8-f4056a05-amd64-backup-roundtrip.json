@@ -1,0 +1,199 @@
+{
+  "Original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "Original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "all_JSON_lengths_matched": true,
+  "all_observed_HTTP_status_and_media_matched": true,
+  "all_selected_permission_bodies_matched": true,
+  "arms": {
+    "Native": {
+      "literal_subphase_exits": {
+        "cleanup": 0,
+        "probe": 0,
+        "ready-Native": 0,
+        "ready-Original": 0,
+        "start-Native": 0,
+        "start-Original-foundation": 0,
+        "stop-Original-HTTP": 0
+      },
+      "remaining_owned": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "retired_exact_container_generations": 4,
+      "zip_bytes": 39053,
+      "zip_sha256": "d0f1e0fd09ee1149c6fa175f5198e8e128296a6507336b59386b13228e0c904c"
+    },
+    "Original": {
+      "literal_subphase_exits": {
+        "cleanup": 0,
+        "probe": 0,
+        "ready-Original": 0,
+        "start-Original-foundation": 0
+      },
+      "remaining_owned": {
+        "container": [],
+        "network": [],
+        "volume": []
+      },
+      "retired_exact_container_generations": 2,
+      "zip_bytes": 39065,
+      "zip_sha256": "e7e26b2ba63ef1073bcf1c12df4d0bc4b844a5578ff34ebb90a2e8d574841501"
+    }
+  },
+  "campaign_literal_exits": {
+    "campaign": 0,
+    "paired": 0,
+    "preflight": 0,
+    "reduce": 0,
+    "run": 0
+  },
+  "candidate": {
+    "image_id": "sha256:a69e24a3ba220ca0df75b78fe85aacae23b138e0499dd8f890d94cf0b5b92251",
+    "manifest_sha256": "c57624c80694dd2933e799df06459f10a628a323dba381de0cd480112e0fe9de",
+    "revision": "f4056a0520c39c652c1085d2527da3b7319c7017",
+    "source_archive_sha256": "f777977cce39e58cafe820643bfe2ba706f693eb19494bb59a1dc318174e3389",
+    "source_tree_sha256": "a9fc23f81f94c9a9b254df0b727f5f23cb7df17a2fd763d5e619a5f88f37296c",
+    "tag": "dispatcharr-rust-candidate:m0-workspace-format-vod-f4056a0520c3"
+  },
+  "credits": "Original Dispatcharr, React and dependency authors retain full application and protocol credit.",
+  "declared_routes": 3,
+  "engine_calls_from_audit": 0,
+  "fixture_seal_sha256": "67a6536d41e317e62550bd2d42e841946cd6d37388a5e279e6cb2640547def80",
+  "formal_M0": false,
+  "formal_M8": false,
+  "job_execution_verified": false,
+  "observations_per_arm": 8,
+  "performance": false,
+  "platform": "linux/amd64",
+  "raw_archive_names_token_bearers_or_response_bodies_published": false,
+  "read_only_HTTP_probe_selected_jobs_enabled": false,
+  "receipt_sha256": {
+    "Native": {
+      "cleanup_sha256": "fbdf5ffe1e2206525850f957423fc97505fbed49f5a4af5dec1c350444938e2d",
+      "exact_retired_roles": 4,
+      "probe_stdout_sha256": "8d595b35b0703d85df6d4b73a198718cf346c779253cc46b71d63eea2cb0e560",
+      "receipt_sha256": "72bb25f7049218ab8969f0e288083833ae2b7cf097ab340150549706f2502305"
+    },
+    "Original": {
+      "cleanup_sha256": "06f06756ca4b509dab9d6efaac5a49ec553f0ba7a61d99c65807a12302b2cc46",
+      "exact_retired_roles": 2,
+      "probe_stdout_sha256": "e59943faf27bd6057331580239c9167c86581af6bc94abc7962d051e5751e4f2",
+      "receipt_sha256": "628560aa0d08c721d5da6e2141a80da69aa9fb41769da30ee788b880dea5182f"
+    },
+    "paired": "840c800896a2b34108714e19044a5bd69dc5d92ea179c75064f53f64b427dbc6",
+    "reducer": "7fee0c26764b2f331bbbef5ecd6498406ce88fc148958155dbd06dfaa8d09854"
+  },
+  "receiving_commit": "38b9ad676dd6c3f005c178decd8acca532aba5c1",
+  "restore_verified": false,
+  "route_register_ordinals": [
+    322,
+    328,
+    329
+  ],
+  "schema": "m0-m8-amd64-backup-inventory-token-download-scoped-proof/1",
+  "scoped_Allow_Vary_mismatches": 8,
+  "selected_files_SQL_and_broker_unchanged": true,
+  "separate_fixture_ZIPs": true,
+  "status": "scoped-pass-with-wire-differences",
+  "two_download_paths_match_each_arm_own_stock_ZIP": true,
+  "wire_per_route_case": [
+    {
+      "Native_Allow": null,
+      "Native_Vary": "origin",
+      "Native_content_length": 113,
+      "Original_Allow": "OPTIONS, GET",
+      "Original_Vary": "Accept, origin",
+      "Original_content_length": 113,
+      "case": "inventory-admin",
+      "media": "application/json",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "Native_Allow": null,
+      "Native_Vary": "origin",
+      "Native_content_length": 63,
+      "Original_Allow": "OPTIONS, GET",
+      "Original_Vary": "Accept, origin",
+      "Original_content_length": 63,
+      "case": "inventory-standard",
+      "media": "application/json",
+      "role": "standard",
+      "status": 403
+    },
+    {
+      "Native_Allow": null,
+      "Native_Vary": "origin",
+      "Native_content_length": 44,
+      "Original_Allow": "OPTIONS, GET",
+      "Original_Vary": "Accept, origin",
+      "Original_content_length": 44,
+      "case": "issue-token-admin",
+      "media": "application/json",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "Native_Allow": null,
+      "Native_Vary": "origin",
+      "Native_content_length": 63,
+      "Original_Allow": "OPTIONS, GET",
+      "Original_Vary": "Accept, origin",
+      "Original_content_length": 63,
+      "case": "issue-token-standard",
+      "media": "application/json",
+      "role": "standard",
+      "status": 403
+    },
+    {
+      "Native_Allow": null,
+      "Native_Vary": "origin",
+      "Native_content_length": 39053,
+      "Original_Allow": "OPTIONS, GET",
+      "Original_Vary": "Accept, origin",
+      "Original_content_length": 39065,
+      "case": "download-issued-token",
+      "media": "application/zip",
+      "role": "issued-token",
+      "status": 200
+    },
+    {
+      "Native_Allow": null,
+      "Native_Vary": "origin",
+      "Native_content_length": 39053,
+      "Original_Allow": "OPTIONS, GET",
+      "Original_Vary": "Accept, origin",
+      "Original_content_length": 39065,
+      "case": "download-direct-admin",
+      "media": "application/zip",
+      "role": "admin",
+      "status": 200
+    },
+    {
+      "Native_Allow": null,
+      "Native_Vary": "origin",
+      "Native_content_length": 36,
+      "Original_Allow": "OPTIONS, GET",
+      "Original_Vary": "Accept, origin",
+      "Original_content_length": 36,
+      "case": "download-direct-standard",
+      "media": "application/json",
+      "role": "standard",
+      "status": 401
+    },
+    {
+      "Native_Allow": null,
+      "Native_Vary": "origin",
+      "Native_content_length": 113,
+      "Original_Allow": "OPTIONS, GET",
+      "Original_Vary": "Accept, origin",
+      "Original_content_length": 113,
+      "case": "inventory-admin-repeat",
+      "media": "application/json",
+      "role": "admin",
+      "status": 200
+    }
+  ]
+}

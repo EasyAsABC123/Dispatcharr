@@ -1874,6 +1874,12 @@ active real channels to Rust until M2's ownership and rollback gate passes.
 
 ## M0 — baseline and executable contracts
 
+The [pinned Original register audit](rust-m0-b01ebff6-contract-register-audit.md) matched 592 routes and 362 OpenAPI operations. It identified 322 unresolved method declarations and 798 incomplete HTTP role matrices.
+
+Exact [f4056a05 ordinary packages](rust-m0-f4056a05-dual-architecture-package.md) built on AMD64 and ARM64 with the same protected upstream files. ARM64 signed startup, React readiness and exact cleanup passed.
+
+The [f4056a05 AMD64 backup read comparison](rust-m0-m8-f4056a05-amd64-backup-roundtrip.md) matched status, media and scoped effects across eight GETs on three routes. Both download paths returned the exact local ZIP in each arm, with exact Compose cleanup. The recorded Allow and Vary differences remain open.
+
 The [exact f4056a05 Rust workspace host gate](rust-m0-f4056a05-workspace-host-gate.md) passed pinned Rustfmt, strict all-target Clippy and all 1,720 enabled tests across 193 suites. The previous formatter and lint failures remain recorded, and 821 ignored fixtures retain their separate gates.
 
 The [ordinary 7c604a6c ARM64 package](rust-m0-7c604a6c-ordinary-arm64-package.md) verified exact source custody, Compose readiness, React startup, signed first-admin login and a signed channel-group read. Five exact containers, one network and one volume retired.
