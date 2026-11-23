@@ -1,0 +1,103 @@
+{
+  "actual_exits": {
+    "collector": 0,
+    "down": 0,
+    "owner": 0,
+    "publisher": 0,
+    "stop": 0
+  },
+  "application": "8a547cf00cd33a94fe4ccb982272be1861d52e73",
+  "audit_exit": 0,
+  "broker": {
+    "database": 0,
+    "final_counts": {
+      "celery": 0,
+      "dvr": 0,
+      "unacked": 0,
+      "unacked_index": 0
+    },
+    "final_index_orphans": 0,
+    "final_target_locks": 0,
+    "held_counts": {
+      "celery": 0,
+      "dvr": 0,
+      "unacked": 0,
+      "unacked_index": 0
+    },
+    "native_startup_plugin_publications": 1,
+    "plugin_event_time_pid_bracket": false,
+    "plugin_reservations_at_final_cut": 0,
+    "plugin_terminal_checked": false,
+    "pre_submit_plugin_reservations": 1
+  },
+  "cleanup": {
+    "engine_idle_at_release": true,
+    "exact": true,
+    "observer_oom": false,
+    "observer_stop_exit": 137,
+    "retired": {
+      "container": 4,
+      "network": 1,
+      "volume": 1
+    },
+    "verified_missing_lookups": {
+      "container-exact-absence": 8,
+      "network-exact-absence": 2,
+      "volume-exact-absence": 1
+    }
+  },
+  "formal_m9_qualified": false,
+  "image": "sha256:bb497d7f606e5550c0fd48deac938c9e1e517f96191c4ddd7f1f96b8f58b1e28",
+  "observer": {
+    "hard_cap_bytes": 100663296,
+    "headroom_bytes": 90596966,
+    "oom_events": 0,
+    "peak_pre_stop_bytes": 45498368,
+    "post_removal_cgroup_sample_available": false,
+    "swap_cap_bytes": 0
+  },
+  "ordinary_management_shell_fixture_helpers": 2,
+  "performance_measured": false,
+  "platform": "linux/arm64",
+  "prior_r13": {
+    "collector_exit": 1,
+    "exact_cleanup": true,
+    "final_plugin_reservations": 2,
+    "full_drain": false,
+    "owner_exit": 1,
+    "target_drain": true
+  },
+  "schema": "dispatcharr.arm64.8a.scoped-xmltv-claim.r15.v1",
+  "sealed_guest_source_files_rechecked": 8,
+  "sha256": {
+    "r13_sanitized_publication": "292b9bf8ea9c66ddcfb150f9ca72dfc391fe7e8d6c39263ed4979915f7aef16e",
+    "r15_literal_exit_ledger": "0c27d34f32b94fb0a10d1cac8b228b1c17e6b77733193a5af7975c5b0f1b83a0",
+    "r15_physical_broker_projection": "c46a0cc4dde9701bfdb52b80b03e66d96e30a37ab2203a18510faf8c7f5656d6",
+    "r15_physical_receipt": "882e7d96e5e5f1400d1c3316b16e249a7daf6154e849e0a9bafa43b7c15ab35a",
+    "r15_stage_seal": "014018fd5394d32a35da73c7c68b63f2ccf0a20fcd967f02da08b9bde9b5f321"
+  },
+  "signed": {
+    "missing_token": 401,
+    "protected_read": 200,
+    "xmltv_post_status": 202,
+    "xmltv_posts": 1
+  },
+  "target": {
+    "matching_child_results": 2,
+    "postgres": {
+      "index_count": 1,
+      "programme_count": 1,
+      "read_only": true,
+      "recordings": 0
+    },
+    "result_ttl_ms_at_readback": 3599884,
+    "root_status": "SUCCESS",
+    "target_and_whole_owned_drain": true
+  },
+  "worker": {
+    "pre_submit_attributed_redis_clients": 68,
+    "same_selected_process_generation": true,
+    "target_distinct_redis_connections": 2,
+    "target_matched_commands": 4
+  }
+}

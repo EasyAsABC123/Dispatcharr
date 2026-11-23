@@ -1,0 +1,9 @@
+# M9 native ARM64 XMLTV worker claim and drain
+
+A disposable Lappy run on exact Rust `8a547cf0` returned HTTP 202 for one signed XMLTV import. The collector joined its root publication, reservation, ACK, and stored result to the same worker generation across two Redis connections. A readback confirmed root success and both linked child results. The owned PostgreSQL snapshot contained one guide programme, one index and zero recordings.
+
+Redis DB 0 was empty while the application was held. At the pre-submit cut it held one independently indexed plugin repository refresh reservation. The publication journal matched the reservation to the ordinary Native startup script. The fixture’s two ORM setup commands used Original’s management-shell context, which avoids submitting extra plugin refresh jobs during setup. Both queues, both reservation stores, orphan indexes and target locks were empty at the final cut. The observed plugin reservation had retired. Its terminal outcome and event-time worker identity remain unverified.
+
+The observer’s peak was 45,498,368 bytes (43.39 MiB) through the final pre-stop sample. It stayed below the 86.4 MiB headroom threshold under a 96 MiB hard cap, with zero swap and zero OOM events. Owner, collector, signed publisher, Compose stop and Compose down exited 0. The controlled stop of the passive observer reported 137 and Docker confirmed it was not OOM killed. All four owned containers, one network and one volume retired.
+
+The previous run verified target drain and left two plugin reservations at its final cut. Its owner and collector each exited 1, and teardown passed. The new scoped native result leaves Original worker attribution, broader M9 acceptance, and performance open. Original Dispatcharr, Celery and Kombu authors retain full credit. [Machine-readable evidence](../scripts/rust-integration/m9-8a547cf0-arm64-worker-claim-drain.json)

@@ -1,0 +1,146 @@
+{
+  "active_vod_redis_loss": {
+    "bounded_pass": true,
+    "candidate_process_preserved": true,
+    "cleanup_proof_sha256": "c3d8797910b536c2c46f4ccfc8bef224f89bc57e9217e90c1964bf3d5a54b9b7",
+    "empty_owned_redis_replacement": true,
+    "extended_recovery_enabled": false,
+    "literal_exits": {
+      "cleanup": 0,
+      "reducer": 0,
+      "run": 0
+    },
+    "observations": {
+      "original": {
+        "first_body_stayed_open": true,
+        "initial_http": 200,
+        "old_body_after_reopen": {
+          "bytes": 8192,
+          "offset": 278528,
+          "sha256": "de88c4361c1136cf32d9554c67dc74aa6829fd58e3e7b10b443f1f2c58e889e1"
+        },
+        "old_body_prefix": {
+          "bytes": 278528,
+          "sha256": "ec963a1f453562493de923e92949d60302716fb3d548394f6024dd607e55f8af"
+        },
+        "reopened_prefix": {
+          "bytes": 8192,
+          "sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f"
+        },
+        "same_id_reopen_http": 200
+      },
+      "rust": {
+        "first_body_stayed_open": true,
+        "initial_http": 200,
+        "old_body_after_reopen": {
+          "bytes": 8192,
+          "offset": 278528,
+          "sha256": "de88c4361c1136cf32d9554c67dc74aa6829fd58e3e7b10b443f1f2c58e889e1"
+        },
+        "old_body_prefix": {
+          "bytes": 278528,
+          "sha256": "ec963a1f453562493de923e92949d60302716fb3d548394f6024dd607e55f8af"
+        },
+        "reopened_prefix": {
+          "bytes": 8192,
+          "sha256": "02921f832147133cdb84ff2dfae8ac4868e95abefdd1cc98a73d54a5c6202a1f"
+        },
+        "same_id_reopen_http": 200
+      }
+    },
+    "owned_project_inventory_empty": true,
+    "raw_receipt_sha256": "a121db306d298254a86f7fb26facf4b1636cdf2f5389c09a8b45bd8caa233d06",
+    "stage_seal": "d831f532e055e0fc171a4f4e63daef05ab2070226acbceeb3a31618adaab6d96",
+    "strict_receipt_sha256": "58f534b47629e0b02928b43ffeb6b6b5f95d9865fc726c5f9a5d9e86447bc4fe"
+  },
+  "credits": "Full credit for Dispatcharr's original application, design, features, user interface, implementation, documentation, and test suite belongs to the original Dispatcharr authors and contributors.",
+  "full_M4_accepted": false,
+  "manifest_sha256": "7ea5c3e1b3ab30513b071acc2b9640b5e49bc660de743f0d2ea569c170d685fc",
+  "native_image": {
+    "image_id": "sha256:f568f190f8f67df75788a242c33fa4be9e7a3936109e26f4dfdb32c2bb4b0f88",
+    "source_tree_sha256": "69c1c6ad2678e9ad355c0a8f75ac7c057802d20f4bc0792e195185d17bc899b6"
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_verified": false,
+  "platform": "linux/amd64",
+  "publication_revision": "b01ebff604379ad75198f2c8780cfc8505ecf964",
+  "publication_revision_runtime_verified": false,
+  "tested_artifact_publication_revision": "49f6c5faf9da691d01b43f776ce0fd14da4c73b0",
+  "tested_candidate_revision": "7c604a6c77fb791c8d4b3b1e30fc58148875f04e",
+  "upstream_503": {
+    "cleanup": {
+      "compose_down_passed": true,
+      "exact_role_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "error_bodies": {
+      "native": {
+        "bytes": 44,
+        "classification": "generic_provider_failure",
+        "sha256": "b33abe12c661e84d3d98ed656917cadda3f53a1836a9cdc09b13971808816521",
+        "status": 500
+      },
+      "original": {
+        "bytes": 116,
+        "classification": "upstream_status_detail_with_url_redacted",
+        "sha256": "1e23558e553f98a1d18ad3a5a5ea2b7a80bd04c3155855becdcb27afead3395e",
+        "status": 500
+      }
+    },
+    "error_body_difference_observed": true,
+    "one_to_one_parity_passed": false,
+    "original_schema_sha256": "b50b0815fda510563061af17d61e5fadc2672bf8afb680369cc64cc455db6058",
+    "owner_phase_exits": {
+      "campaign": 0,
+      "cold": 0,
+      "reduce": 0,
+      "run": 0
+    },
+    "owner_reducer_sha256": "d06b89cc602d833709ca438e88313b45794c7ba0be42c70990929ced44f498a3",
+    "paired_lifecycle_complete": true,
+    "paired_recovery_observations": {
+      "active_readers_during_failure_and_retry": [
+        1,
+        1
+      ],
+      "both_sessions_retired": true,
+      "client_status_sequence": [
+        500,
+        200
+      ],
+      "fresh_authorized_retry": true,
+      "media": {
+        "bytes": 4299455,
+        "content_type": "video/mp4",
+        "decoded_audio_video": true,
+        "sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c"
+      },
+      "mint_status_each": 301,
+      "origin_media_bytes": 4299455,
+      "origin_status_sequence": [
+        503,
+        200
+      ],
+      "provider_slots_after_failure_and_retry": [
+        0,
+        0
+      ],
+      "provider_slots_during_failure_and_retry": [
+        1,
+        1
+      ]
+    },
+    "physical_controller_exit": 0,
+    "physical_receipt_sha256": "4d4169fbfd9fc8615aa7f5ca5d4a09dfe48fdf8af0afd0d13f303a7decf4db7b",
+    "stage_seal": "6a8c98ed930abfa1ca37fee77fc030aa232ac4e7817881dab5cd1108c3e0759b"
+  }
+}
