@@ -1,9 +1,17 @@
 //! Core read contracts ported from Dispatcharr's core serializers and permission map.
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
-use crate::{AuthService, StoreError};
+use crate::{
+    channels::{
+        channel_options_headers, channel_options_indentation, options_json_response,
+        serialize_options_json,
+    },
+    AuthService, StoreError,
+};
 use axum::{
-    extract::{rejection::JsonRejection, ConnectInfo, FromRequestParts, Path, Request, State},
-    http::{header, request::Parts, HeaderMap, Method},
+    extract::{
+        rejection::JsonRejection, ConnectInfo, FromRequestParts, OriginalUri, Path, Request, State,
+    },
+    http::{header, request::Parts, HeaderMap, HeaderValue, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::get,
     Json, Router,
@@ -199,15 +207,21 @@ fn order_profile_fields(fields: &mut Map<String, Value>, source_order: &[&str]) 
     *fields = ordered;
 }
 
+fn direct_profile_allow(detail: bool) -> &'static str {
+    if detail {
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+    } else {
+        "GET, POST, HEAD, OPTIONS"
+    }
+}
+
 fn direct_profile_response(
-    method: Method,
     detail: bool,
     source_order: &[&str],
     Json(mut value): Json<Value>,
 ) -> Response {
-    if method != Method::GET {
-        return Json(value).into_response();
-    }
+    // Axum's GET route also calls this for HEAD. It computes the length
+    // from the ordered GET representation and strips the HEAD entity body.
     match &mut value {
         Value::Array(rows) => {
             for fields in rows.iter_mut().filter_map(Value::as_object_mut) {
@@ -217,11 +231,7 @@ fn direct_profile_response(
         Value::Object(fields) => order_profile_fields(fields, source_order),
         _ => {}
     }
-    let allow = if detail {
-        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
-    } else {
-        "GET, POST, HEAD, OPTIONS"
-    };
+    let allow = direct_profile_allow(detail);
     // Main's existing response middleware appends the origin token to Vary.
     (
         [(header::ALLOW, allow), (header::VARY, "Accept")],
@@ -230,38 +240,167 @@ fn direct_profile_response(
         .into_response()
 }
 
-macro_rules! direct_profile_gets {
+#[derive(Clone, Copy)]
+enum ProfileOptions {
+    UserAgent,
+    StreamProfile,
+}
+
+impl ProfileOptions {
+    fn template(self) -> (&'static str, &'static str, &'static str) {
+        match self {
+            Self::UserAgent => (
+                "agent",
+                "User Agent Instance",
+                "SELECT EXISTS(SELECT 1 FROM core_useragent WHERE id = $1)",
+            ),
+            Self::StreamProfile => (
+                "profile",
+                "Stream Profile Instance",
+                "SELECT EXISTS(SELECT 1 FROM core_streamprofile WHERE id = $1)",
+            ),
+        }
+    }
+
+    fn entity(
+        self,
+        detail: bool,
+        include_action: bool,
+        indentation: usize,
+    ) -> Result<Response, StoreError> {
+        let (key, detail_name, _) = self.template();
+        let raw = include_str!("../datasets/source-core-profile-options.json");
+        let mut source: Map<String, Value> =
+            serde_json::from_str(raw).map_err(|_| StoreError::UnhandledRestFault)?;
+        let metadata = source
+            .get_mut(key)
+            .and_then(Value::as_object_mut)
+            .ok_or(StoreError::UnhandledRestFault)?;
+        if detail {
+            *metadata
+                .get_mut("name")
+                .ok_or(StoreError::UnhandledRestFault)? = detail_name.into();
+            if include_action {
+                let actions = metadata
+                    .get_mut("actions")
+                    .and_then(Value::as_object_mut)
+                    .ok_or(StoreError::UnhandledRestFault)?;
+                let fields = actions
+                    .shift_remove("POST")
+                    .ok_or(StoreError::UnhandledRestFault)?;
+                actions.insert("PUT".into(), fields);
+            } else {
+                metadata.shift_remove("actions");
+            }
+        }
+        options_json_response(
+            serialize_options_json(metadata, indentation).ok_or(StoreError::UnhandledRestFault)?,
+        )
+    }
+}
+
+async fn direct_profile_options(
+    auth: AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    uri: Uri,
+    kind: ProfileOptions,
+    id: Option<String>,
+) -> Response {
+    let detail = id.is_some();
+    let Ok(indentation) = channel_options_indentation(&uri, &headers) else {
+        // Keep the previous fallback for representations outside this JSON scope.
+        let prior_allow = if detail {
+            "GET,HEAD,PATCH,PUT,DELETE"
+        } else {
+            "GET,HEAD,POST"
+        };
+        return (
+            StatusCode::METHOD_NOT_ALLOWED,
+            [(header::ALLOW, prior_allow)],
+        )
+            .into_response();
+    };
+    let result = async {
+        // The ViewSet metadata action falls through to the ordinary UI-admin policy.
+        auth.account_user(peer, headers, true).await?;
+        let include_action = match id {
+            None => true,
+            Some(raw) => match raw.parse::<i64>() {
+                Ok(id) => {
+                    let (_, _, query) = kind.template();
+                    sqlx::query_scalar::<_, bool>(query)
+                        .bind(id)
+                        .fetch_one(auth.store.pool())
+                        .await?
+                }
+                Err(_) => false,
+            },
+        };
+        kind.entity(detail, include_action, indentation)
+    }
+    .await;
+    channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        HeaderValue::from_static(direct_profile_allow(detail)),
+    )
+}
+
+macro_rules! profile_options_routes {
+    ($list:ident, $detail:ident, $kind:ident) => {
+        async fn $list(
+            State(auth): State<AuthService>,
+            ConnectInfo(peer): ConnectInfo<SocketAddr>,
+            headers: HeaderMap,
+            OriginalUri(uri): OriginalUri,
+        ) -> Response {
+            direct_profile_options(auth, peer, headers, uri, ProfileOptions::$kind, None).await
+        }
+
+        async fn $detail(
+            State(auth): State<AuthService>,
+            Path(id): Path<String>,
+            ConnectInfo(peer): ConnectInfo<SocketAddr>,
+            headers: HeaderMap,
+            OriginalUri(uri): OriginalUri,
+        ) -> Response {
+            direct_profile_options(auth, peer, headers, uri, ProfileOptions::$kind, Some(id)).await
+        }
+    };
+}
+profile_options_routes!(useragents_options, useragent_options, UserAgent);
+profile_options_routes!(streamprofiles_options, streamprofile_options, StreamProfile);
+
+macro_rules! direct_profile_reads {
     ($list:ident, $detail:ident, $canonical_list:ident, $canonical_detail:ident, $fields:ident) => {
         async fn $list(
             auth: State<AuthService>,
             peer: ConnectInfo<SocketAddr>,
-            method: Method,
             headers: HeaderMap,
         ) -> Result<Response, StoreError> {
             let value = $canonical_list(auth, peer, headers).await?;
-            Ok(direct_profile_response(method, false, $fields, value))
+            Ok(direct_profile_response(false, $fields, value))
         }
 
         async fn $detail(
             auth: State<AuthService>,
             id: Path<String>,
             peer: ConnectInfo<SocketAddr>,
-            method: Method,
             headers: HeaderMap,
         ) -> Result<Response, StoreError> {
             let value = $canonical_detail(auth, id, peer, headers).await?;
-            Ok(direct_profile_response(method, true, $fields, value))
+            Ok(direct_profile_response(true, $fields, value))
         }
     };
 }
-direct_profile_gets!(
+direct_profile_reads!(
     direct_useragents,
     direct_useragent,
     useragents,
     useragent,
     USER_AGENT_FIELDS
 );
-direct_profile_gets!(
+direct_profile_reads!(
     direct_streamprofiles,
     direct_streamprofile,
     streamprofiles,
@@ -344,22 +483,28 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
         .route("/api/core/settings/", get(settings))
         .route(
             "/api/core/useragents/",
-            get(direct_useragents).post(crate::user_agent_writes::create),
+            get(direct_useragents)
+                .options(useragents_options)
+                .post(crate::user_agent_writes::create),
         )
         .route(
             "/api/core/useragents/{id}/",
             get(direct_useragent)
+                .options(useragent_options)
                 .patch(crate::user_agent_writes::patch)
                 .put(crate::user_agent_writes::put)
                 .delete(crate::user_agent_writes::delete),
         )
         .route(
             "/api/core/streamprofiles/",
-            get(direct_streamprofiles).post(crate::core_stream_writes::create),
+            get(direct_streamprofiles)
+                .options(streamprofiles_options)
+                .post(crate::core_stream_writes::create),
         )
         .route(
             "/api/core/streamprofiles/{id}/",
             get(direct_streamprofile)
+                .options(streamprofile_options)
                 .patch(crate::core_stream_writes::patch)
                 .put(crate::core_stream_writes::put)
                 .delete(crate::core_stream_writes::delete),
@@ -455,10 +600,14 @@ mod special_source16_order_tests {
 #[cfg(test)]
 mod direct_profile_wire_tests {
     use super::*;
-    use axum::body::to_bytes;
+    use axum::{
+        body::{to_bytes, Body},
+        http::{Method, StatusCode},
+    };
+    use tower::ServiceExt;
 
     #[tokio::test]
-    async fn successful_direct_profile_gets_use_original_wire_order_and_headers() {
+    async fn direct_profile_routes_share_ordered_get_headers_with_empty_head() {
         let agent = json!({"id":4,"name":"Owned","is_active":true,"user_agent":"Owned/1.0",
             "description":"fixture","created_at":"2026-01-08T08:12:03.123456Z",
             "updated_at":"2026-01-08T08:12:03.123456Z"});
@@ -484,20 +633,179 @@ mod direct_profile_wire_tests {
                     "GET, POST, HEAD, OPTIONS",
                 ),
             ] {
-                let response = direct_profile_response(Method::GET, detail, fields, Json(payload));
-                assert_eq!(response.status(), axum::http::StatusCode::OK);
-                assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
-                assert_eq!(response.headers()[header::ALLOW], allow);
-                assert_eq!(response.headers()[header::VARY], "Accept");
-                let raw = to_bytes(response.into_body(), 4096).await.unwrap();
-                assert_eq!(raw.as_ref(), expected.as_bytes());
+                let app = Router::new().route(
+                    "/",
+                    get(move || {
+                        let payload = payload.clone();
+                        async move { direct_profile_response(detail, fields, Json(payload)) }
+                    }),
+                );
+                for (method, expected_body) in
+                    [(Method::GET, expected.as_bytes()), (Method::HEAD, b"")]
+                {
+                    let request = Request::builder()
+                        .method(method)
+                        .uri("/")
+                        .body(Body::empty())
+                        .unwrap();
+                    let response = app.clone().oneshot(request).await.unwrap();
+                    assert_eq!(response.status(), StatusCode::OK);
+                    assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+                    assert_eq!(response.headers()[header::ALLOW], allow);
+                    assert_eq!(response.headers()[header::VARY], "Accept");
+                    assert_eq!(
+                        response.headers()[header::CONTENT_LENGTH]
+                            .to_str()
+                            .unwrap()
+                            .parse::<usize>()
+                            .unwrap(),
+                        expected.len()
+                    );
+                    let raw = to_bytes(response.into_body(), 4096).await.unwrap();
+                    assert_eq!(raw.as_ref(), expected_body);
+                }
             }
-            let legacy = serde_json::to_vec(&body).unwrap();
-            let head = direct_profile_response(Method::HEAD, true, fields, Json(body));
-            assert!(!head.headers().contains_key(header::ALLOW));
-            assert!(!head.headers().contains_key(header::VARY));
-            let raw = to_bytes(head.into_body(), 4096).await.unwrap();
-            assert_eq!(raw.as_ref(), legacy.as_slice());
+        }
+    }
+}
+
+#[cfg(test)]
+mod direct_profile_options_tests {
+    use super::*;
+    use axum::{
+        body::{to_bytes, Body},
+        http::Method,
+        routing::options,
+    };
+    use sha2::{Digest, Sha256};
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn direct_profile_options_metadata_matches_four_source_entities() {
+        for (kind, detail, length, digest) in [
+            (
+                ProfileOptions::UserAgent,
+                false,
+                1146,
+                "ad0cec372d97d09bd47156e90bd9d1a6d69f880ae9786e9f33b5b80f6e60958e",
+            ),
+            (
+                ProfileOptions::UserAgent,
+                true,
+                1149,
+                "c4c059688fcb282c8b710da846253225a497287b015244fd519727daef897f42",
+            ),
+            (
+                ProfileOptions::StreamProfile,
+                false,
+                1283,
+                "4c861b46c4ae91c0aba0d294485afc5f041a030e415b28c8e80a7253a7e2a674",
+            ),
+            (
+                ProfileOptions::StreamProfile,
+                true,
+                1286,
+                "26a5dd4e4bec25e01255321dfcced919c5fb6cfbb701f464fff27c807573bea5",
+            ),
+        ] {
+            let app = Router::new().route(
+                "/",
+                options(move || async move {
+                    channel_options_headers(
+                        kind.entity(detail, true, 0).unwrap(),
+                        HeaderValue::from_static(direct_profile_allow(detail)),
+                    )
+                }),
+            );
+            let request = Request::builder()
+                .method(Method::OPTIONS)
+                .uri("/")
+                .body(Body::empty())
+                .unwrap();
+            let response = app.oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::OK);
+            assert_eq!(
+                response.headers()[header::ALLOW],
+                direct_profile_allow(detail)
+            );
+            assert_eq!(response.headers()[header::VARY], "Accept");
+            assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+            assert_eq!(
+                response.headers()[header::CONTENT_LENGTH],
+                length.to_string()
+            );
+            let raw = to_bytes(response.into_body(), length).await.unwrap();
+            assert_eq!(raw.len(), length);
+            assert_eq!(format!("{:x}", Sha256::digest(&raw)), digest);
+        }
+        let missing = ProfileOptions::UserAgent.entity(true, false, 0).unwrap();
+        let raw = to_bytes(missing.into_body(), 4096).await.unwrap();
+        let body: Value = serde_json::from_slice(&raw).unwrap();
+        assert_eq!(body["name"], "User Agent Instance");
+        assert!(body.get("actions").is_none());
+    }
+
+    #[tokio::test]
+    async fn direct_profile_options_routes_require_normal_authentication() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://localhost/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-options-test-signing-key".into()).unwrap(),
+        );
+        for (path, detail, alias) in [
+            ("/api/core/useragents/", false, "/api/core/useragents.json"),
+            (
+                "/api/core/useragents/1/",
+                true,
+                "/api/core/useragents/1.json",
+            ),
+            (
+                "/api/core/streamprofiles/",
+                false,
+                "/api/core/streamprofiles.json",
+            ),
+            (
+                "/api/core/streamprofiles/1/",
+                true,
+                "/api/core/streamprofiles/1.json",
+            ),
+        ] {
+            let request = |uri, accept| {
+                Request::builder()
+                    .method(Method::OPTIONS)
+                    .uri(uri)
+                    .header(header::ACCEPT, accept)
+                    .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                    .body(Body::empty())
+                    .unwrap()
+            };
+            let response = router(auth.clone())
+                .oneshot(request(path, "application/json"))
+                .await
+                .unwrap();
+            assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+            assert_eq!(
+                response.headers()[header::ALLOW],
+                direct_profile_allow(detail)
+            );
+            assert_eq!(response.headers()[header::VARY], "Accept");
+            assert_eq!(
+                response.headers()[header::WWW_AUTHENTICATE],
+                "Bearer realm=\"api\""
+            );
+
+            let response = router(auth.clone())
+                .oneshot(request(path, "text/html"))
+                .await
+                .unwrap();
+            assert_eq!(response.status(), StatusCode::METHOD_NOT_ALLOWED);
+            let response = router(auth.clone())
+                .oneshot(request(alias, "application/json"))
+                .await
+                .unwrap();
+            assert_eq!(response.status(), StatusCode::NOT_FOUND);
         }
     }
 }
