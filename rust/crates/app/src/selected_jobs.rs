@@ -119,11 +119,12 @@ fn select_beat(worker: bool, legacy: bool, core: bool) -> Result<Beat, String> {
 const WORKERS: &str = "RUST_EXPERIMENTAL_SELECTED_JOBS";
 const LEGACY_BEAT: &str = "RUST_EXPERIMENTAL_SELECTED_BEAT";
 const CORE_BEAT: &str = "RUST_EXPERIMENTAL_SELECTED_CORE_BEAT";
+const DEFAULT_QUEUE_CONTROL: &str = "RUST_DEFAULT_QUEUE_CONTROL_DESTINATION";
 
 pub fn main_configuration() -> Result<(bool, Beat), String> {
     // The deployment must actually assign AIO ownership. The descriptive
     // fallback used by configuration reporting does not assign a queue role.
-    if env::var("DISPATCHARR_ENV").as_deref() == Ok("aio")
+    let configuration = if env::var("DISPATCHARR_ENV").as_deref() == Ok("aio")
         && ![
             WORKERS,
             LEGACY_BEAT,
@@ -140,9 +141,14 @@ pub fn main_configuration() -> Result<(bool, Beat), String> {
         .iter()
         .any(|name| env::var_os(name).is_some())
     {
-        return Ok((true, Beat::Core));
+        (true, Beat::Core)
+    } else {
+        configuration()?
+    };
+    if env::var_os(DEFAULT_QUEUE_CONTROL).is_some() && configuration != (true, Beat::Core) {
+        return Err("Default queue maintenance control requires the Selected Core queue graph".into());
     }
-    configuration()
+    Ok(configuration)
 }
 
 pub fn configuration() -> Result<(bool, Beat), String> {
@@ -668,6 +674,14 @@ impl SelectedJobs {
         )
         .await
         .map_err(|_| "Selected complete registry initialization failed")?;
+        if let Some(destination) = env::var_os(DEFAULT_QUEUE_CONTROL) {
+            let destination = destination
+                .into_string()
+                .map_err(|_| "Default queue maintenance destination is not valid UTF-8")?;
+            control
+                .bind_default_queue_control(destination, queue.default_queue_control())
+                .map_err(|_| "Default queue maintenance control requires a unique default@host and password-authenticated broker")?;
+        }
         plugin_jobs
             .attach_prepared(&queue)
             .map_err(|_| "Plugin actual shared worker registry unavailable")?;
@@ -924,6 +938,10 @@ impl SelectedJobs {
             || self.inner.scheduler.start(Arc::new(())),
         )
         .await?;
+        self.inner
+            .control
+            .enable_default_queue_control()
+            .map_err(|_| "Default queue maintenance control activation failed")?;
         self.inner.startup.send_replace(Startup::Started);
         Ok(())
     }

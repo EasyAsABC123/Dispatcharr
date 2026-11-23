@@ -51,6 +51,8 @@ pub enum State {
     Starting,
     Working(usize),
     Observed(Disposition),
+    PauseRequested,
+    Paused,
     Blocked(Disposition),
     Fault(Disposition),
     Stopped,
@@ -71,6 +73,85 @@ pub struct Readiness {
     pub scheduler_enabled: bool,
     pub ready: bool,
 }
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum DefaultAdmission {
+    Unavailable,
+    Prepared,
+    Running,
+    Paused,
+    Closed,
+}
+
+#[derive(Clone)]
+pub struct DefaultQueueControl(watch::Sender<DefaultAdmission>);
+
+impl DefaultQueueControl {
+    pub(crate) fn new() -> Self {
+        Self(watch::channel(DefaultAdmission::Unavailable).0)
+    }
+
+    pub(crate) fn configure(&self) -> bool {
+        self.0.send_if_modified(|state| {
+            if *state != DefaultAdmission::Unavailable {
+                return false;
+            }
+            *state = DefaultAdmission::Prepared;
+            true
+        })
+    }
+
+    fn receiver_if_configured(&self) -> Option<watch::Receiver<DefaultAdmission>> {
+        matches!(
+            *self.0.borrow(),
+            DefaultAdmission::Prepared | DefaultAdmission::Running | DefaultAdmission::Paused
+        )
+        .then(|| self.0.subscribe())
+    }
+
+    pub(crate) fn enable(&self) -> bool {
+        self.0.send_if_modified(|state| {
+            if *state != DefaultAdmission::Prepared {
+                return false;
+            }
+            *state = DefaultAdmission::Running;
+            true
+        })
+    }
+
+    pub(crate) fn request(&self, pause: bool) -> bool {
+        let mut accepted = false;
+        self.0.send_if_modified(|state| {
+            if !matches!(state, DefaultAdmission::Running | DefaultAdmission::Paused) {
+                return false;
+            }
+            accepted = true;
+            let next = if pause { DefaultAdmission::Paused } else { DefaultAdmission::Running };
+            let changed = *state != next;
+            *state = next;
+            changed
+        });
+        accepted
+    }
+
+    fn close(&self) {
+        self.0.send_replace(DefaultAdmission::Closed);
+    }
+}
+
+fn admitting<T>(control: Option<&watch::Receiver<DefaultAdmission>>, action: impl FnOnce() -> T) -> Option<T> {
+    if let Some(control) = control {
+        let state = control.borrow();
+        if matches!(*state, DefaultAdmission::Paused | DefaultAdmission::Closed) {
+            return None;
+        }
+        // Keep the read guard across the synchronous admission decision. The
+        // pause write and the decision to admit a new task cannot race past it.
+        Some(action())
+    } else {
+        Some(action())
+    }
+}
+
 struct FamilyOwner {
     _slot: OwnedSemaphorePermit,
     _caller: Arc<dyn Send + Sync>,
@@ -220,6 +301,7 @@ struct Inner {
     lifecycle: Mutex<(bool, bool)>,
     require_registered: bool,
     schedule_owner: Mutex<ScheduleOwner>,
+    default_control: DefaultQueueControl,
 }
 #[derive(Clone, Copy, Default, PartialEq, Eq)]
 enum ScheduleOwner {
@@ -365,7 +447,7 @@ fn selected_schedule_availability(
             .any(|state| matches!(state, State::Fault(_) | State::Stopped))
     {
         Terminal
-    } else if celery.ready() && dvr.ready() {
+    } else if (celery.ready() || matches!(celery, State::PauseRequested | State::Paused)) && dvr.ready() {
         Ready
     } else {
         Waiting
@@ -622,6 +704,7 @@ impl CoreScheduledWorker {
             owner,
             self.stop.0.subscribe(),
             self.poll,
+            None,
         ));
         Ok(())
     }
@@ -996,10 +1079,15 @@ impl Application {
                 poll,
                 lifecycle: Mutex::new((false, false)),
                 schedule_owner: Mutex::new(ScheduleOwner::Unbound),
+                default_control: DefaultQueueControl::new(),
             }),
             lifetime: Arc::new(Lifetime(watch::channel(false).0)),
         })
     }
+    pub fn default_queue_control(&self) -> DefaultQueueControl {
+        self.inner.default_control.clone()
+    }
+
     pub fn registered_plugin_prepared(&self) -> bool {
         self.inner.require_registered
             && self
@@ -1050,6 +1138,7 @@ impl Application {
                 owner.clone(),
                 self.lifetime.0.subscribe(),
                 self.inner.poll,
+                self.inner.default_control.receiver_if_configured(),
             ));
         }
         let lane = self.inner.dvr.clone();
@@ -1074,6 +1163,7 @@ impl Application {
     /// Stop only intake immediately; callers can then settle producer startup
     /// before the full worker/physical-port drain. Existing tasks retain owners.
     pub fn stop_admission(&self) {
+        self.inner.default_control.close();
         self.lifetime.0.send_replace(true);
     }
     /// Caller stops scheduler/API producers first. Do not close even one shared
@@ -1083,7 +1173,7 @@ impl Application {
         if let Ok(mut lifecycle) = self.inner.lifecycle.lock() {
             lifecycle.1 = true;
         }
-        self.lifetime.0.send_replace(true);
+        self.stop_admission();
         for family in self.inner.families.values() {
             family.inner.stop_admission();
             family
@@ -1340,6 +1430,7 @@ async fn celery_lane(
     caller: Arc<dyn Send + Sync>,
     mut stop: watch::Receiver<bool>,
     poll: Duration,
+    mut default_control: Option<watch::Receiver<DefaultAdmission>>,
 ) {
     let maximum = CELERY_CONCURRENCY;
     let advanced: Option<Arc<tokio::sync::Notify>> = None;
@@ -1354,16 +1445,37 @@ async fn celery_lane(
         if fault.is_some() && tasks.is_empty() {
             break;
         }
-        if !*stop.borrow() && fault.is_none() {
+        let requested = default_control.as_mut().map(|state| *state.borrow_and_update());
+        let held = matches!(requested, Some(DefaultAdmission::Paused | DefaultAdmission::Closed));
+        if requested == Some(DefaultAdmission::Paused) && !*stop.borrow() && fault.is_none() {
+            let drained = tasks.is_empty() && handlers.values().all(|handler| {
+                handler.0.slot.available_permits() == handler.0.inner.maximum_concurrency()
+            });
+            lane.state.send_if_modified(|state| {
+                if drained && !matches!(state, State::Paused) {
+                    *state = State::Paused;
+                    true
+                } else if !drained && !matches!(state, State::PauseRequested) {
+                    *state = State::PauseRequested;
+                    true
+                } else {
+                    false
+                }
+            });
+        }
+        if !held && !*stop.borrow() && fault.is_none() {
             for handler in handlers.values() {
-                if let Err(error) = handler.maintenance(caller.clone()).await {
+                let Some(maintenance) = admitting(default_control.as_ref(), || handler.maintenance(caller.clone())) else {
+                    break;
+                };
+                if let Err(error) = maintenance.await {
                     fault = Some(error.clone());
                     lane.state.send_replace(State::Fault(error));
                     break;
                 }
             }
         }
-        if !*stop.borrow() && fault.is_none() && tasks.len() < maximum {
+        if !held && !*stop.borrow() && fault.is_none() && tasks.len() < maximum {
             for (family, handler) in &handlers {
                 if *family == Family::Recording {
                     continue;
@@ -1374,20 +1486,26 @@ async fn celery_lane(
                 if handler.0.slot.available_permits() == 0 {
                     continue;
                 }
-                if let Some(raw) = handler.due_head() {
-                    if pending.insert(raw.clone()) {
-                        let owned = handler.clone();
-                        let owner = caller.clone();
-                        tasks.spawn(async move {
-                            let result = owned.run_due(raw.clone(), owner).await;
-                            (raw, result)
-                        });
+                admitting(default_control.as_ref(), || {
+                    if let Some(raw) = handler.due_head() {
+                        if pending.insert(raw.clone()) {
+                            let owned = handler.clone();
+                            let owner = caller.clone();
+                            tasks.spawn(async move {
+                                let result = owned.run_due(raw.clone(), owner).await;
+                                (raw, result)
+                            });
+                        }
                     }
-                }
+                });
             }
         }
-        if !*stop.borrow() && fault.is_none() && tasks.len() < maximum && backoff.can_peek() {
-            match head.peek(caller.clone()).await {
+        if !held && !*stop.borrow() && fault.is_none() && tasks.len() < maximum && backoff.can_peek() {
+            let peek = admitting(default_control.as_ref(), || head.peek(caller.clone()));
+            // A pause racing with the physical peek must be rechecked before
+            // its result can be turned into an admitted claim.
+            let Some(peek) = peek else { continue };
+            match peek.await {
                 Ok(Some(raw)) => {
                     let selected = if handlers
                         .get(&Family::RegisteredPlugin)
@@ -1409,17 +1527,19 @@ async fn celery_lane(
                             lane.state.send_replace(State::Working(tasks.len()));
                         } else {
                             let expected: Arc<[u8]> = Arc::from(raw);
-                            if backoff.allow(&expected) && !pending.contains(&expected) {
-                                pending.insert(expected.clone());
-                                let selected = expected.clone();
-                                let owned = handler.clone();
-                                let owner = caller.clone();
-                                tasks.spawn(async move {
-                                    let result = owned.run_selected(selected.clone(), owner).await;
-                                    (selected, result)
-                                });
-                                lane.state.send_replace(State::Working(tasks.len()));
-                            }
+                            admitting(default_control.as_ref(), || {
+                                if backoff.allow(&expected) && !pending.contains(&expected) {
+                                    pending.insert(expected.clone());
+                                    let selected = expected.clone();
+                                    let owned = handler.clone();
+                                    let owner = caller.clone();
+                                    tasks.spawn(async move {
+                                        let result = owned.run_selected(selected.clone(), owner).await;
+                                        (selected, result)
+                                    });
+                                    lane.state.send_replace(State::Working(tasks.len()));
+                                }
+                            });
                         }
                     }
                 }
@@ -1454,6 +1574,10 @@ async fn celery_lane(
                }
               },
               _=stop.changed(),if !*stop.borrow()=>{},
+              _=async { match default_control.as_mut() {
+                  Some(state) => { let _ = state.changed().await; },
+                  None => std::future::pending().await,
+              }}=>{},
               _=async{match &advanced{Some(notify)=>notify.notified().await,None=>std::future::pending::<()>().await}}=>{backoff.wake();},
         _=tokio::time::sleep_until(backoff.deadline(poll))=>{}
              }
@@ -1834,6 +1958,178 @@ mod tests {
         }
     }
 
+    #[test]
+    fn default_pause_requires_activation_and_cannot_reopen_closed_admission() {
+        let control = DefaultQueueControl::new();
+        assert!(!control.request(true));
+        assert!(control.receiver_if_configured().is_none());
+        assert!(!control.enable());
+        assert!(control.receiver_if_configured().is_none());
+        assert!(control.configure());
+        assert!(!control.configure());
+        assert!(!control.request(true));
+        let receiver = control.receiver_if_configured().unwrap();
+        assert!(control.enable());
+        assert_eq!(admitting(Some(&receiver), || 1), Some(1));
+        assert!(control.request(true));
+        assert!(control.request(true));
+        assert_eq!(admitting(Some(&receiver), || 1), None);
+        assert!(control.request(false));
+        assert_eq!(admitting(Some(&receiver), || 1), Some(1));
+        control.close();
+        assert!(!control.enable());
+        assert!(!control.request(false));
+        assert_eq!(admitting(Some(&receiver), || 1), None);
+    }
+
+    #[test]
+    fn configured_default_pause_keeps_scheduler_publication_available_only_with_live_dvr() {
+        for state in [State::PauseRequested, State::Paused] {
+            assert!(!state.ready());
+            assert!(selected_schedules_ready(false, true, &state, &State::Working(0)));
+            assert!(!selected_schedules_ready(false, true, &state, &State::Stopped));
+            assert!(!selected_schedules_ready(false, true, &state, &State::Starting));
+            assert!(!selected_schedules_ready(true, true, &state, &State::Working(0)));
+        }
+    }
+
+    #[test]
+    fn default_failure_blocks_scheduler_even_with_live_dvr() {
+        let dvr = State::Working(0);
+        assert_eq!(
+            selected_schedule_availability(false, true, &State::Fault(
+                Disposition::Operational("owned default receiver fault".into()),
+            ), &dvr),
+            SelectedScheduleAvailability::Terminal
+        );
+        assert_eq!(
+            selected_schedule_availability(false, true, &State::Stopped, &dvr),
+            SelectedScheduleAvailability::Terminal
+        );
+    }
+
+    async fn default_pause_with_admitted_due_lease(stop_before_release: bool) {
+        let head = Arc::new(EmptyCeleryHead::default());
+        let due = Arc::new(HeldDueTask {
+            started: AtomicBool::new(false),
+            finish: Semaphore::new(0),
+        });
+        let handler = FamilyAdapter(Arc::new(OwnedFamily {
+            inner: due.clone(),
+            slot: Arc::new(Semaphore::new(1)),
+            closed: AtomicBool::new(false),
+        }));
+        let entries = milestone_dispatch::REQUIRED
+            .into_iter()
+            .chain([Family::BackupCreate, Family::BackupScheduled])
+            .map(|family| (family, Arc::new(handler.clone()) as Arc<dyn Handler>))
+            .collect();
+        let lane = Arc::new(Lane {
+            prepared: Prepared::new(head.clone(), entries).unwrap(),
+            state: watch::channel(State::Starting).0,
+            done: watch::channel(false).0,
+        });
+        let (stop, rx) = watch::channel(false);
+        let control = DefaultQueueControl::new();
+        assert!(control.configure());
+        assert!(control.enable());
+        let running = tokio::spawn(celery_lane(
+            lane.clone(), head.clone(), BTreeMap::from([(Family::Artwork, handler)]),
+            Arc::new(()), rx, Duration::from_millis(2), control.receiver_if_configured(),
+        ));
+        until(|| due.started.load(Ordering::Acquire)).await;
+        assert!(control.request(true));
+        until(|| matches!(*lane.state.borrow(), State::PauseRequested)).await;
+        let peeks = head.0.load(Ordering::SeqCst);
+        if stop_before_release {
+            control.close();
+            stop.send_replace(true);
+            assert!(!control.request(false));
+            assert!(!running.is_finished());
+            due.finish.add_permits(1);
+            running.await.unwrap();
+            assert!(*lane.done.borrow());
+            assert_eq!(head.0.load(Ordering::SeqCst), peeks);
+            return;
+        }
+        due.finish.add_permits(1);
+        until(|| matches!(*lane.state.borrow(), State::Paused)).await;
+        assert_eq!(head.0.load(Ordering::SeqCst), peeks);
+        assert!(control.request(false));
+        until(|| head.0.load(Ordering::SeqCst) > peeks).await;
+        stop.send_replace(true);
+        running.await.unwrap();
+        assert!(*lane.done.borrow());
+    }
+
+    #[tokio::test]
+    async fn default_pause_waits_for_admitted_due_lease_and_resume_wakes_receiver() {
+        default_pause_with_admitted_due_lease(false).await;
+    }
+
+    #[tokio::test]
+    async fn stopping_during_default_pause_closes_control_and_drains_the_admitted_due_lease() {
+        default_pause_with_admitted_due_lease(true).await;
+    }
+
+    struct HeldDefaultPeek {
+        entered: AtomicBool,
+        release: Semaphore,
+    }
+    impl Head for HeldDefaultPeek {
+        fn queue(&self) -> Queue { Queue::Celery }
+        fn peek(
+            &self,
+            _owner: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Option<Vec<u8>>, Disposition>> {
+            Box::pin(async move {
+                self.entered.store(true, Ordering::SeqCst);
+                self.release.acquire().await.unwrap().forget();
+                Ok(Some(br#"{"headers":{"task":"apps.channels.tasks.prefetch_recording_artwork","id":"owned-head"}}"#.to_vec()))
+            })
+        }
+    }
+
+    #[tokio::test]
+    async fn pause_racing_inflight_peek_does_not_admit_the_returned_head() {
+        let head = Arc::new(HeldDefaultPeek {
+            entered: AtomicBool::new(false),
+            release: Semaphore::new(0),
+        });
+        // HeldDueTask panics if it is asked to run a source FIFO claim.
+        let handler = FamilyAdapter(Arc::new(OwnedFamily {
+            inner: Arc::new(HeldDueTask { started: AtomicBool::new(true), finish: Semaphore::new(0) }),
+            slot: Arc::new(Semaphore::new(1)),
+            closed: AtomicBool::new(false),
+        }));
+        let entries = milestone_dispatch::REQUIRED
+            .into_iter()
+            .chain([Family::BackupCreate, Family::BackupScheduled])
+            .map(|family| (family, Arc::new(handler.clone()) as Arc<dyn Handler>))
+            .collect();
+        let lane = Arc::new(Lane {
+            prepared: Prepared::new(head.clone(), entries).unwrap(),
+            state: watch::channel(State::Starting).0,
+            done: watch::channel(false).0,
+        });
+        let (stop, rx) = watch::channel(false);
+        let control = DefaultQueueControl::new();
+        assert!(control.configure());
+        assert!(control.enable());
+        let running = tokio::spawn(celery_lane(
+            lane.clone(), head.clone(), BTreeMap::from([(Family::Artwork, handler)]),
+            Arc::new(()), rx, Duration::from_millis(2), control.receiver_if_configured(),
+        ));
+        until(|| head.entered.load(Ordering::SeqCst)).await;
+        assert!(control.request(true));
+        assert!(!matches!(*lane.state.borrow(), State::Paused));
+        head.release.add_permits(1);
+        until(|| matches!(*lane.state.borrow(), State::Paused)).await;
+        stop.send_replace(true);
+        running.await.unwrap();
+        assert!(matches!(*lane.state.borrow(), State::Stopped));
+    }
+
     #[tokio::test]
     async fn celery_first_empty_broker_peek_reports_working_during_held_due_task() {
         let head = Arc::new(EmptyCeleryHead::default());
@@ -1864,6 +2160,7 @@ mod tests {
             Arc::new(()),
             rx,
             Duration::from_millis(10),
+            None,
         ));
         until(|| due.started.load(Ordering::Acquire) && head.0.load(Ordering::SeqCst) > 0).await;
         assert!(matches!(*lane.state.borrow(), State::Working(1)));
@@ -2001,6 +2298,7 @@ mod tests {
                     Arc::new(()),
                     rx,
                     poll,
+                    None,
                 ))
             };
             settle_driver().await;

@@ -89,6 +89,7 @@ async fn already_durable_due_jobs_share_existing_six_global_slots() {
         Arc::new(()),
         receiver,
         Duration::from_millis(100),
+        None,
     ));
     for _ in 0..30 {
         tokio::task::yield_now().await;

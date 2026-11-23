@@ -1,6 +1,6 @@
 //! Real bounded Celery pidbox revoke transport for normal recovery.
 //! Original Dispatcharr/Celery/Kombu authors retain application/protocol credit.
-use crate::normal_revocation::Revoked;
+use crate::{normal_queue::DefaultQueueControl, normal_revocation::Revoked};
 use dispatcharr_output_store::transport::{RedisTransport, TransportConfig};
 use std::{
     io::{Read, Write},
@@ -58,6 +58,8 @@ struct Inner {
     topic: String,
     revoked: Revoked,
     backend: Mutex<Option<crate::transport::Jobs>>,
+    default_queue: Mutex<Option<(String, DefaultQueueControl)>>,
+    default_queue_enabled_at: AtomicU64,
     clock: AtomicU64,
     stop: Arc<AtomicBool>,
     started: AtomicBool,
@@ -133,6 +135,8 @@ impl Control {
                 topic,
                 revoked,
                 backend: Mutex::new(None),
+                default_queue: Mutex::new(None),
+                default_queue_enabled_at: AtomicU64::new(0),
                 clock: AtomicU64::new(0),
                 stop: stop.clone(),
                 started: AtomicBool::new(false),
@@ -170,6 +174,41 @@ impl Control {
         *backend = Some(jobs);
         Ok(())
     }
+    pub fn bind_default_queue_control(
+        &self,
+        destination: String,
+        admission: DefaultQueueControl,
+    ) -> Result<(), Error> {
+        let host = destination.strip_prefix("default@").ok_or(Error::Configuration)?;
+        if self.inner.started.load(Ordering::Acquire)
+            || self.inner.address.redis.password.as_deref().is_none_or(str::is_empty)
+            || host.is_empty()
+            || host.len() > 120
+            || !host.bytes().all(|byte| byte.is_ascii_alphanumeric() || b"._-".contains(&byte))
+        {
+            return Err(Error::Configuration);
+        }
+        let mut configured = self.inner.default_queue.lock().map_err(|_| Error::Configuration)?;
+        if configured.is_some() || !admission.configure() {
+            return Err(Error::Configuration);
+        }
+        *configured = Some((destination, admission));
+        Ok(())
+    }
+
+    pub fn enable_default_queue_control(&self) -> Result<(), Error> {
+        if let Some((_, admission)) = &*self.inner.default_queue.lock().map_err(|_| Error::Configuration)? {
+            let enabled_at = now()?;
+            if !admission.enable() {
+                return Err(Error::Configuration);
+            }
+            self.inner
+                .default_queue_enabled_at
+                .store(enabled_at.to_bits(), Ordering::Release);
+        }
+        Ok(())
+    }
+
     pub fn state(&self) -> State {
         *self.inner.state.borrow()
     }
@@ -624,6 +663,7 @@ fn read_loop(
                 && matches!(&v[2], Resp::Number(1)) => {}
         _ => return Err(Error::Protocol),
     }
+    let queue_control = inner.default_queue.lock().map_err(|_| Error::Configuration)?.clone();
     inner.state.send_replace(State::Subscribed);
     while !inner.stop.load(Ordering::Acquire) {
         let value = match response(&mut stream, &inner.stop, true) {
@@ -645,13 +685,24 @@ fn read_loop(
             return Err(Error::Protocol);
         };
         inner.received.fetch_add(1, Ordering::AcqRel);
-        match wire::decode(raw, now()?) {
+        let enabled = queue_control.as_ref().and_then(|(destination, _)| {
+            let enabled_at = inner.default_queue_enabled_at.load(Ordering::Acquire);
+            (enabled_at != 0).then(|| (destination.as_str(), f64::from_bits(enabled_at)))
+        });
+        match wire::decode_for(raw, now()?, enabled) {
             Ok(decoded) => {
                 let _ = inner
                     .clock
                     .fetch_update(Ordering::AcqRel, Ordering::Acquire, |local| {
                         Some(local.max(decoded.clock).saturating_add(1))
                     });
+                if let (Some(pause), Some((_, admission))) = (decoded.pause_default, &queue_control) {
+                    if !inner.stop.load(Ordering::Acquire) && admission.request(pause) {
+                        inner.applied.fetch_add(1, Ordering::AcqRel);
+                    } else {
+                        inner.rejected.fetch_add(1, Ordering::AcqRel);
+                    }
+                }
                 if let Some(keys) = decoded.keys {
                     inner
                         .revoked
@@ -694,4 +745,26 @@ fn read_loop(
     }
     drop(stream);
     Ok(())
+}
+
+#[cfg(test)]
+mod default_queue_tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn maintenance_binding_requires_explicit_target_and_password() {
+        // Construction parses the configured endpoint without opening a socket.
+        let no_password = Control::connect("redis://127.0.0.1:6379/1", Revoked::new()).await.unwrap();
+        assert_eq!(no_password.bind_default_queue_control(
+            "default@owned".into(), DefaultQueueControl::new()), Err(Error::Configuration));
+        let parsed_only_fixture = format!("redis://:owned-test-{}@127.0.0.1:6379/1", std::process::id());
+        let with_password = Control::connect(&parsed_only_fixture, Revoked::new()).await.unwrap();
+        for invalid in ["", "dvr@owned", "default@", "default@owned*"] {
+            assert_eq!(with_password.bind_default_queue_control(
+                invalid.into(), DefaultQueueControl::new()), Err(Error::Configuration));
+        }
+        with_password.bind_default_queue_control("default@owned".into(), DefaultQueueControl::new()).unwrap();
+        assert_eq!(with_password.bind_default_queue_control(
+            "default@another".into(), DefaultQueueControl::new()), Err(Error::Configuration));
+    }
 }
