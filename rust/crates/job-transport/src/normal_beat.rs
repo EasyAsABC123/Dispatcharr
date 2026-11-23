@@ -41,6 +41,41 @@ impl From<sqlx::Error> for Error {
         Self::Database(Box::new(v))
     }
 }
+/// Fixed vocabulary only. Read solely on failed, opt-in shutdown diagnostics.
+/// No runtime errors, SQL, task names, IDs or values escape this observation.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub struct ShutdownDiagnostic {
+    pub timer: &'static str,
+    pub slot: &'static str,
+    pub cache: &'static str,
+    pub checkpoint: &'static str,
+    pub state: &'static str,
+    pub fault: &'static str,
+}
+fn shutdown_dirty_labels(dirty: bool, orphaned: bool) -> (&'static str, &'static str) {
+    if !dirty {
+        ("Clean", "None")
+    } else if orphaned {
+        ("Dirty", "Orphaned")
+    } else {
+        ("Dirty", "Present")
+    }
+}
+fn shutdown_fault_label(error: &Error) -> &'static str {
+    match error {
+        Error::Drain => "Drain",
+        Error::Database(_) => "Database",
+        Error::Configuration(_) => "Configuration",
+        Error::RoleDatabaseTimeout => "RoleDatabaseTimeout",
+        Error::Supervisor => "Supervisor",
+        Error::Settlement { primary, .. } => match primary.as_deref() {
+            Some(Error::Drain) => "SettlementDrain",
+            Some(Error::Database(_)) => "SettlementDatabase",
+            _ => "SettlementOther",
+        },
+        _ => "Other",
+    }
+}
 #[derive(Clone, Debug, Default)]
 pub struct Tick {
     pub reloaded: bool,
@@ -1017,6 +1052,50 @@ impl Scheduler {
 
     pub fn stop_admission(&self) {
         self.inner.lifecycle.close();
+    }
+    /// Nonblocking, allocation-free observation; never changes drain acceptance.
+    /// The caller must select the existing bounded shutdown diagnostic control.
+    pub fn shutdown_diagnostic(&self) -> ShutdownDiagnostic {
+        let (cache, checkpoint) = match self.inner.cache.try_lock() {
+            Ok(cache) => shutdown_dirty_labels(
+                !cache.dirty.is_empty(),
+                cache
+                    .dirty
+                    .keys()
+                    .any(|name| !cache.entries.contains_key(name)),
+            ),
+            Err(_) => ("Busy", "Unknown"),
+        };
+        let (state, fault) = match self.status() {
+            Status::Prepared => ("Prepared", "None"),
+            Status::Running => ("Running", "None"),
+            Status::Standby => ("Standby", "None"),
+            Status::Contended => ("Contended", "None"),
+            Status::Acquired => ("Acquired", "None"),
+            Status::Observed(_) => ("Observed", "None"),
+            Status::ReceiverFault => ("ReceiverFault", "None"),
+            Status::SettlingFault => ("SettlingFault", "None"),
+            Status::Fault(error) => ("Fault", shutdown_fault_label(error.as_ref())),
+            Status::Stopped => ("Stopped", "None"),
+        };
+        ShutdownDiagnostic {
+            timer: if *self.inner.lifecycle.done.borrow() {
+                "Done"
+            } else {
+                "Pending"
+            },
+            slot: if self.inner.lifecycle.slots.is_closed() {
+                "Closed"
+            } else if self.inner.lifecycle.slots.available_permits() > 0 {
+                "Available"
+            } else {
+                "Busy"
+            },
+            cache,
+            checkpoint,
+            state,
+            fault,
+        }
     }
     pub async fn shutdown(&self, budget: Duration) -> Result<(), Error> {
         self.stop_admission();
@@ -4065,3 +4144,45 @@ type LoadedSchedules = (
 #[path = "plugin_startup_schedule.rs"]
 mod plugin_startup_schedule;
 pub use plugin_startup_schedule::PluginRepositoryScheduleAdapter;
+
+#[cfg(test)]
+mod shutdown_diagnostic_tests {
+    use super::*;
+    #[test]
+    fn dirty_observation_does_not_change_shutdown_acceptance() {
+        assert_eq!(shutdown_dirty_labels(false, false), ("Clean", "None"));
+        assert_eq!(shutdown_dirty_labels(true, false), ("Dirty", "Present"));
+        assert_eq!(shutdown_dirty_labels(true, true), ("Dirty", "Orphaned"));
+        assert!(shutdown_result(&Status::Stopped, false).is_ok());
+        assert!(matches!(
+            shutdown_result(&Status::Stopped, true),
+            Err(Error::Drain)
+        ));
+        assert!(matches!(
+            shutdown_result(&Status::Fault(Arc::new(Error::Drain)), false),
+            Err(Error::Drain)
+        ));
+    }
+    #[test]
+    fn faults_are_classified_without_formatting_private_payloads() {
+        assert_eq!(shutdown_fault_label(&Error::Drain), "Drain");
+        assert_eq!(
+            shutdown_fault_label(&Error::Configuration("private fixture payload")),
+            "Configuration"
+        );
+        assert_eq!(
+            shutdown_fault_label(&Error::Database(Box::new(sqlx::Error::Protocol(
+                "private fixture payload".into()
+            )))),
+            "Database"
+        );
+        assert_eq!(
+            shutdown_fault_label(&Error::Settlement {
+                primary: Some(Box::new(Error::Drain)),
+                ready: None,
+                close: None,
+            }),
+            "SettlementDrain"
+        );
+    }
+}

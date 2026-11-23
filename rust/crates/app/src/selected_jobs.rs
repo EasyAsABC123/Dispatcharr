@@ -1039,7 +1039,20 @@ impl SelectedJobs {
             .await
             .is_ok();
         if !scheduler_settled {
-            selected_shutdown_diagnostic("scheduler", None, "unsettled");
+            if selected_shutdown_diagnostics_enabled() {
+                selected_shutdown_diagnostic("scheduler", None, "unsettled");
+                let observed = self.inner.scheduler.shutdown_diagnostic();
+                for (stage, outcome) in [
+                    ("scheduler_timer", observed.timer),
+                    ("scheduler_slot", observed.slot),
+                    ("scheduler_cache", observed.cache),
+                    ("scheduler_checkpoint", observed.checkpoint),
+                    ("scheduler_state", observed.state),
+                    ("scheduler_fault", observed.fault),
+                ] {
+                    selected_shutdown_diagnostic(stage, None, outcome);
+                }
+            }
             if self.inner.beat != Beat::Core {
                 return false;
             }
@@ -1125,17 +1138,18 @@ impl SelectedJobs {
 // Opt-in, fixed-vocabulary shutdown diagnostics. Never format runtime errors,
 // task IDs, arbitrary task names, provider URLs, request bodies or credentials.
 // At most64 records for the whole process, including repeated shutdown callers.
+fn selected_shutdown_diagnostics_enabled() -> bool {
+    static ENABLED: std::sync::OnceLock<bool> = std::sync::OnceLock::new();
+    *ENABLED.get_or_init(|| env::var("RUST_SELECTED_SHUTDOWN_DIAGNOSTICS").is_ok_and(|v| v == "1"))
+}
 fn selected_shutdown_diagnostic(
     stage: &'static str,
     family: Option<Family>,
     outcome: &'static str,
 ) {
-    use std::sync::{atomic::AtomicUsize, OnceLock};
-    static ENABLED: OnceLock<bool> = OnceLock::new();
+    use std::sync::atomic::AtomicUsize;
     static RECORDS: AtomicUsize = AtomicUsize::new(0);
-    if !*ENABLED
-        .get_or_init(|| env::var("RUST_SELECTED_SHUTDOWN_DIAGNOSTICS").is_ok_and(|v| v == "1"))
-    {
+    if !selected_shutdown_diagnostics_enabled() {
         return;
     }
     if RECORDS
