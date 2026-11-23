@@ -1,0 +1,11 @@
+# M6 ordinary scheduler install, recurring ticks and shutdown
+
+The exact b8 Rust AMD64 package reinstalled the disabled `fetch-channel-statuses` schedule during ordinary AIO startup. The disposable fixture began with six known schedule rows, removed that single disabled row, and observed all six after Main became ready. The restored row was still disabled with its two-second interval and zero runs. The other five saved rows matched their pre-start projections. Both receiver lanes were accepting, and the active Core scheduler reported ready.
+
+The owned recurring row published two ordinary hourly roots. The first returned `1` and created one future recording, its UTC clocked schedule, and a linked artwork task that returned `ok`. The second returned `0` and preserved the same booking. The audit matched all three genuine broker publications and their Redis task results, including the artwork parent and child IDs. One recording refresh event was observed and scoped queues and reservations drained. The business effects matched the retained pinned Original workflow. This campaign ran a fresh Native arm and reused that Original reference.
+
+The durable recurring count was exactly two immediately before Main stopped and after its exit. Independent receipts placed the actual stop command between those two SQL observations. Main exited zero without an OOM. Both observer processes retired, all three owned container IDs and host process generations were absent, and labeled Compose container, network and volume inventories were empty. Preflight, execution, cleanup, both reducers and the outer owner all exited zero.
+
+The Native application was `b8d3979366981f0372794f8e04b01763a233bae7`, image `sha256:25414ab4350b0eb74f0e7c8efb0343676a88961bae38880bc758181c0496d155`, with build manifest SHA-256 `654a678fbb369613d9e2cac184035969ad46c05b20440656cca818ee757a96f2`. Original Dispatcharr authors and contributors retain full application and React UI credit. Django, Celery and django-celery-beat retain their authorship and licenses.
+
+The scheduled recording remained in the future. One-off terminal row deletion, frozen Source default FIFO preservation, broader scheduler parity, formal M6 and performance qualification remain open. [Sanitized physical evidence](../scripts/rust-milestone-batches/m6/verified-b8d39793-ordinary-scheduler-cohort.json)
