@@ -1,0 +1,82 @@
+{
+  "credit": "Original Dispatcharr, React, nginx, Django and dependency authors retain full credit.",
+  "custody": {
+    "cleanup_sha256": "1ea39352aca6265bf4da48695e735940b1a11b33060f4c68594dfb4320abd16e",
+    "physical_image_identity_sha256": "929cdbf3fed810261bb827243caafbd89db4777ddfa57d22eadb706086fcfdff",
+    "proof_sha256": "88dfbc30ca88e1ead5aa81cea9f81936dd3d978bccacebd4c437ca83ee2f665d",
+    "raw_guest_projection_sha256": "b5d88c616be16c36aaec0dfdf8a3976959e664256cd81a2064080b7a045a2630",
+    "run_seal_sha256": "02e5a841cdb731c429bfdb33915f308ab96847e40e6ea8ce38b10bec13043b1a",
+    "runtime_receipt_sha256": "8c93c64d0e8792b57bc9057bf3f5211efda5545beddd125ec979381a81329547"
+  },
+  "exact_owned_cleanup": true,
+  "fixture_role": "Administrator",
+  "full_M0": false,
+  "native_comparison": false,
+  "original_Stock_AIO_manifest": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owner_exits": {
+    "campaign": 0,
+    "preflight": 0,
+    "probe": 0,
+    "reduce": 0
+  },
+  "performance_measured": false,
+  "physical_exits": {
+    "cleanup": 0,
+    "create": 0,
+    "probe": 0,
+    "readiness": 0,
+    "startup": 0
+  },
+  "responses": {
+    "direct_uwsgi": {
+      "GET": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 644,
+        "body_sha256": "f63f1c6c695f42c7cb6cf25fda462754e0b41b6f987270ab0ca4bcd5bb8b8ac6",
+        "content_length": "644",
+        "content_type": "application/json",
+        "nginx": false,
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "HEAD": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 644,
+        "body_sha256": "f63f1c6c695f42c7cb6cf25fda462754e0b41b6f987270ab0ca4bcd5bb8b8ac6",
+        "content_length": "644",
+        "content_type": "application/json",
+        "nginx": false,
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "HEAD_entity_equals_same_listener_GET": true
+    },
+    "nginx": {
+      "GET": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 644,
+        "body_sha256": "f63f1c6c695f42c7cb6cf25fda462754e0b41b6f987270ab0ca4bcd5bb8b8ac6",
+        "content_length": "644",
+        "content_type": "application/json",
+        "nginx": true,
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "HEAD": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "644",
+        "content_type": "application/json",
+        "nginx": true,
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "HEAD_entity_equals_same_listener_GET": false
+    }
+  },
+  "route": "/api/core/useragents/",
+  "schema": 1,
+  "scope": "Ordinary authenticated User-Agent collection read on two listeners in one exact Stock AIO fixture"
+}

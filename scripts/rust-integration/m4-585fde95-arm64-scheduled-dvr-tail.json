@@ -1,0 +1,97 @@
+{
+  "desktop_engine_scope_retirement_independently_verified": true,
+  "fixture_only_retry_prepared": false,
+  "independent_audit_sha256": "96cb1d9be329627a28548072f2bd28599967ba18162ccc99132e132e65e80861",
+  "local_read_only_copy_diagnostic": {
+    "all_video_packets": 256,
+    "decoder": "FFmpeg n9.0.2, single thread, strict video-only check",
+    "final_video_packet_block_position": 1482709,
+    "final_video_packet_payload_bytes": 3114,
+    "final_video_packet_pts_dts_seconds": 10.221,
+    "first_stage_of_media_corruption_confirmed": false,
+    "last_clean_decoded_frame_pts_seconds": 10.181,
+    "literal_exit": 183,
+    "ordered_packet_inventory_sha256": "c6d886ac5d7da3c19643c80dbf17238c7d0df72450252982bfc8854e90a32f3f"
+  },
+  "matching_received_segment_sha256": [
+    "924ec0b70eb373ac2eeabe5b82b3626aa80861039cb2d7c042d3ec835c292666",
+    "74eeeeb26981eead4f94736993269f213fde5330ce1bd121f9d735bdbfdaff4c"
+  ],
+  "native": {
+    "active_provider_slots": 1,
+    "active_recorder_processes": 1,
+    "active_upstreams": 1,
+    "application_actual_exit": 0,
+    "application_exit_receipt_sha256": "1b920cb08762a62b79cc9cac0c25f18350a0ee13d220ab1815d30923ef2684f3",
+    "application_oom_killed": false,
+    "booking_http_status": 201,
+    "causal_before_application_stop_retirement_gate_passed": false,
+    "cleanup_sha256": "1c105f63c9acd2c01f68014981e2f0cce78ca77a94524c905d1fc95572c4c0d4",
+    "controller_sha256": "2ba840a18ed2967e6295bcb6d7b42f9baa6fdb59109e2d42b77f1776f531aa2e",
+    "failed_predicate": "finalized partial media valid",
+    "failure_fixture_source_line": 76,
+    "failure_receipt_sha256": "36b3fcdc271ac5c7b1eb93d4b9903bb77e57d5622805ce4531f89db67f81f0b6",
+    "ffprobe_frame_count_exit": 0,
+    "ffprobe_reported_audio_frames": 474,
+    "ffprobe_reported_video_frames_with_decode_errors": 256,
+    "final_mkv_bytes": 1485956,
+    "final_mkv_sha256": "62e38e599fca098b546904f924a17e717674375b68555fa9595a50d9a89f846f",
+    "literal_lane_actual_exit": 1,
+    "owned_vm_generations_retired": 3,
+    "post_application_stop_observed": {
+      "ffmpeg_recorders": 0,
+      "owned_HLS_directory_absent": true,
+      "provider_slots": 0,
+      "upstreams": 0
+    },
+    "received_AV_strict_decode_exit": 0,
+    "received_audio_frames": 376,
+    "received_video_frames": 200,
+    "related_containers_absent": 4,
+    "scenario_sha256": "1fd3ee6d83b3245312fb8738caa12596e391d4e7c74b6618d81cf7352943866e",
+    "scheduled_clocked_one_off": true,
+    "signed_playlist_http_status": 200,
+    "signed_segment_http_statuses": [
+      200,
+      200
+    ],
+    "stop_body": {
+      "status": "stopped",
+      "success": true
+    },
+    "stop_http_status": 200,
+    "strict_decoder_command_sha256": "ff11b2932fbdbcd432e73e9c7061aeb94e1bce4abb5b8114595526a5a9530e99",
+    "strict_decoder_stderr_sha256": "b3274c8c04625a654315f1c093466b5fad4038cfbc91224ff1048f6bc6be9cd8",
+    "strict_final_decode_exit": 183,
+    "terminal_row": {
+      "remux_success": true,
+      "status": "stopped"
+    },
+    "total_recorded_HTTP_steps": 67,
+    "typed_error": "H.264 invalid level prefix and corrupt decoded frame"
+  },
+  "native_revision": "585fde95b5ed61ed2cd714f1d93c2214c6deaad9",
+  "native_scheduled_recording_parity_passed": false,
+  "original": {
+    "arm_receipt_sha256": "92bbef68d8eceee1c8b29748aab44da6caa982604a778e84653eeb6f4a9f239e",
+    "cleanup_sha256": "1a192cd75e9b9c6601eefe38885547074b635abf98dff6881b8815c679f98ab1",
+    "controller_sha256": "58ceae30368e3cf6c005fec81e9e91500a0fe0613b62653b85249fc87e982c60",
+    "final_audio_frames": 810,
+    "final_mkv_bytes": 2492901,
+    "final_mkv_sha256": "940b62fad1f49792820e5e01846ef17061f702b038021d526c0ea7087c0627b2",
+    "final_video_frames": 430,
+    "full_fixture_passed": true,
+    "literal_lane_actual_exit": 0,
+    "owned_vm_generations_retired": 2,
+    "related_containers_absent": 3,
+    "scenario_sha256": "2b0ed96736fb7cd6b084b6c641579611ab2477187d0a9c3ef44662f05a5428f8",
+    "strict_final_command_sha256": "f27f81311baa169da1885436f55f07c96a9ae5291dd287b82b42a70b17c3ab0f",
+    "strict_final_decode_exit": 0
+  },
+  "original_and_native_host_CLI_groups_physically_absent": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_credit": false,
+  "platform": "linux/arm64",
+  "scope": "ARM64 ordinary scheduled DVR Native r3 relative to fresh Original r2",
+  "shared_vm_boot_id": "2b806dd3-2a0a-45e3-80aa-011afca305f8"
+}

@@ -1,0 +1,194 @@
+{
+  "actual_exits": {
+    "campaign": 0,
+    "cleanup": 0,
+    "preflight": 0,
+    "proof": 0,
+    "run": 0,
+    "runtime_driver": 0
+  },
+  "backends": {
+    "Native": {
+      "cleanup": {
+        "exact_container_identities_absent": 4,
+        "exact_host_process_generations_absent": 3,
+        "remaining_owned": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "custody": {
+        "cleanup_sha256": "f93d6a30cf797428dbf12d3d6766a0b7690e00db45a4aea8f8c2e2206e8169ed",
+        "probe_sha256": "4a82a3aefb45da1e0a1bb6f64a47807fb5909a8dedf719e797bf49c7c1899851",
+        "receipt_sha256": "bb0a86203f55bf5f3937bff83ee16af5fbe64790501782af68bdeb0af24d6333"
+      },
+      "fixture_archive_bytes": 39003,
+      "fixture_archive_sha256": "eaf2d596174c352f7719feb2534ea8e52667d5e6fb3699801a9242fe5ec137c5",
+      "observed_effects": {
+        "archive_v2_postgresql_bytes_matched": true,
+        "initial_and_final_inventory_empty": true,
+        "registered_owner_jobs_needed": false,
+        "request_statuses": [
+          200,
+          201,
+          200,
+          200,
+          200,
+          204,
+          200
+        ],
+        "unchanged_owned_SQL_broker_control": true,
+        "upload_inventory_signed_download_delete": true
+      },
+      "steps": [
+        {
+          "bytes": 2,
+          "method": "GET",
+          "status": 200,
+          "step": "empty-inventory"
+        },
+        {
+          "bytes": 96,
+          "method": "POST",
+          "status": 201,
+          "step": "upload"
+        },
+        {
+          "bytes": 112,
+          "method": "GET",
+          "status": 200,
+          "step": "inventory-after-upload"
+        },
+        {
+          "bytes": 44,
+          "method": "GET",
+          "status": 200,
+          "step": "issue-download-token"
+        },
+        {
+          "bytes": 39003,
+          "method": "GET",
+          "status": 200,
+          "step": "download-issued-token"
+        },
+        {
+          "bytes": 0,
+          "method": "DELETE",
+          "status": 204,
+          "step": "delete"
+        },
+        {
+          "bytes": 2,
+          "method": "GET",
+          "status": 200,
+          "step": "empty-inventory-after-delete"
+        }
+      ]
+    },
+    "Original": {
+      "cleanup": {
+        "exact_container_identities_absent": 2,
+        "exact_host_process_generations_absent": 2,
+        "remaining_owned": {
+          "containers": 0,
+          "networks": 0,
+          "volumes": 0
+        }
+      },
+      "custody": {
+        "cleanup_sha256": "745695a8d5df0fa1929e428b14fe4f5b2b8c578fd75fd51d9e4db5c6cda0220a",
+        "probe_sha256": "1e2dc1e7f5db56981a6d8ed5d7438ca542a33f803db9838881047820cbbde7ec",
+        "receipt_sha256": "b06d3799620277c042420843dd67c67563f2cc58f672a81f138b2fb95948e9f3"
+      },
+      "fixture_archive_bytes": 38980,
+      "fixture_archive_sha256": "90f2233e96176038d5711bbac6ac846a53100f578039bbadca5d8df9facaabd3",
+      "observed_effects": {
+        "archive_v2_postgresql_bytes_matched": true,
+        "initial_and_final_inventory_empty": true,
+        "registered_owner_jobs_needed": false,
+        "request_statuses": [
+          200,
+          201,
+          200,
+          200,
+          200,
+          204,
+          200
+        ],
+        "unchanged_owned_SQL_broker_control": true,
+        "upload_inventory_signed_download_delete": true
+      },
+      "steps": [
+        {
+          "bytes": 2,
+          "method": "GET",
+          "status": 200,
+          "step": "empty-inventory"
+        },
+        {
+          "bytes": 96,
+          "method": "POST",
+          "status": 201,
+          "step": "upload"
+        },
+        {
+          "bytes": 112,
+          "method": "GET",
+          "status": 200,
+          "step": "inventory-after-upload"
+        },
+        {
+          "bytes": 44,
+          "method": "GET",
+          "status": 200,
+          "step": "issue-download-token"
+        },
+        {
+          "bytes": 38980,
+          "method": "GET",
+          "status": 200,
+          "step": "download-issued-token"
+        },
+        {
+          "bytes": 0,
+          "method": "DELETE",
+          "status": 204,
+          "step": "delete"
+        },
+        {
+          "bytes": 2,
+          "method": "GET",
+          "status": 200,
+          "step": "empty-inventory-after-delete"
+        }
+      ]
+    }
+  },
+  "candidate_image": "sha256:bb3bdbc5197780f3e49978a1c55650333d633e168b5c44ea663854571d2c2670",
+  "candidate_manifest_sha256": "328762af67efd3a1d84c5d3b25e4a842800a55351e1725138cc1a8605c4c7bfe",
+  "candidate_revision": "585fde95b5ed61ed2cd714f1d93c2214c6deaad9",
+  "credit": "The original Dispatcharr and React authors and contributors retain full credit.",
+  "custody": {
+    "paired_sha256": "562b98e182017e857ef64cf896d5e5185e2f2d261fb0dec2f4371660fc19d65b",
+    "predecessor_teardown_sha256": "aea6fed99234d59dd9626f18f21db249bee25a9f9e2c84ba3849fa2d26ca0d22",
+    "proof_sha256": "4771fc9bfcbc8c793ee786b897e092652ce7ef1b6c10ed2493318a2a5d05b555",
+    "run_seal_sha256": "94e91b0590c06008591621006dc6babc22f3d1104acc0b06b1fad11477950984"
+  },
+  "formal_evidence_node": "native/backup-workflow",
+  "full_M8": false,
+  "performance_measured": false,
+  "prior_attempt_preserved": {
+    "compose_cleanup_exit": 0,
+    "exact_owned_absence_independently_verified": true,
+    "run_exit": 1,
+    "wrapper_cleanup_exit": 1
+  },
+  "responses_total": 14,
+  "restore_schedule_and_backup_job_execution_measured": false,
+  "schema": 1,
+  "scope": "Ordinary Admin Backup Manager PostgreSQL archive upload, signed export and deletion",
+  "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "whole_formal_row_accepted": false
+}

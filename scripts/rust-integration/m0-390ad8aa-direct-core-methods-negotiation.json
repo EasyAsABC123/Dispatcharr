@@ -1,0 +1,505 @@
+{
+  "actual_exits": {
+    "campaign": 1,
+    "cleanup": 0,
+    "preflight": 0,
+    "proof": 0,
+    "run": 1,
+    "runtime_driver": 1
+  },
+  "candidate_image": "sha256:deb3ab0d832adf093c67b12eb1655baf23aeaf74bd55164643d9af38147127d0",
+  "candidate_manifest_sha256": "2de6a7abd447ddc75e75c78f6fe1ced430a5ee1642dc37331483a51a3b083c1c",
+  "candidate_revision": "390ad8aa16f07de7cbc7364a86f1eb2254faa4c8",
+  "cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "credit": "The original Dispatcharr and React authors and contributors retain full credit.",
+  "custody": {
+    "cleanup_sha256": "eb5826c01b896136ec5d2d6e6d2dc86feef884b51550d0fa4481bad195915e04",
+    "proof_sha256": "0fdeb56847a7ec7ac91ec0dbcf76abc8b6fd0578014292c198faa52aebbb7645",
+    "raw_receipt_sha256": "9131bc9bfa378e6aa5db807b09c22d1a1c2777c007110cae94ad5086f5812ae3",
+    "run_seal_sha256": "a379e63d31fb0060c10ee9e5e5e2c8d0c03700508bc8645b14c7dec5225d19e2"
+  },
+  "direct_HEAD_entity_is_diagnostic": true,
+  "full_M0": false,
+  "fully_verified_operations_added": 0,
+  "identities_each_backend": [
+    {
+      "id": 1,
+      "level": 1,
+      "role": "standard"
+    },
+    {
+      "id": 2,
+      "level": 10,
+      "role": "admin"
+    }
+  ],
+  "matched_preferred_JSON_pairs": 2,
+  "pairs": [
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 851,
+        "body_sha256": "a1187b79b1834ab564fb37925ad26b1e7a97b98afde80162b87b261434c27bb2",
+        "content_length": "851",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": null,
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "851",
+        "content_type": "application/json",
+        "representation": "empty",
+        "status": 200,
+        "vary": "origin"
+      },
+      "accept": "application/json",
+      "family": "agent-list",
+      "kind": "head",
+      "method": "HEAD",
+      "path": "/api/core/useragents/",
+      "role": "standard",
+      "route_id": "route-b85d3ade7ecfee8953a1"
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1146,
+        "body_sha256": "ad0cec372d97d09bd47156e90bd9d1a6d69f880ae9786e9f33b5b80f6e60958e",
+        "content_length": "1146",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Original_metadata": {
+        "action": "POST",
+        "parsers": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renderers": [
+          "application/json",
+          "text/html"
+        ],
+        "serializer_fields": [
+          "created_at",
+          "description",
+          "id",
+          "is_active",
+          "name",
+          "updated_at",
+          "user_agent"
+        ]
+      },
+      "Rust": {
+        "allow": "GET,HEAD,POST",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "0",
+        "content_type": null,
+        "representation": "empty",
+        "status": 405,
+        "vary": "origin"
+      },
+      "accept": "application/json",
+      "family": "agent-list",
+      "kind": "options",
+      "method": "OPTIONS",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "route_id": "route-b85d3ade7ecfee8953a1"
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 16470,
+        "body_sha256": "18793fdf5181cba17546c53f8ee4e31d5c158a0a473f1a858e8575472fec5374",
+        "content_length": "16470",
+        "content_type": "text/html; charset=utf-8",
+        "representation": "html",
+        "status": 200,
+        "vary": "Accept, origin, Cookie"
+      },
+      "Original_HTML_projection": {
+        "owned_agent_visible": true,
+        "owned_profile_visible": false,
+        "title": "User Agent List \u2013 Django REST framework"
+      },
+      "Rust": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 851,
+        "body_sha256": "a1187b79b1834ab564fb37925ad26b1e7a97b98afde80162b87b261434c27bb2",
+        "content_length": "851",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "text/html",
+      "family": "agent-list",
+      "kind": "html",
+      "method": "GET",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "route_id": "route-b85d3ade7ecfee8953a1"
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 851,
+        "body_sha256": "a1187b79b1834ab564fb37925ad26b1e7a97b98afde80162b87b261434c27bb2",
+        "content_length": "851",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 851,
+        "body_sha256": "a1187b79b1834ab564fb37925ad26b1e7a97b98afde80162b87b261434c27bb2",
+        "content_length": "851",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json, text/html;q=0.8",
+      "family": "agent-list",
+      "kind": "json",
+      "method": "GET",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "route_id": "route-b85d3ade7ecfee8953a1",
+      "typed_JSON_sha256_both": "620e38928066e94b7e62305e495ec3811aab1b91ef6bd61c417f8d8d8c520592"
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 206,
+        "body_sha256": "f6a961eefdb13c8c0497d4f2ed6f9394ca345d45065d47e8eb12f5383eb3cf78",
+        "content_length": "206",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": null,
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "206",
+        "content_type": "application/json",
+        "representation": "empty",
+        "status": 200,
+        "vary": "origin"
+      },
+      "accept": "application/json",
+      "family": "agent-detail",
+      "kind": "head",
+      "method": "HEAD",
+      "path": "/api/core/useragents/4/",
+      "role": "standard",
+      "route_id": "route-ba1955652b652c310e20"
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 1149,
+        "body_sha256": "c4c059688fcb282c8b710da846253225a497287b015244fd519727daef897f42",
+        "content_length": "1149",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Original_metadata": {
+        "action": "PUT",
+        "parsers": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renderers": [
+          "application/json",
+          "text/html"
+        ],
+        "serializer_fields": [
+          "created_at",
+          "description",
+          "id",
+          "is_active",
+          "name",
+          "updated_at",
+          "user_agent"
+        ]
+      },
+      "Rust": {
+        "allow": "GET,HEAD,PATCH,PUT,DELETE",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "0",
+        "content_type": null,
+        "representation": "empty",
+        "status": 405,
+        "vary": "origin"
+      },
+      "accept": "application/json",
+      "family": "agent-detail",
+      "kind": "options",
+      "method": "OPTIONS",
+      "path": "/api/core/useragents/4/",
+      "role": "admin",
+      "route_id": "route-ba1955652b652c310e20"
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1064,
+        "body_sha256": "201ca60213ca8a7fcc23fa3ef51255bdf89b7aa8cee2f048c3770c11877d661f",
+        "content_length": "1064",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": null,
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "1064",
+        "content_type": "application/json",
+        "representation": "empty",
+        "status": 200,
+        "vary": "origin"
+      },
+      "accept": "application/json",
+      "family": "profile-list",
+      "kind": "head",
+      "method": "HEAD",
+      "path": "/api/core/streamprofiles/",
+      "role": "standard",
+      "route_id": "route-fdca87537cd595a20d06"
+    },
+    {
+      "Original": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1283,
+        "body_sha256": "4c861b46c4ae91c0aba0d294485afc5f041a030e415b28c8e80a7253a7e2a674",
+        "content_length": "1283",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Original_metadata": {
+        "action": "POST",
+        "parsers": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renderers": [
+          "application/json",
+          "text/html"
+        ],
+        "serializer_fields": [
+          "command",
+          "id",
+          "is_active",
+          "locked",
+          "name",
+          "parameters",
+          "user_agent"
+        ]
+      },
+      "Rust": {
+        "allow": "GET,HEAD,POST",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "0",
+        "content_type": null,
+        "representation": "empty",
+        "status": 405,
+        "vary": "origin"
+      },
+      "accept": "application/json",
+      "family": "profile-list",
+      "kind": "options",
+      "method": "OPTIONS",
+      "path": "/api/core/streamprofiles/",
+      "role": "admin",
+      "route_id": "route-fdca87537cd595a20d06"
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 118,
+        "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+        "content_length": "118",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": null,
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "118",
+        "content_type": "application/json",
+        "representation": "empty",
+        "status": 200,
+        "vary": "origin"
+      },
+      "accept": "application/json",
+      "family": "profile-detail",
+      "kind": "head",
+      "method": "HEAD",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "standard",
+      "route_id": "route-0d2bf3aa82ca7c57fc62"
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 1286,
+        "body_sha256": "26a5dd4e4bec25e01255321dfcced919c5fb6cfbb701f464fff27c807573bea5",
+        "content_length": "1286",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Original_metadata": {
+        "action": "PUT",
+        "parsers": [
+          "application/json",
+          "application/x-www-form-urlencoded",
+          "multipart/form-data"
+        ],
+        "renderers": [
+          "application/json",
+          "text/html"
+        ],
+        "serializer_fields": [
+          "command",
+          "id",
+          "is_active",
+          "locked",
+          "name",
+          "parameters",
+          "user_agent"
+        ]
+      },
+      "Rust": {
+        "allow": "GET,HEAD,PATCH,PUT,DELETE",
+        "body_bytes": 0,
+        "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "content_length": "0",
+        "content_type": null,
+        "representation": "empty",
+        "status": 405,
+        "vary": "origin"
+      },
+      "accept": "application/json",
+      "family": "profile-detail",
+      "kind": "options",
+      "method": "OPTIONS",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "route_id": "route-0d2bf3aa82ca7c57fc62"
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 17715,
+        "body_sha256": "eb9bfc09be11ed1584e89392dbf159e3ff05e714f08bf293c333fe0262cf219b",
+        "content_length": "17715",
+        "content_type": "text/html; charset=utf-8",
+        "representation": "html",
+        "status": 200,
+        "vary": "Accept, origin, Cookie"
+      },
+      "Original_HTML_projection": {
+        "owned_agent_visible": true,
+        "owned_profile_visible": true,
+        "title": "Stream Profile Instance \u2013 Django REST framework"
+      },
+      "Rust": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 118,
+        "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+        "content_length": "118",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "text/html",
+      "family": "profile-detail",
+      "kind": "html",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "route_id": "route-0d2bf3aa82ca7c57fc62"
+    },
+    {
+      "Original": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 118,
+        "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+        "content_length": "118",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "Rust": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 118,
+        "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+        "content_length": "118",
+        "content_type": "application/json",
+        "representation": "json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "accept": "application/json, text/html;q=0.8",
+      "family": "profile-detail",
+      "kind": "json",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "route_id": "route-0d2bf3aa82ca7c57fc62",
+      "typed_JSON_sha256_both": "6c5be4d0e9e40ff7dbc2ee40891ad431d7048dfe3487a0c20a17ec2b6c3b2b87"
+    }
+  ],
+  "performance_measured": false,
+  "responses_total": 24,
+  "schema": 1,
+  "scope": "Direct application listeners only, with exact owned teardown",
+  "selected_contract_differences": 10,
+  "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "stock_nginx_ingress_measured": false,
+  "unchanged_scoped_SQL_and_broker_sha256": "b71dd61cbf00c652fb8d2b4cee6b10deeee172df281e6f28f1637283cad0de5c"
+}
