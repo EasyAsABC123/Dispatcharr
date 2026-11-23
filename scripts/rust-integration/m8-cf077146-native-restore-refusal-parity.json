@@ -1,0 +1,96 @@
+{
+  "schema": "dispatcharr-amd64-native-backup-refusal-parity/1",
+  "actual_receipt_sha256": "aa657051f861078f6243faf74f619b79d70de50c3d5375cd5057e7a3390f4f34",
+  "manifest_sha256": "db898e45f817e405013d565d68ad8e0c12a2ee4a53e4d664a81de777b271093c",
+  "candidate": "cf077146a1f7c47e8c81721040823f19a4a7402b",
+  "image_id": "sha256:1146637e076953bf7b7e29c06c203dd4c9fa00f650b903c60aef1bc303f3b705",
+  "scope": "M8 ordinary AMD64 Native backup refusal wording successor and complete scoped backup workflow",
+  "passed": true,
+  "exact_cleanup": true,
+  "formal_M8_native_backup_workflow_accepted": false,
+  "actual_exits": {
+    "preflight": 0,
+    "run": 0,
+    "evaluate": 0,
+    "outer": 0
+  },
+  "result": {
+    "worker_publications": 5,
+    "independent_template_DB_unchanged": true,
+    "routes": [
+      {
+        "operation": "create-inventory-signed-download",
+        "terminal": "completed",
+        "admission_HTTP": 202,
+        "signed_token_HTTP": 200,
+        "signed_download_HTTP": 200
+      },
+      {
+        "operation": "restore-refusal",
+        "archive": "owned-no-metadata.zip",
+        "Native_result": {
+          "status": "failed",
+          "error": "Invalid backup: missing metadata.json"
+        },
+        "admission_HTTP": 202,
+        "literal_task_token_HTTP": 401,
+        "signed_token_HTTP": 200,
+        "signed_state": "failed",
+        "Original_error": "Invalid backup: missing metadata.json",
+        "error_body_equals_Original": true
+      },
+      {
+        "operation": "restore-refusal",
+        "archive": "owned-wrong-type.zip",
+        "Native_result": {
+          "status": "failed",
+          "error": "Database type mismatch: backup is sqlite, but current database is postgresql"
+        },
+        "admission_HTTP": 202,
+        "literal_task_token_HTTP": 401,
+        "signed_token_HTTP": 200,
+        "signed_state": "failed",
+        "Original_error": "Database type mismatch: backup is sqlite, but current database is postgresql",
+        "error_body_equals_Original": true
+      },
+      {
+        "operation": "same-schema-restore",
+        "terminal": "completed",
+        "scoped_SQL_restored": true,
+        "admission_HTTP": 202,
+        "literal_task_token_HTTP": 401,
+        "signed_token_HTTP": 200
+      }
+    ],
+    "owned_file_deletions": [
+      {
+        "archive": "owned-no-metadata.zip",
+        "HTTP": 204,
+        "response_empty": true,
+        "response_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "archive_count_before": 2,
+        "archive_count_after": 1,
+        "exact_own_archive_removed": true,
+        "other_archive_fingerprints_unchanged": true
+      },
+      {
+        "archive": "owned-wrong-type.zip",
+        "HTTP": 204,
+        "response_empty": true,
+        "response_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "archive_count_before": 2,
+        "archive_count_after": 1,
+        "exact_own_archive_removed": true,
+        "other_archive_fingerprints_unchanged": true
+      }
+    ],
+    "retention": {
+      "retention": 2,
+      "initial_run_count": 0,
+      "durable_run_count": 1,
+      "archive_count_remaining": 2,
+      "archive_count_removed": 3,
+      "publication_after_due_s": 3.836920976638794
+    }
+  }
+}

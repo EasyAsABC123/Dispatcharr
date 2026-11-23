@@ -1,0 +1,116 @@
+{
+  "milestone": "M8",
+  "scope": "one Original continuous Source16 backup schedule and restore owner",
+  "Original_git_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "Original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "fixture_freeze_sha256": "fb82fc227f40dc4f9acda659d7558071c911c1db5ba38f57c71030b7539e8c72",
+  "actual_exits": {
+    "outer": 0,
+    "controller": 0,
+    "fixture": 0,
+    "evaluator": 0
+  },
+  "actual_calls": 16,
+  "actual_HTTP_by_case": [
+    200,
+    200,
+    200,
+    400,
+    400,
+    200,
+    200,
+    404,
+    202,
+    401,
+    202,
+    401,
+    202,
+    401,
+    200,
+    202
+  ],
+  "actual_distinct_worker_jobs": 5,
+  "same_prefork_generation_for_all_selected_jobs": true,
+  "same_nonce_database": true,
+  "literal_task_token_queries": 3,
+  "corrected_query_extra_request_count": 0,
+  "schedule": {
+    "worker_receipt_sha256": "a5833669e217c76c63b3d2f1071355ae3b08c5e75448d5c8f3db1d92ea684c09",
+    "total_runs": [
+      0,
+      1
+    ],
+    "retention": 2,
+    "removed": [
+      "dispatcharr-backup-2020.01.01.00.00.00.zip",
+      "dispatcharr-backup-2020.01.02.00.00.00.zip",
+      "dispatcharr-backup-2020.01.03.00.00.00.zip"
+    ],
+    "retained": [
+      "dispatcharr-backup-2020.01.04.00.00.00.zip",
+      "dispatcharr-backup-2026.11.23.12.09.00.zip"
+    ],
+    "published_epoch": 1795435740.002375,
+    "due_epoch": 1795435740.0,
+    "beat_exit": 0,
+    "beat_retired_before_case4": true,
+    "queues_after_beat_retirement": [
+      0,
+      0,
+      0,
+      0
+    ]
+  },
+  "typed_restore_results": [
+    {
+      "index": 9,
+      "result": {
+        "status": "failed",
+        "error": "Invalid backup: missing metadata.json"
+      },
+      "worker_receipt_sha256": "80ab80b4a739085c29616930ba1edb687a6944512e8e1fa3bf96a640615a6aef",
+      "sql_unchanged": true
+    },
+    {
+      "index": 11,
+      "result": {
+        "status": "failed",
+        "error": "Database type mismatch: backup is sqlite, but current database is postgresql"
+      },
+      "worker_receipt_sha256": "b41ba9f0cc39bf34ec7fbefec272f350cbe096fb877f963834b81e60f21bf347",
+      "sql_unchanged": true
+    },
+    {
+      "index": 13,
+      "result": {
+        "status": "completed",
+        "filename": "owned-retained-v2.zip"
+      },
+      "worker_receipt_sha256": "c65dd18d08e14c7b00309a9c25baae3fd14cce046bdd08fd22a0494313b59056",
+      "sentinel_removed": true
+    },
+    {
+      "index": 16,
+      "result": {
+        "status": "completed",
+        "filename": "owned-format-version-mutated.zip"
+      },
+      "worker_receipt_sha256": "dd91d600ddbee7bba945b3bbfb94e9c69e2d0c0510565522899d16d1f4b3a9de",
+      "sentinel_removed": true
+    }
+  ],
+  "archived_actor_identity_projection_sha256": "bf7013793c8fb927fb1b555c1e3c5605c1e52b8c83d05b033cf1aa4fc1d41093",
+  "independent_controls_unchanged": true,
+  "worker_exit": 0,
+  "exact_cleanup": {
+    "containers_and_old_host_process_generations": 2,
+    "networks_by_name_and_ID": 1,
+    "empty_project_inventories": true
+  },
+  "physical_receipt_sha256": "141756ce0e2cc047e2bfbf51d0aa56f18470de40730a86288f52d558c3197569",
+  "raw_broker_journal_sha256": "ca41c85150768b57d9716a65e5e59f2b282be83c4b17abcfae6400dcf3cec3c2",
+  "raw_same_worker_journal_sha256": "83e898e76a7fcb02181e36bd111a94c969981d4e89a3f3f436753dd0012ed2c1",
+  "root_m478_formal_acceptance": false,
+  "full_M8_passed": false,
+  "credit": "Dispatcharr's original authors and contributors retain full application and React UI credit."
+}

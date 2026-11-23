@@ -1,0 +1,60 @@
+{
+  "schema": "dispatcharr-owned96-allocator-actual-aggregate/1",
+  "actual_campaign_sha256": "f07180d9f460171b738098eb95026c228e2f67ac9cc47f70ee1894975a7191c5",
+  "sealed_trial_sha256": "f5e6e97a7ca21e65f55bc5c3a10d8b495c26070c1147be820c7215e9122696da",
+  "diagnostic_actual_exit": 1,
+  "audit_actual_exit": 0,
+  "classification": "pre-allocator reference schema assertion; neither allocator runtime nor memory failure observed",
+  "exact_saved_cleanup_verified": true,
+  "formal_cap_bytes": 100663296,
+  "formal_headroom_boundary_bytes": 90596966,
+  "formal_budgets_changed": false,
+  "allocator": {
+    "benefit_proven": false,
+    "copied_tool_bytes_match": true,
+    "env_bearing_pulse_commands": 0,
+    "guest_malloc_support_proven": false,
+    "headroom_passed": null,
+    "process_launched": false,
+    "runtime_mode": null
+  },
+  "callbacks": {
+    "completed_counts": null,
+    "last_completed_phase": null,
+    "observed_trace_records": null,
+    "open_callback": null,
+    "reason": "natural setup not reached"
+  },
+  "memory": {
+    "all_six_role_terminal_oom_flags": false,
+    "cgroup_current_bytes": null,
+    "configured_limits": {
+      "cpus": 0.5,
+      "mem_limit": 100663296,
+      "memswap_limit": 100663296,
+      "pids_limit": 32
+    },
+    "effective_guest_limits": null,
+    "events": null,
+    "lifetime_peak_bytes": null,
+    "no_missing_counter_inferred_zero": true,
+    "reason": "setup pulse and snapshot collector never started; configured caps are not observed counters",
+    "swap": null
+  },
+  "performance_accepted": false,
+  "qualified": false,
+  "aggregate_receipt_sha256": "32252107063306edac77c73f5858fc531f66dd3d98ce3b9670ecd30ece569466",
+  "reference": {
+    "literal_zero_commands": 13,
+    "strict_reference_accepted": false,
+    "observed": {
+      "audio": 0,
+      "video": 1
+    },
+    "required": {
+      "audio": 1,
+      "video": 0
+    }
+  },
+  "exact_owned_absence_checks": 16
+}

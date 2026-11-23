@@ -1,0 +1,889 @@
+{
+  "Native_observation_receipt_sha256": "7490a0f532f43d0da5ffc8d85b1dadb90707677c98c328e4b0b9ff2611da22f5",
+  "Source_observation_receipt_sha256": "999983597db3a88a9ee4854048cef0943dd07f2b220c1b4e7da4454bc3744871",
+  "Source_stock_manifest": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3",
+  "candidate": "d2c5e6113efe947551c17bf877e8c6b2c964190c",
+  "exact_cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "formal_M0_accepted": false,
+  "literal_Physical_observation_success": true,
+  "manifest_sha256": "01103d3bb13f2e3fddd934a9ad287e04e87751e5c4112825f22c5d931835e650",
+  "safe_cases": [
+    {
+      "Native": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 16505,
+        "body_kind": "html",
+        "content_length": "16505",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      },
+      "accept": "text/html",
+      "case": "anchor",
+      "changed_selected_headers": [],
+      "family": "agent-list",
+      "method": "GET",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "same_normalized_layout": true,
+      "same_status_and_representation": true,
+      "stock_nginx": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 16505,
+        "body_kind": "html",
+        "content_length": "16505",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 877,
+        "body_kind": "json",
+        "content_length": "877",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "navigation",
+      "changed_selected_headers": [
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "agent-list",
+      "method": "GET",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 16505,
+        "body_kind": "html",
+        "content_length": "16505",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 877,
+        "body_kind": "json",
+        "content_length": "877",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html; q=1.0, */*",
+      "case": "ajax",
+      "changed_selected_headers": [
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "agent-list",
+      "method": "GET",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 16505,
+        "body_kind": "html",
+        "content_length": "16505",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 877,
+        "body_kind": "json",
+        "content_length": "877",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "force-browsable",
+      "changed_selected_headers": [
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "agent-list",
+      "method": "GET",
+      "path": "/api/core/useragents/?format=api",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 16593,
+        "body_kind": "html",
+        "content_length": "16593",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 877,
+        "body_kind": "json",
+        "content_length": "877",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "application/json",
+      "case": "browsable-explicit-json",
+      "changed_selected_headers": [
+        "content_length"
+      ],
+      "family": "agent-list",
+      "method": "GET",
+      "path": "/api/core/useragents/?format=api",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 57,
+        "body_kind": "json",
+        "content_length": "57",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 406,
+        "vary": [
+          "Accept, origin"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 877,
+        "body_kind": "json",
+        "content_length": "877",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "force-json",
+      "changed_selected_headers": [],
+      "family": "agent-list",
+      "method": "GET",
+      "path": "/api/core/useragents/?format=json",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": true,
+      "stock_nginx": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 877,
+        "body_kind": "json",
+        "content_length": "877",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 0,
+        "body_kind": "empty-head",
+        "content_length": "877",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "head-navigation",
+      "changed_selected_headers": [
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "agent-list",
+      "method": "HEAD",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 0,
+        "body_kind": "empty-head",
+        "content_length": "16506",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET,HEAD,POST"
+        ],
+        "body_bytes": 0,
+        "body_kind": "empty",
+        "content_length": "0",
+        "content_type": "",
+        "csrf_cookie_attributes": {},
+        "status": 405,
+        "vary": [
+          "origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "options-navigation",
+      "changed_selected_headers": [
+        "allow",
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "agent-list",
+      "method": "OPTIONS",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 17636,
+        "body_kind": "html",
+        "content_length": "17636",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 877,
+        "body_kind": "json",
+        "content_length": "877",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "standard-navigation",
+      "changed_selected_headers": [
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "agent-list",
+      "method": "GET",
+      "path": "/api/core/useragents/",
+      "role": "standard",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, POST, HEAD, OPTIONS"
+        ],
+        "body_bytes": 11780,
+        "body_kind": "html",
+        "content_length": "11780",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 17764,
+        "body_kind": "html",
+        "content_length": "17764",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      },
+      "accept": "text/html",
+      "case": "anchor",
+      "changed_selected_headers": [],
+      "family": "profile-detail",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "same_normalized_layout": true,
+      "same_status_and_representation": true,
+      "stock_nginx": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 17764,
+        "body_kind": "html",
+        "content_length": "17764",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 127,
+        "body_kind": "json",
+        "content_length": "127",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "navigation",
+      "changed_selected_headers": [
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "profile-detail",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 17764,
+        "body_kind": "html",
+        "content_length": "17764",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 127,
+        "body_kind": "json",
+        "content_length": "127",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html; q=1.0, */*",
+      "case": "ajax",
+      "changed_selected_headers": [
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "profile-detail",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 17764,
+        "body_kind": "html",
+        "content_length": "17764",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 127,
+        "body_kind": "json",
+        "content_length": "127",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "force-browsable",
+      "changed_selected_headers": [
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "profile-detail",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/?format=api",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 17874,
+        "body_kind": "html",
+        "content_length": "17874",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 127,
+        "body_kind": "json",
+        "content_length": "127",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "application/json",
+      "case": "browsable-explicit-json",
+      "changed_selected_headers": [
+        "content_length"
+      ],
+      "family": "profile-detail",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/?format=api",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 57,
+        "body_kind": "json",
+        "content_length": "57",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 406,
+        "vary": [
+          "Accept, origin"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 127,
+        "body_kind": "json",
+        "content_length": "127",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "force-json",
+      "changed_selected_headers": [],
+      "family": "profile-detail",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/?format=json",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": true,
+      "stock_nginx": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 127,
+        "body_kind": "json",
+        "content_length": "127",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 0,
+        "body_kind": "empty-head",
+        "content_length": "127",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "head-navigation",
+      "changed_selected_headers": [
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "profile-detail",
+      "method": "HEAD",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 0,
+        "body_kind": "empty-head",
+        "content_length": "17765",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET,HEAD,PATCH,PUT,DELETE"
+        ],
+        "body_bytes": 0,
+        "body_kind": "empty",
+        "content_length": "0",
+        "content_type": "",
+        "csrf_cookie_attributes": {},
+        "status": 405,
+        "vary": [
+          "origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "options-navigation",
+      "changed_selected_headers": [
+        "allow",
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "profile-detail",
+      "method": "OPTIONS",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 20442,
+        "body_kind": "html",
+        "content_length": "20442",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    },
+    {
+      "Native": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 127,
+        "body_kind": "json",
+        "content_length": "127",
+        "content_type": "application/json",
+        "csrf_cookie_attributes": {},
+        "status": 200,
+        "vary": [
+          "Accept, origin"
+        ]
+      },
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "case": "standard-navigation",
+      "changed_selected_headers": [
+        "vary",
+        "content_length",
+        "csrf_cookie_attributes"
+      ],
+      "family": "profile-detail",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "standard",
+      "same_normalized_layout": null,
+      "same_status_and_representation": false,
+      "stock_nginx": {
+        "allow": [
+          "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+        ],
+        "body_bytes": 10600,
+        "body_kind": "html",
+        "content_length": "10600",
+        "content_type": "text/html; charset=utf-8",
+        "csrf_cookie_attributes": {
+          "expires_present": true,
+          "max-age": "31449600",
+          "path": "/",
+          "samesite": "Lax"
+        },
+        "status": 200,
+        "vary": [
+          "Accept, origin, Cookie"
+        ]
+      }
+    }
+  ],
+  "separate_Source_direct_HEAD_diagnostic": [
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "body_bytes": 16506,
+      "body_sha256": "5d56d5cd417aef62ba15a0b4d775b03ee1ab2a44c8bcee3ce8af45e54248789f",
+      "content_length": "16506",
+      "content_type": "text/html; charset=utf-8",
+      "family": "agent-list",
+      "listener": "direct_uwsgi",
+      "method": "HEAD",
+      "path": "/api/core/useragents/",
+      "set_cookie": true,
+      "status": 200
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "body_bytes": 17765,
+      "body_sha256": "f8db11e9739cdf128aba230592217a0b07ab3f786124f760aa5b7dbdb49d6475",
+      "content_length": "17765",
+      "content_type": "text/html; charset=utf-8",
+      "family": "profile-detail",
+      "listener": "direct_uwsgi",
+      "method": "HEAD",
+      "path": "/api/core/streamprofiles/6/",
+      "set_cookie": true,
+      "status": 200
+    }
+  ]
+}
