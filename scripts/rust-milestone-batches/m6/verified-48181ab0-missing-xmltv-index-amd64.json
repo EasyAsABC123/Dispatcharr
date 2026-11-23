@@ -1,0 +1,103 @@
+{
+  "all_five_actual_phases": {
+    "campaign": 0,
+    "cleanup": 0,
+    "preflight": 0,
+    "proof": 0,
+    "run": 0
+  },
+  "architecture": "linux/amd64",
+  "arms": {
+    "Native": {
+      "actual_baseline_and_post_retirement_sql_exact": true,
+      "actual_exit": 0,
+      "actual_index_children": 2,
+      "both_cases": {
+        "existing-index-sql-null": {
+          "actual_parent_and_source_match": true,
+          "file_absent": true,
+          "immediate_sql_snapshot_matches_baseline": true,
+          "record_receipt_sha256": "fd3d6c648546e69f93e4e30b39b193f788b19463a9167b92db36228510af25a0",
+          "terminal_result_null": true,
+          "typed_index_terminal": "SUCCESS"
+        },
+        "index-row-absent": {
+          "actual_parent_and_source_match": true,
+          "file_absent": true,
+          "immediate_sql_snapshot_matches_baseline": true,
+          "record_receipt_sha256": "61c16323e6c2b073aaf9d25943b8c611aa9a335133dd0048aeee4aacf87c9d95",
+          "terminal_result_null": true,
+          "typed_index_terminal": "SUCCESS"
+        }
+      },
+      "existing_sql_null_row_timestamp_unchanged": true,
+      "matching_db2_null_success": true,
+      "normal_response_empty": true,
+      "private_after_application_exit_sql_sha256": "e9a5a75adf4e36f8e13696c736bef5c2247f1d86c42085aa6e390f3e6344729b",
+      "private_baseline_sql_sha256": "e9a5a75adf4e36f8e13696c736bef5c2247f1d86c42085aa6e390f3e6344729b",
+      "private_broker_journal_sha256": "e022e640917c4ca798cd44756efb1d55e33d93222dda3e66e0ed3bd205a7eb8b",
+      "private_business_receipt_sha256": "f029e95b250dff48488a1a2aeb9015e5e798dc9ce8f27c4ee5626a84d43881a4",
+      "private_cleanup_sha256": "d60f47ba51e6e33d5c476fdac5da822c8cb7a8985ae698d55278bac0a7d5593c",
+      "real_scanner_root": 1,
+      "retired_containers_and_host_generations": 3,
+      "same_exact_post_application_snapshot": true,
+      "scope_locks_absent": true,
+      "signed_current_status": 200,
+      "sql_states": {
+        "existing-index-sql-null": "same-null-and-timestamp",
+        "index-row-absent": "absent"
+      }
+    },
+    "Original": {
+      "actual_baseline_and_post_retirement_sql_exact": true,
+      "actual_exit": 0,
+      "actual_index_children": 2,
+      "both_cases": {
+        "existing-index-sql-null": {
+          "actual_parent_and_source_match": true,
+          "file_absent": true,
+          "immediate_sql_snapshot_matches_baseline": true,
+          "record_receipt_sha256": "0ea0eaf264b28183e29eaec8fdbfd81c641ec80bd87e2af52d1def9d6685615a",
+          "terminal_result_null": true,
+          "typed_index_terminal": "SUCCESS"
+        },
+        "index-row-absent": {
+          "actual_parent_and_source_match": true,
+          "file_absent": true,
+          "immediate_sql_snapshot_matches_baseline": true,
+          "record_receipt_sha256": "33c9de648d426b59e0cab876fe833a87063dffa317152ca2badb3c2cd7d80d05",
+          "terminal_result_null": true,
+          "typed_index_terminal": "SUCCESS"
+        }
+      },
+      "existing_sql_null_row_timestamp_unchanged": true,
+      "matching_db2_null_success": true,
+      "normal_response_empty": true,
+      "private_after_application_exit_sql_sha256": "040c18166fe57e018e1053138592fed924db0898c8f3543552d4ff3e997577f4",
+      "private_baseline_sql_sha256": "040c18166fe57e018e1053138592fed924db0898c8f3543552d4ff3e997577f4",
+      "private_broker_journal_sha256": "1e667ef7bca41cdafbd8836d56d8b71a1e51ce518bcd13e46c8667dabf5bc463",
+      "private_business_receipt_sha256": "b314c0bf7a7161ddb9697e7363bf8cdf164fae11e4274d641f1338439e3e923a",
+      "private_cleanup_sha256": "3b3763a047fe3e17405e49fa223add5098e429a7d896a2bb443fca5d0fff431a",
+      "real_scanner_root": 1,
+      "retired_containers_and_host_generations": 2,
+      "same_exact_post_application_snapshot": true,
+      "scope_locks_absent": true,
+      "signed_current_status": 200,
+      "sql_states": {
+        "existing-index-sql-null": "same-null-and-timestamp",
+        "index-row-absent": "absent"
+      }
+    }
+  },
+  "exact_native_application_revision": "48181ab0067d85c628bab46a93af717c1b5759c0",
+  "exact_native_image_id": "sha256:c0d7a5a98311ffe8becb1a8e729a1dbee4e1fd1704b212cab5826ade45fabb3e",
+  "exact_native_manifest_sha256": "18b677fe7d7fa5ddd482e6b6892e95999e93a0a2db8cdec3f8cc82b5baf020c9",
+  "formal_programme_index_cell_accepted": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owner_cleanup_sha256": "14cbe390ed8885e4d7b5f7224d419516690a90350a09a02541fa87b288f521d8",
+  "owner_proof_sha256": "125c2d821896bb99d89d6b45c35f4e6982bc34e07af01e217c49235e4db74f12",
+  "paired_scoped_absence_passed": true,
+  "performance_verified": false,
+  "scope": "ordinary-scanner-two-missing-XMLTV-index-states",
+  "whole_m6_accepted": false
+}

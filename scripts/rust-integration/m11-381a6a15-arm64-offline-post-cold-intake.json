@@ -1,0 +1,184 @@
+{
+  "actual_exit": 0,
+  "arm_child": "sha256:4413f7c928eb38915a2470b4da05a57eb1af7f2de6e34224fa2d768f5aa686a2",
+  "arm_config": "sha256:80d26a7053c9d301dc7b03f993908e5ffb453bb04a25d4d339e16f06570fc4e4",
+  "candidate": {
+    "image": "sha256:dbbfb2245f8bd8619aa6522ba8218fa819326043eeda8f61ebb1861830d31bfd",
+    "manifest_sha256": "4ca7a077d39cfd9e4970c981cae73343858ed180f1bd19d4f0524f078721cb11",
+    "platform": "linux/arm64",
+    "revision": "381a6a157d1f860527906794bb8c63859fcc8176",
+    "signed_auth_sha256": "dbaf1e60a1cd68072cba228e72b18b9d1eb9e453942158f01ecbe82c37e3819b",
+    "source_tree_sha256": "7c66de54082dc4314b8e512523aafd2d40807b0be4de8f0f45987e1d44ff0b2d"
+  },
+  "controls": [
+    {
+      "control": "genuine predecessor release intake",
+      "guard": "stale-fallback-candidate",
+      "rejected": true
+    },
+    {
+      "control": "genuine predecessor cold return",
+      "guard": "stale-fallback-candidate",
+      "rejected": true
+    },
+    {
+      "control": "genuine predecessor signed browser",
+      "guard": "stale-fallback-candidate",
+      "rejected": true
+    },
+    {
+      "control": "older image paired with current source",
+      "guard": "mixed-candidate-image",
+      "rejected": true
+    },
+    {
+      "control": "reserialized current package",
+      "guard": "receipt-digest-mismatch",
+      "rejected": true
+    },
+    {
+      "control": "predecessor substituted for current package bytes",
+      "guard": "receipt-digest-mismatch",
+      "rejected": true
+    },
+    {
+      "control": "wrong full source archive",
+      "guard": "protected-application-custody",
+      "rejected": true
+    },
+    {
+      "control": "nonzero signed auth",
+      "guard": "unverified-literal-result",
+      "rejected": true
+    },
+    {
+      "control": "rebound to different signed receipt",
+      "guard": "signed-package-binding-mismatch",
+      "rejected": true
+    },
+    {
+      "control": "fresh cold proof pin omitted",
+      "guard": "fresh-current-cold-proof-open",
+      "rejected": true
+    },
+    {
+      "control": "no retention approval",
+      "guard": "retention-authority",
+      "rejected": true
+    },
+    {
+      "control": "self-asserted retention approval",
+      "guard": "unsigned-retention-assertion",
+      "rejected": true
+    },
+    {
+      "control": "missing operator packet",
+      "guard": "missing-evidence",
+      "rejected": true
+    },
+    {
+      "control": "formal M9 input absent",
+      "guard": "formal-m9-open",
+      "rejected": true
+    },
+    {
+      "control": "predecessor scoped cold return as full M10",
+      "guard": "formal-m10-open",
+      "rejected": true
+    },
+    {
+      "control": "self-declared release authorization",
+      "guard": "separate-release-authorization",
+      "rejected": true
+    },
+    {
+      "control": "different current deployment fixture configuration",
+      "guard": "cold-physical-evidence-mismatch",
+      "rejected": true
+    },
+    {
+      "control": "different current restore checkpoint",
+      "guard": "restored-manifest-mismatch",
+      "rejected": true
+    },
+    {
+      "control": "incomplete current physical teardown",
+      "guard": "cold-teardown-unverified",
+      "rejected": true
+    },
+    {
+      "control": "current local drill submitted as full M10",
+      "guard": "formal-m10-open",
+      "rejected": true
+    }
+  ],
+  "credit": "Original Dispatcharr and React authors and contributors retain full project credit.",
+  "current_cold_review": {
+    "cleanup_sha256": "47e88c83dc1667ef1950b7fa764ce9586fecf5483ad6e7a2dd10e42fa157dfc2",
+    "configuration_sha256": "e143653cb7c182910846d192bde4a61858fe4c8105339552dc54a2a4972ee921",
+    "copy": {
+      "byte_equal_cold_checkpoint_count": 5,
+      "common_archive_sha256": "2b1c9dd1ceeebcdc8552a5e22ded5249ccfd72b989afe04a8ede0cebee359f97",
+      "exact_cold_preboot_order_rows_sequences": true,
+      "fresh_cold_restores": 2,
+      "initial_logical_restores": 2,
+      "logical_columns": 501,
+      "logical_tables": 62,
+      "rendered_checkpoint_file_sha256": "ef738e162d21dc1d49147f0e7890bc20af8c80d5799c6e7b55fb5f1150fbac59",
+      "semantic_checkpoint_sha256": "9941b12d6c4655c9c716ddb8137d85203f997654377df1d1cad97afe4e89aff3",
+      "temporary_archives_retired": true
+    },
+    "raw_receipt_sha256": "2e9f54e5c50ba28f4e726c959e65153be5c327fc4b5db6755b5c3b58a1e03232",
+    "stage_manifest_sha256": "b3c87df94f78d98a62e02768140cc78e70cd33ee06e4ed319e400c783660edc5",
+    "teardown": {
+      "compose_down_exit": 0,
+      "exact_container_ids": 16,
+      "exact_named_volumes": 6,
+      "exact_network_id_and_name": 1,
+      "original_project_inventories_empty": true,
+      "reserved_names_observed_absent_postdown": 16,
+      "reserved_names_proven_absent_prestart": 16,
+      "temporary_compose_removed": true
+    }
+  },
+  "engine_calls": 0,
+  "evidence_sha256": {
+    "current_cold_audit": "792caee338c7b8aa1b56183834688cb1ee5dfee14374f8b2be56c41f460ee903",
+    "current_cold_packet": "0764bd5e71ce9b1a6a493588dd21f1cc237440d2546d92e86f9e9ef0b0fe1398",
+    "package": "ccff202ed0da02390fc32682310904166d87551a86f36a79d1a69f53b9fe84fc",
+    "predecessor_browser": "64634ecdd297d2920c53f3bf9274596e46dbea3d7503388c153075ca756b344d",
+    "predecessor_cold": "a3b3145008b27fff0e761649c8ec599856499de04c5cb8ac145181efacba13e2",
+    "predecessor_intake": "93e50aa9e06a2ef26cd79238159d981b6f600583d825e203e3e0c757400d377d",
+    "prepared_cold_binding": "25267ed4e4fcc80db2636addc818939eb53efc757432e48285a01fdca57683c3"
+  },
+  "intake_replay_byte_equal": true,
+  "network_calls": 0,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "predecessor_method_only": true,
+  "publication_revision": "cac40c07c752d224b068b95b2899eb4dece36082",
+  "raw_verified_intake_sha256": "8b071a23cbdca8c6072dedef1b3a1fabd4c64372b9ee78c1c2c6279acb72bd9c",
+  "release": {
+    "deployment_actions": 0,
+    "formal_m10_accepted": false,
+    "formal_m9_accepted": false,
+    "m11_fallback_component_issued": false,
+    "operator_approved": false,
+    "release_authorized": false
+  },
+  "remaining_release_gates": [
+    "formal_m9_acceptance",
+    "formal_m10_operator_handoff_and_rollout",
+    "approved_local_retention",
+    "same_configuration_compatibility",
+    "operator_signoffs_runbook_monitoring",
+    "separate_release_authorization"
+  ],
+  "schema": "dispatcharr-m11-381a-arm64-offline-post-cold-intake/1",
+  "scoped_evidence": {
+    "current_arm_cold_logical_return_verified": true,
+    "current_arm_standard_role_browser_verified": false,
+    "package_and_signed_auth_verified": true,
+    "prior_arm_browser_and_cold_receipts_accepted_for_current_candidate": false
+  },
+  "source_archive_sha256": "9303306d3f608894c4cdd1c1d7732bc834e0521b4572bed7633ee7232c894111"
+}
