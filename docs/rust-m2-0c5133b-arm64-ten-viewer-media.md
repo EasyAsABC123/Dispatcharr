@@ -16,7 +16,11 @@ verified browser image supplied a 112-file React bundle for the next
 fixture. The Native arm completed its media proof, and its provider
 reducer found zero reported VLC generations. The packaged VLC starts
 through the ARM64 loader, whose process name the fixture's direct VLC
-filter excluded. Physical validation of the revised observer remains open.
+filter excluded. A later run passed the exact Native loader observer,
+all 61 provider samples, and 20 independent decodes with exact teardown.
+The Original arm passed the React audit. Two of its samples finished
+after the 50 ms observation deadline, keeping the complete pair open.
+[Native follow-up receipt](../scripts/rust-integration/m2-0c5133b-arm64-provider-correction.json)
 
 The scoped media and upstream evidence is independent of the remaining
 asset and process checks. The paired ARM64 performance campaign remains
