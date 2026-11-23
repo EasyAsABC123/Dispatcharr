@@ -1,0 +1,153 @@
+{
+  "arms": {
+    "Native": {
+      "checks": 40,
+      "default_database_unchanged": true,
+      "empty_owned_docker_inventories": true,
+      "integration_sha256": "c198a2655572712ed2a0546302246ab6140d3540a2b53f4b4f5c84a2f35606f1",
+      "literal_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "private_cleanup_sha256": "35859d7e9f73ec8552c6da55ba5dcfb263b5c8a33bc6cb48ec11e53963465f2c",
+      "private_workflow_sha256": "321d6094a96aecbd12cc0e42b27b1c9101f687541d9e53b623c0ec6f71a97e62",
+      "scoped_queue_results_and_reservation_drained": true,
+      "signed_imports": [
+        {
+          "programme_title": "Owned first import",
+          "realtime_event_count": 11,
+          "request_root_and_two_children_joined": true,
+          "signed_import_http": 202,
+          "task_families": [
+            "refresh_epg_data",
+            "build_programme_index_task",
+            "evaluate_series_rules"
+          ],
+          "terminal_states": [
+            "SUCCESS",
+            "SUCCESS",
+            "SUCCESS"
+          ]
+        },
+        {
+          "programme_title": "Owned second import",
+          "realtime_event_count": 11,
+          "request_root_and_two_children_joined": true,
+          "signed_import_http": 202,
+          "task_families": [
+            "refresh_epg_data",
+            "build_programme_index_task",
+            "evaluate_series_rules"
+          ],
+          "terminal_states": [
+            "SUCCESS",
+            "SUCCESS",
+            "SUCCESS"
+          ]
+        }
+      ],
+      "six_distinct_actual_task_ids": true
+    },
+    "Original": {
+      "checks": 40,
+      "default_database_unchanged": true,
+      "empty_owned_docker_inventories": true,
+      "integration_sha256": "cd4a86006a085099442c899c1b40946d81e38147acad19d03510f949aa6f9fdf",
+      "literal_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "private_cleanup_sha256": "6a5d426e9f34aa7398ba33adc8280ec804da27d4a29151d249084ffdba9ae612",
+      "private_workflow_sha256": "9f81a3530744b3172e7fb1c04f769aa498087198bb07adcc8e873edf41796e66",
+      "scoped_queue_results_and_reservation_drained": true,
+      "signed_imports": [
+        {
+          "programme_title": "Owned first import",
+          "realtime_event_count": 11,
+          "request_root_and_two_children_joined": true,
+          "signed_import_http": 202,
+          "task_families": [
+            "refresh_epg_data",
+            "build_programme_index_task",
+            "evaluate_series_rules"
+          ],
+          "terminal_states": [
+            "SUCCESS",
+            "SUCCESS",
+            "SUCCESS"
+          ]
+        },
+        {
+          "programme_title": "Owned second import",
+          "realtime_event_count": 11,
+          "request_root_and_two_children_joined": true,
+          "signed_import_http": 202,
+          "task_families": [
+            "refresh_epg_data",
+            "build_programme_index_task",
+            "evaluate_series_rules"
+          ],
+          "terminal_states": [
+            "SUCCESS",
+            "SUCCESS",
+            "SUCCESS"
+          ]
+        }
+      ],
+      "six_distinct_actual_task_ids": true
+    }
+  },
+  "candidate": "0596767d65b889424d529670cc7301b02564071b",
+  "credit": "Original Dispatcharr, React, Django, Celery, Redis and dependency contributors retain full credit.",
+  "formal_m6_admission": false,
+  "formal_unbound_dependency_chain": [
+    "m6/Source-missing-domains",
+    "m6/api202-publication",
+    "m6/channel-signal-tvg-programmes",
+    "m6/configured-series-positive",
+    "m6/configured-series-repeat",
+    "m6/guide-current-output",
+    "m6/local-logo-artwork-positive-repeat",
+    "m6/m3u-groups-single",
+    "m6/oneoff-beat-publication",
+    "m6/programme-index",
+    "m6/recording61-video-audio",
+    "m6/refresh-local-positive",
+    "m6/scanner-first",
+    "m6/second-import-replaces-title"
+  ],
+  "linux_architecture": "amd64",
+  "maximum_source_reference_age_seconds": 900,
+  "native_build_manifest_sha256": "31b96706c8c5581f46a725ea41356e7bdb0f4b8696de1b65c7f7d47aebbc8ea7",
+  "native_image_id": "sha256:e34bcd9b550bb4feb6a20636e4bf4436ed7ddee3ea7f56515f67d80e08fd2cbe",
+  "one_global_slot": true,
+  "ordinary_image_inspection_sha256": "b562b872dd02fb201d2f8fea34aa70d9bced2ca9acb4eeecdb2e2288df7715bf",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owner_exits": {
+    "campaign": 0,
+    "preflight": 0,
+    "reduce": 0,
+    "run": 2
+  },
+  "performance_measured": false,
+  "prior_pass_status_transferred": false,
+  "private_coordinator_report_sha256": "b9b34448b243613d76b5d832fffcfcde31e91e010f93284d552d20a76dec7401",
+  "programme_ids_changed": true,
+  "public_coordinator": "dc3cae86dff86ae8a4e84c148d7c6e2ffe8308ba",
+  "same_package_recording61_prerequisite_open": true,
+  "scope": "M6 exact 059 ordinary AMD64 local XMLTV pair",
+  "second_import_replaced_title_on_same_channel_and_window": true,
+  "signed_current_and_programme_reads": {
+    "equal_full_payloads": true,
+    "http_statuses": [
+      200,
+      200
+    ],
+    "role": "admin",
+    "title": "Owned first import"
+  },
+  "source_reference_age_seconds": 20.189334630966187,
+  "whole_coordinator_nodes": 127
+}

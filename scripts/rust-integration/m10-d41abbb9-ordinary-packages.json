@@ -1,0 +1,107 @@
+{
+  "amd64": {
+    "admission_seal_sha256": "cd6feda7a7a2ba9ca3c201aa3ea401fd8c4692c2bf859c579598510db8b67ed0",
+    "image": "sha256:d242cc95abdb9cd24e54a69b835057df4e18c626d41edaf70737eda3a5bf3380",
+    "manifest_sha256": "62e15cdfa5c1504c2d8734e4f625dbd952f59b69c9b62c3eea2bc2f35f1220d0",
+    "ordinary_build_phases": {
+      "build": 0,
+      "owner": 0,
+      "preflight": 0,
+      "verify": 0
+    },
+    "ordinary_default_feature_args": true,
+    "platform": "linux/amd64",
+    "runtime_packages_frozen": true,
+    "same_manifest_runtime_evidence": "m0-d41abbb9-amd64-notification-methods.json",
+    "source_file_map_verified": true,
+    "status": "passed",
+    "verified_package_archive_sha256": "d27939f91cd8cc1234fb73914356303f2daaf2f0b8c6314d8d3dc58e2b28d873"
+  },
+  "application_inputs": 2187,
+  "application_revision": "d41abbb90dec665182f2060804e40a4d522b1743",
+  "arm64": {
+    "arm_child": "sha256:047df2c28779cf6dfa7a56127d477f897803098dcc20df6a1e73838be2712915",
+    "arm_config": "sha256:4c8da1bb48aea5bf86a82faae116567847a1c57fd556998dd407ce2d45e2f80f",
+    "auth_projection_sha256": "dabc2b19dec15ef61ac1b9165afc78890d379e732eb6b1e9d844c2542187e485",
+    "cleanup": {
+      "network_lookups_absent": 2,
+      "raw_ids_retained": false,
+      "scoped_inventories_empty": true,
+      "verified_full_ids_count": 5,
+      "volumes_absent": 1
+    },
+    "exact_cleanup": true,
+    "fixture_http": {
+      "authenticated_channel_groups": 200,
+      "channel_groups": 0,
+      "empty_setup": 200,
+      "first_admin_creation": 200,
+      "jwt_login": 200,
+      "jwt_pair_type_checked": true,
+      "setup_closed": 200
+    },
+    "guest_uid": 65532,
+    "image_index": "sha256:e27ee44878df3d26160846e3fa11f0db33c24ecd1c7fa9419d3faa8fe25992a0",
+    "independent_lappy_audit_sha256": "746f01d3f865ae13ef3da04d6818c2e9020069fa1d727e4523e548234a223eb2",
+    "literal_phases": {
+      "owner": 0,
+      "package_run": 0,
+      "physical_build": 0,
+      "preflight": 0,
+      "proof": 0,
+      "signed_auth": 0
+    },
+    "package_binding_sha256": "357607524ff3e7078523b4f717691563aa58bf31528d9bb5354e9430439d8f62",
+    "platform": "linux/arm64",
+    "react_html_http": 200,
+    "ready_http": 200,
+    "receipts_sha256": {
+      "auth-smoke/literal-exits.jsonl": "d51f67f3bb604ec2d308d5f8e2f6909e9d9da8649bbdb48d0f2570d27eeaaad6",
+      "auth-smoke/owner.json": "d1a2e340cc74ac462479b8d41f57add8e1fc7010c8350902ad1c7d8dc7c9f4f7",
+      "auth-smoke/receipt.json": "7a8b28ae1836c9b9067f9aa29fd07bc2b12829632f716d6902e0e0c409786597",
+      "build.json": "16bad3150f6cf1f02f337b576931eefd5d5b5fe5b182d17f720cdb0a8e91e87e",
+      "image-identity.json": "3c3a995ba354ee7e4c5860adb88093c75a1a1449d89521d4d0fd8fadc8179e50",
+      "receipt.json": "b1a29ff79341dc6a85505c5a289b3d9838312e847f3a803ca79d0eb74ac3e488"
+    },
+    "retained_auth_source_sha256": "75ebaf13a78165a678310060fd6c8bf137a794ebc7aa507cb27dfde50d0d7129",
+    "source_capsule_seal_sha256": "efffd816fdc7d439a8ef60a6d8cbba9fe1678e740ad5fc3c013b4644d0967988",
+    "source_plan_sha256": "287f7a34976eb4f08e23fd81cc0a99e814e05858f0ed11978ff9af03c8a7dbcf",
+    "stage_seal_sha256": "9b8f0ea0bbcb7cc65da0ddfea1cd31597731b5b67f81d27830f75572bc9e0f92",
+    "status": "passed",
+    "transferred_ARM64_recipe_seal_sha256": "cec2d0add080ae64e083bb49f9930082256a77cee6a97462571f7cc81ee2ae52",
+    "verified_prior_059_ARM64_audit_sha256": "b9e947976ebe3cd93b0ee6c13bf9a576b8c14e6c23309e483e5463a24ee35087"
+  },
+  "credit": "Original Dispatcharr and dependency authors retain full credit and licenses.",
+  "cumulative_changed_Rust_files": 3,
+  "direct_parent": "fa5404a539fbbd528e7aa33d2196d49b1bdee8eb",
+  "exact_application_archive_sha256": "b3929735be1feb983afc04ecd61ba2124cf0f5b299937fc56ffde73e8f70e600",
+  "full_milestone_accepted": false,
+  "host": {
+    "focused_tests": [
+      "notifications::special_cache_representation_tests::notification_detail_preserves_original_json_field_order",
+      "core_reads::direct_profile_wire_tests::successful_profile_json_uses_source_field_order_for_objects_and_arrays",
+      "logos::tests::logo_read_orders_cache_and_usage_fields_in_detail_and_paginated_entity"
+    ],
+    "literal_exits": {
+      "format": 0,
+      "owner": 0,
+      "strict_clippy": 0,
+      "targeted": 0,
+      "workspace_tests": 0
+    },
+    "test_only_timeshift_support_file_count": 5,
+    "tests": {
+      "failed": 0,
+      "ignored": 821,
+      "passed": 1750,
+      "suites": 181
+    }
+  },
+  "performance_measured": false,
+  "registry_publish_or_default_switch": false,
+  "retained_source_modes": 2187,
+  "rust_inputs": 1690,
+  "source_tree_sha256": "6362c9ead4c4532bc54132965c98ce969f73465d4bdb8adce802a66d9399aeb1",
+  "unchanged_protected_inputs": 497,
+  "verified_predecessor_application_revision": "0596767d65b889424d529670cc7301b02564071b"
+}

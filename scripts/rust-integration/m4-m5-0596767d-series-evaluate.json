@@ -1,0 +1,223 @@
+{
+  "application": {
+    "application_archive": "93b298777bb866fc8f0ad9797b47dce8a9704eea12590412c4f174b6b257f537",
+    "archive": "4aa5ce438addd2b09bcaf3638e8484dd08c172e86acd86ca09972fb2b0f27c6e",
+    "image": "sha256:e34bcd9b550bb4feb6a20636e4bf4436ed7ddee3ea7f56515f67d80e08fd2cbe",
+    "inputs": 2187,
+    "manifest": "31b96706c8c5581f46a725ea41356e7bdb0f4b8696de1b65c7f7d47aebbc8ea7",
+    "protected_inputs": 497,
+    "revision": "0596767d65b889424d529670cc7301b02564071b",
+    "tag": "dispatcharr-rust-candidate:m0-m4-m5-m9-combined-0596767d65b8",
+    "tree": "0e83fbb98ab3c549a1763decdb9ae7c0de97fe8faa376e944a184e2656b35743"
+  },
+  "credit": "Original Dispatcharr, Django, DRF, Celery, and dependency contributors retain full credit.",
+  "formal_M4_accepted": false,
+  "formal_M5_accepted": false,
+  "initial_readiness_attempt": {
+    "arms": {
+      "native": {
+        "project_inventory_empty": true,
+        "retained_command_exits": {
+          "0": 25,
+          "1": 150
+        }
+      },
+      "original": {
+        "project_inventory_empty": true,
+        "retained_command_exits": {
+          "0": 25,
+          "1": 150
+        }
+      }
+    },
+    "pair_passed": false,
+    "reason": "fixture HTTP module shadowing",
+    "receipt_sha256": "fb1f0577262af044abf02d751862568322f065e4bd37de9ba83eab2ea777f722"
+  },
+  "ledger": "M4/M5 \u2014 Exact 0596767d matched 12 Series evaluate cells (11 signed, one unsigned) for HTTP and synchronous effects; its separate Native-only targeted startup and worker readback passed with clean teardown. The earlier physical pair remains failed on an unattributed result key, and Original worker parity and formal M4/M5 acceptance remain open.",
+  "native_targeted_scope": {
+    "after_booking": {
+      "original_worker_comparison": "not_run_web_only_control",
+      "pending_roles": [],
+      "sql_status": {
+        "future": null,
+        "ongoing": "interrupted"
+      },
+      "terminal_results": [
+        [
+          "artwork",
+          "SUCCESS"
+        ],
+        [
+          "artwork",
+          "SUCCESS"
+        ],
+        [
+          "artwork",
+          "SUCCESS"
+        ],
+        [
+          "artwork",
+          "SUCCESS"
+        ],
+        [
+          "immediate_recording",
+          "SUCCESS"
+        ],
+        [
+          "plugin_refresh",
+          "SUCCESS"
+        ],
+        [
+          "recovery",
+          "SUCCESS"
+        ],
+        [
+          "version_check",
+          "SUCCESS"
+        ]
+      ]
+    },
+    "app_exit": 0,
+    "booking_effects": {
+      "artwork": 4,
+      "clocks": 1,
+      "future_beat": 1,
+      "immediate": 1,
+      "recordings": 2,
+      "series_frames": 0
+    },
+    "observer_exit": 0,
+    "oom_killed": false,
+    "owned_rows_retired": true,
+    "passed": true,
+    "project_inventory_empty": true,
+    "receipt_sha256": {
+      "booking-publication.json": "68b45bbee62ef889592390d8a60e93c845218e9f25d1424b149ad7a5ed9c68ba",
+      "cleanup.json": "989dcb7a150ba14a4c2bc776453fafe2b8aedfa68891621c9ee19ef883ab2b22",
+      "exit-state.json": "f936fdd50ea981fbce616cc96db9d5dde78a036f23a34e267ab498629fd45f54",
+      "owned-cleanup.json": "0075528368c36be8708ed57a4d17422c4f9692071305333381b858653b45a5bf",
+      "startup-admission.json": "3fc14debf345919fa932cccba505c2284dd055567fe56199ca476897ab4382bb",
+      "startup-observer-exit.json": "81868a6e94ffc0178bf833deb1c9013d9fab4ee95ddb876a5e8ec4f1d26376d2",
+      "worker-readback.json": "9e0c6817fa8447c453ca43c288033f6afd33eb76538fb0fef0ed4b77db1429e2"
+    },
+    "refreshes": [
+      2
+    ],
+    "result_receipt_sha256": "b23bc7b7ed2d91d589e8005664ca66172030840cf999a26a2b28fb035eaccaf6",
+    "retained_command_exits": {
+      "0": 53
+    },
+    "scope": "one Native booking against archived Original book reply",
+    "startup_before_booking": {
+      "observed_before_booking": true,
+      "roles": [
+        "plugin_refresh",
+        "recovery",
+        "version_check"
+      ],
+      "terminal": [
+        [
+          "plugin_refresh",
+          "SUCCESS"
+        ],
+        [
+          "recovery",
+          "SUCCESS"
+        ],
+        [
+          "version_check",
+          "SUCCESS"
+        ]
+      ]
+    }
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "package_literal_exits": {
+    "actual-exit": 0,
+    "ordinary-build.actual-exit": 0,
+    "ordinary-verify.actual-exit": 0,
+    "preflight.actual-exit": 0
+  },
+  "paired_synchronous_scope": {
+    "historical_extra_uuid_attributed": false,
+    "historical_extra_uuid_expiry_attribution_established": false,
+    "native_topology": "ordinary AIO with workers",
+    "observations": {
+      "native": {
+        "effects": {
+          "artwork": 4,
+          "clocks": 1,
+          "future_beat": 1,
+          "immediate": 1,
+          "recordings": 2,
+          "series_frames": 0
+        },
+        "future_recording_status": null,
+        "ongoing_recording_status": "interrupted",
+        "receipt_sha256": {
+          "after-exit-results.json": "4a44cf46016336bced89e6a17f29f092c6d193eda81601eb3f09d4642c328ab4",
+          "after-exit.json": "c06e789748dde8cef9ad764f491f401b896c6db8534ce18b37a2c1707bb4b38a",
+          "cleanup.json": "989dcb7a150ba14a4c2bc776453fafe2b8aedfa68891621c9ee19ef883ab2b22",
+          "http-book.json": "45cef801f6ea62601aa2c1efd0edcee3855d52504a4bd2e5550e90fad7cb0fae",
+          "http-repeat.json": "52c0a65a244b3cf4cdc2e75b5c678a7577526b9e959d5078b0224f9f4d95a0b4",
+          "result.json": "c76d8b342dc1505c0c0675fcc38921beb3a54178badf37613d22dd64ff6f8460"
+        },
+        "result_classes": {
+          "immediate_recording": 1,
+          "unattributed": 1
+        }
+      },
+      "original": {
+        "effects": {
+          "artwork": 4,
+          "clocks": 1,
+          "future_beat": 1,
+          "immediate": 1,
+          "recordings": 2,
+          "series_frames": 0
+        },
+        "future_recording_status": null,
+        "ongoing_recording_status": null,
+        "receipt_sha256": {
+          "after-exit-results.json": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+          "after-exit.json": "6a683c571e9d4333686c7995a81eda75faf17791c44c45a3e88dc53ef79d76ff",
+          "cleanup.json": "989dcb7a150ba14a4c2bc776453fafe2b8aedfa68891621c9ee19ef883ab2b22",
+          "http-book.json": "f78b65c529504362997bd93ba79b4acbd23b6d98f648517fce9996c592222887",
+          "http-repeat.json": "c14cd1b9c6442b23839f79b97b30b587760098455af8955ff3f23d219810a071",
+          "result.json": "f88be0c69d1060a008b54c1dcb09994d061ce31f717c97b47a62d516962d7a96"
+        },
+        "result_classes": {}
+      }
+    },
+    "original_topology": "uWSGI web only; no separate DVR or artwork consumers",
+    "pair_receipt_sha256": "11650d08d8edc9a2678b6dfc4bfad1cbb53a0251d06e656418f27219509e12a0",
+    "process_and_cleanup": {
+      "native": {
+        "app_exit": 0,
+        "oom_killed": false,
+        "owned_rows_retired": true,
+        "project_inventory_empty": true,
+        "retained_command_exits": {
+          "0": 76
+        }
+      },
+      "original": {
+        "app_exit": 0,
+        "oom_killed": false,
+        "owned_rows_retired": true,
+        "project_inventory_empty": true,
+        "retained_command_exits": {
+          "0": 76
+        }
+      }
+    },
+    "refreshes": [
+      2,
+      0
+    ],
+    "whole_pair_passed": false,
+    "wire_exact": 12
+  },
+  "worker_parity": false
+}

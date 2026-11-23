@@ -1,0 +1,124 @@
+{
+  "application": "0596767d65b889424d529670cc7301b02564071b",
+  "candidate_image": "sha256:e34bcd9b550bb4feb6a20636e4bf4436ed7ddee3ea7f56515f67d80e08fd2cbe",
+  "candidate_manifest_sha256": "31b96706c8c5581f46a725ea41356e7bdb0f4b8696de1b65c7f7d47aebbc8ea7",
+  "candidate_source_archive_sha256": "4aa5ce438addd2b09bcaf3638e8484dd08c172e86acd86ca09972fb2b0f27c6e",
+  "canonical_nodes": 127,
+  "combined_current_status": {
+    "blocked": 121,
+    "passed": 5,
+    "retained_source_authority": 1
+  },
+  "credit": "Original Dispatcharr and dependency contributors retain full credit.",
+  "evidence_sha256": {
+    "coordinator_report": "d0aef68d5fcac1a4ed6931655c123eb36f6917950ea010b414644f6323dc49ef",
+    "final_cleanup": "7f5811e32630d3cecf3ba82ac266cf5a78b082f0668288e7717d86a5568c7358",
+    "group_reducer": "83deed7038dd5e343f7b0f64f85995986deb21035d05d8da00d2ab8698a0239f",
+    "independent_exact_reduction": "d632858cd646a3cbd0c7d779bc518b25ad25f3d8aac8ee130d75bcf803493f6c",
+    "ordinary_image_inspection": "b562b872dd02fb201d2f8fea34aa70d9bced2ca9acb4eeecdb2e2288df7715bf"
+  },
+  "exact_owned_cleanup": true,
+  "full_release_accepted": false,
+  "literal_exits": {
+    "cleanup": 0,
+    "coordinator": 2,
+    "owner": 0,
+    "reducer": 0,
+    "run": 2
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false,
+  "project_overlap": {
+    "all_configured_mappings_accounted": true,
+    "running_fixture_projects": 2,
+    "samples_with_both": 48
+  },
+  "public_coordinator": "dc3cae86dff86ae8a4e84c148d7c6e2ffe8308ba",
+  "workflows": {
+    "package/m4-functional": {
+      "actual_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "evidence_sha256": {
+        "cleanup": "ab5c5032c212ad7abfa5975b06ae2522b8ce992076b7e1504b1eece37223ad90",
+        "evaluation": "f01df04359e76543550720cd8907eb6dadb53e81cc6f73537cf3c4ecc66307f8",
+        "execution": "7a76f0e22132e61fdab988f56a2f3d40e91fe8eb9fa627e62602207178e57cca"
+      },
+      "exact_owned_cleanup": true,
+      "observations": {
+        "actual_functional_phases": 4,
+        "media": [
+          {
+            "WebSocket_kinds": {
+              "vod_started": 2,
+              "vod_stats": 4,
+              "vod_stopped": 2
+            },
+            "backend": "source",
+            "frames": 200,
+            "prefix_bytes": 1048576,
+            "prefix_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+            "protocol": "vod",
+            "provider_slot_released": true
+          },
+          {
+            "WebSocket_kinds": {
+              "vod_started": 2,
+              "vod_stats": 4,
+              "vod_stopped": 2
+            },
+            "backend": "candidate",
+            "frames": 200,
+            "prefix_bytes": 1048576,
+            "prefix_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+            "protocol": "vod",
+            "provider_slot_released": true
+          },
+          {
+            "WebSocket_kinds": {
+              "timeshift_stats": 4
+            },
+            "backend": "source",
+            "frames": 199,
+            "prefix_bytes": 1048576,
+            "prefix_sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+            "protocol": "timeshift",
+            "provider_slot_released": true
+          },
+          {
+            "WebSocket_kinds": {
+              "timeshift_stats": 4
+            },
+            "backend": "candidate",
+            "frames": 199,
+            "prefix_bytes": 1048576,
+            "prefix_sha256": "1cc8fc1322cde2976bdb61712405e591edcab253f01cfa11ec8b220a4e0009c2",
+            "protocol": "timeshift",
+            "provider_slot_released": true
+          }
+        ],
+        "resource_measurements": false
+      }
+    },
+    "package/proxy-auth": {
+      "actual_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "evidence_sha256": {
+        "cleanup": "32b30a74bc77ed5654c12bd71d471189935089a9f25ba62bcb417f05770addba",
+        "evaluation": "1a71f09f1348a1fa0f8a581779024ade7e15f4c720b2fedbbc972ebc37a96613",
+        "execution": "127d3d22281f6b67dc7851540856fcc0ac1055cf57074f1da7e757b402821c25"
+      },
+      "exact_owned_cleanup": true,
+      "observations": {
+        "checks": 38,
+        "configured_proxy_auth_checks": 20,
+        "ordinary_decoded_frames": 75
+      }
+    }
+  }
+}

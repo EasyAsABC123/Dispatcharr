@@ -1,0 +1,7 @@
+# Exact AMD64 catalogue and inventory response bodies
+
+The ordinary AMD64 package for `d41abbb90dec665182f2060804e40a4d522b1743` passed two signed Docker Compose replays against retained Original `1241b3f7` authorities. The fixtures covered 50 distinct GET contracts and 134 HTTP observations. All 100 GET body digests and all 17 OPTIONS body digests matched their Original counterparts. The Rust HEAD responses were empty in all 17 cases. The retained Original HEAD authority was direct uWSGI and recorded entity bytes, so the HEAD results establish the Rust bodyless behavior under the stated gate. [Evidence](../scripts/rust-integration/m0-d41abbb9-amd64-signed-read-exact.json)
+
+The preceding `0596767d` package matched those 100 typed GET results and selected headers but differed in 18 raw bodies. The response digest pairs can be reconstructed by the serializers' field order. The `d41abbb9` code uses Original's field order for successful User Agent, Stream Profile, Output Profile and logo reads. All 18 previously differing bodies matched in the fresh run. [Previous typed evidence](rust-m0-0596767d-amd64-signed-read-cohorts.md)
+
+Each Rust scope retired four container role generations and left empty owned container, network and volume inventories. Both cold admissions, both physical owners and the combined reducer exited 0. The scoped GET contracts still have partial coverage in the broader M0 register. These fixtures measured wire behavior. Original Dispatcharr authors and contributors retain full application and protocol credit.
