@@ -1,0 +1,106 @@
+{
+  "application_tree_sha256": "5b064bdc1c49ab77f9eba5e002f64a454a410a5ae340c4b9c4af1e06ab574cc6",
+  "audit_sha256": "42544fd49d101372b51bf500a188feb1a0fc827377e955a92838c1924c347462",
+  "build_manifest_sha256": "328762af67efd3a1d84c5d3b25e4a842800a55351e1725138cc1a8605c4c7bfe",
+  "candidate": "585fde95b5ed61ed2cd714f1d93c2214c6deaad9",
+  "formal_m4_acceptance": false,
+  "fresh_original_arm": false,
+  "host_verification": {
+    "main_compile_actual_exit": 0,
+    "passing_scheduler_unit_tests": 26
+  },
+  "image": "sha256:bb3bdbc5197780f3e49978a1c55650333d633e168b5c44ea663854571d2c2670",
+  "literal_exits": {
+    "campaign": 0,
+    "cleanup": 0,
+    "preflight": 0,
+    "proof": 0,
+    "run": 0
+  },
+  "native": {
+    "business_sha256": "ef3b3d181befdfe93fe3c32e4de2ea274c7f6f918eea49c522f96fda05f950be",
+    "cleanup_sha256": "f9571f772ac0c291632e9364b8236815336b3980b469d1ba7e21f51393062fde",
+    "clocked_task": "apps.channels.tasks.run_recording",
+    "final_av_frames": {
+      "audio": 522,
+      "video": 281
+    },
+    "final_media_sha256": "bf93f8fd4691ed9a5b869dfe400ab7b7af056ab303c3fd3330ccfcb8de626312",
+    "lane_seconds": 103.45440927497111,
+    "project": "dispatcharr-normal-dvr-188a02814d",
+    "received_av_frames": {
+      "audio": 376,
+      "video": 200
+    },
+    "retired_container_count": 3,
+    "seconds_before_due_end": 58.004112,
+    "segment_body_bytes": [
+      617580,
+      617768
+    ],
+    "segment_body_sha256": [
+      "751ef5c4cd6dd4f61dcc62d29a7af154df60ebbc1f3270e693d6ddccb23b4515",
+      "c0981c44aef9b9be4c30e3ef210c4edc26b79012832376f4107a4fd1391f2aac"
+    ]
+  },
+  "native_stop_command_seconds": 0.291194859019015,
+  "performance_credit": false,
+  "postgres_regression": {
+    "cleanup": {
+      "container_process_actual_exit": 0,
+      "exact_owned_absence": true,
+      "postgres_own_stop_actual": 0,
+      "postgres_process_actual_exit": 0,
+      "release_errors": []
+    },
+    "cleanup_sha256": "cd75eb9e111fb54b963f81fd01b13199cf67414329976cab163bdd0c2fa17627",
+    "fixture_seal_sha256": "386373c4d62e03718c64fa350cbbcb5f0858a44ac59d945c7a69849479b7b4eb",
+    "initial_fixture_attempt": {
+      "actual_exit": 1,
+      "application_assertions_reached": false,
+      "exact_owned_absence": true,
+      "sqlstate": "28000"
+    },
+    "owner_actual_exit": 0,
+    "passed_tests": 1,
+    "receipt_sha256": "32770e084929564d67a378b3cef9dd96d58e4946d84f3eba2e5309ee37c74cd5",
+    "test": "normal_beat::tests::acknowledged_clocked_dvr_checkpoint_retires_after_worker_deletion",
+    "test_actual_exit": 0,
+    "test_binary_sha256": "d5ba17fd1f13b613ee876f151e3a093a4f0b8bc671a8f815afd44ff8dc49942d"
+  },
+  "previous_diagnostic_sha256": "aebde36bb7b52eb4aa45dfa62401d64963ce244a28e4583ebde1380b52193306",
+  "previous_failed_drained_stage": {
+    "family": null,
+    "outcome": "unsettled",
+    "stage": "scheduler"
+  },
+  "proof_sha256": "f551ae3f647823768d456dc572f07ffcfcf569be55ee2b1337b6900d4782e2f6",
+  "retained_original": {
+    "business_sha256": "1f5eb38055322f3ae54b141bbb4d0ea913f65925d6d86f2eb6c23ec92f69a87e",
+    "cleanup_sha256": "cd6a712b0cb830906b2145ef3136ce23cf8b99d4aee0665466f4e0f1bba8a287",
+    "clocked_task": "apps.channels.tasks.run_recording",
+    "final_av_frames": {
+      "audio": 906,
+      "video": 482
+    },
+    "final_media_sha256": "f0fe198d16610fa3c1da7f3842c934f6bed4ef5b536a3bf22472054814ab3605",
+    "lane_seconds": 102.89012498001102,
+    "project": "dispatcharr-normal-dvr-b7aa67ed3d",
+    "received_av_frames": {
+      "audio": 376,
+      "video": 200
+    },
+    "retired_container_count": 2,
+    "seconds_before_due_end": 57.458039,
+    "segment_body_bytes": [
+      617580,
+      617768
+    ],
+    "segment_body_sha256": [
+      "751ef5c4cd6dd4f61dcc62d29a7af154df60ebbc1f3270e693d6ddccb23b4515",
+      "c0981c44aef9b9be4c30e3ef210c4edc26b79012832376f4107a4fd1391f2aac"
+    ]
+  },
+  "scheduler_postimage_sha256": "575377c8d1583ca8e4ee8c69fbbefef3365c3d2edb49474d9f6af33fc8b73e2d",
+  "status": "scoped_native_clean_drain_and_retained_original_workload_confirmed"
+}

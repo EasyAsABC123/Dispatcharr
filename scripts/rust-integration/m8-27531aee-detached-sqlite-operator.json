@@ -1,0 +1,166 @@
+{
+  "actual_phase_exits": {
+    "actual_operator_run": 0,
+    "build": 0,
+    "campaign_outer": 0,
+    "host_outer": 0,
+    "preflight": 0,
+    "proof": 0,
+    "run": 0
+  },
+  "application_revision": "27531aeeea69f53ebb37f33c4069bda0fd2efa8f",
+  "before_after_owned_inputs_unchanged": true,
+  "bound_evidence": {
+    "campaign_input_seal_sha256": "bb848ff1627d7027489e0e151ab0a8340b2246dff5a0488955ca3fa0e4c2c4f4",
+    "host_runner_sha256": "1309d06948d14b72777ca5699c3b81c8cc75b8b2238f8957596092861f1fe426",
+    "host_terminal_stdout_sha256": "68f25147ec707883d1309e76a90bfc6a78f17270b8ba50953c9c4f90606bb199",
+    "operator_raw_receipt_sha256": "a0e89633f64be212fde78ce1cf98dd699e56369c40251f86e1cbf4de3b3906bf",
+    "opt_in_build_log_sha256": "c7c0899c68f5938bf59812384d70b3088b885c40eebc19e62907199d2e401cca",
+    "owner_preflight_sha256": "6234f6cf70611567c08a110de703b5eb24ef204164951b4c861407db6c46fec4",
+    "owner_proof_sha256": "74c67f37e39402fcd1a578f44757e4b6bf007ef73f5ff838e4d0b36aa3d5ea76"
+  },
+  "cases": {
+    "default-help": {
+      "actual_exit": 0,
+      "cleanup_sha256": "60b991d1bc6489ceee3956377f039ff507c8d5ee690376162a97587f2db230d2",
+      "networkless": true,
+      "operator_runtime_user": "65532:65532",
+      "owned_cleanup_verified": true,
+      "owned_container_removed": 1,
+      "owned_readonly_input_unchanged": null,
+      "result": "ordinary help does not advertise the opt-in command",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "3eeefb7b084a5446e4b97b75b7af6c5bb6de69eaefade0d82d23ba09b6696b79"
+    },
+    "opt-in-help": {
+      "actual_exit": 0,
+      "cleanup_sha256": "60b991d1bc6489ceee3956377f039ff507c8d5ee690376162a97587f2db230d2",
+      "networkless": true,
+      "operator_runtime_user": "65532:65532",
+      "owned_cleanup_verified": true,
+      "owned_container_removed": 1,
+      "owned_readonly_input_unchanged": null,
+      "result": "feature-enabled help advertises the opt-in command",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "cf9f57867a704408bb2c6592c2f583395dc70ce917244fcc028980cb1e750dba"
+    },
+    "staged-collision": {
+      "actual_exit": 1,
+      "cleanup_sha256": "60b991d1bc6489ceee3956377f039ff507c8d5ee690376162a97587f2db230d2",
+      "networkless": true,
+      "operator_runtime_user": "65532:65532",
+      "owned_cleanup_verified": true,
+      "owned_container_removed": 1,
+      "owned_readonly_input_unchanged": true,
+      "result": "owned late duplicate rejected with no staged or committed output",
+      "stderr_sha256": "1fab210e616520009171a14cd7c01ba2696337f47a01956ac307a3b3f74eda41",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "unknown-history": {
+      "actual_exit": 1,
+      "cleanup_sha256": "60b991d1bc6489ceee3956377f039ff507c8d5ee690376162a97587f2db230d2",
+      "networkless": true,
+      "operator_runtime_user": "65532:65532",
+      "owned_cleanup_verified": true,
+      "owned_container_removed": 1,
+      "owned_readonly_input_unchanged": true,
+      "result": "unlisted migration rejected with no staged or committed output",
+      "stderr_sha256": "9478f6c86ccdffcc0b3cfd10c87229bf54e838d1ee18d526d3145249f2c1726a",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "upgrade": {
+      "actual_exit": 0,
+      "cleanup_sha256": "60b991d1bc6489ceee3956377f039ff507c8d5ee690376162a97587f2db230d2",
+      "networkless": true,
+      "operator_runtime_user": "65532:65532",
+      "owned_cleanup_verified": true,
+      "owned_container_removed": 1,
+      "owned_readonly_input_unchanged": true,
+      "result": "exact 184-record successor, 62 application tables and preserved fixture credential rows",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "9d4607c4362553dc0dc9966a9e02d440507525fab969a526ae3a7e66e873eaaf"
+    }
+  },
+  "credential_comparison": {
+    "application_users": {
+      "fields_compared": [
+        "id",
+        "username",
+        "password",
+        "is_superuser",
+        "is_staff",
+        "is_active"
+      ],
+      "rows_unchanged": 1
+    },
+    "authentication_tested": false,
+    "credential_values_retained_in_evidence": false,
+    "m3u_accounts": {
+      "fields_compared": [
+        "id",
+        "username",
+        "password"
+      ],
+      "rows_unchanged": 1
+    }
+  },
+  "default_manifest_sha256": "8fcd9bd6b8d15950454dda86018f57688a2dc4cf45e94b93c8a84cc4a7ffeafa",
+  "excluded_acceptance": [
+    "production SQLite startup and in-place upgrade",
+    "live SQLite datastore and journal/WAL ownership",
+    "separately gated copied-data web runtime",
+    "SQLite backup/restore",
+    "SQLite-to-PostgreSQL conversion",
+    "performance",
+    "full M8"
+  ],
+  "feature_build_flags": {
+    "opt_in_tested": {
+      "DISPATCHARR_BUILD_COPIED_SQLITE_RUNTIME": 0,
+      "DISPATCHARR_BUILD_SQLITE_OPERATOR": 1
+    },
+    "ordinary": {
+      "DISPATCHARR_BUILD_COPIED_SQLITE_RUNTIME": 0,
+      "DISPATCHARR_BUILD_SQLITE_OPERATOR": 0
+    }
+  },
+  "foreign_key_check_empty": true,
+  "format_version": 1,
+  "historical_migration_rows": 132,
+  "integrity_check_ok": true,
+  "reported_table_DDL_text_variance": [
+    "core_coresettings"
+  ],
+  "license_and_notice_sha256": {
+    "ATTRIBUTION.md": "1202a089caf31b613a39ac819c8b362cd939cf828328a3880d1ffa16a45ffea7",
+    "LICENSE": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+    "libsqlite3-sys-LICENSE": "f59ba65550f2a5adff98ec6478d783402c8e0a3eb515025c0b3438f3d30dc39e",
+    "sqlx-sqlite-LICENSE-APACHE": "9be39331309bc958aab10457c1a8459c038ae95662f26dfcf6c9088e2b3d653f",
+    "sqlx-sqlite-LICENSE-MIT": "44b1600a26039a75b28e1ce154a5dd163b16549f50e34fa577d9efe9c1bae179"
+  },
+  "main_binary_sha256": "de5b801f831c085300e003dd60734cbccbe0a46b0ae96475ea95b49ce3725b73",
+  "milestone": "M8",
+  "opt_in_image": "sha256:5c3341b8b9d988d057b97d608fefb95ca43f30627fa6e6be823a437116101fbe",
+  "ordinary_and_opt_in_main_binary_equal": true,
+  "ordinary_image": "sha256:112612e750fd41d4390d0cb38a65e7d63b5b9a387a784960db27247dc86e5f54",
+  "original_authors_retain_full_credit": true,
+  "owned_cleanup": {
+    "containers_removed": 5,
+    "empty_project_label_inventories_per_case": true,
+    "exact_cleanup": true
+  },
+  "physical_output_database_retained": false,
+  "published_docs_head_at_fixture_binding": "8417ac0632c43340e0d92d0e662643951c21131a",
+  "scope": "AMD64 opt-in detached historical SQLite copy upgrade",
+  "source_archive_sha256": "5ddebde22eb743d67597b9629db25ae740f05c49ebe8e8868e39d611bfa2bd86",
+  "source_tree_sha256": "5c04c56247372bc6a746bd83fc92b1a6a8427c438dc98e6ff77d7461aca55615",
+  "upgraded_application_tables": 62,
+  "upgraded_migration_rows": 184,
+  "verified_schema_match": [
+    "exact migration record set",
+    "application table names",
+    "named columns",
+    "indexes",
+    "foreign keys"
+  ]
+}
