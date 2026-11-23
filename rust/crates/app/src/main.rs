@@ -1,4 +1,6 @@
 //! Derivative Dispatcharr backend port. Original project credit: ATTRIBUTION.md.
+mod admin_channelgroup;
+mod admin_channelgroup_assets;
 mod admin_ingress;
 mod backup_config;
 mod combined_statistics;
@@ -417,6 +419,9 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     )
     .await
     .map_err(|_| "Database connection failed (credentials omitted)")?;
+    let admin_sessions =
+        dispatcharr_store::DjangoAdminSessions::with_current_key(store.clone(), &secret)
+            .map_err(|_| "Invalid Django admin session configuration")?;
     let auth =
         AuthService::new(store.clone(), auth_config).with_native_log_liveness(logs.liveness());
     let auth = if let Some(url) = cache_url.as_deref() {
@@ -1437,6 +1442,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         admin_ingress::AdminIngress {
             xc_live: xc.is_some(),
             location: admin_location,
+            channel_groups: Some(admin_sessions),
         },
         admin_ingress::apply,
     ));

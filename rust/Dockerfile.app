@@ -152,6 +152,12 @@ COPY --from=build /out/sqlite-operator-notices/ /usr/share/doc/dispatcharr/
 COPY --from=frontend /dispatcharr-frontend/dist/ /opt/dispatcharr-frontend/
 COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
 COPY rust/crates/output-http/data/Django-LICENSE /usr/share/doc/dispatcharr/Django-LICENSE
+COPY rust/crates/app/assets/django-admin-6.0.9/LICENSE-DJANGO /usr/share/doc/dispatcharr/django-admin-6.0.9/LICENSE-DJANGO
+COPY rust/crates/app/assets/django-admin-6.0.9/js/vendor/jquery/LICENSE.txt /usr/share/doc/dispatcharr/django-admin-6.0.9/LICENSE-JQUERY
+COPY rust/crates/app/assets/django-admin-6.0.9/js/vendor/xregexp/LICENSE.txt /usr/share/doc/dispatcharr/django-admin-6.0.9/LICENSE-XREGEXP
+COPY rust/crates/app/assets/django-admin-6.0.9/img/README.md /usr/share/doc/dispatcharr/django-admin-6.0.9/NOTICE-ICONS.md
+COPY rust/crates/app/assets/django-admin-6.0.9/PROVENANCE.md /usr/share/doc/dispatcharr/django-admin-6.0.9/PROVENANCE.md
+COPY rust/crates/app/assets/django-admin-6.0.9/asset-sha256.json /usr/share/doc/dispatcharr/django-admin-6.0.9/asset-sha256.json
 COPY rust/crates/store/third-party/PYTHON-COPYRIGHT /usr/share/doc/dispatcharr/Python-COPYRIGHT
 COPY rust/crates/store/third-party/REQUESTS-LICENSE /usr/share/doc/dispatcharr/Requests-LICENSE
 COPY rust/crates/store/datasets/Celery-LICENSE /usr/share/doc/dispatcharr/Celery-LICENSE

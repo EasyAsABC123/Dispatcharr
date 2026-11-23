@@ -25,6 +25,7 @@ const REDIRECT_BODY: &str = concat!(
 pub(super) struct AdminIngress {
     pub(super) xc_live: bool,
     pub(super) location: HeaderValue,
+    pub(super) channel_groups: Option<dispatcharr_store::DjangoAdminSessions>,
 }
 
 pub(super) fn configured_location() -> Result<HeaderValue, &'static str> {
@@ -72,12 +73,24 @@ pub(super) async fn apply(
     next: Next,
 ) -> Response {
     let path = request.uri().path();
+    if let Some(asset) = super::admin_channelgroup_assets::serve(path, request.method()) {
+        return asset;
+    }
+    if path == super::admin_channelgroup::PATH && request.method() == Method::GET {
+        let (parts, _) = request.into_parts();
+        return super::admin_channelgroup::handle(
+            ingress.channel_groups.as_ref(),
+            &parts.uri,
+            &parts.headers,
+        )
+        .await;
+    }
     if let Some(tail) = path.strip_prefix("/admin/") {
         if ingress.xc_live && two_nonempty_tails(tail) {
             return next.run(request).await;
         }
-        // nginx exempts two components even with a terminal slash. The
-        // dedicated Django UI is outside the native gateway's scope.
+        // nginx exempts two components even with a terminal slash. Other
+        // dedicated admin paths are still outside this native route.
         if two_nonempty_tails(tail.strip_suffix('/').unwrap_or(tail)) {
             return super::api_not_found().await.into_response();
         }
@@ -121,7 +134,11 @@ mod tests {
             )
             .fallback(|| async { StatusCode::ACCEPTED })
             .layer(middleware::from_fn_with_state(
-                AdminIngress { xc_live, location },
+                AdminIngress {
+                    xc_live,
+                    location,
+                    channel_groups: None,
+                },
                 apply,
             ))
             .layer(middleware::from_fn(crate::response_headers::apply))
@@ -192,6 +209,43 @@ mod tests {
                 assert_eq!(response.headers()[header::LOCATION], "/login");
             } else {
                 assert!(!response.headers().contains_key(header::LOCATION));
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn exact_channelgroup_read_and_admin_assets_precede_the_legacy_boundary() {
+        let app = router(login_location(None).unwrap(), true);
+        let path = super::super::admin_channelgroup::PATH;
+        for (method, uri, status) in [
+            (Method::GET, path, StatusCode::FOUND),
+            (Method::POST, path, StatusCode::NOT_FOUND),
+            (Method::GET, "/admin/login/", StatusCode::MOVED_PERMANENTLY),
+            (Method::GET, "/admin/owned/123.ts", StatusCode::OK),
+            (Method::GET, "/static/admin/css/base.css", StatusCode::OK),
+            (Method::HEAD, "/static/admin/css/base.css", StatusCode::OK),
+        ] {
+            let response = app
+                .clone()
+                .oneshot(
+                    Request::builder()
+                        .method(method.clone())
+                        .uri(uri)
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), status, "{method} {uri}");
+            if uri == "/static/admin/css/base.css" {
+                let length: usize = response.headers()[header::CONTENT_LENGTH]
+                    .to_str()
+                    .unwrap()
+                    .parse()
+                    .unwrap();
+                assert_eq!(response.headers()[header::CONTENT_TYPE], "text/css");
+                let body = to_bytes(response.into_body(), 128 * 1024).await.unwrap();
+                assert_eq!(body.len(), if method == Method::HEAD { 0 } else { length });
             }
         }
     }

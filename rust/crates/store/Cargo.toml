@@ -13,6 +13,8 @@ sqlite-historical-upgrade = ["sqlx/sqlite"]
 dispatcharr-contracts = { path = "../contracts" }
 dispatcharr-upstream-http = {path="../upstream-http"}
 futures-util = "0.3"
+flate2 = { version = "1", default-features = false, features = ["zlib-rs"] }
+hmac = "0.12"
 dispatcharr-ingest-core = {path="../ingest-core"}
 axum = {version="0.8",features=["multipart"]}
 async-stream = "0.3"

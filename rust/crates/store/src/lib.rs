@@ -33,6 +33,7 @@ pub mod sqlite_identity;
 pub use output_profile_writes::OutputProfileWrites;
 mod core_utilities;
 mod display_timezone;
+mod django_admin_session;
 mod django_pickle;
 mod epg_policy;
 mod epg_reads;
@@ -118,6 +119,10 @@ mod vod_category_settings;
 pub use auth::{AuthConfig, AuthService, Claims, RequestAuthMethod, TokenPair};
 pub use cache_codec::{decode_source_cache, encode_source_cache, source_cache_values_equal};
 pub use channels::ChannelIdentity;
+pub use django_admin_session::{
+    DjangoAdminSessions, DjangoChannelGroupOrder, DjangoChannelGroupPage,
+    DjangoChannelGroupPageResult, DjangoChannelGroupQuery, DjangoChannelGroupRead,
+};
 pub use passwords::verify_password;
 pub use playback::{ProviderStream, ResolvedChannel};
 
