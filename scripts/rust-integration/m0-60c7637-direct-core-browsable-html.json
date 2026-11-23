@@ -1,0 +1,128 @@
+{
+  "Original": {
+    "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff"
+  },
+  "candidate": {
+    "app_inputs_verified": 2167,
+    "host_tests_passed": 10,
+    "image_id": "sha256:3f5d4512e615b32cf521df05ee41445677ac4cfd642ffe345e0c156d95d1c116",
+    "main_check_exit": 0,
+    "manifest_sha256": "9b6dcfdd2880fe3dc8f4ff423fece29308cafcb466c61c920198dc0b65ea3a3b",
+    "package_seal_sha256": "12394378e83b99a34cd97f4044fef9648d3f39e8690f850b01814e95bf9fa9fd",
+    "parent": "329730439bf3d9dd9ccdfb4c4fdce44ad9f76def",
+    "platform": "linux/amd64",
+    "prior_media_lane_cleanup_sha256": "dc693f4e70379f635171c6ec2b41914ad518833d1f3d6b398cbb61bcd99fda4d",
+    "protected_inputs_unchanged": 497,
+    "revision": "60c7637c807671955fcb789cbc94a5763ae799a2",
+    "rust_host_inputs_verified": 1670,
+    "source_archive_sha256": "056a3863f5b1e598863f77d9ffbf5e50a1e7f0c023863d533aef7d3865ad68dc",
+    "source_tree_sha256": "31249092472da40e02057b612c3ded98fbaebbe902c487619d198eb1225cd3c2"
+  },
+  "cases": [
+    {
+      "administrator_accept": "text/html",
+      "administrator_status": 200,
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 16470,
+      "content_type": "text/html; charset=utf-8",
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "csrf_mask_slots": [
+        "form-csrf",
+        "script-csrf"
+      ],
+      "family": "agent-list",
+      "matching_normalized_body_sha256": "73bb806806c3f342aa6bd214c7c83f2686f8244f1c23c25950d30ae71665b732",
+      "matching_standard_json_entity_sha256": "835505ca54bc7316eb711a577ef84e7bc09e3425e2895705451541729026d08a",
+      "method": "GET",
+      "path": "/api/core/useragents/",
+      "standard_explicit_JSON_status_both": 200,
+      "standard_fallback_identical_json_and_no_cookie": true,
+      "standard_native_explicit_HTML_fallback_status": 200,
+      "title": "User Agent List – Django REST framework",
+      "vary": "Accept, origin, Cookie"
+    },
+    {
+      "administrator_accept": "text/html",
+      "administrator_status": 200,
+      "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "body_bytes": 17715,
+      "content_type": "text/html; charset=utf-8",
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "csrf_mask_slots": [
+        "script-csrf"
+      ],
+      "family": "profile-detail",
+      "matching_normalized_body_sha256": "881b6af1cc112295d7eda58cfc6636f110b5f508897abce7ef9c9a5c7bf36652",
+      "matching_standard_json_entity_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/",
+      "standard_explicit_JSON_status_both": 200,
+      "standard_fallback_identical_json_and_no_cookie": true,
+      "standard_native_explicit_HTML_fallback_status": 200,
+      "title": "Stream Profile Instance – Django REST framework",
+      "vary": "Accept, origin, Cookie"
+    }
+  ],
+  "credit": "Original Dispatcharr, Django, Django REST Framework, React, and dependency authors and contributors retain full credit.",
+  "fixture": {
+    "actual_guest_exit": {
+      "Native": 0,
+      "Original": 0
+    },
+    "actual_pair_receipt_sha256": "fd6b3c232878c111e16b69514e749154c2638681b7a939cc8eb7c236b2beb4ff",
+    "cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "cleanup_sha256": "94116b19e3366d7f5bdcb0ffa4d508997fc50b9d31f1ba1888382099e235bb4e",
+    "fresh_paired_arms": true,
+    "literal_owner_exits": {
+      "campaign": 0,
+      "cleanup": 0,
+      "preflight": 0,
+      "proof": 0,
+      "run": 0
+    },
+    "prior_original_census_sha256": "c03fee7d747974d088bb00997153369554e52eba929d1aed58c635ce20a26df8",
+    "raw_credentials_retained": false,
+    "receipt_sanitized": true,
+    "roles": [
+      {
+        "level": 1,
+        "role": "standard"
+      },
+      {
+        "level": 10,
+        "role": "admin"
+      }
+    ],
+    "seal_sha256": "27fe871ef6f8fe39756789f2981d0a58ed86b415b077d95b6f44573de533bdf6",
+    "typed_proof_sha256": "a68f59752f9f4132a2602e9a5a0a697a0344bb75662172a8bcdf8988ae6c787d",
+    "unchanged_SQL_broker_sha256": "01cfb4a15c99134be2171486b66b6528650b096d9b04f125dd5e0ef94d5011f9"
+  },
+  "formal_M0_accepted": false,
+  "performance_measured": false,
+  "scope": "Two direct administrator explicit HTML GETs and Standard JSON fallback on exact AMD64 package"
+}

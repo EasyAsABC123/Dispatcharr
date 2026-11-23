@@ -1,0 +1,157 @@
+{
+  "campaign_receipt_sha256": "df4a2bb85f7533aa8f2881563faed7fe728953822e228ea429f0b1b771d1c89c",
+  "candidate_image": "sha256:8d26782ba4a364efc735e55c86e7c4790f38e4ab339727158f3d3a9ab02c95a9",
+  "core_receipt_sha256": "45a7e8f8acc851015e073488cdca34119164bb251db8cb4061deaeeeb632827a",
+  "diagnostic_authority_sha256": "fcbd0f4de50fe2e357efe975c8287231c66257434c7155c0a5d39dbad0c46b17",
+  "formal_acceptance": {
+    "formal_budget_replaced": false,
+    "frozen_gates_changed": false,
+    "headroom_boundary_bytes": 90596966,
+    "headroom_minimum_fraction": 0.1,
+    "joined_feasibility_proven": false,
+    "observer_memory_limit_bytes": 100663296,
+    "observer_memory_limit_mib": 96,
+    "performance_accepted": false,
+    "qualified_campaign": false
+  },
+  "literal_exits": {
+    "campaign": 0,
+    "cleanup": 0,
+    "collector": 0,
+    "compose_down": 0,
+    "core": 0,
+    "owner_diagnostic": 0,
+    "owner_probe": 0,
+    "ready_pulse": 0,
+    "setup_disposal_readout": 0,
+    "stop": 0
+  },
+  "observer": {
+    "effective_cpu_fraction": 0.5,
+    "effective_memory_max_bytes": 268435456,
+    "effective_pids_max": 32,
+    "effective_swap_max_bytes": 0,
+    "maximum_observed_swap_bytes": 0,
+    "maximum_periodic_lifetime_memory_peak_bytes": 115249152,
+    "maximum_periodic_memory_current_bytes": 115212288,
+    "memory_current_after_django_setup_bytes": 109338624,
+    "memory_current_at_disposal_bytes": 24399872,
+    "memory_current_before_django_setup_bytes": 24854528,
+    "memory_events_all_zero": true,
+    "periodic_sample_count": 9,
+    "phase_lifetime_peaks_bytes": {
+      "after_django_import": 24854528,
+      "after_django_setup": 110125056,
+      "before_delegate": 24854528,
+      "before_django_import": 24854528,
+      "before_django_setup": 24854528,
+      "delegate_imported": 24854528,
+      "models_and_clients_imported": 113270784,
+      "notification_observer_ready": 115249152,
+      "owned_guide_staged": 113270784,
+      "post_setup_disposal": 115470336,
+      "prepared_before_anchor": 115249152,
+      "process_start": 22421504,
+      "released_without_anchor": 115249152,
+      "startup_setup_without_monitor_relay": 24592384
+    },
+    "raw_export_sha256": "ef6caf3e53b215296be9cfe336965e0595097f24bccd4317c68905fb7d980c56",
+    "raw_periodic_points": [
+      {
+        "current_bytes": 16150528,
+        "peak_bytes": 22421504,
+        "sample": 0
+      },
+      {
+        "current_bytes": 45035520,
+        "peak_bytes": 45297664,
+        "sample": 1
+      },
+      {
+        "current_bytes": 61112320,
+        "peak_bytes": 61112320,
+        "sample": 2
+      },
+      {
+        "current_bytes": 78675968,
+        "peak_bytes": 78675968,
+        "sample": 3
+      },
+      {
+        "current_bytes": 90988544,
+        "peak_bytes": 90988544,
+        "sample": 4
+      },
+      {
+        "current_bytes": 108027904,
+        "peak_bytes": 110125056,
+        "sample": 5
+      },
+      {
+        "current_bytes": 112652288,
+        "peak_bytes": 113270784,
+        "sample": 6
+      },
+      {
+        "current_bytes": 115212288,
+        "peak_bytes": 115249152,
+        "sample": 7
+      },
+      {
+        "current_bytes": 115208192,
+        "peak_bytes": 115249152,
+        "sample": 8
+      }
+    ],
+    "setup_summary_sha256": "50586aa2176996e588a4cc6e6455f8733fe10b589a35b07bce1cd2bd5d34d5b9",
+    "setup_through_disposal_lifetime_memory_peak_bytes": 115470336
+  },
+  "scope": "ARM64 Native publication-observer natural setup and disposal diagnostic",
+  "scope_observations": {
+    "application_viewers": 0,
+    "publication_anchor_present": false,
+    "publication_callbacks_invoked": 0,
+    "publication_monitor_started": false,
+    "publication_relay_started": false,
+    "readiness_setup_only": true,
+    "viewer_decodes": 0,
+    "xmltv_submissions": 0
+  },
+  "teardown": {
+    "all_support_terminal": {
+      "baseline": {
+        "exit": 0,
+        "oom": false
+      },
+      "candidate": {
+        "exit": 0,
+        "oom": false
+      },
+      "data-init": {
+        "exit": 0,
+        "oom": false
+      },
+      "observer": {
+        "exit": 137,
+        "oom": false
+      },
+      "origin": {
+        "exit": 137,
+        "oom": false
+      },
+      "publication-observer": {
+        "exit": 137,
+        "oom": false
+      }
+    },
+    "cleanup_sha256": "96c04bac261b60e8832af7db2fd02a163112e505fba84c7b4ecbfd1d8f8fcf5b",
+    "container_ids": 6,
+    "container_names": 6,
+    "container_network_volume_label_rosters_empty": true,
+    "exact_cleanup": true,
+    "network_ids": 1,
+    "network_names": 1,
+    "typed_current_absence_readback": true,
+    "volume_names": 2
+  }
+}
