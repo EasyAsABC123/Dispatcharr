@@ -1,0 +1,134 @@
+{
+  "arms": {
+    "Native": {
+      "checks": 40,
+      "default_database_unchanged": true,
+      "empty_owned_docker_inventories": true,
+      "integration_sha256": "37e9a651ed08ed43a19d045f751945bdd10015e6278c60eca1aafcbd702ce21a",
+      "literal_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "private_cleanup_sha256": "1e3e4de867b4581a3f24ea21f4946e429025c373dca52a16d092d921f1a2069b",
+      "private_workflow_sha256": "cd23bf70c66821b4a0bd910173e3df92b464f149718e1d8ff626cd57c3b6bcc4",
+      "scoped_queue_results_and_reservation_drained": true,
+      "signed_imports": [
+        {
+          "programme_title": "Owned first import",
+          "realtime_event_count": 11,
+          "request_root_and_two_children_joined": true,
+          "signed_import_http": 202,
+          "task_families": [
+            "refresh_epg_data",
+            "build_programme_index_task",
+            "evaluate_series_rules"
+          ],
+          "terminal_states": [
+            "SUCCESS",
+            "SUCCESS",
+            "SUCCESS"
+          ]
+        },
+        {
+          "programme_title": "Owned second import",
+          "realtime_event_count": 11,
+          "request_root_and_two_children_joined": true,
+          "signed_import_http": 202,
+          "task_families": [
+            "refresh_epg_data",
+            "build_programme_index_task",
+            "evaluate_series_rules"
+          ],
+          "terminal_states": [
+            "SUCCESS",
+            "SUCCESS",
+            "SUCCESS"
+          ]
+        }
+      ],
+      "six_distinct_actual_task_ids": true
+    },
+    "Original": {
+      "checks": 40,
+      "default_database_unchanged": true,
+      "empty_owned_docker_inventories": true,
+      "integration_sha256": "99ae38fe213b459db1852a1491683ef05c7344e640c6e0b8ef29e799577161b4",
+      "literal_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "private_cleanup_sha256": "04e93b6298fec228cce88b3222575071a5e2f043df39478de2568fe5d1557350",
+      "private_workflow_sha256": "41e96fffc2609d002263e51a1aa436da3532f8efde369ef7c50f8bd9756be1d6",
+      "scoped_queue_results_and_reservation_drained": true,
+      "signed_imports": [
+        {
+          "programme_title": "Owned first import",
+          "realtime_event_count": 11,
+          "request_root_and_two_children_joined": true,
+          "signed_import_http": 202,
+          "task_families": [
+            "refresh_epg_data",
+            "build_programme_index_task",
+            "evaluate_series_rules"
+          ],
+          "terminal_states": [
+            "SUCCESS",
+            "SUCCESS",
+            "SUCCESS"
+          ]
+        },
+        {
+          "programme_title": "Owned second import",
+          "realtime_event_count": 11,
+          "request_root_and_two_children_joined": true,
+          "signed_import_http": 202,
+          "task_families": [
+            "refresh_epg_data",
+            "build_programme_index_task",
+            "evaluate_series_rules"
+          ],
+          "terminal_states": [
+            "SUCCESS",
+            "SUCCESS",
+            "SUCCESS"
+          ]
+        }
+      ],
+      "six_distinct_actual_task_ids": true
+    }
+  },
+  "candidate": "b8d3979366981f0372794f8e04b01763a233bae7",
+  "formal_m6_admission": false,
+  "linux_architecture": "amd64",
+  "maximum_source_reference_age_seconds": 900,
+  "native_build_manifest_sha256": "654a678fbb369613d9e2cac184035969ad46c05b20440656cca818ee757a96f2",
+  "native_image_id": "sha256:25414ab4350b0eb74f0e7c8efb0343676a88961bae38880bc758181c0496d155",
+  "one_global_slot": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owner_exits": {
+    "campaign": 0,
+    "preflight": 0,
+    "reduce": 0,
+    "run": 2
+  },
+  "performance_measured": false,
+  "prior_pass_status_transferred": false,
+  "private_coordinator_report_sha256": "649e16f8ec43c5d5d26ee65396c05178573f63fdebfec3aa25be5975006b5e87",
+  "programme_ids_changed": true,
+  "same_package_recording61_prerequisite_open": true,
+  "scope": "M6 exact b8 ordinary AMD64 local XMLTV pair",
+  "second_import_replaced_title_on_same_channel_and_window": true,
+  "signed_current_and_programme_reads": {
+    "equal_full_payloads": true,
+    "http_statuses": [
+      200,
+      200
+    ],
+    "role": "admin",
+    "title": "Owned first import"
+  },
+  "source_reference_age_seconds": 19.9713613986969,
+  "whole_coordinator_nodes": 127
+}

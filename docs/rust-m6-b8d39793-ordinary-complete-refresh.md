@@ -1,0 +1,9 @@
+# M6 ordinary XMLTV title replacement on AMD64
+
+Pinned Original and the ordinary Rust AIO package each completed two signed XMLTV imports and passed 40 checks. Signed reads returned the same current-programme and programme-list JSON. The second import replaced “Owned first import” with “Owned second import” on the same channel and time window and produced a distinct programme ID. Both arms observed 11 realtime events per import, the persisted programme index and separate digests for the two synthetic XMLTV files.
+
+Each import returned HTTP 202 and produced one real Refresh task with two linked children for the programme index and series rules. All six distinct task IDs per backend had successful terminal results. Both fixtures preserved the default database, cleared their scoped queues and reservations, and removed their labeled containers, networks and volumes. Each package node exited zero for execution, evaluation and cleanup. The Original reference was 19.971 seconds old when Native started under the same exclusive lease.
+
+The Rust Linux AMD64 application was `b8d3979366981f0372794f8e04b01763a233bae7`, image `sha256:25414ab4350b0eb74f0e7c8efb0343676a88961bae38880bc758181c0496d155`, and build manifest SHA-256 `654a678fbb369613d9e2cac184035969ad46c05b20440656cca818ee757a96f2`. Original was `1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430`. Original Dispatcharr authors and contributors retain full application and React UI credit. Django, Celery and Redis retain their authorship and licenses.
+
+The scoped outer campaign and reducer exited zero. The coordinator exited 2 with the rest of the 127-node inventory unbound. The b8 recording61 prerequisite, formal M6 admission and performance qualification remain open. [Sanitized physical evidence](../scripts/rust-integration/m6-b8d39793-ordinary-complete-refresh.json)
