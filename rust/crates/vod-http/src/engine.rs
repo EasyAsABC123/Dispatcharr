@@ -15,7 +15,7 @@ use axum::{
 use bytes::Bytes;
 use dispatcharr_contracts::PlaybackRequest;
 use dispatcharr_coordination::Coordinator;
-use dispatcharr_store::{AuthService, Store, StoreError, User};
+use dispatcharr_store::{AuthService, RequestAuthMethod, Store, StoreError, User};
 use futures_util::{stream, StreamExt};
 use serde_json::json;
 use std::{
@@ -26,6 +26,13 @@ use std::{
     sync::{atomic::Ordering, Arc},
     time::Duration,
 };
+
+fn signed_restart_subject(user: Option<&User>, method: Option<RequestAuthMethod>) -> Option<i64> {
+    match method {
+        Some(RequestAuthMethod::SignedBearerHeader) => user.map(|user| user.id),
+        _ => None,
+    }
+}
 
 #[derive(Clone)]
 pub struct VodConfig {
@@ -119,10 +126,17 @@ impl VodEngine {
             }),
         })
     }
-    /// Opt-in recovery bridge. Defaults remain unchanged until the paired
-    /// active HTTP/fault/shutdown contract gates accept this behavior.
+    /// Opt-in recovery bridge for the wider generation and entry cases.
     pub fn with_redis_recovery(self, namespace: &str) -> Result<Self, StoreError> {
         self.inner.sessions.enable_recovery(namespace)?;
+        Ok(self)
+    }
+    /// Limit ordinary Redis restart recovery to explicitly reauthenticated
+    /// local sessions with the same content and retained provider.
+    pub fn with_authenticated_redis_restart(self, namespace: &str) -> Result<Self, StoreError> {
+        self.inner
+            .sessions
+            .enable_authenticated_restart(namespace)?;
         Ok(self)
     }
     /// Attach the bounded original lifecycle publisher before any playback.
@@ -213,10 +227,14 @@ impl VodEngine {
                 json!({"error":"VOD is shutting down"}),
             ));
         }
-        let (mut user, xc_path) = match xc {
-            Some((user, path)) => (Some(user), Some(path)),
-            None => (self.inner.resolver.authorize(request).await?, None),
+        let (mut user, xc_path, method) = match xc {
+            Some((user, path)) => (Some(user), Some(path), None),
+            None => {
+                let (user, method) = self.inner.resolver.authorize_entry(request).await?;
+                (user, None, method)
+            }
         };
+        let restart_user = signed_restart_subject(user.as_ref(), method);
         let redirect = |request: &VodRequest, session: &str| match xc_path {
             Some(path) => xc_session_redirect(request, session, path),
             None => session_redirect(request, session),
@@ -265,7 +283,13 @@ impl VodEngine {
         let ticket = self
             .inner
             .sessions
-            .enter_with_resolver(id, source, request, self.inner.resolver.clone())
+            .enter_with_resolver(
+                id,
+                source,
+                request,
+                self.inner.resolver.clone(),
+                restart_user,
+            )
             .await?;
         let provider_url = ticket.session.provider_url();
         let mut upstream_request = self
@@ -1271,7 +1295,7 @@ async fn stop_client(State(engine): State<VodEngine>, request: Request<Body>) ->
                 StatusCode::BAD_REQUEST,
                 axum::Json(json!({"error":"Invalid JSON"})),
             )
-                .into_response()
+                .into_response();
         }
     };
     let value: serde_json::Value = match serde_json::from_slice(&body) {
@@ -1281,7 +1305,7 @@ async fn stop_client(State(engine): State<VodEngine>, request: Request<Body>) ->
                 StatusCode::BAD_REQUEST,
                 axum::Json(json!({"error":"Invalid JSON"})),
             )
-                .into_response()
+                .into_response();
         }
     };
     let Some(id) = value
@@ -1639,5 +1663,33 @@ mod existing_range_admission {
             .await
             .unwrap();
         assert_eq!(body, RANGE_NOT_SATISFIABLE);
+    }
+}
+
+#[cfg(test)]
+mod authenticated_restart_tests {
+    use super::{signed_restart_subject, RequestAuthMethod, User};
+
+    #[test]
+    fn authenticated_restart_requires_explicit_signed_header_provenance() {
+        let user = User {
+            id: 42,
+            username: "fixture-viewer".into(),
+            password: "!".into(),
+            is_active: true,
+            user_level: 0,
+            stream_limit: 1,
+            custom_properties: serde_json::json!({}),
+        };
+        let signed = Some(RequestAuthMethod::SignedBearerHeader);
+        assert_eq!(signed_restart_subject(Some(&user), signed), Some(42));
+        assert_eq!(signed_restart_subject(None, signed), None);
+        assert_eq!(
+            signed_restart_subject(Some(&user), Some(RequestAuthMethod::ApiKey)),
+            None
+        );
+        // Query, restored optional identity, XC, and fixture resolvers may
+        // carry a resolved user without provenance from the original header.
+        assert_eq!(signed_restart_subject(Some(&user), None), None);
     }
 }

@@ -35,7 +35,7 @@ pub(super) async fn stop(inner: Arc<Inner>, id: &str) -> Result<bool, StoreError
             .await
             .map_err(|_| redis_error())?;
         if let Some(session) = _service.sessions.lock().await.get(&id) {
-            if session.scope.get().is_none() {
+            if session.scope.get().is_none() || session.authenticated_restart {
                 session.stop.send_replace(true);
             }
         }

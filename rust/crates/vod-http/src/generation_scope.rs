@@ -79,6 +79,7 @@ struct Inner {
     shutdown: watch::Sender<bool>,
     failed: AtomicBool,
     activated: AtomicBool,
+    authenticated_restart: bool,
     idle_pending: AtomicBool,
     pending_followers: AtomicBool,
 }
@@ -92,8 +93,16 @@ struct Generation {
 }
 struct State {
     current: Arc<Generation>,
+    epoch: u64,
     retired: BTreeMap<String, Weak<Generation>>,
     pending: Option<Retired>,
+}
+pub(crate) struct OrdinaryBodyGeneration {
+    // Retain serialization through recovery's local registry decision.
+    _control: Arc<Control>,
+    pub(crate) lease: Arc<Lease>,
+    pub(crate) metadata_token: String,
+    pub(crate) epoch: u64,
 }
 struct BodyHold {
     _slot: OwnedSemaphorePermit,
@@ -188,11 +197,15 @@ fn timestamp() -> String {
 }
 // Public Source stop signals are not ownership loss or service shutdown.
 const CLASSIFY: &str = r#"
+if ARGV[3]=='1' and redis.call('EXISTS',KEYS[4])~=0 then return 'STOP' end
 local owner=redis.call('GET',KEYS[1])
 local metadata=redis.call('HGET',KEYS[2],'rust_owner_token')
 if owner and owner~=ARGV[1] then return 'FOREIGN' end
 if redis.call('EXISTS',KEYS[2])~=0 and metadata~=ARGV[2] then return 'FOREIGN' end
-if owner and metadata then return 'OWNED' end
+if owner and metadata then
+ if ARGV[3]=='1' and redis.call('HGET',KEYS[3],'token')~=ARGV[1] then return 'PARTIAL' end
+ return 'OWNED'
+end
 if owner or metadata or redis.call('EXISTS',KEYS[3])~=0 then return 'PARTIAL' end
 return 'ABSENT'
 "#;
@@ -253,6 +266,7 @@ redis.call('DEL',KEYS[2]);return {'DELETED'}
 pub(crate) const ENTER_CURRENT: &str = r#"
 if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[2]
  or redis.call('HGET',KEYS[3],'token')~=ARGV[1] then return {'FOREIGN'} end
+if ARGV[12]=='1' and redis.call('EXISTS',KEYS[4])~=0 then return {'STOP'} end
 if redis.call('HGET',KEYS[2],'user_id')~=ARGV[3] or redis.call('HGET',KEYS[2],'content_uuid')~=ARGV[4]
  or redis.call('HGET',KEYS[2],'content_obj_type')~=ARGV[5] then return {'IDENTITY'} end
 local count=tonumber(redis.call('HGET',KEYS[2],'active_streams')or'0')
@@ -294,6 +308,7 @@ async fn control(inner: &Arc<Inner>) -> Result<Arc<Control>, Error> {
 async fn classify_current_physical(
     inner: &Arc<Inner>,
     gen: &Generation,
+    authenticated_restart: bool,
 ) -> redis::RedisResult<String> {
     Script::new(CLASSIFY)
         .key(owner(inner))
@@ -302,6 +317,7 @@ async fn classify_current_physical(
         .key(format!("vod_proxy:client:{}:stop", inner.id))
         .arg(gen.lease.token())
         .arg(&gen.token)
+        .arg(u8::from(authenticated_restart))
         .invoke_async(&mut inner.recovery.inner.connection.clone())
         .await
 }
@@ -333,11 +349,28 @@ async fn mutate(
         .await
         .map_err(|_| Error::Backend)
 }
+fn classification_error(error: redis::RedisError, authenticated_restart: bool) -> Error {
+    if authenticated_restart && (error.is_connection_dropped() || error.is_connection_refusal()) {
+        Error::Disconnected
+    } else {
+        Error::Backend
+    }
+}
+
 impl LocalScope {
     pub async fn adopt(
         recovery: Recovery,
         initial: Initial,
         limits: Limits,
+    ) -> Result<Self, Error> {
+        Self::adopt_with_restart_policy(recovery, initial, limits, false).await
+    }
+
+    pub(crate) async fn adopt_with_restart_policy(
+        recovery: Recovery,
+        initial: Initial,
+        limits: Limits,
+        authenticated_restart: bool,
     ) -> Result<Self, Error> {
         if initial.id.is_empty()
             || initial.id.len() > 128
@@ -380,6 +413,7 @@ impl LocalScope {
             serial: Arc::new(Mutex::new(())),
             state: Mutex::new(State {
                 current: gen.clone(),
+                epoch: 0,
                 retired: BTreeMap::new(),
                 pending: None,
             }),
@@ -387,6 +421,7 @@ impl LocalScope {
             shutdown: watch::channel(false).0,
             failed: AtomicBool::new(false),
             activated: AtomicBool::new(false),
+            authenticated_restart,
             idle_pending: AtomicBool::new(false),
             pending_followers: AtomicBool::new(false),
         });
@@ -430,6 +465,23 @@ impl LocalScope {
     ) -> Result<Body, Error> {
         self.attach_inner(caller, is_new, hook, true).await
     }
+    pub(crate) async fn attach_ordinary_reserved(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+        is_new: bool,
+        hook: Option<Arc<dyn StopHook>>,
+        lease: &Lease,
+        metadata_token: &str,
+    ) -> Result<Body, Error> {
+        // Healthy ordinary ENTER selected an exact metadata token before it
+        // attached its body. A concurrent restart cannot bind it to a successor.
+        let _serial = self
+            .legacy_finalizer_guard(lease, metadata_token, self.profile_id())
+            .await
+            .ok_or(Error::PartialState)?;
+        self.attach_inner(caller, is_new, hook, true).await
+    }
+
     /// New recovery setup: no public slot belongs to this body until reopen's
     /// actual success. Dropping a failed pending setup must not DECR a sibling.
     pub async fn attach_pending(
@@ -536,6 +588,61 @@ impl LocalScope {
         let current = self.inner.state.lock().await.current.clone();
         (current.lease.clone(), current.token.clone())
     }
+    pub(crate) async fn ordinary_body_generation(
+        &self,
+        body: &Body,
+        recheck_owner: bool,
+    ) -> Result<OrdinaryBodyGeneration, Error> {
+        if !self.inner.authenticated_restart
+            || !Weak::ptr_eq(&body.state.scope, &Arc::downgrade(&self.inner))
+        {
+            return Err(Error::Configuration);
+        }
+        let read = async {
+            let guard = control(&self.inner).await?;
+            let (current, epoch) = {
+                let state = self.inner.state.lock().await;
+                (state.current.clone(), state.epoch)
+            };
+            let hold = body
+                .state
+                .hold
+                .lock()
+                .unwrap()
+                .clone()
+                .ok_or(Error::Stopped)?;
+            if *self.inner.stop.borrow()
+                || body.is_closed()
+                || !body.state.admitted.load(Ordering::Acquire)
+                || ordinary_body_is_retired(&self.inner, &hold, &current)
+            {
+                return Err(Error::PartialState);
+            }
+            if recheck_owner {
+                let observed = classify_current_physical(&self.inner, &current, true)
+                    .await
+                    .map_err(|_| Error::Backend)?;
+                match observed.as_str() {
+                    "OWNED" => {}
+                    "STOP" => return Err(Error::Stopped),
+                    "FOREIGN" => return Err(Error::ForeignOwner),
+                    _ => return Err(Error::PartialState),
+                }
+            }
+            if *self.inner.stop.borrow() || body.is_closed() {
+                return Err(Error::Stopped);
+            }
+            Ok(OrdinaryBodyGeneration {
+                _control: guard,
+                lease: current.lease.clone(),
+                metadata_token: current.token.clone(),
+                epoch,
+            })
+        };
+        tokio::time::timeout(self.inner.recovery.inner.observer_timeout, read)
+            .await
+            .map_err(|_| Error::ObserverTimeout)?
+    }
     pub async fn can_evict(&self) -> bool {
         self.body_slots() == self.inner.limits.bodies
             && self.control_slots() == self.inner.limits.controls
@@ -622,34 +729,41 @@ impl LocalScope {
     }
     pub async fn retire_missing_retained(&self, caller: Arc<dyn Send + Sync>) -> Result<(), Error> {
         let inner = self.inner.clone();
+        let authenticated_restart = inner.authenticated_restart;
         let task = tokio::spawn(async move {
             let _caller = caller;
             let _control = control(&inner).await?;
+            if authenticated_restart && *inner.stop.borrow() {
+                return Err(Error::Stopped);
+            }
             let gen = inner.state.lock().await.current.clone();
             let pending_owned = inner.idle_pending.load(Ordering::Acquire);
             if pending_owned && !inner.pending_followers.load(Ordering::Acquire) {
                 return Err(Error::PartialState);
             }
             if !pending_owned {
-                if !*gen.lease.lost().borrow() {
+                // The ordinary coordinator already schedules its healthy
+                // heartbeat. This read does not add another write per viewer.
+                if !authenticated_restart && !*gen.lease.lost().borrow() {
                     let _ = gen.lease.heartbeat().await;
                 }
                 gen.lease.settlement().wait().await;
             }
-            let observed = match classify_current_physical(&inner, &gen).await {
-                Ok(value) => value,
-                // Only this immutable, read-only script may be observed afresh.
-                // redis0.32.7 restricts this predicate to BrokenPipe, reset, EOF.
-                Err(error) if error.is_connection_dropped() => {
-                    if *inner.stop.borrow() || *inner.shutdown.borrow() {
-                        return Err(Error::Stopped);
+            let observed =
+                match classify_current_physical(&inner, &gen, authenticated_restart).await {
+                    Ok(value) => value,
+                    // Only this immutable, read-only script may be observed afresh.
+                    // redis0.32.7 restricts this predicate to BrokenPipe, reset, EOF.
+                    Err(error) if error.is_connection_dropped() => {
+                        if *inner.stop.borrow() || *inner.shutdown.borrow() {
+                            return Err(Error::Stopped);
+                        }
+                        classify_current_physical(&inner, &gen, authenticated_restart)
+                            .await
+                            .map_err(|error| classification_error(error, authenticated_restart))?
                     }
-                    classify_current_physical(&inner, &gen)
-                        .await
-                        .map_err(|_| Error::Backend)?
-                }
-                Err(_) => return Err(Error::Backend),
-            };
+                    Err(error) => return Err(classification_error(error, authenticated_restart)),
+                };
             // Pending provider ownership must not be retired/reallocated on
             // absent/partial state while its physical operation is outstanding.
             if pending_owned && observed != "OWNED" {
@@ -752,13 +866,14 @@ impl LocalScope {
             if *inner.stop.borrow() {
                 return Err(Error::Stopped);
             }
-            let retired = inner
-                .state
-                .lock()
-                .await
-                .pending
-                .take()
-                .ok_or(Error::PartialState)?;
+            let (retired, epoch) = {
+                let mut state = inner.state.lock().await;
+                let epoch = state
+                    .epoch
+                    .checked_add(u64::from(inner.authenticated_restart))
+                    .ok_or(Error::Capacity)?;
+                (state.pending.take().ok_or(Error::PartialState)?, epoch)
+            };
             let hold = body
                 .state
                 .hold
@@ -774,41 +889,43 @@ impl LocalScope {
                 .get("user_id")
                 .cloned()
                 .ok_or(Error::Configuration)?;
-            let generation = retired
-                .reopen_source_retained(request, admission, caller)
-                .await?;
-            if *inner.stop.borrow() || body.is_closed() {
-                let _ = generation.close().await;
-                return Err(Error::Stopped);
+            let generation = if inner.authenticated_restart {
+                retired.reopen_retained(request, admission, caller).await?
+            } else {
+                retired
+                    .reopen_source_retained(request, admission, caller)
+                    .await?
+            };
+            {
+                let mut state = inner.state.lock().await;
+                let attached = body.state.hold.lock().unwrap();
+                if let Some(attached) = attached
+                    .as_ref()
+                    .filter(|_| !*inner.stop.borrow() && !body.is_closed())
+                {
+                    let lease = generation
+                        .cleanup
+                        .as_ref()
+                        .expect("live generation")
+                        .lease
+                        .clone();
+                    let token = generation.metadata_token().to_owned();
+                    let next = Arc::new(Generation {
+                        user_id: public_user_id,
+                        lease,
+                        token,
+                        recovered: StdMutex::new(Some(Arc::new(generation))),
+                        retired: AtomicBool::new(false),
+                    });
+                    *attached._origin.lock().unwrap() = next.clone();
+                    state.current = next;
+                    state.epoch = epoch;
+                    body.state.admitted.store(true, Ordering::Release);
+                    return Ok(());
+                }
             }
-            let lease = generation
-                .cleanup
-                .as_ref()
-                .expect("live generation")
-                .lease
-                .clone();
-            let token = generation.metadata_token().to_owned();
-            let recovered = Arc::new(generation);
-            let next = Arc::new(Generation {
-                user_id: public_user_id,
-                lease,
-                token,
-                recovered: StdMutex::new(Some(recovered)),
-                retired: AtomicBool::new(false),
-            });
-            *body
-                .state
-                .hold
-                .lock()
-                .unwrap()
-                .as_ref()
-                .expect("owned body")
-                ._origin
-                .lock()
-                .unwrap() = next.clone();
-            inner.state.lock().await.current = next;
-            body.state.admitted.store(true, Ordering::Release);
-            Ok(())
+            let _ = generation.close().await;
+            Err(Error::Stopped)
         });
         tokio::time::timeout(self.inner.recovery.inner.observer_timeout, task)
             .await
@@ -827,7 +944,11 @@ impl LocalScope {
         admission: NewAdmission,
         profile_max: Option<u32>,
     ) -> Result<(), Error> {
-        match self.enter_current_inner(body, admission, true).await? {
+        let allow_idle = !self.inner.authenticated_restart;
+        match self
+            .enter_current_inner(body, admission, allow_idle)
+            .await?
+        {
             Some(admission) => {
                 self.enter_idle_after_policy(
                     body,
@@ -880,6 +1001,9 @@ impl LocalScope {
                 return Err(Error::PartialState);
             }
             let gen = inner.state.lock().await.current.clone();
+            if inner.authenticated_restart && gen.retired.load(Ordering::Acquire) {
+                return Err(Error::PartialState);
+            }
             // Source skips optional user restoration while public metadata exists.
             // Anonymous request policy does not authorize changing its public subject.
             if !admission
@@ -896,27 +1020,35 @@ impl LocalScope {
             let owner_key = owner(&inner);
             let stop_key = format!("vod_proxy:client:{}:stop", inner.id);
             if admission.limit > 0 {
-                dispatcharr_clients::vod::admit_source_owner_physical(
-                    &mut inner.recovery.inner.connection.clone(),
-                    dispatcharr_clients::vod::Admission {
-                        session_id: &inner.id,
-                        fields: &admission.fields,
-                        limit: admission.limit,
-                        policy: &admission.policy,
-                        create: false,
-                        token: &gen.token,
-                        scan_limit: 50000,
-                        timeout: inner.recovery.inner.observer_timeout,
-                        ttl: Duration::from_secs(3600),
-                    },
-                    dispatcharr_clients::vod::AdmissionFence {
-                        owner_key: &owner_key,
-                        owner_token: gen.lease.token(),
-                        stop_key: &stop_key,
-                    },
-                )
-                .await
-                .map_err(Error::Admission)?;
+                let request = dispatcharr_clients::vod::Admission {
+                    session_id: &inner.id,
+                    fields: &admission.fields,
+                    limit: admission.limit,
+                    policy: &admission.policy,
+                    create: false,
+                    token: &gen.token,
+                    scan_limit: 50000,
+                    timeout: inner.recovery.inner.observer_timeout,
+                    ttl: Duration::from_secs(3600),
+                };
+                let fence = dispatcharr_clients::vod::AdmissionFence {
+                    owner_key: &owner_key,
+                    owner_token: gen.lease.token(),
+                    stop_key: &stop_key,
+                };
+                let mut connection = inner.recovery.inner.connection.clone();
+                let admitted = if inner.authenticated_restart {
+                    dispatcharr_clients::vod::admit_fenced_physical(&mut connection, request, fence)
+                        .await
+                } else {
+                    dispatcharr_clients::vod::admit_source_owner_physical(
+                        &mut connection,
+                        request,
+                        fence,
+                    )
+                    .await
+                };
+                admitted.map_err(Error::Admission)?;
             }
             if *inner.stop.borrow() || body.is_closed() {
                 return Err(Error::Stopped);
@@ -933,6 +1065,11 @@ impl LocalScope {
                 let mut entry = hold.receipt.lock().unwrap();
                 if entry.is_some() {
                     return Err(Error::Configuration);
+                }
+                if inner.authenticated_restart {
+                    // This origin and its receipt use the exact generation
+                    // selected under serial, including for a lost ENTER reply.
+                    *hold._origin.lock().unwrap() = gen.clone();
                 }
                 *entry = Some(receipt.clone());
             }
@@ -960,6 +1097,7 @@ impl LocalScope {
                 .arg(&receipt.field)
                 .arg(receipt.max_fields)
                 .arg(receipt.max_bytes)
+                .arg(u8::from(inner.authenticated_restart))
                 .invoke_async(&mut inner.recovery.inner.connection.clone())
                 .await;
             let reply = match reply {
@@ -1090,9 +1228,11 @@ impl LocalScope {
             .ok_or(Error::Configuration)?;
         let inner = self.inner.clone();
         let task = tokio::spawn(async move {
-            let _hold = hold;
             let _control = control(&inner).await?;
             let gen = inner.state.lock().await.current.clone();
+            if ordinary_body_is_retired(&inner, &hold, &gen) {
+                return Ok(Progress::Missing);
+            }
             let reply = mutate(&inner, &gen, "progress", &bytes.to_string(), None).await?;
             match reply.first().map(String::as_str) {
                 Some("UPDATED") => Ok(Progress::Updated),
@@ -1195,6 +1335,14 @@ async fn close_owned_kind(
     }
     result
 }
+fn ordinary_body_is_retired(inner: &Inner, hold: &BodyHold, gen: &Arc<Generation>) -> bool {
+    if !inner.authenticated_restart {
+        return false;
+    }
+    let origin = hold._origin.lock().unwrap();
+    origin.retired.load(Ordering::Acquire) || !Arc::ptr_eq(&origin, gen)
+}
+
 async fn close_public(
     inner: Arc<Inner>,
     hold: Arc<BodyHold>,
@@ -1208,6 +1356,14 @@ async fn close_public(
     // the separate ordinary-control admission is full.
     let serial = inner.serial.clone().lock_owned().await;
     let gen = inner.state.lock().await.current.clone();
+    if ordinary_body_is_retired(&inner, &_hold, &gen) {
+        return Ok(Closed {
+            changed: false,
+            remaining: 0,
+            deleted: false,
+            event_eligible: false,
+        });
+    }
     if uncertain
         && receipt.as_ref().is_none_or(|entry| {
             entry.lease_token != gen.lease.token() || entry.metadata_token != gen.token
@@ -1334,5 +1490,24 @@ fn disarm_recovered(generation: &Generation) {
             // plus lease settlement. Keep old body identity, not old setup jobs.
             owner.cleanup.take();
         }
+    }
+}
+
+#[cfg(test)]
+mod authenticated_restart_tests {
+    use super::{classification_error, Error};
+    use std::io::{Error as IoError, ErrorKind};
+
+    #[test]
+    fn only_known_disconnects_receive_the_ordinary_restart_grace() {
+        for kind in [ErrorKind::ConnectionReset, ErrorKind::ConnectionRefused] {
+            let fault = || redis::RedisError::from(IoError::from(kind));
+            assert_eq!(classification_error(fault(), true), Error::Disconnected);
+            assert_eq!(classification_error(fault(), false), Error::Backend);
+        }
+        let timed_out = redis::RedisError::from(IoError::from(ErrorKind::TimedOut));
+        assert_eq!(classification_error(timed_out, true), Error::Backend);
+        let malformed = redis::RedisError::from((redis::ErrorKind::TypeError, "synthetic reply"));
+        assert_eq!(classification_error(malformed, true), Error::Backend);
     }
 }

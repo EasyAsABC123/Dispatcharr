@@ -206,6 +206,30 @@ return result
         }))
     }
 
+    /// Decide whether an existing binding still falls within the shared HLS
+    /// idle window without refreshing either TTL or the client's last activity.
+    pub async fn hls_session_within_idle_window(
+        &self,
+        token: &str,
+        idle: Duration,
+    ) -> Result<bool, Error> {
+        if !valid_token(token) {
+            return Ok(false);
+        }
+        let result: i64 = invoke(
+            &self.inner,
+            scripts::HLS_SESSION_WITHIN_IDLE_WINDOW,
+            &[format!("live:hls:session:{token}")],
+            &[
+                token.to_owned(),
+                now().to_string(),
+                idle.as_secs_f64().to_string(),
+            ],
+        )
+        .await?;
+        Ok(result == 1)
+    }
+
     pub async fn get_hls_session(&self, token: &str) -> Result<Option<HlsSessionInfo>, Error> {
         if !valid_token(token) {
             return Ok(None);

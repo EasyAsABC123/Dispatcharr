@@ -604,8 +604,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
             .map_err(|_| "Invalid fMP4 configuration".to_string())
         })
         .transpose()?;
-    // Recovery remains an explicit verification lane until its packaged
-    // SQL/authentication/restart and remaining entry semantics are accepted.
+    // Broader recovery remains opt-in. Ordinary playback allows only a
+    // reauthenticated local same-session restart under the retained provider.
     let vod_recovery_enabled = match env::var("RUST_VOD_REDIS_RECOVERY_ENABLED").as_deref() {
         Ok("0") | Err(_) => false,
         Ok("1") => true,
@@ -653,6 +653,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
                 .map_err(|_| "VOD recovery configuration failed")?
         } else {
             engine
+                .with_authenticated_redis_restart(&lease_config.namespace)
+                .map_err(|_| "VOD authenticated restart configuration failed")?
         };
         Some(engine)
     } else {
