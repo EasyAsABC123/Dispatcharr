@@ -3,13 +3,13 @@
 use crate::{AuthService, StoreError};
 use axum::{
     extract::{rejection::JsonRejection, ConnectInfo, FromRequestParts, Path, Request, State},
-    http::{request::Parts, HeaderMap},
-    response::Response,
+    http::{header, request::Parts, HeaderMap, Method},
+    response::{IntoResponse, Response},
     routing::get,
     Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
-use serde_json::{json, Value};
+use serde_json::{json, Map, Value};
 use sqlx::{postgres::PgRow, Row};
 use std::net::SocketAddr;
 
@@ -168,6 +168,107 @@ endpoints!(settings, setting, Settings);
 endpoints!(useragents, useragent, UserAgents);
 endpoints!(streamprofiles, streamprofile, StreamProfiles);
 endpoints!(outputprofiles, outputprofile, OutputProfiles);
+
+const USER_AGENT_FIELDS: &[&str] = &[
+    "id",
+    "name",
+    "user_agent",
+    "description",
+    "is_active",
+    "created_at",
+    "updated_at",
+];
+const STREAM_PROFILE_FIELDS: &[&str] = &[
+    "id",
+    "name",
+    "command",
+    "parameters",
+    "is_active",
+    "user_agent",
+    "locked",
+];
+
+fn order_profile_fields(fields: &mut Map<String, Value>, source_order: &[&str]) {
+    let mut ordered = Map::with_capacity(fields.len());
+    for key in source_order {
+        if let Some((name, value)) = fields.shift_remove_entry(*key) {
+            ordered.insert(name, value);
+        }
+    }
+    ordered.extend(std::mem::take(fields));
+    *fields = ordered;
+}
+
+fn direct_profile_response(
+    method: Method,
+    detail: bool,
+    source_order: &[&str],
+    Json(mut value): Json<Value>,
+) -> Response {
+    if method != Method::GET {
+        return Json(value).into_response();
+    }
+    match &mut value {
+        Value::Array(rows) => {
+            for fields in rows.iter_mut().filter_map(Value::as_object_mut) {
+                order_profile_fields(fields, source_order);
+            }
+        }
+        Value::Object(fields) => order_profile_fields(fields, source_order),
+        _ => {}
+    }
+    let allow = if detail {
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+    } else {
+        "GET, POST, HEAD, OPTIONS"
+    };
+    // Main's existing response middleware appends the origin token to Vary.
+    (
+        [(header::ALLOW, allow), (header::VARY, "Accept")],
+        Json(value),
+    )
+        .into_response()
+}
+
+macro_rules! direct_profile_gets {
+    ($list:ident, $detail:ident, $canonical_list:ident, $canonical_detail:ident, $fields:ident) => {
+        async fn $list(
+            auth: State<AuthService>,
+            peer: ConnectInfo<SocketAddr>,
+            method: Method,
+            headers: HeaderMap,
+        ) -> Result<Response, StoreError> {
+            let value = $canonical_list(auth, peer, headers).await?;
+            Ok(direct_profile_response(method, false, $fields, value))
+        }
+
+        async fn $detail(
+            auth: State<AuthService>,
+            id: Path<String>,
+            peer: ConnectInfo<SocketAddr>,
+            method: Method,
+            headers: HeaderMap,
+        ) -> Result<Response, StoreError> {
+            let value = $canonical_detail(auth, id, peer, headers).await?;
+            Ok(direct_profile_response(method, true, $fields, value))
+        }
+    };
+}
+direct_profile_gets!(
+    direct_useragents,
+    direct_useragent,
+    useragents,
+    useragent,
+    USER_AGENT_FIELDS
+);
+direct_profile_gets!(
+    direct_streamprofiles,
+    direct_streamprofile,
+    streamprofiles,
+    streamprofile,
+    STREAM_PROFILE_FIELDS
+);
+
 struct JsonProfileId(String);
 
 fn literal_json_profile_id(path: &str) -> Option<&str> {
@@ -243,22 +344,22 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
         .route("/api/core/settings/", get(settings))
         .route(
             "/api/core/useragents/",
-            get(useragents).post(crate::user_agent_writes::create),
+            get(direct_useragents).post(crate::user_agent_writes::create),
         )
         .route(
             "/api/core/useragents/{id}/",
-            get(useragent)
+            get(direct_useragent)
                 .patch(crate::user_agent_writes::patch)
                 .put(crate::user_agent_writes::put)
                 .delete(crate::user_agent_writes::delete),
         )
         .route(
             "/api/core/streamprofiles/",
-            get(streamprofiles).post(crate::core_stream_writes::create),
+            get(direct_streamprofiles).post(crate::core_stream_writes::create),
         )
         .route(
             "/api/core/streamprofiles/{id}/",
-            get(streamprofile)
+            get(direct_streamprofile)
                 .patch(crate::core_stream_writes::patch)
                 .put(crate::core_stream_writes::put)
                 .delete(crate::core_stream_writes::delete),
@@ -348,6 +449,56 @@ mod special_source16_order_tests {
             case["response_body_sha256"].as_str().unwrap()
         );
         assert_eq!(raw.len(), 1147);
+    }
+}
+
+#[cfg(test)]
+mod direct_profile_wire_tests {
+    use super::*;
+    use axum::body::to_bytes;
+
+    #[tokio::test]
+    async fn successful_direct_profile_gets_use_original_wire_order_and_headers() {
+        let agent = json!({"id":4,"name":"Owned","is_active":true,"user_agent":"Owned/1.0",
+            "description":"fixture","created_at":"2026-01-08T08:12:03.123456Z",
+            "updated_at":"2026-01-08T08:12:03.123456Z"});
+        let profile = json!({"id":9,"name":"Owned profile","is_active":true,"command":"ffmpeg",
+            "parameters":"-v quiet","locked":false,"user_agent":null});
+        let agent_bytes = r#"{"id":4,"name":"Owned","user_agent":"Owned/1.0","description":"fixture","is_active":true,"created_at":"2026-01-08T08:12:03.123456Z","updated_at":"2026-01-08T08:12:03.123456Z"}"#;
+        let profile_bytes = r#"{"id":9,"name":"Owned profile","command":"ffmpeg","parameters":"-v quiet","is_active":true,"user_agent":null,"locked":false}"#;
+        for (body, fields, row) in [
+            (agent, USER_AGENT_FIELDS, agent_bytes),
+            (profile, STREAM_PROFILE_FIELDS, profile_bytes),
+        ] {
+            for (detail, payload, expected, allow) in [
+                (
+                    true,
+                    body.clone(),
+                    row.to_owned(),
+                    "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+                ),
+                (
+                    false,
+                    json!([body.clone(), body.clone()]),
+                    format!("[{row},{row}]"),
+                    "GET, POST, HEAD, OPTIONS",
+                ),
+            ] {
+                let response = direct_profile_response(Method::GET, detail, fields, Json(payload));
+                assert_eq!(response.status(), axum::http::StatusCode::OK);
+                assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+                assert_eq!(response.headers()[header::ALLOW], allow);
+                assert_eq!(response.headers()[header::VARY], "Accept");
+                let raw = to_bytes(response.into_body(), 4096).await.unwrap();
+                assert_eq!(raw.as_ref(), expected.as_bytes());
+            }
+            let legacy = serde_json::to_vec(&body).unwrap();
+            let head = direct_profile_response(Method::HEAD, true, fields, Json(body));
+            assert!(!head.headers().contains_key(header::ALLOW));
+            assert!(!head.headers().contains_key(header::VARY));
+            let raw = to_bytes(head.into_body(), 4096).await.unwrap();
+            assert_eq!(raw.as_ref(), legacy.as_slice());
+        }
     }
 }
 
