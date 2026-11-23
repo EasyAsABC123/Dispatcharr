@@ -18,6 +18,8 @@ mod playback;
 mod plugin_gpg_trace;
 mod plugin_jobs_bridge;
 mod proxy_health;
+#[cfg(test)]
+mod proxy_health_component;
 mod realtime;
 mod recording_http_bridge;
 mod redis_config;
