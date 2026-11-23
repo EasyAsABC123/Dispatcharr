@@ -1,0 +1,766 @@
+{
+  "candidate": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "cohorts": {
+    "1": {
+      "CPU_ratio_range": [
+        0.8462361828068482,
+        0.8808851023758765
+      ],
+      "median_CPU_ratio": 0.8724033108768515,
+      "median_peak_working_memory_ratio": 0.6990975473666335,
+      "passed_pairs": 3,
+      "peak_working_memory_ratio_range": [
+        0.6944758423318342,
+        0.7068982399451665
+      ]
+    },
+    "10": {
+      "CPU_ratio_range": [
+        0.28862599131510824,
+        0.2950287560943337
+      ],
+      "median_CPU_ratio": 0.29150194509951866,
+      "median_peak_working_memory_ratio": 0.6767437242281589,
+      "passed_pairs": 3,
+      "peak_working_memory_ratio_range": [
+        0.6638225060002986,
+        0.6872781485162572
+      ]
+    },
+    "100": {
+      "CPU_ratio_range": [
+        0.08913328907181249,
+        0.09158276648219835
+      ],
+      "median_CPU_ratio": 0.08991866910863285,
+      "median_peak_working_memory_ratio": 0.5530775004691312,
+      "passed_pairs": 3,
+      "peak_working_memory_ratio_range": [
+        0.50784322161511,
+        0.5677121931031828
+      ]
+    }
+  },
+  "common_pacing_period_ms": 250,
+  "completed_measurement_pairs": 9,
+  "controller_raw_sha256": "5959cc9b3654b7bec438166c2af19af84d8634c92574b29e92ae0bbe1a9e8ef9",
+  "exact_project_cleanup": true,
+  "experiment_raw_sha256": "846b5c7d3bde9ae52c001ccab1665c55411bb439b56b3ec49dff30a6c755d7dd",
+  "frozen_plan_sha256": "55a48c523275b0a25445e226286f4796c4edc8b4e10209caf9e28384d0eb7b6a",
+  "functional_sha256": "f57ab58af1439d1128b70bde32a0bd42c443030c202149d6d9fed3266f7f654b",
+  "literal_owner_exit": 0,
+  "paired_trials": [
+    {
+      "arms": {
+        "native": {
+          "metrics": {
+            "core_cpu_percent": 0.31934976849202923,
+            "core_memory_fraction": 0.03398895263671875,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 0.7600765579898188,
+            "peak_working_memory_bytes": 236564480,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "9cfe51fb7dc6520dbd7d193041eaf7a62780c5a2b91166cb50ce8c95a894f5a0",
+          "receipt_sha256": "e7f03dc3078076f4aefda7a09bf8a3939867fbd009c748a2975ccc5c6e2e2c26",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 61408320,
+                "readers": 1
+              },
+              "slow": {
+                "measured_bytes": 0,
+                "readers": 0
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 76760400
+          }
+        },
+        "source": {
+          "metrics": {
+            "core_cpu_percent": 0.6376874020660539,
+            "core_memory_fraction": 0.2082977294921875,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 0.871244467453782,
+            "peak_working_memory_bytes": 334651392,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "4c31d27e825b10795f89d5a05556dc6392a520a07eb4dc05b60703a242768f7d",
+          "receipt_sha256": "206f7f08888f95750759a61ac0578c858d1a249561c23204b9da242f3ac14128",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 61408320,
+                "readers": 1
+              },
+              "slow": {
+                "measured_bytes": 0,
+                "readers": 0
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 76760400
+          }
+        }
+      },
+      "pair": {
+        "cpu_ratio": 0.8724033108768515,
+        "failed": [],
+        "measured_class_byte_ratios": {
+          "fast": 1.0
+        },
+        "memory_ratio": 0.7068982399451665,
+        "order": "source,native",
+        "passed": true,
+        "trial": 1,
+        "viewers": 1
+      }
+    },
+    {
+      "arms": {
+        "native": {
+          "metrics": {
+            "core_cpu_percent": 0.31623805081515777,
+            "core_memory_fraction": 0.0335693359375,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 0.756220516902527,
+            "peak_working_memory_bytes": 236560384,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "7b3867c6f0e45171deed9aa4458e0bc810cd123a487fb89ae2bd0e42e46278a1",
+          "receipt_sha256": "f7c2f1afd772ecdff1f1f3dbfc56cf440d5b0bbc92aaac06b55a35d5721f4973",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 61408320,
+                "readers": 1
+              },
+              "slow": {
+                "measured_bytes": 0,
+                "readers": 0
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 76760400
+          }
+        },
+        "source": {
+          "metrics": {
+            "core_cpu_percent": 0.6301916263292002,
+            "core_memory_fraction": 0.2179107666015625,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 0.858478040851059,
+            "peak_working_memory_bytes": 340631552,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "896257f38cf6fcd7c2307ac66b6208971ce9750d43dc47352b816c23cf6437db",
+          "receipt_sha256": "4e65116eed9f89438f25fa73a4e1b859b8a0ab481c995c77cb1d4bf776a16afa",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 61408320,
+                "readers": 1
+              },
+              "slow": {
+                "measured_bytes": 0,
+                "readers": 0
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 76760400
+          }
+        }
+      },
+      "pair": {
+        "cpu_ratio": 0.8808851023758765,
+        "failed": [],
+        "measured_class_byte_ratios": {
+          "fast": 1.0
+        },
+        "memory_ratio": 0.6944758423318342,
+        "order": "native,source",
+        "passed": true,
+        "trial": 2,
+        "viewers": 1
+      }
+    },
+    {
+      "arms": {
+        "native": {
+          "metrics": {
+            "core_cpu_percent": 0.31856432993013356,
+            "core_memory_fraction": 0.020843505859375,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 0.7551880556838343,
+            "peak_working_memory_bytes": 236072960,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "443ea3bfba44315344b69784cd52df3e3e53174e6cbaab0669978f9a9f07ee0e",
+          "receipt_sha256": "fe30383a6d59252edde5f3d26340792e52534220065d8193fe9d523a1f853b8d",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 61408320,
+                "readers": 1
+              },
+              "slow": {
+                "measured_bytes": 0,
+                "readers": 0
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 76760400
+          }
+        },
+        "source": {
+          "metrics": {
+            "core_cpu_percent": 0.6587247818915336,
+            "core_memory_fraction": 0.22015380859375,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 0.8924081373819069,
+            "peak_working_memory_bytes": 337682432,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "15553f0715e0b665020f6517964812f3ac37bfd091e2dce3f0719a3d7dbe5a96",
+          "receipt_sha256": "72948ef9cacefc11dfbbac1c396cd7770b6bfa907af9af1d802d5d131a677bca",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 61408320,
+                "readers": 1
+              },
+              "slow": {
+                "measured_bytes": 0,
+                "readers": 0
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 76760400
+          }
+        }
+      },
+      "pair": {
+        "cpu_ratio": 0.8462361828068482,
+        "failed": [],
+        "measured_class_byte_ratios": {
+          "fast": 1.0
+        },
+        "memory_ratio": 0.6990975473666335,
+        "order": "source,native",
+        "passed": true,
+        "trial": 3,
+        "viewers": 1
+      }
+    },
+    {
+      "arms": {
+        "native": {
+          "metrics": {
+            "core_cpu_percent": 0.3702938487724315,
+            "core_memory_fraction": 0.023712158203125,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 0.8899246491388997,
+            "peak_working_memory_bytes": 237297664,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "e115e8d77306a56a9311cb50f50e6e4de56a81d35f6708c3cb401e60886f15d6",
+          "receipt_sha256": "9e399b47baabcc2631117d0d3140790d1a19e2d778944f5e49c344cc84db571f",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 552674880,
+                "readers": 9
+              },
+              "slow": {
+                "measured_bytes": 30704160,
+                "readers": 1
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 767604000
+          }
+        },
+        "source": {
+          "metrics": {
+            "core_cpu_percent": 2.545916120696609,
+            "core_memory_fraction": 0.23260498046875,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 3.0833143095810867,
+            "peak_working_memory_bytes": 350646272,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "88de8fa76bc1eae03da25e54275a9d8611e79a0c09e8169204d58c93c2cb5773",
+          "receipt_sha256": "70e12897ad18498f5a025805901190b499fcd098625e83b3151b2f23697e058f",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 552674880,
+                "readers": 9
+              },
+              "slow": {
+                "measured_bytes": 30704160,
+                "readers": 1
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 767604000
+          }
+        }
+      },
+      "pair": {
+        "cpu_ratio": 0.28862599131510824,
+        "failed": [],
+        "measured_class_byte_ratios": {
+          "fast": 1.0,
+          "slow": 1.0
+        },
+        "memory_ratio": 0.6767437242281589,
+        "order": "source,native",
+        "passed": true,
+        "trial": 1,
+        "viewers": 10
+      }
+    },
+    {
+      "arms": {
+        "native": {
+          "metrics": {
+            "core_cpu_percent": 0.3729470795347024,
+            "core_memory_fraction": 0.02124786376953125,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 0.9060946524670792,
+            "peak_working_memory_bytes": 236769280,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "22427548a2ee23fe39870a2f79857d81a9638a4a95887b136959bbb9d870704f",
+          "receipt_sha256": "48576a53b0d7358455134cc20507499d93ff7373f38a281f5159216774a20206",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 552674880,
+                "readers": 9
+              },
+              "slow": {
+                "measured_bytes": 30704160,
+                "readers": 1
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 767604000
+          }
+        },
+        "source": {
+          "metrics": {
+            "core_cpu_percent": 2.545531262456787,
+            "core_memory_fraction": 0.2437591552734375,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 3.0712079204149196,
+            "peak_working_memory_bytes": 356675584,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "5b020d2b524cd98d15b829d9813aee4dbc33945a5d4f91454ae9e68d4e39f735",
+          "receipt_sha256": "db1b09b0a8cec584ecd6fd0c1de37d15dc94da5cc9fd36ff0e27df58c9feb0b6",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 552674880,
+                "readers": 9
+              },
+              "slow": {
+                "measured_bytes": 30704160,
+                "readers": 1
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 767604000
+          }
+        }
+      },
+      "pair": {
+        "cpu_ratio": 0.2950287560943337,
+        "failed": [],
+        "measured_class_byte_ratios": {
+          "fast": 1.0,
+          "slow": 1.0
+        },
+        "memory_ratio": 0.6638225060002986,
+        "order": "native,source",
+        "passed": true,
+        "trial": 2,
+        "viewers": 10
+      }
+    },
+    {
+      "arms": {
+        "native": {
+          "metrics": {
+            "core_cpu_percent": 0.3736505775738514,
+            "core_memory_fraction": 0.0203399658203125,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 0.9045482731648224,
+            "peak_working_memory_bytes": 237920256,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "ccca92b0d418c44efb6947bfe645e69bf5fe1e740351b9aed075ac04f60bf429",
+          "receipt_sha256": "616b080f7da887ccf4a596f8031ff41ff7a53faf03655fb2dcc13317f1c524ec",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 552674880,
+                "readers": 9
+              },
+              "slow": {
+                "measured_bytes": 30704160,
+                "readers": 1
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 767604000
+          }
+        },
+        "source": {
+          "metrics": {
+            "core_cpu_percent": 2.5712010565453842,
+            "core_memory_fraction": 0.2222747802734375,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 3.103060848722673,
+            "peak_working_memory_bytes": 346177536,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "eb1894d77cd6de89453b46406eb66c57486b55a8940f73b15fe658699f69b941",
+          "receipt_sha256": "9ebd820679050897f893b38bd86bc639aaa9a05ab84fe3cc31e2a1769a4d0fb2",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 552674880,
+                "readers": 9
+              },
+              "slow": {
+                "measured_bytes": 30704160,
+                "readers": 1
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 767604000
+          }
+        }
+      },
+      "pair": {
+        "cpu_ratio": 0.29150194509951866,
+        "failed": [],
+        "measured_class_byte_ratios": {
+          "fast": 1.0,
+          "slow": 1.0
+        },
+        "memory_ratio": 0.6872781485162572,
+        "order": "source,native",
+        "passed": true,
+        "trial": 3,
+        "viewers": 10
+      }
+    },
+    {
+      "arms": {
+        "native": {
+          "metrics": {
+            "core_cpu_percent": 0.7640565020054179,
+            "core_memory_fraction": 0.0289154052734375,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 1.9217843602910007,
+            "peak_working_memory_bytes": 241610752,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "60318fcf6684acdc6704a3a2587794e96c27e9b0f5edaa280a33027ee8cb9447",
+          "receipt_sha256": "17b53e9ae8406a2445391355a63af113127e3b1689df7ab16a93997dea3244aa",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 5526748800,
+                "readers": 90
+              },
+              "slow": {
+                "measured_bytes": 307041600,
+                "readers": 10
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 7676040000
+          }
+        },
+        "source": {
+          "metrics": {
+            "core_cpu_percent": 17.579929846378146,
+            "core_memory_fraction": 0.36425018310546875,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 20.984126535034875,
+            "peak_working_memory_bytes": 425586688,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "fc586a691215d3e7067a7c662751071c19465079339c05f6254a640503d9c8d8",
+          "receipt_sha256": "b0332118bdc37d52ca0c66b513eabcfdc4a8cad2d8d981a69a18b750dd5efcb0",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 5526748800,
+                "readers": 90
+              },
+              "slow": {
+                "measured_bytes": 307041600,
+                "readers": 10
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 7676040000
+          }
+        }
+      },
+      "pair": {
+        "cpu_ratio": 0.09158276648219835,
+        "failed": [],
+        "measured_class_byte_ratios": {
+          "fast": 1.0,
+          "slow": 1.0
+        },
+        "memory_ratio": 0.5677121931031828,
+        "order": "source,native",
+        "passed": true,
+        "trial": 1,
+        "viewers": 100
+      }
+    },
+    {
+      "arms": {
+        "native": {
+          "metrics": {
+            "core_cpu_percent": 0.7407875908330147,
+            "core_memory_fraction": 0.02765655517578125,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 1.9054492789700137,
+            "peak_working_memory_bytes": 241741824,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "5c83f747cf9de0a530e1aceb1ae9abd667afa117039e856c3d924667189612f1",
+          "receipt_sha256": "26359b466062e5ab7ed833caf37cacd8ba901978b204f255877297bd4b36a76e",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 5526748800,
+                "readers": 90
+              },
+              "slow": {
+                "measured_bytes": 307041600,
+                "readers": 10
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 7676040000
+          }
+        },
+        "source": {
+          "metrics": {
+            "core_cpu_percent": 17.936819836381247,
+            "core_memory_fraction": 0.41986083984375,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 21.377526834388892,
+            "peak_working_memory_bytes": 476016640,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "a60d4b6c4fea29345ade788ce64f13bc9df1eb62fcc5bf516509cecc4ebdf795",
+          "receipt_sha256": "312ede6ccc4b51aa6615e37cd177c375b43d902a471e44f3119cdb78b332d3c6",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 5526748800,
+                "readers": 90
+              },
+              "slow": {
+                "measured_bytes": 307041600,
+                "readers": 10
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 7676040000
+          }
+        }
+      },
+      "pair": {
+        "cpu_ratio": 0.08913328907181249,
+        "failed": [],
+        "measured_class_byte_ratios": {
+          "fast": 1.0,
+          "slow": 1.0
+        },
+        "memory_ratio": 0.50784322161511,
+        "order": "native,source",
+        "passed": true,
+        "trial": 2,
+        "viewers": 100
+      }
+    },
+    {
+      "arms": {
+        "native": {
+          "metrics": {
+            "core_cpu_percent": 0.7671403814447719,
+            "core_memory_fraction": 0.039703369140625,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 1.9307053687528273,
+            "peak_working_memory_bytes": 241446912,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "0fbc760a7daa5773f1711f6adc6415fdea60c8db920f9e02281d6518fc7f6201",
+          "receipt_sha256": "bf537abde507cc1ac33e87587e26035bbdb18c80a80d98740c1b616a03621493",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 5526748800,
+                "readers": 90
+              },
+              "slow": {
+                "measured_bytes": 307041600,
+                "readers": 10
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 7676040000
+          }
+        },
+        "source": {
+          "metrics": {
+            "core_cpu_percent": 18.00036804719628,
+            "core_memory_fraction": 0.3679351806640625,
+            "core_throttled_period_fraction": 0.0,
+            "cpu_percent_mean": 21.471685334002185,
+            "peak_working_memory_bytes": 436551680,
+            "samples": 60,
+            "whole_stack": [
+              "core",
+              "infrastructure"
+            ]
+          },
+          "raw_resource_sha256": "473b35c238a31f29d4e88556034552cadccafb8bef82e27cf98942dae1952340",
+          "receipt_sha256": "b49589c4a042b84fa8fc568cd602e14348308848311f50b152d7b753e005507e",
+          "work": {
+            "chunks": 300,
+            "classes": {
+              "fast": {
+                "measured_bytes": 5526748800,
+                "readers": 90
+              },
+              "slow": {
+                "measured_bytes": 307041600,
+                "readers": 10
+              }
+            },
+            "pacing_fraction": 1.0,
+            "total_full_bytes": 7676040000
+          }
+        }
+      },
+      "pair": {
+        "cpu_ratio": 0.08991866910863285,
+        "failed": [],
+        "measured_class_byte_ratios": {
+          "fast": 1.0,
+          "slow": 1.0
+        },
+        "memory_ratio": 0.5530775004691312,
+        "order": "source,native",
+        "passed": true,
+        "trial": 3,
+        "viewers": 100
+      }
+    }
+  ],
+  "production_rust_peer_sha256": "22ebb3fd86631d019642da0e45fd9f8ab9c6d5a02184b5b47ae0d17fdb5df752",
+  "scope": "Whole active core plus common stopped-web PGRedis, exact Source-only common pacing and separately cued paired matrix; no HTTP/application acceptance",
+  "source_windows": 9,
+  "whole_core_performance_pass": true
+}
