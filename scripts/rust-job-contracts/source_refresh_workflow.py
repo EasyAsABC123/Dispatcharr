@@ -54,6 +54,13 @@ def start(args,name):
 try:
  broker.flushdb();backend.flushdb()
  for key in ['dvr:recover_dispatch_lock','core:version_check_dispatch_lock']:cache.set(key,'1',ex=3600)
+ # These copied fixtures have no external plugin dependency. Retain actual startup
+ # publication while keeping the documented local XMLTV workload independent of
+ # remote repositories and periodic plugin refresh.
+ from apps.plugins.models import PluginRepo
+ PluginRepo.objects.filter(enabled=True).update(enabled=False)
+ CoreSettings.objects.update_or_create(key='plugin_repo_settings',defaults={
+  'name':'Plugin Repository Settings','value':{'refresh_interval_hours':0}})
  CoreSettings.objects.update_or_create(key='dvr_settings',defaults={'name':'Owned no rules','value':{'series_rules':[]}})
  dc.delete(CoreSettings.group_cache_key('dvr_settings'));dc.delete(CoreSettings.group_cache_ver_key('dvr_settings'))
  recordings=list(Recording.objects.order_by('id').values())
@@ -64,14 +71,42 @@ try:
  epg=EPGData.objects.create(epg_source=source,tvg_id='workflow-owned',name='Workflow owned');channel=Channel(name='rust-complete-workflow',channel_number=1987666,epg_data=epg,uuid='117e9aa2-802c-4adb-985c-404017923012');Channel.objects.bulk_create([channel])
  user=User.objects.create(username='rust-complete-workflow-admin',password='!',user_level=10,is_active=True,custom_properties={});users.append(user.pk);token=str(RefreshToken.for_user(user).access_token);headers={'Authorization':'Bearer '+token,'Accept':'application/json'}
  # Remove only known startup plugin publication before intake. No descendants are removed.
- startup=broker.lrange('celery',0,63);check('startup-only-known-plugin',all(json.loads(v)['headers']['task']=='apps.plugins.tasks.refresh_plugin_repos'for v in startup));report['startup_removed']=[hashlib.sha256(v).hexdigest()for v in startup];broker.delete('celery')
+ startup=broker.lrange('celery',0,63);check('startup-only-known-plugin',all(json.loads(v)['headers']['task']=='apps.plugins.tasks.refresh_plugin_repos'for v in startup))
+ if native:
+  # This handoff precedes Native intake and never resets a live owner's queues.
+  assert not startup and not broker.hlen('unacked') and not broker.zcard('unacked_index')
+  ticket=Path('/evidence/.native-workflow-prepared.tmp')
+  with ticket.open('x')as marker:
+   json.dump({'fixture_clock':report['fixture_clock'],'source_id':source.pk,'file_sha256':hashlib.sha256(guide.read_bytes()).hexdigest(),
+              'owned_broker_ready':0,'owned_broker_reserved':0},marker);marker.flush();os.fsync(marker.fileno())
+  ticket.replace('/evidence/native-workflow-prepared.json')
+  report['startup_removed']=[]
+ else:
+  report['startup_removed']=[hashlib.sha256(v).hexdigest()for v in startup];broker.delete('celery')
  if not native:start(['/dispatcharrpy/bin/uwsgi','--http','127.0.0.1:5657','--module','dispatcharr.wsgi:application','--master','--workers','1','--threads','1','--die-on-term','--need-app'],'workflow-web')
  def ready():
   try:return requests.get(target+'/api/core/version/',timeout=1).status_code==200
   except requests.RequestException:return False
- wait(ready)
+ wait(ready,seconds=90 if native else 50)
  # Startup hooks in this owned copied web may publish only plugin work; quarantine before worker.
- startup=broker.lrange('celery',0,63);check('web-startup-only-known-plugin',all(json.loads(v)['headers']['task']=='apps.plugins.tasks.refresh_plugin_repos'for v in startup));broker.delete('celery')
+ if native:
+  # The existing ordinary graph consumes its real boot work. Record the fixture
+  # success only after both intake lanes and Core Beat report accepting and
+  # the isolated broker gives a clean pre-import baseline.
+  def ordinary_settled():
+   try: response=requests.get(target+'/health/ready',timeout=1)
+   except requests.RequestException:return False
+   if response.status_code!=200:return False
+   graph=response.json().get('selected_workers',{})
+   return (graph.get('ready')is True and graph.get('startup')=='Started'
+     and graph.get('control')=='Subscribed'and graph.get('clocked_scheduler_enabled')is True
+     and graph.get('clocked_scheduler_scope')=='core-saved-families'
+     and graph.get('clocked_scheduler','').startswith('Observed(')
+     and all(graph.get(lane,'').startswith(('Working(','Observed('))for lane in ('celery','dvr'))
+     and not broker.llen('celery')and not broker.llen('dvr')and not broker.hlen('unacked')and not broker.zcard('unacked_index'))
+  check('web-startup-only-known-plugin',wait(ordinary_settled,seconds=50))
+ else:
+  startup=broker.lrange('celery',0,63);check('web-startup-only-known-plugin',all(json.loads(v)['headers']['task']=='apps.plugins.tasks.refresh_plugin_repos'for v in startup));broker.delete('celery')
  if not native:start(['/dispatcharrpy/bin/celery','-A','refresh_workflow_observer:app','worker','--pool=prefork','--concurrency=1','--without-gossip','--without-mingle','--without-heartbeat','--loglevel=WARNING','--hostname=rust-workflow@fixture'],'workflow-worker')
  if not native:wait(lambda:broker.exists('_kombu.binding.celery.pidbox'))
  event_thread.start();check('event-subscriber-ready',event_ready.wait(5)and not event_errors)

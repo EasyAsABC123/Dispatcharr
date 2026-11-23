@@ -149,7 +149,7 @@ def validate(nodes, bindings):
                 raise ValueError("bound input changed: " + name)
 
 
-def owner_readiness(nodes, document):
+def owner_readiness(nodes, document, output=None):
     """An arbitrary argv binding cannot bypass an owner's actual readiness.
 
     Retained Source is a dependency authority, never a newly executed/current
@@ -235,6 +235,23 @@ def owner_readiness(nodes, document):
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
         elif key in bindings and node["owner"] == "m6":
+            if key in {"m6/guide-current-output", "m6/second-import-replaces-title"}:
+                owner = module(HERE / "m6/second_import_owner.py", "readiness_m6_second_import")
+                if not {owner.SOURCE, owner.NATIVE} <= bindings.keys():
+                    raise ValueError("M6 complete-refresh cell requires both existing complete-refresh package bindings")
+                owner_binding = owners["m235"]
+                owner.require_fresh_roots(owner_binding["output_root"], output)
+                for package_key in (owner.SOURCE, owner.NATIVE):
+                    resolved = m235.resolve_node(package_key, owner_binding, HERE.parents[1])
+                    expected_package = owner.package_dispatch_spec(package_key, document["candidate"],
+                                                                   owner_binding, output, HERE.parents[1], resolved)
+                    if bindings[package_key] != expected_package:
+                        raise ValueError("M6 complete-refresh cell requires the exact ordinary workflow package and its proofs")
+                expected = owner.dispatch_spec(document["candidate"], owner_binding["output_root"],
+                                               output, HERE.parents[1], node=key)
+                if bindings[key] != expected:
+                    raise ValueError("M6 complete-refresh exact checker, cleanup, and evaluator binding required")
+                continue
             # This export currently offers bounded partial probes, not complete
             # functional or performance workflows. Do not invent a green binding.
             if key not in {"m6/api202-publication", "m6/default-job-graph"}:
@@ -548,6 +565,16 @@ def schedule(nodes, bindings, output, candidate, worker=execute, authorities=Non
                             'paired_lease': lease, 'reason': str(error)}]
         second = invoke(native)
         second.update(paired_lease=lease, reference_age_at_dispatch_seconds=age)
+        if (native['id'] == 'package/complete-refresh' and 'm6/guide-current-output' in bindings
+                and accepted(second) and second.get('cleanup_verified') is True):
+            result_digests = {
+                key: hashlib.sha256((directory(key) / 'result.json').read_bytes()).hexdigest()
+                for key in (source['id'], native['id'])
+            }
+            save(directory(native['id']) / 'pair-lease.json', {
+                'candidate': candidate, 'paired_lease': lease, 'result_sha256': result_digests,
+                'reference_age_at_dispatch_seconds': age,
+            })
         return [first, second]
 
     unsafe = False
@@ -632,7 +659,7 @@ def main():
     if not owner.candidate_ready(bound["candidate"]):
         raise ValueError("current committed candidate/archive/source-map/build binding required")
     validate(nodes, bound["nodes"])
-    authorities = owner_readiness(nodes, bound)
+    authorities = owner_readiness(nodes, bound, args.output)
     # Lock across scheduler invocations; owner adapters never create their own pool.
     with fixture_lease(HERE / ".dispatcher.lock"):
         report = schedule(nodes, bound["nodes"], args.output, bound["candidate"], authorities=authorities)

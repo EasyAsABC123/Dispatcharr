@@ -3,6 +3,7 @@
 Original Dispatcharr authors retain full application credit and AGPL licensing.
 """
 import argparse,hashlib,json,os,subprocess,sys,time,urllib.request,uuid
+from ordinary_refresh_launch import candidate_overlay, run_prepared_candidate
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2];sys.path.insert(0,str(ROOT/'scripts/rust-integration'))
 from run import BASELINE,fixture_source
@@ -39,12 +40,12 @@ def main():
   if manifest:
    candidate=out/'candidate.yml'
    (out/'workflow-files').mkdir(mode=0o755);(out/'workflow-files').chmod(0o755)
-   candidate.write_text('services:\n  data-init:\n    image: debian:bookworm-slim@sha256:734a72b3d6142a71993b4bc580ca01d8ca687f77a2c422d96a961d3376b179bc\n    user: "0:0"\n    entrypoint: [sh, -c, "mkdir -p /data/logos /data/cached_epg && chown -R 65532:65532 /data"]\n    volumes: [workflow-data:/data]\n    network_mode: none\n  candidate:\n    image: '+manifest['image_id']+'\n    read_only: true\n    user: "65532:65532"\n    cap_drop: [ALL]\n    security_opt: [no-new-privileges:true]\n    depends_on:\n      data-init: {condition: service_completed_successfully}\n      baseline: {condition: service_started}\n    environment:\n      DATABASE_URL: postgres://dispatch:playback-fixture-only@baseline:5432/'+name+'\n      DJANGO_SECRET_KEY: playback-fixture-only\n      REDIS_URL: redis://:playback-fixture-only@baseline:6379/0\n      CELERY_BROKER_URL: redis://:playback-fixture-only@baseline:6379/8\n      CELERY_RESULT_BACKEND: redis://:playback-fixture-only@baseline:6379/9\n      RUST_EPG_REFRESH_ENABLED: "1"\n      RUST_EPG_SOURCE_CWD: /app\n      RUST_EPG_MEDIA_ROOT: /app/media\n      RUST_BIND: 0.0.0.0:9192\n      TMPDIR: /data\n      TOKIO_WORKER_THREADS: "2"\n    volumes:\n      - workflow-data:/data\n      - '+str(out/'workflow-files')+':/evidence/workflow-files:ro\n    stop_grace_period: 20s\nvolumes:\n  workflow-data:\n')
+   candidate.write_text(candidate_overlay(manifest['image_id'], name, out/'workflow-files'))
    compose+=['-f',str(candidate)]
    report['candidate_manifest_sha256']=hashlib.sha256(a.manifest.read_bytes()).hexdigest();report['candidate_image']=manifest['image_id'];report['candidate_tree']=manifest.get('tree_sha256',manifest.get('source_tree_sha256'));report['reference_integration_sha256']=hashlib.sha256((a.reference/'integration.json').read_bytes()).hexdigest()
   before=None
   try:
-   command(compose+['up','-d','baseline']);deadline=time.monotonic()+180
+   command(compose+['up','-d','--pull','never','--no-build','baseline']);deadline=time.monotonic()+180
    while True:
     try:
      command(compose+['exec','-T','baseline','/dispatcharrpy/bin/python','-c',"import urllib.request; r=urllib.request.urlopen('http://127.0.0.1:5656/api/core/version/',timeout=2); assert r.status==200"],timeout=5)
@@ -55,15 +56,14 @@ def main():
    before=helper('dispatcharr','baseline_manifest')
    command(compose+['exec','-T','-e','PGPASSWORD=playback-fixture-only','baseline','psql','-h','127.0.0.1','-U','dispatch','-d','postgres','-v','ON_ERROR_STOP=1','-c','CREATE DATABASE '+name])
    seed=helper(name,'seed');report['copied_nonempty_tables']=sum(v['count']>0 for v in seed['manifest']['tables'].values())
-   if manifest:
-    command(compose+['up','-d','--no-build','candidate'])
-    audit=command(compose+['exec','-T','candidate','sh','-c','id; pwd; ls -ld /app /app/media /data /data/cached_epg /evidence /evidence/workflow-files; test -x /evidence/workflow-files; test -w /data; test /app/media -ef /data'])
-    (out/'candidate-path-audit.txt').write_text(audit);report['candidate_path_audit_sha256']=hashlib.sha256(audit.encode()).hexdigest()
 
    args=compose+['exec','-T','-e','POSTGRES_DB='+name,'-e','INDEX_PRODUCTION_CONNECTOR=1','-e','BACKUP_ROOT=/evidence/jobs-backups','-e','JOB_DISPOSABLE_FIXTURE=playback-fixture-only','-e','CELERY_BROKER_URL=redis://:playback-fixture-only@localhost:6379/8','-e','CELERY_RESULT_BACKEND=redis://:playback-fixture-only@localhost:6379/9','baseline','/dispatcharrpy/bin/python','/job-tools/source_refresh_workflow.py']
    if manifest:
     reference_data=json.loads((a.reference/'source-refresh-workflow-private.json').read_text());clock=reference_data['fixture_clock'];args=args[:-3]+['-e','WORKFLOW_TARGET_URL=http://candidate:9192','-e','WORKFLOW_CLOCK='+clock]+args[-3:]
-   result=subprocess.run(args,env=env,text=True,capture_output=True,timeout=480);(out/'source-controller-private.log').write_text(result.stdout+result.stderr);result.check_returncode()
+    report['ordinary_aio_verified']=run_prepared_candidate(command,compose,out,args,env,manifest['image_id'])
+    report['candidate_path_audit_sha256']=hashlib.sha256((out/'candidate-path-audit.txt').read_bytes()).hexdigest()
+   else:
+    result=subprocess.run(args,env=env,text=True,capture_output=True,timeout=480);(out/'source-controller-private.log').write_text(result.stdout+result.stderr);result.check_returncode()
    actual=json.loads((out/'source-refresh-workflow-private.json').read_text())
    if manifest:
     source_actual=json.loads((a.reference/'source-refresh-workflow-private.json').read_text());assert source_actual['passed']and not source_actual.get('native_candidate',False)
