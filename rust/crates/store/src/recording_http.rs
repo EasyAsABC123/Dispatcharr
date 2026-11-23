@@ -201,7 +201,15 @@ struct Recording {
 }
 impl Recording {
     fn value(&self) -> Value {
-        json!({"id":self.id,"channel":self.channel,"start_time":iso(self.start),"end_time":iso(self.end),"task_id":self.task,"custom_properties":self.properties})
+        // Match RecordingSerializer's Original model field order on the wire.
+        json!({
+            "id": self.id,
+            "start_time": iso(self.start),
+            "end_time": iso(self.end),
+            "task_id": self.task,
+            "custom_properties": self.properties,
+            "channel": self.channel,
+        })
     }
 }
 fn iso(time: DateTime<Utc>) -> String {
@@ -1395,6 +1403,55 @@ mod recording_jobs_binding_tests {
             Box::pin(async { panic!("closed routing probe must not publish tasks") })
         }
     }
+    #[tokio::test]
+    async fn dvr_library_recordings_serialize_to_original_wire_bytes() {
+        use sha2::{Digest, Sha256};
+
+        let record = |id, channel, label| Recording {
+            id,
+            channel,
+            start: "2026-01-03T12:00:00Z".parse().unwrap(),
+            end: "2026-01-03T12:30:00Z".parse().unwrap(),
+            task: None,
+            properties: json!({
+                "status": "completed",
+                "program": {
+                    "title": format!("Owned compatibility DVR {label} show"),
+                    "description": "Synthetic recorded programme",
+                },
+            }),
+            uuid: Uuid::nil(),
+            name: String::new(),
+        };
+        let visible = record(1, 11, "visible");
+        let other = record(2, 12, "other");
+        for (value, length, expected) in [
+            (
+                visible.value(),
+                253,
+                "4da32704763a0b5a86d9b1b774aa7d348bb9ada7f43eec09677e96fdd5ae446e",
+            ),
+            (
+                Value::Array(vec![visible.value()]),
+                255,
+                "1c7f2536f7e7dfcdea3d86b391248b09dc3c60551771e7d809c28e0560a7d377",
+            ),
+            (
+                Value::Array(vec![visible.value(), other.value()]),
+                507,
+                "0f0fed96f994d417aeb3f05b217fe4ec679cf8b2f5ca1ee0c9c6b8bf6253e29b",
+            ),
+        ] {
+            let response = reply(200, value, Arc::new(())).unwrap();
+            assert_eq!(response.status(), StatusCode::OK);
+            let body = axum::body::to_bytes(response.into_body(), 1024)
+                .await
+                .unwrap();
+            assert_eq!(body.len(), length);
+            assert_eq!(format!("{:x}", Sha256::digest(body)), expected);
+        }
+    }
+
     #[test]
     fn dvr_library_projects_only_rule_objects_in_original_order() {
         let first = json!({"title":"First","untagged_is_new":false,"extra":{"n":1}});
