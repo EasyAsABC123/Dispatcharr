@@ -1,0 +1,396 @@
+{
+  "M0_original_method_declaration_boundaries": {
+    "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "accepted_HTTP_rows_added": 0,
+    "counts": {
+      "ASGI_WebSocket_route": 1,
+      "Django_admin_site_or_model_workflow": 13,
+      "function_view_requires_request_profile": 6,
+      "function_view_with_explicit_method_branch": 3
+    },
+    "historical_register_unchanged": true,
+    "input_sha256": {
+      "previous_report": "c329445986a877fc3000baa4d8955ec36ebcfc9fbfc8ab0b68329c89b75d3bdd",
+      "register": "49d935200a80ada4a1297cee2786257641d24e8908f388a6fc662abf9c9544cb"
+    },
+    "rows": [
+      {
+        "accepted_http_methods": null,
+        "classification": "function_view_with_explicit_method_branch",
+        "explicit_method_branches": [
+          "POST"
+        ],
+        "handler": "apps.accounts.api_views.initialize_superuser",
+        "handler_line": 215,
+        "resolver_ordinal": 3,
+        "route": "api/accounts/initialize-superuser/",
+        "source_file": "apps/accounts/api_views.py",
+        "source_sha256": "96feed79eeb22dd2c1a44cf74967cb39498cc52846473fa21032057e0d7dcf6c",
+        "work_id": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "function_view_with_explicit_method_branch",
+        "explicit_method_branches": [
+          "HEAD"
+        ],
+        "handler": "apps.output.views.m3u_endpoint",
+        "handler_line": 102,
+        "resolver_ordinal": 362,
+        "route": "output/^m3u(?:/(?P<profile_name>[^/]+))?/?$",
+        "source_file": "apps/output/views.py",
+        "source_sha256": "8fba134416cfa0aa130a3c74c3c0371db9ce52ed6ad784d690b329292092b2f0",
+        "work_id": "route-b4a3f38e76ae962a071f:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "function_view_with_explicit_method_branch",
+        "explicit_method_branches": [
+          "HEAD"
+        ],
+        "handler": "apps.output.views.epg_endpoint",
+        "handler_line": 127,
+        "resolver_ordinal": 363,
+        "route": "output/^epg(?:/(?P<profile_name>[^/]+))?/?$",
+        "source_file": "apps/output/views.py",
+        "source_sha256": "8fba134416cfa0aa130a3c74c3c0371db9ce52ed6ad784d690b329292092b2f0",
+        "work_id": "route-a41fa134f8e99a70d993:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "function_view_requires_request_profile",
+        "explicit_method_branches": [],
+        "handler": "apps.output.views.xc_player_api",
+        "handler_line": 561,
+        "resolver_ordinal": 405,
+        "route": "player_api.php",
+        "source_file": "apps/output/views.py",
+        "source_sha256": "8fba134416cfa0aa130a3c74c3c0371db9ce52ed6ad784d690b329292092b2f0",
+        "work_id": "route-2246bed35607b85b6f84:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "function_view_requires_request_profile",
+        "explicit_method_branches": [],
+        "handler": "apps.output.views.xc_panel_api",
+        "handler_line": 596,
+        "resolver_ordinal": 406,
+        "route": "panel_api.php",
+        "source_file": "apps/output/views.py",
+        "source_sha256": "8fba134416cfa0aa130a3c74c3c0371db9ce52ed6ad784d690b329292092b2f0",
+        "work_id": "route-1e43eda45f64f14ba3de:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "function_view_requires_request_profile",
+        "explicit_method_branches": [],
+        "handler": "apps.output.views.xc_get",
+        "handler_line": 604,
+        "resolver_ordinal": 407,
+        "route": "get.php",
+        "source_file": "apps/output/views.py",
+        "source_sha256": "8fba134416cfa0aa130a3c74c3c0371db9ce52ed6ad784d690b329292092b2f0",
+        "work_id": "route-56d9c31dd9fc91261e25:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "function_view_requires_request_profile",
+        "explicit_method_branches": [],
+        "handler": "apps.output.views.xc_xmltv",
+        "handler_line": 612,
+        "resolver_ordinal": 408,
+        "route": "xmltv.php",
+        "source_file": "apps/output/views.py",
+        "source_sha256": "8fba134416cfa0aa130a3c74c3c0371db9ce52ed6ad784d690b329292092b2f0",
+        "work_id": "route-7b6640a47b04c4dcf62e:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "function_view_requires_request_profile",
+        "explicit_method_branches": [],
+        "handler": "apps.timeshift.views.timeshift_proxy",
+        "handler_line": 110,
+        "resolver_ordinal": 411,
+        "route": "timeshift/<str:username>/<str:password>/<str:duration>/<str:timestamp>/<str:channel_id>",
+        "source_file": "apps/timeshift/views.py",
+        "source_sha256": "75852d0ec478b81fb758241e20101ce5d37e47636337845e18f8823037726b1a",
+        "work_id": "route-96eaf62e9698df611d43:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "function_view_requires_request_profile",
+        "explicit_method_branches": [],
+        "handler": "apps.timeshift.views.timeshift_proxy_query",
+        "handler_line": 136,
+        "resolver_ordinal": 412,
+        "route": "streaming/timeshift.php",
+        "source_file": "apps/timeshift/views.py",
+        "source_sha256": "75852d0ec478b81fb758241e20101ce5d37e47636337845e18f8823037726b1a",
+        "work_id": "route-65fd01892db0a2d662ac:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.admin.sites.AdminSite.index",
+        "resolver_ordinal": 416,
+        "route": "admin/",
+        "work_id": "route-ee87e8ee9aef5a2e933d:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "apps.accounts.admin._rate_limited_admin_login",
+        "resolver_ordinal": 417,
+        "route": "admin/login/",
+        "work_id": "route-4f51a66d89cfc07cda5f:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.admin.sites.AdminSite.logout",
+        "resolver_ordinal": 418,
+        "route": "admin/logout/",
+        "work_id": "route-96911b319eecedadfc1e:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.admin.sites.AdminSite.password_change",
+        "resolver_ordinal": 419,
+        "route": "admin/password_change/",
+        "work_id": "route-fa4b2d8afc4a46fcd708:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.admin.sites.AdminSite.password_change_done",
+        "resolver_ordinal": 420,
+        "route": "admin/password_change/done/",
+        "work_id": "route-eb125afe58de6b190727:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.admin.sites.AdminSite.autocomplete_view",
+        "resolver_ordinal": 421,
+        "route": "admin/autocomplete/",
+        "work_id": "route-7f0fbe4ad6f56718c9fb:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.admin.sites.AdminSite.i18n_javascript",
+        "resolver_ordinal": 422,
+        "route": "admin/jsi18n/",
+        "work_id": "route-94980d22021781d6d201:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.contenttypes.views.shortcut",
+        "resolver_ordinal": 423,
+        "route": "admin/r/<path:content_type_id>/<path:object_id>/",
+        "work_id": "route-caafd2fc3aff7c9bad9b:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.auth.admin.UserAdmin.user_change_password",
+        "resolver_ordinal": 424,
+        "route": "admin/accounts/user/<id>/password/",
+        "work_id": "route-896114f1ef3c364f1f1e:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.auth.admin.UserAdmin.add_view",
+        "resolver_ordinal": 426,
+        "route": "admin/accounts/user/add/",
+        "work_id": "route-5b2c307f77a959464bd3:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django_celery_beat.admin.PeriodicTaskAdmin.changelist_view",
+        "resolver_ordinal": 557,
+        "route": "admin/django_celery_beat/periodictask/",
+        "work_id": "route-6d42dcbfa30f2b797b4a:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.admin.sites.AdminSite.app_index",
+        "resolver_ordinal": 587,
+        "route": "admin/^(?P<app_label>accounts|auth|dispatcharr_channels|epg|hdhr|m3u|vod|core|django_celery_beat)/$",
+        "work_id": "route-aacd547468dcab9a99a2:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "Django_admin_site_or_model_workflow",
+        "handler": "django.contrib.admin.sites.AdminSite.catch_all_view",
+        "resolver_ordinal": 588,
+        "route": "admin/(?P<url>.*)$",
+        "work_id": "route-5effc64e702691947191:METHOD_UNRESOLVED"
+      },
+      {
+        "accepted_http_methods": null,
+        "classification": "ASGI_WebSocket_route",
+        "handler": "dispatcharr.consumers.MyWebSocketConsumer",
+        "http_method_matrix_applicable": false,
+        "resolver_ordinal": 591,
+        "route": "ws/",
+        "source_artifacts": {
+          "dispatcharr/asgi.py": "b0c67894be11f8797e123c974d653c146a5f9d5f2aba862521f68f00a356b1ca",
+          "dispatcharr/routing.py": "567b99437a8292e60913193d47bdf7d4855b40f07f02425eb16611f4097c8b15"
+        },
+        "work_id": "route-1156f2f1488d795754d5:METHOD_UNRESOLVED"
+      }
+    ]
+  },
+  "M1_paired_core": {
+    "functional_sha256": "f57ab58af1439d1128b70bde32a0bd42c443030c202149d6d9fed3266f7f654b",
+    "held_controls": {
+      "cached_bytes_after_stop": true,
+      "cached_final_viewer_held": true,
+      "history_bytes_after_owned_redis_cleanup": true,
+      "history_final_viewer_held": true,
+      "passed": true,
+      "single_frame_credit_enforced": true
+    },
+    "native_peer_sha256": "22ebb3fd86631d019642da0e45fd9f8ab9c6d5a02184b5b47ae0d17fdb5df752",
+    "performance_verified": false,
+    "physical_phase_exits": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "readers_per_backend": [
+      1,
+      10,
+      100
+    ],
+    "teardown": "project removed"
+  },
+  "M2_one_hundred_signed_viewers": {
+    "candidate_revision": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+    "credits": "The original Dispatcharr authors and contributors retain full application and protocol credit.",
+    "exact_retired_roles": 5,
+    "formal_m2_accepted": false,
+    "fresh_concurrent_authenticated_readers_per_backend": 100,
+    "image_id": "sha256:e6d40f935400adfc8ccd64d31211b556cf3bf8dffc39f7fd823fbb5688d0f2dd",
+    "literal_controller_exit": 0,
+    "manifest_sha256": "72c01c185cad19e515090807006f3f98fc034fb0459a981cebc759700278ee12",
+    "one_origin_during_overlap": true,
+    "one_provider_slot_per_backend": true,
+    "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "performance_measured": false,
+    "positive_media_progress_and_A_V_decode_per_backend": 100,
+    "raw_receipt_sha256": "0e307111ed3882fc83f72fb9c3f2726d1285645fe8761eee2e59d7877ef239bd"
+  },
+  "M8_selected_plugin": {
+    "candidate": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+    "controller_sha256": "34e0d32d81cd042eea9388649306a6bd9fe48feb26fa49f614ce491542c9cdbd",
+    "credit": "Original Dispatcharr, Django and dependency authors retain full credit.",
+    "exact_owned_role_count": 3,
+    "focused_qualification": {
+      "cases": [
+        {
+          "HTTP_SQL_and_marker_checks": true,
+          "actual_HTTP_status": 200,
+          "owned_content_length": true,
+          "response_sha256": "d6974fe7158241c4cc0517b24528b4c82dc08a222d0bb5c4fa422611a2f73e56",
+          "selected_headers_match": true,
+          "step": "enable"
+        },
+        {
+          "HTTP_SQL_and_marker_checks": true,
+          "actual_HTTP_status": 200,
+          "owned_content_length": true,
+          "response_sha256": "dfd6dc7eba8c6243a233de6346443a50f54892f3a252cfcd87e9114ee9f49eae",
+          "selected_headers_match": true,
+          "step": "list-enabled"
+        },
+        {
+          "HTTP_SQL_and_marker_checks": true,
+          "actual_HTTP_status": 200,
+          "owned_content_length": true,
+          "response_sha256": "d4716e737546391b9391b9cc72530a9e1d570ed9c8d987441141f9bbbdafc67c",
+          "selected_headers_match": true,
+          "step": "echo"
+        },
+        {
+          "HTTP_SQL_and_marker_checks": true,
+          "actual_HTTP_status": 200,
+          "owned_content_length": true,
+          "response_sha256": "8e982ed1bf46077201604b4f67566301558844bbb1d090f185e8de31b00ebc34",
+          "selected_headers_match": true,
+          "step": "disable"
+        },
+        {
+          "HTTP_SQL_and_marker_checks": true,
+          "actual_HTTP_status": 200,
+          "owned_content_length": true,
+          "response_sha256": "486292fc65d4b63a8480abe80435e9febc573db2ed3a63fba003781deb69bfe4",
+          "selected_headers_match": true,
+          "step": "list-disabled"
+        }
+      ],
+      "full_M8_accepted": false,
+      "main_exit": 0,
+      "passed": true,
+      "performance_verified": false,
+      "retired_compatibility_host_generations": 1,
+      "scope": "trust-reviewed taskless Selected lifecycle"
+    },
+    "formal_M8_pass": false,
+    "image": "sha256:e6d40f935400adfc8ccd64d31211b556cf3bf8dffc39f7fd823fbb5688d0f2dd",
+    "independent_cleanup_sha256": "4bba4cec1df1f3ad92a264e8a9199050d7a9d38bd58eae5e7f039d3b7e7eb182",
+    "manifest_sha256": "72c01c185cad19e515090807006f3f98fc034fb0459a981cebc759700278ee12",
+    "ordinary_default_owner_verified": false,
+    "performance_verified": false,
+    "result_sha256": "35fb79a4169e99c9925d5e2178dd28412cf874ecca0cc74da8549282d003933d",
+    "separate_UID_role_retired": true,
+    "source_reference_TCP_cases": 4
+  },
+  "M9_scoped_replay": {
+    "formal_m9_passed": false,
+    "raw_batch_sha256": "accf55e8c07947ed2cbf7c5e4bc5de0b1d6d0ca954567298318cc72df5dbaee2",
+    "scopes": {
+      "m3-healthy-hls": {
+        "exact_teardown": true,
+        "execution_sha256": "8e0730c9a94e02771ddba52f8ae24abf67995b2824ccc1127fe819ea61ff4717",
+        "literal_actual_exit": 0,
+        "semantic_proof": true
+      },
+      "m4-completed-ranges": {
+        "exact_teardown": true,
+        "execution_sha256": "81c3ff184f0dee698a796485268fae25c14dd4136e53913f81d1869bd3714ad0",
+        "literal_actual_exit": 0,
+        "semantic_proof": true
+      },
+      "m7-notifications": {
+        "exact_teardown": true,
+        "execution_sha256": "40af848a9f6acd043a3cd6cf4a9f136e62ddf7e6c1c35d943d96490d30e6e2b5",
+        "literal_actual_exit": 0,
+        "semantic_proof": true
+      },
+      "m8-inventory-restore": {
+        "exact_teardown": true,
+        "execution_sha256": "42c64635705f046003d6f810f3017542177e9c65520d8381378d348c8a05f77b",
+        "literal_actual_exit": 0,
+        "semantic_proof": true
+      },
+      "m9-local-warm-rollback": {
+        "exact_teardown": true,
+        "execution_sha256": "a364959cd159836edb0e687930e4b7a68568aa75377cc05310bbc66e3b4caadd",
+        "literal_actual_exit": 0,
+        "semantic_proof": true
+      }
+    }
+  },
+  "candidate": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "scope": "current production AMD64 functional checks and pinned Original method branch metadata"
+}
