@@ -1,0 +1,59 @@
+{
+  "actual_exit": 0,
+  "application": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "archive": {
+    "archive_removed": true,
+    "custom_archive_bytes": 242004,
+    "custom_archive_sha256": "489dd743a3efdd74e8518f1ad558668246f79aabd78f4fc7e3504975a2302326",
+    "dump_exit": 0,
+    "restore_exit": 0
+  },
+  "build_sha256": "750aed6d8c6912ab4e891cd1fee132838fc14a7e7cecdc724c70aeeb7e10d3fb",
+  "controller_seal_sha256": "1e7c9e8df44cb690890bdb0b31f657f47375568177bbf718397af64c90b392c5",
+  "copy_login_timestamp_and_audit_only_changes": true,
+  "copy_schema_and_selected_data_unchanged": true,
+  "exact_cleanup": true,
+  "failed_attempts": [
+    {
+      "actual_exit": 1,
+      "exact_cleanup": true,
+      "raw_receipt_sha256": "c97a6ba28f7e9c6dedf1a5e999f8be2e5e4d74dc9ffd316d634ada57e6b8b3e8",
+      "reason": "The physical ordinal comparison rejected normal logical-copy compaction."
+    },
+    {
+      "actual_exit": 1,
+      "exact_cleanup": true,
+      "raw_receipt_sha256": "15a71eb40ddddc3a2a8a70e8f11d0f850a802f1df3bed871556a107bd40ce89e",
+      "reason": "The first post-login census check rejected the normal audit row."
+    }
+  ],
+  "image": "sha256:8d26782ba4a364efc735e55c86e7c4790f38e4ab339727158f3d3a9ab02c95a9",
+  "initial_rehearsal": true,
+  "logical_copy": {
+    "columns": 501,
+    "compacted_ordinals": 73,
+    "other_schema_census_and_selected_data_exact": true,
+    "same_order_and_definitions": true,
+    "tables": 62
+  },
+  "native_login_audit": {
+    "all_other_counts_unchanged": true,
+    "exactly_one_appended": true,
+    "fixture_actor_verified": true,
+    "previous_event_preserved": true,
+    "type": "login_success"
+  },
+  "native_stop_exit": 0,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "production_rollout": false,
+  "raw_receipt_sha256": "b6d9a6b687a234e044c30faad0a45e4e5ef54c22917764c6f7c17617ec90be72",
+  "retired_counts": {
+    "container": 9,
+    "network": 1,
+    "volume": 3
+  },
+  "source_data_and_login_unchanged": true,
+  "source_native_source_signed_account_catalog": true,
+  "source_warm_generation_unchanged": true,
+  "status": "passed"
+}
