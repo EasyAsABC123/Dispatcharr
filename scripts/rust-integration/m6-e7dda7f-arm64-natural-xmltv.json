@@ -1,0 +1,59 @@
+{
+  "actual_arms": {
+    "original": {
+      "actual_exit": 0,
+      "broker_db": 0,
+      "exact_cleanup": true,
+      "families": [
+        "apps.channels.tasks.evaluate_series_rules",
+        "apps.epg.tasks.build_programme_index_task",
+        "apps.epg.tasks.refresh_epg_data"
+      ],
+      "natural_job_count": 3,
+      "physical_receipt_sha256": "c786f2c1abdac4f518b6a6060057d2c77d0d5671a35bc570805f0a899254b111",
+      "programmes_and_index_present": true,
+      "queue_and_locks_drained": true,
+      "request_status": 202,
+      "result_db": 0,
+      "xmltv_actual_exit": 0
+    },
+    "rust": {
+      "actual_exit": 0,
+      "broker_db": 0,
+      "exact_cleanup": true,
+      "families": [
+        "apps.channels.tasks.evaluate_series_rules",
+        "apps.epg.tasks.build_programme_index_task",
+        "apps.epg.tasks.refresh_epg_data"
+      ],
+      "natural_job_count": 3,
+      "physical_receipt_sha256": "2cf85cab910beb9f229c68bff4c413ace212b61d07e314b7db8775c92fb50b7c",
+      "programmes_and_index_present": true,
+      "queue_and_locks_drained": true,
+      "request_status": 202,
+      "result_db": 0,
+      "xmltv_actual_exit": 0
+    }
+  },
+  "aligned_xmltv_sha256": "6a83e05100eaf109e0be501083ab373bfc4ac021bb0e1d36a7595a5e8e76c20b",
+  "architecture": "linux/arm64",
+  "baseline": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "candidate": "e7dda7fec25918644a29de56454bad7f9a63fd83",
+  "candidate_image_index": "sha256:2a0d4807711a9443e46443d40b7fbad6d00f97e15ff76158b2e6154621e2fb92",
+  "full_M6_verified": false,
+  "performance_measured": false,
+  "prior_rust_attempts": [
+    {
+      "actual_exit": 1,
+      "exact_cleanup": true,
+      "phase": "combined infrastructure cold startup",
+      "physical_receipt_sha256": "3878d670806b14d97ecf4f86b5881e896e2c04aeb148b52922b9146d4e748aa2"
+    },
+    {
+      "actual_exit": 1,
+      "exact_cleanup": true,
+      "phase": "candidate before auth readiness",
+      "physical_receipt_sha256": "e8742e8f98716a5a06bd424489587a0a1ea3926e4087ed01cd24f8a4bac50430"
+    }
+  ]
+}
