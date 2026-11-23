@@ -1,0 +1,914 @@
+{
+  "actual_exit": 0,
+  "browsable_api_gap_open": true,
+  "candidate": {
+    "expected": "successor",
+    "image_id": "sha256:6f9b0d9b070a09080a19ab1a4f615abfa5d78be72638cb746d3f4618bfe42402",
+    "manifest_sha256": "29ca4548b53ad25cccb2e7ec6deef39b4ebe26f639c66b1dc29c429acf004bea",
+    "revision": "bd07920a487d4384461b8d56e1fa1492e7109376",
+    "source_tree_sha256": "2f32bb99fe3fbfcda7e2b08f2d353f04a16866e2b89797a6069e7c524b2e3572",
+    "tag": "dispatcharr-rust-candidate:e7-connect-log-json-accept-ordinary-bd07920a487d"
+  },
+  "cleanup": {
+    "Native": {
+      "exact_retired_roles": 4,
+      "receipt_sha256": "38fcf217a6ef5b3eaa9e021382dd4cc4c9ad4f56e6e9d08fccb59aaee28424fa"
+    },
+    "Original": {
+      "exact_retired_roles": 2,
+      "receipt_sha256": "3dc5c35cb59af6e4d984f30664463e64c874b93913559337cf76564dd8c15fcc"
+    }
+  },
+  "complete_ordinary_success_wire_equal": false,
+  "credit": "Original Dispatcharr, Django, Django REST Framework and dependency authors retain full credit.",
+  "focused_fixed_json_406_and_Vary_equal": true,
+  "formal_nodes_promoted": 0,
+  "observations": {
+    "Native": {
+      "open/api": {
+        "body_bytes": 23,
+        "body_sha256": "cacf8a32e69eabea7d57711f4ccbeed4d284e1bbd0789137936d388da707b9de",
+        "branch": "api_detail_not_found",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 23,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 404
+      },
+      "plain/absent": {
+        "body_bytes": 373,
+        "body_sha256": "23942e751f004fa138afe021d0f500f14a43cd2af2585077f4392c6e5142e1d3",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 373,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "plain/anonymous": {
+        "body_bytes": 58,
+        "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "bearer_realm_api",
+          "content_length": 58,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 401
+      },
+      "plain/html": {
+        "body_bytes": 57,
+        "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+        "branch": "negotiation_not_acceptable",
+        "exact_rejection_body": true,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 57,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 406
+      },
+      "plain/json": {
+        "body_bytes": 373,
+        "body_sha256": "23942e751f004fa138afe021d0f500f14a43cd2af2585077f4392c6e5142e1d3",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 373,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "plain/standard": {
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 63,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 403
+      },
+      "plain/viewer": {
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 63,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 403
+      },
+      "plain/wildcard": {
+        "body_bytes": 373,
+        "body_sha256": "23942e751f004fa138afe021d0f500f14a43cd2af2585077f4392c6e5142e1d3",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 373,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "trailing/absent": {
+        "body_bytes": 373,
+        "body_sha256": "23942e751f004fa138afe021d0f500f14a43cd2af2585077f4392c6e5142e1d3",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 373,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "trailing/anonymous": {
+        "body_bytes": 58,
+        "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "bearer_realm_api",
+          "content_length": 58,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 401
+      },
+      "trailing/html": {
+        "body_bytes": 57,
+        "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+        "branch": "negotiation_not_acceptable",
+        "exact_rejection_body": true,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 57,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 406
+      },
+      "trailing/json": {
+        "body_bytes": 373,
+        "body_sha256": "23942e751f004fa138afe021d0f500f14a43cd2af2585077f4392c6e5142e1d3",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 373,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "trailing/standard": {
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 63,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 403
+      },
+      "trailing/viewer": {
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 63,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 403
+      },
+      "trailing/wildcard": {
+        "body_bytes": 373,
+        "body_sha256": "23942e751f004fa138afe021d0f500f14a43cd2af2585077f4392c6e5142e1d3",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [],
+          "challenge": "absent",
+          "content_length": 373,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      }
+    },
+    "Original": {
+      "open/api": {
+        "body_bytes": 11233,
+        "body_sha256": "705ebc214a65461a2f8b68c4612254d1fc0fbb70d5e7ad36bba9479ab59d8617",
+        "branch": "owned_log_in_drf_html",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 11233,
+          "content_type": "text/html; charset=utf-8",
+          "location_present": false,
+          "set_cookie_present": true,
+          "vary_fields": [
+            [
+              "accept",
+              "origin",
+              "cookie"
+            ]
+          ]
+        },
+        "mime": "text/html",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "plain/absent": {
+        "body_bytes": 327,
+        "body_sha256": "25d30ef12e8fce3be70f2961cfe954a6826898bb2240c5600768dec5e5f945f9",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 327,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "plain/anonymous": {
+        "body_bytes": 58,
+        "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "bearer_realm_api",
+          "content_length": 58,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 401
+      },
+      "plain/html": {
+        "body_bytes": 57,
+        "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+        "branch": "negotiation_not_acceptable",
+        "exact_rejection_body": true,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 57,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 406
+      },
+      "plain/json": {
+        "body_bytes": 327,
+        "body_sha256": "25d30ef12e8fce3be70f2961cfe954a6826898bb2240c5600768dec5e5f945f9",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 327,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "plain/standard": {
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 63,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 403
+      },
+      "plain/viewer": {
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 63,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 403
+      },
+      "plain/wildcard": {
+        "body_bytes": 327,
+        "body_sha256": "25d30ef12e8fce3be70f2961cfe954a6826898bb2240c5600768dec5e5f945f9",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 327,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "trailing/absent": {
+        "body_bytes": 327,
+        "body_sha256": "25d30ef12e8fce3be70f2961cfe954a6826898bb2240c5600768dec5e5f945f9",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 327,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "trailing/anonymous": {
+        "body_bytes": 58,
+        "body_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "bearer_realm_api",
+          "content_length": 58,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 401
+      },
+      "trailing/html": {
+        "body_bytes": 57,
+        "body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+        "branch": "negotiation_not_acceptable",
+        "exact_rejection_body": true,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 57,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 406
+      },
+      "trailing/json": {
+        "body_bytes": 327,
+        "body_sha256": "25d30ef12e8fce3be70f2961cfe954a6826898bb2240c5600768dec5e5f945f9",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 327,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      },
+      "trailing/standard": {
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 63,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 403
+      },
+      "trailing/viewer": {
+        "body_bytes": 63,
+        "body_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+        "branch": "ordinary_role_denial",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 63,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 403
+      },
+      "trailing/wildcard": {
+        "body_bytes": 327,
+        "body_sha256": "25d30ef12e8fce3be70f2961cfe954a6826898bb2240c5600768dec5e5f945f9",
+        "branch": "owned_log_in_json",
+        "exact_rejection_body": false,
+        "headers": {
+          "allow_fields": [
+            [
+              "GET",
+              "HEAD",
+              "OPTIONS"
+            ]
+          ],
+          "challenge": "absent",
+          "content_length": 327,
+          "content_type": "application/json",
+          "location_present": false,
+          "set_cookie_present": false,
+          "vary_fields": [
+            [
+              "accept",
+              "origin"
+            ]
+          ]
+        },
+        "mime": "application/json",
+        "state_unchanged": true,
+        "status": 200
+      }
+    }
+  },
+  "ordinary_JSON_role_and_owned_row_checks": true,
+  "package": {
+    "feature_arg": 0,
+    "image": "sha256:6f9b0d9b070a09080a19ab1a4f615abfa5d78be72638cb746d3f4618bfe42402",
+    "manifest_sha256": "29ca4548b53ad25cccb2e7ec6deef39b4ebe26f639c66b1dc29c429acf004bea",
+    "revision": "bd07920a487d4384461b8d56e1fa1492e7109376"
+  },
+  "paired_receipt_sha256": "30b60a20c11772f51a2a30bbb9bf942823e334207645c6094b3bf678d62fbdb0",
+  "predecessor_browsable_receipt_sha256": "aa74440f045dc9b1d0ea5ad6836333a3bfdff2292fa42215ade895a3a4e50ee8",
+  "scope": "Connect delivery-log exact JSON 406 and ordinary Accept/role controls",
+  "wire_comparisons": {
+    "plain/absent": {
+      "raw_body_equal": false,
+      "selected_header_differences": [
+        "allow_fields",
+        "content_length"
+      ]
+    },
+    "plain/anonymous": {
+      "raw_body_equal": true,
+      "selected_header_differences": [
+        "allow_fields"
+      ]
+    },
+    "plain/html": {
+      "raw_body_equal": true,
+      "selected_header_differences": [
+        "allow_fields"
+      ]
+    },
+    "plain/json": {
+      "raw_body_equal": false,
+      "selected_header_differences": [
+        "allow_fields",
+        "content_length"
+      ]
+    },
+    "plain/standard": {
+      "raw_body_equal": true,
+      "selected_header_differences": [
+        "allow_fields"
+      ]
+    },
+    "plain/viewer": {
+      "raw_body_equal": true,
+      "selected_header_differences": [
+        "allow_fields"
+      ]
+    },
+    "plain/wildcard": {
+      "raw_body_equal": false,
+      "selected_header_differences": [
+        "allow_fields",
+        "content_length"
+      ]
+    },
+    "trailing/absent": {
+      "raw_body_equal": false,
+      "selected_header_differences": [
+        "allow_fields",
+        "content_length"
+      ]
+    },
+    "trailing/anonymous": {
+      "raw_body_equal": true,
+      "selected_header_differences": [
+        "allow_fields"
+      ]
+    },
+    "trailing/html": {
+      "raw_body_equal": true,
+      "selected_header_differences": [
+        "allow_fields"
+      ]
+    },
+    "trailing/json": {
+      "raw_body_equal": false,
+      "selected_header_differences": [
+        "allow_fields",
+        "content_length"
+      ]
+    },
+    "trailing/standard": {
+      "raw_body_equal": true,
+      "selected_header_differences": [
+        "allow_fields"
+      ]
+    },
+    "trailing/viewer": {
+      "raw_body_equal": true,
+      "selected_header_differences": [
+        "allow_fields"
+      ]
+    },
+    "trailing/wildcard": {
+      "raw_body_equal": false,
+      "selected_header_differences": [
+        "allow_fields",
+        "content_length"
+      ]
+    }
+  }
+}
