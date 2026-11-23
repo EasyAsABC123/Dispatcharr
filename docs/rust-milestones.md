@@ -1510,6 +1510,11 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 
 ## Latest scoped runtime evidence for 63ee09fc
 
+- **M2** The exact 63ee09fc component repeated the shared Core and Engine warm-cache, writer-pressure and graceful drain checks. [Component qualification](rust-m2-63ee09fc-proxy-health-component.md)
+- **M7** Three exact 63ee09fc realtime pairs and the separate signed EPG worker, WebSocket and Connect delivery pair passed. [Realtime scopes](rust-m7-63ee09fc-realtime-scopes.md) · [Signed EPG delivery](rust-m7-63ee09fc-epg-channels-connect.md)
+- **M7** Original completed 24 authenticated XC reads across two fixed hash seeds and two named XMLTV reads. [Pinned Original output authority](rust-m7-original-output-hash-grammar.md)
+- **M8** The coordinator accepted retained Original restore and schedule authority using audited common, media and raw restore-warning evidence. [Retained backup authority](rust-m8-original-retained-backup-authority.md)
+
 - **M6** Three signed positive scalar refresh cases matched the pinned Original. The ordinary AMD64 package retained typed Redis locks, five linked worker results per case, and durable readback. Both ordinary architecture packages passed. [Positive scalar guide refresh](rust-m6-63ee09fc-positive-scalar-refresh.md)
 - **M2** The 31cc8a3f ordinary-package comparison verified the effect of a signed timeout change during a real upstream stall and recovery on the same upstream connection. [Proxy-health decision and recovery](rust-m2-31cc8a3f-proxy-health-decision.md)
 - **M8** The b60763d1 ordinary AMD64 package passed signed backup, same-schema restore, refusal and retention checks on disposable PostgreSQL data. [PostgreSQL backup and restore](rust-m8-b60763d1-amd64-postgresql-backup.md)

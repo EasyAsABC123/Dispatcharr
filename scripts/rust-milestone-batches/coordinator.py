@@ -161,7 +161,7 @@ def owner_readiness(nodes, document, output=None):
     authorities = {}
     m235 = module(HERE / "m235/batch.py", "readiness_m235")
     m478 = module(HERE / "m478/batch.py", "readiness_m478")
-    ops_matrix, _, _ = m478.load()
+    ops_matrix, ops_definitions, _ = m478.load()
     source_audit = None
     for node in nodes:
         key = node["id"]
@@ -222,8 +222,18 @@ def owner_readiness(nodes, document, output=None):
             for field, source_field in (("environment", "environment_overlay"), ("strip_inherited_prefixes", "strip_inherited_prefixes")):
                 if source_field in resolved and bindings[key].get(field) != resolved[source_field]:
                     raise ValueError("owner environment differs: " + key)
-        elif key in bindings and node["owner"] == "m478":
+        elif node["owner"] == "m478":
             path = owners.get("m478")
+            if key == m478.SOURCE16 and path:
+                owner_bound = m478.bindings(path)
+                retained = m478.retained_source_baseline(ops_definitions[key], owner_bound)
+                if retained is not None:
+                    if key in bindings:
+                        raise ValueError("retained Source cannot also be dispatched: " + key)
+                    authorities[key] = retained
+                    continue
+            if key not in bindings:
+                continue
             if not path:
                 raise ValueError("M478 binding file required")
             owner_bound = m478.bindings(path)

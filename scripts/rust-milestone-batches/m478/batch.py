@@ -4,6 +4,7 @@ Root owns dispatch/polling/global3/quiet; this adapter checks bindings and resul
 """
 import argparse
 import hashlib
+import importlib.util
 import json
 import re
 from pathlib import Path
@@ -11,7 +12,8 @@ from pathlib import Path
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[2]
 WORKING_FIXTURES = REPO / 'artifacts/rust/m4-m7-m8-wide-batch-1'
-STATES = {'passed', 'failed', 'blocked', 'not_run'}
+STATES = {'passed', 'failed', 'blocked', 'not_run', 'retained_source_baseline', 'retained_source_authority'}
+SOURCE16 = 'source/backup-restore-schedules'
 
 
 def need(value, label):
@@ -94,6 +96,17 @@ def candidate_ready(candidate):
     return True
 
 
+def retained_source_baseline(node, bound):
+    evidence = bound.get('retained_source16')
+    if evidence is None or node['id'] != SOURCE16:
+        return None
+    need(SOURCE16 not in bound['nodes'], 'retained Source cannot also be dispatched')
+    spec = importlib.util.spec_from_file_location('m478_retained_source16', HERE / 'retained_source16.py')
+    adapter = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(adapter)
+    return adapter.resolve(node, evidence)
+
+
 def blockers(node, bound):
     row = bound['nodes'].get(node['id'])
     reasons = []
@@ -116,6 +129,11 @@ def state(matrix, bound, receipts=None):
     for node in matrix['nodes']:
         identifier = node['id']
         receipt = receipts.get(identifier)
+        retained = retained_source_baseline(node, bound)
+        if retained is not None:
+            need(receipt is None, 'retained Source cannot replace an actual Root receipt')
+            output[identifier] = retained
+            continue
         if receipt is None:
             reasons = blockers(node, bound)
             output[identifier] = {'status': 'blocked' if reasons else 'not_run', 'reasons': reasons, 'actual_calls': None, 'execution_performed': False}
@@ -149,7 +167,7 @@ def state(matrix, bound, receipts=None):
             result = output[node['id']]
             if result['execution_performed'] or result['status'] != 'not_run':
                 continue
-            bad = [dep for dep in node['requires'] if dep in output and output[dep]['status'] in ('failed', 'blocked')]
+            bad = [dep for dep in node['requires'] if dep in output and output[dep]['status'] in ('failed', 'blocked', 'retained_source_baseline')]
             if bad:
                 result.update(status='blocked', reasons=['Dependency not accepted: ' + value for value in bad])
                 changed = True
@@ -159,6 +177,7 @@ def state(matrix, bound, receipts=None):
 def dispatch_spec(identifier, matrix, bound):
     node = next((n for n in matrix['nodes'] if n['id'] == identifier), None)
     need(node is not None, 'this owner node ID')
+    need(retained_source_baseline(node, bound) is None, 'retained Source cannot also be dispatched')
     row = bound['nodes'].get(identifier, {})
     reasons = blockers(node, bound)
     # Missing implementation can still be tested by an explicitly bound safe
@@ -195,7 +214,13 @@ def main():
         counts = {label: sum(v['status'] == label for v in results.values()) for label in STATES}
         # External shared nodes also need exact-current accepted Root receipts.
         external_complete = all(receipts.get(key, {}).get('current_candidate_accepted') is True and receipts[key].get('candidate') == bound['candidate'] and candidate_ready(bound['candidate']) for key in external)
-        accepted = counts['passed'] == len(nodes) and external_complete
+        nodes_complete = all(
+            row['status'] == 'passed'
+            or (key == SOURCE16 and row['status'] == 'retained_source_authority'
+                and row.get('satisfies_dependency') is True)
+            for key, row in results.items()
+        )
+        accepted = nodes_complete and external_complete
         result = {'matrix_valid': True, 'milestones_accepted': accepted, 'execution_performed_by_this_adapter': False, 'counts': counts, 'nodes': results, 'shared_external_pending': [key for key in external if receipts.get(key, {}).get('current_candidate_accepted') is not True or receipts[key].get('candidate') != bound['candidate']], 'Source_applications_or_Docker_started': 0}
         status = 0 if accepted else 2
     raw = json.dumps(result, indent=2, allow_nan=False) + '\n'
