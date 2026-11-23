@@ -1,0 +1,110 @@
+{
+  "schema": "dispatcharr-d2-arm64-m2-shared-ts-r2-audit/1",
+  "arm64_platform": "linux/arm64",
+  "candidate_revision": "d2c5e6113efe947551c17bf877e8c6b2c964190c",
+  "candidate_build_sha256": "2e60da5a1b09e191759dcbac126bbfb48552d2f536e33f887766f8327d258170",
+  "candidate_image_index": "sha256:bd5030fe5d58c5157bd0539218057c4d01e8b2f8d0615240bf31d63531981dbf",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "campaign_actual_exit": 1,
+  "campaign_receipt_sha256": "908e311185655272c06ee2ed0fa51a27d08312430c3d738149680564a1dea0d6",
+  "exact_cleanup": true,
+  "offline_audit_exit": 0,
+  "original_r2_first_failure": {
+    "after_generation_snapshot_recorded": false,
+    "component": "ordinary provider reducer",
+    "deadline_ns": 50000000,
+    "line": 26
+  },
+  "original_r1_comparison": {
+    "actual_exit": 0,
+    "deadline_samples_passed": 61,
+    "exact_cleanup": true,
+    "maximum_finish_after_target_ns": 20584084,
+    "receipt_sha256": "1e3078586a315d30813e45d97888a97260201ba992f4219726f0c098deff7f87",
+    "sample_2_timing": {
+      "finish_after_target_ns": 20584084,
+      "sample": 2,
+      "start_after_target_ns": 1581292,
+      "vlc_scan_ns": 17739542
+    }
+  },
+  "paired_acceptance": false,
+  "performance_measured": false,
+  "formal_m2_accepted": false,
+  "historical_100_viewer_credit": false,
+  "arm_results": {
+    "Native": {
+      "active_origin_provider_clients_vlc_after_close": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "actual_decode_exits_zero": 20,
+      "actual_exit": 0,
+      "capture_guest_exit": 0,
+      "deadline_misses": [],
+      "deadline_samples_passed": 61,
+      "distinct_signed_sessions": 10,
+      "down_exit": 0,
+      "exact_cleanup": true,
+      "maximum_finish_after_target_ns": 15856172,
+      "provider_gate_exit": 0,
+      "provider_rows": 61,
+      "reader_keys_after_close": 0,
+      "receipt_sha256": "661d7d448532e0cca148382a619976ae558cbb3d5723bbe33768167819d4c8cd",
+      "role_generations_verified": true,
+      "same_upstream_for_entire_window": true,
+      "sample_2_timing": {
+        "finish_after_target_ns": 13224376,
+        "sample": 2,
+        "start_after_target_ns": 7396459,
+        "vlc_scan_ns": 3422042
+      },
+      "stop_exit": 0,
+      "upstream_connections_delta": 1,
+      "useful_av_verified": true,
+      "viewer_count": 10
+    },
+    "Original": {
+      "active_origin_provider_clients_vlc_after_close": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "actual_decode_exits_zero": 20,
+      "actual_exit": 1,
+      "capture_guest_exit": 0,
+      "deadline_misses": [
+        {
+          "finish_after_target_ns": 60866210,
+          "sample": 2,
+          "start_after_target_ns": 3441335,
+          "vlc_scan_ns": 56052583
+        }
+      ],
+      "deadline_samples_passed": 60,
+      "distinct_signed_sessions": 10,
+      "down_exit": 0,
+      "exact_cleanup": true,
+      "maximum_finish_after_target_ns": 60866210,
+      "provider_gate_exit": 1,
+      "provider_rows": 61,
+      "reader_keys_after_close": 0,
+      "receipt_sha256": "cbbd90011ca75c259e012f97b28a691d024b6f89ee80fbbdd2ba36ef361413d6",
+      "role_generations_verified": false,
+      "same_upstream_for_entire_window": true,
+      "sample_2_timing": {
+        "finish_after_target_ns": 60866210,
+        "sample": 2,
+        "start_after_target_ns": 3441335,
+        "vlc_scan_ns": 56052583
+      },
+      "stop_exit": 0,
+      "upstream_connections_delta": 1,
+      "useful_av_verified": true,
+      "viewer_count": 10
+    }
+  }
+}

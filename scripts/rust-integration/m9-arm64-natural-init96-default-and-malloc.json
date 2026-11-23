@@ -1,0 +1,137 @@
+{
+  "schema": "dispatcharr-natural-init96-r2-actual-aggregate/1",
+  "actual_pair_exit": 1,
+  "actual_pair_receipt_sha256": "06e8991f4e5546c381af2961c7287e8fdcbd487ec11a5bf54c711d52e4a1407f",
+  "audit_actual_exit": 0,
+  "exact_saved_pair_release": true,
+  "negative_saved_checks_total": 18,
+  "qualified": false,
+  "performance_accepted": false,
+  "matched_allocator_efficacy_claim": false,
+  "findings": {
+    "actual_malloc_support_at_process_start_proven": true,
+    "both_exceed_unchanged86_4MiB_headroom": true,
+    "default_completed_all29_callbacks_before_later_connection_error": true,
+    "malloc_oom_before_setup_return": true
+  },
+  "arms": {
+    "default": {
+      "diagnostic_actual_exit": 1,
+      "pulse_literal_exit": 1,
+      "ordinary_django_setup_returned": true,
+      "actual_callback_edges": {
+        "config_create": {
+          "after": 29,
+          "before": 29
+        },
+        "logging": {
+          "after": 1,
+          "before": 1
+        },
+        "models": {
+          "after": 29,
+          "before": 29
+        },
+        "ready": {
+          "after": 29,
+          "before": 29
+        },
+        "settings": {
+          "after": 1,
+          "before": 1
+        }
+      },
+      "callback_event_count": 180,
+      "callback_trace_closed": true,
+      "actual_memory": {
+        "actual_samples": 8,
+        "effective_cap_bytes": 100663296,
+        "effective_cpu_max": "50000 100000",
+        "effective_pids_max": 32,
+        "final_actual_events": {
+          "high": 0,
+          "low": 0,
+          "max": 25,
+          "oom": 0,
+          "oom_group_kill": 0,
+          "oom_kill": 0,
+          "sock_throttled": 0
+        },
+        "final_post_disposal_charge_bytes": 20135936,
+        "first_sample_charge_bytes": 20570112,
+        "formal_lifetime_headroom_bytes": 90596966,
+        "headroom_passed": false,
+        "last_sample_charge_bytes": 100634624,
+        "observed_swap_current_bytes": 0,
+        "observed_swap_max_bytes": 0,
+        "sampled_charge_peak_bytes": 100634624,
+        "sampler_complete": true,
+        "source_counters_not_invented": true,
+        "whole_lifetime_kernel_peak_bytes": 100663296
+      },
+      "independent_post_disposal_proven": true,
+      "saved_exact_cleanup_verified": true,
+      "exact_negative_absence_checks": 9,
+      "all_ordinary_sql_redis_checks_completed": false
+    },
+    "malloc": {
+      "diagnostic_actual_exit": 1,
+      "pulse_literal_exit": 137,
+      "ordinary_django_setup_returned": false,
+      "actual_callback_edges": {
+        "config_create": {
+          "after": 29,
+          "before": 29
+        },
+        "logging": {
+          "after": 1,
+          "before": 1
+        },
+        "models": {
+          "after": 29,
+          "before": 29
+        },
+        "ready": {
+          "after": 3,
+          "before": 4
+        },
+        "settings": {
+          "after": 1,
+          "before": 1
+        }
+      },
+      "callback_event_count": 129,
+      "callback_trace_closed": false,
+      "actual_memory": {
+        "actual_samples": 6,
+        "effective_cap_bytes": 100663296,
+        "effective_cpu_max": "50000 100000",
+        "effective_pids_max": 32,
+        "final_actual_events": {
+          "high": 0,
+          "low": 0,
+          "max": 51,
+          "oom": 1,
+          "oom_group_kill": 0,
+          "oom_kill": 1,
+          "sock_throttled": 0
+        },
+        "final_post_disposal_charge_bytes": 20754432,
+        "first_sample_charge_bytes": 19787776,
+        "formal_lifetime_headroom_bytes": 90596966,
+        "headroom_passed": false,
+        "last_sample_charge_bytes": 93106176,
+        "observed_swap_current_bytes": 0,
+        "observed_swap_max_bytes": 0,
+        "sampled_charge_peak_bytes": 93106176,
+        "sampler_complete": false,
+        "source_counters_not_invented": true,
+        "whole_lifetime_kernel_peak_bytes": 100663296
+      },
+      "independent_post_disposal_proven": true,
+      "saved_exact_cleanup_verified": true,
+      "exact_negative_absence_checks": 9,
+      "all_ordinary_sql_redis_checks_completed": false
+    }
+  }
+}

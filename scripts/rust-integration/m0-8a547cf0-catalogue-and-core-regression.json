@@ -1,0 +1,989 @@
+{
+  "schema": "dispatcharr-scoped-catalogue-and-core-regression/1",
+  "candidate": "8a547cf00cd33a94fe4ccb982272be1861d52e73",
+  "build_manifest_sha256": "5aac266c185bbaa121a1b890bbeb7455e5b606c30f04c5b966a2cebc8b4e48c8",
+  "image_id": "sha256:006f892bafae5386f19a1e3856fd2caf752a4aa6f99d6e398ea60ff3cc951d5d",
+  "proofs": {
+    "catalogue": "e56317e4c38e40f108ef8d41759a0e3f7f2115eb6de29bb40ddf1f0a316cf5f4",
+    "Core_read": "c39a0a48dfb9e2ac422f6361ef53d40f0357fb9869cf152dd12ecc8972223e7d",
+    "Core_write": "fc9d86ca6cc3bf8db779b7f4dc576f1ed414373360be9b7e7834e905acac226e"
+  },
+  "catalogue": {
+    "match_count": 102,
+    "exact_options_bodies": 10,
+    "cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "cases": [
+      {
+        "route_id": "route-ba1955652b652c310e20",
+        "contract_id": "route-ba1955652b652c310e20:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-ba1955652b652c310e20",
+        "contract_id": "route-ba1955652b652c310e20:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-ba1955652b652c310e20",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-ba1955652b652c310e20",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-7add22f14d3acc810ff5",
+        "contract_id": "route-7add22f14d3acc810ff5:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-7add22f14d3acc810ff5",
+        "contract_id": "route-7add22f14d3acc810ff5:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-fdca87537cd595a20d06",
+        "contract_id": "route-fdca87537cd595a20d06:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-fdca87537cd595a20d06",
+        "contract_id": "route-fdca87537cd595a20d06:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-fdca87537cd595a20d06",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-fdca87537cd595a20d06",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-b7cc0323a58bb50a231c",
+        "contract_id": "route-b7cc0323a58bb50a231c:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-b7cc0323a58bb50a231c",
+        "contract_id": "route-b7cc0323a58bb50a231c:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-3ee13ff4f7b07df52a40",
+        "contract_id": "route-3ee13ff4f7b07df52a40:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-3ee13ff4f7b07df52a40",
+        "contract_id": "route-3ee13ff4f7b07df52a40:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-3ee13ff4f7b07df52a40",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-3ee13ff4f7b07df52a40",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": true
+      },
+      {
+        "route_id": "route-93a26264c9d8ad2a84ac",
+        "contract_id": "route-93a26264c9d8ad2a84ac:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-93a26264c9d8ad2a84ac",
+        "contract_id": "route-93a26264c9d8ad2a84ac:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-e07365518a567eba0898",
+        "contract_id": "route-e07365518a567eba0898:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-e07365518a567eba0898",
+        "contract_id": "route-e07365518a567eba0898:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-e07365518a567eba0898",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-e07365518a567eba0898",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": true
+      },
+      {
+        "route_id": "route-40830229e08a3f7b3572",
+        "contract_id": "route-40830229e08a3f7b3572:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-40830229e08a3f7b3572",
+        "contract_id": "route-40830229e08a3f7b3572:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-bcad6fcc7a44673cca5c",
+        "contract_id": "route-bcad6fcc7a44673cca5c:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-bcad6fcc7a44673cca5c",
+        "contract_id": "route-bcad6fcc7a44673cca5c:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-bcad6fcc7a44673cca5c",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-bcad6fcc7a44673cca5c",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-238d41df9f2dcd9d1471",
+        "contract_id": "route-238d41df9f2dcd9d1471:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-238d41df9f2dcd9d1471",
+        "contract_id": "route-238d41df9f2dcd9d1471:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-f140a95f4ea400cc74f0",
+        "contract_id": "route-f140a95f4ea400cc74f0:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-f140a95f4ea400cc74f0",
+        "contract_id": "route-f140a95f4ea400cc74f0:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-f140a95f4ea400cc74f0",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-f140a95f4ea400cc74f0",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": true
+      },
+      {
+        "route_id": "route-46bf8895f1099c41714b",
+        "contract_id": "route-46bf8895f1099c41714b:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-46bf8895f1099c41714b",
+        "contract_id": "route-46bf8895f1099c41714b:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-bc28dbffca264c415359",
+        "contract_id": "route-bc28dbffca264c415359:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-bc28dbffca264c415359",
+        "contract_id": "route-bc28dbffca264c415359:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-bc28dbffca264c415359",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-bc28dbffca264c415359",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": true
+      },
+      {
+        "route_id": "route-4b846379969a5288d58b",
+        "contract_id": "route-4b846379969a5288d58b:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-4b846379969a5288d58b",
+        "contract_id": "route-4b846379969a5288d58b:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-6780933c22f5b89f1bf7",
+        "contract_id": "route-6780933c22f5b89f1bf7:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-6780933c22f5b89f1bf7",
+        "contract_id": "route-6780933c22f5b89f1bf7:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-6780933c22f5b89f1bf7",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-6780933c22f5b89f1bf7",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": true
+      },
+      {
+        "route_id": "route-ec0b8bd762480300bd02",
+        "contract_id": "route-ec0b8bd762480300bd02:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-ec0b8bd762480300bd02",
+        "contract_id": "route-ec0b8bd762480300bd02:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-fd4e8b363cc6b7a32d16",
+        "contract_id": "route-fd4e8b363cc6b7a32d16:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-fd4e8b363cc6b7a32d16",
+        "contract_id": "route-fd4e8b363cc6b7a32d16:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-fd4e8b363cc6b7a32d16",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-fd4e8b363cc6b7a32d16",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": true
+      },
+      {
+        "route_id": "route-a1f9956244b17a14f893",
+        "contract_id": "route-a1f9956244b17a14f893:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-a1f9956244b17a14f893",
+        "contract_id": "route-a1f9956244b17a14f893:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-55aadc5558ca3b8248b1",
+        "contract_id": "route-55aadc5558ca3b8248b1:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-55aadc5558ca3b8248b1",
+        "contract_id": "route-55aadc5558ca3b8248b1:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-55aadc5558ca3b8248b1",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-55aadc5558ca3b8248b1",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": true
+      },
+      {
+        "route_id": "route-69a67acf65189dcd2e64",
+        "contract_id": "route-69a67acf65189dcd2e64:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-69a67acf65189dcd2e64",
+        "contract_id": "route-69a67acf65189dcd2e64:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-82723694fa5ab6ee5f1e",
+        "contract_id": "route-82723694fa5ab6ee5f1e:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-82723694fa5ab6ee5f1e",
+        "contract_id": "route-82723694fa5ab6ee5f1e:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-82723694fa5ab6ee5f1e",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-82723694fa5ab6ee5f1e",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": true
+      },
+      {
+        "route_id": "route-dafd1a6542f902f1b0fb",
+        "contract_id": "route-dafd1a6542f902f1b0fb:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-dafd1a6542f902f1b0fb",
+        "contract_id": "route-dafd1a6542f902f1b0fb:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-dfd94c84789ce0429d99",
+        "contract_id": "route-dfd94c84789ce0429d99:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-dfd94c84789ce0429d99",
+        "contract_id": "route-dfd94c84789ce0429d99:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-dfd94c84789ce0429d99",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-dfd94c84789ce0429d99",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": true
+      },
+      {
+        "route_id": "route-4ce88ce8b59bfa6db6fc",
+        "contract_id": "route-4ce88ce8b59bfa6db6fc:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-4ce88ce8b59bfa6db6fc",
+        "contract_id": "route-4ce88ce8b59bfa6db6fc:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-d64394eade0a18a43d8b",
+        "contract_id": "route-d64394eade0a18a43d8b:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-d64394eade0a18a43d8b",
+        "contract_id": "route-d64394eade0a18a43d8b:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-d64394eade0a18a43d8b",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-d64394eade0a18a43d8b",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": true
+      },
+      {
+        "route_id": "route-c5f4fd3cbfb4c9bfd8ba",
+        "contract_id": "route-c5f4fd3cbfb4c9bfd8ba:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-c5f4fd3cbfb4c9bfd8ba",
+        "contract_id": "route-c5f4fd3cbfb4c9bfd8ba:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-904bf410afa61f6f31f3",
+        "contract_id": "route-904bf410afa61f6f31f3:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-904bf410afa61f6f31f3",
+        "contract_id": "route-904bf410afa61f6f31f3:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-904bf410afa61f6f31f3",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-904bf410afa61f6f31f3",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-189d9a32320fbe47702c",
+        "contract_id": "route-189d9a32320fbe47702c:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-189d9a32320fbe47702c",
+        "contract_id": "route-189d9a32320fbe47702c:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-f7e00cea4d0010ef9052",
+        "contract_id": "route-f7e00cea4d0010ef9052:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-f7e00cea4d0010ef9052",
+        "contract_id": "route-f7e00cea4d0010ef9052:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-f7e00cea4d0010ef9052",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-f7e00cea4d0010ef9052",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-4c0b549152c518526c4e",
+        "contract_id": "route-4c0b549152c518526c4e:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-4c0b549152c518526c4e",
+        "contract_id": "route-4c0b549152c518526c4e:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-19bf65ba611362c0b318",
+        "contract_id": "route-19bf65ba611362c0b318:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-19bf65ba611362c0b318",
+        "contract_id": "route-19bf65ba611362c0b318:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-19bf65ba611362c0b318",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-19bf65ba611362c0b318",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-529265bdb047246c9c78",
+        "contract_id": "route-529265bdb047246c9c78:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-529265bdb047246c9c78",
+        "contract_id": "route-529265bdb047246c9c78:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-810dc0b91be9e6d31409",
+        "contract_id": "route-810dc0b91be9e6d31409:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-810dc0b91be9e6d31409",
+        "contract_id": "route-810dc0b91be9e6d31409:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-810dc0b91be9e6d31409",
+        "contract_id": null,
+        "method": "HEAD",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": 0,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-810dc0b91be9e6d31409",
+        "contract_id": null,
+        "method": "OPTIONS",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-3d8f07733be09ee8a755",
+        "contract_id": "route-3d8f07733be09ee8a755:GET",
+        "method": "GET",
+        "role": "standard",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      },
+      {
+        "route_id": "route-3d8f07733be09ee8a755",
+        "contract_id": "route-3d8f07733be09ee8a755:GET",
+        "method": "GET",
+        "role": "admin",
+        "matched": true,
+        "native_HEAD_body_bytes": null,
+        "required_raw_OPTIONS_metadata_matched": null
+      }
+    ]
+  },
+  "Core": {
+    "read_count": 18,
+    "read_passed": true,
+    "read_cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "write_passed": true,
+    "write_cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "writes_each": 2,
+    "exact_state_rollback": {
+      "oversized_HTML": true,
+      "choice_overflow": true
+    }
+  },
+  "formal_M0_accepted": false,
+  "performance_measured": false
+}
