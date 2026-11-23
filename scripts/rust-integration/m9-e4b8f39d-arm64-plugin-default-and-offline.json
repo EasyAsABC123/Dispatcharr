@@ -1,0 +1,130 @@
+{
+  "application": "e4b8f39df783c3d2a558b42cef14fda3dc82a715",
+  "configured_offline_case": {
+    "actual_exit": 0,
+    "cleanup_exit": 0,
+    "owned_repo_configuration": {
+      "changed_fixture_rows": 1,
+      "configured_fixture_disabled_official": true,
+      "enabled_repository_count": 0,
+      "prior_default_official_enabled": true
+    },
+    "prior_private_receipts": {
+      "cleanup.json": "547f21be43ef538d61a6391162b795f471f5397014ee690a035e2068944d159c",
+      "offline-repository-setting.json": "edf7b92872ca7f5f1fcbb0170a4075407710a674651b35fe621e95796ffa6916",
+      "signed-refresh-0.json": "264cfdb5fdebd55a5d25d153df838f18cbca41745851fe9460636154666d846c",
+      "signed-refresh-1.json": "0d913272c0edc356b39fd4b9d3ed5593364d435ffb1c91930f2a07c14dd881b1"
+    },
+    "resource_retirements": {
+      "container": 4,
+      "network": 2,
+      "volume": 0
+    },
+    "signed_outcomes": [
+      {
+        "guide_index_present": true,
+        "jobs": [
+          {
+            "descendant": false,
+            "family": "apps.epg.tasks.refresh_epg_data",
+            "status": "SUCCESS"
+          },
+          {
+            "descendant": true,
+            "family": "apps.epg.tasks.build_programme_index_task",
+            "status": "SUCCESS"
+          },
+          {
+            "descendant": true,
+            "family": "apps.channels.tasks.evaluate_series_rules",
+            "status": "SUCCESS"
+          }
+        ],
+        "programme_exact": true,
+        "queue_and_locks_empty": true,
+        "request": 1,
+        "signed_http_status": 202,
+        "worker_ready_http": 200
+      },
+      {
+        "guide_index_present": true,
+        "jobs": [
+          {
+            "descendant": false,
+            "family": "apps.epg.tasks.refresh_epg_data",
+            "status": "SUCCESS"
+          },
+          {
+            "descendant": true,
+            "family": "apps.epg.tasks.build_programme_index_task",
+            "status": "SUCCESS"
+          },
+          {
+            "descendant": true,
+            "family": "apps.channels.tasks.evaluate_series_rules",
+            "status": "SUCCESS"
+          }
+        ],
+        "programme_exact": true,
+        "queue_and_locks_empty": true,
+        "request": 2,
+        "signed_http_status": 202,
+        "worker_ready_http": 200
+      }
+    ]
+  },
+  "default_official_case": {
+    "actual_exit": 1,
+    "cleanup_exit": 0,
+    "prior_private_receipts": {
+      "cleanup.json": "b3d13365b0e9bf749e1bd3c00d3b89729135b04b10021b273938fb06ee2c644a",
+      "guide-readiness-after-0.json": "86cb885bf76bc54924381250e14624873375d76f2ebd45f1d9488708bd09a0d6",
+      "guide-readiness-pre-seed.json": "17f96b8c750c1d49e530001184a68c654bd53bea682d64649fed8fc5cf335a07",
+      "guide-terminal-0.stderr": "1d5c68f033a5f016356f3c1a058b1d261d4ce9a47113d8bdb631f823ac2e4804"
+    },
+    "ready_after_accepted_guide": {
+      "celery": "Fault",
+      "celery_details": "Fault(Operational(\"Plugin ETA execution outside settled domain\"))",
+      "clocked_scheduler": "ReceiverFault",
+      "dvr": "Observed",
+      "ready": false,
+      "startup": "Started",
+      "status": 503
+    },
+    "ready_before_seed": {
+      "celery": "Observed",
+      "celery_details": "Observed(Empty)",
+      "clocked_scheduler": "Observed",
+      "dvr": "Observed",
+      "ready": true,
+      "startup": "Started",
+      "status": 200
+    },
+    "resource_retirements": {
+      "container": 4,
+      "network": 2,
+      "volume": 0
+    },
+    "signed_guide_http": 202,
+    "unclaimed_owned_guide_queue_projection": {
+      "broker_counts": [
+        1,
+        0,
+        0,
+        0
+      ],
+      "guide_index_exists": false,
+      "guide_row_count": 0,
+      "head_args_match_guide": true,
+      "head_forced": true,
+      "head_is_refresh": true,
+      "head_is_timed": false,
+      "new_result_status_and_descendant_boolean": [],
+      "sql_source_status": "idle"
+    }
+  },
+  "exact_underlying_default_plugin_error_class_verified": false,
+  "formal_m9_accepted": false,
+  "paired_performance_verified": false,
+  "platform": "linux/arm64"
+}
