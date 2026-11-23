@@ -23,40 +23,84 @@ struct AppliedMigration {
     timestamp: Option<DateTime<Utc>>,
 }
 
+fn migration_verbosity(value: &str) -> Result<bool, OperatorError> {
+    match value {
+        "0" | "1" => Ok(false),
+        "2" | "3" => Ok(true),
+        _ => Err(OperatorError::Arguments),
+    }
+}
+
 impl Inspection {
     pub fn parse(args: &[String]) -> Result<Self, OperatorError> {
-        let args: Vec<_> = args.iter().map(String::as_str).collect();
-        let head = args
-            .strip_prefix(&["showmigrations"])
-            .ok_or(OperatorError::Arguments)?;
-        let mode = head
-            .strip_suffix(&["--database", "default", "--no-color"])
-            .unwrap_or(head);
-        let (mode, verbose) = match mode {
-            [args @ .., "--verbosity=2"] | [args @ .., "--verbosity", "2"] => (args, true),
-            _ => (mode, false),
-        };
-        let list = if verbose {
-            Self::ListWithDates
-        } else {
-            Self::List
-        };
-        match mode {
-            [] | ["--list"] => Ok(list(None)),
-            ["--plan"] => Ok(if verbose {
+        let mut args = args.iter().map(String::as_str);
+        if args.next() != Some("showmigrations") {
+            return Err(OperatorError::Arguments);
+        }
+
+        let mut plan = None;
+        let mut app = None;
+        let mut verbose = false;
+        while let Some(argument) = args.next() {
+            match argument {
+                "--list" | "-l" | "--plan" | "-p" => {
+                    let requested_plan = matches!(argument, "--plan" | "-p");
+                    if plan
+                        .replace(requested_plan)
+                        .is_some_and(|old| old != requested_plan)
+                    {
+                        return Err(OperatorError::Arguments);
+                    }
+                }
+                "--database" => {
+                    if args.next() != Some("default") {
+                        return Err(OperatorError::Arguments);
+                    }
+                }
+                "--database=default" | "--no-color" => {}
+                "--verbosity" | "-v" => {
+                    verbose = migration_verbosity(args.next().ok_or(OperatorError::Arguments)?)?;
+                }
+                _ => {
+                    let attached_verbosity = argument.strip_prefix("--verbosity=").or_else(|| {
+                        argument
+                            .strip_prefix("-v")
+                            .map(|value| value.strip_prefix('=').unwrap_or(value))
+                    });
+                    if let Some(level) = attached_verbosity {
+                        verbose = migration_verbosity(level)?;
+                    } else if argument.starts_with('-') || app.replace(argument).is_some() {
+                        return Err(OperatorError::Arguments);
+                    }
+                }
+            }
+        }
+
+        if plan == Some(true) {
+            if app.is_some() {
+                return Err(OperatorError::Arguments);
+            }
+            return Ok(if verbose {
                 Self::PlanWithDependencies
             } else {
                 Self::Plan
-            }),
-            [app] | [app, "--list"] => PLAN
-                .iter()
-                .map(|(label, _)| *label)
-                .chain([APP_WITHOUT_MIGRATIONS])
-                .find(|label| label == app)
-                .map(|label| list(Some(label)))
-                .ok_or(OperatorError::Arguments),
-            _ => Err(OperatorError::Arguments),
+            });
         }
+
+        let selected = app
+            .map(|name| {
+                PLAN.iter()
+                    .map(|(label, _)| *label)
+                    .chain([APP_WITHOUT_MIGRATIONS])
+                    .find(|label| *label == name)
+                    .ok_or(OperatorError::Arguments)
+            })
+            .transpose()?;
+        Ok(if verbose {
+            Self::ListWithDates(selected)
+        } else {
+            Self::List(selected)
+        })
     }
 
     pub(crate) async fn execute(self, store: &Store) -> Result<String, OperatorError> {
@@ -283,6 +327,71 @@ mod tests {
             all.replace(" (applied at 2026-11-20 11:01:02)", ""),
             Inspection::List(None).render(&applied)
         );
+    }
+
+    #[test]
+    fn explicit_verbosity_and_short_forms_select_the_existing_source_renderers() {
+        let cases: &[(&[&str], Inspection)] = &[
+            (&["-v", "3", "--plan"], Inspection::PlanWithDependencies),
+            (
+                &["--database", "default", "-p", "-v", "2", "--no-color"],
+                Inspection::PlanWithDependencies,
+            ),
+            (
+                &["-l", "core", "--verbosity=0"],
+                Inspection::List(Some("core")),
+            ),
+            (
+                &[
+                    "--database=default",
+                    "--verbosity=3",
+                    "--no-color",
+                    "accounts",
+                ],
+                Inspection::ListWithDates(Some("accounts")),
+            ),
+            (
+                &["core", "-l", "--verbosity", "0"],
+                Inspection::List(Some("core")),
+            ),
+            (&["-p", "--verbosity=1"], Inspection::Plan),
+            (&["-p", "-v", "2"], Inspection::PlanWithDependencies),
+            (&["--plan", "-v3"], Inspection::PlanWithDependencies),
+            (
+                &["accounts", "-l", "-v=3"],
+                Inspection::ListWithDates(Some("accounts")),
+            ),
+            (
+                &["--list", "--verbosity=3"],
+                Inspection::ListWithDates(None),
+            ),
+        ];
+        for (tail, expected) in cases {
+            let args = std::iter::once("showmigrations")
+                .chain(tail.iter().copied())
+                .map(str::to_owned)
+                .collect::<Vec<_>>();
+            assert_eq!(Inspection::parse(&args).unwrap(), *expected, "{args:?}");
+        }
+        let rejected: &[&[&str]] = &[
+            &["--list", "-v"],
+            &["--plan", "--verbosity=4"],
+            &["--plan", "-v-1"],
+            &["--verbosity", "--plan"],
+            &["--database", "other", "-v", "2"],
+            &["--database=other", "-p"],
+            &["--unknown", "--list"],
+            &["-l", "-p"],
+            &["-p", "core"],
+            &["core", "accounts", "-l"],
+        ];
+        for tail in rejected {
+            let args = std::iter::once("showmigrations")
+                .chain(tail.iter().copied())
+                .map(str::to_owned)
+                .collect::<Vec<_>>();
+            assert!(Inspection::parse(&args).is_err(), "{args:?}");
+        }
     }
 
     #[test]

@@ -52,6 +52,10 @@ fn positive(name: &str, default: usize) -> Result<usize, String> {
     Ok(value)
 }
 
+fn xc_vod_info_enabled(value: Option<&std::ffi::OsStr>) -> bool {
+    value.is_none_or(|value| value == std::ffi::OsStr::new("1"))
+}
+
 fn live_engine_config() -> Result<EngineConfig, String> {
     let mut config = EngineConfig::default();
     config.initial_buffer_chunks = 4;
@@ -816,9 +820,10 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         .map_err(|_| "XC initialization failed (credentials omitted)")?
         .with_epg()
         .with_vod_lists();
+        // Original serves ordinary Movie and Series info in its standard XC
+        // API. Keep the existing explicit setting for operators who opt out.
         Some(
-            if env::var_os("RUST_XC_CACHED_VOD_INFO").as_deref() == Some(std::ffi::OsStr::new("1"))
-            {
+            if xc_vod_info_enabled(env::var_os("RUST_XC_CACHED_VOD_INFO").as_deref()) {
                 gateway.with_cached_vod_info()
             } else {
                 gateway
@@ -2346,6 +2351,21 @@ fn main() -> std::process::ExitCode {
         Err(error) => {
             eprintln!("Dispatcharr Rust startup failed: {error}");
             std::process::ExitCode::FAILURE
+        }
+    }
+}
+
+#[cfg(test)]
+mod xc_vod_info_startup_tests {
+    use super::xc_vod_info_enabled;
+    use std::ffi::OsStr;
+
+    #[test]
+    fn ordinary_main_enables_xc_vod_info_with_an_explicit_opt_out() {
+        assert!(xc_vod_info_enabled(None));
+        assert!(xc_vod_info_enabled(Some(OsStr::new("1"))));
+        for disabled in ["0", "false", ""] {
+            assert!(!xc_vod_info_enabled(Some(OsStr::new(disabled))));
         }
     }
 }

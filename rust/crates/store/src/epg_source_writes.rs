@@ -178,7 +178,10 @@ fn validate(
         return Err(StoreError::InvalidInput(Value::Object(errors)));
     }
     if saved["source_type"] != old["source_type"]
-        || !matches!(saved["source_type"].as_str(), Some("dummy" | "xmltv"))
+        || !matches!(
+            saved["source_type"].as_str(),
+            Some("dummy" | "xmltv" | "schedules_direct")
+        )
     {
         return Err(unsupported());
     }
@@ -496,6 +499,157 @@ async fn update_sd_settings(
         .await?
 }
 
+fn validate_sd_editor(
+    input: Map<String, Value>,
+    old: &Value,
+    old_cron: &str,
+    partial: bool,
+) -> Result<Validated, StoreError> {
+    // The React editor saves local metadata and its schedule. An empty
+    // password from the editor retains the stored value.
+    if !partial
+        || old["source_type"] != "schedules_direct"
+        || input.is_empty()
+        || input.keys().any(|key| {
+            !matches!(
+                key.as_str(),
+                "name"
+                    | "source_type"
+                    | "username"
+                    | "password"
+                    | "is_active"
+                    | "refresh_interval"
+                    | "cron_expression"
+                    | "priority"
+            )
+        })
+        || input
+            .get("is_active")
+            .is_some_and(|value| !value.is_boolean())
+    {
+        return Err(unsupported());
+    }
+    validate(input, old, old_cron, partial)
+}
+
+async fn update_sd_editor(
+    session: &TaskSqlSession,
+    id: i64,
+    old: Value,
+    old_cron: String,
+    update: Validated,
+    zone: String,
+) -> Result<(), StoreError> {
+    let name = update.saved["name"]
+        .as_str()
+        .ok_or_else(unsupported)?
+        .to_owned();
+    let interval = update.saved["refresh_interval"]
+        .as_i64()
+        .and_then(|value| i32::try_from(value).ok())
+        .ok_or_else(unsupported)?;
+    let priority = update.saved["priority"]
+        .as_i64()
+        .and_then(|value| i32::try_from(value).ok())
+        .ok_or_else(unsupported)?;
+    let active = update.saved["is_active"]
+        .as_bool()
+        .ok_or_else(unsupported)?;
+    let status = update.saved["status"]
+        .as_str()
+        .ok_or_else(unsupported)?
+        .to_owned();
+    let task_id = old["refresh_task_id"].as_i64().ok_or_else(unsupported)?;
+    let old_interval = old["refresh_interval"]
+        .as_i64()
+        .and_then(|value| i32::try_from(value).ok())
+        .ok_or_else(unsupported)?;
+    session
+        .run(move |connection| {
+            Box::pin(async move {
+                let mut transaction = connection.begin().await?;
+                no_custom_triggers(&mut transaction).await?;
+                let row: Option<Value> = sqlx::query_scalar(
+                    "SELECT to_jsonb(e) FROM epg_epgsource e WHERE id=$1 FOR UPDATE",
+                )
+                .bind(id)
+                .fetch_optional(&mut *transaction)
+                .await?;
+                if row.ok_or_else(missing)? != old {
+                    return Err(unsupported());
+                }
+
+                // Revalidate the managed schedule that the editor read. Preserve
+                // the task ID and its run history through a cron/interval change.
+                let cron: Option<String> = sqlx::query_scalar(
+                    "SELECT COALESCE(concat_ws(' ',ct.minute,ct.hour,ct.day_of_month,
+                                               ct.month_of_year,ct.day_of_week),'')
+                       FROM django_celery_beat_periodictask p
+                       LEFT JOIN django_celery_beat_crontabschedule ct ON ct.id=p.crontab_id
+                       LEFT JOIN django_celery_beat_intervalschedule iv ON iv.id=p.interval_id
+                       WHERE p.id=$1 AND p.name=$2 AND p.task='apps.epg.tasks.refresh_epg_data'
+                         AND p.args='[]'
+                         AND num_nonnulls(p.interval_id,p.crontab_id)=1
+                         AND p.solar_id IS NULL AND p.clocked_id IS NULL
+                         AND (
+                           (p.kwargs=$3 AND
+                            (ct.id IS NOT NULL OR (iv.period='hours' AND iv.every=GREATEST($4,1))))
+                           OR (p.kwargs=$5 AND p.crontab_id IS NULL
+                               AND iv.period='hours' AND iv.every=24 AND $4=24)
+                         )
+                       FOR UPDATE OF p",
+                )
+                .bind(task_id)
+                .bind(format!("epg_source-refresh-{id}"))
+                .bind(format!("{{\"source_id\": {id}}}"))
+                .bind(old_interval)
+                // EPG migration 0007 wrote account_id on the linked 24-hour
+                // task. The same upsert canonicalizes it to source_id.
+                .bind(format!("{{\"account_id\": {id}}}"))
+                .fetch_optional(&mut *transaction)
+                .await?;
+                if cron.as_deref() != Some(old_cron.as_str()) {
+                    return Err(unsupported());
+                }
+                let duplicate: bool = sqlx::query_scalar(
+                    "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE name=$1 AND id<>$2)",
+                )
+                .bind(&name)
+                .bind(id)
+                .fetch_one(&mut *transaction)
+                .await?;
+                if duplicate {
+                    return Err(field("name", "epg source with this name already exists."));
+                }
+
+                sqlx::query(
+                    "UPDATE epg_epgsource SET name=$2,is_active=$3,refresh_interval=$4,
+                                              priority=$5,status=$6 WHERE id=$1",
+                )
+                .bind(id)
+                .bind(name)
+                .bind(active)
+                .bind(interval)
+                .bind(priority)
+                .bind(status)
+                .execute(&mut *transaction)
+                .await?;
+                schedule_refresh_on_connection(
+                    &mut transaction,
+                    id,
+                    active,
+                    interval,
+                    &update.cron,
+                    &zone,
+                )
+                .await?;
+                transaction.commit().await?;
+                Ok(())
+            })
+        })
+        .await?
+}
+
 async fn dummy_signal(
     session: &TaskSqlSession,
     auth: AuthService,
@@ -691,9 +845,15 @@ async fn change(
             let old:Value=row.try_get("raw")?;let old_cron:String=row.try_get("cron")?;
             let input = body_object(body)?;
             if old["source_type"] == "schedules_direct" {
-                let action = sd_update(input, &old, &old_cron, partial)?;
-                update_sd_settings(&session, id, old, action).await?;
-                return Ok((project(&session, id, Some(old_cron)).await?, true));
+                if let Ok(action) = sd_update(input.clone(), &old, &old_cron, partial) {
+                    update_sd_settings(&session, id, old, action).await?;
+                    return Ok((project(&session, id, Some(old_cron)).await?, true));
+                }
+                let update = validate_sd_editor(input, &old, &old_cron, partial)?;
+                let cron = update.cron.clone();
+                let zone = schedule_timezone(&session, auth.clone(), &cron).await?;
+                update_sd_editor(&session, id, old, old_cron, update, zone).await?;
+                return Ok((project(&session, id, Some(cron)).await?, true));
             }
             let Validated {saved,cron,url_changed}=validate(input,&old,&old_cron,partial)?;
             let dummy=saved["source_type"]=="dummy";
@@ -949,6 +1109,77 @@ mod tests {
         ));
         assert!(sd_update(activate.clone(), &old, "", false).is_err());
         assert!(sd_update(activate.clone(), &old, "17 4 29 2 *", true).is_err());
+    }
+
+    fn sd_editor_row() -> Value {
+        let mut row = old();
+        row["source_type"] = json!("schedules_direct");
+        row["refresh_interval"] = json!(24);
+        row["refresh_task_id"] = json!(14);
+        row["username"] = json!("fixture-user");
+        row["password"] = json!("fixture-only");
+        row["custom_properties"] = json!({"logo_style": "dark"});
+        row
+    }
+
+    #[test]
+    fn schedules_direct_react_editor_updates_local_fields_and_keeps_provider_data() {
+        let before = sd_editor_row();
+        let request = json!({
+            "name": "Evening guide",
+            "source_type": "schedules_direct",
+            "username": "fixture-user",
+            "password": "",
+            "is_active": false,
+            "refresh_interval": 0,
+            "cron_expression": "25 3 * * *",
+            "priority": 10,
+        });
+        let fields = request.as_object().unwrap();
+        assert!(sd_update(fields.clone(), &before, "", true).is_err());
+        let update = validate_sd_editor(fields.clone(), &before, "", true).unwrap();
+        let mut expected = before.clone();
+        expected["name"] = json!("Evening guide");
+        expected["refresh_interval"] = json!(0);
+        expected["priority"] = json!(10);
+        assert_eq!(update.saved, expected);
+        assert_eq!(update.cron, "25 3 * * *");
+        assert!(!update.url_changed);
+    }
+
+    #[test]
+    fn schedules_direct_editor_toggle_and_interval_follow_saved_cron_semantics() {
+        let mut before = sd_editor_row();
+        before["refresh_interval"] = json!(0);
+        let cron = "25 3 * * *";
+        let toggle = json!({"is_active": true});
+        let update =
+            validate_sd_editor(toggle.as_object().unwrap().clone(), &before, cron, true).unwrap();
+        assert_eq!(update.saved["status"], "idle");
+        assert_eq!(update.saved["is_active"], true);
+        assert_eq!(update.cron, cron);
+
+        let interval = json!({"refresh_interval": 8, "cron_expression": ""});
+        let update =
+            validate_sd_editor(interval.as_object().unwrap().clone(), &before, cron, true).unwrap();
+        assert_eq!(update.saved["refresh_interval"], 8);
+        assert_eq!(update.cron, "");
+    }
+
+    #[test]
+    fn schedules_direct_editor_preserves_other_workflows() {
+        let before = sd_editor_row();
+        for request in [
+            json!({"username": "another-fixture-user"}),
+            json!({"password": "replacement-fixture"}),
+            json!({"source_type": "xmltv"}),
+            json!({"custom_properties": {"logo_style": "white"}}),
+        ] {
+            assert!(
+                validate_sd_editor(request.as_object().unwrap().clone(), &before, "", true)
+                    .is_err()
+            );
+        }
     }
 
     #[test]

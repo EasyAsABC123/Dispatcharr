@@ -53,7 +53,7 @@ fn sqlite_upgrade(args: &[String]) -> i32 {
 fn main() {
     let args: Vec<String> = std::env::args().skip(1).collect();
     if args == ["--help"] {
-        println!("Native Dispatcharr safe operator\nUsage: dispatcharr-operator reset_network_access\n       dispatcharr-operator reset_user_network [--user USERNAME]\n       dispatcharr-operator createsuperuser --noinput [--username USERNAME] [--email EMAIL]\n       dispatcharr-operator showmigrations [APP] [--list] [--verbosity 2]\n       dispatcharr-operator showmigrations --plan [--verbosity 2]\nOnly these safe commands and flags are supported. Django global flags are not emulated.");
+        println!("Native Dispatcharr safe operator\nUsage: dispatcharr-operator reset_network_access\n       dispatcharr-operator reset_user_network [--user USERNAME]\n       dispatcharr-operator createsuperuser --noinput [--username USERNAME] [--email EMAIL]\n       dispatcharr-operator showmigrations [APP] [--list] [--verbosity LEVEL]\n       dispatcharr-operator showmigrations --plan [--verbosity LEVEL]\nShowmigrations verbosity levels 0 and 1 use the plain output, and 2 and 3 use the verbose output.\nOnly these safe commands and flags are supported. Django global flags are not emulated.");
         #[cfg(feature = "sqlite-historical-upgrade")]
         println!("       dispatcharr-operator sqlite_upgrade_copy --input FILE --output FILE [--display-timezone ZONE]");
         return;

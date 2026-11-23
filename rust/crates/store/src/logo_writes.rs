@@ -368,7 +368,7 @@ pub(crate) async fn delete(
     )
         .into_response())
 }
-fn bulk_delete_json_error(raw: &[u8], error: serde_json::Error) -> StoreError {
+fn logo_action_json_error(raw: &[u8], error: serde_json::Error) -> StoreError {
     // serde_json reports the last byte for an absent value. DRF reports the
     // next character, including whitespace after the separator.
     if error.is_eof() {
@@ -399,7 +399,7 @@ fn bulk_delete_json_error(raw: &[u8], error: serde_json::Error) -> StoreError {
     ))
 }
 
-async fn bulk_delete_body(request: Request) -> Result<Map<String, Value>, StoreError> {
+async fn logo_action_body(request: Request) -> Result<Map<String, Value>, StoreError> {
     let media = request
         .headers()
         .get(axum::http::header::CONTENT_TYPE)
@@ -419,7 +419,7 @@ async fn bulk_delete_body(request: Request) -> Result<Map<String, Value>, StoreE
         ));
     }
     match serde_json::from_slice::<Value>(&raw)
-        .map_err(|error| bulk_delete_json_error(&raw, error))?
+        .map_err(|error| logo_action_json_error(&raw, error))?
     {
         Value::Object(fields) => Ok(fields),
         _ => Err(StoreError::UnhandledRestFault),
@@ -467,7 +467,7 @@ pub(crate) async fn bulk_delete(
 ) -> Result<Response, StoreError> {
     auth.account_user(peer, request.headers().clone(), true)
         .await?;
-    let body = bulk_delete_body(request).await?;
+    let body = logo_action_body(request).await?;
     let ids = bulk_logo_ids(body.get("logo_ids"))?;
     let delete_files = crate::channels::truthy(body.get("delete_files"));
     let permit = auth.images.reserve().await?;
@@ -535,13 +535,99 @@ async fn bulk_delete_owned(
     Ok(())
 }
 
-fn safe_file_delete(url: &str) -> Result<(), StoreError> {
-    delete_local_logo(url, false)
+pub(crate) async fn cleanup_unused(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Json<Value>, StoreError> {
+    auth.account_user(peer, request.headers().clone(), true)
+        .await?;
+    let content_type = request
+        .headers()
+        .get(axum::http::header::CONTENT_TYPE)
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.split(';').next())
+        .map(str::trim);
+    let body = match content_type {
+        Some("multipart/form-data" | "application/x-www-form-urlencoded") => {
+            input(request, false).await?.fields
+        }
+        _ => logo_action_body(request).await?,
+    };
+    let delete_files = crate::channels::truthy(body.get("delete_files"));
+    let permit = auth.images.reserve().await?;
+    let work = auth.images.begin()?;
+    let result = tokio::spawn(async move {
+        let (_permit, _work) = (permit, work);
+        cleanup_unused_owned(auth.store.pool(), delete_files).await
+    })
+    .await
+    .map_err(|_| StoreError::UnhandledRestFault)??;
+    Ok(Json(result))
 }
 
-fn delete_local_logo(url: &str, bulk: bool) -> Result<(), StoreError> {
+async fn cleanup_unused_owned(
+    pool: &sqlx::PgPool,
+    delete_files: bool,
+) -> Result<Value, StoreError> {
+    let mut tx = pool.begin().await?;
+    // Original selects by direct Channel.logo references. Override links do
+    // not count as usage, and Django's delete collector clears those links.
+    let logos: Vec<(i64, String, Option<String>)> = sqlx::query_as(
+        "SELECT l.id::bigint, l.name, CASE WHEN $1 THEN l.url END
+         FROM dispatcharr_channels_logo l
+         WHERE NOT EXISTS (SELECT 1 FROM dispatcharr_channels_channel c WHERE c.logo_id=l.id)
+         ORDER BY l.id FOR UPDATE OF l",
+    )
+    .bind(delete_files)
+    .fetch_all(&mut *tx)
+    .await?;
+    let mut local_files_deleted = 0;
+    let mut deleted_logos = Vec::with_capacity(logos.len());
+    let mut ids = Vec::with_capacity(logos.len());
+    for (id, name, url) in logos {
+        if let Some(url) = url.filter(|url| url.starts_with("/data/logos")) {
+            let removed = tokio::task::spawn_blocking(move || delete_local_logo(&url, true))
+                .await
+                .map_err(|_| StoreError::UnhandledRestFault)??;
+            local_files_deleted += usize::from(removed);
+        }
+        ids.push(id);
+        deleted_logos.push(name);
+    }
+    if !ids.is_empty() {
+        sqlx::query(
+            "UPDATE dispatcharr_channels_channeloverride SET logo_id=NULL WHERE logo_id=ANY($1)",
+        )
+        .bind(&ids)
+        .execute(&mut *tx)
+        .await?;
+        sqlx::query("DELETE FROM dispatcharr_channels_logo WHERE id=ANY($1)")
+            .bind(&ids)
+            .execute(&mut *tx)
+            .await?;
+    }
+    tx.commit().await?;
+    let deleted_count = deleted_logos.len();
+    let mut message = format!("Successfully deleted {deleted_count} unused logos");
+    if local_files_deleted > 0 {
+        message.push_str(&format!(" and deleted {local_files_deleted} local files"));
+    }
+    Ok(json!({
+        "message": message,
+        "deleted_count": deleted_count,
+        "deleted_logos": deleted_logos,
+        "local_files_deleted": local_files_deleted,
+    }))
+}
+
+fn safe_file_delete(url: &str) -> Result<(), StoreError> {
+    delete_local_logo(url, false).map(|_| ())
+}
+
+fn delete_local_logo(url: &str, bulk: bool) -> Result<bool, StoreError> {
     if !FsPath::new(url).exists() {
-        return Ok(());
+        return Ok(false);
     }
     let root = std::fs::canonicalize("/data/logos").map_err(|_| {
         StoreError::Unsupported("Logo file deletion requires a canonical logo root")
@@ -553,7 +639,7 @@ fn delete_local_logo(url: &str, bulk: bool) -> Result<(), StoreError> {
             "Escaped legacy logo file deletion is not implemented",
         ));
     }
-    std::fs::remove_file(url).map_err(|error| {
+    std::fs::remove_file(url).map(|()| true).map_err(|error| {
         let message = match error.raw_os_error() {
             Some(code @ (1 | 2 | 13 | 20 | 21 | 30)) => {
                 let label = match code {
@@ -699,7 +785,7 @@ mod bulk_tests {
                 .header("Content-Type", "application/json")
                 .body(axum::body::Body::from(body))
                 .unwrap();
-            let result = bulk_delete_body(request).await;
+            let result = logo_action_body(request).await;
             let detail = format!(
                 "JSON parse error - Expecting value: line {line} column {column} (char {position})"
             );
@@ -722,7 +808,7 @@ mod bulk_tests {
                 crate::source_json_error(body, error)
             );
             let error = serde_json::from_slice::<Value>(body).unwrap_err();
-            let actual = bulk_delete_json_error(body, error);
+            let actual = logo_action_json_error(body, error);
             assert!(
                 matches!(actual, StoreError::InvalidInput(value) if value == json!({"detail": expected}))
             );
@@ -746,5 +832,118 @@ mod bulk_tests {
             bulk_logo_ids(Some(&json!([1, "invalid"]))),
             Err(StoreError::UnhandledRestFault)
         ));
+    }
+}
+
+#[cfg(test)]
+mod cleanup_tests {
+    use super::*;
+    use axum::{body::Body, http::header, Extension};
+    use sqlx::postgres::PgPoolOptions;
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn channel_logo_cleanup_post_requires_authentication() {
+        let store = crate::Store::from_pool(
+            PgPoolOptions::new().connect_lazy_with(sqlx::postgres::PgConnectOptions::new()),
+        );
+        let config = crate::AuthConfig::new(uuid::Uuid::new_v4().to_string()).unwrap();
+        let auth = AuthService::new(store, config);
+        let response = auth
+            .router()
+            .layer(Extension(ConnectInfo(
+                "127.0.0.1:12345".parse::<SocketAddr>().unwrap(),
+            )))
+            .oneshot(
+                Request::post("/api/channels/logos/cleanup/")
+                    .header(header::CONTENT_TYPE, "application/json")
+                    .body(Body::from("{}"))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+        assert_eq!(
+            response.headers()[header::WWW_AUTHENTICATE],
+            "Bearer realm=\"api\""
+        );
+        let raw = axum::body::to_bytes(response.into_body(), 512)
+            .await
+            .unwrap();
+        assert_eq!(
+            serde_json::from_slice::<Value>(&raw).unwrap(),
+            json!({"detail":"Authentication credentials were not provided."}),
+        );
+    }
+
+    #[tokio::test]
+    #[ignore = "requires explicit disposable PostgreSQL; creates only connection-local temporary tables"]
+    async fn channel_logo_cleanup_preserves_linked_logos_and_reports_deleted_rows() {
+        let pool = PgPoolOptions::new()
+            .max_connections(1)
+            .connect(
+                &std::env::var("DATABASE_TEST_URL").expect("disposable PostgreSQL is required"),
+            )
+            .await
+            .unwrap();
+        sqlx::raw_sql(
+            "CREATE TEMP TABLE dispatcharr_channels_logo (
+                 id bigint PRIMARY KEY, name text NOT NULL, url text UNIQUE NOT NULL
+             );
+             CREATE TEMP TABLE dispatcharr_channels_channel (
+                 id bigint PRIMARY KEY, logo_id bigint REFERENCES dispatcharr_channels_logo
+             );
+             CREATE TEMP TABLE dispatcharr_channels_channeloverride (
+                 id bigint PRIMARY KEY, logo_id bigint REFERENCES dispatcharr_channels_logo
+             );
+             INSERT INTO dispatcharr_channels_logo VALUES
+                 (10, 'Unused remote', 'https://example.invalid/unused.png'),
+                 (20, 'Used', 'https://example.invalid/used.png'),
+                 (30, 'Override only', 'https://example.invalid/override.png');
+             INSERT INTO dispatcharr_channels_channel VALUES (1, 20), (2, NULL);
+             INSERT INTO dispatcharr_channels_channeloverride VALUES (1, 30);",
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+
+        let result = cleanup_unused_owned(&pool, false).await.unwrap();
+        assert_eq!(
+            result,
+            json!({
+                "message": "Successfully deleted 2 unused logos",
+                "deleted_count": 2,
+                "deleted_logos": ["Unused remote", "Override only"],
+                "local_files_deleted": 0,
+            }),
+        );
+        let remaining: Vec<(i64, String)> =
+            sqlx::query_as("SELECT id, name FROM dispatcharr_channels_logo")
+                .fetch_all(&pool)
+                .await
+                .unwrap();
+        assert_eq!(remaining, [(20, "Used".to_owned())]);
+        let channel: Vec<(i64, Option<i64>)> =
+            sqlx::query_as("SELECT id, logo_id FROM dispatcharr_channels_channel ORDER BY id")
+                .fetch_all(&pool)
+                .await
+                .unwrap();
+        assert_eq!(channel, [(1, Some(20)), (2, None)]);
+        let overrides: Vec<(i64, Option<i64>)> =
+            sqlx::query_as("SELECT id, logo_id FROM dispatcharr_channels_channeloverride")
+                .fetch_all(&pool)
+                .await
+                .unwrap();
+        assert_eq!(overrides, [(1, None)]);
+        let retry = cleanup_unused_owned(&pool, true).await.unwrap();
+        assert_eq!(
+            retry,
+            json!({
+                "message": "Successfully deleted 0 unused logos",
+                "deleted_count": 0,
+                "deleted_logos": [],
+                "local_files_deleted": 0,
+            }),
+        );
     }
 }
