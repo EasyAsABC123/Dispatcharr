@@ -8,7 +8,7 @@ browser steps and the scoped persisted account checks.
 
 Original used its pinned 1,211-file source overlay and its stock runtime
 entrypoint. Rust used its exact native ARM64 package. The browser used
-the same observer and scenario on both arms. Both applications and
+the same observer and scenario on both arms. Both fixture arms and
 browser observers exited 0, and exact Compose and browser cleanup passed.
 
 The result qualifies the ordinary account workflow and unchanged React
