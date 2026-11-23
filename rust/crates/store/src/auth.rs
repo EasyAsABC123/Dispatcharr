@@ -104,6 +104,13 @@ pub struct AuthService {
     pub(crate) ip_lookup: crate::ip_lookup::IpLookup,
 }
 
+/// The request credential that authenticated the active user.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum RequestAuthMethod {
+    SignedBearerHeader,
+    ApiKey,
+}
+
 type AttemptHistory = HashMap<(IpAddr, &'static str), VecDeque<Instant>>;
 
 impl AuthService {
@@ -358,9 +365,19 @@ impl AuthService {
         request: &PlaybackRequest,
     ) -> Result<Option<User>, StoreError> {
         Ok(self
-            .authenticate_read_strategy(request, None)
+            .authenticate_with_method(request)
             .await?
-            .map(|subject| subject.user))
+            .map(|(user, _)| user))
+    }
+
+    pub async fn authenticate_with_method(
+        &self,
+        request: &PlaybackRequest,
+    ) -> Result<Option<(User, RequestAuthMethod)>, StoreError> {
+        Ok(self
+            .authenticate_read_with_method(request, None)
+            .await?
+            .map(|(subject, method)| (subject.user, method)))
     }
 
     pub(crate) async fn authenticate_read_strategy(
@@ -368,6 +385,17 @@ impl AuthService {
         request: &PlaybackRequest,
         limits: Option<crate::rest_reads::RestReadLimits>,
     ) -> Result<Option<crate::rest_reads::ReadSubject>, StoreError> {
+        Ok(self
+            .authenticate_read_with_method(request, limits)
+            .await?
+            .map(|(subject, _)| subject))
+    }
+
+    async fn authenticate_read_with_method(
+        &self,
+        request: &PlaybackRequest,
+        limits: Option<crate::rest_reads::RestReadLimits>,
+    ) -> Result<Option<(crate::rest_reads::ReadSubject, RequestAuthMethod)>, StoreError> {
         if limits.is_some() {
             let _original = self.rest_writer()?;
         }
@@ -380,7 +408,7 @@ impl AuthService {
             return active_bearer_subject(
                 self.rest_read_user_id(claims.id().unwrap(), limits).await?,
             )
-            .map(Some);
+            .map(|user| Some((user, RequestAuthMethod::SignedBearerHeader)));
         }
         let key = request
             .header("x-api-key")
@@ -401,7 +429,9 @@ impl AuthService {
             )
             .await?;
             match self.rest_read_user_key(key, limits).await? {
-                Some(user) if user.user.is_active => return Ok(Some(user)),
+                Some(user) if user.user.is_active => {
+                    return Ok(Some((user, RequestAuthMethod::ApiKey)));
+                }
                 user => {
                     if self
                         .shared_auth_budget(
@@ -1219,6 +1249,24 @@ mod tests {
                 .map(|(key, value)| (key.into(), value.into()))
                 .collect(),
         }
+    }
+
+    #[tokio::test]
+    async fn authenticated_restart_uses_only_the_canonical_signed_bearer_verifier() {
+        let service = service();
+        let valid = service.mint(json!("42"), "access").unwrap();
+        let verified = bearer_claims(&service.config, &["Bearer", &valid])
+            .unwrap()
+            .expect("Canonical Bearer verifies the signed access JWT");
+        assert_eq!(verified.id(), Some(42));
+
+        for alternate in [vec!["bearer", &valid], vec!["ApiKey", &valid], vec![]] {
+            assert!(bearer_claims(&service.config, &alternate)
+                .unwrap()
+                .is_none());
+        }
+        let refresh = service.mint(json!("42"), "refresh").unwrap();
+        assert!(bearer_claims(&service.config, &["Bearer", &refresh]).is_err());
     }
 
     #[tokio::test]

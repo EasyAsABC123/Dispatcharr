@@ -133,11 +133,52 @@ local announced=state and state~='initializing' and state~='error'
 return {'OK',tostring(#stop_targets),announced and '1' or '0'}
 "#;
 
-pub const HEARTBEAT: &str = r#"
+// Original checks its 12s HLS ghost threshold on a 5s heartbeat. For an
+// existing profiled session with a stale descriptor and no raw/output owner,
+// allow at most that scan interval before expiring the still-valid binding.
+// Share the predicate between the Redis heartbeat and the HLS watchdog.
+macro_rules! with_profiled_hls_idle_grace {
+    ($script:literal) => {
+        concat!(r#"
+local function has_profiled_hls_idle_grace(row, now, age, idle)
+  local grace = idle + 5 - age
+  if grace <= 0 or redis.call('HGET', row, 'output_format') ~= 'hls' then return false end
+  local profile = redis.call('HGET', row, 'output_profile_id')
+  local token = redis.call('HGET', row, 'hls_token')
+  if not profile or #profile > 19 or not string.match(profile, '^[1-9]%d*$') or
+      not token or #token ~= 32 or not string.match(token, '^[%w_%-]+$') then return false end
+  local capability = 'live:hls:session:' .. token
+  if redis.call('TYPE', capability).ok ~= 'hash' or redis.call('PTTL', capability) <= 0 then return false end
+  local channel = redis.call('HGET', capability, 'channel_id')
+  local client = redis.call('HGET', capability, 'client_id')
+  if not channel or not client or row ~= 'live:channel:' .. channel .. ':clients:' .. client then return false end
+  local prefix = 'live:channel:' .. channel
+  local output = prefix .. ':output:hls:p' .. profile
+  if redis.call('EXISTS', prefix .. ':stopping', prefix .. ':owner', output .. ':owner') ~= 0 then return false end
+  local playlist = output .. ':playlist'
+  if redis.call('TYPE', playlist).ok ~= 'string' or redis.call('PTTL', playlist) <= grace * 1000 or
+      redis.call('STRLEN', playlist) > 65536 then return false end
+  local ok, state = pcall(cjson.decode, redis.call('GET', playlist))
+  if not ok or type(state) ~= 'table' or type(state.ts) ~= 'number' or
+      type(state.window) ~= 'table' or #state.window == 0 then return false end
+  local adv = state.adv_target
+  if type(adv) ~= 'number' or adv < 0 or adv ~= math.floor(adv) then adv = 6 end
+  return now - state.ts > math.max(45, 3 * adv)
+end
+"#, $script)
+    };
+}
+
+pub const HEARTBEAT: &str = with_profiled_hls_idle_grace!(
+    r#"
 if redis.call('HGET',KEYS[1],'rust_token')~=ARGV[1] then return 0 end
 if redis.call('EXISTS',KEYS[3])==1 or redis.call('HGET',KEYS[1],'rust_preempted')=='1' then return -1 end
 local old=redis.call('HGET',KEYS[1],'last_active')
-if old and tonumber(ARGV[2])-tonumber(old)>tonumber(ARGV[7]) then return -1 end
+if old then
+  local now, idle = tonumber(ARGV[2]), tonumber(ARGV[7])
+  local age = now - tonumber(old)
+  if age > idle and (ARGV[10] ~= 'hls' or not has_profiled_hls_idle_grace(KEYS[1], now, age, idle)) then return -1 end
+end
 if ARGV[10]~='hls' then
   redis.call('HSET',KEYS[1],'bytes_sent',ARGV[3],'current_rate_KBps',ARGV[4],
     'chunks_sent',ARGV[8],'avg_rate_KBps',ARGV[9],'stats_updated_at',ARGV[2])
@@ -146,7 +187,27 @@ if ARGV[5]=='1' then redis.call('HSET',KEYS[1],'last_active',ARGV[2]) end
 redis.call('PEXPIRE',KEYS[1],ARGV[6])
 redis.call('PEXPIRE',KEYS[2],ARGV[6])
 return 1
-"#;
+"#
+);
+
+pub const HLS_SESSION_WITHIN_IDLE_WINDOW: &str = with_profiled_hls_idle_grace!(
+    r#"
+local channel = redis.call('HGET', KEYS[1], 'channel_id')
+local client = redis.call('HGET', KEYS[1], 'client_id')
+if not channel or not client then return 0 end
+local prefix = 'live:channel:' .. channel
+local row = prefix .. ':clients:' .. client
+if redis.call('HGET', row, 'hls_token') ~= ARGV[1] or
+    redis.call('HGET', row, 'rust_preempted') == '1' or
+    redis.call('EXISTS', prefix .. ':stopping', prefix .. ':client:' .. client .. ':stop') ~= 0 then return 0 end
+local last = tonumber(redis.call('HGET', row, 'last_active'))
+if not last then return 0 end
+local now, idle = tonumber(ARGV[2]), tonumber(ARGV[3])
+local age = now - last
+if age < idle or has_profiled_hls_idle_grace(row, now, age, idle) then return 1 end
+return 0
+"#
+);
 
 pub const RELEASE: &str = r#"
 if redis.call('EXISTS',KEYS[1])==0 then redis.call('SREM',KEYS[2],ARGV[2]);return 0 end

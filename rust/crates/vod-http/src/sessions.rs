@@ -109,13 +109,25 @@ pub(crate) struct Session {
     lease: Arc<Lease>,
     scope: std::sync::OnceLock<LocalScope>,
     metadata_token: String,
+    pub(super) authenticated_restart: bool,
+    generation_epoch: u64,
     state: Mutex<State>,
     _slot: Arc<OwnedSemaphorePermit>,
 }
 impl Session {
+    fn uses_scoped_body_lifecycle(&self) -> bool {
+        self.scope
+            .get()
+            .is_some_and(|scope| !self.authenticated_restart || scope.activated())
+    }
     pub(crate) fn provider_url(&self) -> std::borrow::Cow<'_, str> {
         crate::offset::provider_url(&self.candidate.url, self.timeshift.borrowed())
     }
+}
+#[derive(Clone)]
+struct RecoveryMode {
+    recovery: recovery::Recovery,
+    extended: bool,
 }
 struct Inner {
     connection: ConnectionManager,
@@ -128,7 +140,7 @@ struct Inner {
     stopped: watch::Sender<bool>,
     max_requests: usize,
     max_sessions: usize,
-    recovery: std::sync::Mutex<Option<recovery::Recovery>>,
+    recovery: std::sync::Mutex<Option<RecoveryMode>>,
     pending_cleanups: AtomicUsize,
     cleanup_failed: AtomicBool,
     events: std::sync::Mutex<Option<Producer>>,
@@ -176,7 +188,11 @@ impl Progress {
         }
         self.checked_boundary = yields;
         if let (Some(session), Some(body)) = (self.session.upgrade(), self.body.as_ref()) {
-            if let Some(scope) = session.scope.get() {
+            if let Some(scope) = session
+                .scope
+                .get()
+                .filter(|_| !session.authenticated_restart)
+            {
                 // Unknown physical consume replies are never retried. Keep the
                 // operational diagnostic and end only this observer's body.
                 self.public_stopped = scope.consume_public_stop(body).await.unwrap_or(true);
@@ -269,11 +285,26 @@ impl SessionPool {
     }
 
     pub fn enable_recovery(&self, namespace: &str) -> Result<(), dispatcharr_store::StoreError> {
+        self.configure_recovery(namespace, true)
+    }
+
+    pub fn enable_authenticated_restart(
+        &self,
+        namespace: &str,
+    ) -> Result<(), dispatcharr_store::StoreError> {
+        self.configure_recovery(namespace, false)
+    }
+
+    fn configure_recovery(
+        &self,
+        namespace: &str,
+        extended: bool,
+    ) -> Result<(), dispatcharr_store::StoreError> {
         let registry = self.inner.sessions.try_lock().map_err(|_| unavailable())?;
         if !registry.is_empty()
             || self.inner.requests.available_permits() != self.inner.max_requests
             || self.inner.slots.available_permits() != self.inner.max_sessions
-            || self.inner.max_requests > 4096
+            || extended && self.inner.max_requests > 4096
         {
             return Err(dispatcharr_store::StoreError::Unsupported(
                 "VOD recovery must be configured before playback",
@@ -285,8 +316,9 @@ impl SessionPool {
                 "VOD recovery already configured",
             ));
         }
-        *mode = Some(
-            recovery::Recovery::new(
+        *mode = Some(RecoveryMode {
+            extended,
+            recovery: recovery::Recovery::new(
                 self.inner.coordinator.clone(),
                 self.inner.connection.clone(),
                 namespace.to_owned(),
@@ -294,7 +326,7 @@ impl SessionPool {
                 Duration::from_secs(3),
             )
             .map_err(|_| unavailable())?,
-        );
+        });
         Ok(())
     }
     async fn scoped_body(
@@ -308,8 +340,11 @@ impl SessionPool {
             return Ok(None);
         };
         if session.scope.get().is_none() {
-            let scope = LocalScope::adopt(
-                mode,
+            if !mode.extended && !session.authenticated_restart {
+                return Ok(None);
+            }
+            let scope = LocalScope::adopt_with_restart_policy(
+                mode.recovery,
                 ScopeInitial {
                     id: session.id.clone(),
                     lease: session.lease.clone(),
@@ -329,24 +364,32 @@ impl SessionPool {
                     stop: session.stop.clone(),
                 },
                 ScopeLimits {
-                    bodies: self.inner.max_requests,
-                    controls: self.inner.max_requests,
+                    bodies: self.inner.max_requests.min(4096),
+                    controls: self.inner.max_requests.min(4096),
                     idle_grace: self.inner.idle_grace,
                 },
+                session.authenticated_restart,
             )
             .await
             .map_err(scope_error)?;
             session.scope.set(scope).map_err(|_| unavailable())?;
         }
         let hook = scope_hook(&self.inner, transition(session, false));
-        session
-            .scope
-            .get()
-            .expect("installed scope")
-            .attach_reserved(request, is_new, hook)
-            .await
-            .map(Some)
-            .map_err(scope_error)
+        let scope = session.scope.get().expect("installed scope");
+        let body = if session.authenticated_restart {
+            scope
+                .attach_ordinary_reserved(
+                    request,
+                    is_new,
+                    hook,
+                    &session.lease,
+                    &session.metadata_token,
+                )
+                .await
+        } else {
+            scope.attach_reserved(request, is_new, hook).await
+        };
+        body.map(Some).map_err(scope_error)
     }
     pub fn install_events(&self, producer: Producer) -> Result<(), dispatcharr_store::StoreError> {
         let sessions = self.inner.sessions.try_lock().map_err(|_| unavailable())?;
@@ -391,7 +434,7 @@ impl SessionPool {
                 .lock()
                 .unwrap()
                 .as_ref()
-                .is_none_or(recovery::Recovery::cleanup_succeeded)
+                .is_none_or(|mode| mode.recovery.cleanup_succeeded())
     }
     pub fn stop_admission(&self) {
         self.inner.stopped.send_replace(true);
@@ -507,24 +550,9 @@ impl SessionPool {
         let retained_id = previous.id.clone();
         let requested_alias = id != retained_id;
         let candidate = source.candidates.first().ok_or_else(unavailable)?.clone();
-        let same_fingerprint = |left: &VodCandidate, right: &VodCandidate| {
-            left.relation_id == right.relation_id
-                && left.account_id == right.account_id
-                && left.max_streams == right.max_streams
-                && left.url == right.url
-                && left.user_agent == right.user_agent
-                && left
-                    .credential_pool
-                    .as_ref()
-                    .map(|p| (&p.counter_key, p.max_streams))
-                    == right
-                        .credential_pool
-                        .as_ref()
-                        .map(|p| (&p.counter_key, p.max_streams))
-        };
         let retained_available = source.candidates.iter().any(|next| {
             next.profile_id == previous.candidate.profile_id
-                && same_fingerprint(next, &previous.candidate)
+                && same_provider_fingerprint(next, &previous.candidate)
         });
         let mut inactive_handoff = false;
         if requested_alias {
@@ -543,7 +571,7 @@ impl SessionPool {
                 // a permission-filtered candidate list does not prove inactive.
                 let bounded = candidate.profile_id != previous.candidate.profile_id
                     && candidate.max_streams > 0
-                    && same_fingerprint(&candidate, &previous.candidate)
+                    && same_provider_fingerprint(&candidate, &previous.candidate)
                     && source.user.as_ref().is_some_and(|u| u.stream_limit == 0)
                     && source.user.as_ref().map(|u| u.id)
                         == previous.source.user.as_ref().map(|u| u.id);
@@ -633,6 +661,8 @@ impl SessionPool {
                         lease,
                         metadata_token,
                         scope: std::sync::OnceLock::new(),
+                        authenticated_restart: false,
+                        generation_epoch: 0,
                         state: Mutex::new(State {
                             active: 1,
                             reserved: false,
@@ -687,14 +717,48 @@ impl SessionPool {
                             scope_error(error)
                         }
                     })?;
+                let ordinary = if previous.authenticated_restart {
+                    Some(
+                        scope
+                            .ordinary_body_generation(&body, false)
+                            .await
+                            .map_err(scope_error)?,
+                    )
+                } else {
+                    None
+                };
+                let session = if let Some(generation) = &ordinary {
+                    let registry = self.inner.sessions.lock().await;
+                    registry
+                        .get(&retained_id)
+                        .filter(|current| {
+                            current.authenticated_restart
+                                && current
+                                    .scope
+                                    .get()
+                                    .is_some_and(|owner| owner.same_scope(&scope))
+                                && current.generation_epoch == generation.epoch
+                                && current.lease.token() == generation.lease.token()
+                                && current.metadata_token == generation.metadata_token
+                        })
+                        .cloned()
+                        .ok_or_else(unavailable)?
+                } else {
+                    previous
+                };
                 {
-                    let mut state = previous.state.lock().await;
+                    let mut state = session.state.lock().await;
+                    if ordinary.is_some()
+                        && (state.closed || *session.stop.borrow() || self.stopped())
+                    {
+                        return Err(unavailable());
+                    }
                     state.active += 1;
                     state.epoch += 1;
                 }
-                previous.last_request.store(millis(), Ordering::Relaxed);
+                session.last_request.store(millis(), Ordering::Relaxed);
                 return Ok(Ticket {
-                    session: previous,
+                    session,
                     pool: Arc::downgrade(&self.inner),
                     _request: Some(request_permit),
                     is_new: false,
@@ -754,7 +818,26 @@ impl SessionPool {
                     scope_error(error)
                 }
             })?;
-        let (lease, metadata_token) = scope.current_identity().await;
+        let ordinary = if previous.authenticated_restart {
+            Some(
+                scope
+                    .ordinary_body_generation(&body, true)
+                    .await
+                    .map_err(scope_error)?,
+            )
+        } else {
+            None
+        };
+        let (lease, metadata_token, generation_epoch) = if let Some(generation) = &ordinary {
+            (
+                generation.lease.clone(),
+                generation.metadata_token.clone(),
+                generation.epoch,
+            )
+        } else {
+            let (lease, metadata_token) = scope.current_identity().await;
+            (lease, metadata_token, 0)
+        };
         let session = Arc::new(Session {
             id: id.into(),
             source,
@@ -769,6 +852,8 @@ impl SessionPool {
             lease,
             metadata_token,
             scope: std::sync::OnceLock::new(),
+            authenticated_restart: previous.authenticated_restart,
+            generation_epoch,
             state: Mutex::new(State {
                 active: 1,
                 reserved: true,
@@ -784,11 +869,16 @@ impl SessionPool {
             .map_err(|_| unavailable())?;
         let mut registry = self.inner.sessions.lock().await;
         if registry.get(id).is_none_or(|current| {
-            current
+            let same_scope = current
                 .scope
                 .get()
-                .is_none_or(|value| !value.same_scope(&scope))
-        }) {
+                .is_some_and(|value| value.same_scope(&scope));
+            !same_scope
+                || ordinary.as_ref().is_some_and(|generation| {
+                    !current.authenticated_restart || current.generation_epoch >= generation.epoch
+                })
+        }) || (ordinary.is_some() && (*session.stop.borrow() || self.stopped()))
+        {
             return Err(dispatcharr_store::StoreError::Unsupported(
                 "Recovery registry generation changed",
             ));
@@ -814,7 +904,7 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
-        self.enter_selected(id, source, request, None).await
+        self.enter_selected(id, source, request, None, None).await
     }
     pub(crate) async fn enter_with_resolver(
         &self,
@@ -822,8 +912,9 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
         resolver: Arc<dyn crate::resolver::VodResolver>,
+        restart_user: Option<i64>,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
-        self.enter_selected(id, source, request, Some(resolver))
+        self.enter_selected(id, source, request, Some(resolver), restart_user)
             .await
     }
     async fn enter_selected(
@@ -832,6 +923,7 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
         resolver: Option<Arc<dyn crate::resolver::VodResolver>>,
+        restart_user: Option<i64>,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
         // All entry/recovery paths share this immutable process identity. Fail
         // before a pending body, retirement job, ledger or quota can be created.
@@ -850,8 +942,15 @@ impl SessionPool {
         let id = id.to_owned();
         let request = request.clone();
         tokio::spawn(async move {
-            pool.enter_owned(&id, source, &request, request_permit, resolver)
-                .await
+            pool.enter_owned(
+                &id,
+                source,
+                &request,
+                request_permit,
+                resolver,
+                restart_user,
+            )
+            .await
         })
         .await
         .map_err(|_| unavailable())?
@@ -863,6 +962,7 @@ impl SessionPool {
         request: &VodRequest,
         request_permit: Arc<OwnedSemaphorePermit>,
         resolver: Option<Arc<dyn crate::resolver::VodResolver>>,
+        restart_user: Option<i64>,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
         // This lock serializes bounded session SETUP only, never media/network body I/O.
         let mut registry = self.inner.sessions.lock().await;
@@ -886,7 +986,7 @@ impl SessionPool {
             // explicit seek before taking the state mutex: even briefly owning
             // it could interfere with a departing body's pending provider read.
             if request.session_id.is_some()
-                && session.scope.get().is_none()
+                && !session.uses_scoped_body_lifecycle()
                 && !*session.stop.borrow()
                 && request.playback.header("range").is_some_and(|range| {
                     crate::engine::range_is_unsatisfiable(
@@ -901,6 +1001,15 @@ impl SessionPool {
                 ));
             }
             drop(registry);
+            let can_restart = !session.authenticated_restart
+                || ordinary_restart_matches(
+                    &source,
+                    request,
+                    restart_user,
+                    &session.id,
+                    &session.source,
+                    &session.candidate,
+                );
             if let Some(scope) = session.scope.get().cloned() {
                 if !scope.activated() {
                     // Do not wait for the periodic monitor to observe Redis
@@ -908,7 +1017,7 @@ impl SessionPool {
                     // physical reply, even if the observer goes away.
                     match scope.retire_missing_retained(request_permit.clone()).await {
                         Err(recovery::Error::StillOwned) => {}
-                        Ok(()) | Err(recovery::Error::Capacity) => {
+                        Ok(()) | Err(recovery::Error::Capacity) if can_restart => {
                             return self
                                 .enter_recovered(
                                     id,
@@ -923,9 +1032,10 @@ impl SessionPool {
                                 )
                                 .await;
                         }
+                        Ok(()) => return Err(unavailable()),
                         Err(error) => return Err(scope_error(error)),
                     }
-                } else {
+                } else if can_restart {
                     return self
                         .enter_recovered(
                             id,
@@ -939,9 +1049,16 @@ impl SessionPool {
                             },
                         )
                         .await;
+                } else {
+                    return Err(unavailable());
                 }
             }
-            if let Some(scope) = session.scope.get().cloned() {
+            if let Some(scope) = session
+                .scope
+                .get()
+                .filter(|_| !session.authenticated_restart)
+                .cloned()
+            {
                 let locally_idle = {
                     let state = session.state.lock().await;
                     state.active == 0 && !state.reserved && !state.closed
@@ -986,7 +1103,11 @@ impl SessionPool {
                         timeout: Duration::from_secs(2),
                         ttl: Duration::from_secs(3600),
                     };
-                    let admitted = if let Some(scope) = session.scope.get() {
+                    let admitted = if let Some(scope) = session
+                        .scope
+                        .get()
+                        .filter(|_| !session.authenticated_restart)
+                    {
                         let (owner, _, stop) = scope.entry_fence_keys(&session.lease);
                         dispatcharr_clients::vod::admit_source_owner_physical(
                             &mut connection,
@@ -1074,6 +1195,9 @@ impl SessionPool {
                         previous.lease.settlement().wait().await;
                         result.map_err(|_| unavailable())?;
                     }
+                    if !can_restart {
+                        return Err(unavailable());
+                    }
                     return self
                         .enter_recovered(
                             id,
@@ -1146,7 +1270,11 @@ impl SessionPool {
             timeout: Duration::from_secs(2),
             ttl: Duration::from_secs(10),
         };
-        let source_mode = self.inner.recovery.lock().unwrap().is_some();
+        let mode = self.inner.recovery.lock().unwrap().clone();
+        let source_mode = mode.as_ref().is_some_and(|mode| mode.extended);
+        let authenticated_restart = mode.is_some()
+            && !source_mode
+            && ordinary_restart_user(&source, request, restart_user).is_some();
         let created = if source_mode {
             dispatcharr_clients::vod::admit_source(&mut connection, admission).await
         } else {
@@ -1214,6 +1342,8 @@ impl SessionPool {
             lease: Arc::new(lease),
             scope: std::sync::OnceLock::new(),
             metadata_token,
+            authenticated_restart,
+            generation_epoch: 0,
             state: Mutex::new(State {
                 active: 1,
                 reserved: true,
@@ -1255,6 +1385,66 @@ impl SessionPool {
         }
         update(&self.inner, session, fields).await
     }
+}
+
+fn ordinary_restart_user(
+    source: &VodSource,
+    request: &VodRequest,
+    restart_user: Option<i64>,
+) -> Option<i64> {
+    let timeshift = crate::offset::requested(&request.playback);
+    restart_user.filter(|id| {
+        !source.redirect
+            && source.user.as_ref().is_some_and(|user| user.id == *id)
+            && request.session_id.is_some()
+            && request.playback.header("range").is_none()
+            && timeshift.utc_start.is_empty()
+            && timeshift.utc_end.is_empty()
+            && timeshift.offset.is_empty()
+    })
+}
+
+fn ordinary_restart_matches(
+    source: &VodSource,
+    request: &VodRequest,
+    restart_user: Option<i64>,
+    retained_id: &str,
+    retained_source: &VodSource,
+    retained_provider: &VodCandidate,
+) -> bool {
+    ordinary_restart_user(source, request, restart_user).is_some_and(|id| {
+        retained_source
+            .user
+            .as_ref()
+            .is_some_and(|user| user.id == id)
+            && request.session_id.as_deref() == Some(retained_id)
+            && source.content_uuid == retained_source.content_uuid
+            && source.kind == retained_source.kind
+            && source
+                .candidates
+                .first()
+                .is_some_and(|next| same_provider(next, retained_provider))
+    })
+}
+
+fn same_provider(left: &VodCandidate, right: &VodCandidate) -> bool {
+    left.profile_id == right.profile_id && same_provider_fingerprint(left, right)
+}
+
+fn same_provider_fingerprint(left: &VodCandidate, right: &VodCandidate) -> bool {
+    left.relation_id == right.relation_id
+        && left.account_id == right.account_id
+        && left.max_streams == right.max_streams
+        && left.url == right.url
+        && left.user_agent == right.user_agent
+        && left
+            .credential_pool
+            .as_ref()
+            .map(|p| (&p.counter_key, p.max_streams))
+            == right
+                .credential_pool
+                .as_ref()
+                .map(|p| (&p.counter_key, p.max_streams))
 }
 
 fn metadata_fields(
@@ -1364,7 +1554,10 @@ fn monitor(session: Weak<Session>, pool: Weak<Inner>) {
         let Some(id) = session.upgrade().map(|session| session.id.clone()) else {
             return;
         };
-        monitor_scope(id, scope, pool);
+        let authenticated_restart = session
+            .upgrade()
+            .is_some_and(|session| session.authenticated_restart);
+        monitor_scope(id, scope, pool, authenticated_restart);
         return;
     }
     tokio::spawn(async move {
@@ -1397,8 +1590,9 @@ fn monitor(session: Weak<Session>, pool: Weak<Inner>) {
     });
 }
 
-fn monitor_scope(id: String, scope: LocalScope, pool: Weak<Inner>) {
+fn monitor_scope(id: String, scope: LocalScope, pool: Weak<Inner>, authenticated_restart: bool) {
     tokio::spawn(async move {
+        let mut disconnected_since = None;
         loop {
             tokio::time::sleep(Duration::from_secs(1)).await;
             let Some(pool) = pool.upgrade() else {
@@ -1437,7 +1631,23 @@ fn monitor_scope(id: String, scope: LocalScope, pool: Weak<Inner>) {
             }
             // Read-only classification/physical heartbeat may be retried as a
             // future operation. Never replay an uncertain allocation/mutation.
-            let _ = scope.retire_missing().await;
+            if authenticated_restart {
+                // A typed disconnect can precede the classified absence.
+                // Preserve an already-owned body briefly, never admit new
+                // readers on an unavailable or indeterminate observation.
+                match scope.retire_missing().await {
+                    Ok(()) | Err(recovery::Error::StillOwned) => disconnected_since = None,
+                    Err(recovery::Error::Capacity) => {}
+                    Err(recovery::Error::Disconnected)
+                        if disconnected_since
+                            .get_or_insert_with(tokio::time::Instant::now)
+                            .elapsed()
+                            < Duration::from_secs(10) => {}
+                    Err(_) => scope.stop(),
+                }
+            } else {
+                let _ = scope.retire_missing().await;
+            }
         }
     });
 }
@@ -1478,7 +1688,7 @@ impl Ticket {
     pub(crate) fn departing_pull(&self) -> Option<oneshot::Receiver<()>> {
         // Recovery owns a separate generation ledger. This path uses only
         // the local legacy reservation, whose active count moves under state.
-        if self.session.scope.get().is_some() || !self.body_started.load(Ordering::Acquire) {
+        if self.session.uses_scoped_body_lifecycle() || !self.body_started.load(Ordering::Acquire) {
             return None;
         }
         let pool = self.pool.upgrade()?;
@@ -1498,7 +1708,7 @@ impl Ticket {
     }
 
     pub(crate) fn source_blocks(&self) -> bool {
-        self.session.scope.get().is_some()
+        self.session.uses_scoped_body_lifecycle()
     }
     pub fn progress(&self) -> Progress {
         Progress {
@@ -1809,3 +2019,123 @@ mod session_user_lookup;
 
 #[path = "session_stop_owned.rs"]
 mod session_stop_owned;
+
+#[cfg(test)]
+mod authenticated_restart_tests {
+    use super::ordinary_restart_matches;
+    use crate::{ContentKind, VodCandidate, VodRequest, VodSource};
+    use dispatcharr_contracts::PlaybackRequest;
+    use dispatcharr_store::User;
+
+    fn fixture() -> (VodSource, VodRequest) {
+        (
+            VodSource {
+                kind: ContentKind::Movie,
+                content_uuid: "content".into(),
+                name: "Synthetic playback fixture".into(),
+                user: Some(User {
+                    id: 7,
+                    username: "viewer".into(),
+                    password: "!".into(),
+                    is_active: true,
+                    user_level: 0,
+                    stream_limit: 1,
+                    custom_properties: serde_json::json!({}),
+                }),
+                candidates: vec![VodCandidate {
+                    relation_id: 1,
+                    account_id: 2,
+                    profile_id: 3,
+                    max_streams: 1,
+                    credential_pool: None,
+                    url: "http://fixture.invalid/movie".into(),
+                    user_agent: "fixture".into(),
+                }],
+                redirect: false,
+                limit_policy: Default::default(),
+            },
+            VodRequest {
+                resolved_client_ip: None,
+                playback: PlaybackRequest {
+                    channel_id: "content".into(),
+                    peer_ip: "127.0.0.1".parse().unwrap(),
+                    headers: vec![],
+                    query: vec![],
+                },
+                kind: "movie".into(),
+                content_id: "content".into(),
+                session_id: Some("retained".into()),
+                profile_id: None,
+            },
+        )
+    }
+
+    #[test]
+    fn ordinary_restart_requires_fresh_matching_subject() {
+        let (retained, request) = fixture();
+        let allows = |source: &VodSource, user| {
+            ordinary_restart_matches(
+                source,
+                &request,
+                user,
+                "retained",
+                &retained,
+                &retained.candidates[0],
+            )
+        };
+        assert!(allows(&retained, Some(7)));
+        assert!(!allows(&retained, None));
+        assert!(!allows(&retained, Some(8)));
+        let mut other = retained.clone();
+        other.user.as_mut().unwrap().id = 8;
+        assert!(!allows(&other, Some(8)));
+        let mut anonymous = retained.clone();
+        anonymous.user = None;
+        assert!(!allows(&anonymous, Some(7)));
+    }
+
+    #[test]
+    fn ordinary_restart_rejects_other_ids_content_profiles_and_request_modes() {
+        let (retained, request) = fixture();
+        let allows = |source: &VodSource, request: &VodRequest| {
+            ordinary_restart_matches(
+                source,
+                request,
+                Some(7),
+                "retained",
+                &retained,
+                &retained.candidates[0],
+            )
+        };
+        let mut other = retained.clone();
+        other.candidates[0].profile_id += 1;
+        assert!(!allows(&other, &request));
+        other = retained.clone();
+        other.candidates[0].max_streams += 1;
+        assert!(!allows(&other, &request));
+        other = retained.clone();
+        other.candidates[0].relation_id += 1;
+        assert!(!allows(&other, &request));
+        other = retained.clone();
+        other.candidates[0].url.push_str("/new");
+        assert!(!allows(&other, &request));
+        other = retained.clone();
+        other.content_uuid.push_str("-other");
+        assert!(!allows(&other, &request));
+        other = retained.clone();
+        other.redirect = true;
+        assert!(!allows(&other, &request));
+
+        let mut modified = request.clone();
+        modified.session_id = Some("alias".into());
+        assert!(!allows(&retained, &modified));
+        modified.session_id = None;
+        assert!(!allows(&retained, &modified));
+        modified = request.clone();
+        modified.playback.headers = vec![("range".into(), "bytes=0-".into())];
+        assert!(!allows(&retained, &modified));
+        modified = request;
+        modified.playback.query = vec![("utc_start".into(), "2025-01-01T00:00:00Z".into())];
+        assert!(!allows(&retained, &modified));
+    }
+}

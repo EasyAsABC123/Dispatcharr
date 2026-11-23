@@ -1,5 +1,5 @@
 use dispatcharr_contracts::{BoxFuture, PlaybackRequest, UserLimitPolicy};
-use dispatcharr_store::{AuthService, Store, StoreError, User};
+use dispatcharr_store::{AuthService, RequestAuthMethod, Store, StoreError, User};
 use serde_json::Value;
 use sqlx::Row;
 use std::collections::HashSet;
@@ -90,6 +90,14 @@ pub trait VodResolver: Send + Sync {
         &'a self,
         request: &'a VodRequest,
     ) -> BoxFuture<'a, Result<Option<User>, StoreError>>;
+    /// An authenticated request can opt in to restart only if the resolver
+    /// attests that the original signed HTTP header authenticated its user.
+    fn authorize_entry<'a>(
+        &'a self,
+        request: &'a VodRequest,
+    ) -> BoxFuture<'a, Result<(Option<User>, Option<RequestAuthMethod>), StoreError>> {
+        Box::pin(async move { self.authorize(request).await.map(|user| (user, None)) })
+    }
     fn resolve<'a>(
         &'a self,
         request: &'a VodRequest,
@@ -127,10 +135,16 @@ impl SqlVodResolver {
     pub fn new(store: Store, auth: AuthService) -> Self {
         Self { store, auth }
     }
-    async fn authenticated(&self, request: &VodRequest) -> Result<Option<User>, StoreError> {
-        let user = self.auth.authenticate(&request.playback).await?;
-        if user.is_some() {
-            return Ok(user);
+    async fn authenticated(
+        &self,
+        request: &VodRequest,
+    ) -> Result<(Option<User>, Option<RequestAuthMethod>), StoreError> {
+        if let Some((user, method)) = self
+            .auth
+            .authenticate_with_method(&request.playback)
+            .await?
+        {
+            return Ok((Some(user), Some(method)));
         }
         // QueryParamJWTAuthentication ignores invalid/expired query tokens. Valid
         // tokens with a deleted/inactive user still fail like JWT get_user().
@@ -147,10 +161,16 @@ impl SqlVodResolver {
                 adapted
                     .headers
                     .push(("authorization".into(), format!("Bearer {token}")));
-                return self.auth.authenticate(&adapted).await;
+                // This is a query credential even though the compatibility
+                // lookup adapts it to the canonical header verifier.
+                return self
+                    .auth
+                    .authenticate(&adapted)
+                    .await
+                    .map(|user| (user, None));
             }
         }
-        Ok(None)
+        Ok((None, None))
     }
 }
 
@@ -208,10 +228,17 @@ impl VodResolver for SqlVodResolver {
         &'a self,
         request: &'a VodRequest,
     ) -> BoxFuture<'a, Result<Option<User>, StoreError>> {
+        Box::pin(async move { self.authorize_entry(request).await.map(|(user, _)| user) })
+    }
+
+    fn authorize_entry<'a>(
+        &'a self,
+        request: &'a VodRequest,
+    ) -> BoxFuture<'a, Result<(Option<User>, Option<RequestAuthMethod>), StoreError>> {
         Box::pin(async move {
             // DRF authenticates before entering the view, then the native VOD
             // route applies STREAMS globally before its user VOD flag.
-            let user = self.authenticated(request).await?;
+            let (user, method) = self.authenticated(request).await?;
             if !self
                 .store
                 .network_allowed(self.auth.client_ip(&request.playback), "STREAMS", None)
@@ -226,7 +253,7 @@ impl VodResolver for SqlVodResolver {
                     return Err(StoreError::Forbidden);
                 }
             }
-            Ok(user)
+            Ok((user, method))
         })
     }
 

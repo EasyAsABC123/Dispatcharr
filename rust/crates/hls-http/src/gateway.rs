@@ -324,17 +324,15 @@ impl HlsGateway {
                 }
                 if lock(&session.touched).elapsed() >= inner.config.session_idle_timeout {
                     if inner.outputs.is_some() {
-                        match inner.clients.inspect_hls_session(&session.token).await {
-                            Ok(Some(info))
-                                if info
-                                    .metadata
-                                    .get("last_active")
-                                    .and_then(|value| value.parse::<f64>().ok())
-                                    .is_some_and(|active| {
-                                        wall_time() - active
-                                            < inner.config.session_idle_timeout.as_secs_f64()
-                                    }) =>
-                            {
+                        match inner
+                            .clients
+                            .hls_session_within_idle_window(
+                                &session.token,
+                                inner.config.session_idle_timeout,
+                            )
+                            .await
+                        {
+                            Ok(true) => {
                                 *lock(&session.touched) = Instant::now();
                                 continue;
                             }

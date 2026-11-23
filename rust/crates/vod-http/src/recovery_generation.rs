@@ -24,6 +24,7 @@ pub enum Error {
     Configuration,
     Capacity,
     Backend,
+    Disconnected,
     ObserverTimeout,
     StillOwned,
     PartialState,
