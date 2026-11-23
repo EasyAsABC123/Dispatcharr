@@ -1,0 +1,82 @@
+{
+  "auditor_engine_calls": 0,
+  "auditor_exit": 0,
+  "literal_phases": {
+    "audit": 0,
+    "outer": 1,
+    "physical": 1,
+    "preflight": 0
+  },
+  "no_payload_transfer": true,
+  "pair": {
+    "actual_exit": 1,
+    "exact_cleanup": true,
+    "image": "sha256:dbbfb2245f8bd8619aa6522ba8218fa819326043eeda8f61ebb1861830d31bfd",
+    "native": "381a6a157d1f860527906794bb8c63859fcc8176",
+    "package_manifest_sha256": "4ca7a077d39cfd9e4970c981cae73343858ed180f1bd19d4f0524f078721cb11",
+    "pair_passed": false,
+    "physical": true,
+    "roles": {
+      "original": 1
+    },
+    "source": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "pair_sha256": "cbccc67177fa3fe588d8251383bf44ec78f92393a5a14a756b8a954d7f483a69",
+  "roles": {
+    "original": {
+      "actual_exit": 1,
+      "application_started": false,
+      "business_probe_started": false,
+      "exact_cleanup": true,
+      "ledger_sha256": "f7194cb8198c70eb494865884b4bd8307b215b2834ff05a8de79bbbb1e853a91",
+      "network_id_and_name_absent": true,
+      "owned_inventories_empty": true,
+      "payload_manifest": {
+        "container_duration_seconds": 30.0,
+        "ffmpeg_version": "ffmpeg version 9.0.2-Dispatcharr Copyright (c) 2000-2026 the FFmpeg developers",
+        "independent_file_sha256": "f4a7cbe4e50eaf6cd1578933b8eb8701eb83b384182d6af1f488461e5586dd2f",
+        "streams": [
+          [
+            "audio",
+            "aac"
+          ],
+          [
+            "video",
+            "h264"
+          ]
+        ],
+        "vod": {
+          "audio": "aac",
+          "bytes": 0,
+          "bytes_per_second": 262144,
+          "duration_seconds": 30,
+          "fixture_bytes": 4299461,
+          "fixture_sha256": "f4a7cbe4e50eaf6cd1578933b8eb8701eb83b384182d6af1f488461e5586dd2f",
+          "head_requests": 0,
+          "requests": 0,
+          "video": "h264"
+        }
+      },
+      "phase": "strict-origin-input-admission",
+      "physical_observations": null,
+      "receipt_sha256": "7fb5c59946dbf67ea2b625041b488ca9aac5038543517989efa2979f852e2a2d",
+      "resources_retired": {
+        "container": 1,
+        "network": 1,
+        "volume": 0
+      }
+    }
+  },
+  "same_host_proof_sha256": "5d088da46a635533bc5dac2b1b5490bd5787ccc1ade34aff6e8f091ccf0cb2e2",
+  "launch_seal_sha256": "45848c8275a7ac24dceac503697c1b0238f3a2fb2dc06f7124c0b3505b954735",
+  "static_fixture_seal_sha256": "8d44a97de25e94a3c029093a1fe965d09da6eea5ddf3255f7bb68dac872d08d1",
+  "expected_prequalified_amd_mp4": {
+    "bytes": 4299455,
+    "sha256": "4f3236e89fd6d9fee4f18bb1cd1e9759113a204dc64b74efa7a704fd4c6fc11c",
+    "configured_pace_bytes_per_second": 262144
+  },
+  "actual_arm_input_matches": false,
+  "pacing_measured_through_media_request": false,
+  "no_normalization": true,
+  "arm_vod_acceptance": false
+}

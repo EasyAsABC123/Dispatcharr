@@ -1,0 +1,344 @@
+{
+  "Root_M478": false,
+  "audits": {
+    "448": {
+      "application_exit": {
+        "actual_exit": 1,
+        "expected_exit": null,
+        "oom_killed": false
+      },
+      "call_differences": [],
+      "candidate": "448217d77f8e819a72401f889641c152f06a7274",
+      "checkpoint": {
+        "checkpoint": "clean ordinary Native exit",
+        "observed_through_case": 16,
+        "type": "Checkpoint",
+        "unobservable_rows": []
+      },
+      "continuous_acceptance": false,
+      "exact_cleanup": true,
+      "image": "sha256:af46a5ce8d6699baf9e1fce0f65801dd5208d128ca0f9a728c8a1da76ccdbcfb",
+      "job_differences": [],
+      "literal_phases": {
+        "campaign": 1,
+        "closure": 0,
+        "evaluate": 1,
+        "preflight": 0,
+        "run": 1
+      },
+      "observed_calls": 16,
+      "owned_marker_retired": true,
+      "persistence": {
+        "archive_set_unchanged": true,
+        "archived_state_unchanged": true,
+        "control_file_unchanged": true,
+        "independent_database_unchanged": true
+      },
+      "terminal_records": [
+        {
+          "family": null,
+          "outcome": "unsettled",
+          "stage": "scheduler"
+        },
+        {
+          "family": null,
+          "outcome": "Done",
+          "stage": "scheduler_timer"
+        },
+        {
+          "family": null,
+          "outcome": "Available",
+          "stage": "scheduler_slot"
+        },
+        {
+          "family": null,
+          "outcome": "Dirty",
+          "stage": "scheduler_cache"
+        },
+        {
+          "family": null,
+          "outcome": "Present",
+          "stage": "scheduler_checkpoint"
+        },
+        {
+          "family": null,
+          "outcome": "Fault",
+          "stage": "scheduler_state"
+        },
+        {
+          "family": null,
+          "outcome": "Drain",
+          "stage": "scheduler_fault"
+        }
+      ],
+      "timeline": [
+        {
+          "clock_UTC": "2026-11-23T14:48:03.012565+00:00",
+          "marker_UTC": "2026-11-23T14:47:22.471577+00:00",
+          "phase": "after-case3",
+          "row_count": 9,
+          "scan_files": [
+            {
+              "id": 8,
+              "last_run_UTC": "2026-11-23T14:47:26.324923+00:00",
+              "run_count": 1
+            }
+          ],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": true,
+            "synchronized": 1
+          }
+        },
+        {
+          "clock_UTC": "2026-11-23T14:48:12.561358+00:00",
+          "marker_UTC": "2026-11-23T14:48:10.355852+00:00",
+          "phase": "after-case6",
+          "row_count": 9,
+          "scan_files": [
+            {
+              "id": 8,
+              "last_run_UTC": "2026-11-23T14:48:06.334704+00:00",
+              "run_count": 3
+            }
+          ],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": true,
+            "synchronized": 1
+          }
+        },
+        {
+          "clock_UTC": "2026-11-23T14:48:15.173695+00:00",
+          "marker_UTC": "2026-11-23T14:48:12.910784+00:00",
+          "phase": "after-case7",
+          "row_count": 8,
+          "scan_files": [
+            {
+              "id": 8,
+              "last_run_UTC": "2026-11-23T14:48:06.334704+00:00",
+              "run_count": 3
+            }
+          ],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": true,
+            "synchronized": 1
+          }
+        },
+        {
+          "clock_UTC": "2026-11-23T14:48:28.325365+00:00",
+          "marker_UTC": null,
+          "phase": "after-case13",
+          "row_count": 1,
+          "scan_files": [],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": false,
+            "synchronized": 0
+          }
+        },
+        {
+          "clock_UTC": "2026-11-23T14:48:33.615421+00:00",
+          "marker_UTC": null,
+          "phase": "after-case16",
+          "row_count": 1,
+          "scan_files": [],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": false,
+            "synchronized": 0
+          }
+        },
+        {
+          "clock_UTC": "2026-11-23T14:48:35.784042+00:00",
+          "marker_UTC": null,
+          "phase": "before-Main-stop",
+          "row_count": 1,
+          "scan_files": [],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": false,
+            "synchronized": 0
+          }
+        }
+      ]
+    },
+    "b8": {
+      "application_exit": {
+        "actual_exit": 1,
+        "expected_exit": null,
+        "oom_killed": false
+      },
+      "call_differences": [],
+      "candidate": "b8d3979366981f0372794f8e04b01763a233bae7",
+      "checkpoint": {
+        "checkpoint": "clean ordinary Native exit",
+        "observed_through_case": 16,
+        "type": "Checkpoint",
+        "unobservable_rows": []
+      },
+      "continuous_acceptance": false,
+      "exact_cleanup": true,
+      "image": "sha256:25414ab4350b0eb74f0e7c8efb0343676a88961bae38880bc758181c0496d155",
+      "job_differences": [],
+      "literal_phases": {
+        "campaign": 1,
+        "closure": 0,
+        "evaluate": 1,
+        "preflight": 0,
+        "run": 1
+      },
+      "observed_calls": 16,
+      "owned_marker_retired": true,
+      "persistence": {
+        "archive_set_unchanged": true,
+        "archived_state_unchanged": true,
+        "control_file_unchanged": true,
+        "independent_database_unchanged": true
+      },
+      "terminal_records": [
+        {
+          "family": null,
+          "outcome": "unsettled",
+          "stage": "scheduler"
+        }
+      ],
+      "timeline": [
+        {
+          "clock_UTC": "2026-11-23T13:42:02.826260+00:00",
+          "marker_UTC": "2026-11-23T13:41:22.215891+00:00",
+          "phase": "after-case3",
+          "row_count": 9,
+          "scan_files": [
+            {
+              "id": 8,
+              "last_run_UTC": "2026-11-23T13:41:26.259609+00:00",
+              "run_count": 1
+            }
+          ],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": true,
+            "synchronized": 1
+          }
+        },
+        {
+          "clock_UTC": "2026-11-23T13:42:12.416252+00:00",
+          "marker_UTC": "2026-11-23T13:42:10.271274+00:00",
+          "phase": "after-case6",
+          "row_count": 9,
+          "scan_files": [
+            {
+              "id": 8,
+              "last_run_UTC": "2026-11-23T13:42:06.268934+00:00",
+              "run_count": 3
+            }
+          ],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": true,
+            "synchronized": 1
+          }
+        },
+        {
+          "clock_UTC": "2026-11-23T13:42:14.878492+00:00",
+          "marker_UTC": "2026-11-23T13:42:12.715721+00:00",
+          "phase": "after-case7",
+          "row_count": 8,
+          "scan_files": [
+            {
+              "id": 8,
+              "last_run_UTC": "2026-11-23T13:42:06.268934+00:00",
+              "run_count": 3
+            }
+          ],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": true,
+            "synchronized": 1
+          }
+        },
+        {
+          "clock_UTC": "2026-11-23T13:42:28.087301+00:00",
+          "marker_UTC": null,
+          "phase": "after-case13",
+          "row_count": 1,
+          "scan_files": [],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": false,
+            "synchronized": 0
+          }
+        },
+        {
+          "clock_UTC": "2026-11-23T13:42:33.153679+00:00",
+          "marker_UTC": null,
+          "phase": "after-case16",
+          "row_count": 1,
+          "scan_files": [],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": false,
+            "synchronized": 0
+          }
+        },
+        {
+          "clock_UTC": "2026-11-23T13:42:35.249606+00:00",
+          "marker_UTC": null,
+          "phase": "before-Main-stop",
+          "row_count": 1,
+          "scan_files": [],
+          "scheduler_state": "Observed",
+          "tick_metrics": {
+            "disabled": 0,
+            "invalid_rows": 0,
+            "missing": 0,
+            "reloaded": false,
+            "synchronized": 0
+          }
+        }
+      ]
+    }
+  },
+  "formal_M8": false,
+  "raw_egress": false,
+  "scope": "sanitized M8 Source16 shutdown failure audit",
+  "schema": "dispatcharr-m8-ordinary-scheduler-drain-typed-failure/1",
+  "final_sync_retained_dirty_checkpoint": true,
+  "exact_dirty_entry_identified": false,
+  "source_audit_sha256": "0b563821a7ce4eba10aa02e63b63c7549bbc8908f77d8ea5c1855c004789635b"
+}

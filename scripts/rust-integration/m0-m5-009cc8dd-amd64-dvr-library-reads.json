@@ -1,0 +1,198 @@
+{
+  "Original": {
+    "actual_receipt_sha256": "ae2453cd05e5c60f8ae4c0fd75129ab5d2c230db0be729b60972dd0b9882e842",
+    "cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "literal_exits": {
+      "campaign": 0,
+      "cleanup": 0,
+      "physical_controller": 0,
+      "preflight": 0,
+      "proof": 0,
+      "run": 0
+    },
+    "proof_sha256": "0decb97fb45cbf59ee03385562d801f130d628587ade9c333ef961e8e4382cc5",
+    "retired_exact_roles": 2
+  },
+  "Rust": {
+    "actual_receipt_sha256": "c486fa9de27aecf4559ca29b443ae4cc23cbf69b8bed336ddfddaa30b8680c05",
+    "cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "literal_exits": {
+      "campaign": 0,
+      "cleanup": 0,
+      "physical_controller": 0,
+      "preflight": 0,
+      "proof": 0,
+      "run": 0
+    },
+    "proof_sha256": "8c533e9baa174557398fa5f86f1b177d70f0ec727d1960e64b21af9459ef2819",
+    "retired_exact_roles": 4
+  },
+  "actual_observations": 10,
+  "candidate": "009cc8dda306ba1f4848ab937107dc2722f84f5b",
+  "cases": [
+    {
+      "bytes_each": 255,
+      "contract_id": "route-f11670971b47e9fa9cdc:GET",
+      "raw_body_matched": false,
+      "role": "standard",
+      "route": "/api/channels/recordings/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 507,
+      "contract_id": "route-f11670971b47e9fa9cdc:GET",
+      "raw_body_matched": false,
+      "role": "admin",
+      "route": "/api/channels/recordings/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 255,
+      "contract_id": "route-7083b0daee9897e8ed81:GET",
+      "raw_body_matched": false,
+      "role": "standard",
+      "route": "/api/channels/recordings.json",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 507,
+      "contract_id": "route-7083b0daee9897e8ed81:GET",
+      "raw_body_matched": false,
+      "role": "admin",
+      "route": "/api/channels/recordings.json",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 253,
+      "contract_id": "route-b406c782172baf90cd51:GET",
+      "raw_body_matched": false,
+      "role": "standard",
+      "route": "/api/channels/recordings/{id}/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 253,
+      "contract_id": "route-b406c782172baf90cd51:GET",
+      "raw_body_matched": false,
+      "role": "admin",
+      "route": "/api/channels/recordings/{id}/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 253,
+      "contract_id": "route-cb2f8fac46d19480e674:GET",
+      "raw_body_matched": false,
+      "role": "standard",
+      "route": "/api/channels/recordings/{id}.json",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 253,
+      "contract_id": "route-cb2f8fac46d19480e674:GET",
+      "raw_body_matched": false,
+      "role": "admin",
+      "route": "/api/channels/recordings/{id}.json",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 96,
+      "contract_id": null,
+      "raw_body_matched": true,
+      "role": "standard",
+      "route": "/api/channels/series-rules/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    },
+    {
+      "bytes_each": 96,
+      "contract_id": null,
+      "raw_body_matched": true,
+      "role": "admin",
+      "route": "/api/channels/series-rules/",
+      "selected_headers_matched": true,
+      "status": 200,
+      "typed_json_matched": true
+    }
+  ],
+  "credentials_or_raw_bodies_published": false,
+  "credits": "Original Dispatcharr authors and contributors retain full application and protocol credit.",
+  "declared_GET_observations": 8,
+  "direct_parent": "49a4e490dfda9c638107cd2b3dba77972f2698f5",
+  "fixture_seal_sha256": "eb478478185847445a0c88852fb9f6f31a2d0520cc1559cf4b0dd0662f3b6f5e",
+  "full_M0_passed": false,
+  "full_M5_passed": false,
+  "known_recording_raw_field_order_divergences": 8,
+  "manifest_sha256": "13f60786980097f8dd71fa95890e24baa24eed23da293b4929c94b6953aa2862",
+  "mixed_method_row_GET_observations": 2,
+  "ordinary_amd64_image": "sha256:95a71b08d1449bebf22979b18fec3bcb1841e472ff2e0ea8d6f48136f09b4e9e",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "performance_verified": false,
+  "protected_fixture_SQL_and_broker_unchanged": true,
+  "raw_body_matches": 2,
+  "recording_field_order": {
+    "Original": [
+      "id",
+      "start_time",
+      "end_time",
+      "task_id",
+      "custom_properties",
+      "channel"
+    ],
+    "Rust": [
+      "id",
+      "channel",
+      "start_time",
+      "end_time",
+      "task_id",
+      "custom_properties"
+    ]
+  },
+  "registered_GET_contracts": 4,
+  "schema": "m0-m5-amd64-dvr-library-signed-read-scoped-proof/1",
+  "source_archive_sha256": "02a594c5549b629db5546becf6b87a5826400e0498b2bb52afa1f708270a85a6",
+  "source_tree_sha256": "78789c136cc29220daed1dc6cd207e7e3a7bf2efbde8c16f460234628f41b2c0",
+  "status": "passed",
+  "typed_and_selected_header_matches": 10
+}
