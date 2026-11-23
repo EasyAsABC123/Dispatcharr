@@ -1,0 +1,95 @@
+{
+  "schema": "dispatcharr-amd64-native-backup-scoped/1",
+  "source_receipt_sha256": "9dbe875ad0111aede35e5f679851f1ea33c93fc6b300531e7b37ada98c94c760",
+  "candidate": "d2c5e6113efe947551c17bf877e8c6b2c964190c",
+  "image_id": "sha256:212432b13a1e0d8aa5aaf1ece7c34748c427d06e6a094cd385529e43f33527d6",
+  "scope": "M8 exact d2c5 AMD64 ordinary Native AIO backup, restore refusals and retention",
+  "passed": true,
+  "exact_cleanup": true,
+  "formal_M8_native_backup_workflow_accepted": false,
+  "actual_exits": {
+    "run": 0,
+    "evaluate": 0,
+    "outer": 0
+  },
+  "result": {
+    "default_AIO": true,
+    "worker_publications": 5,
+    "independent_template_DB_unchanged": true,
+    "routes": [
+      {
+        "operation": "create-inventory-signed-download",
+        "terminal": "completed",
+        "admission_HTTP": 202,
+        "signed_token_HTTP": 200,
+        "signed_download_HTTP": 200
+      },
+      {
+        "operation": "restore-refusal",
+        "archive": "owned-no-metadata.zip",
+        "Native_result": {
+          "status": "failed",
+          "error": "Native restore archive is not a readable ZIP backup"
+        },
+        "admission_HTTP": 202,
+        "literal_task_token_HTTP": 401,
+        "signed_token_HTTP": 200,
+        "signed_state": "failed",
+        "Original_error": "Invalid backup: missing metadata.json",
+        "error_body_equals_Original": false
+      },
+      {
+        "operation": "restore-refusal",
+        "archive": "owned-wrong-type.zip",
+        "Native_result": {
+          "status": "failed",
+          "error": "Database type mismatch: current database is postgresql"
+        },
+        "admission_HTTP": 202,
+        "literal_task_token_HTTP": 401,
+        "signed_token_HTTP": 200,
+        "signed_state": "failed",
+        "Original_error": "Database type mismatch: backup is sqlite, but current database is postgresql",
+        "error_body_equals_Original": false
+      },
+      {
+        "operation": "same-schema-restore",
+        "terminal": "completed",
+        "scoped_SQL_restored": true,
+        "admission_HTTP": 202,
+        "literal_task_token_HTTP": 401,
+        "signed_token_HTTP": 200
+      }
+    ],
+    "owned_file_deletions": [
+      {
+        "archive": "owned-no-metadata.zip",
+        "HTTP": 204,
+        "response_empty": true,
+        "response_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "archive_count_before": 2,
+        "archive_count_after": 1,
+        "exact_own_archive_removed": true,
+        "other_archive_fingerprints_unchanged": true
+      },
+      {
+        "archive": "owned-wrong-type.zip",
+        "HTTP": 204,
+        "response_empty": true,
+        "response_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "archive_count_before": 2,
+        "archive_count_after": 1,
+        "exact_own_archive_removed": true,
+        "other_archive_fingerprints_unchanged": true
+      }
+    ],
+    "retention": {
+      "retention": 2,
+      "initial_run_count": 0,
+      "durable_run_count": 1,
+      "archive_count_remaining": 2,
+      "archive_count_removed": 3,
+      "publication_after_due_s": 2.402801990509033
+    }
+  }
+}

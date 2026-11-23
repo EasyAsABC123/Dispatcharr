@@ -1,0 +1,981 @@
+{
+  "Native_comparison_executed": false,
+  "cleanup": {
+    "inventories": {
+      "container": [],
+      "network": [],
+      "volume": []
+    },
+    "owned_CID_absent": true,
+    "owned_generation_absent": true,
+    "passed": true
+  },
+  "cleanup_sha256": "1ea39352aca6265bf4da48695e735940b1a11b33060f4c68594dfb4320abd16e",
+  "credit": "Original Dispatcharr, nginx, Django, Django REST Framework, React and dependency authors and contributors retain full credit.",
+  "direct_uwsgi_HEAD_diagnostics": [
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "body_bytes": 16506,
+      "body_sha256": "5d56d5cd417aef62ba15a0b4d775b03ee1ab2a44c8bcee3ce8af45e54248789f",
+      "content_length": "16506",
+      "content_type": "text/html; charset=utf-8",
+      "family": "agent-list",
+      "listener": "direct_uwsgi",
+      "method": "HEAD",
+      "path": "/api/core/useragents/",
+      "set_cookie": true,
+      "status": 200
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "body_bytes": 17765,
+      "body_sha256": "f8db11e9739cdf128aba230592217a0b07ab3f786124f760aa5b7dbdb49d6475",
+      "content_length": "17765",
+      "content_type": "text/html; charset=utf-8",
+      "family": "profile-detail",
+      "listener": "direct_uwsgi",
+      "method": "HEAD",
+      "path": "/api/core/streamprofiles/6/",
+      "set_cookie": true,
+      "status": 200
+    }
+  ],
+  "failed_preceding_attempt_sha256": "cfc2d9b40e8fb9b00b8ae0119e5a86aa05fa9b214ae03bf95efca036770020a9",
+  "fixture_receipt_sha256": "999983597db3a88a9ee4854048cef0943dd07f2b220c1b4e7da4454bc3744871",
+  "fixture_seal_sha256": "d57997cf397d4133a9375983d0e708dd72b1ef969112139b6976f51945b97984",
+  "formal_M0_accepted": false,
+  "guest_sha256": "b4abc3741c58cb10aaa40a985b2ab4d1ddcaca2c11f4e619ce6b61afa0f4a9d8",
+  "literal_phases": {
+    "cleanup": 0,
+    "create": 0,
+    "probe": 0,
+    "readiness": 0,
+    "startup": 0
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false,
+  "proof_sha256": "ffc9af12ec5c61643c31279d24156eb17e4f44adce3ef697b2c6578ae860e0ae",
+  "raw_guest_sha256": "c80c183f0ba0b3881e28afea3bf083d355a893e8f4b4f131bd41f5896af6d60d",
+  "scope": "Stock Original nginx signed Core browser negotiation and separate direct HEAD diagnostics",
+  "signed_HTTP_readback_unchanged": true,
+  "signed_role_levels": {
+    "administrator": 10,
+    "standard": 1
+  },
+  "stock_config": "sha256:e6dd7702028a8540782053a8433a77db47f4713ba92c296c572e5deef9b3b3cc",
+  "stock_nginx_cases": [
+    {
+      "accept": "text/html",
+      "allow": [
+        "GET, POST, HEAD, OPTIONS"
+      ],
+      "body_bytes": 16505,
+      "body_kind": "html",
+      "case": "anchor",
+      "content_length": "16505",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "form-csrf": 1,
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "agent-list",
+      "format_links": [
+        "/api/core/useragents/?format=json",
+        "/api/core/useragents/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "/api/core/useragents/",
+          null,
+          "OPTIONS",
+          null
+        ],
+        [
+          "/api/core/useragents/",
+          "POST",
+          null,
+          "multipart/form-data"
+        ],
+        [
+          "/api/core/useragents/",
+          "POST",
+          null,
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "GET",
+      "named_form_control_count": 7,
+      "normalized_body_sha256": "1267c0a97fc7a8ba18e6d0064638e61700744a211d5fbd44f4c967b4720ed1e6",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "same_mask_normalized_bytes_as_route_anchor": true,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, POST, HEAD, OPTIONS"
+      ],
+      "body_bytes": 16505,
+      "body_kind": "html",
+      "case": "navigation",
+      "content_length": "16505",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "form-csrf": 1,
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "agent-list",
+      "format_links": [
+        "/api/core/useragents/?format=json",
+        "/api/core/useragents/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "/api/core/useragents/",
+          null,
+          "OPTIONS",
+          null
+        ],
+        [
+          "/api/core/useragents/",
+          "POST",
+          null,
+          "multipart/form-data"
+        ],
+        [
+          "/api/core/useragents/",
+          "POST",
+          null,
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "GET",
+      "named_form_control_count": 7,
+      "normalized_body_sha256": "1267c0a97fc7a8ba18e6d0064638e61700744a211d5fbd44f4c967b4720ed1e6",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "same_mask_normalized_bytes_as_route_anchor": true,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html; q=1.0, */*",
+      "allow": [
+        "GET, POST, HEAD, OPTIONS"
+      ],
+      "body_bytes": 16505,
+      "body_kind": "html",
+      "case": "ajax",
+      "content_length": "16505",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "form-csrf": 1,
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "agent-list",
+      "format_links": [
+        "/api/core/useragents/?format=json",
+        "/api/core/useragents/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "/api/core/useragents/",
+          null,
+          "OPTIONS",
+          null
+        ],
+        [
+          "/api/core/useragents/",
+          "POST",
+          null,
+          "multipart/form-data"
+        ],
+        [
+          "/api/core/useragents/",
+          "POST",
+          null,
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "GET",
+      "named_form_control_count": 7,
+      "normalized_body_sha256": "1267c0a97fc7a8ba18e6d0064638e61700744a211d5fbd44f4c967b4720ed1e6",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "same_mask_normalized_bytes_as_route_anchor": true,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, POST, HEAD, OPTIONS"
+      ],
+      "body_bytes": 16593,
+      "body_kind": "html",
+      "case": "force-browsable",
+      "content_length": "16593",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "form-csrf": 1,
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "agent-list",
+      "format_links": [
+        "/api/core/?format=api",
+        "/api/core/useragents?format=api",
+        "/api/core/useragents/?format=api",
+        "/api/core/useragents/?format=api",
+        "/api/core/useragents/?format=json",
+        "/api/core/useragents/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "/api/core/useragents/?format=api",
+          null,
+          "OPTIONS",
+          null
+        ],
+        [
+          "/api/core/useragents/?format=api",
+          "POST",
+          null,
+          "multipart/form-data"
+        ],
+        [
+          "/api/core/useragents/?format=api",
+          "POST",
+          null,
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "GET",
+      "named_form_control_count": 7,
+      "normalized_body_sha256": "ae17d1ee1ed6ce22e17639a51db24d37fc647e786fd4ae076d9fb1990e9fbb83",
+      "path": "/api/core/useragents/?format=api",
+      "role": "admin",
+      "same_mask_normalized_bytes_as_route_anchor": false,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "JSON_body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+      "JSON_keys_or_rows": [
+        "detail"
+      ],
+      "JSON_type": "object",
+      "accept": "application/json",
+      "allow": [
+        "GET, POST, HEAD, OPTIONS"
+      ],
+      "body_bytes": 57,
+      "body_kind": "json",
+      "case": "browsable-explicit-json",
+      "content_length": "57",
+      "content_type": "application/json",
+      "csrf_cookie_attributes": {},
+      "family": "agent-list",
+      "listener": "stock_nginx",
+      "method": "GET",
+      "path": "/api/core/useragents/?format=api",
+      "role": "admin",
+      "status": 406,
+      "vary": [
+        "Accept, origin"
+      ]
+    },
+    {
+      "JSON_body_sha256": "5169b2a2e9ca7b8ebab5c94a82c83d43244070320cfa0e1c10e255d9136750b7",
+      "JSON_keys_or_rows": 4,
+      "JSON_type": "array",
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, POST, HEAD, OPTIONS"
+      ],
+      "body_bytes": 877,
+      "body_kind": "json",
+      "case": "force-json",
+      "content_length": "877",
+      "content_type": "application/json",
+      "csrf_cookie_attributes": {},
+      "family": "agent-list",
+      "listener": "stock_nginx",
+      "method": "GET",
+      "path": "/api/core/useragents/?format=json",
+      "role": "admin",
+      "status": 200,
+      "vary": [
+        "Accept, origin"
+      ]
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, POST, HEAD, OPTIONS"
+      ],
+      "body_bytes": 0,
+      "body_kind": "empty-head",
+      "case": "head-navigation",
+      "content_length": "16506",
+      "content_type": "text/html; charset=utf-8",
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "agent-list",
+      "listener": "stock_nginx",
+      "method": "HEAD",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, POST, HEAD, OPTIONS"
+      ],
+      "body_bytes": 17636,
+      "body_kind": "html",
+      "case": "options-navigation",
+      "content_length": "17636",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "form-csrf": 1,
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "agent-list",
+      "format_links": [
+        "/api/core/useragents/?format=json",
+        "/api/core/useragents/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "/api/core/useragents/",
+          null,
+          "OPTIONS",
+          null
+        ],
+        [
+          "/api/core/useragents/",
+          "POST",
+          null,
+          "multipart/form-data"
+        ],
+        [
+          "/api/core/useragents/",
+          "POST",
+          null,
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "OPTIONS",
+      "named_form_control_count": 7,
+      "normalized_body_sha256": "3ab699b4878e0f55b408ac110a185ff34757107e4177fc0383017ef4e76849d5",
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "same_mask_normalized_bytes_as_route_anchor": false,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, POST, HEAD, OPTIONS"
+      ],
+      "body_bytes": 11780,
+      "body_kind": "html",
+      "case": "standard-navigation",
+      "content_length": "11780",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "agent-list",
+      "format_links": [
+        "/api/core/useragents/?format=json",
+        "/api/core/useragents/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "GET",
+      "named_form_control_count": 0,
+      "normalized_body_sha256": "2295ae52bf0bdf24fc77ab441ff8e8425bdedb1b1c0c53e7eeb4ad081ab092cc",
+      "path": "/api/core/useragents/",
+      "role": "standard",
+      "same_mask_normalized_bytes_as_route_anchor": false,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html",
+      "allow": [
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+      ],
+      "body_bytes": 17764,
+      "body_kind": "html",
+      "case": "anchor",
+      "content_length": "17764",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "profile-detail",
+      "format_links": [
+        "/api/core/streamprofiles/6/?format=json",
+        "/api/core/streamprofiles/6/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "OPTIONS",
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "DELETE",
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "PUT",
+          "multipart/form-data"
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "PUT",
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "GET",
+      "named_form_control_count": 8,
+      "normalized_body_sha256": "58aa355a1551bc25915369cb896f072c45c8ae9133b55bbfac97ce9b4febd16c",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "same_mask_normalized_bytes_as_route_anchor": true,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+      ],
+      "body_bytes": 17764,
+      "body_kind": "html",
+      "case": "navigation",
+      "content_length": "17764",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "profile-detail",
+      "format_links": [
+        "/api/core/streamprofiles/6/?format=json",
+        "/api/core/streamprofiles/6/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "OPTIONS",
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "DELETE",
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "PUT",
+          "multipart/form-data"
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "PUT",
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "GET",
+      "named_form_control_count": 8,
+      "normalized_body_sha256": "58aa355a1551bc25915369cb896f072c45c8ae9133b55bbfac97ce9b4febd16c",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "same_mask_normalized_bytes_as_route_anchor": true,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html; q=1.0, */*",
+      "allow": [
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+      ],
+      "body_bytes": 17764,
+      "body_kind": "html",
+      "case": "ajax",
+      "content_length": "17764",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "profile-detail",
+      "format_links": [
+        "/api/core/streamprofiles/6/?format=json",
+        "/api/core/streamprofiles/6/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "OPTIONS",
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "DELETE",
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "PUT",
+          "multipart/form-data"
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "PUT",
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "GET",
+      "named_form_control_count": 8,
+      "normalized_body_sha256": "58aa355a1551bc25915369cb896f072c45c8ae9133b55bbfac97ce9b4febd16c",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "same_mask_normalized_bytes_as_route_anchor": true,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+      ],
+      "body_bytes": 17874,
+      "body_kind": "html",
+      "case": "force-browsable",
+      "content_length": "17874",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "profile-detail",
+      "format_links": [
+        "/api/core/?format=api",
+        "/api/core/streamprofiles?format=api",
+        "/api/core/streamprofiles/?format=api",
+        "/api/core/streamprofiles/6/?format=api",
+        "/api/core/streamprofiles/6/?format=api",
+        "/api/core/streamprofiles/6/?format=json",
+        "/api/core/streamprofiles/6/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/?format=api",
+          null,
+          "OPTIONS",
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/?format=api",
+          null,
+          "DELETE",
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/?format=api",
+          null,
+          "PUT",
+          "multipart/form-data"
+        ],
+        [
+          "/api/core/streamprofiles/6/?format=api",
+          null,
+          "PUT",
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "GET",
+      "named_form_control_count": 8,
+      "normalized_body_sha256": "8e9c57cadcbfbdcb564234aa94f86bc834facfe21e69b72c86e2716838f07d5b",
+      "path": "/api/core/streamprofiles/6/?format=api",
+      "role": "admin",
+      "same_mask_normalized_bytes_as_route_anchor": false,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "JSON_body_sha256": "a5d55bea935e8c7176837edb49d58892bb4356c604fe8028bfa71c96ad81edd3",
+      "JSON_keys_or_rows": [
+        "detail"
+      ],
+      "JSON_type": "object",
+      "accept": "application/json",
+      "allow": [
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+      ],
+      "body_bytes": 57,
+      "body_kind": "json",
+      "case": "browsable-explicit-json",
+      "content_length": "57",
+      "content_type": "application/json",
+      "csrf_cookie_attributes": {},
+      "family": "profile-detail",
+      "listener": "stock_nginx",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/?format=api",
+      "role": "admin",
+      "status": 406,
+      "vary": [
+        "Accept, origin"
+      ]
+    },
+    {
+      "JSON_body_sha256": "24787768904c1f4a3476b8018f31bf6a0a08a7e7ffc4139464c6f6ac7b2a75cb",
+      "JSON_keys_or_rows": [
+        "command",
+        "id",
+        "is_active",
+        "locked",
+        "name",
+        "parameters",
+        "user_agent"
+      ],
+      "JSON_type": "object",
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+      ],
+      "body_bytes": 127,
+      "body_kind": "json",
+      "case": "force-json",
+      "content_length": "127",
+      "content_type": "application/json",
+      "csrf_cookie_attributes": {},
+      "family": "profile-detail",
+      "listener": "stock_nginx",
+      "method": "GET",
+      "path": "/api/core/streamprofiles/6/?format=json",
+      "role": "admin",
+      "status": 200,
+      "vary": [
+        "Accept, origin"
+      ]
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+      ],
+      "body_bytes": 0,
+      "body_kind": "empty-head",
+      "case": "head-navigation",
+      "content_length": "17765",
+      "content_type": "text/html; charset=utf-8",
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "profile-detail",
+      "listener": "stock_nginx",
+      "method": "HEAD",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+      ],
+      "body_bytes": 20442,
+      "body_kind": "html",
+      "case": "options-navigation",
+      "content_length": "20442",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "profile-detail",
+      "format_links": [
+        "/api/core/streamprofiles/6/?format=json",
+        "/api/core/streamprofiles/6/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "OPTIONS",
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "DELETE",
+          null
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "PUT",
+          "multipart/form-data"
+        ],
+        [
+          "/api/core/streamprofiles/6/",
+          null,
+          "PUT",
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "OPTIONS",
+      "named_form_control_count": 8,
+      "normalized_body_sha256": "5e95ed1aaf9dae3aeb8de19ac1de06194350a9fb5b47f858df4a2087454752c7",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "same_mask_normalized_bytes_as_route_anchor": false,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    },
+    {
+      "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+      "allow": [
+        "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+      ],
+      "body_bytes": 10600,
+      "body_kind": "html",
+      "case": "standard-navigation",
+      "content_length": "10600",
+      "content_type": "text/html; charset=utf-8",
+      "cookie_linked_mask_counts": {
+        "script-csrf": 1
+      },
+      "csrf_cookie_attributes": {
+        "expires_present": true,
+        "max-age": "31449600",
+        "path": "/",
+        "samesite": "Lax"
+      },
+      "family": "profile-detail",
+      "format_links": [
+        "/api/core/streamprofiles/6/?format=json",
+        "/api/core/streamprofiles/6/?format=api"
+      ],
+      "forms": [
+        [
+          null,
+          null,
+          null,
+          null
+        ]
+      ],
+      "listener": "stock_nginx",
+      "method": "GET",
+      "named_form_control_count": 0,
+      "normalized_body_sha256": "f499c323dd159839d850b136dc1b235b1b97758083be638b1f46ff34417e2671",
+      "path": "/api/core/streamprofiles/6/",
+      "role": "standard",
+      "same_mask_normalized_bytes_as_route_anchor": false,
+      "status": 200,
+      "vary": [
+        "Accept, origin, Cookie"
+      ]
+    }
+  ],
+  "stock_oci_manifest": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3"
+}
