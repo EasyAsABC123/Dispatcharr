@@ -1,0 +1,116 @@
+{
+  "actual_receipts_sha256": {
+    "cleanup.json": "cbf8305eb4c025a5544642193abdef04079cabee4c80486fae2fca9500e317ed",
+    "command.json": "6087340536167f471203295e04bdeb29b259a845d780480a9af3ed6c0f5fb759",
+    "container-terminal.json": "1f496a546f6e12fd1afb35648986c2dbf126086f9ba82371fc901038e8ab27ca",
+    "evidence/discovered-labels.json": "0c3ef3b10658bf879fb6513cfb632cad5935ca4eff92462616ffadf573b51b9c",
+    "preflight.json": "1d7948a1e2faec633a8f8a18db89e39c6cd9933155e4bea4a0d6efd0118edd7c",
+    "result.json": "7465d50027695468a7a1dc1fa95791fb87e0f4b38812017f311456be407bb78d",
+    "source-after.json": "78a1927742ef80eabcb9f982dd2ff94ff1b6afc6cdcedeb7caca49b00a1c8b1f",
+    "source-before.json": "75928eeeb6cced437a11ece1bc4267c0422b2514960a3866cc4c0ca8a8a69acb",
+    "tests.log": "6cd75204197a0921788321acffc20041c72175cd532ef1fb0ff4758208aff9c6"
+  },
+  "ci": {
+    "failed": 0,
+    "found": 3362,
+    "fresh_output_sha256_equal_to_prior_verified": {
+      "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d",
+      "runtime-contracts.json": "ea9582c481d4953ab45401fe2f8553a53d3ab4cfde51d267d606bd0c4b3657bc"
+    },
+    "installed_direct_dependencies_compatible": 31,
+    "labels": [
+      "apps.accounts.tests",
+      "apps.backups.tests",
+      "apps.channels.tests",
+      "apps.connect.tests",
+      "apps.dashboard.tests",
+      "apps.epg.tests",
+      "apps.m3u.tests",
+      "apps.output.tests",
+      "apps.plugins.tests",
+      "apps.proxy.live_proxy.tests",
+      "apps.proxy.tests",
+      "apps.proxy.vod_proxy.tests",
+      "apps.timeshift.tests",
+      "apps.vod.tests",
+      "core.tests",
+      "tests"
+    ],
+    "literal_test_terminal": "OK",
+    "passed": 3362,
+    "preflight_and_container_discovery_agreed": true,
+    "skipped": 0
+  },
+  "credit": "Original Dispatcharr and dependency authors retain full application, test and dependency credit and licenses.",
+  "formal_M0_accepted": false,
+  "historical_failures_preserved": [
+    {
+      "cleanup_exit": 0,
+      "missing_child_module": "dispatcharr",
+      "run_exit": 1,
+      "source_log_sha256": "3ea7c3be4f5eb943e0e6d91103ada0592533e45f89f0526e4cefe3e728af94eb",
+      "test": "test_readonly_plugin_loads_current_source_without_changing_cache"
+    },
+    {
+      "cleanup_exit": 0,
+      "missing_child_module": "dispatcharr.settings_test",
+      "run_exit": 1,
+      "source_log_sha256": "f1fa9c5a1946fc4465c4665c91ef07bc2444df97cd188c54d01af4ac19bccdb1",
+      "test": "test_readonly_plugin_loads_current_source_without_changing_cache"
+    }
+  ],
+  "historical_pass_log_sha256": "5ce7a671b204e8b1a444e2edbf51313363aaf385989e8268eee011ea1612ad35",
+  "image": "ghcr.io/dispatcharr/dispatcharr@sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "launcher_seal_sha256": "da17a6de89700edb9a1b2d7540182a9493b10abe04d8feb38039e3dcdf6d84c9",
+  "original_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false,
+  "physical": {
+    "actual_exits": {
+      "cleanup": 0,
+      "evaluate": 0,
+      "inspect": 0,
+      "outer": 0,
+      "preflight": 0,
+      "run": 0
+    },
+    "dependency_sync": false,
+    "exact_owned_retirement": true,
+    "network_mode": "none",
+    "oom_killed": false,
+    "own_container_state_exit": 0,
+    "owned_after_cleanup_counts": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    },
+    "owned_observed_before_cleanup": {
+      "containers": 1,
+      "networks": 0,
+      "volumes": 0
+    },
+    "published_ports": 0,
+    "pull_policy": "never",
+    "read_only_source": true,
+    "tmpfs": 3
+  },
+  "platform": "linux/amd64",
+  "qualifies_exact_original_backend_baseline": true,
+  "runtime_inventory": {
+    "openapi_operations": 362,
+    "openapi_paths": 246,
+    "resolved_django_patterns": 592,
+    "schema_scope": "public OpenAPI with existing serializer inference fallback omissions"
+  },
+  "rust_application_parity_accepted": false,
+  "scope": "fresh supported Original full Python backend CI cohort",
+  "source_custody": {
+    "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "ci_bootstrap_sha256": "234be4e80fe611017f8e829bcd3c082ce47e1521f0a40c82cbebd50492de1f3b",
+    "ci_labels_sha256": "8da7dcdb079ade49ca80ffccde3d310ea1e82f179f3d87e3099f6b126d9a2c9f",
+    "commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "files": 1211,
+    "source_map_sha256": "d93d0e243f423a2da085161f961f80b6d3f9b958e491d585bbe383bc1aeda3ae",
+    "source_root_mode": "0755",
+    "verified_unchanged_after_runtime": true
+  }
+}
