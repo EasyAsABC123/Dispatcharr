@@ -1,0 +1,110 @@
+{
+  "amd64": {
+    "admission_seal_sha256": "1620845639bfff17a01e6f1161e78ba7fe6fa0cd373cc27f9a51fb99f09e4874",
+    "image": "sha256:257d640941b9c55a3665b330fbdc5b3c9db4ca29d3834bf749bb6e68dbf3b08d",
+    "manifest_sha256": "45bab5dc494aae4e6ef7ef7ce780d0be49af1013eb8cccffbb3538a1150ff19a",
+    "ordinary_build_phases": {
+      "build": 0,
+      "owner": 0,
+      "preflight": 0,
+      "verify": 0
+    },
+    "ordinary_default_feature_args": true,
+    "platform": "linux/amd64",
+    "runtime_packages_frozen": true,
+    "source_file_map_verified": true,
+    "status": "passed",
+    "verified_package_archive_sha256": "fe258e098459f574ba628e1a22060cb21239b0e36c6036e458fcaefc1bcad466"
+  },
+  "application_inputs": 2187,
+  "application_revision": "4e7455d9d018f4c09c9a6e3f8cf690939a85bff0",
+  "arm64": {
+    "arm_child": "sha256:b976eadaa85f0ac05c9a812e29e561d258afcf5143356b5634b6c92b56708dab",
+    "arm_config": "sha256:233a824bb234ddd7939112cb3447003a5022dda4e5b9f2c38eefab2027d054d6",
+    "auth_projection_sha256": "df7a12a851c54264cfb86d4127ab48f06738e8312fcba73703201da4ed65e885",
+    "cleanup": {
+      "network_lookups_absent": 2,
+      "raw_ids_retained": false,
+      "scoped_inventories_empty": true,
+      "verified_full_ids_count": 5,
+      "volumes_absent": 1
+    },
+    "exact_cleanup": true,
+    "fixture_http": {
+      "authenticated_channel_groups": 200,
+      "channel_groups": 0,
+      "empty_setup": 200,
+      "first_admin_creation": 200,
+      "jwt_login": 200,
+      "jwt_pair_type_checked": true,
+      "setup_closed": 200
+    },
+    "guest_uid": 65532,
+    "image_index": "sha256:3f5ac696f28d0b637eae1ae203d234d35a91f2ad73136fab6786bfa4f57b8639",
+    "independent_lappy_audit_sha256": "6eb1b6fe7d4d68aaa0c8e0f6ab7b3e970fbb6f53674dc8772cdc237d5e548045",
+    "literal_phases": {
+      "owner": 0,
+      "package_run": 0,
+      "physical_build": 0,
+      "preflight": 0,
+      "proof": 0,
+      "signed_auth": 0
+    },
+    "package_binding_sha256": "c9573a8a34469bf5491ad601e275d2d09ef5a585ec6bb234449eae0b0d593356",
+    "platform": "linux/arm64",
+    "react_html_http": 200,
+    "ready_http": 200,
+    "receipts_sha256": {
+      "auth-smoke/literal-exits.jsonl": "d51f67f3bb604ec2d308d5f8e2f6909e9d9da8649bbdb48d0f2570d27eeaaad6",
+      "auth-smoke/owner.json": "2fb66d1677ceffe0e9180e95ab6eac5040234c52e054dc1ecae8e8d853cdfe03",
+      "auth-smoke/receipt.json": "68bbbf1e5384216a10e61f60a3479b0fe9c325ad7a6da918e92f2949e329721d",
+      "build.json": "f1c0b499966e472b42844b1b1e7c23869c18d4ef484c6b2c89efc98ce77a020a",
+      "image-identity.json": "75f3b952f41a37245d0d2da2555dbce29dc02692bfac2d173d020e3d9ba27910",
+      "receipt.json": "875d7f9e25ccd1f0934d501f84cf469c2566b35db521e61600adc0d14fe5de84"
+    },
+    "retained_auth_source_sha256": "75ebaf13a78165a678310060fd6c8bf137a794ebc7aa507cb27dfde50d0d7129",
+    "source_capsule_seal_sha256": "47e3effee73d8d49516c1e254530a5299ba2fb4f7f430e2153fc5b36636031d6",
+    "source_plan_sha256": "c9d672c703d5048bbcfc355c16e49237015482399419720f2737b94b9d7c2d54",
+    "stage_seal_sha256": "52153c579fa172f3771aebc390c798be0eaabbd7cd01736de6060373d0c92637",
+    "status": "passed",
+    "transferred_ARM64_recipe_seal_sha256": "d0a78180e157aeccedd117ec03b22b8edbe045920ddb4c5a1e475401ce0e44ea",
+    "verified_prior_d41_ARM64_audit_sha256": "746f01d3f865ae13ef3da04d6818c2e9020069fa1d727e4523e548234a223eb2"
+  },
+  "credit": "Original Dispatcharr and dependency authors retain full credit and licenses.",
+  "cumulative_changed_Rust_files": 4,
+  "direct_parent": "896b4689f9929fcf5a86c6bbcedb45713930a66a",
+  "exact_application_archive_sha256": "706c2d7e78c85f0d912a4b5ff4242b9a01a86691e79a4edd0fc4abf3a13c68d3",
+  "full_milestone_accepted": false,
+  "host": {
+    "focused_tests": [
+      "normal_control::wire::tests::recording_async_result_revoke_uses_zero_expiry_and_null_signal",
+      "normal_control::wire::tests::default_control_rejects_pre_activation_backlog_and_extended_expiry",
+      "normal_control::wire::tests::control_does_not_accept_termination_or_oversized_identity_as_revoke",
+      "normal_control::wire::tests::default_control_rejects_reply_fields_and_extra_arguments",
+      "normal_control::wire::tests::exact_string_identity_single_and_batch_expiration_are_preserved",
+      "normal_control::wire::tests::exact_no_reply_original_caller_shapes_are_scoped_to_one_receiver",
+      "recording_http_bridge::series_revoke_tests::series_revoke_continues_only_on_proven_early_nonpublication"
+    ],
+    "literal_exits": {
+      "format": 0,
+      "owner": 0,
+      "strict_clippy": 0,
+      "targeted": 0,
+      "workspace_tests": 0
+    },
+    "test_only_timeshift_support_file_count": 5,
+    "tests": {
+      "failed": 0,
+      "ignored": 821,
+      "passed": 1751,
+      "suites": 181
+    }
+  },
+  "performance_measured": false,
+  "registry_publish_or_default_switch": false,
+  "retained_source_modes": 2187,
+  "rust_inputs": 1690,
+  "source_tree_sha256": "0979bb1222f97f976235fcc561dc957cb5cc1d23d636b456fcae7fe5fb2de23d",
+  "unchanged_protected_inputs": 497,
+  "verified_predecessor_application_revision": "d41abbb90dec665182f2060804e40a4d522b1743"
+}

@@ -1,0 +1,193 @@
+{
+  "architecture": "linux/amd64",
+  "candidate_image_id": "sha256:d242cc95abdb9cd24e54a69b835057df4e18c626d41edaf70737eda3a5bf3380",
+  "candidate_manifest_sha256": "62e15cdfa5c1504c2d8734e4f625dbd952f59b69c9b62c3eea2bc2f35f1220d0",
+  "candidate_revision": "d41abbb90dec665182f2060804e40a4d522b1743",
+  "credit": "Original Dispatcharr, Django, FFmpeg and dependency authors retain full credit.",
+  "formal_M2_accepted": false,
+  "formal_M3_accepted": false,
+  "fresh_functional_scopes": {
+    "fmp4": {
+      "arms": {
+        "Native": {
+          "A_V_decodes": 2,
+          "decoder_video_frames": [
+            74,
+            75
+          ],
+          "remux_processes": 1,
+          "shared_complete_fragments": 6,
+          "signed_viewers": 2,
+          "survivor_new_bytes": 854025,
+          "teardown": {
+            "exact_generations_retired": 3,
+            "receipt_sha256": "12e3aeb00a87a2ebaba89f9a415a85764998b0680df4a1d12f82b41e3b9654bb",
+            "scoped_inventories_empty": true
+          },
+          "transform_processes": 1,
+          "upstream_connections": 1
+        },
+        "Original": {
+          "A_V_decodes": 2,
+          "decoder_video_frames": [
+            74,
+            75
+          ],
+          "remux_processes": 1,
+          "shared_complete_fragments": 6,
+          "signed_viewers": 2,
+          "survivor_new_bytes": 826598,
+          "teardown": {
+            "exact_generations_retired": 2,
+            "receipt_sha256": "0949d9419b18382749a039fee9b7a7f53ab29f4baa61a4a9f2282139f572006f",
+            "scoped_inventories_empty": true
+          },
+          "transform_processes": 1,
+          "upstream_connections": 1
+        }
+      },
+      "literal_exits": {
+        "physical": 0,
+        "preflight": 0,
+        "proof": 0
+      },
+      "proof_sha256": "1870dde37c3a0eb6baa87fdfdffdf4138f2084251e573e6c479acd8565e80621",
+      "report_sha256": "506f07dcec60bf77dbda0d8182c8722958648abf9e91c35577ed2a633dc06f23"
+    },
+    "hls": {
+      "arms": {
+        "Native": {
+          "decode_frames": [
+            {
+              "audio": {
+                "codec": "aac",
+                "frames": 192
+              },
+              "video": {
+                "codec": "h264",
+                "frames": 100
+              }
+            },
+            {
+              "audio": {
+                "codec": "aac",
+                "frames": 192
+              },
+              "video": {
+                "codec": "h264",
+                "frames": 100
+              }
+            }
+          ],
+          "profile_processes": 1,
+          "signed_viewers": 2,
+          "stop_HTTP_statuses": [
+            204,
+            204
+          ],
+          "teardown": {
+            "exact_generations_retired": 3,
+            "receipt_sha256": "5578c7a741f6fa32040bf6f89a5c3bad84027833b2a05aceed7f040dd033a80d",
+            "scoped_inventories_empty": true
+          },
+          "upstream_connections": 1
+        },
+        "Original": {
+          "decode_frames": [
+            {
+              "audio": {
+                "codec": "aac",
+                "frames": 192
+              },
+              "video": {
+                "codec": "h264",
+                "frames": 100
+              }
+            },
+            {
+              "audio": {
+                "codec": "aac",
+                "frames": 192
+              },
+              "video": {
+                "codec": "h264",
+                "frames": 100
+              }
+            }
+          ],
+          "profile_processes": 1,
+          "signed_viewers": 2,
+          "stop_HTTP_statuses": [
+            204,
+            204
+          ],
+          "teardown": {
+            "exact_generations_retired": 2,
+            "receipt_sha256": "4274ac8f2d7f2df60faf433fdadb6402a28c1d93b148e0fb492a4d3113e8058a",
+            "scoped_inventories_empty": true
+          },
+          "upstream_connections": 1
+        }
+      },
+      "literal_exits": {
+        "physical": 0,
+        "preflight": 0,
+        "proof": 0
+      },
+      "matched_segments": [
+        {
+          "bytes": 320164,
+          "sequence": 2,
+          "sha256": "862ca83ce5b7f78b5113e2713cf633e1fcc40237a85902105cddb8c81b07db10"
+        },
+        {
+          "bytes": 301740,
+          "sequence": 3,
+          "sha256": "1000449dfc5a79b43fbf5fa36f143ec50a18ae00ca26bce9dbc17164a8687454"
+        }
+      ],
+      "paired_regular_segments_byte_equal": true,
+      "proof_sha256": "8cf3266d6eca5ff547570b692cd296d410189eb6422dfcfa0e23bc2c8d38b632",
+      "report_sha256": "a571dd78d4ffb70e11972d73567d1413a07c9582341451cd10b07f1c3e383eeb"
+    },
+    "ts": {
+      "arms": {
+        "Native": {
+          "max_video_frames": 124,
+          "min_video_frames": 124,
+          "ordered_decoder_transcripts_sha256": "928b1ef7d54c8c6b5259cafc68fccf52efa832849e97e8a522d26c47c0303d94",
+          "ordered_prefixes_sha256": "1a9a4f2fecb15b7807892c865efd588c944fdfd4f533dc80c44622af80e5a788",
+          "positive_A_V_decodes": 100,
+          "provider_slots": 1,
+          "signed_readers": 100,
+          "upstream_connections_added": 1
+        },
+        "Original": {
+          "max_video_frames": 98,
+          "min_video_frames": 72,
+          "ordered_decoder_transcripts_sha256": "b8e1695d0a429f331d2de307a2d71d314a0e45c62f5bb9e4e7f43143f52bffcf",
+          "ordered_prefixes_sha256": "b0ae479946badc65e54ea273ae5c2081b4550f53ebec4fc372d669e3a9dc3e48",
+          "positive_A_V_decodes": 100,
+          "provider_slots": 1,
+          "signed_readers": 100,
+          "upstream_connections_added": 1
+        }
+      },
+      "literal_exits": {
+        "physical": 0,
+        "preflight": 0,
+        "proof": 0
+      },
+      "proof_sha256": "fc2b347bab6d9a35cf41ee78fc0e2103d9e23e85d8d108e36e136fa027755be0",
+      "raw_receipt_sha256": "4301cd4efb2807a226d251d04d0a6975f3d010129fbf3bddbde400159cb638ab",
+      "scoped_exact_teardown": {
+        "container_and_process_generations_retired": 5,
+        "empty_inventories": true
+      }
+    }
+  },
+  "historical_native_statuses_carried": false,
+  "literal_owner_exit": 0,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false
+}
