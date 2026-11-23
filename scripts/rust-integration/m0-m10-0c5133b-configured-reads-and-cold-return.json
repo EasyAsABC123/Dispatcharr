@@ -1,0 +1,301 @@
+{
+  "M0": {
+    "application": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+    "canonical_rows_changed": 0,
+    "cases": {
+      "native": [
+        {
+          "contract_id": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+          "family": "configured",
+          "method": "GET",
+          "path": "/api/accounts/initialize-superuser/",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "contract_id": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+          "family": "configured",
+          "method": "GET",
+          "path": "/api/accounts/initialize-superuser/",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "contract_id": "route-7850f9793043afebdf5a:METHOD_UNRESOLVED",
+          "family": "lineup",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-standby-profile/lineup.json",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "contract_id": "route-7850f9793043afebdf5a:METHOD_UNRESOLVED",
+          "family": "lineup",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-standby-profile/lineup.json",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "contract_id": "route-ffc697ca6f835d388f08:METHOD_UNRESOLVED",
+          "family": "idle",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-standby-profile/lineup_status.json",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "contract_id": "route-ffc697ca6f835d388f08:METHOD_UNRESOLVED",
+          "family": "idle",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-standby-profile/lineup_status.json",
+          "role": "admin",
+          "status": 200
+        }
+      ],
+      "original": [
+        {
+          "contract_id": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+          "family": "configured",
+          "method": "GET",
+          "path": "/api/accounts/initialize-superuser/",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "contract_id": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+          "family": "configured",
+          "method": "GET",
+          "path": "/api/accounts/initialize-superuser/",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "contract_id": "route-7850f9793043afebdf5a:METHOD_UNRESOLVED",
+          "family": "lineup",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-standby-profile/lineup.json",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "contract_id": "route-7850f9793043afebdf5a:METHOD_UNRESOLVED",
+          "family": "lineup",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-standby-profile/lineup.json",
+          "role": "admin",
+          "status": 200
+        },
+        {
+          "contract_id": "route-ffc697ca6f835d388f08:METHOD_UNRESOLVED",
+          "family": "idle",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-standby-profile/lineup_status.json",
+          "role": "standard",
+          "status": 200
+        },
+        {
+          "contract_id": "route-ffc697ca6f835d388f08:METHOD_UNRESOLVED",
+          "family": "idle",
+          "method": "GET",
+          "path": "/hdhr/owned-m0-standby-profile/lineup_status.json",
+          "role": "admin",
+          "status": 200
+        }
+      ]
+    },
+    "cases_per_arm": 6,
+    "exact_cleanup": true,
+    "fixture_state_unchanged": true,
+    "formal_M0_pass": false,
+    "independent_proof_sha256": "69be804a801fc71aad6bdd744087a2b043685477aab35a5de789372b62a3d45a",
+    "manifest_sha256": "72c01c185cad19e515090807006f3f98fc034fb0459a981cebc759700278ee12",
+    "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "paired_receipt_sha256": "d8c732a1248a394cc84d9c1e6c9fc40c78d59730410db12eb83873b559c4fe25"
+  },
+  "M10": {
+    "acked_row_changes": {
+      "changed_fields": [
+        "name",
+        "updated_at"
+      ],
+      "changed_table": "dispatcharr_channels_channel",
+      "channel_id": 1,
+      "new_name": "owned ARM64 channel M10 acknowledged rename",
+      "old_name": "owned ARM64 channel",
+      "schema_sequences_and_unrelated_rows_equal": true,
+      "updated_rows": 1
+    },
+    "all_project_inventories_empty": true,
+    "application": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+    "business_patch_count": 1,
+    "cleanup_sha256": "71c19a70fc3a92441aa243237afde0ca005e6217a90bbc97e0ac3e93b236a0ec",
+    "cold_exact_startup_control": true,
+    "common_written_archive_sha256": "9e65e8874a65e206bcc3ed2d3ea2e43969d71ee41b92758fde34c9fd4aa4c09f",
+    "exact_product_request_count": 14,
+    "full_m10_claimed": false,
+    "image": "sha256:8d26782ba4a364efc735e55c86e7c4790f38e4ab339727158f3d3a9ab02c95a9",
+    "ingress_route_order": [
+      "Original",
+      "Native",
+      "OriginalCold"
+    ],
+    "literal_exits": {
+      "owner": 0,
+      "physical": 0,
+      "preflight": 0,
+      "proof": 0
+    },
+    "native_writer_retired_before_copy": true,
+    "no_original_reconciliation_patch": true,
+    "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "raw_receipt_sha256": "11b42d2f971a3f29e852a48d1ceec57c0feff4841a815c05a003251d2c2987bd",
+    "retired_resources": {
+      "container": 16,
+      "network": 1,
+      "volume": 6
+    },
+    "same_signed_session": true,
+    "scope": "isolated ARM64 same-schema cold return",
+    "strict_cold_no_effect_equivalence_claimed": false,
+    "unchanged_warm_source": true
+  },
+  "M3": {
+    "build_sha256": "750aed6d8c6912ab4e891cd1fee132838fc14a7e7cecdc724c70aeeb7e10d3fb",
+    "captures": [
+      {
+        "clip_bytes": 1736082,
+        "clip_sha256": "a0c6262244e8711e52cd96fbe226fd09b2b2081910857179b393a586827d9bc4",
+        "complete_fragments": 6,
+        "decoder": {
+          "begin_ns": 558852763756,
+          "codecs": {
+            "audio": "aac",
+            "video": "h264"
+          },
+          "duration_us": 12040000,
+          "eof_and_exit": true,
+          "ffmpeg_sha256": "7944790a81f0062178fb4c627450b413943542da226cb7bb2dd11db26421f5fb",
+          "ffprobe_frames": {
+            "audio": 564,
+            "video": 300
+          },
+          "finish_ns": 558894065964,
+          "pid": 22,
+          "start_ticks": 55885
+        },
+        "http_status": 200,
+        "input_sha256": "a1d32a9aa4ed53f107c6c8549f286a694de731770c37852fed7094c48ded1d62",
+        "literal_tool_exits": {
+          "ffmpeg": 0,
+          "ffprobe": 0
+        },
+        "ordinal": 1,
+        "origin": {
+          "bytes": 3746652,
+          "generation": 1,
+          "opened_ns": 543593604124,
+          "retired_ns": 558580387589
+        },
+        "provider_slots_active": 1,
+        "provider_slots_retired": 0,
+        "route_sha256": "09bdb34ebde9b8d3947872de48014d6b2a062fb101486783af15aed1ec62cce9"
+      },
+      {
+        "clip_bytes": 1736082,
+        "clip_sha256": "a0c6262244e8711e52cd96fbe226fd09b2b2081910857179b393a586827d9bc4",
+        "complete_fragments": 6,
+        "decoder": {
+          "begin_ns": 574191525721,
+          "codecs": {
+            "audio": "aac",
+            "video": "h264"
+          },
+          "duration_us": 12040000,
+          "eof_and_exit": true,
+          "ffmpeg_sha256": "7944790a81f0062178fb4c627450b413943542da226cb7bb2dd11db26421f5fb",
+          "ffprobe_frames": {
+            "audio": 564,
+            "video": 300
+          },
+          "finish_ns": 574224462513,
+          "pid": 62,
+          "start_ticks": 57419
+        },
+        "http_status": 200,
+        "input_sha256": "a1d32a9aa4ed53f107c6c8549f286a694de731770c37852fed7094c48ded1d62",
+        "literal_tool_exits": {
+          "ffmpeg": 0,
+          "ffprobe": 0
+        },
+        "ordinal": 2,
+        "origin": {
+          "bytes": 3747968,
+          "generation": 2,
+          "opened_ns": 558923419923,
+          "retired_ns": 573916899846
+        },
+        "provider_slots_active": 1,
+        "provider_slots_retired": 0,
+        "route_sha256": "09bdb34ebde9b8d3947872de48014d6b2a062fb101486783af15aed1ec62cce9"
+      }
+    ],
+    "image": {
+      "arm_child_sha256": "sha256:1c0a72079a9873bd9dd71fd81df67a107f883078b9cedb93f901813ddf7e3fc1",
+      "arm_config_sha256": "sha256:929d39f7bf7e087e3ecf2f79306ad9615ea1aebc0733f0324a9e2ede4abcbaea",
+      "entrypoint": [
+        "/usr/local/bin/dispatcharr-rs"
+      ],
+      "index_sha256": "sha256:8d26782ba4a364efc735e55c86e7c4790f38e4ab339727158f3d3a9ab02c95a9",
+      "platform": "linux/arm64",
+      "user": "65532:65532"
+    },
+    "limits": {
+      "application_restart_exercised": false,
+      "clip_bytes_retired_in_guest": true,
+      "hard_main_retirement_exercised": false,
+      "performance_measured": false
+    },
+    "missing_bearer_http_status": 401,
+    "pinned_inputs": {
+      "SHA256SUMS": "19a4ba6f9308f17b69336ac55f41599661678bdb64df44a47ede6a1b83abf1cc",
+      "dispatcharr-0c-fmp4-247bf161a69e3110-native/literal-exits.jsonl": "b02fe8c3ea47e784986c56eda64f3924f647cca4f7dd1eda1cd1a48ccccb9371",
+      "dispatcharr-0c-fmp4-247bf161a69e3110-native/receipt.json": "483bfe065c624fba3a95c0b6c9a586b0ad60bce973c6fd2641ba0d7a2a850c5b"
+    },
+    "project": "dispatcharr-0c-fmp4-247bf161a69e3110-native",
+    "recorded_exits": {
+      "actual_exit": 0,
+      "candidate_start_literal_exit": 0,
+      "down_literal_exit": 0,
+      "guest_literal_exit": 0,
+      "infra_start_literal_exit": 0,
+      "stop_literal_exit": 0
+    },
+    "revision": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+    "schema": "dispatcharr-arm64-fmp4-retirement-evidence/1",
+    "scope": "signed same-channel fMP4 last-reader retirement and reopen",
+    "signed_auth": true,
+    "teardown": {
+      "exact_cleanup": true,
+      "exact_prestart_absence": true,
+      "owned_roster_counts": {
+        "container": 5,
+        "network": 1,
+        "volume": 1
+      },
+      "post_down_direct_absence_checks": {
+        "container inspect": 10,
+        "network inspect": 2,
+        "volume inspect": 1
+      },
+      "roles": [
+        "baseline",
+        "candidate",
+        "data-init",
+        "observer",
+        "origin"
+      ]
+    },
+    "tree": "37367020363f670cf6cd3da8b26540d25e91181031f4abdfc373b30455117e04"
+  }
+}

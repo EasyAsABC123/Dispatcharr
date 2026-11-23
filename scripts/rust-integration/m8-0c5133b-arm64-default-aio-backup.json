@@ -1,0 +1,138 @@
+{
+  "arm64_host": "lappy",
+  "arms": {
+    "native": {
+      "archive": {
+        "bytes": 37367,
+        "format": "Dispatcharr PostgreSQL backup v2",
+        "matches_own_download": true,
+        "sha256": "c02b71c1f1c8d38b7defc30cc01c3a07c98efaca1b13e1e53de713b7e34a4d80",
+        "unchanged_after_restore": true
+      },
+      "command_ledger_sha256": "d132182019b1531d23b4ba33499e838334e5ddd73ffdfc43fbef958cdca8b874",
+      "control": "8d962a93fd0153a708e20eebf55ea978fa150cd9fff71cc1aa1d6538bf11ba51",
+      "control_data_sha256": "13757a9bfd5be955342475d32a87b62093f4dfdd95fe6a9427cf128d07179fd3",
+      "exact_teardown": true,
+      "login_statuses": [
+        200,
+        200,
+        401
+      ],
+      "physical_exit": 0,
+      "physically_stable_roles": [
+        "native",
+        "database"
+      ],
+      "probe_exit": 0,
+      "probe_stdout_sha256": "c27fc9093de535739d738cb5e48ae3543c5c96022d5f233478b20789a671c461",
+      "raw_receipt_sha256": "f6362047931ee57eade8eceb5750c6cbc1bd764d3f8e37e9cc657dec4316a803",
+      "readiness": {
+        "clocked_scheduler_enabled": true,
+        "clocked_scheduler_scope": "core-saved-families",
+        "ready": true,
+        "startup": "Started"
+      },
+      "recovered_rows_sha256": "54fdb8ad65b22d0ac96282b7ef61de2c5f2e6c6879bdd7a2f62a0d0534eaad70",
+      "retired": {
+        "container": 6,
+        "network": 1,
+        "volume": 2
+      },
+      "role": "ordinary DISPATCHARR_ENV=aio with default Selected Core worker and Beat",
+      "scoped_target_replaced_and_restored": true,
+      "tasks": {
+        "create": {
+          "redis_state": "SUCCESS",
+          "signed_state": "completed",
+          "submit_status": 202,
+          "task_id": "2561984d-0d7c-4fb1-b21b-c72b4b6e2bbf"
+        },
+        "restore": {
+          "redis_state": "SUCCESS",
+          "signed_state": "completed",
+          "submit_status": 202,
+          "task_id": "bace2807-c1c6-4cd2-927e-5aa02d142602"
+        }
+      },
+      "three_zero_queue_samples_pre_create_and_after_both_jobs": true
+    },
+    "original": {
+      "archive": {
+        "bytes": 36826,
+        "format": "Dispatcharr PostgreSQL backup v2",
+        "matches_own_download": true,
+        "sha256": "d0769bdb5ef6caadcfcd3c7b5c187d0c88558f46938ad26df4c7206072962f31",
+        "unchanged_after_restore": true
+      },
+      "command_ledger_sha256": "0f83901cd66024b470f5f5db164ffe135d242d9ef9e6affbda960ef7378a1833",
+      "control": "8d962a93fd0153a708e20eebf55ea978fa150cd9fff71cc1aa1d6538bf11ba51",
+      "control_data_sha256": "13757a9bfd5be955342475d32a87b62093f4dfdd95fe6a9427cf128d07179fd3",
+      "exact_teardown": true,
+      "login_statuses": [
+        200,
+        200,
+        401
+      ],
+      "physical_exit": 0,
+      "physically_stable_roles": [
+        "original",
+        "worker",
+        "database"
+      ],
+      "probe_exit": 0,
+      "probe_stdout_sha256": "40b9a1b0ac471b69509fc55bcea045c2bc6a8ef7de6932d70443364f19a9e1a9",
+      "raw_receipt_sha256": "d971f6446d1d428e8af6a98bad819ac698d529b009e18a0b066c5b9a559bdc48",
+      "readiness": {
+        "consumer": "stock Celery",
+        "public_readiness": 200
+      },
+      "recovered_rows_sha256": "c9a1450587f9a783fb1b6e3ccd3817b5a7f9479e91400c7bb156b7f6cca186b1",
+      "retired": {
+        "container": 7,
+        "network": 1,
+        "volume": 2
+      },
+      "role": "stock Original HTTP create/restore with one prefork Celery consumer",
+      "scoped_target_replaced_and_restored": true,
+      "tasks": {
+        "create": {
+          "redis_state": "SUCCESS",
+          "signed_state": "completed",
+          "submit_status": 202,
+          "task_id": "1b1727f2-e7f5-4c68-933c-646f1be17125"
+        },
+        "restore": {
+          "redis_state": "SUCCESS",
+          "signed_state": "completed",
+          "submit_status": 202,
+          "task_id": "139c86ea-0066-4f1d-b1bb-23e9044329ee"
+        }
+      },
+      "three_zero_queue_samples_pre_create_and_after_both_jobs": true
+    }
+  },
+  "cross_arm_archive_bytes_equal": false,
+  "date_utc": "2026-11-23",
+  "default_aio_selected_core_verified": true,
+  "each_arm_restored_its_own_archive": true,
+  "image": "sha256:8d26782ba4a364efc735e55c86e7c4790f38e4ab339727158f3d3a9ab02c95a9",
+  "independent_audit_exit": 0,
+  "natural_scheduled_backup_exercised": false,
+  "original_authors_retain_full_credit": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "other_runtime_owner_enabled": false,
+  "package_manifest_sha256": "750aed6d8c6912ab4e891cd1fee132838fc14a7e7cecdc724c70aeeb7e10d3fb",
+  "performance_claim": false,
+  "physical_pair_exit": 0,
+  "physical_pair_sha256": "3ae1471de5923c0664d05cad8668748ec22cc70c6fb0faebbbcf2b0e8408adad",
+  "prior_failure": {
+    "exact_cleanup": true,
+    "original_fourth_login": 429,
+    "physical_exit": 1,
+    "rust_started": false
+  },
+  "revision": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+  "source_tree": "37367020363f670cf6cd3da8b26540d25e91181031f4abdfc373b30455117e04",
+  "stage_manifest_sha256": "20b33889c05bed28ea160826d959e368c34f9668080cad174a8e8e701ca0ff13",
+  "wider_restore_or_full_m8_claim": false
+}
