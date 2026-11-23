@@ -1,0 +1,115 @@
+{
+  "milestone": "M3",
+  "full_M3_passed": false,
+  "full_milestone_performance_verified": false,
+  "scoped_screen_passed": true,
+  "equal_work": true,
+  "scope": "AMD64 32-second ordinary packaged signed HLS with two viewers on one FFmpeg OutputProfile",
+  "application_revision": "60c7637c807671955fcb789cbc94a5763ae799a2",
+  "candidate_build_manifest_sha256": "9b6dcfdd2880fe3dc8f4ff423fece29308cafcb466c61c920198dc0b65ea3a3b",
+  "candidate_source_map_sha256": "31249092472da40e02057b612c3ded98fbaebbe902c487619d198eb1225cd3c2",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "engine_freeze_sha256": "dc627b4e2c39cefbfd5147e27e69636a30e7c56acb2799ed358167bec139e49b",
+  "actual_exits": {
+    "coordinator_outer": 0,
+    "scoped_owner": 0,
+    "offline_controls": 0,
+    "cold_preflight": 0,
+    "physical_controller": 0
+  },
+  "backends": {
+    "Original": {
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "window_seconds": 31.999998299987055,
+      "samples": 33,
+      "cpu_core_seconds": 1.442872,
+      "peak_concurrent_working_memory_bytes": 1307181056,
+      "delivered_media_bytes": 5988928,
+      "goodput_bytes_per_second": 187154.0099426325,
+      "measured_segment_first_byte_p95_ms": 4.15344798238948,
+      "warmup_first_playable_seconds_per_viewer": [
+        6.284278467006516,
+        6.246802294976078
+      ],
+      "playlist_requests_per_viewer": 32,
+      "complete_segments_delivered": 12,
+      "upstream_connections_total": 1,
+      "upstream_connections_peak": 1,
+      "transform_generations": 1,
+      "viewer_stop_http": [
+        204,
+        204
+      ],
+      "retired_playlist_http": [
+        410,
+        410
+      ],
+      "exact_owned_container_and_host_generation_absence": 2,
+      "owned_project_inventory_empty": true
+    },
+    "Native": {
+      "image_id": "sha256:3f5d4512e615b32cf521df05ee41445677ac4cfd642ffe345e0c156d95d1c116",
+      "window_seconds": 32.00006041000597,
+      "samples": 33,
+      "cpu_core_seconds": 0.722688,
+      "peak_concurrent_working_memory_bytes": 679006208,
+      "delivered_media_bytes": 5988928,
+      "goodput_bytes_per_second": 187153.64668897144,
+      "measured_segment_first_byte_p95_ms": 8.522714022547007,
+      "warmup_first_playable_seconds_per_viewer": [
+        6.2405348169850186,
+        2.0360330009716563
+      ],
+      "playlist_requests_per_viewer": 32,
+      "complete_segments_delivered": 12,
+      "upstream_connections_total": 1,
+      "upstream_connections_peak": 1,
+      "transform_generations": 1,
+      "viewer_stop_http": [
+        204,
+        204
+      ],
+      "retired_playlist_http": [
+        410,
+        410
+      ],
+      "exact_owned_container_and_host_generation_absence": 3,
+      "owned_project_inventory_empty": true
+    }
+  },
+  "native_over_original": {
+    "cpu": 0.5008677138374021,
+    "memory": 0.5194431214278552,
+    "goodput": 0.9999980590655729,
+    "segment_first_byte_p95": 1.0
+  },
+  "screen_thresholds": {
+    "cpu_max": 0.9,
+    "memory_max": 0.95,
+    "goodput_min": 0.95,
+    "segment_first_byte_p95_max": 1.1,
+    "segment_first_byte_p95_floor_ms": 50.0
+  },
+  "raw_segment_first_byte_p95_ratio": 2.0519611798879174,
+  "equal_outputs": {
+    "sequence_numbers": [
+      3,
+      4,
+      5,
+      6,
+      7,
+      8
+    ],
+    "duration_bytes_hash_and_H264_AAC_decode_equal": true
+  },
+  "physical_cleanup_errors": 0,
+  "raw_evidence_sha256": {
+    "paired_report": "e45e832e9e5f582a00c942f3b3dfe7cf50da47c9e1bcb4f0efad11dc23ce967a",
+    "quiet_admission": "f1cc06a9b1f42e0f32037e7ec2307a67d9ccd5073679d37de16eb9db55ab0331",
+    "Original_workload": "6ba21f47e0d5e78ae7b695708950610b764bfbaca9af8cd6224cd79a1f5dc818",
+    "Original_cleanup": "9cfac2685ed1a4ce4f4f06d3fc9129bf7562b43a84dc6a120221a09934dabe11",
+    "Native_workload": "e083d86c7ec2b1c07d6e6760b4242c2d31698a018312fb947ccdbf9b2ebd89b1",
+    "Native_cleanup": "7e62b83581ef38a2f7db1f7cd8689849114574f9b1153732e46c1f093f643a51"
+  },
+  "credit": "Dispatcharr's original authors and contributors retain full application and React UI credit. FFmpeg and dependency authors retain their own project credit."
+}
