@@ -1,6 +1,6 @@
 //! Channel API read contracts from original Dispatcharr serializers and access rules.
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
-use crate::{AuthService, Store, StoreError, User};
+use crate::{catalogue_options, core_reads::JsonReadId, AuthService, Store, StoreError, User};
 use axum::{
     body::Bytes,
     extract::{ConnectInfo, OriginalUri, Path, Query, State},
@@ -10,7 +10,7 @@ use axum::{
     Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
-use serde_json::{json, Map, Value};
+use serde_json::{json, ser::Formatter, Map, Value};
 use sqlx::{Postgres, QueryBuilder, Row};
 use std::{
     collections::{HashMap, HashSet},
@@ -649,16 +649,108 @@ async fn lightweight(
     ));
     filters(&mut query, &params, &user, &auth, false).await?;
     order(&mut query, &params);
-    let mut values = query
+    let values = query
         .build_query_scalar::<Value>()
         .fetch_all(auth.store.pool())
         .await?;
-    if summary {
-        for value in &mut values {
-            value["channel_number"] = float(value["channel_number"].clone());
+    Ok(Json(Value::Array(values)))
+}
+
+// The Original guide action returns Django JsonResponse directly. Its
+// default JSONEncoder uses spaces after separators and ASCII escapes.
+struct SummaryJsonFormatter;
+impl Formatter for SummaryJsonFormatter {
+    fn begin_array_value<W: ?Sized + std::io::Write>(
+        &mut self,
+        writer: &mut W,
+        first: bool,
+    ) -> std::io::Result<()> {
+        if first {
+            Ok(())
+        } else {
+            writer.write_all(b", ")
         }
     }
-    Ok(Json(Value::Array(values)))
+
+    fn begin_object_key<W: ?Sized + std::io::Write>(
+        &mut self,
+        writer: &mut W,
+        first: bool,
+    ) -> std::io::Result<()> {
+        self.begin_array_value(writer, first)
+    }
+
+    fn begin_object_value<W: ?Sized + std::io::Write>(
+        &mut self,
+        writer: &mut W,
+    ) -> std::io::Result<()> {
+        writer.write_all(b": ")
+    }
+
+    fn write_string_fragment<W: ?Sized + std::io::Write>(
+        &mut self,
+        writer: &mut W,
+        fragment: &str,
+    ) -> std::io::Result<()> {
+        let mut remaining = fragment;
+        while let Some((index, character)) = remaining.char_indices().find(|(_, c)| *c > '\u{7e}') {
+            writer.write_all(&remaining.as_bytes()[..index])?;
+            for unit in character.encode_utf16(&mut [0; 2]) {
+                write!(writer, "\\u{unit:04x}")?;
+            }
+            remaining = &remaining[index + character.len_utf8()..];
+        }
+        writer.write_all(remaining.as_bytes())
+    }
+
+    fn write_f64<W: ?Sized + std::io::Write>(
+        &mut self,
+        writer: &mut W,
+        value: f64,
+    ) -> std::io::Result<()> {
+        RangeJsonFormatter.write_f64(writer, value)
+    }
+
+    fn write_number_str<W: ?Sized + std::io::Write>(
+        &mut self,
+        writer: &mut W,
+        value: &str,
+    ) -> std::io::Result<()> {
+        RangeJsonFormatter.write_number_str(writer, value)
+    }
+}
+
+fn summary_reply(mut value: Value) -> Result<Response, StoreError> {
+    let rows = value.as_array_mut().ok_or(StoreError::UnhandledRestFault)?;
+    for row in rows {
+        let original = row.as_object_mut().ok_or(StoreError::UnhandledRestFault)?;
+        let mut ordered = Map::new();
+        for field in [
+            "id",
+            "uuid",
+            "name",
+            "logo_id",
+            "channel_number",
+            "epg_data_id",
+            "channel_group_id",
+        ] {
+            let mut item = original
+                .shift_remove(field)
+                .ok_or(StoreError::UnhandledRestFault)?;
+            if field == "channel_number" {
+                item = float(item);
+            }
+            ordered.insert(field.into(), item);
+        }
+        *row = Value::Object(ordered);
+    }
+    let mut output = Vec::new();
+    serde::Serialize::serialize(
+        &value,
+        &mut serde_json::Serializer::with_formatter(&mut output, SummaryJsonFormatter),
+    )
+    .map_err(|_| StoreError::UnhandledRestFault)?;
+    options_json_response(Bytes::from(output))
 }
 // Source ChannelViewSet.numbers_in_range: the group editor uses this bounded
 // advisory scan. Reuse only the shared ACL, never management-list filters.
@@ -869,8 +961,9 @@ async fn summary(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     Query(params): Query<HashMap<String, String>>,
-) -> Result<Json<Value>, StoreError> {
-    lightweight(auth, peer, headers, params, true).await
+) -> Result<Response, StoreError> {
+    let Json(rows) = lightweight(auth, peer, headers, params, true).await?;
+    summary_reply(rows)
 }
 async fn retrieve(
     State(auth): State<AuthService>,
@@ -895,6 +988,18 @@ async fn retrieve(
     }
     Ok(response)
 }
+
+async fn retrieve_json_alias(
+    auth: State<AuthService>,
+    JsonReadId(id): JsonReadId,
+    peer: ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: OriginalUri,
+    query: Query<HashMap<String, String>>,
+) -> Result<Response, StoreError> {
+    retrieve(auth, Path(id), Method::GET, peer, headers, uri, query).await
+}
+
 pub(crate) fn channel_options_indentation(
     uri: &Uri,
     headers: &HeaderMap,
@@ -1153,6 +1258,26 @@ pub(crate) use batch_epg::{batch_body as channel_mutation_json, mutation_value};
 
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
+        .route(
+            "/api/channels/channels.json",
+            catalogue_options::json_alias(list, catalogue_options::COLLECTION_ALLOW),
+        )
+        .route(
+            "/api/channels/channels/{json_id}",
+            catalogue_options::json_alias(retrieve_json_alias, catalogue_options::DETAIL_ALLOW),
+        )
+        .route(
+            "/api/channels/channels/ids.json",
+            catalogue_options::json_alias(ids, catalogue_options::READ_ONLY_ALLOW),
+        )
+        .route(
+            "/api/channels/channels/summary.json",
+            catalogue_options::json_alias(summary, catalogue_options::READ_ONLY_ALLOW),
+        )
+        .route(
+            "/api/channels/channels/numbers-in-range.json",
+            catalogue_options::json_alias(numbers_in_range, catalogue_options::READ_ONLY_ALLOW),
+        )
         .route("/api/channels/channels/by-uuids/", post(by_uuids))
         .route(
             "/api/channels/channels/numbers-in-range/",
@@ -1173,7 +1298,13 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/channels/channels/assign/",
             post(crate::channel_writes::assign_numbers),
         )
-        .route("/api/channels/channels/summary/", get(summary))
+        .route(
+            "/api/channels/channels/summary/",
+            get(summary).layer(axum::middleware::from_fn_with_state(
+                catalogue_options::READ_ONLY_ALLOW,
+                catalogue_options::typed_get_headers,
+            )),
+        )
         .route(
             "/api/channels/channels/batch-set-epg/",
             post(batch_epg::set),
@@ -1252,6 +1383,74 @@ impl Store {
 
 #[cfg(test)]
 mod tests {
+    #[tokio::test]
+    async fn guide_summary_json_matches_measured_django_response() {
+        use sha2::{Digest, Sha256};
+
+        let row = json!({
+            "epg_data_id": null, "id": 11, "logo_id": 1, "channel_number": 987.5,
+            "channel_group_id": 1, "name": "Owned catalogue M0 M5 channel",
+            "uuid": "5f02f4b2-a536-4e0d-86d0-257148af1ef0",
+        });
+        let response = summary_reply(json!([row])).unwrap();
+        assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+        assert_eq!(response.headers()[header::CONTENT_LENGTH], "184");
+        let body = axum::body::to_bytes(response.into_body(), 512)
+            .await
+            .unwrap();
+        assert_eq!(
+            format!("{:x}", Sha256::digest(body)),
+            "0ef5ecdd6c339258623d6214bdc5c80804baf0dd485ca54c65e14e9105dc43aa",
+        );
+    }
+
+    #[tokio::test]
+    async fn guide_inventory_canonical_reads_use_signed_ordinary_handlers() {
+        use axum::{body::Body, http::Request, Extension};
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("guide-inventory-auth-fixture".into()).unwrap(),
+        );
+        let peer: SocketAddr = "127.0.0.1:12345".parse().unwrap();
+        let router = router(auth.clone())
+            .merge(crate::streams::router(auth))
+            .layer(Extension(ConnectInfo(peer)));
+        for path in [
+            "/api/channels/channels/summary/",
+            "/api/channels/streams/groups/",
+        ] {
+            let request = Request::builder()
+                .uri(path)
+                .header(header::ACCEPT, "application/json")
+                .body(Body::empty())
+                .unwrap();
+            let response = router.clone().oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::UNAUTHORIZED, "{path}");
+        }
+    }
+
+    #[tokio::test]
+    async fn guide_summary_uses_default_django_escapes_and_numeric_spelling() {
+        let row = json!({
+            "epg_data_id": null, "id": 1, "logo_id": null, "channel_number": 1e-7,
+            "channel_group_id": null, "name": "c:afé,😀\u{7f}",
+            "uuid": "owned",
+        });
+        let response = summary_reply(json!([row.clone(), row])).unwrap();
+        let body = axum::body::to_bytes(response.into_body(), 512)
+            .await
+            .unwrap();
+        let expected = r#"{"id": 1, "uuid": "owned", "name": "c:af\u00e9,\ud83d\ude00\u007f", "logo_id": null, "channel_number": 1e-07, "epg_data_id": null, "channel_group_id": null}"#;
+        assert_eq!(
+            body.as_ref(),
+            format!("[{expected}, {expected}]").as_bytes()
+        );
+    }
+
     use super::*;
 
     #[test]

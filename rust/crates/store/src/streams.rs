@@ -1,12 +1,15 @@
 //! Stream management read contracts from original Dispatcharr views/serializers.
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
 use crate::{
+    catalogue_options,
     channels::{base_url, like, page_url, search_terms, stream},
+    core_reads::JsonReadId,
     AuthService, StoreError, User,
 };
 use axum::{
     extract::{ConnectInfo, OriginalUri, Path, Query, State},
     http::HeaderMap,
+    middleware::from_fn_with_state,
     routing::{delete, get},
     Json, Router,
 };
@@ -318,6 +321,38 @@ async fn retrieve(
     )
     .await
 }
+
+async fn retrieve_json_alias(
+    auth: State<AuthService>,
+    JsonReadId(id): JsonReadId,
+    peer: ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: OriginalUri,
+    query: Query<HashMap<String, String>>,
+) -> Result<Json<Value>, StoreError> {
+    retrieve(auth, Path(id), peer, headers, uri, query).await
+}
+
+async fn groups(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Result<Json<Vec<String>>, StoreError> {
+    let user = auth.account_user(peer, headers, false).await?;
+    if user.user_level < 1 {
+        return Err(StoreError::PermissionDenied);
+    }
+    // Original selects all distinct group names that have a stream; the
+    // separate Filter Options endpoint restricts this by active account.
+    let groups = sqlx::query_scalar(
+        "SELECT g.name FROM dispatcharr_channels_channelgroup g \
+         WHERE EXISTS(SELECT 1 FROM dispatcharr_channels_stream s WHERE s.channel_group_id=g.id) \
+         ORDER BY g.name",
+    )
+    .fetch_all(auth.store.pool())
+    .await?;
+    Ok(Json(groups))
+}
 // Original action deliberately omits DRF SearchFilter and removes group
 // filters for both option lists, then account IDs only for account choices.
 async fn filter_options(
@@ -370,9 +405,41 @@ pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route(
             "/api/channels/streams/",
-            get(list).post(crate::stream_writes::create),
+            get(list)
+                .layer(from_fn_with_state(
+                    catalogue_options::COLLECTION_ALLOW,
+                    catalogue_options::typed_get_headers,
+                ))
+                .post(crate::stream_writes::create),
+        )
+        .route(
+            "/api/channels/streams.json",
+            catalogue_options::json_alias(list, catalogue_options::COLLECTION_ALLOW),
+        )
+        .route(
+            "/api/channels/streams/ids.json",
+            catalogue_options::json_alias(ids, catalogue_options::READ_ONLY_ALLOW),
+        )
+        .route(
+            "/api/channels/streams/groups.json",
+            catalogue_options::json_alias(groups, catalogue_options::READ_ONLY_ALLOW),
+        )
+        .route(
+            "/api/channels/streams/filter-options.json",
+            catalogue_options::json_alias(filter_options, catalogue_options::READ_ONLY_ALLOW),
+        )
+        .route(
+            "/api/channels/streams/{json_id}",
+            catalogue_options::json_alias(retrieve_json_alias, catalogue_options::DETAIL_ALLOW),
         )
         .route("/api/channels/streams/ids/", get(ids))
+        .route(
+            "/api/channels/streams/groups/",
+            get(groups).layer(from_fn_with_state(
+                catalogue_options::READ_ONLY_ALLOW,
+                catalogue_options::typed_get_headers,
+            )),
+        )
         .route("/api/channels/streams/filter-options/", get(filter_options))
         .route(
             "/api/channels/streams/bulk-delete/",
@@ -381,6 +448,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route(
             "/api/channels/streams/{id}/",
             get(retrieve)
+                .layer(from_fn_with_state(
+                    catalogue_options::DETAIL_ALLOW,
+                    catalogue_options::typed_get_headers,
+                ))
                 .patch(crate::stream_writes::patch)
                 .put(crate::stream_writes::put)
                 .delete(crate::stream_writes::delete),

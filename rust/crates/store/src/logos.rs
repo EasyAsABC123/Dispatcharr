@@ -1,12 +1,15 @@
 //! Logo read API derived from original Dispatcharr views and serializers.
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
 use crate::{
+    catalogue_options,
     channels::{like, page_url},
+    core_reads::JsonReadId,
     AuthService, StoreError,
 };
 use axum::{
     extract::{ConnectInfo, OriginalUri, Path, State},
     http::{HeaderMap, Uri},
+    middleware::from_fn_with_state,
     routing::get,
     Json, Router,
 };
@@ -338,11 +341,35 @@ async fn retrieve(
 ) -> Result<Json<Value>, StoreError> {
     read(auth, peer, headers, uri, Some(id)).await
 }
+
+async fn retrieve_json_alias(
+    auth: State<AuthService>,
+    peer: ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: OriginalUri,
+    JsonReadId(id): JsonReadId,
+) -> Result<Json<Value>, StoreError> {
+    retrieve(auth, peer, headers, uri, Path(id)).await
+}
+
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
         .route(
             "/api/channels/logos/",
-            get(list).post(crate::logo_writes::create),
+            get(list)
+                .layer(from_fn_with_state(
+                    catalogue_options::COLLECTION_ALLOW,
+                    catalogue_options::typed_get_headers,
+                ))
+                .post(crate::logo_writes::create),
+        )
+        .route(
+            "/api/channels/logos.json",
+            catalogue_options::json_alias(list, catalogue_options::COLLECTION_ALLOW),
+        )
+        .route(
+            "/api/channels/logos/{json_id}",
+            catalogue_options::json_alias(retrieve_json_alias, catalogue_options::DETAIL_ALLOW),
         )
         .route(
             "/api/channels/logos/bulk-delete/",

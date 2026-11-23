@@ -541,6 +541,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/channels/groups/",
             get(list).post(create).options(collection_options),
         )
+        .route(
+            "/api/channels/groups.json",
+            catalogue_options::json_alias(list, catalogue_options::COLLECTION_ALLOW),
+        )
         .route("/api/channels/groups/cleanup/", post(cleanup))
         .route(
             "/api/channels/groups/{json_id}",

@@ -5,13 +5,16 @@ use crate::{
         channel_options_headers, channel_options_indentation, options_json_response,
         serialize_options_json,
     },
+    core_reads::{negotiate_literal_json_alias, omitted_json_method},
     AuthService, StoreError,
 };
 use axum::{
     extract::{ConnectInfo, OriginalUri, Request, State},
+    handler::Handler,
     http::{header, HeaderMap, HeaderValue, Method, StatusCode, Uri},
-    middleware::Next,
+    middleware::{from_fn_with_state, Next},
     response::{IntoResponse, Response},
+    routing::{get, MethodRouter},
 };
 use serde_json::{Map, Value};
 use std::net::SocketAddr;
@@ -204,6 +207,39 @@ pub(super) async fn typed_read_headers(
     }
 }
 
+/// Successful GET metadata for narrowly measured canonical reads.
+pub(super) async fn typed_get_headers(
+    allow: State<&'static str>,
+    request: Request,
+    next: Next,
+) -> Response {
+    if request.method() == Method::GET {
+        return typed_read_headers(allow, request, next).await;
+    }
+    next.run(request).await
+}
+
+async fn alias_headers(
+    state: State<&'static str>,
+    request: Request,
+    next: Next,
+) -> Result<Response, StoreError> {
+    negotiate_literal_json_alias(request.headers())?;
+    Ok(typed_read_headers(state, request, next).await)
+}
+
+pub(super) fn json_alias<H, T, S>(handler: H, allow: &'static str) -> MethodRouter<S>
+where
+    H: Handler<T, S>,
+    T: 'static,
+    S: Clone + Send + Sync + 'static,
+{
+    get(handler)
+        .layer(from_fn_with_state(allow, alias_headers))
+        .head(omitted_json_method)
+        .fallback(omitted_json_method)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -216,6 +252,117 @@ mod tests {
     };
     use sha2::{Digest, Sha256};
     use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn inventory_json_aliases_reach_only_signed_ordinary_read_handlers() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("inventory-route-test-fixture".into()).unwrap(),
+        );
+        let peer: SocketAddr = "127.0.0.1:12345".parse().unwrap();
+        let router = crate::streams::router(auth.clone())
+            .merge(crate::channels::router(auth.clone()))
+            .merge(crate::channel_groups::router(auth.clone()))
+            .merge(crate::logos::router(auth))
+            .layer(Extension(ConnectInfo(peer)));
+        for path in [
+            "/api/channels/streams.json",
+            "/api/channels/streams/21.json",
+            "/api/channels/streams/ids.json",
+            "/api/channels/streams/groups.json",
+            "/api/channels/streams/filter-options.json",
+            "/api/channels/channels.json",
+            "/api/channels/channels/11.json",
+            "/api/channels/channels/ids.json",
+            "/api/channels/channels/summary.json",
+            "/api/channels/channels/numbers-in-range.json",
+            "/api/channels/groups.json",
+            "/api/channels/logos.json",
+            "/api/channels/logos/1.json",
+        ] {
+            for (method, accept, query, expected) in [
+                (
+                    Method::GET,
+                    "application/json",
+                    "",
+                    StatusCode::UNAUTHORIZED,
+                ),
+                (
+                    Method::GET,
+                    "application/json",
+                    "?format=api",
+                    StatusCode::UNAUTHORIZED,
+                ),
+                (Method::GET, "text/html", "", StatusCode::NOT_ACCEPTABLE),
+                (
+                    Method::OPTIONS,
+                    "application/json",
+                    "",
+                    StatusCode::NOT_FOUND,
+                ),
+                (Method::HEAD, "application/json", "", StatusCode::NOT_FOUND),
+                (Method::POST, "application/json", "", StatusCode::NOT_FOUND),
+            ] {
+                let request = Request::builder()
+                    .method(method)
+                    .uri(format!("{path}{query}"))
+                    .header(header::ACCEPT, accept)
+                    .body(Body::empty())
+                    .unwrap();
+                let response = router.clone().oneshot(request).await.unwrap();
+                assert_eq!(response.status(), expected, "{path}{query} {accept}");
+                assert!(!response.headers().contains_key(header::SET_COOKIE));
+            }
+        }
+        for path in [
+            "/api/channels/streams/21",
+            "/api/channels/streams/21%2Ejson",
+            "/api/channels/channels/11.JSON",
+            "/api/channels/channels/11.json.json",
+            "/api/channels/logos/-1.json",
+            "/api/channels/logos/.json",
+        ] {
+            let request = Request::builder()
+                .uri(path)
+                .header(header::ACCEPT, "application/json")
+                .body(Body::empty())
+                .unwrap();
+            let response = router.clone().oneshot(request).await.unwrap();
+            assert_eq!(response.status(), StatusCode::NOT_FOUND, "{path}");
+        }
+    }
+
+    #[tokio::test]
+    async fn inventory_canonical_get_headers_do_not_change_head_or_errors() {
+        let router = Router::new()
+            .route("/ready", get(|| async { axum::Json([1, 2]) }))
+            .route(
+                "/denied",
+                get(|| async { (StatusCode::UNAUTHORIZED, axum::Json([1, 2])) }),
+            )
+            .layer(from_fn_with_state(COLLECTION_ALLOW, typed_get_headers));
+        for (method, uri, expected_vary) in [
+            (Method::GET, "/ready", Some("Accept")),
+            (Method::HEAD, "/ready", None),
+            (Method::GET, "/denied", None),
+        ] {
+            let request = Request::builder()
+                .method(method)
+                .uri(uri)
+                .body(Body::empty())
+                .unwrap();
+            let response = router.clone().oneshot(request).await.unwrap();
+            assert_eq!(
+                response
+                    .headers()
+                    .get(header::VARY)
+                    .and_then(|value| value.to_str().ok()),
+                expected_vary,
+            );
+        }
+    }
 
     #[tokio::test]
     async fn ten_catalogue_metadata_responses_match_physical_source_bytes() {
