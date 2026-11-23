@@ -1,0 +1,126 @@
+{
+  "actual_exits": {
+    "cold": 0,
+    "owner": 0,
+    "proof": 0,
+    "run": 0
+  },
+  "application_source_tree_sha256": "e1efe250b05f506daa6ca972492e05c6c37c4d62fb2a7a21e91c7acca1fd362b",
+  "arms": {
+    "native": {
+      "archive": {
+        "bytes": 37350,
+        "format": "Dispatcharr PostgreSQL backup v2",
+        "matched_own_signed_download": true,
+        "sha256": "93daadc29ecb74e5a4a0337788b1504111cbca4afd6ecfe129ec0b4a510c96b4",
+        "unchanged_after_restore": true
+      },
+      "before_and_after_task_consecutive_zero_queue_samples": 3,
+      "exact_retired": {
+        "containers": 6,
+        "network_id_and_name": 1,
+        "volumes": 2
+      },
+      "operation_journal_sha256": "cecd8395ca8b261ab258775659ff5a27cb7b652862a4e0ba6eea7dd47dc86f7c",
+      "ordinary_readiness": {
+        "clocked_scheduler_enabled": true,
+        "clocked_scheduler_scope": "core-saved-families",
+        "ready": true,
+        "startup": "Started"
+      },
+      "private_receipt_sha256": "8f219d26ab215f54f89bae66dc1bbe285c2682d48c8de9ef8bc1d85b3be89d9a",
+      "restored_and_replaced_login_statuses": [
+        200,
+        200,
+        401
+      ],
+      "restored_scope_sha256": "4b170d3ac55c04bf5b6256a88fabd30da9d2891681ee73de6957e615ce09cc5c",
+      "stable_roles": [
+        "native",
+        "database"
+      ],
+      "tasks": {
+        "create": {
+          "matched_task_identity_sha256": "762ee52ae0867c86d3cf4eb6814ed0d8074071379188dcc3704f12b89805b858",
+          "redis_state": "SUCCESS",
+          "signed_terminal_state": "completed",
+          "submitted_status": 202
+        },
+        "restore": {
+          "matched_task_identity_sha256": "14ff2672919153b5b53b230a23467c95ad20d4fcea4808e76631e4f217d5d2a7",
+          "redis_state": "SUCCESS",
+          "signed_terminal_state": "completed",
+          "submitted_status": 202
+        }
+      }
+    },
+    "original": {
+      "archive": {
+        "bytes": 36818,
+        "format": "Dispatcharr PostgreSQL backup v2",
+        "matched_own_signed_download": true,
+        "sha256": "7e11ddcfdbffaf5f7b7d3358e2ca5d05c2d362250118d70fc22ad88ec2d8f000",
+        "unchanged_after_restore": true
+      },
+      "before_and_after_task_consecutive_zero_queue_samples": 3,
+      "exact_retired": {
+        "containers": 7,
+        "network_id_and_name": 1,
+        "volumes": 2
+      },
+      "operation_journal_sha256": "4946f3d13932dfcc4177575640024137bdde7a2572ebdc806e04a329d898032d",
+      "ordinary_readiness": {
+        "consumer": "stock Celery",
+        "public_readiness": 200
+      },
+      "private_receipt_sha256": "94a258b7e68202706059cf3911c72f71534d2bbe787248263a9b53e7c406492e",
+      "restored_and_replaced_login_statuses": [
+        200,
+        200,
+        401
+      ],
+      "restored_scope_sha256": "d3abf2f5dc21463bea3759e185214031fd9391b16c4b7fefbdc9fdbe102a9d31",
+      "stable_roles": [
+        "original",
+        "worker",
+        "database"
+      ],
+      "tasks": {
+        "create": {
+          "matched_task_identity_sha256": "8363d8615ed241845c7e8c0ef922f6e0cc1dcc83764bcdf04ce1ea142fb12f57",
+          "redis_state": "SUCCESS",
+          "signed_terminal_state": "completed",
+          "submitted_status": 202
+        },
+        "restore": {
+          "matched_task_identity_sha256": "fb1cde0ae9fe08573a451cf8791a98e4d4b7e5fc9c1c5bddce72ffcccab7f54a",
+          "redis_state": "SUCCESS",
+          "signed_terminal_state": "completed",
+          "submitted_status": 202
+        }
+      }
+    }
+  },
+  "build_manifest_sha256": "229eeefe4981eba12cbae67c2606013f70b253733c2aeae2eb501ceeb619a217",
+  "credit": "Original Dispatcharr, React and dependency authors retain full credit.",
+  "distinct_task_identities": 4,
+  "full_M8_accepted": false,
+  "image": "sha256:5d6ffa093510de989c8cfde27e1a98592cd21cdb135f77607166bcd0d5c54f1e",
+  "independent_audit_exit": 0,
+  "no_published_host_ports": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owner_proof_sha256": "180e4e16c525cc0f07dd6af545aea417208f7590ae2f935a4001a5a6b72e8c27",
+  "pair_receipt_sha256": "18fba10be5893df2f55fb39f339a4981d9d33874fb24a2860c2c0aabf5669de0",
+  "performance_verified": false,
+  "platform": "linux/arm64",
+  "preserved_independent_database_and_file_controls": true,
+  "retired": {
+    "containers": 13,
+    "networks": 2,
+    "volumes": 4
+  },
+  "revision": "8fc7eef0a702b57d3c6b20dac171478b38e0196e",
+  "same_schema_archive_restored_per_backend": true,
+  "scheduled_backup_execution_exercised": false,
+  "stage_seal": "a1b10ff9e9d60136e4c18dda92415595bd78e9f63104e6918c1758c0c97699d5"
+}

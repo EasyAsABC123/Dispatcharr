@@ -1,0 +1,144 @@
+{
+  "actual_exits": {
+    "owner": 0,
+    "pair": 0,
+    "preflight": 0,
+    "proof": 0,
+    "run": 0
+  },
+  "arm_exits": {
+    "native": 0,
+    "original": 0
+  },
+  "business_requests_per_arm": 6,
+  "candidate": {
+    "build_manifest_sha256": "1b69a08e8a388048738bda724c5f72194b219cf42df9e74b159cc153648eadf4",
+    "image": "sha256:c664b1bcd90252bf49d6a792c455b6490dce1eb65a695bf9e664f01b3ed0512c",
+    "platform": "linux/arm64",
+    "revision": "390ad8aa16f07de7cbc7364a86f1eb2254faa4c8"
+  },
+  "case_observations": {
+    "bare-active-explicit": {
+      "advertised_lineup_path_followed": "/hdhr/output_profile/4/lineup.json",
+      "discovery": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "guide_numbers": [
+        "2.5",
+        "12"
+      ],
+      "lineup": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "model_sha256": "ce269e9bd8d77c266e73b73c0a0cd60a07639bec6cae881d8d297625d4dda9e8",
+      "output_profile": 4,
+      "status": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_length": "84",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "status_bytes": 84,
+      "status_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37"
+    },
+    "named-inactive-explicit": {
+      "advertised_lineup_path_followed": "/hdhr/owned-hdhr/output_profile/5/lineup.json",
+      "discovery": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "guide_numbers": [
+        "2.5"
+      ],
+      "lineup": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_type": "application/json",
+        "status": 200
+      },
+      "model_sha256": "889e6086d68c0300ace2dacf848bd4d090e988e1f3f4eb863b6872feab032aac",
+      "output_profile": null,
+      "status": {
+        "allow": "GET, HEAD, OPTIONS",
+        "content_length": "84",
+        "content_type": "application/json",
+        "status": 200,
+        "vary": "Accept, origin"
+      },
+      "status_bytes": 84,
+      "status_sha256": "f06249539f3780a26c05931b08f9f0c921d5b6c5b5cb0c15b576412a32d81b37"
+    }
+  },
+  "cases_per_arm": 2,
+  "cleanup": {
+    "native": {
+      "app_db_generations_stable": true,
+      "container_count": 6,
+      "engine_operation_journal_sha256": "0a93b8826854a3c467f53fc591d922692ed16b291a0ec3ccfa9a5653efc9b0ac",
+      "exact_container_and_network_id_rosters_sha256": "0895c0a2721f6dc8d00f6813604bd58b62d2f80cdddecfe226c7387b282430bf",
+      "network_names": [
+        "dispatcharr-390-hdhr-cross-native-3907cc7a0012-net"
+      ],
+      "owner_container_network_volume_inventories_empty": true,
+      "project": "dispatcharr-390-hdhr-cross-native-3907cc7a0012",
+      "runtime_receipt_sha256": "e824013362e533c418fae15b6a79b5f78660236d05d368493add1c6cc808cfda",
+      "scoped_SQL_unchanged": true,
+      "volume_names": [
+        "dispatcharr-390-hdhr-cross-native-3907cc7a0012-appdata",
+        "dispatcharr-390-hdhr-cross-native-3907cc7a0012-pgdata"
+      ]
+    },
+    "original": {
+      "app_db_generations_stable": true,
+      "container_count": 6,
+      "engine_operation_journal_sha256": "791c0d6dea4730f2a2357a6ff50a3e5423f5847f60a5082d67dcb7b7fcf3d827",
+      "exact_container_and_network_id_rosters_sha256": "a6c348015cbedf55741541a63e6c802316c1c83fb86833bb7ce2773bd2887c48",
+      "network_names": [
+        "dispatcharr-390-hdhr-cross-original-3907cc7a0011-net"
+      ],
+      "owner_container_network_volume_inventories_empty": true,
+      "project": "dispatcharr-390-hdhr-cross-original-3907cc7a0011",
+      "runtime_receipt_sha256": "df93bef3212ce8744ae6cc652c024e912ebd231ef660484ecc031aecf74ac8cb",
+      "scoped_SQL_unchanged": true,
+      "volume_names": [
+        "dispatcharr-390-hdhr-cross-original-3907cc7a0011-appdata",
+        "dispatcharr-390-hdhr-cross-original-3907cc7a0011-pgdata"
+      ]
+    }
+  },
+  "credit": "Original Dispatcharr, React and dependency authors and contributors retain full credit.",
+  "exact_retired_resources": {
+    "containers": 12,
+    "networks": 2,
+    "volumes": 4
+  },
+  "fixture_proof_sha256": "903c677089a1d9d37f9235f5cfcad92ff4720a45a2721b3740f6c4de5e55575a",
+  "formal_M7_accepted": false,
+  "input_seal": "c8bdbc03e78e28a17e8bfea6361de60bac562f4052dff43c49d3499a218346f4",
+  "migration_rows": 184,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "pair_receipt_sha256": "43d99688afccf91f357cef9676426074f1e27f74c2101077a8b7bbc2711cd208",
+  "performance_verified": false,
+  "published_host_ports": false,
+  "scoped_checked_tables": [
+    "core_coresettings",
+    "core_outputprofile",
+    "dispatcharr_channels_channel",
+    "dispatcharr_channels_channeloverride",
+    "dispatcharr_channels_channelprofile",
+    "dispatcharr_channels_channelprofilemembership",
+    "django_migrations",
+    "hdhr_hdhrdevice"
+  ],
+  "seeded_output_profile_ids": {
+    "default": 3,
+    "explicit": 4,
+    "inactive": 5
+  },
+  "signed_auth_required": false
+}

@@ -1,0 +1,75 @@
+{
+  "application_revision": "390ad8aa16f07de7cbc7364a86f1eb2254faa4c8",
+  "comparison": {
+    "comparison_prefix_covers_bytes_served_in_failed_sample": true,
+    "consecutive_matching_slices_after_rewind": 151,
+    "damaged_slice_exact_prefix_bytes": 3104,
+    "damaged_slice_sha256": "3a9c4c82b6f003c4e1b06a5592fc2aaae0d32fe4fe9ee1494c96c5db94fc3f04",
+    "healthy_source_slice_bytes": 5170,
+    "healthy_source_slice_index_zero_based": 255,
+    "healthy_source_slice_sha256": "7300718713bed362b20d4d4e6336e357f6c5638a96c011229c9298a97d849c23",
+    "matching_ordered_initial_normalized_h264_vcl": 255,
+    "origin_prefix_bytes_read_for_comparison": 6291420,
+    "origin_prefix_vcl_count": 629,
+    "raw_media_retained_on_lappy": true,
+    "remaining_unlocalized_boundary": [
+      "proxy HTTP stream",
+      "recorder MPEG-TS capture"
+    ],
+    "rewound_to_source_slice_index_zero_based": 128,
+    "source_generation_and_final_remux_introduction_excluded_for_observed_specimen": true,
+    "truncated_bytes": 2066
+  },
+  "milestone_accepted": false,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_credit": false,
+  "scope": "ARM64 scheduled DVR origin and earlier invalid access-unit comparison",
+  "specimens": {
+    "native_585fde95_prior_r3": {
+      "actual_exit": 1,
+      "exact_mkv_sha256": "62e38e599fca098b546904f924a17e717674375b68555fa9595a50d9a89f846f",
+      "final_mkv_strict_decode_exit": 183,
+      "first_256_normalized_h264_vcl_equal_to_failed_original": true,
+      "ordered_first_256_vcl_sha256": "aa460c2eaf5238cf9c4d21d65f183e220cc238cc523f77280a9f3ed847abe11a"
+    },
+    "original_tail_r3": {
+      "actual_exit": 1,
+      "actual_origin_sha256": "b994dfd68f54cdf58ed169f2da7b4e4843d1632acad4b9a178408bdad1f450c0",
+      "after_backend_stop_sha256": "f893e219a4e5c639741b539dc93ad63accaf4199ebdd4162d891506a1b25a05a",
+      "cleanup_sha256": "ae5c24a59f094aacff2696f25581a6ead48ed98f9035bddf8433fc18d79d091d",
+      "complete_hls_video_failure_zero_based": 255,
+      "exact_cleanup": true,
+      "exact_mkv_sha256": "b6049ce3670151ba250ce04293fa7d5beaa8a8cc16ea9aa8ef49dee6a95e65a1",
+      "failed_hls_segment": "seg_00002.ts",
+      "final_mkv_strict_decode_exit": 183,
+      "last_hls_segment_strict_decode_exit": 0,
+      "origin_probe_bytes_served": 4850776,
+      "video_failure_in_segment_zero_based": 55
+    },
+    "original_upstream_capture_r1": {
+      "actual_exit": 1,
+      "cleanup_marker_absent": true,
+      "cleanup_sha256": "0255948d6b4e57af9c74060e7fad6b568be7e3f9c99ef3203b1bf6c0965a583b",
+      "container_network_volume_and_host_group_retirement_independently_rechecked": true,
+      "diagnostic_sha256": "8d5a88e978ef307bc6d4922a29955ceaf77ce6db5c76d05378ee691d79f021bd",
+      "exact_cleanup": true,
+      "exact_origin_bytes": 45001748,
+      "exact_origin_matches_failed_original_origin_log": true,
+      "exact_origin_sha256": "b994dfd68f54cdf58ed169f2da7b4e4843d1632acad4b9a178408bdad1f450c0",
+      "exact_origin_strict_decode_exit": 0,
+      "execution_sha256": "6a25cfdcf5b7d384bd146d0fc58546bd07feef2fe917533cb9e8188e2f57ff81",
+      "final_mkv_strict_decode_exit": 0,
+      "kernel_delivered_frames": 9042,
+      "kernel_dropped_frames": 0,
+      "matching_frames_without_timestamp": 0,
+      "native_counterpart_started": false,
+      "ordinary_scheduled_dvr_passed": true,
+      "recorder_body_retained": false,
+      "route_matches": 2,
+      "tap_exited": 1,
+      "tap_failure": "UpstreamCaptureNotQualified",
+      "tap_terminal_sha256": "81ccaef8304185ae26e5b93b4ac9ab8758f38d9426d06bf263bc9efb07bc7107",
+      "truncated_frames": 0
+    }
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "acceptance_boundary": {
+    "full_m10": false,
+    "mixed_schema": false,
+    "performance": false,
+    "production": false,
+    "strict_no_effect_from_cold_boot": false
+  },
+  "audit": {
+    "cleanup_receipt_sha256": "36b7bdef4cbdb591fb9092cc4ec784f7256435973a3ec6788a3f7ecbbe1afe76",
+    "independent_proof_byte_identical": true,
+    "independent_proof_sha256": "f5a8464d0f6f98def2914990d4c538f5a85d3e58484819465c7089e621ab1cf4",
+    "inputs_seal_sha256": "3ce71869cbfeeaf62c5584dcbd25a7ec83d5047513699c0644153936d614a9ad",
+    "raw_private_fixture_material_in_packet": false,
+    "run_receipt_sha256": "30463725d0976fb38e17e1758ec01e4541a552fc01cdaab72b19dd50600c4141"
+  },
+  "candidate": {
+    "arm_manifest": "sha256:c6633ad6bad847ca9dd5dd64f7c8177601ad724ff3b5f9809fa93f1d82c2dc31",
+    "image_config": "sha256:8b6c5ec38179301e2ede52ba65c04486796645e804df65669c3f20101e517fee",
+    "image_index": "sha256:c664b1bcd90252bf49d6a792c455b6490dce1eb65a695bf9e664f01b3ed0512c",
+    "packaged_uid": "65532:65532",
+    "platform": "linux/arm64",
+    "revision": "390ad8aa16f07de7cbc7364a86f1eb2254faa4c8",
+    "sqlite_opt_ins_disabled": true
+  },
+  "cold_return": {
+    "acknowledged_rename_visible": true,
+    "all_other_startup_effect_fields_equal_in_scope": true,
+    "cold_reference_stop_exit": 0,
+    "cold_source_stop_exit": 0,
+    "matched_cold_startup_timestamp_effects": 4,
+    "post_ready_read_has_exact_schema_rows_sequences_login_audit": true,
+    "source_issued_session_read_http": 200,
+    "source_native_and_control_retained_observations_preserved": true
+  },
+  "copy": {
+    "cold_preboot_raw_column_order_rows_sequences_match": true,
+    "columns": 501,
+    "declared_ordinal_compactions": 73,
+    "fresh_cold_restore_exits": [
+      0,
+      0
+    ],
+    "initial_dump_exits": [
+      0,
+      0
+    ],
+    "initial_logical_reference_restores": 2,
+    "initial_restore_exits": [
+      0,
+      0
+    ],
+    "no_drop_or_clobber": true,
+    "stopped_written_common_dump_exit": 0,
+    "tables": 62,
+    "temporary_archives_retired": true
+  },
+  "ingress": {
+    "business_patches": 1,
+    "http_200": 14,
+    "methods": {
+      "GET": 10,
+      "PATCH": 1,
+      "POST": 3
+    },
+    "one_ingress_generation": true,
+    "original_reconciliation_patches": 0,
+    "patch_backend": "Native",
+    "per_route": [
+      {
+        "requests": 6,
+        "route": "Original",
+        "signed_requests": 3,
+        "source_issued_session_requests": 3
+      },
+      {
+        "requests": 6,
+        "route": "Native",
+        "signed_requests": 5,
+        "source_issued_session_requests": 3
+      },
+      {
+        "requests": 2,
+        "route": "OriginalCold",
+        "signed_requests": 2,
+        "source_issued_session_requests": 2
+      }
+    ],
+    "requests": 14,
+    "route_switches_drained": true,
+    "signed_requests": 10,
+    "source_issued_session_requests": 8
+  },
+  "literal_exits": {
+    "independent_proof": 0,
+    "owner_outer": 0,
+    "preflight": 0,
+    "runtime": 0,
+    "runtime_receipt": 0
+  },
+  "original": {
+    "image_index": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "source_inputs": 1211,
+    "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "publication_base": "0aebc22f",
+  "schema": "dispatcharr-m10-arm64-cold-copy-return/1",
+  "scope": "isolated same-schema cold logical-copy rollback after one acknowledged Native write",
+  "status": "passed",
+  "teardown": {
+    "compose_down_exit": 0,
+    "container_ids_absent": 16,
+    "exact_cleanup": true,
+    "owned_named_volumes_absent": 6,
+    "owned_networks_absent": 1,
+    "prestart_absence_verified": true,
+    "project_rosters_empty": true,
+    "reserved_container_names_absent": 16,
+    "verified_against_literal_ledger": true
+  },
+  "write": {
+    "fields": [
+      "name",
+      "updated_at"
+    ],
+    "rows": 1,
+    "source_and_other_rows_unchanged": true,
+    "writer_exit": 0,
+    "writer_sql_sessions_after_stop": 0
+  }
+}

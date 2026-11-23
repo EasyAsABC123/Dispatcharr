@@ -1,0 +1,92 @@
+{
+  "arm64_measured": false,
+  "candidate": "390ad8aa16f07de7cbc7364a86f1eb2254faa4c8",
+  "cohorts": {
+    "1": {
+      "cpu_ratio": {
+        "max_ratio": 0.8783427636810816,
+        "median_ratio": 0.8651693074753026,
+        "min_ratio": 0.84386481953843
+      },
+      "memory_ratio": {
+        "max_ratio": 0.7112128371726718,
+        "median_ratio": 0.7026627756317886,
+        "min_ratio": 0.6978747081806196
+      }
+    },
+    "10": {
+      "cpu_ratio": {
+        "max_ratio": 0.3035007488005964,
+        "median_ratio": 0.2887305515541051,
+        "min_ratio": 0.2847439628746969
+      },
+      "memory_ratio": {
+        "max_ratio": 0.6852642408618427,
+        "median_ratio": 0.6808705451472038,
+        "min_ratio": 0.67996570515832
+      }
+    },
+    "100": {
+      "cpu_ratio": {
+        "max_ratio": 0.0914104598873738,
+        "median_ratio": 0.09091146807733912,
+        "min_ratio": 0.08951549035469654
+      },
+      "memory_ratio": {
+        "max_ratio": 0.5660042583392477,
+        "median_ratio": 0.5632529547227985,
+        "min_ratio": 0.5104825061306255
+      }
+    }
+  },
+  "experiment_actual_exit": 0,
+  "experiment_sha256": "ea09ef4bc6049dff5c95d9e9bafa89f11867ae2783ad6232048d87428646d09e",
+  "formal_m1_acceptance": false,
+  "fresh_plan_sha256": "504a3162849202c92fa69cadce871c694425ba9158fe02aaac46734b767def37",
+  "host": "beepboop",
+  "host_warmup_observation": {
+    "file_write_first_UTC": "2026-11-23T09:36:48.854300646Z",
+    "file_write_last_UTC": "2026-11-23T09:36:50.112328338Z",
+    "next_resource_sample_start_UTC": "2026-11-23T09:37:08Z",
+    "other_work": "one low-priority synthetic FFmpeg generation",
+    "overlaps_a_timed_CPU_or_memory_window": false,
+    "prior_resource_sample_end_UTC": "2026-11-23T09:36:34Z",
+    "scope": "final Source qualification warmup only",
+    "verified_previous_and_next_resource_window_timestamps": true
+  },
+  "host_warmup_observation_sha256": "1be6ea0809e4ac81c4e8420eb48c7e03bc5ab84e8c8283d4e2923de12eebfd99",
+  "independent_verifier_actual_exit": 0,
+  "native_binary_sha256": "22ebb3fd86631d019642da0e45fd9f8ab9c6d5a02184b5b47ae0d17fdb5df752",
+  "original_commit": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owned_physical_cleanup": [
+    {
+      "observed_container_identities_absent": 7,
+      "project": "dispatcharr-m1-core-functional-29738b52c7",
+      "project_labels_empty": true
+    },
+    {
+      "observed_container_identities_absent": 28,
+      "project": "dispatcharr-m1-core-functional-b22246851f",
+      "project_labels_empty": true
+    }
+  ],
+  "package_manifest_sha256": "2de6a7abd447ddc75e75c78f6fe1ced430a5ee1642dc37331483a51a3b083c1c",
+  "passed": true,
+  "period_ms": 250,
+  "physical_windows_total": 27,
+  "platform": "linux/amd64",
+  "runtime_budget": {
+    "equal_final_bytes": true,
+    "max_cpu_ratio": 0.9,
+    "max_peak_working_memory_ratio": 0.95,
+    "min_pacing_fraction": 0.95,
+    "min_timed_bytes_match_ratio_per_class": 0.98,
+    "min_timed_samples": 50,
+    "timed_seconds": 60,
+    "warmup_seconds": 15
+  },
+  "scope": "bounded core plus identical stopped-web PostgreSQL/Redis",
+  "source_only_windows": 9,
+  "verified_pairs": 9,
+  "whole_service_measured": false
+}

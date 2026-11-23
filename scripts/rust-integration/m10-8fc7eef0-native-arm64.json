@@ -1,0 +1,228 @@
+{
+  "audit_operations": {
+    "Git_writes": 0,
+    "engine_calls": 0,
+    "network_calls": 0
+  },
+  "defaults_review": {
+    "ARM_Xtream_VOD_response_workflow_covered": false,
+    "inherited_intentional_behavior": "Ordinary Xtream VOD-info enabled when flag absent, reviewed at27531; not a new8fc delta.",
+    "unchanged": "Compose/deployment configuration and build defaults"
+  },
+  "hashes": {
+    "AMD_gate": "96b84f35eece92688f1533f0aac07233842d0113d02c09db630cbd6b4d1beb21",
+    "AMD_package_proof": "52c7e9068267d7d4c5aa722e9450952ed966cf9f94e36daba02488a44fd61845",
+    "AMD_strict_proof": "3e884cecb7a6ad9d7516905dc13a2b44352c4f621cb3e75375d38cd632793cac",
+    "auth": "e285e7aedfc5776f504a0742b12690624b772b7a946a246c7fbdbcca5688e8b5",
+    "auth_literal_exit_journal": "d51f67f3bb604ec2d308d5f8e2f6909e9d9da8649bbdb48d0f2570d27eeaaad6",
+    "binding": "ef5d79ec511bbd9a1dbd859e7cf93135752dd3485009d6cba1b41b86f35c3fa7",
+    "build": "229eeefe4981eba12cbae67c2606013f70b253733c2aeae2eb501ceeb619a217",
+    "coordinator_lock": "7f1844336854932fd8809273cc5ddaa0a72c133b48ce4ba34bd8f59f69d2f960",
+    "delta_object_manifest": "cee8ac654784e770135113c60901e988ebe4c646dd06e8026ea118c6b17ea8a4",
+    "image_identity": "7b7d19d1c470c141267d4488c3806aa73a6c2efa3060f692d228bbc7cea509ea",
+    "independent_private_audit": "27a28b8d26a39c523df840e987063e093303458cdc1d203200ee638aa0122ee1",
+    "owner_proof": "77f0a4e9612ee89683ad4ab142854dc791454cc7946452be58afec28259896cf",
+    "package_literal_exit_journal": "180b139d92de8acb6af053af8447cd8c1b0d89afb19c84b04225611ac13a7bb8",
+    "package_receipt": "fe909877b2be916d8cdb36318e75ae7a1de64efc88ea1b82363b89350d72b20d",
+    "plan": "27c74b7d2695462287e7320af79bd117637559d3ed6efbdfcf691ea04413928f",
+    "reviewed_scope": "e087d60bacb706d38c695e57362cfe0bd5ce4012775cb71deab75229b4e5933f",
+    "source_test_manifest": "cdd60921ec550c7c03efe8db25d77a5c5dbc667c64c14f6671374341d38753ab"
+  },
+  "independent_evidence_sha256": "34f7c3e866e9dc33ac7247bb44a675f74e4f4f73f17dbc482872c1f1a0313d42",
+  "journal_counts": {
+    "auth_absence_exit1": 15,
+    "auth_records": 57,
+    "package_absence_exit1": 4,
+    "package_records": 26
+  },
+  "limitations": [
+    "This audit used retained artifacts and local Git reads; no new engine inventory or physical run.",
+    "Retirement is supported by sealed executor checks, typed receipts and literal operation/exit journals. Raw per-resource-ID inspect stdout/stderr was not retained.",
+    "Host regression provenance is the transferred source-bound coordinator envelopes and hash-verified streams, not a local Cargo rerun.",
+    "The prior16-case-per-arm AMD gate is audited with its explicit limits; it does not certify ARM store response workflows, broad RBAC, media/jobs, performance, full Compose or full M10.",
+    "No registry publish, deployment, operational default switch or Git delivery was performed."
+  ],
+  "owner_literal_exits": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "package": {
+    "ARM64_manifest": "sha256:7c4fd0becb2bb28699400975f1e6a137e8dd309f5ef7c67af14c92fb1a9cb497",
+    "config_digest_from_BuildKit_log": "sha256:6a415b26b4aa91e22330c05d8cfd937795b5bce409644e4bdbcea8f437ea3d1b",
+    "default_features": true,
+    "image_OCI_index": "sha256:5d6ffa093510de989c8cfde27e1a98592cd21cdb135f77607166bcd0d5c54f1e",
+    "native_dynamic_closures_verified": true,
+    "outputs": {
+      "usr/local/bin/dispatcharr-operator": {
+        "ELF": "ELF64 little-endian AArch64",
+        "assembly_mode": "0755",
+        "bytes": 9709456,
+        "sha256": "23a67efb3328d60ea9de8922899859fd9368e8f6260e9d8bb4c02bec94f2d6da"
+      },
+      "usr/local/bin/dispatcharr-rs": {
+        "ELF": "ELF64 little-endian AArch64",
+        "assembly_mode": "0755",
+        "bytes": 102484088,
+        "sha256": "7eada2eb2b24de79e5ced27db7a8c39a9aface303ac9b9f4432443b8cab1caca"
+      }
+    },
+    "platform": "linux/arm64",
+    "runtime": "Pinned ordinary runtime; six retained base layers and two binary COPY layers",
+    "sqlite_build_args_both_zero": true,
+    "toolchain": "Rust1.90.0 locked/offline release jobs2",
+    "uid": "65532:65532"
+  },
+  "publication": {
+    "authority_message": "3640efc0-9d38-46c5-be63-065e3e467b31",
+    "independent_network_verification": false,
+    "revision": "0aebc22fcc9b0ec08be8f3d6f10032172a6b0083",
+    "status": "coordinator-reported published and verified"
+  },
+  "publication_status": "sanitized evidence for the migration branch",
+  "recorded_retirement": {
+    "auth_containers_retired": 5,
+    "candidate_exit": 0,
+    "content_container_absent": true,
+    "no_shared_cleanup": true,
+    "owned_network_and_volume_absent": true,
+    "temporary_auth_config_removed": true
+  },
+  "retirement_audit_method": "Verified sealed executor checks, typed receipts and operation/exit journals. Raw resource-ID inspect stdout/stderr was not retained by this executor; no new engine inventory performed.",
+  "roles_and_effects": {
+    "accounts_after": 1,
+    "accounts_before": 0,
+    "active_admin_login_rows": 1,
+    "group_rows_before_and_after": 0,
+    "guest_uid": 65532,
+    "mutating_guest_runs": 1,
+    "scope": "clean first-admin, JWT login, protected group read; no broad RBAC matrix"
+  },
+  "schema": "dispatcharr-sanitized-native-arm64-package-evidence/1",
+  "scoped_AMD_gate": {
+    "ARM_wire_result_claimed": false,
+    "HEAD_cross_listener_bodies_compared": false,
+    "HTML_negotiation_measured": false,
+    "build_manifest_sha256": "bfe1e896447d3d9d4c345f20f524faaad68d2eb573dbd72fbaea2694c534c1b7",
+    "cases_per_arm": 16,
+    "formal_M0_passed": false,
+    "gate_sha256": "96b84f35eece92688f1533f0aac07233842d0113d02c09db630cbd6b4d1beb21",
+    "image": "sha256:87aa72b586d4836135f5fba988ad966c37edffa1dca4494e34cf98d4de735a9c",
+    "ordinary_package_zero_authority": "Coordinator650fdc47-5b6a-4934-aa1b-0ea5f66482c7; raw package leaf has no exit field",
+    "package_proof_sha256": "52c7e9068267d7d4c5aa722e9450952ed966cf9f94e36daba02488a44fd61845",
+    "status": "passed",
+    "strict_proof_sha256": "3e884cecb7a6ad9d7516905dc13a2b44352c4f621cb3e75375d38cd632793cac"
+  },
+  "signed_auth": {
+    "authenticated_channel_groups": 200,
+    "channel_groups": 0,
+    "empty_setup": 200,
+    "first_admin_creation": 200,
+    "jwt_login": 200,
+    "jwt_pair_type_checked": true,
+    "setup_closed": 200
+  },
+  "source": {
+    "anchor_revision": "390ad8aa16f07de7cbc7364a86f1eb2254faa4c8",
+    "application_files": 2162,
+    "application_revision": "8fc7eef0a702b57d3c6b20dac171478b38e0196e",
+    "application_tree_sha256": "e1efe250b05f506daa6ca972492e05c6c37c4d62fb2a7a21e91c7acca1fd362b",
+    "archive_sha256": "5095dc708d5a9e9e05d91ed12e129e09d98476983c1c295e79b5375e1d25bf24",
+    "change_kinds": {
+      "rust/crates/store/datasets/source-core-profile-options.json": "added",
+      "rust/crates/store/src/core_reads.rs": "modified"
+    },
+    "changed_paths": [
+      "rust/crates/store/datasets/source-core-profile-options.json",
+      "rust/crates/store/src/core_reads.rs"
+    ],
+    "dataset_addition": {
+      "after_sha256": "9dcd63e2d9715ad18c0d795847a1e201611032d4e31c0c6d7853b86dd8db1f3c",
+      "before_sha256": null,
+      "mode": "0664",
+      "path": "rust/crates/store/datasets/source-core-profile-options.json"
+    },
+    "direct_parent": "0fe91f168eb37f037759302d4a2e5fa491080523",
+    "exact_custody_object_files": 12,
+    "leaf_postimage_sha256": "10f1f0d9dddbb8c317822a1284025b784397ef8279279bc60c7bdf8057fcf940",
+    "leaf_preimage_sha256": "656609f7611f851682462d14483e320070f249a5c6efe438caea6b57918f3400",
+    "materialized_context_files": 16979,
+    "protected_files": 497,
+    "protected_tree_sha256": "1a74175c6e698b04b2d2bc0d44b92210893113161a959e319fe919c6faedf716",
+    "vendor_support_and_modes_match_proven_anchor": true
+  },
+  "source_bound_host_checks": {
+    "Main_cargo_check_passed": true,
+    "additional_ignored_cases": [],
+    "execution_wrapper_prefix": [
+      "timeout",
+      "--signal=TERM",
+      "--kill-after=15s",
+      "720s"
+    ],
+    "focused_Rust_tests_passed": 6,
+    "literal_argv_authority": "Coordinator12095768-545c-4e0e-a7a9-17f5ca9cfaea, exact runner/source-bound streams; not inferred from logs.",
+    "physical_ARM_strict_wire_pair_coverage": false,
+    "receipts": {
+      "main": {
+        "actual_exit": 0,
+        "argv": [
+          "cargo",
+          "+1.90.0",
+          "check",
+          "--offline",
+          "--locked",
+          "-j",
+          "2",
+          "-p",
+          "dispatcharr-rs",
+          "--bin",
+          "dispatcharr-rs"
+        ],
+        "cases": [
+          "dispatcharr-rs binary type-check"
+        ],
+        "receipt_sha256": "163e6ec6988baccbd77e5b9f43ada896f4d610280dfd5b89d403ce2ce4a0b6b2",
+        "stderr_sha256": "5495323d2a2b1103db9f2eb007eade28557310dd0a9a947002ab1db029ea562d",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "store": {
+        "actual_exit": 0,
+        "argv": [
+          "cargo",
+          "+1.90.0",
+          "test",
+          "--offline",
+          "--locked",
+          "-j",
+          "2",
+          "-p",
+          "dispatcharr-store",
+          "--lib",
+          "core_reads::"
+        ],
+        "cases": [
+          "core_reads::json_profile_tests::literal_decimal_suffixes_are_independent_of_canonical_routes",
+          "core_reads::json_profile_tests::alias_extractor_does_not_change_the_canonical_path",
+          "core_reads::direct_profile_wire_tests::direct_profile_routes_share_ordered_get_headers_with_empty_head",
+          "core_reads::direct_profile_options_tests::direct_profile_options_metadata_matches_four_source_entities",
+          "core_reads::special_source16_order_tests::existing_collection_dto_preserves_actual_source16_literal_bytes",
+          "core_reads::direct_profile_options_tests::direct_profile_options_routes_require_normal_authentication"
+        ],
+        "receipt_sha256": "a8a850103f62d5eaf3092e4f9e73df0a4643af38d06beae06405c1b84b46c530",
+        "stderr_sha256": "46d8a43c6a1724d918fa1b0d63462cdc5ec080f461d197ae3535309c74aa1a2e",
+        "stdout_sha256": "a559b243643dd4faca7fed072ffac9232d75879f190eff3510c9df0841567825"
+      }
+    }
+  },
+  "startup": {
+    "guest_architecture": "aarch64",
+    "guest_uid": 65532,
+    "migrations": 184,
+    "react_html": 200,
+    "ready": 200,
+    "tables": 62
+  },
+  "status": "independently_audited_retained_physical_pass"
+}
