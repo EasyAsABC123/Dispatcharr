@@ -1,0 +1,265 @@
+{
+  "candidate_image_id": "sha256:1cad036b0aa3d882d2d1ca201d7ea87def49be853f321421b71a6348e3a63936",
+  "candidate_manifest_sha256": "7bb0e5fa109c7c6bfe68dbba7468b7dd2d570d936da45083bf086582b1c6c28f",
+  "candidate_revision": "9f29dbedf8a144605dd05038024425d55b079ca0",
+  "credit": "Original Dispatcharr, FFmpeg and dependency contributors retain full credit.",
+  "fixture_seal_sha256": "672fb50b6c8b4e64588da013e0bf6ce88b822eaafd0f3bd8aadfb3e16c7f4096",
+  "full_M3_passed": false,
+  "historical_proof_credited_to_candidate": false,
+  "host_execution_sha256": "bdaca26ce5cfef78cc5fb97d604ad9ccf817eab4a3fa2ede67e55d66fd006cb3",
+  "literal_physical_exit": 0,
+  "observations": {
+    "Native": {
+      "cleanup_verified": true,
+      "exact_loopback_mappings_verified": true,
+      "image_id": "sha256:1cad036b0aa3d882d2d1ca201d7ea87def49be853f321421b71a6348e3a63936",
+      "matched_viewers": 2,
+      "ordinary_stop_statuses": [
+        204,
+        204
+      ],
+      "peak_active_upstream": 1,
+      "profile_and_origin_exactly_retired": true,
+      "profile_processes": 1,
+      "real_decodes": {
+        "one": {
+          "actual_exit": 0,
+          "settled": true,
+          "streams": {
+            "audio": {
+              "codec": "aac",
+              "frames": 192
+            },
+            "video": {
+              "codec": "h264",
+              "frames": 100
+            }
+          }
+        },
+        "two": {
+          "actual_exit": 0,
+          "settled": true,
+          "streams": {
+            "audio": {
+              "codec": "aac",
+              "frames": 192
+            },
+            "video": {
+              "codec": "h264",
+              "frames": 100
+            }
+          }
+        }
+      },
+      "segments_each_viewer": [
+        {
+          "bytes": 320164,
+          "sequence": 2,
+          "sha256": "862ca83ce5b7f78b5113e2713cf633e1fcc40237a85902105cddb8c81b07db10"
+        },
+        {
+          "bytes": 301740,
+          "sequence": 3,
+          "sha256": "1000449dfc5a79b43fbf5fa36f143ec50a18ae00ca26bce9dbc17164a8687454"
+        }
+      ],
+      "upstream_connections": 1
+    },
+    "Original": {
+      "cleanup_verified": true,
+      "exact_loopback_mappings_verified": true,
+      "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+      "matched_viewers": 2,
+      "ordinary_stop_statuses": [
+        204,
+        204
+      ],
+      "peak_active_upstream": 1,
+      "profile_and_origin_exactly_retired": true,
+      "profile_processes": 1,
+      "real_decodes": {
+        "one": {
+          "actual_exit": 0,
+          "settled": true,
+          "streams": {
+            "audio": {
+              "codec": "aac",
+              "frames": 192
+            },
+            "video": {
+              "codec": "h264",
+              "frames": 100
+            }
+          }
+        },
+        "two": {
+          "actual_exit": 0,
+          "settled": true,
+          "streams": {
+            "audio": {
+              "codec": "aac",
+              "frames": 192
+            },
+            "video": {
+              "codec": "h264",
+              "frames": 100
+            }
+          }
+        }
+      },
+      "segments_each_viewer": [
+        {
+          "bytes": 320164,
+          "sequence": 2,
+          "sha256": "862ca83ce5b7f78b5113e2713cf633e1fcc40237a85902105cddb8c81b07db10"
+        },
+        {
+          "bytes": 301740,
+          "sequence": 3,
+          "sha256": "1000449dfc5a79b43fbf5fa36f143ec50a18ae00ca26bce9dbc17164a8687454"
+        }
+      ],
+      "upstream_connections": 1
+    }
+  },
+  "ordinary_healthy_HLS_verified": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owner_loss": {
+    "first_launch": {
+      "checkpoint": "ExactOwnedLoopbackEndpoint",
+      "cleanup_verified": true,
+      "physical_actual_exit": 1,
+      "strict_actual_exit": 1
+    },
+    "retry": {
+      "cleanup_verified": true,
+      "original_timeline": [
+        {
+          "marker": null,
+          "offset": 0,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 3,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 8,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 15,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 25,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 35,
+          "status": 200
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 45,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 55,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 65,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 75,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 90,
+          "status": 404
+        }
+      ],
+      "passive_offsets": [
+        85,
+        87,
+        89
+      ],
+      "physical_actual_exit": 0,
+      "rust_timeline": [
+        {
+          "marker": null,
+          "offset": 0,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 3,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 8,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 15,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 25,
+          "status": 200
+        },
+        {
+          "marker": null,
+          "offset": 35,
+          "status": 200
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 45,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 55,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 65,
+          "status": 404
+        },
+        {
+          "marker": "playlist stale",
+          "offset": 75,
+          "status": 404
+        },
+        {
+          "marker": "session expired",
+          "offset": 90,
+          "status": 410
+        }
+      ],
+      "strict_actual_exit": 1,
+      "strict_proof_sha256": "aa5f875a6bf724dce8dbb29f6567bc5f64f3c148c83137ce007f0668cac45e9f"
+    }
+  },
+  "performance_verified": false,
+  "profile_configuration_sha256": "a213d9bca945ace9219daac8584b41fa4a0d6adaeae4959a387dd462a3669171",
+  "report_sha256": "3dd2c1733047479592c239dbf8668fc14dab6ce64ce0af454e6806750cfdd18f",
+  "same_regular_segments_by_sequence": true,
+  "scope": "ordinary shared profiled HLS"
+}

@@ -1,0 +1,84 @@
+{
+  "architecture": "linux/arm64",
+  "original": {
+    "actual_exit": 0,
+    "auth_http": {
+      "empty_groups": true,
+      "first_admin_created": 200,
+      "jwt_login_status": 200,
+      "no_bearer_status": 401,
+      "protected_read": 200,
+      "setup_closed": 200,
+      "setup_ready": 200,
+      "signed_access_and_refresh": true
+    },
+    "exact_cleanup": true,
+    "locale": "C.UTF-8",
+    "physical_receipt_sha256": "8b4cc4206f124fec7e7064ae012e5030512679fd74638e1649a3fc8c0f824f36",
+    "postgres_checkpoints": [
+      {
+        "database_encoding": "-",
+        "database_exists": false,
+        "login_locale_utf8": true,
+        "phase": "before_database_guarantee",
+        "template_encoding": "UTF8"
+      },
+      {
+        "database_encoding": "UTF8",
+        "database_exists": true,
+        "login_locale_utf8": true,
+        "phase": "before_encoding_check",
+        "template_encoding": "UTF8"
+      }
+    ],
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "runtime_image": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+    "serving_roles": [
+      "beat",
+      "daphne",
+      "nginx",
+      "postgres",
+      "redis",
+      "uwsgi",
+      "worker_celery",
+      "worker_dvr"
+    ],
+    "socket_types": [
+      "uwsgi",
+      "postgresql"
+    ],
+    "source_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "source_overlay": true,
+    "unchanged_source_count": 1211
+  },
+  "performance_verified": false,
+  "rust": {
+    "actual_exit": 0,
+    "auth_http": {
+      "empty_groups": true,
+      "first_admin_created": 200,
+      "jwt_login_status": 200,
+      "no_bearer_status": 401,
+      "protected_read": 200,
+      "setup_closed": 200,
+      "setup_ready": 200,
+      "signed_access_and_refresh": true
+    },
+    "exact_cleanup": true,
+    "features_off": true,
+    "image_config": "sha256:0c29c33adeb2a3fdb902478774cf817790c43a103b5b390891b2373ab6b7878e",
+    "image_index": "sha256:2a0d4807711a9443e46443d40b7fbad6d00f97e15ff76158b2e6154621e2fb92",
+    "physical_receipt_sha256": "195fe24b12be8e1677659cfdb781d5043e57c4a7f37dd82b0acea47a6c8556ca",
+    "platform_manifest": "sha256:31360fc7fa79ce5a91ac4cb6375605c245de2489270bb8ede43bc43bac4a7468",
+    "revision": "e7dda7fec25918644a29de56454bad7f9a63fd83",
+    "roles": [
+      "cache",
+      "candidate",
+      "data-init",
+      "database",
+      "observer"
+    ],
+    "source_tree": "3738fcd39f5e9cf0cce5608ad2d5b73370c745f6fdf2bb4248b60c21f2030852"
+  },
+  "scope": "two native ARM64 startup prerequisites, separate projects, Lappy"
+}

@@ -1,0 +1,9 @@
+# Healthy HLS sharing and abrupt owner loss on 9f29dbe
+
+A fresh Original and ordinary Rust Compose comparison on AMD64 passed healthy HLS sharing. Each backend served two viewers from one provider connection and one FFmpeg profile process. Both regular transport-stream segments matched exactly on each viewer and across backends. Each decode produced 100 H.264 frames and 192 AAC frames. Both stop requests returned HTTP 204 on each backend, and exact teardown passed. The physical runner and independent proof each exited 0.
+
+A separate Rust run isolated old-playlist behavior after abrupt owner loss. The retained physical Original result supplied the response timeline. Rust served two viewers with one upstream before the exact owner was killed, delivered decodable media through the surviving replica, and kept the surviving process generation. The first ten playlist responses matched Original through 75 seconds. At 90 seconds, Original returned `404 Playlist stale` and Rust returned `410 Session expired`. Read-only observations showed the bound capability present at 87 seconds and absent at 89 seconds, while the stale playlist descriptor survived. The physical capture and exact teardown passed. Its strict parity reducer exited 1.
+
+The first owner-loss attempt failed the baseline loopback endpoint check before the Rust replicas were started. Its teardown passed. The distinct retry bound the allocated loopback port through Compose and container inspection, then completed all eleven requests. The [aggregate receipt](../scripts/rust-integration/m3-9f29dbe-hls-sharing-and-owner-loss.json) preserves the healthy pass and both owner-loss attempts. Healthy sharing and prior fMP4 recovery cover separate cases. Old HLS capability lifetime, wider failover and comparative performance remain open.
+
+Original Dispatcharr, FFmpeg and dependency contributors retain full credit.
