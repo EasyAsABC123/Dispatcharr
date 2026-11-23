@@ -5,7 +5,7 @@
 //! packaged application build. Non-integer IDs and other FIFO families remain
 //! explicit unsupported scope; no whole-job-system acceptance is implied.
 use crate::{
-    refresh_protocol::{RefreshCall, RefreshMessage},
+    refresh_protocol::{canonical_decimal_source_id, RefreshCall, RefreshMessage},
     refresh_worker::{RefreshExecutor, ServiceExecutor},
     scheduled_refresh_driver::{Config as DriverConfig, ScheduledRefreshDriver},
     transport::{Config as JobsConfig, Jobs},
@@ -367,25 +367,42 @@ impl RefreshApplication {
         if matches!(id, Value::Array(_) | Value::Object(_)) {
             return source_500();
         }
-        // The Source view forwards these other scalar forms unchanged. They
-        // need separate typed protocol/execution support; do not fake a202.
-        let Some(source_id) = id.as_i64().filter(|id| *id > 0) else {
-            return (
-                StatusCode::NOT_IMPLEMENTED,
-                Json(json!({"error":"This refresh ID shape has not been migrated"})),
-            )
-                .into_response();
+        let decimal = id
+            .as_str()
+            .and_then(canonical_decimal_source_id)
+            .filter(|_| {
+                object
+                    .get("force")
+                    .is_none_or(|value| value == &Value::Bool(false))
+            });
+        let Some(source_id) = id.as_i64().filter(|id| *id > 0).or(decimal) else {
+            return unqualified_import_id();
         };
-        let dummy = sqlx::query_scalar::<_, bool>(
-            "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE id=$1 AND source_type='dummy')",
-        )
-        .bind(source_id)
-        .fetch_one(self.inner.store.pool())
-        .await;
-        match dummy {
-            Ok(true) => return (StatusCode::BAD_REQUEST, Json(json!({"success":false,"message":"Dummy EPG sources do not require refreshing."}))).into_response(),
-            Ok(false) => {},
-            Err(_) => return source_500(),
+        if decimal.is_some() {
+            // Only the existing active XMLTV case has signed, end-to-end Source evidence.
+            let eligible = sqlx::query_scalar::<_, bool>(
+                "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE id=$1 AND is_active AND source_type='xmltv')",
+            )
+            .bind(source_id)
+            .fetch_one(self.inner.store.pool())
+            .await;
+            match eligible {
+                Ok(true) => {}
+                Ok(false) => return unqualified_import_id(),
+                Err(_) => return source_500(),
+            }
+        } else {
+            let dummy = sqlx::query_scalar::<_, bool>(
+                "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE id=$1 AND source_type='dummy')",
+            )
+            .bind(source_id)
+            .fetch_one(self.inner.store.pool())
+            .await;
+            match dummy {
+                Ok(true) => return (StatusCode::BAD_REQUEST, Json(json!({"success":false,"message":"Dummy EPG sources do not require refreshing."}))).into_response(),
+                Ok(false) => {}
+                Err(_) => return source_500(),
+            }
         }
         let force = object.get("force").is_some_and(python_truth);
         let task_id = Uuid::new_v4();
@@ -398,7 +415,7 @@ impl RefreshApplication {
             parent: None,
             eta: None,
             call: RefreshCall {
-                args: vec![json!(source_id)],
+                args: vec![id.clone()],
                 kwargs: json!({"force":force}).as_object().unwrap().clone(),
                 list_args: false,
             },
@@ -446,6 +463,13 @@ impl dispatcharr_store::sd_source_http::InitialXmltvRefresh for RefreshApplicati
     }
 }
 
+fn unqualified_import_id() -> Response {
+    (
+        StatusCode::NOT_IMPLEMENTED,
+        Json(json!({"error":"This refresh ID shape has not been migrated"})),
+    )
+        .into_response()
+}
 fn python_truth(value: &Value) -> bool {
     match value {
         Value::Null => false,

@@ -34,12 +34,36 @@ impl RefreshMessage {
     /// Exact immediate import API arguments, after protocol parsing has
     /// established the actual published message fields.
     pub(crate) fn has_explicit_api_arguments(&self) -> bool {
+        let [argument] = self.call.args.as_slice() else {
+            return false;
+        };
+        let source_matches = argument.as_i64() == Some(self.source_id)
+            || (!self.force
+                && self.retry == 0
+                && self.eta.is_none()
+                && self.parent.is_none()
+                && self.root == self.task_id
+                && argument.as_str().and_then(canonical_decimal_source_id) == Some(self.source_id));
         !self.call.list_args
-            && self.call.args.as_slice() == [json!(self.source_id)]
+            && source_matches
             && self.call.kwargs.len() == 1
             && self.call.kwargs.get("force").and_then(Value::as_bool) == Some(self.force)
     }
 }
+/// Canonical spelling is also the exact Source lock and provider-group suffix.
+pub(crate) fn canonical_decimal_source_id(value: &str) -> Option<i64> {
+    if value.len() > 10
+        || !value
+            .as_bytes()
+            .first()
+            .is_some_and(|&b| matches!(b, b'1'..=b'9'))
+        || !value.bytes().all(|byte| byte.is_ascii_digit())
+    {
+        return None;
+    }
+    value.parse::<i32>().ok().map(i64::from)
+}
+
 impl RefreshCall {
     pub fn initial(source_id: i64) -> Self {
         Self {
@@ -58,7 +82,25 @@ impl RefreshCall {
             list_args: true,
         }
     }
+    fn has_decimal_source(&self) -> bool {
+        self.args.first().is_some_and(Value::is_string)
+    }
+
     pub fn resolve(&self) -> Result<(i64, bool, u32), ProtocolError> {
+        if self.has_decimal_source() {
+            if self.list_args
+                || self.args.len() != 1
+                || self.kwargs.len() != 1
+                || self.kwargs.get("force") != Some(&Value::Bool(false))
+            {
+                return Err(invalid());
+            }
+            let source = self.args[0]
+                .as_str()
+                .and_then(canonical_decimal_source_id)
+                .ok_or_else(invalid)?;
+            return Ok((source, false, 0));
+        }
         if self.args.len() > 3 || self.kwargs.len() > 3 {
             return Err(invalid());
         }
@@ -95,6 +137,8 @@ impl RefreshCall {
                 } else {
                     "False".to_owned()
                 }
+            } else if let Some(decimal) = v.as_str() {
+                format!("'{decimal}'")
             } else {
                 v.to_string()
             }
@@ -127,6 +171,7 @@ pub fn encode(
     let resolved = message.call.resolve()?;
     if resolved != (message.source_id, message.force, message.retry)
         || message.parent.is_none() && message.root != message.task_id
+        || message.call.has_decimal_source() && (message.parent.is_some() || message.eta.is_some())
     {
         return Err(invalid());
     }
@@ -173,7 +218,7 @@ pub fn parse(bytes: &[u8]) -> Result<RefreshMessage, ProtocolError> {
     let mut e: Value = serde_json::from_slice(bytes).map_err(|_| invalid())?;
     // Actual Source periodic worker34 preserves this bounded marker only in
     // task.request.headers; ordinary result metadata/body semantics are unchanged.
-    crate::periodic_headers::take(&mut e)?;
+    let periodic = crate::periodic_headers::take(&mut e)?;
     let h = &e["headers"];
     if h["task"] != NAME || h["timelimit"] != json!([HARD_TIME_LIMIT_SECONDS, null]) {
         return Err(invalid());
@@ -222,6 +267,9 @@ pub fn parse(bytes: &[u8]) -> Result<RefreshMessage, ProtocolError> {
         list_args: h["argsrepr"].as_str().is_some_and(|v| v.starts_with('[')),
     };
     let (source_id, force, retry) = call.resolve()?;
+    if call.has_decimal_source() && (periodic.is_some() || parent.is_some() || eta.is_some()) {
+        return Err(invalid());
+    }
     let (args, kwargs) = call.repr()?;
     if h["argsrepr"] != args || h["kwargsrepr"] != kwargs {
         return Err(invalid());
@@ -292,6 +340,63 @@ mod tests {
             count += 1
         }
         assert_eq!(count, 11)
+    }
+    #[test]
+    fn canonical_decimal_api_root_keeps_source_wire_and_integer_lookup() {
+        let task = Uuid::parse_str("fd998eb9-5f75-4abe-987e-a10db69fa42b").unwrap();
+        let mut message = RefreshMessage {
+            task_id: task,
+            source_id: 3,
+            force: false,
+            retry: 0,
+            root: task,
+            parent: None,
+            eta: None,
+            call: RefreshCall {
+                args: vec![json!("3")],
+                kwargs: json!({"force": false}).as_object().unwrap().clone(),
+                list_args: false,
+            },
+        };
+        let reply = Uuid::parse_str("2b75ad35-87aa-4caa-aeba-072f156a76b2").unwrap();
+        let delivery = Uuid::parse_str("09564d08-b39e-469b-90ec-985855f450a9").unwrap();
+        let wire = encode(&message, reply, delivery, "gen1@localhost").unwrap();
+        let envelope: Value = serde_json::from_slice(&wire).unwrap();
+        let body: Value =
+            serde_json::from_slice(&STANDARD.decode(envelope["body"].as_str().unwrap()).unwrap())
+                .unwrap();
+        assert_eq!(body[0], json!(["3"]));
+        assert_eq!(envelope["headers"]["argsrepr"], "('3',)");
+        assert_eq!(envelope["headers"]["kwargsrepr"], "{'force': False}");
+        let parsed = parse(&wire).unwrap();
+        assert_eq!(parsed, message);
+        assert!(parsed.has_explicit_api_arguments());
+        message.call.args[0] = json!("4");
+        assert!(!message.has_explicit_api_arguments());
+        message.call.args[0] = json!("3");
+        assert_eq!(
+            message.source_id.to_string(),
+            message.call.args[0].as_str().unwrap()
+        );
+        for value in [
+            json!("03"),
+            json!("+3"),
+            json!(" 3"),
+            json!("0"),
+            json!("2147483648"),
+            json!(true),
+            json!(3.0),
+            Value::Null,
+        ] {
+            message.call.args[0] = value;
+            assert!(encode(&message, reply, delivery, "gen1@localhost").is_err());
+        }
+        message.call.args[0] = json!("3");
+        message.call.kwargs.insert("force".into(), json!(true));
+        assert!(encode(&message, reply, delivery, "gen1@localhost").is_err());
+        message.call.kwargs.insert("force".into(), json!(false));
+        message.parent = Some(reply);
+        assert!(encode(&message, reply, delivery, "gen1@localhost").is_err());
     }
     #[test]
     fn argument_types_duplicates_unknowns_and_bounds_are_rejected() {

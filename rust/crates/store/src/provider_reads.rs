@@ -19,6 +19,8 @@ use serde_json::{json, Map, Value};
 use sqlx::{postgres::PgRow, Row};
 use std::net::SocketAddr;
 
+mod m3u_json;
+
 #[derive(Clone, Copy)]
 enum Resource {
     Accounts,
@@ -873,12 +875,61 @@ pub(crate) fn router(auth: AuthService) -> Router {
                 .delete(crate::provider_mutations::delete_filter),
         )
         .route(
+            "/api/m3u/accounts/{parent}/profiles.json",
+            get(m3u_json::read_profiles)
+                .layer(from_fn_with_state(
+                    CRUD_LIST_ALLOW,
+                    epg_library_json_headers,
+                ))
+                .post(m3u_json::create_profile)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/m3u/accounts/{parent}/profiles/{json_id}",
+            get(m3u_json::read_profile)
+                .layer(from_fn_with_state(
+                    CRUD_DETAIL_ALLOW,
+                    epg_library_json_headers,
+                ))
+                .patch(m3u_json::patch_profile)
+                .put(m3u_json::put_profile)
+                .delete(m3u_json::delete_profile)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/m3u/accounts/{parent}/filters.json",
+            get(m3u_json::read_filters)
+                .layer(from_fn_with_state(
+                    CRUD_LIST_ALLOW,
+                    epg_library_json_headers,
+                ))
+                .post(m3u_json::create_filter)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/m3u/accounts/{parent}/filters/{json_id}",
+            get(m3u_json::read_filter)
+                .layer(from_fn_with_state(
+                    CRUD_DETAIL_ALLOW,
+                    epg_library_json_headers,
+                ))
+                .patch(m3u_json::patch_filter)
+                .put(m3u_json::put_filter)
+                .delete(m3u_json::delete_filter)
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
             "/api/m3u/server-groups.json",
             get(server_groups_json)
                 .layer(from_fn_with_state(
                     CRUD_LIST_ALLOW,
                     epg_library_json_headers,
                 ))
+                .post(m3u_json::create_group)
                 .head(omitted_json_method)
                 .fallback(omitted_json_method),
         )
@@ -889,6 +940,9 @@ pub(crate) fn router(auth: AuthService) -> Router {
                     CRUD_DETAIL_ALLOW,
                     epg_library_json_headers,
                 ))
+                .patch(m3u_json::patch_group)
+                .put(m3u_json::put_group)
+                .delete(m3u_json::delete_group)
                 .head(omitted_json_method)
                 .fallback(omitted_json_method),
         )

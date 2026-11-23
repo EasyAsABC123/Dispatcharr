@@ -871,7 +871,16 @@ mod tests {
                     "",
                     StatusCode::NOT_FOUND,
                 ),
-                (Method::POST, "application/json", "", StatusCode::NOT_FOUND),
+                (
+                    Method::POST,
+                    "application/json",
+                    "",
+                    if path == "/api/m3u/server-groups.json" {
+                        StatusCode::UNAUTHORIZED
+                    } else {
+                        StatusCode::NOT_FOUND
+                    },
+                ),
             ] {
                 let request = Request::builder()
                     .method(method.clone())

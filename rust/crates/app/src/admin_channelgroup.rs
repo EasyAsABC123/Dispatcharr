@@ -174,10 +174,17 @@ fn http_date(time: chrono::DateTime<Utc>) -> String {
 
 fn html_response(status: StatusCode, html: String, csrf: Option<&Csrf>) -> Response {
     let now = Utc::now();
+    // The view's CSRF decorator varies signed pages on Cookie before CORS.
+    // For redirects and denials the outer session middleware adds Cookie last.
+    let vary = if csrf.is_none() && matches!(status, StatusCode::FOUND | StatusCode::FORBIDDEN) {
+        "origin, Cookie"
+    } else {
+        "Cookie, origin"
+    };
     let mut response = Response::builder()
         .status(status)
         .header(header::CONTENT_TYPE, "text/html; charset=utf-8")
-        .header(header::VARY, "Cookie")
+        .header(header::VARY, vary)
         .body(Body::from(html))
         .expect("admin HTML headers");
     if status != StatusCode::FORBIDDEN {
@@ -380,7 +387,8 @@ fn write_paginator(html: &mut String, page: &DjangoChannelGroupPage, selection: 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use axum::body::to_bytes;
+    use axum::{body::to_bytes, http::Request, middleware, routing::get, Router};
+    use tower::ServiceExt;
 
     #[tokio::test]
     async fn anonymous_route_has_exact_local_next_and_private_headers() {
@@ -392,7 +400,7 @@ mod tests {
             format!("{LOGIN}?next={PATH}")
         );
         assert_eq!(reply.headers()[header::CACHE_CONTROL], NO_CACHE);
-        assert_eq!(reply.headers()[header::VARY], "Cookie");
+        assert_eq!(reply.headers()[header::VARY], "origin, Cookie");
         assert!(!reply.headers().contains_key(header::SET_COOKIE));
         assert!(to_bytes(reply.into_body(), 16).await.unwrap().is_empty());
 
@@ -430,7 +438,7 @@ mod tests {
         assert!(!html.contains("/jsi18n/") && !html.contains("/channelgroup/add/"));
         assert!(html.contains(&format!("value=\"{}\"", csrf.token)));
         let response = html_response(StatusCode::OK, html, Some(&csrf));
-        assert_eq!(response.headers()[header::VARY], "Cookie");
+        assert_eq!(response.headers()[header::VARY], "Cookie, origin");
         assert!(response.headers()[header::SET_COOKIE]
             .to_str()
             .unwrap()
@@ -439,6 +447,47 @@ mod tests {
             .to_str()
             .unwrap()
             .contains("Max-Age=31449600; Path=/; SameSite=Lax"));
+    }
+
+    #[tokio::test]
+    async fn changelist_vary_order_preserves_middleware_and_cookie_boundaries() {
+        let app = Router::new()
+            .route(
+                "/",
+                get(|| async {
+                    let csrf = Csrf::for_response(None);
+                    html_response(StatusCode::OK, String::new(), Some(&csrf))
+                }),
+            )
+            .route(
+                "/forbidden",
+                get(|| async { html_response(StatusCode::FORBIDDEN, String::new(), None) }),
+            )
+            .route(
+                "/invalid-page",
+                get(|| async { redirect(&format!("{PATH}?e=1")) }),
+            )
+            .layer(middleware::from_fn(crate::response_headers::apply));
+        for (path, status, vary, csrf) in [
+            ("/", StatusCode::OK, "Cookie, origin", true),
+            ("/forbidden", StatusCode::FORBIDDEN, "origin, Cookie", false),
+            ("/invalid-page", StatusCode::FOUND, "origin, Cookie", false),
+        ] {
+            let response = app
+                .clone()
+                .oneshot(Request::builder().uri(path).body(Body::empty()).unwrap())
+                .await
+                .unwrap();
+            assert_eq!(response.status(), status);
+            let headers = response.headers();
+            assert_eq!(headers.get_all(header::VARY).iter().count(), 1);
+            assert_eq!(headers[header::VARY], vary);
+            assert_eq!(headers.contains_key(header::SET_COOKIE), csrf);
+            assert_eq!(
+                headers.contains_key(header::CACHE_CONTROL),
+                status != StatusCode::FORBIDDEN
+            );
+        }
     }
 
     #[test]
