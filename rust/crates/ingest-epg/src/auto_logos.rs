@@ -4,7 +4,7 @@ use crate::{ImportError, SwapPolicyContext};
 use dispatcharr_store::Store;
 use futures_util::TryStreamExt;
 use serde_json::{json, Value};
-use sqlx::{Connection, PgConnection, Postgres, QueryBuilder, Row};
+use sqlx::{PgConnection, Postgres, QueryBuilder, Row};
 use std::{
     collections::HashMap,
     sync::{Arc, OnceLock},
@@ -128,23 +128,24 @@ async fn apply(
     context: SwapPolicyContext,
     config: LogoConfig,
 ) -> Result<LogoStats, ImportError> {
-    let mut connection = store.pool().acquire().await?.detach();
-    // Original iterator observes one ordered ID snapshot, then reads each batch
-    // afresh. A holdable private cursor keeps that snapshot without a Rust Vec
-    // proportional to the complete catalogue or an open write transaction.
-    sqlx::query("BEGIN").execute(&mut connection).await?;
-    let declare=format!("DECLARE rust_epg_auto_logos CURSOR WITH HOLD FOR SELECT c.id FROM dispatcharr_channels_channel c JOIN epg_epgdata e ON e.id=c.epg_data_id WHERE e.epg_source_id={source_id} AND e.icon_url IS NOT NULL AND e.icon_url<>'' ORDER BY c.id ASC");
-    sqlx::query(&declare).execute(&mut connection).await?;
-    sqlx::query("COMMIT").execute(&mut connection).await?;
-    let result = batches(&mut connection, context, config).await;
-    // Finish actual cursor cleanup before the retained guard/slot is released.
-    let closed = sqlx::query("CLOSE rust_epg_auto_logos")
-        .execute(&mut connection)
-        .await;
+    let mut connection = store.pool().acquire().await?;
+    let result = async {
+        // Original iterator observes one ordered ID snapshot, then reads each batch
+        // afresh. A holdable private cursor keeps that snapshot without a Rust Vec
+        // proportional to the complete catalogue or an open write transaction.
+        sqlx::query("BEGIN").execute(&mut *connection).await?;
+        let declare=format!("DECLARE rust_epg_auto_logos CURSOR WITH HOLD FOR SELECT c.id FROM dispatcharr_channels_channel c JOIN epg_epgdata e ON e.id=c.epg_data_id WHERE e.epg_source_id={source_id} AND e.icon_url IS NOT NULL AND e.icon_url<>'' ORDER BY c.id ASC");
+        sqlx::query(&declare).execute(&mut *connection).await?;
+        sqlx::query("COMMIT").execute(&mut *connection).await?;
+        let result = batches(&mut connection, context, config).await;
+        // Finish actual cursor cleanup before the retained guard/slot is released.
+        sqlx::query("CLOSE rust_epg_auto_logos").execute(&mut *connection).await?;
+        result
+    }.await;
     let _ = connection.close().await;
-    closed?;
     result
 }
+
 async fn batches(
     connection: &mut PgConnection,
     context: SwapPolicyContext,

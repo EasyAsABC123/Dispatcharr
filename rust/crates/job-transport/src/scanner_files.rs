@@ -524,9 +524,11 @@ impl Service {
         file: &WatchFile,
         context: &mut RunContext,
     ) -> Result<Object, Error> {
-        let mut c = self.connection().await?;
+        let mut c = self.inner.pool.acquire().await?;
         let result = self.create_owned(&mut c, file, context).await;
-        settle(c).await?;
+        let ready = c.ping().await;
+        let close = c.close().await;
+        check_settlement(ready, close)?;
         match result {
             Err(Error::Insert { epg, error }) if epg == file.epg => {
                 if let Some(pg) = error
@@ -610,6 +612,13 @@ impl Service {
 async fn settle(mut c: PgConnection) -> Result<(), Error> {
     let barrier = c.ping().await;
     let close = c.close().await;
+    check_settlement(barrier, close)
+}
+
+fn check_settlement(
+    barrier: Result<(), sqlx::Error>,
+    close: Result<(), sqlx::Error>,
+) -> Result<(), Error> {
     if barrier.is_err() || close.is_err() {
         Err(Error::Operational)
     } else {

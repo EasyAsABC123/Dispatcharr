@@ -28,6 +28,7 @@ pub struct Executor {
     #[cfg(target_os = "linux")]
     pub(super) taskless: Arc<std::sync::OnceLock<super::normal_backup::SelectedTaskless>>,
     uncertain_restore: RestoreUncertain,
+    restore_scheduler: Arc<std::sync::OnceLock<crate::normal_beat::RestorePauseClient>>,
     cache: String,
     pub(super) config: PgConfig,
     pub(super) runtime: Runtime,
@@ -98,6 +99,7 @@ impl Executor {
             #[cfg(target_os = "linux")]
             taskless: Arc::new(std::sync::OnceLock::new()),
             uncertain_restore: Arc::new(std::sync::Mutex::new(Vec::with_capacity(1))),
+            restore_scheduler: Arc::new(std::sync::OnceLock::new()),
             cache,
             config,
             runtime,

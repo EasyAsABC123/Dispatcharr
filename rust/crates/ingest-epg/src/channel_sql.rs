@@ -3,7 +3,7 @@
 use crate::{channel_core::ChannelRow, ImportError};
 use dispatcharr_store::Store;
 use futures_util::TryStreamExt;
-use sqlx::{Connection, PgConnection, Postgres, QueryBuilder, Row};
+use sqlx::{Connection, Postgres, QueryBuilder, Row};
 use std::{
     collections::{HashMap, HashSet},
     sync::{
@@ -77,8 +77,7 @@ impl Cached {
     }
 }
 pub(crate) struct ChannelSession {
-    connection: PgConnection,
-    _retained: Arc<dyn Send + Sync>,
+    connection: dispatcharr_store::GuideSqlConnection,
     source_id: i64,
     existing: HashSet<String>,
     scanned: HashSet<String>,
@@ -100,7 +99,7 @@ impl ChannelSession {
         max_keys: usize,
         max_bytes: usize,
     ) -> Result<Self, ImportError> {
-        let connection = store.pool().acquire().await?.detach();
+        let connection = dispatcharr_store::GuideSqlConnection::acquire(store, retained).await?;
         let memory = Arc::new(Memory {
             used: AtomicUsize::new(0),
             max: max_bytes,
@@ -108,7 +107,6 @@ impl ChannelSession {
         let base = memory.hold(128 * 1024)?;
         let mut this = Self {
             connection,
-            _retained: retained,
             source_id,
             existing: HashSet::new(),
             scanned: HashSet::new(),
@@ -124,7 +122,7 @@ impl ChannelSession {
             sqlx::query("SELECT tvg_id FROM epg_epgdata WHERE epg_source_id=$1 LIMIT $2")
                 .bind(source_id)
                 .bind(max_keys as i64 + 1)
-                .fetch(&mut this.connection);
+                .fetch(&mut *this.connection);
         let mut count = 0;
         while let Some(row) = rows.try_next().await? {
             count += 1;
@@ -147,7 +145,7 @@ impl ChannelSession {
         Ok(
             sqlx::query_scalar::<_, i64>("SELECT count(*) FROM epg_epgdata WHERE epg_source_id=$1")
                 .bind(self.source_id)
-                .fetch_one(&mut self.connection)
+                .fetch_one(&mut *self.connection)
                 .await? as u64,
         )
     }
@@ -165,7 +163,7 @@ impl ChannelSession {
         }
         if self.existing.contains(&row.tvg_id) {
             if !self.cached.contains_key(&row.tvg_id) {
-                let existing=sqlx::query("SELECT id::bigint AS id,name,icon_url FROM epg_epgdata WHERE epg_source_id=$1 AND tvg_id=$2").bind(self.source_id).bind(&row.tvg_id).fetch_optional(&mut self.connection).await?;
+                let existing=sqlx::query("SELECT id::bigint AS id,name,icon_url FROM epg_epgdata WHERE epg_source_id=$1 AND tvg_id=$2").bind(self.source_id).bind(&row.tvg_id).fetch_optional(&mut *self.connection).await?;
                 let Some(existing) = existing else {
                     self.existing.remove(&row.tvg_id);
                     self.create(row)?;
@@ -238,7 +236,7 @@ impl ChannelSession {
                 .push_bind(self.source_id);
         });
         query.push(" ON CONFLICT DO NOTHING");
-        query.build().execute(&mut self.connection).await?;
+        query.build().execute(&mut *self.connection).await?;
         self.creates.clear();
         Ok(())
     }
@@ -280,17 +278,25 @@ impl ChannelSession {
             ids.push_bind(id);
         }
         query.push(")");
-        query.build().execute(&mut self.connection).await?;
+        query.build().execute(&mut *self.connection).await?;
         self.updates.clear();
         Ok(())
     }
     pub(crate) async fn finish(mut self) -> Result<(), ImportError> {
+        let result = self.finish_pending().await;
+        let close = self.connection.close().await;
+        result?;
+        close?;
+        Ok(())
+    }
+
+    async fn finish_pending(&mut self) -> Result<(), ImportError> {
         self.flush_creates().await?;
         self.flush_updates().await?;
         // Snapshot the whole stale selection once, as Django's collector does,
         // then keep every public cascade/delete in one transaction. Private
         // temporary rows bound client memory even for a large catalogue.
-        sqlx::query("CREATE TEMP TABLE dispatcharr_channel_stale_names(tvg_id text PRIMARY KEY) ON COMMIT PRESERVE ROWS").execute(&mut self.connection).await?;
+        sqlx::query("CREATE TEMP TABLE dispatcharr_channel_stale_names(tvg_id text PRIMARY KEY) ON COMMIT PRESERVE ROWS").execute(&mut *self.connection).await?;
         let _stale_bytes = self
             .memory
             .hold(self.existing.len() * std::mem::size_of::<&String>() + 4096)?;
@@ -302,9 +308,9 @@ impl ChannelSession {
             query.push_values(chunk.iter(), |mut row, value| {
                 row.push_bind(value.as_str());
             });
-            query.build().execute(&mut self.connection).await?;
+            query.build().execute(&mut *self.connection).await?;
         }
-        sqlx::query("CREATE TEMP TABLE dispatcharr_channel_stale_ids ON COMMIT PRESERVE ROWS AS SELECT e.id FROM epg_epgdata e JOIN dispatcharr_channel_stale_names s ON s.tvg_id=e.tvg_id WHERE e.epg_source_id=$1 AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channel c WHERE c.epg_data_id=e.id)").bind(self.source_id).execute(&mut self.connection).await?;
+        sqlx::query("CREATE TEMP TABLE dispatcharr_channel_stale_ids ON COMMIT PRESERVE ROWS AS SELECT e.id FROM epg_epgdata e JOIN dispatcharr_channel_stale_names s ON s.tvg_id=e.tvg_id WHERE e.epg_source_id=$1 AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channel c WHERE c.epg_data_id=e.id)").bind(self.source_id).execute(&mut *self.connection).await?;
         let mut tx = self.connection.begin().await?;
         sqlx::query("DELETE FROM epg_programdata WHERE epg_id IN(SELECT id FROM dispatcharr_channel_stale_ids)").execute(&mut *tx).await?;
         sqlx::query("UPDATE dispatcharr_channels_channeloverride SET epg_data_id=NULL WHERE epg_data_id IN(SELECT id FROM dispatcharr_channel_stale_ids)").execute(&mut *tx).await?;

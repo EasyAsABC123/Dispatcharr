@@ -627,6 +627,10 @@ pub trait CurrentSchemaRestoreAuthority: Send + Sync {
     fn current_database(&self) -> &str;
     fn server_started_micros(&self) -> i64;
     fn expected_migrations(&self) -> &std::collections::BTreeSet<(String, String)>;
+    /// Called before the FIRST possibly destructive command submission.
+    /// Default preserves existing unobserved callers. An observer must retain
+    /// this per-execution fact through failures; it is not proof of SQL success.
+    fn before_destructive_submission(&self) {}
 }
 /// Application restore is separate from the unchanged disposable-only helper.
 /// Only the currently pinned migration graph is supported; inspection occurs
@@ -737,6 +741,17 @@ fn stage_restore_dump(
     Ok(PreparedDump { scratch, dump })
 }
 
+// The callback precedes even a spawn/IO failure: once invoked the caller must
+// conservatively treat physical submission as possible, never infer no writes.
+fn destructive_submission<T>(
+    authority: Option<&dyn CurrentSchemaRestoreAuthority>,
+    submit: impl FnOnce() -> Result<T, Error>,
+) -> Result<T, Error> {
+    if let Some(authority) = authority {
+        authority.before_destructive_submission();
+    }
+    submit()
+}
 fn restore_archive(
     config: &PgConfig,
     runtime: &Runtime,
@@ -813,11 +828,13 @@ fn restore_archive(
     let mut args = connection_args(config);
     args.extend(["-c".into(),"DROP SCHEMA IF EXISTS public CASCADE; CREATE SCHEMA public; GRANT ALL ON SCHEMA public TO public;".into()]);
     checked(
-        run(
-            prepare_command(&runtime.psql, config, &args, limits.database_bytes),
-            limits,
-            cancel,
-        )?,
+        destructive_submission(authority, || {
+            run(
+                prepare_command(&runtime.psql, config, &args, limits.database_bytes),
+                limits,
+                cancel,
+            )
+        })?,
         "psql schema cleanup",
     )?;
     let mut args = vec!["--no-owner".into()];
@@ -1072,6 +1089,121 @@ fn parse_migration_copy(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    struct EffectAuthority {
+        count: std::sync::atomic::AtomicUsize,
+        migrations: std::collections::BTreeSet<(String, String)>,
+    }
+    impl EffectAuthority {
+        fn new() -> Self {
+            Self {
+                count: std::sync::atomic::AtomicUsize::new(0),
+                migrations: Default::default(),
+            }
+        }
+        fn calls(&self) -> usize {
+            self.count.load(std::sync::atomic::Ordering::Acquire)
+        }
+    }
+    impl CurrentSchemaRestoreAuthority for EffectAuthority {
+        fn current_database(&self) -> &str {
+            "owned_effect_fixture"
+        }
+        fn server_started_micros(&self) -> i64 {
+            1
+        }
+        fn expected_migrations(&self) -> &std::collections::BTreeSet<(String, String)> {
+            &self.migrations
+        }
+        fn before_destructive_submission(&self) {
+            self.count.fetch_add(1, std::sync::atomic::Ordering::AcqRel);
+        }
+    }
+    fn effect_ports(root: &Path) -> (PgConfig, Runtime) {
+        (
+            PgConfig {
+                host: "owned-inert-no-network".into(),
+                port: 1,
+                user: "owned-fixture".into(),
+                database: "owned_effect_fixture".into(),
+                password: None,
+                options: Default::default(),
+            },
+            Runtime {
+                pg_dump: root.join("never-exec-dump"),
+                pg_restore: root.join("never-exec-restore"),
+                psql: root.join("never-exec-psql"),
+            },
+        )
+    }
+    #[test]
+    fn bad_archive_never_announces_destructive_submission() {
+        let root = OwnedDirectory::new(&std::env::temp_dir()).unwrap();
+        let archive = root.0.join("owned.zip");
+        File::create(&archive)
+            .unwrap()
+            .write_all(b"inert invalid archive")
+            .unwrap();
+        let (config, runtime) = effect_ports(&root.0);
+        let authority = EffectAuthority::new();
+        assert!(matches!(
+            restore_current_schema(
+                &config,
+                &runtime,
+                &archive,
+                &root.0.join("scratch"),
+                &Limits::default(),
+                &Cancellation::default(),
+                &authority
+            ),
+            Err(Error::Zip)
+        ));
+        assert_eq!(authority.calls(), 0);
+    }
+    #[test]
+    fn wrong_engine_never_announces_destructive_submission() {
+        let root = OwnedDirectory::new(&std::env::temp_dir()).unwrap();
+        let archive = root.0.join("owned.zip");
+        let mut zip = ZipWriter::new(File::create(&archive).unwrap());
+        zip.start_file("metadata.json", SimpleFileOptions::default())
+            .unwrap();
+        zip.write_all(br#"{"database_type":"sqlite","database_file":"database.sqlite3"}"#)
+            .unwrap();
+        zip.start_file("database.sqlite3", SimpleFileOptions::default())
+            .unwrap();
+        zip.write_all(b"inert owned fixture").unwrap();
+        zip.finish().unwrap();
+        let (config, runtime) = effect_ports(&root.0);
+        let authority = EffectAuthority::new();
+        assert!(matches!(
+            restore_current_schema(
+                &config,
+                &runtime,
+                &archive,
+                &root.0.join("scratch"),
+                &Limits::default(),
+                &Cancellation::default(),
+                &authority
+            ),
+            Err(Error::SqliteDatabaseTypeMismatch)
+        ));
+        assert_eq!(authority.calls(), 0);
+    }
+    #[test]
+    fn destructive_boundary_precedes_submission_error() {
+        let authority = EffectAuthority::new();
+        let result: Result<(), Error> = destructive_submission(Some(&authority), || {
+            assert_eq!(authority.calls(), 1);
+            Err(Error::Io)
+        });
+        assert!(matches!(result, Err(Error::Io)));
+        assert_eq!(authority.calls(), 1);
+    }
+    #[test]
+    fn unobserved_submission_keeps_existing_result() {
+        let result: Result<(), Error> = destructive_submission(None, || Err(Error::Timeout));
+        assert!(matches!(result, Err(Error::Timeout)));
+    }
 
     #[test]
     fn restore_distinguishes_missing_metadata_and_sqlite_before_database_dispatch() {

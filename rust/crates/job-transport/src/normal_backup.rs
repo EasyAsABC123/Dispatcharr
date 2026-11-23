@@ -162,6 +162,18 @@ impl Application {
             .bind_restore_plugins(plugins)
             .map_err(|_| Error::Configuration)
     }
+    pub fn bind_restore_scheduler(
+        &self,
+        scheduler: &crate::normal_beat::Scheduler,
+    ) -> Result<(), Error> {
+        if !self.inner.jobs.allows_defaults() || !self.inner.jobs.allows_normal_restore() {
+            return Err(Error::Configuration);
+        }
+        self.inner
+            .executor
+            .bind_restore_scheduler(scheduler)
+            .map_err(|_| Error::Configuration)
+    }
     pub async fn initialize_schedule(&self, owner: Arc<dyn Send + Sync>) -> Result<(), StoreError> {
         self.schedule_for_worker()?.initialize(owner).await
     }
@@ -268,7 +280,7 @@ impl Application {
                 // a partially acquired fence would hide session close failures.
                 // Acquisition already has its actual thirty-second deadline;
                 // the closed-intake branch below settles every acquired scope.
-                let result=inner.executor.prepare_restore(owner.clone()).await;
+                let result=inner.executor.prepare_worker_restore(owner.clone()).await;
                 match result {
                     Ok(scope)=>restore_scope=Some(scope),
                     Err(dispatcharr_store::BackupRestoreError::Capacity)=>return Ok(Disposition::Capacity),
@@ -285,7 +297,7 @@ impl Application {
             }
             if inner.closed.load(Ordering::Acquire) || restore_claim_closed() {
                 if let Some(scope)=restore_scope.take() {
-                    inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore preclaim drain unsettled".into()))?;
+                    scope.decline_unstarted().await.map_err(|_|Disposition::Operational("restore preclaim drain unsettled".into()))?;
                 }
                 return if is_restore || !inner.jobs.allows_defaults() {
                     Ok(Disposition::NotDue)
@@ -300,15 +312,15 @@ impl Application {
             {
                 Ok(value) => value.into_message(),
                 Err(TransportError::ClaimRace) => {
-                    if let Some(scope)=restore_scope.take() { inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore race drain unsettled".into()))?; }
+                    if let Some(scope)=restore_scope.take() { scope.decline_unstarted().await.map_err(|_|Disposition::Operational("restore race drain unsettled".into()))?; }
                     return Ok(Disposition::HeadChanged);
                 },
                 Err(TransportError::Capacity) => {
-                    if let Some(scope)=restore_scope.take() { inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore capacity drain unsettled".into()))?; }
+                    if let Some(scope)=restore_scope.take() { scope.decline_unstarted().await.map_err(|_|Disposition::Operational("restore capacity drain unsettled".into()))?; }
                     return Err(Disposition::Capacity);
                 },
                 Err(error) => {
-                    if let Some(scope)=restore_scope.take() { inner.executor.retain_restore(scope,owner.clone()); }
+                    if let Some(scope)=restore_scope.take() { scope.retain_uncertain(); }
                     retain(&inner, owner.clone());
                     return Err(Disposition::Operational(format!("backup claim {error:?}")));
                 }
@@ -323,7 +335,7 @@ impl Application {
                     })?
                 {
                     if let Some(scope)=restore_scope.take() {
-                        inner.executor.release_restore(scope,owner.clone()).await.map_err(|_|Disposition::Operational("restore revoked drain unsettled".into()))?;
+                        scope.decline_unstarted().await.map_err(|_|Disposition::Operational("restore revoked drain unsettled".into()))?;
                     }
                     inner
                         .jobs
@@ -339,8 +351,8 @@ impl Application {
                     Kind::Restore(filename)=>{
                         if let Some(value)=restore_preflight_result.take() { Ok(value) }
                         else {
-                            let scope=restore_scope.as_ref().ok_or_else(||Disposition::Operational("restore actual SQL admission missing".into()))?.clone();
-                            inner.executor.restore(filename.clone(),scope,owner.clone()).await
+                            let scope=restore_scope.as_mut().ok_or_else(||Disposition::Operational("restore actual SQL admission missing".into()))?;
+                            scope.execute(filename.clone()).await
                         }
                     },
                     kind=>{
@@ -359,7 +371,7 @@ impl Application {
             }
             .await;
             if outcome.is_err() {
-                if let Some(scope)=restore_scope.take() { inner.executor.retain_restore(scope,owner.clone()); }
+                if let Some(scope)=restore_scope.take() { scope.retain_uncertain(); }
                 retain(&inner, owner.clone());
             }
             outcome

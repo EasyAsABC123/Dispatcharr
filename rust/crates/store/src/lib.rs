@@ -60,7 +60,7 @@ pub use settings_groups::source_system_settings_defaults;
 mod user_agent_writes;
 pub use epg_policy::{source_epg_history_policy, EpgHistoryPolicy, EpgPolicyError};
 mod epg_staging;
-pub use epg_staging::{GuideMapping, GuideStaging, GuideSwapCounts};
+pub use epg_staging::{GuideMapping, GuideSqlConnection, GuideStaging, GuideSwapCounts};
 pub use ip_lookup::IpLookupConfig;
 pub use schema::{initialize_empty_database, SchemaInitialization};
 mod backup_restore_schema;

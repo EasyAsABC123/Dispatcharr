@@ -613,10 +613,10 @@ impl Inner {
             return Ok(IndexOutcome::MissingFile);
         };
         context.ensure_active()?;
-        // A private writer drops its potentially large driver buffers when this
-        // operation completes, rather than retaining them in the shared pool.
+        // Close the writer to discard its large buffers, while charging the Main
+        // pool until the index transaction and connection both settle.
         stage(&trace, IndexStage::WriterAdmission);
-        let mut connection = self.services.store.pool().acquire().await?.detach();
+        let mut connection = self.services.store.pool().acquire().await?;
         let result=async{
             let mut tx=connection.begin().await?;if let Err(error)=context.ensure_active(){tx.rollback().await?;return Err(error);}
             // Original update_or_create obtains its row lock before save's

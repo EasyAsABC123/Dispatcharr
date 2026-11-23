@@ -742,6 +742,9 @@ impl SelectedJobs {
         .map_err(|_| "Selected normal Beat initialization failed")?;
         if beat == Beat::Core {
             backup_jobs
+                .bind_restore_scheduler(&scheduler)
+                .map_err(|_| "Selected Core restore scheduler pause binding failed")?;
+            backup_jobs
                 .initialize_core_schedule(Arc::new(()))
                 .await
                 .map_err(|_| "Selected Core backup schedule initialization failed")?;

@@ -80,18 +80,18 @@ impl Effects for RetainedEffects {
     ) -> Answer<'a, FileEffect<()>> {
         Box::pin(async move {
             let _receipt = receipt;
-            let mut connection = self.connection().await?;
+            let mut connection = self.pool.acquire().await.map_err(|_| Error::Operational)?;
             let found = sqlx::query_scalar::<_, i64>(
                 "SELECT id::bigint FROM dispatcharr_channels_logo WHERE url=$1 LIMIT 2",
             )
             .bind(path)
-            .fetch_all(&mut connection)
+            .fetch_all(&mut *connection)
             .await;
             let found = match found {
                 Ok(rows) => rows,
                 Err(error) => {
                     let caught = Self::server_error(&error);
-                    Self::close(connection).await?;
+                    connection.close().await.map_err(|_| Error::Operational)?;
                     return if caught {
                         Ok(FileEffect::CaughtServerError)
                     } else {
@@ -100,11 +100,11 @@ impl Effects for RetainedEffects {
                 }
             };
             if found.len() > 1 {
-                Self::close(connection).await?;
+                connection.close().await.map_err(|_| Error::Operational)?;
                 return Err(Error::Unsupported);
             }
             if !found.is_empty() {
-                Self::close(connection).await?;
+                connection.close().await.map_err(|_| Error::Operational)?;
                 return Ok(FileEffect::Settled(()));
             }
             let result = async {
@@ -133,7 +133,7 @@ impl Effects for RetainedEffects {
             }
             .await;
             let caught = result.as_ref().err().is_some_and(Self::server_error);
-            Self::close(connection).await?;
+            connection.close().await.map_err(|_| Error::Operational)?;
             match result {
                 Ok(()) => Ok(FileEffect::Settled(())),
                 Err(_) if caught => Ok(FileEffect::CaughtServerError),

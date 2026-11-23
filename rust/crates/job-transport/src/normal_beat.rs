@@ -19,6 +19,9 @@ use std::{
 };
 use tokio::sync::{oneshot, watch, Mutex, OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
+#[path = "normal_beat_restore_pause.rs"]
+mod restore_pause;
+pub(crate) use restore_pause::{RestorePause, RestorePauseClient};
 #[derive(Debug)]
 pub enum Error {
     Closed,
@@ -155,6 +158,7 @@ struct Inner {
     identity: ProducerIdentitySource,
     cache: Mutex<Cache>,
     lifecycle: Lifecycle,
+    restore_pause: restore_pause::Control,
     maximum_sleep: Duration,
     scope: ScheduleScope,
     saved_cleanup: Option<SavedCleanupSchedule>,
@@ -741,6 +745,7 @@ impl Scheduler {
                 identity,
                 cache: Mutex::new(Cache::default()),
                 lifecycle: Lifecycle::new(),
+                restore_pause: restore_pause::Control::new(),
                 maximum_sleep,
                 scope: scope.unwrap_or_else(|| match &backup_worker {
                     Some(worker) if worker.owns_plugin_refresh() => {
@@ -885,9 +890,21 @@ impl Scheduler {
                     self.inner.lifecycle.status.send_replace(Status::Acquired);
                 }
                 *self.inner.cache.lock().await = Cache::default();
+                self.inner.restore_pause.elected(true);
                 let observed = self.run_owned(&mut session.connection, stop, caller).await;
-                let observed = self.finish_owned(&mut session.connection, observed).await;
-                return session.settle(observed).await;
+                // An uncertain parked restore must not issue checkpoint SQL.
+                let observed = if self.inner.restore_pause.blocked()
+                    && !self.inner.restore_pause.settled_on_stop()
+                {
+                    Err(Error::Drain)
+                } else if self.inner.restore_pause.settled_on_stop() {
+                    observed
+                } else {
+                    self.finish_owned(&mut session.connection, observed).await
+                };
+                let settled = session.settle(observed).await;
+                self.inner.restore_pause.elected(false);
+                return settled;
             }
             if !self.inner.scope.uses_selected_receivers() {
                 // Legacy and standalone Core still admit a single configured
@@ -909,9 +926,16 @@ impl Scheduler {
         stop: &mut watch::Receiver<bool>,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<Status, Error> {
+        let mut restore_pause = self.inner.restore_pause.changes.subscribe();
         loop {
-            if *stop.borrow() {
+            if *stop.borrow() || self.inner.restore_pause.stopped() {
                 return Ok(Status::Stopped);
+            }
+            if self.inner.restore_pause.blocked() {
+                if !self.park_for_restore(connection, stop).await? {
+                    return Ok(Status::Stopped);
+                }
+                continue;
             }
             match self.receiver_availability() {
                 Terminal => return Ok(Status::ReceiverFault),
@@ -920,6 +944,7 @@ impl Scheduler {
                     tokio::select! {
                         _ = tokio::time::sleep(self.inner.maximum_sleep) => {},
                         _ = stop.changed() => {},
+                        _ = restore_pause.changed() => {},
                     }
                     continue;
                 }
@@ -965,6 +990,7 @@ impl Scheduler {
                 tokio::select! {
                     _ = tokio::time::sleep(duration) => {},
                     _ = stop.changed() => {},
+                        _ = restore_pause.changed() => {},
                 }
             }
         }
@@ -1051,6 +1077,7 @@ impl Scheduler {
     }
 
     pub fn stop_admission(&self) {
+        self.inner.restore_pause.stop();
         self.inner.lifecycle.close();
     }
     /// Nonblocking, allocation-free observation; never changes drain acceptance.
@@ -1114,6 +1141,9 @@ impl Scheduler {
                 .await
                 .map_err(|_| Error::Drain)?
                 .map_err(|_| Error::Drain)?;
+        if self.inner.restore_pause.blocked() && !self.inner.restore_pause.settled_on_stop() {
+            return Err(Error::Drain);
+        }
         shutdown_result(
             &self.status(),
             !self.inner.cache.lock().await.dirty.is_empty(),

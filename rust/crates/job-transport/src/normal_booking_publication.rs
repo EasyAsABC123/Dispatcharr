@@ -331,9 +331,9 @@ async fn future(
     row: BookingRow,
     owner: Arc<dyn Send + Sync>,
 ) -> Result<BookingTask, Error> {
-    tokio::spawn(async move {let _owner=owner;let mut connection=pool.acquire().await.map_err(database)?.detach();
+    tokio::spawn(async move {let _owner=owner;let mut connection=pool.acquire().await.map_err(database)?;
   let observed=async {
-   let clocked:Vec<i64>=sqlx::query_scalar("SELECT id::bigint FROM django_celery_beat_clockedschedule WHERE clocked_time=$1 LIMIT 2").bind(row.start).fetch_all(&mut connection).await.map_err(database)?;if clocked.len()>1{return Err(Error::Unsupported("multiple booking clocked schedules"));}
+   let clocked:Vec<i64>=sqlx::query_scalar("SELECT id::bigint FROM django_celery_beat_clockedschedule WHERE clocked_time=$1 LIMIT 2").bind(row.start).fetch_all(&mut *connection).await.map_err(database)?;if clocked.len()>1{return Err(Error::Unsupported("multiple booking clocked schedules"));}
    let mut tx=connection.begin().await.map_err(database)?;let name=format!("dvr-recording-{}",row.recording);
    let result=async {
     let clocked=match clocked.first(){Some(value)=>*value,None=>{let id=sqlx::query_scalar::<_,i64>("INSERT INTO django_celery_beat_clockedschedule (clocked_time) VALUES ($1) RETURNING id::bigint").bind(row.start).fetch_one(&mut *tx).await.map_err(database)?;marker(&mut tx).await?;id}};
@@ -348,7 +348,7 @@ async fn future(
     marker(&mut tx).await?;Ok::<i64,Error>(id)
    }.await;
    let periodic_id=match result{Ok(id)=>{tx.commit().await.map_err(database)?;id},Err(error)=>{if let Err(rollback)=tx.rollback().await{return Err(database(rollback));}return Err(error)}};
-   let updated=sqlx::query("UPDATE dispatcharr_channels_recording SET task_id=$1 WHERE id=$2").bind(&name).bind(row.recording).execute(&mut connection).await.map_err(database)?;
+   let updated=sqlx::query("UPDATE dispatcharr_channels_recording SET task_id=$1 WHERE id=$2").bind(&name).bind(row.recording).execute(&mut *connection).await.map_err(database)?;
    if updated.rows_affected()!=1{return Err(Error::Unsupported("booking row removed before task assignment"));}Ok(BookingTask::Periodic{name,periodic_id})
   }.await;
   let ready=connection.ping().await.err().map(Box::new);let close=connection.close().await.err().map(Box::new);settle(observed,ready,close)
@@ -359,10 +359,10 @@ async fn drop_future(
     recording: i64,
     owner: Arc<dyn Send + Sync>,
 ) -> Result<(), Error> {
-    tokio::spawn(async move {let _owner=owner;let mut connection=pool.acquire().await.map_err(database)?.detach();let observed=async{
-  let removed:Vec<Option<i64>>=sqlx::query_scalar("DELETE FROM django_celery_beat_periodictask WHERE name=$1 RETURNING clocked_id::bigint").bind(format!("dvr-recording-{recording}")).fetch_all(&mut connection).await.map_err(database)?;
+    tokio::spawn(async move {let _owner=owner;let mut connection=pool.acquire().await.map_err(database)?;let observed=async{
+  let removed:Vec<Option<i64>>=sqlx::query_scalar("DELETE FROM django_celery_beat_periodictask WHERE name=$1 RETURNING clocked_id::bigint").bind(format!("dvr-recording-{recording}")).fetch_all(&mut *connection).await.map_err(database)?;
   if !removed.is_empty(){marker(&mut connection).await?;}
-  for clocked in removed.into_iter().flatten(){let removed=sqlx::query("DELETE FROM django_celery_beat_clockedschedule WHERE id=$1 AND NOT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)").bind(clocked).execute(&mut connection).await.map_err(database)?.rows_affected();if removed>0{marker(&mut connection).await?;}}
+  for clocked in removed.into_iter().flatten(){let removed=sqlx::query("DELETE FROM django_celery_beat_clockedschedule WHERE id=$1 AND NOT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE clocked_id=$1)").bind(clocked).execute(&mut *connection).await.map_err(database)?.rows_affected();if removed>0{marker(&mut connection).await?;}}
   Ok(())}.await;
   let ready=connection.ping().await.err().map(Box::new);let close=connection.close().await.err().map(Box::new);settle(observed,ready,close)
  }).await.map_err(|_|Error::Supervisor)?
@@ -375,12 +375,12 @@ async fn assign(
 ) -> Result<(), Error> {
     tokio::spawn(async move {
         let _owner = owner;
-        let mut connection = pool.acquire().await.map_err(database)?.detach();
+        let mut connection = pool.acquire().await.map_err(database)?;
         let observed =
             sqlx::query("UPDATE dispatcharr_channels_recording SET task_id=$1 WHERE id=$2")
                 .bind(key)
                 .bind(recording)
-                .execute(&mut connection)
+                .execute(&mut *connection)
                 .await
                 .map_err(database)
                 .and_then(|value| {

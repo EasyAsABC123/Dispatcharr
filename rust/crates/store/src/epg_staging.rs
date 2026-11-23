@@ -4,16 +4,17 @@ use crate::{EpgHistoryPolicy, Store, StoreError};
 use chrono::{DateTime, Duration, Utc};
 use dispatcharr_ingest_core::XmltvProgramme;
 use futures_util::TryStreamExt;
-use sqlx::{Connection, PgConnection, Postgres, QueryBuilder, Row};
+use sqlx::{pool::PoolConnection, Connection, PgConnection, Postgres, QueryBuilder, Row};
 use std::{
     collections::HashMap,
     future::Future,
+    ops::{Deref, DerefMut},
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc, OnceLock,
     },
 };
-use tokio::sync::{OwnedSemaphorePermit, Semaphore};
+use tokio::sync::Semaphore;
 
 const MAX_ROWS: usize = 5_000_000;
 const MAX_BYTES: usize = 4 * 1024 * 1024 * 1024;
@@ -31,10 +32,65 @@ pub struct GuideMapping {
     pub epg_ids: Vec<i64>,
     pub by_tvg_id: HashMap<String, i64>,
 }
+/// A private guide connection that continues to occupy a Main pool slot.
+pub struct GuideSqlConnection {
+    connection: Option<PoolConnection<Postgres>>,
+    owner: Arc<dyn Send + Sync>,
+    runtime: tokio::runtime::Handle,
+}
+
+impl GuideSqlConnection {
+    pub async fn acquire(store: &Store, owner: Arc<dyn Send + Sync>) -> Result<Self, sqlx::Error> {
+        let connection = store.pool().acquire().await?;
+        Ok(Self {
+            connection: Some(connection),
+            owner,
+            runtime: tokio::runtime::Handle::current(),
+        })
+    }
+
+    pub async fn close(mut self) -> Result<(), sqlx::Error> {
+        self.start_close()
+            .expect("owned guide SQL connection")
+            .await
+            .map_err(|_| sqlx::Error::Protocol("guide SQL close supervisor failed".into()))?
+    }
+
+    fn start_close(&mut self) -> Option<tokio::task::JoinHandle<Result<(), sqlx::Error>>> {
+        let mut connection = self.connection.take()?;
+        let owner = self.owner.clone();
+        Some(self.runtime.spawn(async move {
+            let _owner = owner;
+            let ready = connection.ping().await;
+            let closed = connection.close().await;
+            ready.and(closed)
+        }))
+    }
+}
+
+impl Deref for GuideSqlConnection {
+    type Target = PgConnection;
+
+    fn deref(&self) -> &Self::Target {
+        self.connection.as_ref().expect("owned guide SQL connection")
+    }
+}
+
+impl DerefMut for GuideSqlConnection {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        self.connection.as_mut().expect("owned guide SQL connection")
+    }
+}
+
+impl Drop for GuideSqlConnection {
+    fn drop(&mut self) {
+        // Dropping the observer detaches the supervised close, not the pool checkout.
+        drop(self.start_close());
+    }
+}
+
 pub struct GuideStaging {
-    connection: PgConnection,
-    _admission: OwnedSemaphorePermit,
-    _retained: Arc<dyn Send + Sync>,
+    connection: GuideSqlConnection,
     source_id: i64,
     rows: usize,
     bytes: usize,
@@ -66,11 +122,11 @@ impl Store {
         owned(async move{
             // A private session makes temporary-table cleanup unambiguous:
             // closing it removes staging data instead of returning it to a pool.
-            let mut connection=store.pool.acquire().await?.detach();
-            let backend_pid=sqlx::query_scalar("SELECT pg_backend_pid()").fetch_one(&mut connection).await?;
+            let mut connection=GuideSqlConnection::acquire(&store, Arc::new((admission, retained))).await?;
+            let backend_pid=sqlx::query_scalar("SELECT pg_backend_pid()").fetch_one(&mut *connection).await?;
             sqlx::query("CREATE TEMP TABLE epg_program_staging (epg_id bigint NOT NULL,start_time timestamptz NOT NULL,end_time timestamptz NOT NULL,title varchar(255) NOT NULL,sub_title text,description text,tvg_id varchar(255),custom_properties jsonb) ON COMMIT PRESERVE ROWS")
-                .execute(&mut connection).await?;
-            Ok(GuideStaging{connection,_admission:admission,_retained:retained,source_id,rows:0,bytes:0,backend_pid})
+                .execute(&mut *connection).await?;
+            Ok(GuideStaging{connection,source_id,rows:0,bytes:0,backend_pid})
         }).await
     }
 }
@@ -88,7 +144,7 @@ impl GuideStaging {
             let mut bytes=0usize;
             {
                 let mut rows=sqlx::query("SELECT e.id,e.tvg_id FROM epg_epgdata e WHERE e.epg_source_id=$1 AND (EXISTS (SELECT 1 FROM dispatcharr_channels_channel c WHERE c.epg_data_id=e.id) OR EXISTS (SELECT 1 FROM dispatcharr_channels_channeloverride o WHERE o.epg_data_id=e.id)) LIMIT 100001")
-                    .bind(this.source_id).fetch(&mut this.connection);
+                    .bind(this.source_id).fetch(&mut *this.connection);
                 while let Some(row)=rows.try_next().await? {
                     let id:i64=row.try_get("id")?;
                     let tvg:Option<String>=row.try_get("tvg_id")?;
@@ -112,7 +168,7 @@ impl GuideStaging {
                 "SELECT count(*) FROM epg_epgdata WHERE epg_source_id=$1",
             )
             .bind(this.source_id)
-            .fetch_one(&mut this.connection)
+            .fetch_one(&mut *this.connection)
             .await?;
             Ok((this, count))
         })
@@ -156,7 +212,7 @@ impl GuideStaging {
                         .push_bind(&row.sub_title).push_bind(&row.description).push_bind(&row.tvg_id)
                         .push_bind(row.custom_properties.as_ref().map(sqlx::types::Json));
                 });
-                query.build().execute(&mut this.connection).await?;
+                query.build().execute(&mut *this.connection).await?;
             }
             this.rows+=rows.len();this.bytes+=bytes;Ok(this)
         }).await
@@ -237,7 +293,9 @@ impl GuideStaging {
                 transaction.rollback().await?;
                 return Err(StoreError::Unsupported("EPG staging swap cancelled"));
             }
-            transaction.commit().await?;Ok(counts)
+            transaction.commit().await?;
+            this.connection.close().await?;
+            Ok(counts)
         }).await
     }
 }

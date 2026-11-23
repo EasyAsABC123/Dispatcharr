@@ -4,7 +4,7 @@
 use chrono::{DateTime, SecondsFormat, Timelike, Utc};
 use dispatcharr_contracts::UpdateEventSink;
 use serde_json::{json, Value};
-use sqlx::{Connection, PgConnection, PgPool};
+use sqlx::{pool::PoolConnection, Connection, PgPool, Postgres};
 use std::{
     cmp::Ordering,
     io::Read,
@@ -438,13 +438,13 @@ enum Delete {
     Other(String),
 }
 async fn finish<T>(
-    mut connection: PgConnection,
+    mut connection: PoolConnection<Postgres>,
     result: Result<T, Error>,
     transaction_open: bool,
 ) -> Result<T, Error> {
     let rollback = if result.is_err() && transaction_open {
         sqlx::query("ROLLBACK")
-            .execute(&mut connection)
+            .execute(&mut *connection)
             .await
             .err()
             .map(Box::new)
@@ -502,16 +502,16 @@ async fn delete(
     owner: Arc<dyn Send + Sync>,
 ) -> Result<u64, Error> {
     tokio::spawn(async move{
-        let _owner=owner;let mut connection=pool.acquire().await.map_err(sql)?.detach();let mut open=false;
+        let _owner=owner;let mut connection=pool.acquire().await.map_err(sql)?;let mut open=false;
         let result=async{
-            sqlx::query("BEGIN").execute(&mut connection).await.map_err(sql)?;open=true;
+            sqlx::query("BEGIN").execute(&mut *connection).await.map_err(sql)?;open=true;
             let(mode,key)=match selection{Delete::Current(key)=>(0,Some(key)),Delete::All=>(1,None),Delete::Other(key)=>(2,Some(key))};
-            let ids:Vec<i64>=sqlx::query_scalar("SELECT id::bigint FROM core_systemnotification WHERE notification_type='version_update' AND ($1::integer=1 OR ($1=0 AND notification_key=$2) OR ($1=2 AND notification_key<>$2)) ORDER BY priority DESC,created_at DESC LIMIT 129 FOR UPDATE").bind(mode).bind(key).fetch_all(&mut connection).await.map_err(sql)?;
+            let ids:Vec<i64>=sqlx::query_scalar("SELECT id::bigint FROM core_systemnotification WHERE notification_type='version_update' AND ($1::integer=1 OR ($1=0 AND notification_key=$2) OR ($1=2 AND notification_key<>$2)) ORDER BY priority DESC,created_at DESC LIMIT 129 FOR UPDATE").bind(mode).bind(key).fetch_all(&mut *connection).await.map_err(sql)?;
             if ids.len()>128{return Err(Error::Capacity);}
-            let related:i64=sqlx::query_scalar("SELECT count(*) FROM core_notificationdismissal WHERE notification_id=ANY($1)").bind(&ids).fetch_one(&mut connection).await.map_err(sql)?;if related>1024{return Err(Error::Capacity);}
-            let children=sqlx::query("DELETE FROM core_notificationdismissal WHERE notification_id=ANY($1)").bind(&ids).execute(&mut connection).await.map_err(sql)?.rows_affected();
-            let parents=sqlx::query("DELETE FROM core_systemnotification WHERE id=ANY($1)").bind(&ids).execute(&mut connection).await.map_err(sql)?.rows_affected();
-            sqlx::query("COMMIT").execute(&mut connection).await.map_err(sql)?;open=false;Ok(children+parents)
+            let related:i64=sqlx::query_scalar("SELECT count(*) FROM core_notificationdismissal WHERE notification_id=ANY($1)").bind(&ids).fetch_one(&mut *connection).await.map_err(sql)?;if related>1024{return Err(Error::Capacity);}
+            let children=sqlx::query("DELETE FROM core_notificationdismissal WHERE notification_id=ANY($1)").bind(&ids).execute(&mut *connection).await.map_err(sql)?.rows_affected();
+            let parents=sqlx::query("DELETE FROM core_systemnotification WHERE id=ANY($1)").bind(&ids).execute(&mut *connection).await.map_err(sql)?.rows_affected();
+            sqlx::query("COMMIT").execute(&mut *connection).await.map_err(sql)?;open=false;Ok(children+parents)
         }.await;finish(connection,result,open).await
     }).await.map_err(|_|Error::Supervisor)?
 }
@@ -522,28 +522,28 @@ async fn upsert(
     owner: Arc<dyn Send + Sync>,
 ) -> Result<(bool, Value), Error> {
     tokio::spawn(async move{
-        let _owner=owner;let mut connection=pool.acquire().await.map_err(sql)?.detach();let mut open=false;
+        let _owner=owner;let mut connection=pool.acquire().await.map_err(sql)?;let mut open=false;
         let result=async{
-            sqlx::query("BEGIN").execute(&mut connection).await.map_err(sql)?;open=true;
+            sqlx::query("BEGIN").execute(&mut *connection).await.map_err(sql)?;open=true;
             let key=format!("version-{version}");let title=format!("Version {version} Available");let message=format!("A new version of Dispatcharr ({version}) is available.");let action=json!({"version":version,"release_url":release_url,"release_notes":null});
-            let existing:Option<(i64,DateTime<Utc>)>=sqlx::query_as("SELECT id::bigint,created_at FROM core_systemnotification WHERE notification_key=$1 FOR UPDATE").bind(&key).fetch_optional(&mut connection).await.map_err(sql)?;
+            let existing:Option<(i64,DateTime<Utc>)>=sqlx::query_as("SELECT id::bigint,created_at FROM core_systemnotification WHERE notification_key=$1 FOR UPDATE").bind(&key).fetch_optional(&mut *connection).await.map_err(sql)?;
             let mut created=false;let mut row=existing;
             if row.is_none(){
                 // Sample both Django auto fields independently; never set an
                 // existing created_at to NOW or hide update timestamps in tests.
                 let created_at=now();let updated_at=now();
-                row=sqlx::query_as("INSERT INTO core_systemnotification(notification_key,notification_type,priority,source,title,message,action_data,is_active,admin_only,expires_at,created_at,updated_at) VALUES($1,'version_update','high','system',$2,$3,$4,true,true,NULL,$5,$6) ON CONFLICT(notification_key) DO NOTHING RETURNING id::bigint,created_at").bind(&key).bind(&title).bind(&message).bind(&action).bind(created_at).bind(updated_at).fetch_optional(&mut connection).await.map_err(sql)?;
+                row=sqlx::query_as("INSERT INTO core_systemnotification(notification_key,notification_type,priority,source,title,message,action_data,is_active,admin_only,expires_at,created_at,updated_at) VALUES($1,'version_update','high','system',$2,$3,$4,true,true,NULL,$5,$6) ON CONFLICT(notification_key) DO NOTHING RETURNING id::bigint,created_at").bind(&key).bind(&title).bind(&message).bind(&action).bind(created_at).bind(updated_at).fetch_optional(&mut *connection).await.map_err(sql)?;
                 created=row.is_some();
-                if row.is_none(){row=sqlx::query_as("SELECT id::bigint,created_at FROM core_systemnotification WHERE notification_key=$1 FOR UPDATE").bind(&key).fetch_optional(&mut connection).await.map_err(sql)?;}
+                if row.is_none(){row=sqlx::query_as("SELECT id::bigint,created_at FROM core_systemnotification WHERE notification_key=$1 FOR UPDATE").bind(&key).fetch_optional(&mut *connection).await.map_err(sql)?;}
             }
             let(id,created_at)=row.ok_or(Error::Unsupported("Version notice disappeared"))?;
             if !created {
                 // update_or_create preserves source/expiry/created_at while
                 // reactivating and updating all declared defaults and auto_now.
-                sqlx::query("UPDATE core_systemnotification SET notification_type='version_update',priority='high',title=$2,message=$3,action_data=$4,is_active=true,admin_only=true,updated_at=$5 WHERE id=$1").bind(id).bind(&title).bind(&message).bind(&action).bind(now()).execute(&mut connection).await.map_err(sql)?;
+                sqlx::query("UPDATE core_systemnotification SET notification_type='version_update',priority='high',title=$2,message=$3,action_data=$4,is_active=true,admin_only=true,updated_at=$5 WHERE id=$1").bind(id).bind(&title).bind(&message).bind(&action).bind(now()).execute(&mut *connection).await.map_err(sql)?;
             }
             let notice=json!({"id":id,"notification_key":key,"notification_type":"version_update","priority":"high","title":title,"message":message,"action_data":action,"is_active":true,"admin_only":true,"created_at":iso(created_at)});
-            sqlx::query("COMMIT").execute(&mut connection).await.map_err(sql)?;open=false;Ok((created,notice))
+            sqlx::query("COMMIT").execute(&mut *connection).await.map_err(sql)?;open=false;Ok((created,notice))
         }.await;finish(connection,result,open).await
     }).await.map_err(|_|Error::Supervisor)?
 }

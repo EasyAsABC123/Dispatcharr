@@ -220,13 +220,13 @@ async fn interrupt(
     let properties = Value::Object(properties);
     tokio::spawn(async move {
         let _owner = owner;
-        let mut c = pool.acquire().await.map_err(database)?.detach();
+        let mut c = pool.acquire().await.map_err(database)?;
         let observed = sqlx::query(
             "UPDATE dispatcharr_channels_recording SET custom_properties=$1 WHERE id=$2",
         )
         .bind(&properties)
         .bind(row.recording)
-        .execute(&mut c)
+        .execute(&mut *c)
         .await;
         let ready = c.ping().await.err().map(Box::new);
         let close = c.close().await.err().map(Box::new);
@@ -537,12 +537,12 @@ async fn assign_task(
 ) -> Result<(), Error> {
     tokio::spawn(async move {
         let _owner = owner;
-        let mut connection = pool.acquire().await.map_err(database)?.detach();
+        let mut connection = pool.acquire().await.map_err(database)?;
         let result =
             sqlx::query("UPDATE dispatcharr_channels_recording SET task_id=$1 WHERE id=$2")
                 .bind(key)
                 .bind(recording)
-                .execute(&mut connection)
+                .execute(&mut *connection)
                 .await;
         let ready = connection.ping().await.err().map(Box::new);
         let close = connection.close().await.err().map(Box::new);
@@ -576,13 +576,13 @@ async fn repair_future(
     owner: Arc<dyn Send + Sync>,
 ) -> Result<Repair, Error> {
     let row = upcoming.row.clone();
-    tokio::spawn(async move {let _owner=owner;let mut connection=pool.acquire().await.map_err(database)?.detach();
+    tokio::spawn(async move {let _owner=owner;let mut connection=pool.acquire().await.map_err(database)?;
   let observed=async {
    let name=format!("dvr-recording-{}",row.recording);
-   let existing:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE name=$1)").bind(&name).fetch_one(&mut connection).await.map_err(database)?;
+   let existing:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM django_celery_beat_periodictask WHERE name=$1)").bind(&name).fetch_one(&mut *connection).await.map_err(database)?;
    if !existing {
     if row.start<=Utc::now(){return Ok(Repair::Immediate);}
-    let clocked:Vec<i64>=sqlx::query_scalar("SELECT id::bigint FROM django_celery_beat_clockedschedule WHERE clocked_time=$1 LIMIT 2").bind(row.start).fetch_all(&mut connection).await.map_err(database)?;
+    let clocked:Vec<i64>=sqlx::query_scalar("SELECT id::bigint FROM django_celery_beat_clockedschedule WHERE clocked_time=$1 LIMIT 2").bind(row.start).fetch_all(&mut *connection).await.map_err(database)?;
     if clocked.len()>1{return Err(Error::Unsupported("multiple clocked schedules at one time"));}
     let mut transaction=connection.begin().await.map_err(database)?;
     let changed=async {
@@ -595,7 +595,7 @@ async fn repair_future(
     }.await;
     match changed {Ok(())=>transaction.commit().await.map_err(database)?,Err(error)=>{let rollback=transaction.rollback().await.err();if let Some(error)=rollback{return Err(database(error));}return Err(error);}}
    }
-   let assigned=sqlx::query("UPDATE dispatcharr_channels_recording SET task_id=$1 WHERE id=$2").bind(name).bind(row.recording).execute(&mut connection).await.map_err(database)?;
+   let assigned=sqlx::query("UPDATE dispatcharr_channels_recording SET task_id=$1 WHERE id=$2").bind(name).bind(row.recording).execute(&mut *connection).await.map_err(database)?;
    if assigned.rows_affected()!=1{return Err(Error::Unsupported("upcoming recording removed"));}Ok(Repair::Scheduled)
   }.await;
   let ready=connection.ping().await.err().map(Box::new);let close=connection.close().await.err().map(Box::new);
