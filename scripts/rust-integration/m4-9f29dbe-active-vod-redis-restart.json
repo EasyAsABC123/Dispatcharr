@@ -1,0 +1,44 @@
+{
+  "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "first_attempt_independent_resources_absent": true,
+  "first_attempt_literal_exits": {
+    "cleanup": 1,
+    "reduce": 1,
+    "run": 1
+  },
+  "full_m4_verified": false,
+  "observations": {
+    "original": {
+      "capture_sha256": "88843dca50fd0e7cd9d74738452cbfa9f494bfec05506f8dedbaab3f1b1d495e",
+      "first_body_after_reopen_bytes": 8192,
+      "first_body_after_reopen_matches_offset": true,
+      "first_body_bytes": 278528,
+      "first_body_ended": false,
+      "initial_http": 200,
+      "reopen_bytes": 8192,
+      "reopen_prefix_matches_origin": true,
+      "same_id_reopen_http": 200
+    },
+    "rust": {
+      "capture_sha256": "c0880068e817c4a98525b64508765ec5ed0da01e84a01fed54b3b162a417becc",
+      "first_body_after_reopen_bytes": 0,
+      "first_body_after_reopen_matches_offset": null,
+      "first_body_bytes": 65536,
+      "first_body_ended": true,
+      "initial_http": 200,
+      "reopen_bytes": 0,
+      "reopen_prefix_matches_origin": false,
+      "same_id_reopen_http": 503
+    }
+  },
+  "paired_exact_cleanup": true,
+  "paired_literal_exits": {
+    "cleanup": 0,
+    "reducer": 1,
+    "run": 0
+  },
+  "performance_verified": false,
+  "rust_image": "sha256:1cad036b0aa3d882d2d1ca201d7ea87def49be853f321421b71a6348e3a63936",
+  "rust_manifest_sha256": "7bb0e5fa109c7c6bfe68dbba7468b7dd2d570d936da45083bf086582b1c6c28f",
+  "rust_revision": "9f29dbedf8a144605dd05038024425d55b079ca0"
+}
