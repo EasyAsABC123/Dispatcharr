@@ -1,0 +1,75 @@
+{
+  "campaign_passed": true,
+  "candidate": "63ee09fcba02f79300ee249b77f1fc881d05657c",
+  "cases": [
+    {
+      "actual_exit": 0,
+      "case": "delayed",
+      "exact_cleanup": true,
+      "literal_execution_sha256": "a8d39e681a27e876d78343ad4a382deb87769504d6ed8ccbe2d1bb89833bc702",
+      "passed": true,
+      "ran": true,
+      "signed_ts_media_bytes": 13160,
+      "wire": {
+        "disposition": "release",
+        "gate_role_drained": true,
+        "held_reply_bytes": 5,
+        "held_reply_sha256": "8b731f85850fac625747bb8f9e4d99f93a230f8ba98898830ade3698b666fc6b",
+        "held_seconds": 1.067474679031875,
+        "selected_reply_forwarded": true,
+        "unrelated_frames_retained": 0
+      },
+      "work_sha256": "eb582bbe52c9d5e6e6b97e915026a23c93c279f3c46cf27728fb30e3ff142039",
+      "workload_passed": true
+    },
+    {
+      "actual_exit": 0,
+      "case": "dropped",
+      "exact_cleanup": true,
+      "literal_execution_sha256": "5e1d5751dbc90e5689b80895913f3bc5864abb4e1df7ff5043cb9e9cbf6f7223",
+      "passed": true,
+      "ran": true,
+      "same_clone_exact_pg_blocker": true,
+      "signed_ts_media_bytes": 13160,
+      "wire": {
+        "disposition": "disconnect",
+        "gate_role_drained": true,
+        "held_reply_bytes": 5,
+        "held_reply_sha256": "8b731f85850fac625747bb8f9e4d99f93a230f8ba98898830ade3698b666fc6b",
+        "held_seconds": 0.5568595050135627,
+        "selected_reply_forwarded": false,
+        "unrelated_frames_retained": 0
+      },
+      "work_sha256": "f71dbb876108ed28c380e601775f223ae321c6a9d8ee33e189de5ee67117c154",
+      "workload_passed": true
+    },
+    {
+      "actual_exit": 0,
+      "actual_main_stop": 0,
+      "case": "shutdown",
+      "exact_cleanup": true,
+      "literal_execution_sha256": "d999791dc637a0c4e43539de584b3818e310ca4c425525955f783f8fa69289e0",
+      "passed": true,
+      "ran": true,
+      "wire": {
+        "disposition": "release",
+        "gate_role_drained": true,
+        "held_reply_bytes": 5,
+        "held_reply_sha256": "8b731f85850fac625747bb8f9e4d99f93a230f8ba98898830ade3698b666fc6b",
+        "held_seconds": 0.6415757030481473,
+        "selected_reply_forwarded": true,
+        "unrelated_frames_retained": 0
+      },
+      "work_sha256": "2daf3aa8365bd95f4f926fdc146924cca16a3f202703f42868c482bc1b6238bd",
+      "workload_passed": true
+    }
+  ],
+  "credit": "Original Dispatcharr and upstream contributors retain full credit.",
+  "formal_required_nodes_added": 0,
+  "image": "sha256:2ac376b08d4e684f90c98a7c29e0772f9dbd863bca01c45a83b5816f2192233d",
+  "independent_reducer_exit": 0,
+  "manifest_sha256": "262265e9cb7e95e3a4eb4d9669d47666e8738c39d551071313d10b1c21f10d6b",
+  "original_wrapper_exit": 1,
+  "per_waiter_join_observed": false,
+  "wrapper_failure": "Module name collision after all three runtime arms exited zero"
+}

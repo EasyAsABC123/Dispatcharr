@@ -1510,6 +1510,9 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 
 ## Latest scoped runtime evidence for 63ee09fc
 
+- **M2** Three packaged Main reply cases passed independent validation of delay, dropped-reply PostgreSQL fallback and shutdown with exact cleanup. The wrapper's separate reducer import failed after the runtime cases. [Packaged Main reply cases](rust-m2-63ee09fc-proxy-health-replies.md)
+- **M7** The exact 63ee09fc output pair matched 24 selected XC response projections and verified the same cold/warm named XMLTV bytes across two Native process generations. [Native output hash and guide grammar](rust-m7-63ee09fc-native-output-hash-grammar.md)
+
 - **M2** The exact 63ee09fc component repeated the shared Core and Engine warm-cache, writer-pressure and graceful drain checks. [Component qualification](rust-m2-63ee09fc-proxy-health-component.md)
 - **M7** Three exact 63ee09fc realtime pairs and the separate signed EPG worker, WebSocket and Connect delivery pair passed. [Realtime scopes](rust-m7-63ee09fc-realtime-scopes.md) · [Signed EPG delivery](rust-m7-63ee09fc-epg-channels-connect.md)
 - **M7** Original completed 24 authenticated XC reads across two fixed hash seeds and two named XMLTV reads. [Pinned Original output authority](rust-m7-original-output-hash-grammar.md)
