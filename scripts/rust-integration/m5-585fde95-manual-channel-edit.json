@@ -1,0 +1,236 @@
+{
+  "Native_runtime_configuration": {
+    "explicit_selected_Beat": false,
+    "explicit_selected_programme_receiver": true
+  },
+  "actual_exits": {
+    "campaign": 0,
+    "preflight": 0,
+    "reduce": 0,
+    "run": 0,
+    "runtime_driver": 0
+  },
+  "browser_DOM_measured": false,
+  "cleanup": {
+    "exact_container_and_process_generations_absent": 5,
+    "host_CLI_groups_settled": true,
+    "projects": 2,
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "credit": "The original Dispatcharr and React authors and contributors retain full credit.",
+  "custody": {
+    "child_execution_sha256": "7fde1b38c0f21e2b75ed5c6264c812ecfe32fb36d809f9a926830a1924c9cfcf",
+    "owner_reducer_sha256": "5797120e6930c812a65274bcc8c95a283fb037a949110f304e15b1b3ed56b249",
+    "raw_paired_report_sha256": "f165fad581110dcaf7ce098f9344982f6621236d23a1411b5ab46eba38617a13",
+    "run_seal_sha256": "6a30f8cfe5915d82a3954be3977ba9e82f54b076d769846dcf90878b82dd086b"
+  },
+  "lanes": {
+    "Native": {
+      "four_websocket_windows_empty": true,
+      "generation_after_set_epg_and_patch": 2,
+      "programme_B_record_id": 3,
+      "selected_enabled_membership": [
+        1,
+        1,
+        true
+      ],
+      "selected_programme_root": {
+        "children": 0,
+        "guide_argument": 6,
+        "journal_sha256": "bdce292769d5e92fa8040e77ea7e008975fa9acd5db007574365e88f8933c153",
+        "queue": "celery",
+        "result_null": true,
+        "root_id_sha256": "bde281903196badd116c8cec37751dd6cd859f2282d8d71e53ddb6b1caff017f",
+        "task": "apps.epg.tasks.parse_programs_for_tvg_id",
+        "terminal": "SUCCESS"
+      },
+      "steps": [
+        {
+          "HTTP_status": 200,
+          "XMLTV_channel_titles": [
+            "Owned programme A"
+          ],
+          "after_guide_id": 5,
+          "before_guide_id": 5,
+          "body_bytes": 17004,
+          "body_sha256": "b9382c33cf04937673d15219cdc69d1a183996b347df9ead1c6ce230183cd55e",
+          "method": "GET",
+          "observed_websocket_events": 0,
+          "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+          "selected_new_roots": 0
+        },
+        {
+          "HTTP_status": 200,
+          "after_guide_id": 6,
+          "before_guide_id": 5,
+          "body_bytes": 1068,
+          "body_sha256": "7fa8aa162d2ab8e354b61fb75e8995f4917bf8ca7d3c2d19957e4175a00e444f",
+          "method": "POST",
+          "observed_websocket_events": 0,
+          "path": "/api/channels/channels/14/set-epg/",
+          "selected_new_roots": 1
+        },
+        {
+          "HTTP_status": 200,
+          "after_guide_id": 6,
+          "before_guide_id": 6,
+          "body_bytes": 853,
+          "body_sha256": "38e592272d589c1221f7dbb9e60f38af18c0a95d37f428549fc987b755a31e17",
+          "method": "PATCH",
+          "observed_websocket_events": 0,
+          "path": "/api/channels/channels/14/",
+          "selected_new_roots": 0,
+          "stream_link_rows_after": [
+            [
+              22,
+              0,
+              25
+            ],
+            [
+              21,
+              1,
+              24
+            ]
+          ],
+          "stream_link_rows_before": [
+            [
+              21,
+              0,
+              24
+            ],
+            [
+              22,
+              1,
+              25
+            ]
+          ]
+        },
+        {
+          "HTTP_status": 200,
+          "XMLTV_channel_titles": [
+            "Owned programme B"
+          ],
+          "after_guide_id": 6,
+          "before_guide_id": 6,
+          "body_bytes": 17012,
+          "body_sha256": "eb16325117016c59a755a41705c35cc0a2428c2581c0eb9b9d33d47f99b112d3",
+          "method": "GET",
+          "observed_websocket_events": 0,
+          "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+          "selected_new_roots": 0
+        }
+      ]
+    },
+    "Original": {
+      "four_websocket_windows_empty": true,
+      "generation_after_set_epg_and_patch": 2,
+      "programme_B_record_id": 3,
+      "selected_enabled_membership": [
+        1,
+        1,
+        true
+      ],
+      "selected_programme_root": {
+        "children": 0,
+        "guide_argument": 6,
+        "journal_sha256": "dc2e2542d20175f021c516b737193ae9f3d2bda3ae5d4f62d3ce4261de538834",
+        "queue": "celery",
+        "result_null": true,
+        "root_id_sha256": "42569af409fa9af033f48766430cd6e230a7b5a4fb59bc431e4fe2a9f911c619",
+        "task": "apps.epg.tasks.parse_programs_for_tvg_id",
+        "terminal": "SUCCESS"
+      },
+      "steps": [
+        {
+          "HTTP_status": 200,
+          "XMLTV_channel_titles": [
+            "Owned programme A"
+          ],
+          "after_guide_id": 5,
+          "before_guide_id": 5,
+          "body_bytes": 17004,
+          "body_sha256": "5f2602ed1bac5bee211a77e3aa7c4ce7bd7da9fa7905b8e1b9defe20fcfb03f7",
+          "method": "GET",
+          "observed_websocket_events": 0,
+          "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+          "selected_new_roots": 0
+        },
+        {
+          "HTTP_status": 200,
+          "after_guide_id": 6,
+          "before_guide_id": 5,
+          "body_bytes": 1068,
+          "body_sha256": "5ec5a17e774a0c040921ae689aec71ac87173154bdef5c07a4d330b5dc91edeb",
+          "method": "POST",
+          "observed_websocket_events": 0,
+          "path": "/api/channels/channels/14/set-epg/",
+          "selected_new_roots": 1
+        },
+        {
+          "HTTP_status": 200,
+          "after_guide_id": 6,
+          "before_guide_id": 6,
+          "body_bytes": 853,
+          "body_sha256": "0b603323b3e083d406ad654d1b1ff8bcccc9243743a3cb7a31271d6c9944c839",
+          "method": "PATCH",
+          "observed_websocket_events": 0,
+          "path": "/api/channels/channels/14/",
+          "selected_new_roots": 0,
+          "stream_link_rows_after": [
+            [
+              22,
+              0,
+              25
+            ],
+            [
+              21,
+              1,
+              24
+            ]
+          ],
+          "stream_link_rows_before": [
+            [
+              21,
+              0,
+              24
+            ],
+            [
+              22,
+              1,
+              25
+            ]
+          ]
+        },
+        {
+          "HTTP_status": 200,
+          "XMLTV_channel_titles": [
+            "Owned programme B"
+          ],
+          "after_guide_id": 6,
+          "before_guide_id": 6,
+          "body_bytes": 17012,
+          "body_sha256": "3e743bb4afeb350e31f0e1c27f99b477739197cc224f7ddcd533a8d6dff26179",
+          "method": "GET",
+          "observed_websocket_events": 0,
+          "path": "/output/epg/?days=1&prev_days=0&tvg_id_source=channel_number",
+          "selected_new_roots": 0
+        }
+      ]
+    }
+  },
+  "performance_measured": false,
+  "platform": "linux/amd64",
+  "rust_build_manifest_sha256": "328762af67efd3a1d84c5d3b25e4a842800a55351e1725138cc1a8605c4c7bfe",
+  "rust_image": "sha256:bb3bdbc5197780f3e49978a1c55650333d633e168b5c44ea663854571d2c2670",
+  "rust_revision": "585fde95b5ed61ed2cd714f1d93c2214c6deaad9",
+  "schema": 1,
+  "scope": "Manual Channel edit and Set EPG React request sequence over real HTTP on two owned Compose projects",
+  "scoped_HTTP_and_worker_passed": true,
+  "source_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "whole_M5_passed": false
+}

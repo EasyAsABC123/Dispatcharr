@@ -1,0 +1,219 @@
+{
+  "SQL_broker_state_unchanged": true,
+  "build_manifest_sha256": "2de6a7abd447ddc75e75c78f6fe1ced430a5ee1642dc37331483a51a3b083c1c",
+  "candidate": "390ad8aa16f07de7cbc7364a86f1eb2254faa4c8",
+  "canonical_rows_changed": 0,
+  "cases_per_arm": 8,
+  "changed_source_sha256": {
+    "rust/crates/store/src/core_reads.rs": {
+      "after_sha256": "656609f7611f851682462d14483e320070f249a5c6efe438caea6b57918f3400",
+      "before_sha256": "654ae489bb033e17263ef867e78c33305877dd08a535e6c73b918a878875f050"
+    }
+  },
+  "compose_project": "dispatcharr-exact-vod-b277265f8f",
+  "credit": "Original Dispatcharr, React and dependency authors and contributors retain full credit.",
+  "exact_cleanup": true,
+  "exact_http_JSON_Allow_Vary_match": true,
+  "formal_M0_pass": false,
+  "historical_wire_diagnosis": {
+    "body_key_order_by_arm": {
+      "native-agent": [
+        "id",
+        "name",
+        "is_active",
+        "user_agent",
+        "description",
+        "created_at",
+        "updated_at"
+      ],
+      "native-profile": [
+        "id",
+        "name",
+        "is_active",
+        "command",
+        "parameters",
+        "locked",
+        "user_agent"
+      ],
+      "original-agent": [
+        "id",
+        "name",
+        "user_agent",
+        "description",
+        "is_active",
+        "created_at",
+        "updated_at"
+      ],
+      "original-profile": [
+        "id",
+        "name",
+        "command",
+        "parameters",
+        "is_active",
+        "user_agent",
+        "locked"
+      ]
+    },
+    "historical_body_hashes_reconstructed": 16,
+    "predecessor": "585fde95b5ed61ed2cd714f1d93c2214c6deaad9",
+    "prior_native_allow": null,
+    "prior_native_vary": "origin",
+    "prior_original_vary": "Accept, origin",
+    "prior_raw_proof_sha256": "5ee801644888137fb704df386352113c2f65094b2ed4e6edf3fcef51cb47c164"
+  },
+  "image": "sha256:deb3ab0d832adf093c67b12eb1655baf23aeaf74bd55164643d9af38147127d0",
+  "literal_exits": {
+    "archive": {
+      "actual-exit": 0
+    },
+    "host": {
+      "actual-exit": 0,
+      "core-wire.actual-exit": 0,
+      "main.actual-exit": 0
+    },
+    "package": {
+      "actual-exit": 0,
+      "ordinary-build.actual-exit": 0,
+      "ordinary-verify.actual-exit": 0,
+      "preflight.actual-exit": 0
+    },
+    "physical": {
+      "bind.actual-exit": 0,
+      "campaign.actual-exit": 0,
+      "cleanup.actual-exit": 0,
+      "physical_pair": 0,
+      "preflight.actual-exit": 0,
+      "proof.actual-exit": 0,
+      "run.actual-exit": 0
+    }
+  },
+  "matched_response_pairs": [
+    {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 851,
+      "body_sha256": "e13f90083a88946d5018505457226c4236a41d54067a6811b5a3ff70d12cd1b1",
+      "contract_id": "route-b85d3ade7ecfee8953a1:GET",
+      "family": "agent-list",
+      "mime": "application/json",
+      "role": "standard",
+      "route": "/api/core/useragents/",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 851,
+      "body_sha256": "e13f90083a88946d5018505457226c4236a41d54067a6811b5a3ff70d12cd1b1",
+      "contract_id": "route-b85d3ade7ecfee8953a1:GET",
+      "family": "agent-list",
+      "mime": "application/json",
+      "role": "admin",
+      "route": "/api/core/useragents/",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    {
+      "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "body_bytes": 206,
+      "body_sha256": "f6a961eefdb13c8c0497d4f2ed6f9394ca345d45065d47e8eb12f5383eb3cf78",
+      "contract_id": "route-ba1955652b652c310e20:GET",
+      "family": "agent-detail",
+      "mime": "application/json",
+      "role": "standard",
+      "route": "/api/core/useragents/{agent_id}/",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    {
+      "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "body_bytes": 206,
+      "body_sha256": "f6a961eefdb13c8c0497d4f2ed6f9394ca345d45065d47e8eb12f5383eb3cf78",
+      "contract_id": "route-ba1955652b652c310e20:GET",
+      "family": "agent-detail",
+      "mime": "application/json",
+      "role": "admin",
+      "route": "/api/core/useragents/{agent_id}/",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 1064,
+      "body_sha256": "201ca60213ca8a7fcc23fa3ef51255bdf89b7aa8cee2f048c3770c11877d661f",
+      "contract_id": "route-fdca87537cd595a20d06:GET",
+      "family": "profile-list",
+      "mime": "application/json",
+      "role": "standard",
+      "route": "/api/core/streamprofiles/",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    {
+      "allow": "GET, POST, HEAD, OPTIONS",
+      "body_bytes": 1064,
+      "body_sha256": "201ca60213ca8a7fcc23fa3ef51255bdf89b7aa8cee2f048c3770c11877d661f",
+      "contract_id": "route-fdca87537cd595a20d06:GET",
+      "family": "profile-list",
+      "mime": "application/json",
+      "role": "admin",
+      "route": "/api/core/streamprofiles/",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    {
+      "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "body_bytes": 118,
+      "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+      "contract_id": "route-0d2bf3aa82ca7c57fc62:GET",
+      "family": "profile-detail",
+      "mime": "application/json",
+      "role": "standard",
+      "route": "/api/core/streamprofiles/{profile_id}/",
+      "status": 200,
+      "vary": "Accept, origin"
+    },
+    {
+      "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+      "body_bytes": 118,
+      "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+      "contract_id": "route-0d2bf3aa82ca7c57fc62:GET",
+      "family": "profile-detail",
+      "mime": "application/json",
+      "role": "admin",
+      "route": "/api/core/streamprofiles/{profile_id}/",
+      "status": 200,
+      "vary": "Accept, origin"
+    }
+  ],
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owned_roles_retired": [
+    "baseline",
+    "candidate",
+    "data-init",
+    "origin"
+  ],
+  "package_inputs": 2161,
+  "performance_measured": false,
+  "platform": "linux/amd64",
+  "product_parent": "d9eee1e5293e8893f8c2832ce480fe36d6188d4a",
+  "raw_receipt_hashes": {
+    "cleanup_proof_sha256": "52ecc2ff3f0a62b8c9d9d6dc99bfde942e10ee312d526b9c91f8aac84bb64c2d",
+    "ordinary_build_proof_sha256": "33e031de9cc2362bd8635ed3869344abb05303929b03acbaf3f4f1dc48044b0b",
+    "physical_receipt_sha256": "e0582f26e42c7f4f605752e59324e329a6f6d6b842ab9115e77348597dd75132",
+    "product_review_sha256": "95ca6b5e223b0e4e43d7dd03d9643bb4b1eec632bf31679dcd13fd857b52a729",
+    "scope_freeze_sha256": "878ea7d6b051dd725592be8ea3ec27a8c1b84c6024344c54038b381a59a7a8ee",
+    "wire_proof_sha256": "baf71bb310bbec568ed1a069cb172ce9ff9cbd0e78f9199519bc2bd54bb1f9e9"
+  },
+  "remaining_scope": [
+    "HEAD",
+    "OPTIONS",
+    "content negotiation",
+    "other methods, error responses and role outcomes"
+  ],
+  "scope": "successful direct slash-route GET JSON under Standard and Administrator with fresh Original and Native",
+  "source_archive_sha256": "82536b2599f822c333614c694a0aa1bb7f648e96a5aabd4d1b36f5c1952915a4",
+  "source_tree_sha256": "02ed574d6ddeb6083ec43eeb88834e1d40adc87136859007418d86ff08db0057",
+  "unchanged_protected_inputs": 497
+}

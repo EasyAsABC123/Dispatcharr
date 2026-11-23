@@ -1,0 +1,9 @@
+# Native ARM64 package and startup on 585fde95
+
+Candidate `585fde95` passed the ordinary Linux ARM64 package and signed-startup workflow on Lappy. The loaded OCI index was `sha256:7302cc1a95bdbc095d584803aa7dc92051e1bbd827312d1e7dabedeec421c519`. Both exported binaries were AArch64 ELF files. The independent audit checked the committed bytes and modes of all 2,161 application files, all 497 protected frontend, license and attribution files, and the 16,978-file compilation context. The single application change from the prior package was the scheduled DVR checkpoint fix.
+
+Readiness and React each returned HTTP 200. First-admin creation, the closed setup state, JWT login, and the authenticated channel-group read also returned HTTP 200. The disposable database initialized 62 tables and applied 184 migrations. Exactly one active administrator remained. The fixture exposed neither a host port nor a Docker socket inside the guest.
+
+Preflight, run, proof, and the overall ARM64 owner exited 0. The candidate exited 0. The sealed executor's typed records and exit journal establish retirement of the temporary content container, five authentication containers, and the owned network and volume. The independent audit used those receipts and did not rerun engine inspections. The Cargo receipt records 32 passed and two ignored scheduler tests in the standard run, plus the Main compile check. The [separate disposable PostgreSQL regression](rust-m4-585fde95-scheduled-dvr-shutdown.md) executed one of the ignored tests against the same application source.
+
+The [machine-readable package evidence](../scripts/rust-integration/m10-585fde95-native-arm64.json) binds the physical build, image, startup and retirement. Media, scheduled jobs, performance and the controlled rollout remain separate gates. The original Dispatcharr authors and all upstream contributors retain full credit. See [Attribution](../ATTRIBUTION.md).

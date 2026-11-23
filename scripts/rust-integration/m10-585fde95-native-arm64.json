@@ -1,0 +1,223 @@
+{
+  "account_effect": {
+    "active_admin_login_rows": 1,
+    "after": 1,
+    "before": 0,
+    "group_rows_before_and_after": 0,
+    "mutating_guest_runs": 1
+  },
+  "audit_operations": {
+    "Git_writes": 0,
+    "engine_calls": 0,
+    "network_calls": 0
+  },
+  "defaults_review": {
+    "ARM_Xtream_VOD_response_workflow_covered": false,
+    "inherited_intentional_behavior": "Ordinary Xtream VOD-info enabled when flag absent, reviewed at27531; not a new585fde delta.",
+    "unchanged": "Compose/deployment configuration and build defaults"
+  },
+  "hashes": {
+    "auth": "fbb7017f91554a6d4bcd7cbe5e493be46617fc5c79c5047842727a1d4719ad1e",
+    "auth_literal_exit_journal": "d51f67f3bb604ec2d308d5f8e2f6909e9d9da8649bbdb48d0f2570d27eeaaad6",
+    "binding": "52a408f9c417077331eebf0fc26a2dbe37a709b43041c5d17564d8bd706f033b",
+    "build": "83b5fdbee53f1b366ad3462a5c465cbecccb16aa0b18f7558090c9a3ba41010c",
+    "coordinator_lock": "7cd7737eed89cd75be31a568928ce095542ceb3e323232ab7120edffc111bfc4",
+    "delta_object_manifest": "4fb54d4774f9a74372d02fae4bbe82945a25246f6611955a931541b49ca78e4f",
+    "image_identity": "7797e49cba40d95c43733a0c1979c2c21a440a1f99366ba5ec031c7d12471f6d",
+    "independent_private_audit": "53834e6985063a47f1a11cf6d4022b29239dccc50b0b8ca10335e597f2aa8992",
+    "owner_proof": "213fa75d71be9b568d12c1d174dc6d6d475260c23fa757af6dc863ea5ab08fa7",
+    "package_literal_exit_journal": "180b139d92de8acb6af053af8447cd8c1b0d89afb19c84b04225611ac13a7bb8",
+    "package_receipt": "0186bc0ab13751971b6a942c6546ed17603841db567ea5f9dbcba2da4c1b8715",
+    "plan": "452375c0a78d9e41c90e669fbbb3fc05c9449483cbfddd355241f2db6d02e117",
+    "reviewed_scope": "0f2ee035ff04d41b134dd8ed440648b1330a84686a6ac364c4488817c6549bdc",
+    "source_test_manifest": "4bbc4ff606cd53ec0341d34c61ef4fc5de585f0b17bc747b0315bb558c0fa7eb"
+  },
+  "independent_evidence_sha256": "f4a2956c3586b8bc6e84c835ecb9ece311170db94774d0b71f4b3faa2b3636ed",
+  "journal_counts": {
+    "auth_absence_exit1": 15,
+    "auth_records": 57,
+    "package_absence_exit1": 4,
+    "package_records": 26
+  },
+  "limitations": [
+    "This audit read retained artifacts and local Git only; it performed no new engine inventory or physical run.",
+    "Cleanup is supported by sealed executor checks, typed receipts and operation/exit journals; raw per-resource-ID inspect stdout/stderr was not retained.",
+    "Host-source test provenance is the transferred source-bound coordinator envelopes and hash-verified streams, not a locally repeated Cargo run or ARM Beat runtime workflow.",
+    "Two PostgreSQL-dependent Rust cases were ignored, and remain uncovered.",
+    "This is package/startup/signed-auth evidence, not scheduled-job, media, benchmark, full Compose, upgrade/rollback or full M10 qualification.",
+    "No registry publication, deployment or default switch is claimed. Git publication remains coordinator-owned."
+  ],
+  "owner_literal_exits": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "package": {
+    "ARM64_manifest": "sha256:9f934b1a37414689d7b2e6b5e432e305704ad07a141f754084115791f4cba274",
+    "config_digest_from_BuildKit_log": "sha256:03bca139b13ab05d5c090c5a26716f5bf21e8d43f7cdb82e052d8a852cde4652",
+    "default_features": true,
+    "image_OCI_index": "sha256:7302cc1a95bdbc095d584803aa7dc92051e1bbd827312d1e7dabedeec421c519",
+    "native_dynamic_closures_verified": true,
+    "outputs": {
+      "usr/local/bin/dispatcharr-operator": {
+        "ELF": "ELF64 little-endian AArch64",
+        "assembly_mode": "0755",
+        "bytes": 9707936,
+        "sha256": "356a211512d32aa6717456db4c354c9f196c1c1698f24fc8f42c7f5d4ece101a"
+      },
+      "usr/local/bin/dispatcharr-rs": {
+        "ELF": "ELF64 little-endian AArch64",
+        "assembly_mode": "0755",
+        "bytes": 102405256,
+        "sha256": "eae759c89c89f471cbffcb7cf3b03690ab8af3304a90f165e86129d13cb83b65"
+      }
+    },
+    "platform": "linux/arm64",
+    "runtime": "Retained pinned ordinary FFmpeg/VLC runtime; six base layers plus two binary COPY layers",
+    "sqlite_build_args_both_zero": true,
+    "toolchain": "Rust1.90.0; locked/offline release; jobs2",
+    "uid": "65532:65532"
+  },
+  "publication_status": "sanitized evidence for the migration branch",
+  "recorded_retirement": {
+    "auth_containers_retired": 5,
+    "candidate_exit": 0,
+    "content_container_absent": true,
+    "no_shared_cleanup": true,
+    "owned_network_and_volume_absent": true,
+    "temporary_auth_config_removed": true
+  },
+  "retirement_audit_method": "Verified sealed executor checks, typed receipts and operation/exit journals. Raw resource-ID inspect stdout/stderr was not retained by this executor; no new engine inventory performed.",
+  "schema": "dispatcharr-sanitized-native-arm64-package-evidence/1",
+  "signed_auth": {
+    "authenticated_channel_groups": 200,
+    "channel_groups": 0,
+    "empty_setup": 200,
+    "first_admin_creation": 200,
+    "jwt_login": 200,
+    "jwt_pair_type_checked": true,
+    "setup_closed": 200
+  },
+  "source": {
+    "anchor_revision": "27531aeeea69f53ebb37f33c4069bda0fd2efa8f",
+    "application_files": 2161,
+    "application_revision": "585fde95b5ed61ed2cd714f1d93c2214c6deaad9",
+    "application_tree_sha256": "5b064bdc1c49ab77f9eba5e002f64a454a410a5ae340c4b9c4af1e06ab574cc6",
+    "archive_sha256": "cda4a8ba06861e18075bc68dbdedb8cb3172c5b68ffb83b4c1468d68eaafc233",
+    "changed_paths": [
+      "rust/crates/job-transport/src/normal_beat.rs"
+    ],
+    "direct_parent": "03489b7f8fc04d5e503337c13416fe363fca6c87",
+    "leaf_postimage_sha256": "575377c8d1583ca8e4ee8c69fbbefef3365c3d2edb49474d9f6af33fc8b73e2d",
+    "materialized_context_files": 16978,
+    "protected_files": 497,
+    "protected_tree_sha256": "1a74175c6e698b04b2d2bc0d44b92210893113161a959e319fe919c6faedf716",
+    "vendor_support_and_modes_match_proven_anchor": true
+  },
+  "source_bound_host_checks": {
+    "Main_cargo_check_passed": true,
+    "additional_ignored_cases": [
+      {
+        "case": "normal_beat::query_tests::source_predicates_precede_budget_in_actual_production_query",
+        "reason": "Actual owned loopback PostgreSQL query; no fixture is started by this test. Root must grant its shared fixture/Cargo reservation.",
+        "receipt": "beat",
+        "required_by_review": false
+      },
+      {
+        "case": "normal_beat::tests::acknowledged_clocked_dvr_checkpoint_retires_after_worker_deletion",
+        "reason": "requires a disposable PostgreSQL connection in DISPATCHARR_BEAT_TEST_DATABASE_URL",
+        "receipt": "beat",
+        "required_by_review": false
+      }
+    ],
+    "focused_Rust_tests_passed": 32,
+    "physical_ARM_Beat_runtime_coverage": false,
+    "receipts": {
+      "beat": {
+        "actual_exit": 0,
+        "argv": [
+          "cargo",
+          "+1.90.0",
+          "test",
+          "--offline",
+          "--locked",
+          "-j",
+          "2",
+          "-p",
+          "dispatcharr-job-transport",
+          "--lib",
+          "normal_beat::"
+        ],
+        "cases": [
+          "normal_beat::saved_cleanup::tests::guard_requires_both_unchanged_row_and_cron",
+          "normal_beat::saved_cleanup::tests::copied_name_is_bounded_and_kept_verbatim",
+          "normal_beat::plugin_startup_schedule::tests::source_plugin_interval_boolean_numeric_and_type_branches",
+          "normal_beat::saved_cleanup::tests::retains_configured_name_and_admits_a_persisted_occurrence",
+          "normal_beat::saved_cleanup::tests::admits_only_the_selected_default_queue_cleanup_shape",
+          "normal_beat::tests::core_cleanup_scope_keeps_the_ordinary_same_named_backend_task",
+          "normal_beat::tests::all_interval_units_and_clocked_use_the_same_start_expiry_one_off_guards",
+          "normal_beat::tests::backup_scheduler_selects_only_the_owned_standard_periodic_model",
+          "normal_beat::tests::core_expiration_scope_admits_only_the_canonical_saved_daily_task",
+          "normal_beat::saved_cleanup::tests::tick_panic_becomes_supervisor_fault_without_losing_pending_identity",
+          "normal_beat::tests::only_acknowledged_linked_clocked_dvr_can_confirm_retirement",
+          "normal_beat::tests::named_fields_keep_the_existing_numeric_calendar_constructor_unchanged",
+          "normal_beat::tests::physical_owner_returns_the_permit_only_after_the_last_transport_reference",
+          "normal_beat::tests::cached_backup_timezone_change_reaches_the_next_honolulu_cron_boundary",
+          "normal_beat::tests::scheduler_lifecycle_keeps_dormant_stop_closed",
+          "normal_beat::tests::scheduler_lifecycle_owns_setup_before_start_and_timer_before_drain",
+          "normal_beat::tests::saved_timezone_catalogue_drives_existing_sql_window_and_reload",
+          "normal_beat::tests::selected_core_admits_only_canonical_saved_local_m3u_interval",
+          "normal_beat::tests::scoped_xmltv_rechecks_actual_link_and_rejects_changed_arguments",
+          "normal_beat::tests::settled_contender_admits_cleanup_but_dirty_or_faulted_does_not",
+          "normal_beat::tests::selected_core_linked_xmltv_cron_keeps_the_daily_utc_boundary",
+          "normal_beat::tests::selected_core_saved_xc_extends_only_the_linked_hourly_receiver_gate",
+          "normal_beat::tests::scheduled_xmltv_frame_reaches_existing_refresh_parser",
+          "normal_beat::tests::core_plugin_schedule_uses_the_same_plain_repository_refresh_worker_frame",
+          "normal_beat::tests::selected_core_clocked_dvr_uses_the_existing_recording_receiver_envelope",
+          "normal_beat::tests::scheduled_live_xc_frame_reaches_normal_consumer_with_source_time_limits",
+          "normal_beat::tests::selected_core_saved_stats_uses_the_existing_guards_and_receiver_frame",
+          "normal_beat::tests::core_daily_tasks_use_the_ordinary_due_frames_and_worker_parsers",
+          "normal_beat::tests::scheduled_cleanup_frame_reaches_existing_normal_consumer_parser",
+          "normal_beat::tests::unknown_configured_name_is_literal_and_uses_real_identity_list_repr_and_queue",
+          "normal_beat::tests::selected_core_keeps_distinct_named_cleanup_and_version_rows",
+          "normal_beat::tests::selected_core_defaults_publish_to_registered_receiver_families"
+        ],
+        "receipt_sha256": "9bcebca80141535909b74e966e6066c4f0347581400d8f9267ae75b710a6e8f4",
+        "stderr_sha256": "ce29296b5f540325d8f5ad17d0a1e75475fb6d9c934848ebf44b747fa2dd5a05",
+        "stdout_sha256": "cd215bf1e8f8c70f5fb6f13d4da062dcf3753cdfec406078c69170116497732f"
+      },
+      "main": {
+        "actual_exit": 0,
+        "argv": [
+          "cargo",
+          "+1.90.0",
+          "check",
+          "--offline",
+          "--locked",
+          "-j",
+          "2",
+          "-p",
+          "dispatcharr-rs",
+          "--bin",
+          "dispatcharr-rs"
+        ],
+        "cases": [
+          "dispatcharr-rs binary type-check"
+        ],
+        "receipt_sha256": "a57d8e674239488762671f9b28ecbde96d2e21011a9d4fe096631f3cce8406eb",
+        "stderr_sha256": "d8b126fcc028cddee4f4b57810389e5fb6ed808d609d8473f69c81138aea0fba",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    }
+  },
+  "startup": {
+    "guest_architecture": "aarch64",
+    "guest_uid": 65532,
+    "migrations": 184,
+    "react_html": 200,
+    "ready": 200,
+    "tables": 62
+  },
+  "status": "independently_audited_retained_physical_pass"
+}
