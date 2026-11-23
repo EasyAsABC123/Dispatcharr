@@ -1,0 +1,298 @@
+{
+  "actual_exits": {
+    "campaign": 0,
+    "cleanup": 0,
+    "preflight": 0,
+    "proof": 0,
+    "run": 0,
+    "runtime_driver": 0
+  },
+  "business_responses_total": 16,
+  "credit": "The original Dispatcharr and React authors and contributors retain full credit.",
+  "custody": {
+    "cleanup_stdout_sha256": "bc2673e5b1d26a30f20bee67ba25b0d0181fbe5d205c58ccfa1838150410ca25",
+    "proof_stdout_sha256": "5ee801644888137fb704df386352113c2f65094b2ed4e6edf3fcef51cb47c164",
+    "raw_runtime_receipt_sha256": "ccb9030990815629c9ffcc13c6531eed2c38d82c07bb9ee99a3b4531ad3285cd",
+    "run_seal_sha256": "e017981c3814c0ce79d28d7398bf5634366a986661264804369b4f8437a77c8c"
+  },
+  "fully_verified_operations_added": 0,
+  "identity_checks_per_backend": [
+    {
+      "id": 1,
+      "level": 1,
+      "role": "standard"
+    },
+    {
+      "id": 2,
+      "level": 10,
+      "role": "admin"
+    }
+  ],
+  "matched_allow_pairs": 0,
+  "matched_typed_response_pairs": 8,
+  "matched_vary_pairs": 0,
+  "matched_wire_body_pairs": 0,
+  "original": {
+    "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+    "image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+    "revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "owned_fixture": {
+    "agent_id": 4,
+    "profile_agent_id": 4,
+    "profile_id": 6
+  },
+  "paired_cases": [
+    {
+      "Original_wire": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 851,
+        "body_sha256": "92bb72ba4c0d2c7c9e699ab08f2a10a9a26bb3e7468857e3c7fbfb6ad6792188",
+        "mime": "application/json",
+        "vary": "Accept, origin"
+      },
+      "Rust_wire": {
+        "allow": null,
+        "body_bytes": 851,
+        "body_sha256": "8c2803b19bddee48bbbbbd1bcb162bf4138b082223f3e34cb8be544b1a619e0f",
+        "mime": "application/json",
+        "vary": "origin"
+      },
+      "fixture_user_level": 1,
+      "method": "GET",
+      "operation_id": "route-b85d3ade7ecfee8953a1:GET",
+      "ordered_record_ids": [
+        2,
+        3,
+        1,
+        4
+      ],
+      "path": "/api/core/useragents/",
+      "role": "standard",
+      "status_both": 200,
+      "typed_JSON_sha256_both": "30c4cf0149e1c56b2d356c38b8fc314c8374c1c5a0f4dd71f7d17c22a7de81a5"
+    },
+    {
+      "Original_wire": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 851,
+        "body_sha256": "92bb72ba4c0d2c7c9e699ab08f2a10a9a26bb3e7468857e3c7fbfb6ad6792188",
+        "mime": "application/json",
+        "vary": "Accept, origin"
+      },
+      "Rust_wire": {
+        "allow": null,
+        "body_bytes": 851,
+        "body_sha256": "8c2803b19bddee48bbbbbd1bcb162bf4138b082223f3e34cb8be544b1a619e0f",
+        "mime": "application/json",
+        "vary": "origin"
+      },
+      "fixture_user_level": 10,
+      "method": "GET",
+      "operation_id": "route-b85d3ade7ecfee8953a1:GET",
+      "ordered_record_ids": [
+        2,
+        3,
+        1,
+        4
+      ],
+      "path": "/api/core/useragents/",
+      "role": "admin",
+      "status_both": 200,
+      "typed_JSON_sha256_both": "30c4cf0149e1c56b2d356c38b8fc314c8374c1c5a0f4dd71f7d17c22a7de81a5"
+    },
+    {
+      "Original_wire": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 206,
+        "body_sha256": "f6a961eefdb13c8c0497d4f2ed6f9394ca345d45065d47e8eb12f5383eb3cf78",
+        "mime": "application/json",
+        "vary": "Accept, origin"
+      },
+      "Rust_wire": {
+        "allow": null,
+        "body_bytes": 206,
+        "body_sha256": "f63df3c785fe779733ef578902d53f8e4ad9df14d5f0633e3a320d86af72f2ca",
+        "mime": "application/json",
+        "vary": "origin"
+      },
+      "fixture_user_level": 1,
+      "method": "GET",
+      "operation_id": "route-ba1955652b652c310e20:GET",
+      "ordered_record_ids": [
+        4
+      ],
+      "path": "/api/core/useragents/4/",
+      "role": "standard",
+      "status_both": 200,
+      "typed_JSON_sha256_both": "f6188498d47e73efe1743016f57c797f1b7299d1e32667153d070d14cf0c9143"
+    },
+    {
+      "Original_wire": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 206,
+        "body_sha256": "f6a961eefdb13c8c0497d4f2ed6f9394ca345d45065d47e8eb12f5383eb3cf78",
+        "mime": "application/json",
+        "vary": "Accept, origin"
+      },
+      "Rust_wire": {
+        "allow": null,
+        "body_bytes": 206,
+        "body_sha256": "f63df3c785fe779733ef578902d53f8e4ad9df14d5f0633e3a320d86af72f2ca",
+        "mime": "application/json",
+        "vary": "origin"
+      },
+      "fixture_user_level": 10,
+      "method": "GET",
+      "operation_id": "route-ba1955652b652c310e20:GET",
+      "ordered_record_ids": [
+        4
+      ],
+      "path": "/api/core/useragents/4/",
+      "role": "admin",
+      "status_both": 200,
+      "typed_JSON_sha256_both": "f6188498d47e73efe1743016f57c797f1b7299d1e32667153d070d14cf0c9143"
+    },
+    {
+      "Original_wire": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1064,
+        "body_sha256": "201ca60213ca8a7fcc23fa3ef51255bdf89b7aa8cee2f048c3770c11877d661f",
+        "mime": "application/json",
+        "vary": "Accept, origin"
+      },
+      "Rust_wire": {
+        "allow": null,
+        "body_bytes": 1064,
+        "body_sha256": "0e6e5ac8dbee64048502eec7d8dc84d5a9561d8ad9f15047207fffd04b320a04",
+        "mime": "application/json",
+        "vary": "origin"
+      },
+      "fixture_user_level": 1,
+      "method": "GET",
+      "operation_id": "route-fdca87537cd595a20d06:GET",
+      "ordered_record_ids": [
+        3,
+        4,
+        5,
+        2,
+        1,
+        6
+      ],
+      "path": "/api/core/streamprofiles/",
+      "role": "standard",
+      "status_both": 200,
+      "typed_JSON_sha256_both": "97a7ffce8c424b799c17e70d9eea72e3a69ebfe50b8afd007cad7d86237a465c"
+    },
+    {
+      "Original_wire": {
+        "allow": "GET, POST, HEAD, OPTIONS",
+        "body_bytes": 1064,
+        "body_sha256": "201ca60213ca8a7fcc23fa3ef51255bdf89b7aa8cee2f048c3770c11877d661f",
+        "mime": "application/json",
+        "vary": "Accept, origin"
+      },
+      "Rust_wire": {
+        "allow": null,
+        "body_bytes": 1064,
+        "body_sha256": "0e6e5ac8dbee64048502eec7d8dc84d5a9561d8ad9f15047207fffd04b320a04",
+        "mime": "application/json",
+        "vary": "origin"
+      },
+      "fixture_user_level": 10,
+      "method": "GET",
+      "operation_id": "route-fdca87537cd595a20d06:GET",
+      "ordered_record_ids": [
+        3,
+        4,
+        5,
+        2,
+        1,
+        6
+      ],
+      "path": "/api/core/streamprofiles/",
+      "role": "admin",
+      "status_both": 200,
+      "typed_JSON_sha256_both": "97a7ffce8c424b799c17e70d9eea72e3a69ebfe50b8afd007cad7d86237a465c"
+    },
+    {
+      "Original_wire": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 118,
+        "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+        "mime": "application/json",
+        "vary": "Accept, origin"
+      },
+      "Rust_wire": {
+        "allow": null,
+        "body_bytes": 118,
+        "body_sha256": "75d821fd91cf36db74904ce8dbb1acdecca54e98bd2a8988b7f8864dfc29a9f8",
+        "mime": "application/json",
+        "vary": "origin"
+      },
+      "fixture_user_level": 1,
+      "method": "GET",
+      "operation_id": "route-0d2bf3aa82ca7c57fc62:GET",
+      "ordered_record_ids": [
+        6
+      ],
+      "path": "/api/core/streamprofiles/6/",
+      "role": "standard",
+      "status_both": 200,
+      "typed_JSON_sha256_both": "6c5be4d0e9e40ff7dbc2ee40891ad431d7048dfe3487a0c20a17ec2b6c3b2b87"
+    },
+    {
+      "Original_wire": {
+        "allow": "GET, PUT, PATCH, DELETE, HEAD, OPTIONS",
+        "body_bytes": 118,
+        "body_sha256": "f5950a557803809e13f8d9bc930101b8c64ae5e4d1af3fd199d538172ed9cde6",
+        "mime": "application/json",
+        "vary": "Accept, origin"
+      },
+      "Rust_wire": {
+        "allow": null,
+        "body_bytes": 118,
+        "body_sha256": "75d821fd91cf36db74904ce8dbb1acdecca54e98bd2a8988b7f8864dfc29a9f8",
+        "mime": "application/json",
+        "vary": "origin"
+      },
+      "fixture_user_level": 10,
+      "method": "GET",
+      "operation_id": "route-0d2bf3aa82ca7c57fc62:GET",
+      "ordered_record_ids": [
+        6
+      ],
+      "path": "/api/core/streamprofiles/6/",
+      "role": "admin",
+      "status_both": 200,
+      "typed_JSON_sha256_both": "6c5be4d0e9e40ff7dbc2ee40891ad431d7048dfe3487a0c20a17ec2b6c3b2b87"
+    }
+  ],
+  "performance_measured": false,
+  "physical_cleanup": {
+    "compose_down_passed": true,
+    "exact_container_and_process_generations_absent": {
+      "baseline": true,
+      "candidate": true,
+      "data-init": true,
+      "origin": true
+    },
+    "remaining_owned": {
+      "containers": 0,
+      "networks": 0,
+      "volumes": 0
+    }
+  },
+  "response_pairs": 8,
+  "rust": {
+    "image_id": "sha256:bb3bdbc5197780f3e49978a1c55650333d633e168b5c44ea663854571d2c2670",
+    "package_manifest_sha256": "328762af67efd3a1d84c5d3b25e4a842800a55351e1725138cc1a8605c4c7bfe",
+    "platform": "linux/amd64",
+    "revision": "585fde95b5ed61ed2cd714f1d93c2214c6deaad9",
+    "source_tree_sha256": "5b064bdc1c49ab77f9eba5e002f64a454a410a5ae340c4b9c4af1e06ab574cc6"
+  },
+  "schema": 1,
+  "scope": "Four direct Core settings GET routes using two owned signed fixture actors",
+  "selected_SQL_and_broker_sha256_before_after_both": "def553faced9f338e0a42a138769e0bbe77f03c7ccef971a9f1b72fe5a4a615c",
+  "whole_milestone_accepted": false
+}
