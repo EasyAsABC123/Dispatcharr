@@ -1,0 +1,11 @@
+# M11 ARM64 offline release intake for d2c5e611
+
+The offline verifier exited 0 for Rust application revision `d2c5e6113efe947551c17bf877e8c6b2c964190c` on `linux/arm64`, compared with upstream Dispatcharr revision `1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430`. It checked the signed ordinary package, exact platform child and configuration, scoped Core comparison, and physical M10 cold logical return at the same application and configuration. The Core physical run exited 0, its original proof exited 1 on a fixture filename mismatch, and a separate read-only reconstruction exited 0. The intake receipt records all three results.
+
+A read-only verifier on Lappy compared five retained checkpoint and cold-copy manifest files byte for byte and checked their digests against the recorded manifests. It bound those files to the shared archive, the stopped Native writer's checkpoint, the exact configuration and the M10 run, proof and cleanup. The physical drill recorded 14 ingress calls, including 10 signed calls, eight with a Source-issued session. After Native stopped and its database drained, cold Original read the persisted Native rename with its existing signed session. Cleanup accounted for 16 containers, one network and six volumes. Database contents stayed on Lappy.
+
+All 13 denial controls ran and passed. The verifier rejected the genuine older ARM64 receipt, mixed image or signed-package evidence, replaced or re-encoded receipt bytes, missing literal proof, configuration and checkpoint mismatches, incomplete operator evidence, and a scoped cold drill supplied as full M10 acceptance. It also rejected self-declared operator authority. The intake made zero engine calls and performed zero deployment actions.
+
+M11 remains open pending formal M9 acceptance, full M10 operator handoff and rollout, approved local retention, compatibility evidence for the same release configuration, operator signoffs with a runbook and monitoring, and separate release authorization. The verifier issued no M11 fallback component, operator approval or release authorization.
+
+The Rust rewrite builds on Dispatcharr and its original authors and contributors. The pinned upstream application supplied the Original behavior and comparison workload.

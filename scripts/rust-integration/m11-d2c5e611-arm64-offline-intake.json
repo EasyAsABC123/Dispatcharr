@@ -1,0 +1,129 @@
+{
+  "actual_exit": 0,
+  "arm_child_manifest": "sha256:8844863bf338d5e3dced18ee2ea0baeb5a6144d6773356d0c9a73135c5c82fb2",
+  "arm_config": "sha256:c5b9b81f005c1770d5b0e7230ffe4eef74be9af798a1182b29683d8666768223",
+  "candidate": {
+    "image": "sha256:bd5030fe5d58c5157bd0539218057c4d01e8b2f8d0615240bf31d63531981dbf",
+    "manifest_sha256": "2e60da5a1b09e191759dcbac126bbfb48552d2f536e33f887766f8327d258170",
+    "platform": "linux/arm64",
+    "revision": "d2c5e6113efe947551c17bf877e8c6b2c964190c",
+    "signed_auth_sha256": "b52671c537891b2d0432590cb75163dc10e523bce5c889cc455f7f6f18dbbe5c",
+    "source_tree_sha256": "93ba156b05eabcfcd64184ae834ae9c1373f5fff4770e3bb8cc3e4080a8fc862"
+  },
+  "checkpoint_sha256": "9dc5540286379c2e6ffa1a17c5dbab1c64e93e4b919e2b49b58f25d64116447a",
+  "cold_cleanup_sha256": "49e0a68f1f7106b6fad882b183c7ea1b2e18b840857c65933a7cb6f858f3a28e",
+  "cold_raw_receipt_sha256": "ca28f42d04a985d0f92a8b8debdc0b062658d2e7c38262e1084e4e3def99ce35",
+  "common_archive_sha256": "9cf26d519095d1091afe60e0d725f9f77857e9fa699a91f7d5fdbddd1d98bcd8",
+  "configuration_sha256": "4bd077f9f89368ae40df4bd4f06476472c76f1037dc35261391743504d3df4f9",
+  "controls": [
+    {
+      "control": "genuine historical 8fc fallback",
+      "guard": "stale-fallback-candidate",
+      "rejected": true
+    },
+    {
+      "control": "current revision with older image",
+      "guard": "mixed-candidate-image",
+      "rejected": true
+    },
+    {
+      "control": "old evidence replacing current receipt",
+      "guard": "receipt-digest-mismatch",
+      "rejected": true
+    },
+    {
+      "control": "equivalent JSON with different receipt bytes",
+      "guard": "receipt-digest-mismatch",
+      "rejected": true
+    },
+    {
+      "control": "missing signed package proof",
+      "guard": "unverified-literal-result",
+      "rejected": true
+    },
+    {
+      "control": "mixed signed auth package",
+      "guard": "signed-package-binding-mismatch",
+      "rejected": true
+    },
+    {
+      "control": "same candidate with different configuration",
+      "guard": "configuration-mismatch",
+      "rejected": true
+    },
+    {
+      "control": "cold return checkpoint manifest drift",
+      "guard": "restored-manifest-mismatch",
+      "rejected": true
+    },
+    {
+      "control": "missing approved retention",
+      "guard": "retention-authority",
+      "rejected": true
+    },
+    {
+      "control": "incomplete actual operator packet",
+      "guard": "missing-evidence",
+      "rejected": true
+    },
+    {
+      "control": "missing formal M9",
+      "guard": "formal-m9-open",
+      "rejected": true
+    },
+    {
+      "control": "scoped cold receipt substituted for full M10",
+      "guard": "formal-m10-open",
+      "rejected": true
+    },
+    {
+      "control": "self-declared operator authorities",
+      "guard": "separate-release-authorization",
+      "rejected": true
+    }
+  ],
+  "core_independent_reconstruction": 0,
+  "core_original_proof": 1,
+  "core_physical_run": 0,
+  "current_receipt_byte_replay_verified": true,
+  "deployment_actions": 0,
+  "engine_calls": 0,
+  "equal_restored_manifest_count": 5,
+  "evidence_sha256": {
+    "cold": "4c45329ef3ed6965cc78881fe93208b7dd597ce330ee58b53ab629d89d639cc2",
+    "core": "bbfc9e0be4b2a3debfbcd0aba3712c4f66a7ab5d69987acfe52307f66f40f502",
+    "historical": "decb2246b80ed476d530ec9f4284833f0087cb460af464b86f6a933eaacaf28b",
+    "host": "ac67cf941d02806269c4664bc30b6f0dfe19eba005d4abb5864979455b0852b6",
+    "package": "4d17d1c093571e7b5a7b904183c64d18990f873c61d7d41af4e4f411c55b1c66"
+  },
+  "exact_retired_counts": {
+    "containers": 16,
+    "networks": 1,
+    "volumes": 6
+  },
+  "m11_fallback_component_issued": false,
+  "open_gates": [
+    "formal_m9_acceptance",
+    "formal_m10_operator_handoff_and_rollout",
+    "approved_local_retention",
+    "same_configuration_compatibility",
+    "operator_signoffs_runbook_monitoring",
+    "separate_release_authorization"
+  ],
+  "operator_approved": false,
+  "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "platform": "linux/arm64",
+  "release_authorized": false,
+  "restore_manifest_equality_verified": true,
+  "schema": "dispatcharr-m11-current-arm64-offline-intake/1",
+  "verified_ingress": {
+    "signed": 10,
+    "source_issued": 8,
+    "total": 14
+  },
+  "intake_raw_stdout_sha256": "b7193619687926acfa5f4300927f53f3f3022137d6696b87fbc8cb4ec8bcedfa",
+  "verifier_sha256": "3276cc9b7588d76fe2a030510755dd1e377113d847f6194f36435769cbb9c67e",
+  "same_host_projector_sha256": "ccbadf2754d7706cc5e683ba9e74415c1eda0c6708af1f1b7d9906e1ca090ed5",
+  "same_host_projection_actual_exit": 0,
+  "raw_database_data_transferred": false
+}
