@@ -455,7 +455,18 @@ impl StreamEngine {
                     // A held response cannot reserve another Redis payload.
                     // Snapshot above still observes an already retired owner.
                     let Some(permit)=next_profile_delivery(&delivery,&mut stopped,&mut source_stopped).await else {break;};
-                    match store.get_owned_retained(&channel,&expected,sequence,(permit,client.clone(),reader.clone(),demand.clone(),_profiles.clone())).await{
+                    let retained=(permit,client.clone(),reader.clone(),demand.clone(),_profiles.clone());
+                    let payload=if register {
+                        tokio::select!{
+                            biased;
+                            _=wait_profile_client_stop(&mut stopped)=>break,
+                            _=source_stopped.changed()=>break,
+                            result=store.get_owned_wait_retained(&channel,&expected,sequence,retained)=>result,
+                        }
+                    }else{
+                        store.get_owned_retained(&channel,&expected,sequence,retained).await
+                    };
+                    match payload{
                         Ok((Some(data),(permit,client_owner,reader_owner,demand_owner,profile_owner)))=>{
                             sequence=sequence.saturating_add(1);
                             keepalive.received();

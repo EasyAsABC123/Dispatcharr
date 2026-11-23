@@ -7,7 +7,7 @@ pub use profile_events::{
     ProfileEvents,
 };
 use std::{sync::Arc, time::Duration};
-use tokio::sync::{OwnedSemaphorePermit, Semaphore};
+use tokio::sync::{Notify, OwnedSemaphorePermit, Semaphore, TryAcquireError};
 use transport::{RedisTransport, TransportConfig};
 
 #[derive(Clone, Debug)]
@@ -54,7 +54,7 @@ struct Inner {
     address: redis::ConnectionInfo,
     transport: RedisTransport,
     config: OutputConfig,
-    read_bytes: Arc<Semaphore>,
+    read_budget: PayloadReadBudget,
 }
 #[derive(Clone)]
 pub struct OutputLease {
@@ -134,6 +134,26 @@ impl ProfileStore {
             .get_owned_retained(channel, &self.format, expected_owner, sequence, guard)
             .await
     }
+    /// Wait for the existing bounded byte budget for a live profile TS reader.
+    /// Callers can cancel a queued read without creating a Redis operation.
+    pub async fn get_owned_wait_retained<G: Send + 'static>(
+        &self,
+        channel: &str,
+        expected_owner: &str,
+        sequence: u64,
+        guard: G,
+    ) -> Result<(Option<SegmentBytes>, G), Error> {
+        self.store
+            .get_owned_retained_with_admission(
+                channel,
+                &self.format,
+                expected_owner,
+                sequence,
+                guard,
+                ReadAdmission::WaitForProfile,
+            )
+            .await
+    }
     pub async fn get(&self, channel: &str, sequence: u64) -> Result<Option<SegmentBytes>, Error> {
         self.store.get(channel, &self.format, sequence).await
     }
@@ -199,7 +219,7 @@ pub struct HlsColdPoll {
 }
 pub struct SegmentBytes {
     data: Vec<u8>,
-    _bytes: OwnedSemaphorePermit,
+    _bytes: PayloadBudgetPermit,
 }
 impl AsRef<[u8]> for SegmentBytes {
     fn as_ref(&self) -> &[u8] {
@@ -279,7 +299,10 @@ impl OutputStore {
             inner: Arc::new(Inner {
                 address,
                 transport,
-                read_bytes: Arc::new(Semaphore::new(config.max_read_bytes)),
+                read_budget: PayloadReadBudget::new(
+                    config.max_read_bytes,
+                    config.max_queued_operations,
+                ),
                 config,
             }),
         })
@@ -516,6 +539,25 @@ impl OutputStore {
         sequence: u64,
         guard: G,
     ) -> Result<(Option<SegmentBytes>, G), Error> {
+        self.get_owned_retained_with_admission(
+            channel,
+            format,
+            expected_owner,
+            sequence,
+            guard,
+            ReadAdmission::Immediate,
+        )
+        .await
+    }
+    async fn get_owned_retained_with_admission<G: Send + 'static>(
+        &self,
+        channel: &str,
+        format: &str,
+        expected_owner: &str,
+        sequence: u64,
+        guard: G,
+        admission: ReadAdmission,
+    ) -> Result<(Option<SegmentBytes>, G), Error> {
         if !valid_token(expected_owner) {
             return Err(Error::InvalidKey);
         }
@@ -524,6 +566,7 @@ impl OutputStore {
             format!("{}{sequence}", keys[4]),
             Some((keys[0].clone(), expected_owner.to_owned())),
             guard,
+            admission,
         )
         .await
     }
@@ -543,11 +586,12 @@ impl OutputStore {
             keys[5].clone(),
             Some((keys[0].clone(), expected_owner.to_owned())),
             guard,
+            ReadAdmission::Immediate,
         )
         .await
     }
     async fn read_key(&self, key: String) -> Result<Option<SegmentBytes>, Error> {
-        self.read_key_retained(key, None, ())
+        self.read_key_retained(key, None, (), ReadAdmission::Immediate)
             .await
             .map(|(data, ())| data)
     }
@@ -556,13 +600,17 @@ impl OutputStore {
         key: String,
         expected: Option<(String, String)>,
         guard: G,
+        admission: ReadAdmission,
     ) -> Result<(Option<SegmentBytes>, G), Error> {
         let reserved = self
             .inner
-            .read_bytes
-            .clone()
-            .try_acquire_many_owned(self.inner.config.max_segment_bytes as u32)
-            .map_err(|_| Error::Capacity)?;
+            .read_budget
+            .reserve(
+                self.inner.config.max_segment_bytes as u32,
+                self.inner.config.command_timeout,
+                admission,
+            )
+            .await?;
         let maximum = self.inner.config.max_segment_bytes.to_string();
         let mut keys = vec![key];
         let mut owner = String::new();
@@ -590,6 +638,118 @@ impl OutputStore {
         ))
     }
 }
+#[derive(Clone, Copy)]
+enum ReadAdmission {
+    Immediate,
+    WaitForProfile,
+}
+
+struct PayloadReadBudget {
+    bytes: Arc<Semaphore>,
+    profile_waiters: Semaphore,
+    profile_head: Semaphore,
+    released: Arc<Notify>,
+}
+impl PayloadReadBudget {
+    fn new(bytes: usize, max_waiters: usize) -> Self {
+        Self {
+            bytes: Arc::new(Semaphore::new(bytes)),
+            profile_waiters: Semaphore::new(max_waiters),
+            profile_head: Semaphore::new(1),
+            released: Arc::new(Notify::new()),
+        }
+    }
+
+    fn try_reserve(&self, amount: u32) -> Result<PayloadBudgetPermit, TryAcquireError> {
+        let permit = self.bytes.clone().try_acquire_many_owned(amount)?;
+        Ok(PayloadBudgetPermit {
+            permit: Some(permit),
+            released: self.released.clone(),
+        })
+    }
+
+    async fn reserve(
+        &self,
+        amount: u32,
+        timeout: Duration,
+        admission: ReadAdmission,
+    ) -> Result<PayloadBudgetPermit, Error> {
+        if matches!(admission, ReadAdmission::Immediate) {
+            return self.try_reserve(amount).map_err(|_| Error::Capacity);
+        }
+
+        // Profile order is FIFO among profile readers. The weighted budget
+        // never queues: an immediate HLS/fMP4 read may use available bytes
+        // while the profile head waits to be polled again.
+        let head = self.profile_head.try_acquire();
+        match head.as_ref() {
+            Ok(_) => match self.try_reserve(amount) {
+                Ok(permit) => return Ok(permit),
+                Err(TryAcquireError::NoPermits) => {}
+                Err(TryAcquireError::Closed) => return Err(Error::Capacity),
+            },
+            Err(TryAcquireError::NoPermits) => {}
+            Err(TryAcquireError::Closed) => return Err(Error::Capacity),
+        }
+        let _waiter = self
+            .profile_waiters
+            .try_acquire()
+            .map_err(|_| Error::Capacity)?;
+        tokio::time::timeout(timeout, async {
+            let _head = match head {
+                Ok(permit) => permit,
+                Err(_) => self
+                    .profile_head
+                    .acquire()
+                    .await
+                    .map_err(|_| Error::Capacity)?,
+            };
+            loop {
+                let notification = self.released.notified();
+                tokio::pin!(notification);
+                // Make release concurrent with try_reserve observable before
+                // checking the budget, without polling the budget or parking
+                // under a shared mutex.
+                notification.as_mut().enable();
+                match self.try_reserve(amount) {
+                    Ok(permit) => return Ok(permit),
+                    Err(TryAcquireError::Closed) => return Err(Error::Capacity),
+                    Err(TryAcquireError::NoPermits) => notification.await,
+                }
+            }
+        })
+        .await
+        .map_err(|_| Error::Capacity)?
+    }
+}
+
+struct PayloadBudgetPermit {
+    permit: Option<OwnedSemaphorePermit>,
+    released: Arc<Notify>,
+}
+impl PayloadBudgetPermit {
+    fn split(&mut self, size: usize) -> Option<Self> {
+        let permit = self.permit.as_mut()?.split(size)?;
+        Some(Self {
+            permit: Some(permit),
+            released: self.released.clone(),
+        })
+    }
+}
+impl Drop for PayloadBudgetPermit {
+    fn drop(&mut self) {
+        // The split actual frame, the remainder and the supervised physical
+        // command all release credits before waking the sole profile head.
+        if let Some(permit) = self.permit.take() {
+            let has_bytes = permit.num_permits() > 0;
+            drop(permit);
+            if has_bytes {
+                self.released.notify_one();
+            }
+        }
+    }
+}
+
 impl OutputLease {
     pub fn token(&self) -> &str {
         &self.token
@@ -881,3 +1041,102 @@ local all=redis.call('ZRANGE',KEYS[4],0,-1,'WITHSCORES');local entries={}
 for i=1,#all,2 do if not tonumber(all[i]) then return redis.error_reply('CORRUPT sequence') end table.insert(entries,{all[i],all[i+1]}) end
 return {1,owner,index,redis.call('GET',KEYS[3]) or '',entries}
 "#;
+
+#[cfg(test)]
+mod profile_read_admission_tests {
+    use super::*;
+    use std::future::{poll_fn, Future};
+    use std::task::Poll;
+
+    #[tokio::test]
+    async fn profile_queue_preserves_immediate_reads_fifo_and_actual_byte_ownership() {
+        const SEGMENT: u32 = 32 * 1024 * 1024;
+        let budget = PayloadReadBudget::new(8 * SEGMENT as usize, 2);
+        let timeout = Duration::from_secs(1);
+        let mut held = (0..8)
+            .map(|_| budget.try_reserve(SEGMENT).unwrap())
+            .collect::<Vec<_>>();
+        assert!(matches!(
+            budget
+                .reserve(SEGMENT, timeout, ReadAdmission::Immediate)
+                .await,
+            Err(Error::Capacity)
+        ));
+
+        let mut ninth = Box::pin(budget.reserve(SEGMENT, timeout, ReadAdmission::WaitForProfile));
+        let mut tenth = Box::pin(budget.reserve(SEGMENT, timeout, ReadAdmission::WaitForProfile));
+        poll_fn(|cx| {
+            assert!(ninth.as_mut().poll(cx).is_pending());
+            assert!(tenth.as_mut().poll(cx).is_pending());
+            Poll::Ready(())
+        })
+        .await;
+        assert_eq!(budget.profile_waiters.available_permits(), 0);
+        assert!(matches!(
+            budget
+                .reserve(SEGMENT, timeout, ReadAdmission::WaitForProfile)
+                .await,
+            Err(Error::Capacity)
+        ));
+
+        // The sleeping TS head was notified, but may not pre-reserve the
+        // freed bytes. An immediate HLS/fMP4-style read still sees them.
+        drop(held.pop().unwrap());
+        let immediate = budget
+            .reserve(SEGMENT, timeout, ReadAdmission::Immediate)
+            .await
+            .expect("a TS waiter must not hide available weighted capacity");
+        poll_fn(|cx| {
+            assert!(ninth.as_mut().poll(cx).is_pending());
+            assert!(tenth.as_mut().poll(cx).is_pending());
+            Poll::Ready(())
+        })
+        .await;
+        drop(immediate);
+        poll_fn(|cx| {
+            assert!(tenth.as_mut().poll(cx).is_pending());
+            Poll::Ready(())
+        })
+        .await;
+        let mut grant = ninth.await.unwrap();
+        assert_eq!(
+            grant.permit.as_ref().unwrap().num_permits(),
+            SEGMENT as usize
+        );
+        assert_eq!(budget.profile_waiters.available_permits(), 1);
+        assert_eq!(budget.bytes.available_permits(), 0);
+        drop(tenth);
+        assert_eq!(budget.profile_waiters.available_permits(), 2);
+        assert_eq!(budget.bytes.available_permits(), 0);
+
+        let retained_frame = grant.split(17).unwrap();
+        drop(grant);
+        assert_eq!(budget.bytes.available_permits(), SEGMENT as usize - 17);
+        drop(retained_frame);
+        drop(held);
+        assert_eq!(budget.bytes.available_permits(), 8 * SEGMENT as usize);
+    }
+
+    #[tokio::test]
+    async fn profile_head_cancellation_and_release_are_observed_by_its_successor() {
+        let budget = PayloadReadBudget::new(8, 2);
+        let timeout = Duration::from_secs(1);
+        let held = budget.try_reserve(8).unwrap();
+        let mut first = Box::pin(budget.reserve(8, timeout, ReadAdmission::WaitForProfile));
+        let mut second = Box::pin(budget.reserve(8, timeout, ReadAdmission::WaitForProfile));
+        poll_fn(|cx| {
+            assert!(first.as_mut().poll(cx).is_pending());
+            assert!(second.as_mut().poll(cx).is_pending());
+            Poll::Ready(())
+        })
+        .await;
+        drop(first);
+        assert_eq!(budget.profile_waiters.available_permits(), 1);
+        drop(held);
+        let replacement = second.await.unwrap();
+        assert_eq!(budget.profile_waiters.available_permits(), 2);
+        assert_eq!(budget.bytes.available_permits(), 0);
+        drop(replacement);
+        assert_eq!(budget.bytes.available_permits(), 8);
+    }
+}
