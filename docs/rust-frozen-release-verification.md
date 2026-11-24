@@ -1014,3 +1014,12 @@ decoded 75 video frames. Execution, independent evaluation and exact
 cleanup exited zero. This qualifies `package/baseline-all` for this
 package. The full executable inventory and release workflow matrix remain
 open. [Verified paired baseline](rust-m0-amd64-baseline-3d8f9672.json)
+
+The exact ARM64 package also passed the isolated M10 copied PostgreSQL
+rollback rehearsal. Pinned Original supplied the signed session. Rust
+acknowledged a channel rename. The audit saw zero clients on the retired
+writer database before creating the cold copies. The same signed session
+read back the rename from cold Original. Five database checkpoints matched,
+and the two boots were limited to the four expected clock-bounded startup
+effects. The 16 containers, six volumes and one network retired. M11
+remains on hold. [M10 rollback rehearsal evidence](rust-m10-m11-arm64-cold-return-3d8f9672.md)
