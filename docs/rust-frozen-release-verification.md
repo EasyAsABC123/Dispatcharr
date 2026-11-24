@@ -35,6 +35,12 @@ The unsigned plugin repository owner can schedule the full 25-call comparison ag
 
 HDHomeRun discovery, lineup, and status paths now accept percent-encoded decimal output-profile IDs. The router still requires ASCII digits after decoding and canonicalizes leading zeros, including on named ChannelProfile paths. Fifteen HDHomeRun library tests passed. The configured-client Compose fixture will check the ordinary signed package response and encoded aliases.
 
+## SQLite backup creation
+
+The backup library now selects its snapshot from the admitted runtime datastore and writes both formats with the same bounded archive writer. PostgreSQL keeps the existing dump path. The optional SQLite path uses SQLite’s online backup API so the archive includes committed WAL data. Its version 2 archive contains `database.sqlite3` and `metadata.json`.
+
+On Linux, 25 feature-enabled and 17 default backup tests passed. The feature remains outside the ordinary application package, which still requires work on SQLite startup, restore ownership, migration compatibility, and image linkage. The fixture must verify those separately before SQLite contributes to M8 or M9.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution.

@@ -22,6 +22,10 @@ use zip::{write::SimpleFileOptions, ZipArchive, ZipWriter};
 #[cfg(target_os = "linux")]
 mod guarded_ready;
 mod restore_plugin_copy;
+#[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+mod sqlite_create;
+#[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+mod sqlite_snapshot;
 mod taskless_archive_rows;
 #[cfg(target_os = "linux")]
 pub use guarded_ready::{
@@ -475,7 +479,66 @@ fn copy(
 }
 /// Successful archives remain DB-only v2; compressed ZIP bytes need not match
 /// Python's deflater. Current bounded/malformed input limits are explicit deltas.
+/// Select the datastore from an admitted runtime configuration.
+pub enum BackupDatastore<'a> {
+    PostgreSql {
+        config: &'a PgConfig,
+        runtime: &'a Runtime,
+    },
+    #[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+    Sqlite { database: &'a Path },
+}
+
 pub fn create_backup(
+    config: &PgConfig,
+    runtime: &Runtime,
+    backup_root: &Path,
+    scratch_root: &Path,
+    clock: &dyn SourceClock,
+    limits: &Limits,
+    cancel: &Cancellation,
+) -> Result<PathBuf, Error> {
+    create_backup_for_datastore(
+        BackupDatastore::PostgreSql { config, runtime },
+        backup_root,
+        scratch_root,
+        clock,
+        limits,
+        cancel,
+    )
+}
+
+pub fn create_backup_for_datastore(
+    datastore: BackupDatastore<'_>,
+    backup_root: &Path,
+    scratch_root: &Path,
+    clock: &dyn SourceClock,
+    limits: &Limits,
+    cancel: &Cancellation,
+) -> Result<PathBuf, Error> {
+    match datastore {
+        BackupDatastore::PostgreSql { config, runtime } => create_postgresql_backup(
+            config,
+            runtime,
+            backup_root,
+            scratch_root,
+            clock,
+            limits,
+            cancel,
+        ),
+        #[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+        BackupDatastore::Sqlite { database } => sqlite_create::create_sqlite_backup(
+            database,
+            backup_root,
+            scratch_root,
+            clock,
+            limits,
+            cancel,
+        ),
+    }
+}
+
+fn create_postgresql_backup(
     config: &PgConfig,
     runtime: &Runtime,
     backup_root: &Path,
@@ -512,6 +575,35 @@ pub fn create_backup(
         return Err(Error::Capacity);
     }
     let destination = backup_root.join(format!("dispatcharr-backup-{timestamp}.zip"));
+    write_archive(
+        destination,
+        &dump,
+        BackupEngine::PostgreSql,
+        clock,
+        limits,
+        cancel,
+    )
+}
+
+enum BackupEngine {
+    PostgreSql,
+    #[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+    Sqlite,
+}
+
+fn write_archive(
+    destination: PathBuf,
+    dump: &Path,
+    engine: BackupEngine,
+    clock: &dyn SourceClock,
+    limits: &Limits,
+    cancel: &Cancellation,
+) -> Result<PathBuf, Error> {
+    let (database_type, member) = match engine {
+        BackupEngine::PostgreSql => ("postgresql", "database.dump"),
+        #[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+        BackupEngine::Sqlite => ("sqlite", "database.sqlite3"),
+    };
     // Source opens directly with truncate semantics; no atomic rename invented.
     let file = OpenOptions::new()
         .write(true)
@@ -526,8 +618,8 @@ pub fn create_backup(
     let options = SimpleFileOptions::default()
         .compression_method(zip::CompressionMethod::Deflated)
         .large_file(true)
-        .last_modified_time(clock.zip_timestamp(fs::metadata(&dump)?.modified()?)?);
-    zip.start_file("database.dump", options)?;
+        .last_modified_time(clock.zip_timestamp(fs::metadata(dump)?.modified()?)?);
+    zip.start_file(member, options)?;
     copy(File::open(dump)?, &mut zip, limits.database_bytes, cancel)?;
     let created_at = clock.created_at_utc()?;
     if created_at.len() > 128 {
@@ -536,8 +628,8 @@ pub fn create_backup(
     let metadata = Metadata {
         format: "dispatcharr-backup".into(),
         version: 2,
-        database_type: "postgresql".into(),
-        database_file: "database.dump".into(),
+        database_type: database_type.into(),
+        database_file: member.into(),
         created_at,
     };
     let data = serde_json::to_vec_pretty(&metadata).map_err(|_| Error::Metadata)?;
