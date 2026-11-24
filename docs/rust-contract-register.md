@@ -738,3 +738,22 @@ retains its original revision and its DELETE 204 Content-Length difference.
 Both unresolved work IDs and their Original framework assignments are
 preserved. Collection DELETE, browsable HTML, format variants and other
 role/input cases remain open.
+
+
+## Signed Original catalogue GET observations
+
+The [retained Original catalogue packet](../scripts/rust-contracts/retained-original-catalogue-get.json)
+adds 32 eligible signed HTTP 200 GET observations across 16 existing declared
+operations. Administrator and Standard independently read one selected owned
+entity per operation. Actual raw and typed JSON digests, selected headers and
+unchanged scoped SQL and broker state are retained. The pinned Original direct
+uWSGI owner passed all five phases and exact resource and process retirement.
+
+The 16 operations keep their prior fixtures, roles, assertions and any related
+evidence. The generator adds a scoped Source disposition and separate signed
+cases. The other 782 operation dictionaries, 322 unresolved-method IDs,
+250 non-HTTP candidates and 20 partial packaged comparisons (455 cases) are
+unchanged. There are 353 HTTP rows without a typed Source result disposition.
+Some have other scopes of retained observations. Full role and route coverage,
+Native parity and milestone acceptance remain open. Original Dispatcharr,
+Django, Django REST Framework and dependency authors retain full credit.

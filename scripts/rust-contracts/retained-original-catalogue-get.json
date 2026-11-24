@@ -1,0 +1,888 @@
+{
+  "actual_cleanup_passed": true,
+  "actual_owner_exits": {
+    "campaign": 0,
+    "cleanup": 0,
+    "preflight": 0,
+    "proof": 0,
+    "run": 0
+  },
+  "all_GET_owned_SQL_projections": true,
+  "case_counts": {
+    "GET": 68,
+    "HEAD": 17,
+    "OPTIONS": 17
+  },
+  "credit": "Original Dispatcharr, Django, Django REST Framework and dependency authors retain full credit.",
+  "empty_owned_inventories": {
+    "containers": 0,
+    "networks": 0,
+    "volumes": 0
+  },
+  "exact_container_and_process_generations_absent": {
+    "baseline": true,
+    "origin": true
+  },
+  "literal_exit": 0,
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "private_artifact_fingerprints": {
+    "case-plan.json": "e2fde47b17f89c8ddf55af1037f470fd89e55b951480e3c324d759dda9bbf81d",
+    "cleanup.stdout": "2ff34e83e737e301641ad5bda22ad4ee9f11b0ed586f3943ff8fd9efc6cb858b",
+    "dependencies.json": "f63a5aac274b960fae1f990a322ef617d80e9e0227fcc0ed0c67ce100bf1b11d",
+    "proof.stdout": "d009921aea2bc2e49e703a7d284e1bf553993eb00c0b3d032ffcfc9c82e259d0",
+    "receipt.json": "e9b7372e916ad40cc30747f3c2233effa36f5223f0c9968cd1a49d66a6fde5e5",
+    "schedule_guest.py": "c1d112bbf2c55dfaa90cd68df666cf59c4db67f0f50c25c42bc0070548535090",
+    "seed.json": "b81216b966bdfa0be270b6aba85a731082cbe4cb807a6afbcbdab113a4afff54"
+  },
+  "schema": "Original_signed_stock_catalogue_GET_v1",
+  "scope": "Pinned Original direct uWSGI owned catalogue. The 16 GET IDs below have additional signed cases. Existing historical definitions remain; no Native or complete endpoint assertion.",
+  "selected_operations": {
+    "route-40830229e08a3f7b3572:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 109,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "b8fcba8ac7f693b4a8643618bd175befc3209bed634f2a00c768cb992057034f",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "11abfdfec09692351281013b818279d77f0ec5769c189813c505c418c702ee66",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 109,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "b8fcba8ac7f693b4a8643618bd175befc3209bed634f2a00c768cb992057034f",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "11abfdfec09692351281013b818279d77f0ec5769c189813c505c418c702ee66",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:core:outputprofile-detail",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/core/^outputprofiles/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 231,
+      "source_action": "retrieve",
+      "source_handler": "core.api_views.OutputProfileViewSet"
+    },
+    "route-4c0b549152c518526c4e:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 90,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "f3a92c0d629ce9eff3ee445ce791ff1771fecab51d2009cb1390b7e1b7bcd600",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "a360d902c4385406377d770a610f797c63f3c7e0dd93b044a5e1199317bcf234",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 90,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "f3a92c0d629ce9eff3ee445ce791ff1771fecab51d2009cb1390b7e1b7bcd600",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "a360d902c4385406377d770a610f797c63f3c7e0dd93b044a5e1199317bcf234",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:hdhr:hdhr-device-detail",
+      "owning_milestone": "M7",
+      "pattern_exact": "api/hdhr/^devices/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 180,
+      "source_action": "retrieve",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    },
+    "route-4ce88ce8b59bfa6db6fc:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 104,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "1fabd83db206e5e36ec627b795653b39de34f27d68f9a16aaad59b59e48df707",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "257971bb33f50d0df0b9eac2d8f0d5bc8373b32051b5fba3263d69d63745ef6f",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 104,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "1fabd83db206e5e36ec627b795653b39de34f27d68f9a16aaad59b59e48df707",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "257971bb33f50d0df0b9eac2d8f0d5bc8373b32051b5fba3263d69d63745ef6f",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:epg:epgdata-list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/epg/^epgdata\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 168,
+      "source_action": "list",
+      "source_handler": "apps.epg.api_views.EPGDataViewSet"
+    },
+    "route-69a67acf65189dcd2e64:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 279,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "8e8420b0fca77948d18e105d7af21c9267db1ea7cc9750c0f05678c86a729a2c",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "ea7c4268094e91a814ed02f136df73c1c1f988a5a1e54c90f595f5d16212d215",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 279,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "8e8420b0fca77948d18e105d7af21c9267db1ea7cc9750c0f05678c86a729a2c",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "ea7c4268094e91a814ed02f136df73c1c1f988a5a1e54c90f595f5d16212d215",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:epg:program-list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/epg/^programs\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 160,
+      "source_action": "list",
+      "source_handler": "apps.epg.api_views.ProgramViewSet"
+    },
+    "route-7add22f14d3acc810ff5:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 181,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "58bb5aa529aa230d038ec877ffb581a8ecc7b9aa7f1f4b0e1e9bfb1c9cbbc552",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "52491c25b09eb637a8ef10d3cb38c796c90dff2d2c83bf6f422b02c4e255065a",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 181,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "58bb5aa529aa230d038ec877ffb581a8ecc7b9aa7f1f4b0e1e9bfb1c9cbbc552",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "52491c25b09eb637a8ef10d3cb38c796c90dff2d2c83bf6f422b02c4e255065a",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:core:useragent-detail",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/core/^useragents/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 223,
+      "source_action": "retrieve",
+      "source_handler": "core.api_views.UserAgentViewSet"
+    },
+    "route-904bf410afa61f6f31f3:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 92,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "91110e147bdf225632e8cd42ffc5f34c5bd125930326d036aba03086e12eef34",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "13b3a45e3ae2dcce19cb0862ae63bd69976ba8b0c0c8aa14dce052318dc41963",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 92,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "91110e147bdf225632e8cd42ffc5f34c5bd125930326d036aba03086e12eef34",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "13b3a45e3ae2dcce19cb0862ae63bd69976ba8b0c0c8aa14dce052318dc41963",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:hdhr:hdhr-device-list",
+      "owning_milestone": "M7",
+      "pattern_exact": "api/hdhr/^devices/$",
+      "resolver_ordinal": 177,
+      "source_action": "list",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    },
+    "route-93a26264c9d8ad2a84ac:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 911,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "3dbbf8010d98b6cadeba1f80a9974558355e49bb6021d7f81be25a94fb1baec1",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "186c830a8a445c60d34511b8821a8ee41c75aad6da3c57c307d41cff2e59b916",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 911,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "3dbbf8010d98b6cadeba1f80a9974558355e49bb6021d7f81be25a94fb1baec1",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "186c830a8a445c60d34511b8821a8ee41c75aad6da3c57c307d41cff2e59b916",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:core:outputprofile-list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/core/^outputprofiles\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 229,
+      "source_action": "list",
+      "source_handler": "core.api_views.OutputProfileViewSet"
+    },
+    "route-a1f9956244b17a14f893:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 48,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "2821b81b468eaa667cf46f423ed6a90d28bc6c5693a9e3e359430c3b3065de86",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "2821b81b468eaa667cf46f423ed6a90d28bc6c5693a9e3e359430c3b3065de86",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 48,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "2821b81b468eaa667cf46f423ed6a90d28bc6c5693a9e3e359430c3b3065de86",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "2821b81b468eaa667cf46f423ed6a90d28bc6c5693a9e3e359430c3b3065de86",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:m3u:server-group-detail",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/m3u/^server-groups/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 209,
+      "source_action": "retrieve",
+      "source_handler": "apps.m3u.api_views.ServerGroupViewSet"
+    },
+    "route-b7cc0323a58bb50a231c:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 1064,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "599b3989d6635d1e3369c23c1c17b1e6cf7dc039ab27c7aa70887d2d4d6745de",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "d7c3eb20a3e192f2d0204de26dbcdc9f0ce51bb654600528c092c952a222e67f",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 1064,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "599b3989d6635d1e3369c23c1c17b1e6cf7dc039ab27c7aa70887d2d4d6745de",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "d7c3eb20a3e192f2d0204de26dbcdc9f0ce51bb654600528c092c952a222e67f",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:core:streamprofile-list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/core/^streamprofiles\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 225,
+      "source_action": "list",
+      "source_handler": "core.api_views.StreamProfileViewSet"
+    },
+    "route-bc28dbffca264c415359:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 67,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "1d128cb6d7e665c2f986855208d572e430e433ed241aa31f3460a71bbce0febf",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "1dde582a6c4c0d2cdc1a023593341197da4a53ea7d71c251d6991400e6c33cd1",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 67,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "1d128cb6d7e665c2f986855208d572e430e433ed241aa31f3460a71bbce0febf",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "1dde582a6c4c0d2cdc1a023593341197da4a53ea7d71c251d6991400e6c33cd1",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:channels:profile-detail",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^profiles/(?P<pk>[^/.]+)/$",
+      "resolver_ordinal": 117,
+      "source_action": "retrieve",
+      "source_handler": "apps.channels.api_views.ChannelProfileViewSet"
+    },
+    "route-bcad6fcc7a44673cca5c:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 116,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "996edab1a23916472cf14f086bd749be985a934e68733c8c8a57da16c62a389c",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "a2f1b0bf30b6cb26271b436aa6f8060f5eaeb228758d6426deb9cf25ba8c5632",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 116,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "996edab1a23916472cf14f086bd749be985a934e68733c8c8a57da16c62a389c",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "a2f1b0bf30b6cb26271b436aa6f8060f5eaeb228758d6426deb9cf25ba8c5632",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:channels:channel-group-detail",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^groups/(?P<pk>[^/.]+)/$",
+      "resolver_ordinal": 63,
+      "source_action": "retrieve",
+      "source_handler": "apps.channels.api_views.ChannelGroupViewSet"
+    },
+    "route-c5f4fd3cbfb4c9bfd8ba:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 102,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "c072dcb81d0b93d064f21a54a054bbcff9582d243995122282da5c207248544f",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "1817e052599dfa58ec3c2b5acbc68e38e192156aa18da32267bfb10d62e15769",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 102,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "c072dcb81d0b93d064f21a54a054bbcff9582d243995122282da5c207248544f",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "1817e052599dfa58ec3c2b5acbc68e38e192156aa18da32267bfb10d62e15769",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:epg:epgdata-detail",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/epg/^epgdata/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 170,
+      "source_action": "retrieve",
+      "source_handler": "apps.epg.api_views.EPGDataViewSet"
+    },
+    "route-dafd1a6542f902f1b0fb:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 778,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "d79203e1f810d20fdd31bd3272fb49c15743333143fc5cac2e01ddfc1d60e0cf",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "e748a797b5bfc54bd7c8b209eb8b86e6c0e8e24c968ecf0a77ef50450277c911",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 778,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "d79203e1f810d20fdd31bd3272fb49c15743333143fc5cac2e01ddfc1d60e0cf",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "e748a797b5bfc54bd7c8b209eb8b86e6c0e8e24c968ecf0a77ef50450277c911",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:epg:program-detail",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/epg/^programs/(?P<pk>[^/.]+)\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 164,
+      "source_action": "retrieve",
+      "source_handler": "apps.epg.api_views.ProgramViewSet"
+    },
+    "route-ec0b8bd762480300bd02:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 50,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "d8a8a9cce6f9b7b8e4252e5f3d4b33709d9db8c1853fd8c3e6f697d0462123dc",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "d8a8a9cce6f9b7b8e4252e5f3d4b33709d9db8c1853fd8c3e6f697d0462123dc",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 50,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "d8a8a9cce6f9b7b8e4252e5f3d4b33709d9db8c1853fd8c3e6f697d0462123dc",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "d8a8a9cce6f9b7b8e4252e5f3d4b33709d9db8c1853fd8c3e6f697d0462123dc",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:m3u:server-group-list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/m3u/^server-groups\\.(?P<format>[a-z0-9]+)/?$",
+      "resolver_ordinal": 207,
+      "source_action": "list",
+      "source_handler": "apps.m3u.api_views.ServerGroupViewSet"
+    },
+    "route-f140a95f4ea400cc74f0:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 69,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "dbdc3cdbfa44c4eebd2aad37b54148ecc16f59d5468f28f6919bae8ac9d82db0",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "9441ee6bd37ce7577875ca505d3704fd540af5b65fb641a7a33f9f7fd7112307",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "POST",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 69,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "dbdc3cdbfa44c4eebd2aad37b54148ecc16f59d5468f28f6919bae8ac9d82db0",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "9441ee6bd37ce7577875ca505d3704fd540af5b65fb641a7a33f9f7fd7112307",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:channels:profile-list",
+      "owning_milestone": "M5",
+      "pattern_exact": "api/channels/^profiles/$",
+      "resolver_ordinal": 115,
+      "source_action": "list",
+      "source_handler": "apps.channels.api_views.ChannelProfileViewSet"
+    },
+    "route-f7e00cea4d0010ef9052:GET": {
+      "cases": [
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 90,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "f3a92c0d629ce9eff3ee445ce791ff1771fecab51d2009cb1390b7e1b7bcd600",
+          "role": "standard",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "a360d902c4385406377d770a610f797c63f3c7e0dd93b044a5e1199317bcf234",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        },
+        {
+          "allow": [
+            "GET",
+            "PUT",
+            "PATCH",
+            "DELETE",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "content_length": 90,
+          "media": "application/json",
+          "owned_SQL_entity_matches": true,
+          "raw_sha256": "f3a92c0d629ce9eff3ee445ce791ff1771fecab51d2009cb1390b7e1b7bcd600",
+          "role": "admin",
+          "scoped_state_unchanged": true,
+          "status": 200,
+          "typed_JSON_sha256": "a360d902c4385406377d770a610f797c63f3c7e0dd93b044a5e1199317bcf234",
+          "vary": [
+            "Accept",
+            "origin"
+          ]
+        }
+      ],
+      "method": "GET",
+      "name": "api:hdhr:hdhr-device-detail",
+      "owning_milestone": "M7",
+      "pattern_exact": "api/hdhr/^devices/(?P<pk>[^/.]+)/$",
+      "resolver_ordinal": 179,
+      "source_action": "retrieve",
+      "source_handler": "apps.hdhr.api_views.HDHRDeviceViewSet"
+    }
+  },
+  "state_sha256": "b8f7deb249da47c83469505b053db42d69ff0a634f2fdec4e2426ef9fdcc9046"
+}
