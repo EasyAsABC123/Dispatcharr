@@ -228,13 +228,22 @@ impl TvgJobs {
         };
         let claimed = self.claim(candidate, owner.clone()).await?;
         let children = if let Some((id, raw)) = retry {
+            // The parent has already been accepted. Closing intake must
+            // allow its first publication and terminal result to settle.
+            let mut first_attempt = true;
             loop {
-                if shared.stopped.load(std::sync::atomic::Ordering::Acquire) {
+                if !first_attempt && shared.stopped.load(std::sync::atomic::Ordering::Acquire) {
                     return Err(Error::Closed);
                 }
+                first_attempt = false;
                 match shared.jobs.publish_xml_tvg(&raw, owner.clone()).await {
                     Ok(actual) if actual.task_id == id => break,
-                    Err(Error::Capacity) => tokio::time::sleep(Duration::from_millis(100)).await,
+                    Err(Error::Capacity) => {
+                        if shared.stopped.load(std::sync::atomic::Ordering::Acquire) {
+                            return Err(Error::Closed);
+                        }
+                        tokio::time::sleep(Duration::from_millis(100)).await;
+                    }
                     Err(error) => return Err(error),
                     _ => return Err(Error::Corrupt),
                 }

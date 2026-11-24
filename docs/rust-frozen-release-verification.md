@@ -335,6 +335,13 @@ recovered the same task without duplication and drained the reservation
 after cancellation was reapplied. Whole-process recovery and the signed
 operator path remain part of the frozen verification.
 
+Closing worker intake now lets an already admitted XML TVG task make its
+first retry publication. An old-versus-new test against private Redis
+confirmed that the patched worker publishes one child with the original
+lineage and records the parent as Deferred. The full-queue control
+confirmed that shutdown is bounded and preserves the occupied sibling.
+Retaining the parent in that full-queue case remains open.
+
 An interrupted plain HTTP M3U download with a bounded declared length
 preserves both old cache files and publishes the same saved connection
 error as Original. Focused loopback tests passed. The grouped remote-owner
