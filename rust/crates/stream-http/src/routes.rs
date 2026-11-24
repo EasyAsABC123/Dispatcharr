@@ -356,11 +356,7 @@ async fn next_stream(
         }
         // Original ignores the React request's stream_id and uses current state.
         Ok(
-            match app
-                .engine
-                .next_local_source(&id, app.resolver.as_ref())
-                .await?
-            {
+            match app.engine.next_source(&id, app.resolver.as_ref()).await? {
                 crate::engine::NextStreamOutcome::Switched(selected) => (
                     StatusCode::OK,
                     next_stream_response(
@@ -369,8 +365,35 @@ async fn next_stream(
                         selected.next,
                         &selected.url,
                         selected.worker,
+                        true,
                     ),
                 ),
+                crate::engine::NextStreamOutcome::Remote { selected, verdict } => {
+                    if verdict == Some(dispatcharr_output_store::RemoteSwitchVerdict::Switched) {
+                        (
+                            StatusCode::OK,
+                            next_stream_response(
+                                &id,
+                                selected.previous,
+                                selected.next,
+                                &selected.url,
+                                selected.worker,
+                                false,
+                            ),
+                        )
+                    } else {
+                        let (status, message) = remote_switch_failure(verdict);
+                        (
+                            status,
+                            remote_next_error_response(
+                                message,
+                                selected.previous,
+                                selected.next,
+                                selected.worker,
+                            ),
+                        )
+                    }
+                }
                 crate::engine::NextStreamOutcome::Idle => (
                     StatusCode::NOT_FOUND,
                     r#"{"error": "No current stream found for channel"}"#.to_owned(),
@@ -412,13 +435,58 @@ fn next_stream_response(
     next: i64,
     url: &str,
     worker: &str,
+    owner: bool,
 ) -> String {
     let channel = serde_json::Value::from(channel);
     let url = serde_json::Value::from(url);
     let worker = serde_json::Value::from(worker);
     format!(
-        r#"{{"message": "Stream switched to next available", "channel": {channel}, "previous_stream_id": {previous}, "new_stream_id": {next}, "new_url": {url}, "owner": true, "worker_id": {worker}}}"#
+        r#"{{"message": "Stream switched to next available", "channel": {channel}, "previous_stream_id": {previous}, "new_stream_id": {next}, "new_url": {url}, "owner": {owner}, "worker_id": {worker}}}"#
     )
+}
+
+fn remote_next_error_response(message: &str, previous: i64, next: i64, worker: &str) -> String {
+    let message = serde_json::Value::from(message);
+    let worker = serde_json::Value::from(worker);
+    format!(
+        r#"{{"error": {message}, "current_stream_id": {previous}, "next_stream_id": {next}, "owner": false, "worker_id": {worker}}}"#
+    )
+}
+
+#[cfg(test)]
+#[test]
+fn remote_next_uses_exact_original_success_and_failure_wire() {
+    let success = next_stream_response(
+        "owned-channel",
+        11,
+        12,
+        "http://owned-origin/two.ts",
+        "owned-requester",
+        false,
+    );
+    assert_eq!(
+        success,
+        r#"{"message": "Stream switched to next available", "channel": "owned-channel", "previous_stream_id": 11, "new_stream_id": 12, "new_url": "http://owned-origin/two.ts", "owner": false, "worker_id": "owned-requester"}"#
+    );
+    for (verdict, expected_code, expected) in [
+        (
+            Some(dispatcharr_output_store::RemoteSwitchVerdict::Failed),
+            502,
+            r#"{"error": "Owner worker failed to switch stream", "current_stream_id": 11, "next_stream_id": 12, "owner": false, "worker_id": "owned-requester"}"#,
+        ),
+        (
+            None,
+            504,
+            r#"{"error": "Stream switch was not confirmed by the channel owner within 15s", "current_stream_id": 11, "next_stream_id": 12, "owner": false, "worker_id": "owned-requester"}"#,
+        ),
+    ] {
+        let (status, text) = remote_switch_failure(verdict);
+        assert_eq!(status, expected_code);
+        assert_eq!(
+            remote_next_error_response(text, 11, 12, "owned-requester"),
+            expected
+        );
+    }
 }
 
 async fn change_assigned_stream(
@@ -472,22 +540,28 @@ async fn change_assigned_stream(
             changed_stream_response(channel, &url, worker, stream_id, false),
         ),
         AssignedSwitch::Remote { url, verdict } => {
-            let (status, message) = if verdict == Some(RemoteSwitchVerdict::Failed) {
-                (
-                    StatusCode::BAD_GATEWAY,
-                    "Owner worker failed to switch stream",
-                )
-            } else {
-                (
-                    StatusCode::GATEWAY_TIMEOUT,
-                    "Stream switch was not confirmed by the channel owner within 15s",
-                )
-            };
+            let (status, message) = remote_switch_failure(verdict);
             let body = remote_stream_error_response(message, channel, &url, worker, stream_id);
             (status, body)
         }
     };
     Ok(result)
+}
+
+fn remote_switch_failure(
+    verdict: Option<dispatcharr_output_store::RemoteSwitchVerdict>,
+) -> (StatusCode, &'static str) {
+    if verdict == Some(dispatcharr_output_store::RemoteSwitchVerdict::Failed) {
+        (
+            StatusCode::BAD_GATEWAY,
+            "Owner worker failed to switch stream",
+        )
+    } else {
+        (
+            StatusCode::GATEWAY_TIMEOUT,
+            "Stream switch was not confirmed by the channel owner within 15s",
+        )
+    }
 }
 
 fn remote_stream_error_response(

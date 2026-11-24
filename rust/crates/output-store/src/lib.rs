@@ -3,7 +3,7 @@
 mod profile_events;
 mod remote_switch;
 pub use remote_switch::{
-    RemoteSwitchIntent, RemoteSwitchSource, RemoteSwitchVerdict, RemoteSwitchWake,
+    RemoteSwitchIntent, RemoteSwitchKind, RemoteSwitchSource, RemoteSwitchVerdict, RemoteSwitchWake,
 };
 pub mod transport;
 pub use profile_events::{

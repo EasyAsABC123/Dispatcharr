@@ -188,7 +188,11 @@ generation before switching. It confirms the new producer through the
 existing media ticket and reports a receipt bound to the requesting worker.
 A disposable Redis test checked generation fencing, pending cancellation,
 receipt replay and cleanup. The final two-worker fixture still needs to
-verify media continuity and retirement across both processes.
+verify media continuity and retirement across both processes. It uses the same two viewer
+responses and one upstream to exercise remote Next after the assigned
+switch. Both workers recheck the immediate saved successor before the
+producer opens it. A request-specific operation keeps older assigned-only
+listeners from processing Next as an assigned switch.
 
 The ordinary Series DVR API can save a signed rule through the existing
 DVR permission and settings writer. The worker evaluates a saved exact-title

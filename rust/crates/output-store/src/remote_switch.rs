@@ -4,12 +4,36 @@ use super::{Error, OutputStore};
 use serde_json::{json, Value};
 use uuid::Uuid;
 
-pub const REMOTE_SWITCH_EVENT: &str = "dispatcharr_rust_assigned_source_switch";
+const ASSIGNED_SWITCH_EVENT: &str = "dispatcharr_rust_assigned_source_switch";
+const NEXT_SWITCH_EVENT: &str = "dispatcharr_rust_next_source_switch";
+
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum RemoteSwitchKind {
+    Assigned,
+    Next,
+}
+
+impl RemoteSwitchKind {
+    fn event(self) -> &'static str {
+        match self {
+            Self::Assigned => ASSIGNED_SWITCH_EVENT,
+            Self::Next => NEXT_SWITCH_EVENT,
+        }
+    }
+
+    fn redis_name(self) -> &'static [u8] {
+        match self {
+            Self::Assigned => b"assigned",
+            Self::Next => b"next",
+        }
+    }
+}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct RemoteSwitchWake {
     pub channel: Uuid,
     pub request: Uuid,
+    pub kind: RemoteSwitchKind,
 }
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -55,9 +79,11 @@ fn is_digest(raw: &str) -> bool {
 
 impl RemoteSwitchWake {
     pub(crate) fn decode(topic: &[u8], data: &Value) -> Result<Option<Self>, Error> {
-        if data["event"] != REMOTE_SWITCH_EVENT {
-            return Ok(None);
-        }
+        let kind = match data["event"].as_str() {
+            Some(ASSIGNED_SWITCH_EVENT) => RemoteSwitchKind::Assigned,
+            Some(NEXT_SWITCH_EVENT) => RemoteSwitchKind::Next,
+            _ => return Ok(None),
+        };
         if data.as_object().is_none_or(|object| object.len() != 3) {
             return Err(Error::Corrupt);
         }
@@ -72,11 +98,15 @@ impl RemoteSwitchWake {
         if topic != format!("live:events:{channel}").as_bytes() {
             return Err(Error::Corrupt);
         }
-        Ok(Some(Self { channel, request }))
+        Ok(Some(Self {
+            channel,
+            request,
+            kind,
+        }))
     }
 
     fn payload(&self) -> Vec<u8> {
-        json!({"event": REMOTE_SWITCH_EVENT, "channel_id": self.channel.to_string(),
+        json!({"event": self.kind.event(), "channel_id": self.channel.to_string(),
                "request_id": self.request.to_string()})
         .to_string()
         .into_bytes()
@@ -166,6 +196,7 @@ impl OutputStore {
                     intent.target.to_string().as_bytes(),
                     intent.url_sha256.as_bytes(),
                     &wake.payload(),
+                    wake.kind.redis_name(),
                 ],
             )
             .await?;
@@ -186,6 +217,7 @@ impl OutputStore {
                     owner.as_bytes(),
                     wake.request.to_string().as_bytes(),
                     claimant.to_string().as_bytes(),
+                    wake.kind.redis_name(),
                 ],
             )
             .await?;
@@ -319,20 +351,27 @@ if operation=='observe' then
     return {fence,fields[4],fields[5],tostring(millis()+15000)}
 end
 if fence~=ARGV[2] then return {} end
-local state=redis.call('HMGET',KEYS[4],'fence','request','phase','stream','profile','deadline','target','digest','claimant')
+local state=redis.call('HMGET',KEYS[4],'fence','request','phase','stream','profile','deadline','target','digest','claimant','kind','kind_request')
 if operation=='begin' then
+    local kind=ARGV[10] or 'assigned'
+    if kind~='assigned' and kind~='next' then return {} end
     local fields=active()
     if not fields or fields[4]~=ARGV[4] or fields[5]~=ARGV[5] or state[1]==fence then return {} end
     local remaining=tonumber(ARGV[6])-millis()
     if remaining<1 or remaining>15000 then return {} end
     redis.call('HSET',KEYS[4],'fence',fence,'request',ARGV[3],'phase','pending',
-        'stream',ARGV[4],'profile',ARGV[5],'deadline',ARGV[6],'target',ARGV[7],'digest',ARGV[8],'claimant','')
+        'stream',ARGV[4],'profile',ARGV[5],'deadline',ARGV[6],'target',ARGV[7],'digest',ARGV[8],'claimant','',
+        'kind',kind,'kind_request',ARGV[3])
     redis.call('PEXPIRE',KEYS[4],remaining)
     redis.call('PUBLISH',KEYS[5],ARGV[9])
     return {'accepted'}
 end
 if state[1]~=fence or state[2]~=ARGV[3] then return {} end
 if operation=='claim' then
+    -- Legacy assigned workers did not write a kind. Scope the marker to this
+    -- request so a superseded generation cannot leak a previous Next marker.
+    local kind=state[11]==ARGV[3] and state[10] or 'assigned'
+    if kind~=(ARGV[5] or 'assigned') then return {} end
     local fields=active()
     if tonumber(state[6])<=millis() or not fields or fields[4]~=state[4] or fields[5]~=state[5] then
         return {}
@@ -372,7 +411,11 @@ mod tests {
     fn remote_wake_contains_only_canonical_channel_and_request_identity() {
         let channel = Uuid::parse_str("00000000-0000-4000-8000-000000000721").unwrap();
         let request = Uuid::parse_str("00000000-0000-4000-8000-000000000722").unwrap();
-        let wake = RemoteSwitchWake { channel, request };
+        let wake = RemoteSwitchWake {
+            channel,
+            request,
+            kind: RemoteSwitchKind::Assigned,
+        };
         let bytes = wake.payload();
         let mut value: Value = serde_json::from_slice(&bytes).unwrap();
         let topic = format!("live:events:{channel}");
@@ -386,6 +429,24 @@ mod tests {
         value.as_object_mut().unwrap().remove("url");
         value["request_id"] = Value::from("00000000-0000-0000-0000-000000000000");
         assert!(RemoteSwitchWake::decode(topic.as_bytes(), &value).is_err());
+    }
+
+    #[test]
+    fn remote_next_wake_is_distinct_without_shipping_order_or_url() {
+        let wake = RemoteSwitchWake {
+            channel: Uuid::from_u128(11),
+            request: Uuid::from_u128(12),
+            kind: RemoteSwitchKind::Next,
+        };
+        let payload: Value = serde_json::from_slice(&wake.payload()).unwrap();
+        assert_eq!(payload["event"], NEXT_SWITCH_EVENT);
+        assert_ne!(payload["event"], ASSIGNED_SWITCH_EVENT);
+        assert_eq!(payload.as_object().unwrap().len(), 3);
+        assert_eq!(
+            RemoteSwitchWake::decode(format!("live:events:{}", wake.channel).as_bytes(), &payload)
+                .unwrap(),
+            Some(wake)
+        );
     }
 
     #[test]
@@ -496,6 +557,7 @@ mod tests {
         let lost_wake = RemoteSwitchWake {
             channel,
             request: Uuid::from_u128(106),
+            kind: RemoteSwitchKind::Assigned,
         };
         assert!(store
             .begin_remote_switch(&lost_wake, &intent)
@@ -532,10 +594,12 @@ mod tests {
         let wake = RemoteSwitchWake {
             channel,
             request: Uuid::from_u128(107),
+            kind: RemoteSwitchKind::Assigned,
         };
         let foreign_wake = RemoteSwitchWake {
             channel,
             request: Uuid::from_u128(108),
+            kind: RemoteSwitchKind::Assigned,
         };
         assert!(store.begin_remote_switch(&wake, &intent).await.unwrap());
         assert!(!store
@@ -666,6 +730,7 @@ mod tests {
         let next_wake = RemoteSwitchWake {
             channel,
             request: Uuid::from_u128(109),
+            kind: RemoteSwitchKind::Assigned,
         };
         assert!(store.begin_remote_switch(&next_wake, &next).await.unwrap());
         store

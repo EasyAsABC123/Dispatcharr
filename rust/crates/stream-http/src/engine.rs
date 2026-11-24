@@ -286,7 +286,14 @@ struct PendingSourceSwitch {
 pub(crate) enum NextStreamOutcome<'a> {
     Idle,
     Switched(NextStreamSwitch<'a>),
-    MissingActiveDefault { previous: i64, next: i64 },
+    Remote {
+        selected: NextStreamSwitch<'a>,
+        verdict: Option<dispatcharr_output_store::RemoteSwitchVerdict>,
+    },
+    MissingActiveDefault {
+        previous: i64,
+        next: i64,
+    },
 }
 
 #[derive(Debug, PartialEq, Eq)]
