@@ -1,0 +1,1351 @@
+{
+  "candidate": {
+    "build_manifest_sha256": "ebcae7bc9c03c00fb21d9ee4a653b9ac3261bf83c81fe1198cbaa16bfb293b75",
+    "git": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1",
+    "image_id": "sha256:248614e76779972352315362fe306d60fac47c817dff924f1a7535644bc164c5"
+  },
+  "coordinator_revision": "4cb595f107879023d4a1bcb2b3af6cb9a5348ef9",
+  "required_rows": 127,
+  "counts": {
+    "open": 114,
+    "retained_source_authority": 4,
+    "verified_current_execution": 9
+  },
+  "formal_release_verified": false,
+  "owner_groups": [
+    {
+      "declared_nodes": [
+        "package/auth-hash",
+        "package/shipped-createsuperuser22",
+        "package/shipped-safe17"
+      ],
+      "state": "verified_current_scope",
+      "raw_report_sha256": "66d6476545021d189a7e57ae358ee998cef3f60c963de50872a41c8ec56405da",
+      "reducer_sha256": "8a157b905d00360fd7e45211efa27d76d26b7440279dd9e5f550bd123d364c40"
+    },
+    {
+      "declared_nodes": [
+        "package/complete-refresh",
+        "package/complete-refresh-original"
+      ],
+      "state": "verified_current_scope",
+      "raw_report_sha256": "415d9ed6af9ebfa024715f675fc044c96de56167dc3e7bdbd07f0468e9ccb120",
+      "reducer_sha256": "0c33ff3f35911210410b230888d2ac318730d9017be88c347f66b44cde4d9aab"
+    },
+    {
+      "declared_nodes": [
+        "package/output-profile",
+        "package/user-agent"
+      ],
+      "state": "verified_current_scope",
+      "raw_report_sha256": "98406d272d285b6b68e93316579a99f25e5dd544f512c4763efdfa868d41e955",
+      "reducer_sha256": "54e6012d137782fecbd558e10ffde49bceac093d998182f1bc7bb22b2a5008f0"
+    },
+    {
+      "declared_nodes": [
+        "package/m4-functional",
+        "package/proxy-auth"
+      ],
+      "state": "verified_current_scope",
+      "raw_report_sha256": "ef5ab5fbc1f3a2911e9724707b49a13e9d8ce0d06c1baad1f7617f0bb579c0d7",
+      "reducer_sha256": "09e4cf2b071fc70ea1e4f2cbc0caf2ecb30be91c61a01cab935da30aa27831a1"
+    }
+  ],
+  "rows": [
+    {
+      "id": "package/baseline-all",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/proxy-auth",
+      "owner": "m235",
+      "state": "verified_current_execution",
+      "unverified_predecessors": [],
+      "evidence": {
+        "cleanup_sha256": "429764514f59f3c472e00976dc28c9658c049e705a5302d71351025d7980a9e0",
+        "kind": "verified_current_execution",
+        "owner_group": "proxy-m4",
+        "qualification_sha256": "3e17e8e73afca99e2e195e5813d1da04d1802734d867261f3726238f244b3e61"
+      }
+    },
+    {
+      "id": "package/auth-hash",
+      "owner": "m235",
+      "state": "verified_current_execution",
+      "unverified_predecessors": [],
+      "evidence": {
+        "cleanup_sha256": "ffaddb42ffbba89fcb7569e4168ffed53c793a09324e047b8262ddbebbe6a760",
+        "kind": "verified_current_execution",
+        "owner_group": "auth-operator",
+        "qualification_sha256": "5256fae71aaaa40c22ea709f2aea977fb92615e0c7183e9e03f14b1bc26a2113"
+      }
+    },
+    {
+      "id": "package/live-react-stats",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/user-agent",
+      "owner": "m235",
+      "state": "verified_current_execution",
+      "unverified_predecessors": [],
+      "evidence": {
+        "cleanup_sha256": "38845736b85cf85ef8276b568c2047c0ed7b3e85529f37e534aac7ca89c6a3c1",
+        "kind": "verified_current_execution",
+        "owner_group": "profile-user-agent",
+        "qualification_sha256": "d7de2ca4d1d054f79632b8a8fc87df30574bf0be3fbac428a759eda86da38ad2"
+      }
+    },
+    {
+      "id": "package/output-profile",
+      "owner": "m235",
+      "state": "verified_current_execution",
+      "unverified_predecessors": [],
+      "evidence": {
+        "cleanup_sha256": "479425d89f59922e3bcd69f11ece67d4737571aab1653712b570523ab613a137",
+        "kind": "verified_current_execution",
+        "owner_group": "profile-user-agent",
+        "qualification_sha256": "8613ec0c9630f0e2635a57ee0e634c7628b1c9b0a95c69265cdd7bce939478d0"
+      }
+    },
+    {
+      "id": "package/profile-restart",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/guide-grid-packaged",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/current-packaged",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/m4-functional",
+      "owner": "m235",
+      "state": "verified_current_execution",
+      "unverified_predecessors": [],
+      "evidence": {
+        "cleanup_sha256": "dbfdf06ddd6f54ecde5c27bb7f601f038e16deb034c89755d45346eb4cc91849",
+        "kind": "verified_current_execution",
+        "owner_group": "proxy-m4",
+        "qualification_sha256": "315dcd1cd5a6e055abd25d579c3b0f4beac315ca00f57a57aa1760e67385e6d4"
+      }
+    },
+    {
+      "id": "package/clean-install",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/category-browser",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/unified-HTML-browser",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/complete-refresh-original",
+      "owner": "m235",
+      "state": "verified_current_execution",
+      "unverified_predecessors": [],
+      "evidence": {
+        "cleanup_sha256": "67ecbcd905361a1232fdae891130a44a065ad9c5f7973dd657f0fcac5cb4699f",
+        "kind": "verified_current_execution",
+        "owner_group": "complete-refresh",
+        "qualification_sha256": "f7a00605952c1f1f32babc5c678871d0bd8f678fa934fb8c725fc09197caee16"
+      }
+    },
+    {
+      "id": "package/complete-refresh",
+      "owner": "m235",
+      "state": "verified_current_execution",
+      "unverified_predecessors": [],
+      "evidence": {
+        "cleanup_sha256": "2d67282ec53980b959bf9b9ad859d1396dd9089ba5f15472860d623211a9760f",
+        "kind": "verified_current_execution",
+        "owner_group": "complete-refresh",
+        "qualification_sha256": "86d5f688ec48f19e4e54f4cbcbc01cc953092c3c976f23d6eeb22b390ad04e35"
+      }
+    },
+    {
+      "id": "package/static-Chrome-HTML-browser",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/packaged-provider-actions",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/packaged-cached-provider-info",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/channel-logos",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/packaged-vod-images",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/provider-modal-browser",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/fresh-Original17capture",
+      "owner": "m235",
+      "state": "retained_source_authority",
+      "unverified_predecessors": [],
+      "evidence": {
+        "execution_performed": false,
+        "kind": "retained_source_authority",
+        "qualification_sha256": "f204727f66b322612a15bfd4472bb060e0d42046c601c9d3ec1e753bb4cbaad0",
+        "scope": "Original17 corpus and qualification consumed by current shipped-safe17 owner"
+      }
+    },
+    {
+      "id": "package/shipped-safe17",
+      "owner": "m235",
+      "state": "verified_current_execution",
+      "unverified_predecessors": [],
+      "evidence": {
+        "cleanup_sha256": "1a8ea982513ffbacd54c00bdce088771b1d2d85c9b0357075f5bf71c693aaf15",
+        "kind": "verified_current_execution",
+        "owner_group": "auth-operator",
+        "qualification_sha256": "abdb684743829ff974824f82c8374f4c6b2b18e8bf68789d9f892c47fc8d3b6a"
+      }
+    },
+    {
+      "id": "package/shipped-createsuperuser22",
+      "owner": "m235",
+      "state": "verified_current_execution",
+      "unverified_predecessors": [],
+      "evidence": {
+        "cleanup_sha256": "98035f51e8d342144292bb20c3b8af81c19d36007bdd04aac708bb4e7f717190",
+        "kind": "verified_current_execution",
+        "owner_group": "auth-operator",
+        "qualification_sha256": "310db121f50a03ae5076aec263b4dc59ad12d84c8d03802e6c654618fbb4e9e5"
+      }
+    },
+    {
+      "id": "package/strict-typed154",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/sharedTS18",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "package/sharedTS6-all-down",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [
+        "package/sharedTS18"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "package/retention100",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [
+        "package/sharedTS6-all-down"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "source/cache-and-profile-contexts",
+      "owner": "m235",
+      "state": "retained_source_authority",
+      "unverified_predecessors": [],
+      "evidence": {
+        "execution_performed": false,
+        "kind": "retained_source_authority",
+        "scope": "1 framework API call, 5 direct helpers, 6 accessors, 18 profile-argument observations",
+        "source_audit_sha256": "efc3713a3654de2438c9c423a24e8eb0919e1f9dfcd26125c6aef166ed221471"
+      }
+    },
+    {
+      "id": "native/proxy-health",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/core-normal51",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/core-late-faults",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "Main/core-settings-workflow",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [
+        "native/proxy-health"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "Main/active-profile-status-probes",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/profile-delivery",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/HLS-fMP4-workflows",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "Main/lifecycle-fault-workflow",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "Main/React-cross-workflows",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [
+        "native/proxy-health"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "Main/accounts-auth-and-channels",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "Main/settings-task-consumers",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/default-job-graph"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "Main/SQLite-compatibility",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [
+        "external/M9/datastore-scope"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "source/media-profile-and-format-workflows",
+      "owner": "m235",
+      "state": "retained_source_authority",
+      "unverified_predecessors": [],
+      "evidence": {
+        "execution_performed": false,
+        "kind": "retained_source_authority",
+        "scope": "MPEGTS/HLS/fMP4, ffmpeg/VLC, 16 decoded A/V observations, recovery and readback",
+        "source_audit_sha256": "efc3713a3654de2438c9c423a24e8eb0919e1f9dfcd26125c6aef166ed221471"
+      }
+    },
+    {
+      "id": "Main/input-profile-and-provider-probes",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "performance/M2-M3-M5",
+      "owner": "m235",
+      "state": "open",
+      "unverified_predecessors": [
+        "package/baseline-all",
+        "package/live-react-stats",
+        "package/profile-restart",
+        "package/guide-grid-packaged",
+        "package/current-packaged",
+        "package/clean-install",
+        "package/category-browser",
+        "package/unified-HTML-browser",
+        "package/static-Chrome-HTML-browser",
+        "package/packaged-provider-actions",
+        "package/packaged-cached-provider-info",
+        "package/channel-logos",
+        "package/packaged-vod-images",
+        "package/provider-modal-browser",
+        "package/strict-typed154",
+        "package/sharedTS18",
+        "package/sharedTS6-all-down",
+        "package/retention100",
+        "native/proxy-health",
+        "native/core-normal51",
+        "native/core-late-faults",
+        "Main/core-settings-workflow",
+        "Main/active-profile-status-probes",
+        "native/profile-delivery",
+        "native/HLS-fMP4-workflows",
+        "Main/lifecycle-fault-workflow",
+        "Main/React-cross-workflows",
+        "Main/accounts-auth-and-channels",
+        "Main/settings-task-consumers",
+        "Main/SQLite-compatibility",
+        "Main/input-profile-and-provider-probes"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "tools/M8-transport-materials",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "source/plugin-TLS-DNS-GPG16",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "tools/M8-transport-materials"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "native/plugin-normal-metadata",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/plugin-unsigned25",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/plugin-shared-ownership",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "native/plugin-normal-metadata",
+        "native/core-normal51"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "native/plugin-TLS-DNS-GPG16",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "source/plugin-TLS-DNS-GPG16"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "source/plugin-managed-archives",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/plugin-execution-and-install",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "source/plugin-managed-archives"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "source/backup-restore-schedules",
+      "owner": "m478",
+      "state": "retained_source_authority",
+      "unverified_predecessors": [],
+      "evidence": {
+        "execution_performed": false,
+        "kind": "retained_source_authority",
+        "scope": "Source16 with media and raw warning supplements",
+        "source_audit_sha256": "efc3713a3654de2438c9c423a24e8eb0919e1f9dfcd26125c6aef166ed221471"
+      }
+    },
+    {
+      "id": "native/backup-workflow",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "source/backup-SQLite-upgrade",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/backup-SQLite-upgrade",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "source/backup-SQLite-upgrade"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "native/backup-lifecycle",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "native/backup-workflow"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "source/admin-session-CSRF",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/admin-session-CSRF",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "source/admin-session-CSRF"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "source/operator-remaining-arguments",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/operator-operational",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "source/operator-remaining-arguments"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "source/VOD-missing-boundaries",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/VOD-lifecycle-recovery",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "source/VOD-missing-boundaries"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "native/VOD-ranges-catchup",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "native/profile-delivery"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "source/M7-hash-regex-realtime",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/XC-catalogue-refresh-info",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "native/M3U-XMLTV-HDHR",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "source/M7-hash-regex-realtime"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "native/realtime-connect",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "source/M7-hash-regex-realtime",
+        "native/core-normal51",
+        "m6/default-job-graph"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "Main/M4-M7-M8-required-routes",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "native/plugin-execution-and-install",
+        "native/plugin-TLS-DNS-GPG16",
+        "native/backup-workflow",
+        "native/backup-SQLite-upgrade",
+        "native/admin-session-CSRF",
+        "native/operator-operational",
+        "native/VOD-lifecycle-recovery",
+        "native/VOD-ranges-catchup",
+        "native/XC-catalogue-refresh-info",
+        "native/M3U-XMLTV-HDHR",
+        "native/realtime-connect",
+        "package/clean-install"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "performance/VOD-catchup",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "Main/M4-M7-M8-required-routes"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "performance/outputs-realtime",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "Main/M4-M7-M8-required-routes"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "performance/operations-plugins",
+      "owner": "m478",
+      "state": "open",
+      "unverified_predecessors": [
+        "Main/M4-M7-M8-required-routes"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/Source-missing-domains",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "m6/api202-publication",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "m6/scanner-first",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/api202-publication"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/m3u-groups-single",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/scanner-first"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/channel-signal-tvg-programmes",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/m3u-groups-single",
+        "m6/Source-missing-domains"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/refresh-local-positive",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/channel-signal-tvg-programmes"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/programme-index",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/refresh-local-positive"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/configured-series-positive",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/programme-index"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/configured-series-repeat",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/configured-series-positive"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/local-logo-artwork-positive-repeat",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/configured-series-repeat"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/oneoff-beat-publication",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/local-logo-artwork-positive-repeat"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/recording61-video-audio",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/oneoff-beat-publication"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/guide-current-output",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/recording61-video-audio"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/second-import-replaces-title",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/guide-current-output"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/remote-m3u-download-cache-compression",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/second-import-replaces-title"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/xc-stream-import",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/remote-m3u-download-cache-compression"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/vod-import",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/xc-stream-import"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/python-regex-filters-general-hash",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/vod-import"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/account-CSV-hash-overrides",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/python-regex-filters-general-hash"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/schedules-direct-guide",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/account-CSV-hash-overrides"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/matching-custom-dummy-offsets",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/schedules-direct-guide"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/stream-rehash-settings-callback",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/matching-custom-dummy-offsets"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/dvr-offset-reschedule-settings-callback",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/stream-rehash-settings-callback"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/scheduler-install-known-defaults",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "m6/scheduler-tick-publication",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/scheduler-install-known-defaults"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/recurring-positive-repeat",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/scheduler-tick-publication"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/backend-cleanup-expiry",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/recurring-positive-repeat"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/stats-live-ghost",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/backend-cleanup-expiry"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/scanner-empty-and-content",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/stats-live-ghost"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/account-warning-expiration",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/scanner-empty-and-content"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/version503",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/account-warning-expiration"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/version200-update-no-update-malformed",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/version503",
+        "m6/Source-missing-domains"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/scheduler-normal-stop",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/version200-update-no-update-malformed"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/calendar-timezone-boundaries",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/scheduler-normal-stop"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/default-job-graph",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/calendar-timezone-boundaries"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/SQL-ErrorResponse-heldReady",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "m6/cache-reply-held",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/SQL-ErrorResponse-heldReady"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/event-reply-held",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/cache-reply-held"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/result-reply-postend",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/event-reply-held"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/observer-loss-physical-retention",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/result-reply-postend"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/shutdown-drain",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/observer-loss-physical-retention"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/unknown-FIFO-head-unchanged",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/shutdown-drain"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/restart-preserves-unconsumed-head",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/unknown-FIFO-head-unchanged"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/longrunning-poison-recovery",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/restart-preserves-unconsumed-head"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/import-partial-failure-retention",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/longrunning-poison-recovery"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/durable-retry-cancel-restart",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/import-partial-failure-retention"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "m6/playback-during-refresh",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/durable-retry-cancel-restart"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "performance/M6-whole-graph",
+      "owner": "m6",
+      "state": "open",
+      "unverified_predecessors": [
+        "m6/Source-missing-domains",
+        "m6/api202-publication",
+        "m6/scanner-first",
+        "m6/m3u-groups-single",
+        "m6/channel-signal-tvg-programmes",
+        "m6/refresh-local-positive",
+        "m6/programme-index",
+        "m6/configured-series-positive",
+        "m6/configured-series-repeat",
+        "m6/local-logo-artwork-positive-repeat",
+        "m6/oneoff-beat-publication",
+        "m6/recording61-video-audio",
+        "m6/guide-current-output",
+        "m6/second-import-replaces-title",
+        "m6/remote-m3u-download-cache-compression",
+        "m6/xc-stream-import",
+        "m6/vod-import",
+        "m6/python-regex-filters-general-hash",
+        "m6/account-CSV-hash-overrides",
+        "m6/schedules-direct-guide",
+        "m6/matching-custom-dummy-offsets",
+        "m6/stream-rehash-settings-callback",
+        "m6/dvr-offset-reschedule-settings-callback",
+        "m6/scheduler-install-known-defaults",
+        "m6/scheduler-tick-publication",
+        "m6/recurring-positive-repeat",
+        "m6/backend-cleanup-expiry",
+        "m6/stats-live-ghost",
+        "m6/scanner-empty-and-content",
+        "m6/account-warning-expiration",
+        "m6/version503",
+        "m6/version200-update-no-update-malformed",
+        "m6/scheduler-normal-stop",
+        "m6/calendar-timezone-boundaries",
+        "m6/default-job-graph",
+        "m6/SQL-ErrorResponse-heldReady",
+        "m6/cache-reply-held",
+        "m6/event-reply-held",
+        "m6/result-reply-postend",
+        "m6/observer-loss-physical-retention",
+        "m6/shutdown-drain",
+        "m6/unknown-FIFO-head-unchanged",
+        "m6/restart-preserves-unconsumed-head",
+        "m6/longrunning-poison-recovery",
+        "m6/import-partial-failure-retention",
+        "m6/durable-retry-cancel-restart",
+        "m6/playback-during-refresh"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "root/M0-executable-coverage",
+      "owner": "Root",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "root/M1-core-acceptance",
+      "owner": "Root",
+      "state": "open",
+      "unverified_predecessors": [
+        "root/M0-executable-coverage"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "external/M9/datastore-scope",
+      "owner": "Root",
+      "state": "open",
+      "unverified_predecessors": [],
+      "evidence": null
+    },
+    {
+      "id": "root/M9-workflow-parity",
+      "owner": "Root",
+      "state": "open",
+      "unverified_predecessors": [
+        "package/baseline-all",
+        "package/live-react-stats",
+        "package/profile-restart",
+        "package/guide-grid-packaged",
+        "package/current-packaged",
+        "package/clean-install",
+        "package/category-browser",
+        "package/unified-HTML-browser",
+        "package/static-Chrome-HTML-browser",
+        "package/packaged-provider-actions",
+        "package/packaged-cached-provider-info",
+        "package/channel-logos",
+        "package/packaged-vod-images",
+        "package/provider-modal-browser",
+        "package/strict-typed154",
+        "package/sharedTS18",
+        "package/sharedTS6-all-down",
+        "package/retention100",
+        "native/proxy-health",
+        "native/core-normal51",
+        "native/core-late-faults",
+        "Main/core-settings-workflow",
+        "Main/active-profile-status-probes",
+        "native/profile-delivery",
+        "native/HLS-fMP4-workflows",
+        "Main/lifecycle-fault-workflow",
+        "Main/React-cross-workflows",
+        "Main/accounts-auth-and-channels",
+        "Main/settings-task-consumers",
+        "Main/SQLite-compatibility",
+        "Main/input-profile-and-provider-probes",
+        "tools/M8-transport-materials",
+        "source/plugin-TLS-DNS-GPG16",
+        "native/plugin-normal-metadata",
+        "native/plugin-unsigned25",
+        "native/plugin-shared-ownership",
+        "native/plugin-TLS-DNS-GPG16",
+        "source/plugin-managed-archives",
+        "native/plugin-execution-and-install",
+        "native/backup-workflow",
+        "source/backup-SQLite-upgrade",
+        "native/backup-SQLite-upgrade",
+        "native/backup-lifecycle",
+        "source/admin-session-CSRF",
+        "native/admin-session-CSRF",
+        "source/operator-remaining-arguments",
+        "native/operator-operational",
+        "source/VOD-missing-boundaries",
+        "native/VOD-lifecycle-recovery",
+        "native/VOD-ranges-catchup",
+        "source/M7-hash-regex-realtime",
+        "native/XC-catalogue-refresh-info",
+        "native/M3U-XMLTV-HDHR",
+        "native/realtime-connect",
+        "Main/M4-M7-M8-required-routes",
+        "m6/Source-missing-domains",
+        "m6/api202-publication",
+        "m6/scanner-first",
+        "m6/m3u-groups-single",
+        "m6/channel-signal-tvg-programmes",
+        "m6/refresh-local-positive",
+        "m6/programme-index",
+        "m6/configured-series-positive",
+        "m6/configured-series-repeat",
+        "m6/local-logo-artwork-positive-repeat",
+        "m6/oneoff-beat-publication",
+        "m6/recording61-video-audio",
+        "m6/guide-current-output",
+        "m6/second-import-replaces-title",
+        "m6/remote-m3u-download-cache-compression",
+        "m6/xc-stream-import",
+        "m6/vod-import",
+        "m6/python-regex-filters-general-hash",
+        "m6/account-CSV-hash-overrides",
+        "m6/schedules-direct-guide",
+        "m6/matching-custom-dummy-offsets",
+        "m6/stream-rehash-settings-callback",
+        "m6/dvr-offset-reschedule-settings-callback",
+        "m6/scheduler-install-known-defaults",
+        "m6/scheduler-tick-publication",
+        "m6/recurring-positive-repeat",
+        "m6/backend-cleanup-expiry",
+        "m6/stats-live-ghost",
+        "m6/scanner-empty-and-content",
+        "m6/account-warning-expiration",
+        "m6/version503",
+        "m6/version200-update-no-update-malformed",
+        "m6/scheduler-normal-stop",
+        "m6/calendar-timezone-boundaries",
+        "m6/default-job-graph",
+        "m6/SQL-ErrorResponse-heldReady",
+        "m6/cache-reply-held",
+        "m6/event-reply-held",
+        "m6/result-reply-postend",
+        "m6/observer-loss-physical-retention",
+        "m6/shutdown-drain",
+        "m6/unknown-FIFO-head-unchanged",
+        "m6/restart-preserves-unconsumed-head",
+        "m6/longrunning-poison-recovery",
+        "m6/import-partial-failure-retention",
+        "m6/durable-retry-cancel-restart",
+        "m6/playback-during-refresh",
+        "root/M0-executable-coverage",
+        "root/M1-core-acceptance",
+        "external/M9/datastore-scope"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "root/M9-soak",
+      "owner": "Root",
+      "state": "open",
+      "unverified_predecessors": [
+        "root/M9-workflow-parity"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "root/M9-rollback",
+      "owner": "Root",
+      "state": "open",
+      "unverified_predecessors": [
+        "root/M9-workflow-parity"
+      ],
+      "evidence": null
+    },
+    {
+      "id": "root/M9-whole-service-performance",
+      "owner": "Root",
+      "state": "open",
+      "unverified_predecessors": [
+        "root/M9-workflow-parity",
+        "root/M9-soak"
+      ],
+      "evidence": null
+    }
+  ]
+}

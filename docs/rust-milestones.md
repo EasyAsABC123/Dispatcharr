@@ -1520,6 +1520,9 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 - **M3** The current AMD64 package passed shared TS and full worker outage recovery. Both ARM64 backends passed paired signed HLS with strict media decoding and one upstream per test. [Shared streams and restart evidence](rust-2d3ffe53-shared-streams-guide-and-memory.md#m3-shared-streams-and-worker-recovery)
 - **M6 and M9** The current ordered guide and scheduled scanner validated matching worker results. The separate Original idle observation measured 59,207,680 bytes of growth without playback. [Guide scheduling and idle diagnosis](rust-2d3ffe53-shared-streams-guide-and-memory.md#m6-guide-request-before-scheduled-scanner)
 
+- **Release matrix** Four current AMD64 groups independently verified 9 current rows and 4 retained Original dependencies. The release matrix has 114 open rows. [Grouped acceptance and row-by-row evidence](rust-2d3ffe53-amd64-release-groups.md)
+- **M10 and M11** Lappy preserved one acknowledged Rust write through a copied-PostgreSQL return with the same Original-issued session. The matching offline intake leaves the default switch gated. [Current ARM64 rehearsal](rust-m10-m11-2d3ffe53-arm64-copied-return.md)
+
 ## Latest scoped runtime evidence for 2ee64c43
 
 - **M6** Eleven signed invalid string IDs now match the Original 500 response, with no broker publication. Both ordinary packages passed signed startup and the exact source passed 1,775 workspace tests. [Invalid guide input evidence](rust-m6-2ee64c43-invalid-guide-ids.md)
