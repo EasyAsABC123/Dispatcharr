@@ -2,7 +2,7 @@
 //! This is not a SQLite Main/router/restore implementation. The caller must hold
 //! its owned AppData/path admission and account this synchronous work in its role.
 use std::{
-    ffi::{c_char, c_int, CString},
+    ffi::{c_char, c_int, c_void, CString},
     fs::{self, OpenOptions},
     io,
     marker::PhantomData,
@@ -37,6 +37,15 @@ unsafe extern "C" {
     fn sqlite3_backup_step(copy: *mut Copy, pages: c_int) -> c_int;
     fn sqlite3_backup_finish(copy: *mut Copy) -> c_int;
     fn sqlite3_errcode(db: *mut Db) -> c_int;
+    fn sqlite3_exec(
+        db: *mut Db,
+        sql: *const c_char,
+        callback: Option<
+            unsafe extern "C" fn(*mut c_void, c_int, *mut *mut c_char, *mut *mut c_char) -> c_int,
+        >,
+        context: *mut c_void,
+        error: *mut *mut c_char,
+    ) -> c_int;
 }
 #[derive(Debug)]
 pub enum SnapshotError {
@@ -212,30 +221,34 @@ pub fn snapshot_sqlite(
     }
 }
 
+pub(super) fn verify_catalogue(path: &Path) -> Result<(), SnapshotError> {
+    // Like Original, open the extracted copy read/write so SQLite may create
+    // private WAL companions before opening its catalogue. No current DB is used.
+    let database = Database::open(path, 2)?;
+    let code = unsafe {
+        sqlite3_exec(
+            database.0,
+            c"SELECT name FROM sqlite_master WHERE type='table'".as_ptr(),
+            None,
+            ptr::null_mut(),
+            ptr::null_mut(),
+        )
+    };
+    if code == 0 {
+        Ok(())
+    } else {
+        Err(SnapshotError::Sqlite(code))
+    }
+}
+
 #[cfg(test)]
 pub(super) mod tests {
     use super::*;
     use std::{
-        ffi::{c_void, CStr},
+        ffi::CStr,
         sync::atomic::{AtomicUsize, Ordering},
         time::SystemTime,
     };
-    unsafe extern "C" {
-        fn sqlite3_exec(
-            db: *mut Db,
-            sql: *const c_char,
-            callback: Option<
-                unsafe extern "C" fn(
-                    *mut c_void,
-                    c_int,
-                    *mut *mut c_char,
-                    *mut *mut c_char,
-                ) -> c_int,
-            >,
-            context: *mut c_void,
-            error: *mut *mut c_char,
-        ) -> c_int;
-    }
     struct Temp(PathBuf);
     impl Temp {
         fn new() -> Self {

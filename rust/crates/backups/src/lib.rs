@@ -25,6 +25,8 @@ mod restore_plugin_copy;
 #[cfg(all(feature = "sqlite-backup-snapshot", unix))]
 mod sqlite_create;
 #[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+mod sqlite_restore;
+#[cfg(all(feature = "sqlite-backup-snapshot", unix))]
 mod sqlite_snapshot;
 mod taskless_archive_rows;
 #[cfg(target_os = "linux")]
@@ -776,6 +778,22 @@ fn stage_restore_dump(
     limits: &Limits,
     cancel: &Cancellation,
 ) -> Result<PreparedDump, Error> {
+    stage_restore_dump_for(
+        archive,
+        scratch_root,
+        limits,
+        cancel,
+        BackupEngine::PostgreSql,
+    )
+}
+
+fn stage_restore_dump_for(
+    archive: &Path,
+    scratch_root: &Path,
+    limits: &Limits,
+    cancel: &Cancellation,
+    engine: BackupEngine,
+) -> Result<PreparedDump, Error> {
     limits.validate()?;
     cancel.check()?;
     let scratch = OwnedDirectory::new(scratch_root)?;
@@ -809,7 +827,12 @@ fn stage_restore_dump(
     {
         return Err(Error::UnsafeMember);
     }
-    let dump = scratch.0.join("database.dump");
+    let staged_name = match engine {
+        BackupEngine::PostgreSql => "database.dump",
+        #[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+        BackupEngine::Sqlite => "database.sqlite3",
+    };
+    let dump = scratch.0.join(staged_name);
     let mut output = OpenOptions::new()
         .write(true)
         .create_new(true)
@@ -825,12 +848,63 @@ fn stage_restore_dump(
         .get("database_type")
         .map_or(Some("postgresql"), serde_json::Value::as_str)
         .ok_or(Error::Metadata)?;
-    match kind {
-        "postgresql" => {}
-        "sqlite" => return Err(Error::SqliteDatabaseTypeMismatch),
+    match (engine, kind) {
+        (BackupEngine::PostgreSql, "postgresql") => (),
+        (BackupEngine::PostgreSql, "sqlite") => return Err(Error::SqliteDatabaseTypeMismatch),
+        #[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+        (BackupEngine::Sqlite, "sqlite") => (),
         _ => return Err(Error::WrongDatabaseType),
     }
     Ok(PreparedDump { scratch, dump })
+}
+
+/// The staged archive owns its scratch directory until it is installed or discarded.
+#[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+pub struct StagedSqliteRestore {
+    prepared: PreparedDump,
+    bytes_limit: u64,
+}
+
+/// The application holds all SQLite writer and connection admission closed
+/// from before staging through installation and its final result.
+#[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+pub trait CurrentSqliteRestoreAuthority {
+    fn database(&self) -> &Path;
+    fn before_destructive_submission(&self);
+}
+
+#[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+impl StagedSqliteRestore {
+    pub fn path(&self) -> &Path {
+        &self.prepared.dump
+    }
+
+    pub fn install(
+        self,
+        authority: &dyn CurrentSqliteRestoreAuthority,
+        cancel: &Cancellation,
+    ) -> Result<(), Error> {
+        sqlite_restore::install(&self.prepared.dump, self.bytes_limit, authority, cancel)
+    }
+}
+
+/// Extract the SQLite payload to a fresh owned scratch directory and verify
+/// catalogue readability before any current database or pool is touched.
+#[cfg(all(feature = "sqlite-backup-snapshot", unix))]
+pub fn stage_sqlite_restore(
+    archive: &Path,
+    scratch_root: &Path,
+    limits: &Limits,
+    cancel: &Cancellation,
+) -> Result<StagedSqliteRestore, Error> {
+    let prepared =
+        stage_restore_dump_for(archive, scratch_root, limits, cancel, BackupEngine::Sqlite)?;
+    cancel.check()?;
+    sqlite_snapshot::verify_catalogue(&prepared.dump).map_err(|_| Error::Metadata)?;
+    Ok(StagedSqliteRestore {
+        prepared,
+        bytes_limit: limits.database_bytes,
+    })
 }
 
 // The callback precedes even a spawn/IO failure: once invoked the caller must

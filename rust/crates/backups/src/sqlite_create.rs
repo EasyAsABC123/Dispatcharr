@@ -113,8 +113,60 @@ mod tests {
         let restored = root.0.join("independent-readback.sqlite3");
         fs::write(&restored, bytes).unwrap();
         assert_eq!(read_fixture_value(&restored, c"SELECT id FROM owned"), 17);
+        let restore_scratch = root.0.join("restore-scratch");
+        let prepared = stage_sqlite_restore(
+            &root
+                .0
+                .join("backups/dispatcharr-backup-2026.11.23.12.30.00.zip"),
+            &restore_scratch,
+            &Limits::default(),
+            &Cancellation::default(),
+        )
+        .unwrap();
+        assert_eq!(
+            read_fixture_value(prepared.path(), c"SELECT id FROM owned"),
+            17
+        );
+        let stage = prepared.path().to_owned();
+        drop(prepared);
+        assert!(!stage.exists());
         assert_eq!(fs::read_dir(root.0.join("scratch")).unwrap().count(), 0);
     }
+    #[test]
+    fn restore_stage_rejects_wrong_database_type_and_unreadable_payload_without_retaining_files() {
+        let root = OwnedDirectory::new(&std::env::temp_dir()).unwrap();
+        let scratch = root.0.join("restore-scratch");
+        for (kind, expected) in [
+            ("postgresql", Error::WrongDatabaseType),
+            ("sqlite", Error::Metadata),
+        ] {
+            let archive = root.0.join(format!("{kind}.zip"));
+            let mut zip = ZipWriter::new(File::create(&archive).unwrap());
+            let options = SimpleFileOptions::default();
+            zip.start_file("metadata.json", options).unwrap();
+            write!(
+                zip,
+                "{{\"database_type\":\"{kind}\",\"database_file\":\"payload.bin\"}}"
+            )
+            .unwrap();
+            zip.start_file("payload.bin", options).unwrap();
+            zip.write_all(b"not a SQLite database").unwrap();
+            zip.finish().unwrap();
+            let result = stage_sqlite_restore(
+                &archive,
+                &scratch,
+                &Limits::default(),
+                &Cancellation::default(),
+            );
+            let error = result.err().expect("staging failed");
+            assert_eq!(
+                std::mem::discriminant(&error),
+                std::mem::discriminant(&expected)
+            );
+            assert_eq!(fs::read_dir(&scratch).unwrap().count(), 0);
+        }
+    }
+
     #[test]
     fn cancelled_create_never_makes_an_archive() {
         let root = OwnedDirectory::new(&std::env::temp_dir()).unwrap();
