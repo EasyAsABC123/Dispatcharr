@@ -1061,3 +1061,13 @@ had at most one upstream connection with signed media playback and decode
 checks. Independent recomputation verified 1,062 measurement samples,
 all nine pair results and exact cleanup.
 [Measured live resource proof](rust-m1-amd64-signed-live-resource-3d8f9672.md)
+
+### Current AMD64 boot and package acceptance
+
+The independent audit accepted eight exact package rows for the frozen
+`3d8f9672` AMD64 build. The scope covers authentication hashes, the 17 safe
+operator cases, the 22 createsuperuser cases, proxy authentication, the
+packaged M4 functional workload, output-profile and user-agent settings,
+and profile process restart. Each row has its own qualification and
+cleanup receipt. The batch and audit both exited zero.
+[AMD64 boot and package proof](rust-m0-amd64-boot-acceptance-3d8f9672.json)
