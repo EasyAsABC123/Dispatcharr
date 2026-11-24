@@ -4,7 +4,7 @@
   "canonical_required_nodes": 127,
   "combined_index": true,
   "credit": "Original Dispatcharr and upstream dependency authors retain full credit.",
-  "current_package_passes": 15,
+  "current_package_passes": 17,
   "failed_current": {
     "m6/api202-publication": {
       "case_11": {
@@ -25,6 +25,58 @@
   },
   "fresh_original_passes": 1,
   "image_id": "sha256:3cb8dff78119b1d0a40740a9f31f5ab8814a063a509f1891be9fef93ee2d39a6",
+  "m5_terminal": {
+    "cleanup_uncertain": true,
+    "owner_actual_exit": 1,
+    "report_sha256": "ae92cfd1a77a189e04ece9768b7220885dc512b460e2775a10ab1b31ba92367d",
+    "selected": {
+      "package/category-browser": {
+        "exact_owned_absence": false,
+        "phase_actual_exits": {
+          "cleanup": 1,
+          "evaluation": 1,
+          "execution": 0
+        },
+        "result_sha256": "d2c9c00eabfb91ade073b9584a535261ac8f0e9c3fe204e63c9b1a6a7ea2e542",
+        "status": "failed"
+      },
+      "package/channel-logos": {
+        "status": "blocked"
+      },
+      "package/guide-grid-packaged": {
+        "exact_owned_absence": true,
+        "phase_actual_exits": {
+          "cleanup": 0,
+          "evaluation": 0,
+          "execution": 0
+        },
+        "result_sha256": "5a1309ae106f4f9df19185a9b05a7d0ec5099fb441fe2191b1be987227f76a77",
+        "status": "passed"
+      },
+      "package/live-react-stats": {
+        "exact_owned_absence": true,
+        "phase_actual_exits": {
+          "cleanup": 0,
+          "evaluation": 0,
+          "execution": 0
+        },
+        "result_sha256": "be5bcd417f6a31e3601cfaf00253eb41d1f57e92cc3b916eb8dc1f5b34ed67ff",
+        "status": "passed"
+      },
+      "package/packaged-vod-images": {
+        "status": "blocked"
+      },
+      "package/provider-modal-browser": {
+        "status": "blocked"
+      },
+      "package/static-Chrome-HTML-browser": {
+        "status": "blocked"
+      },
+      "package/unified-HTML-browser": {
+        "status": "blocked"
+      }
+    }
+  },
   "open_ids": [
     "Main/M4-M7-M8-required-routes",
     "Main/React-cross-workflows",
@@ -106,8 +158,6 @@
     "package/category-browser",
     "package/channel-logos",
     "package/current-packaged",
-    "package/guide-grid-packaged",
-    "package/live-react-stats",
     "package/packaged-cached-provider-info",
     "package/packaged-provider-actions",
     "package/packaged-vod-images",
@@ -203,6 +253,58 @@
       "report_sha256": "f1cdc0ede4b8d7b04ba93259a1a6e82d2fac08cf88d2c9ee687f03a9f6b5dafe",
       "result_sha256": "5b0fee034b7ed5d555aad948a5e6700e9bf55625d1c5f0f06264362e8befbeb2",
       "type": "fresh_original_pass"
+    },
+    "package/guide-grid-packaged": {
+      "binding_sha256": "f75e65cf01d34e145f230802430b93c60c238ba74e4a4d604a017efd077c939b",
+      "phase_actual_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "phase_sha256": {
+        "cleanup": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "92cc25b4c3bcb7543cd0833e9e749b10e130bbe9346ec8cb997b7067f17bbd1b"
+        },
+        "evaluation": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "54fed22c3b1a2e41e522c6a33362c890786bf1f61eeffb45b63529ff8ad66d6d"
+        },
+        "execution": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "ba5954d886eca7e38c0157e477a296916c44bbff6684c9905078576eee5d458d"
+        }
+      },
+      "prerequisites": {},
+      "report_sha256": "ae92cfd1a77a189e04ece9768b7220885dc512b460e2775a10ab1b31ba92367d",
+      "result_sha256": "5a1309ae106f4f9df19185a9b05a7d0ec5099fb441fe2191b1be987227f76a77",
+      "type": "current_package_pass"
+    },
+    "package/live-react-stats": {
+      "binding_sha256": "f75e65cf01d34e145f230802430b93c60c238ba74e4a4d604a017efd077c939b",
+      "phase_actual_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "phase_sha256": {
+        "cleanup": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "30c1bcf799d0815cfe8b0f36a02fdd23ac71203f356af34c18910e479b356d29"
+        },
+        "evaluation": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "544f376395020c7c81bc4518971fbe68225ebc16bc44ba08a93c3b4d56607784"
+        },
+        "execution": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "prerequisites": {},
+      "report_sha256": "ae92cfd1a77a189e04ece9768b7220885dc512b460e2775a10ab1b31ba92367d",
+      "result_sha256": "be5bcd417f6a31e3601cfaf00253eb41d1f57e92cc3b916eb8dc1f5b34ed67ff",
+      "type": "current_package_pass"
     },
     "package/m4-functional": {
       "binding_sha256": "b2c7bd4e1610d99c13171f3364b42a754c503ac1177e9dc03b7c75e7fe4dae0a",
@@ -371,5 +473,5 @@
     }
   },
   "single_run_full_acceptance": false,
-  "unique_passes": 16
+  "unique_passes": 18
 }

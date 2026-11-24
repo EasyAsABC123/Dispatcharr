@@ -1,6 +1,6 @@
 # Dispatcharr Rust release implementation and verification
 
-The frozen application candidate `3d8f9672` has **16 independently verified canonical row passes** across scoped physical runs. Fifteen are passes against the current Rust package and one is a fresh Original workflow. One other row has retained Original authority and 110 rows remain open in the 127-row release graph. This combined evidence index preserves each run and its predecessors. Full single-run release acceptance remains open. [Current exact-candidate evidence index](rust-current-amd64-acceptance-3d8f9672.json)
+The frozen application candidate `3d8f9672` has **18 independently verified canonical row passes** across scoped physical runs. Seventeen are passes against the current Rust package and one is a fresh Original workflow. One other row has retained Original authority and 108 rows remain open in the 127-row release graph. This combined evidence index preserves each run and its predecessors. Full single-run release acceptance remains open. [Current exact-candidate evidence index](rust-current-amd64-acceptance-3d8f9672.json)
 
 The historical `2d3ffe53` package ledger recorded 14 verified executions, four retained Original authorities and 109 open rows. The implementation table below records the work allocated from that historical baseline. [Historical release matrix](../scripts/rust-integration/2d3ffe53-amd64-release-matrix-with-baseline.json)
 
@@ -15,6 +15,8 @@ The Native ARM64 120-second M9 predecessor completed with ten signed viewers, 25
 The frozen AMD64 Rust Main passed 102 signed catalogue comparisons across 34 routes, including 68 GETs and 34 HEAD and OPTIONS observations. The checked GETs matched owned SQL, and the fixture state remained unchanged. Independent teardown confirmed all four role generations and owned resources retired. The comparisons used retained Original route authority. [Signed Main catalogue evidence](rust-m1-amd64-signed-main-catalogue-3d8f9672.json)
 
 The separate AMD64 SQLite operator passed its five copied-data cases. The ordinary image and the opt-in companion had byte-identical Main binaries. The companion upgraded copied history to 184 migration records and rejected unknown history and a staged collision with unchanged input. Each case ran without a network and proved exact teardown. The same-engine Main workflow remains open. [Copied SQLite operator evidence](rust-m8-amd64-copied-sqlite-operator-3d8f9672.json)
+
+Packaged Guide Grid and live React Stats added two AMD64 canonical passes. Both ran against the frozen package and pinned Original, with independently replayed evaluators and exact teardown. The category browser row remains open after its cleanup evaluator could not establish the expected frontend donor. Five other browser and asset rows remained queued when that cohort stopped.
 
 ## Parallel implementation
 
