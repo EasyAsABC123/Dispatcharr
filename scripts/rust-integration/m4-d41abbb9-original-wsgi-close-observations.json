@@ -1,0 +1,48 @@
+{
+  "application_instrumented_in_disposable_copy": true,
+  "causal_join_proved": false,
+  "credit": "Original Dispatcharr and upstream contributors retain full credit.",
+  "exact_cleanup": true,
+  "ffmpeg_sockets_seen": 2,
+  "observations_sha256": "33252d575bb71513046a0f598066caa0e2578b97ef44e441702581d9b3627be6",
+  "requests": [
+    {
+      "branch": "archive",
+      "elapsed_to_wsgi_close_ms": 3156.828,
+      "http": 206,
+      "observed_closures": [
+        "provider_close_returned",
+        "generator_finally_returned",
+        "iterator_close_returned",
+        "wsgi_response_close_returned"
+      ],
+      "ordinal": 1
+    },
+    {
+      "branch": "eof_probe",
+      "elapsed_to_wsgi_close_ms": 402.321,
+      "http": 206,
+      "observed_closures": [
+        "provider_close_returned",
+        "generator_finally_returned",
+        "iterator_close_returned",
+        "wsgi_response_close_returned"
+      ],
+      "ordinal": 2
+    },
+    {
+      "branch": "archive",
+      "elapsed_to_wsgi_close_ms": 5781.172,
+      "http": 206,
+      "observed_closures": [
+        "provider_close_returned",
+        "generator_finally_returned",
+        "iterator_close_returned",
+        "wsgi_response_close_returned"
+      ],
+      "ordinal": 3
+    }
+  ],
+  "strict_gate_actual_exit": 1,
+  "unique_socket_joins": 0
+}

@@ -1,0 +1,432 @@
+{
+  "candidate": "63ee09fcba02f79300ee249b77f1fc881d05657c",
+  "canonical_routes": {
+    "collection": "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+    "key": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED"
+  },
+  "client_visible_HEAD_only": true,
+  "credit": "Original Dispatcharr and upstream contributors retain full credit.",
+  "exact_NO_SQL_write_and_same_scoped_state": true,
+  "exact_cleanup": true,
+  "formal_rows_promoted": [],
+  "fresh_original_and_native": true,
+  "fresh_receipt_sha256": "c0c8ff71d7c73a1a4740345f8051b9ecffbcff73be6c8d91b1795f4ea111ec85",
+  "manifest_sha256": "262265e9cb7e95e3a4eb4d9669d47666e8738c39d551071313d10b1c21f10d6b",
+  "valid_Bearer_identities_verified": true,
+  "wire_differential": [
+    {
+      "body_equal": true,
+      "headers_differ": {},
+      "method": "GET",
+      "native_options_metadata": null,
+      "native_status": 200,
+      "original_options_metadata": null,
+      "original_status": 200,
+      "role": "owner",
+      "route": "collection"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {
+        "Allow": {
+          "native": null,
+          "original": "GET, DELETE, HEAD, OPTIONS"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "HEAD",
+      "native_options_metadata": null,
+      "native_status": 200,
+      "original_options_metadata": null,
+      "original_status": 200,
+      "role": "owner",
+      "route": "collection"
+    },
+    {
+      "body_equal": false,
+      "headers_differ": {
+        "Allow": {
+          "native": "GET,HEAD,DELETE",
+          "original": "GET, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": "0",
+          "original": "194"
+        },
+        "Content-Type": {
+          "native": null,
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "OPTIONS",
+      "native_options_metadata": null,
+      "native_status": 405,
+      "original_options_metadata": {
+        "actions": null,
+        "name": "User App Data Collection",
+        "parses": [
+          "application/json"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "original_status": 200,
+      "role": "owner",
+      "route": "collection"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {},
+      "method": "GET",
+      "native_options_metadata": null,
+      "native_status": 200,
+      "original_options_metadata": null,
+      "original_status": 200,
+      "role": "admin",
+      "route": "collection"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {
+        "Allow": {
+          "native": null,
+          "original": "GET, DELETE, HEAD, OPTIONS"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "HEAD",
+      "native_options_metadata": null,
+      "native_status": 200,
+      "original_options_metadata": null,
+      "original_status": 200,
+      "role": "admin",
+      "route": "collection"
+    },
+    {
+      "body_equal": false,
+      "headers_differ": {
+        "Allow": {
+          "native": "GET,HEAD,DELETE",
+          "original": "GET, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": "0",
+          "original": "194"
+        },
+        "Content-Type": {
+          "native": null,
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "OPTIONS",
+      "native_options_metadata": null,
+      "native_status": 405,
+      "original_options_metadata": {
+        "actions": null,
+        "name": "User App Data Collection",
+        "parses": [
+          "application/json"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "original_status": 200,
+      "role": "admin",
+      "route": "collection"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {},
+      "method": "GET",
+      "native_options_metadata": null,
+      "native_status": 403,
+      "original_options_metadata": null,
+      "original_status": 403,
+      "role": "other_standard",
+      "route": "collection"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {
+        "Allow": {
+          "native": null,
+          "original": "GET, DELETE, HEAD, OPTIONS"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "HEAD",
+      "native_options_metadata": null,
+      "native_status": 403,
+      "original_options_metadata": null,
+      "original_status": 403,
+      "role": "other_standard",
+      "route": "collection"
+    },
+    {
+      "body_equal": false,
+      "headers_differ": {
+        "Allow": {
+          "native": "GET,HEAD,DELETE",
+          "original": "GET, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": "0",
+          "original": "194"
+        },
+        "Content-Type": {
+          "native": null,
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "OPTIONS",
+      "native_options_metadata": null,
+      "native_status": 405,
+      "original_options_metadata": {
+        "actions": null,
+        "name": "User App Data Collection",
+        "parses": [
+          "application/json"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "original_status": 200,
+      "role": "other_standard",
+      "route": "collection"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {},
+      "method": "GET",
+      "native_options_metadata": null,
+      "native_status": 200,
+      "original_options_metadata": null,
+      "original_status": 200,
+      "role": "owner",
+      "route": "key"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {
+        "Allow": {
+          "native": null,
+          "original": "GET, PUT, DELETE, HEAD, OPTIONS"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "HEAD",
+      "native_options_metadata": null,
+      "native_status": 200,
+      "original_options_metadata": null,
+      "original_status": 200,
+      "role": "owner",
+      "route": "key"
+    },
+    {
+      "body_equal": false,
+      "headers_differ": {
+        "Allow": {
+          "native": "GET,HEAD,PUT,DELETE",
+          "original": "GET, PUT, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": "0",
+          "original": "175"
+        },
+        "Content-Type": {
+          "native": null,
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "OPTIONS",
+      "native_options_metadata": null,
+      "native_status": 405,
+      "original_options_metadata": {
+        "actions": null,
+        "name": "User App Data Key",
+        "parses": [
+          "application/json"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "original_status": 200,
+      "role": "owner",
+      "route": "key"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {},
+      "method": "GET",
+      "native_options_metadata": null,
+      "native_status": 200,
+      "original_options_metadata": null,
+      "original_status": 200,
+      "role": "admin",
+      "route": "key"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {
+        "Allow": {
+          "native": null,
+          "original": "GET, PUT, DELETE, HEAD, OPTIONS"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "HEAD",
+      "native_options_metadata": null,
+      "native_status": 200,
+      "original_options_metadata": null,
+      "original_status": 200,
+      "role": "admin",
+      "route": "key"
+    },
+    {
+      "body_equal": false,
+      "headers_differ": {
+        "Allow": {
+          "native": "GET,HEAD,PUT,DELETE",
+          "original": "GET, PUT, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": "0",
+          "original": "175"
+        },
+        "Content-Type": {
+          "native": null,
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "OPTIONS",
+      "native_options_metadata": null,
+      "native_status": 405,
+      "original_options_metadata": {
+        "actions": null,
+        "name": "User App Data Key",
+        "parses": [
+          "application/json"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "original_status": 200,
+      "role": "admin",
+      "route": "key"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {},
+      "method": "GET",
+      "native_options_metadata": null,
+      "native_status": 403,
+      "original_options_metadata": null,
+      "original_status": 403,
+      "role": "other_standard",
+      "route": "key"
+    },
+    {
+      "body_equal": true,
+      "headers_differ": {
+        "Allow": {
+          "native": null,
+          "original": "GET, PUT, DELETE, HEAD, OPTIONS"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "HEAD",
+      "native_options_metadata": null,
+      "native_status": 403,
+      "original_options_metadata": null,
+      "original_status": 403,
+      "role": "other_standard",
+      "route": "key"
+    },
+    {
+      "body_equal": false,
+      "headers_differ": {
+        "Allow": {
+          "native": "GET,HEAD,PUT,DELETE",
+          "original": "GET, PUT, DELETE, HEAD, OPTIONS"
+        },
+        "Content-Length": {
+          "native": "0",
+          "original": "175"
+        },
+        "Content-Type": {
+          "native": null,
+          "original": "application/json"
+        },
+        "Vary": {
+          "native": "origin",
+          "original": "Accept, origin"
+        }
+      },
+      "method": "OPTIONS",
+      "native_options_metadata": null,
+      "native_status": 405,
+      "original_options_metadata": {
+        "actions": null,
+        "name": "User App Data Key",
+        "parses": [
+          "application/json"
+        ],
+        "renders": [
+          "application/json",
+          "text/html"
+        ]
+      },
+      "original_status": 200,
+      "role": "other_standard",
+      "route": "key"
+    }
+  ]
+}
