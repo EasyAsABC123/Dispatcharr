@@ -264,6 +264,17 @@ def owner_readiness(nodes, document, output=None):
                 raise ValueError("M478 exact controller/evaluator differs: " + key)
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
+        elif key == "m6/Source-missing-domains" and node["owner"] == "m6":
+            if key in bindings:
+                raise ValueError("qualified M6 Original cases cannot be dispatched again")
+            context = owners.get("m6", {}).get("source_missing_domains")
+            if context is None:
+                continue
+            adapter = module(HERE / "m6/retained_source_domains.py", "retained_m6_source_domains")
+            resolved = adapter.resolve(context, HERE.parents[1], document["candidate"])
+            authorities[key] = {"id": key, "status": "retained_source_authority",
+                                "satisfies_dependency": True, "owner_resolution": resolved}
+            continue
         elif key in bindings and node["owner"] == "m6":
             if key == "m6/schedules-direct-guide":
                 owner = module(HERE / "m6/sd_guide_owner.py", "readiness_m6_sd_guide")

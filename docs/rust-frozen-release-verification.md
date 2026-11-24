@@ -623,6 +623,16 @@ Seventeen Rust library tests passed and three external-fixture cases
 remain reserved. The existing ARM64 paired owner adds twelve signed
 or public wire checks and compares exact status, headers and body.
 
+## Retained Original TVG and Version authority
+
+The coordinator accepts the exact retained Original dependency for six
+TVG and four Version200 cases. It verifies all 221 admitted source evidence
+files, reruns the two scoped reducers and checks the recorded cleanup.
+The first epoch retains its exit 1 after the reviewed TVG prefix. The
+Version epoch retains its exit 0. Admission forbids replay and requires
+separate Native results for each dependent workflow. All 34 coordinator
+controls passed on the combined scripts.
+
 ## Recording with a held PostgreSQL ReadyForQuery
 
 The M6 coordinator can dispatch the recording check that holds
