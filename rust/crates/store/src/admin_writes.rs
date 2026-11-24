@@ -426,13 +426,31 @@ async fn set_user_profiles(
     id: i64,
     values: &Value,
 ) -> Result<(), StoreError> {
-    let mut ids = relation_ids("channel_profiles", values)?;
-    ids.sort_unstable();
-    ids.dedup();
-    sqlx::query("DELETE FROM accounts_user_channel_profiles WHERE user_id=$1 AND NOT(channelprofile_id=ANY($2))").bind(id).bind(&ids).execute(&mut **transaction).await?;
-    for profile in ids {
-        sqlx::query("INSERT INTO accounts_user_channel_profiles(user_id,channelprofile_id) VALUES($1,$2) ON CONFLICT DO NOTHING").bind(id).bind(profile).execute(&mut **transaction).await?;
-    }
+    let ids = relation_ids("channel_profiles", values)?;
+    sqlx::query("DELETE FROM accounts_user_channel_profiles WHERE user_id=$1 AND NOT(channelprofile_id=ANY($2))")
+        .bind(id)
+        .bind(&ids)
+        .execute(&mut **transaction)
+        .await?;
+    // Django ManyRelatedManager.set removes the first occurrence of each
+    // retained target from its add set. Repeated targets still reach the
+    // conflict-ignoring add once. Skip unrequested inserts before nextval.
+    sqlx::query(
+        "INSERT INTO accounts_user_channel_profiles(user_id,channelprofile_id)
+         SELECT $1, wanted.target
+         FROM unnest($2::bigint[]) AS wanted(target)
+         GROUP BY wanted.target
+         HAVING COUNT(*) > 1 OR NOT EXISTS (
+             SELECT 1 FROM accounts_user_channel_profiles AS existing
+             WHERE existing.user_id = $1 AND existing.channelprofile_id = wanted.target
+         )
+         ORDER BY wanted.target
+         ON CONFLICT DO NOTHING",
+    )
+    .bind(id)
+    .bind(&ids)
+    .execute(&mut **transaction)
+    .await?;
     Ok(())
 }
 async fn transaction_user(
@@ -670,9 +688,7 @@ async fn set_group_permissions(
     id: i64,
     values: &Value,
 ) -> Result<(), StoreError> {
-    let mut ids = relation_ids("permissions", values)?;
-    ids.sort_unstable();
-    ids.dedup();
+    let ids = relation_ids("permissions", values)?;
     sqlx::query(
         "DELETE FROM auth_group_permissions WHERE group_id=$1 AND NOT(permission_id=ANY($2))",
     )
@@ -680,9 +696,22 @@ async fn set_group_permissions(
     .bind(&ids)
     .execute(&mut **transaction)
     .await?;
-    for permission in ids {
-        sqlx::query("INSERT INTO auth_group_permissions(group_id,permission_id) VALUES($1,$2) ON CONFLICT DO NOTHING").bind(id).bind(permission).execute(&mut **transaction).await?;
-    }
+    sqlx::query(
+        "INSERT INTO auth_group_permissions(group_id,permission_id)
+         SELECT $1, wanted.target
+         FROM unnest($2::bigint[]) AS wanted(target)
+         GROUP BY wanted.target
+         HAVING COUNT(*) > 1 OR NOT EXISTS (
+             SELECT 1 FROM auth_group_permissions AS existing
+             WHERE existing.group_id = $1 AND existing.permission_id = wanted.target
+         )
+         ORDER BY wanted.target
+         ON CONFLICT DO NOTHING",
+    )
+    .bind(id)
+    .bind(&ids)
+    .execute(&mut **transaction)
+    .await?;
     Ok(())
 }
 pub(crate) async fn create_group(

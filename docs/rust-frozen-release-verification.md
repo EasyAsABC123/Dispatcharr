@@ -97,6 +97,8 @@ The Channels summary and number-range JSON collection actions also accept their 
 
 The Logo JSON collection also accepts its registered trailing slash for GET and uses the same permission and serialization paths. The focused router check passed. The signed Channels and Logo fixture will compare 24 requests per backend against the same fixture state.
 
+Saving User channel profiles or Group permissions keeps a singly requested existing join row without spending another PostgreSQL sequence value. The set update retains Original’s conflict-ignoring insert attempt when the request repeats a target. Five focused admin tests passed. The paired fixture will compare the row identities and sequence changes alongside signed access and channel visibility.
+
 ## EPG Programme JSON and HDHomeRun renderer selection
 
 Both numeric EPG Programme JSON routes accept a trailing slash for GET through their existing permission checks and bounded renderer. The focused Store check covers both routes and checks the retained JSON representation behavior. The paired fixture will also check the signed Programme responses and scoped datastore state.
