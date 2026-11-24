@@ -422,9 +422,37 @@ async fn fresh_vod_ranges_match_original_selected_wire() {
     assert!(!head.headers().contains_key("content-range"));
     assert!(head.bytes().await.unwrap().is_empty());
 
-    // Every case uses a new session; suffix and 416 run before any full GET.
+    // Read the socket body directly because the Original advertises an extra
+    // byte on the first suffix request and then closes the HTTP/1 connection.
+    use tokio::io::{AsyncReadExt, AsyncWriteExt};
+    let authority = base.strip_prefix("http://").unwrap();
+    let session = format!("test-{}", uuid::Uuid::new_v4());
+    let mut socket = tokio::net::TcpStream::connect(authority).await.unwrap();
+    let message = format!(
+        "GET /proxy/vod/movie/{movie}/{session} HTTP/1.1\r\nHost: {authority}\r\nRange: bytes=-257\r\n\r\n"
+    );
+    socket.write_all(message.as_bytes()).await.unwrap();
+    let mut wire = Vec::new();
+    tokio::time::timeout(Duration::from_secs(3), socket.read_to_end(&mut wire))
+        .await
+        .unwrap()
+        .unwrap();
+    let split = wire
+        .windows(4)
+        .position(|piece| piece == b"\r\n\r\n")
+        .unwrap();
+    let fields = std::str::from_utf8(&wire[..split])
+        .unwrap()
+        .to_ascii_lowercase();
+    assert!(fields.starts_with("http/1.1 206 "));
+    assert!(fields.contains("\r\ncontent-length: 258"));
+    assert!(fields.contains("\r\ncontent-range: bytes 0-257/4096"));
+    let tail = (3839..=4095).map(|value| value as u8).collect::<Vec<_>>();
+    assert_eq!(&wire[split + 4..], tail.as_slice());
+    clean(&mut redis, &session, profile).await;
+
+    // Every other case uses a new session.
     for (range, conditional, status, bounds) in [
-        (Some("bytes=-256"), false, 206, Some((0, 256))),
         (Some("bytes=9000000-"), false, 416, None),
         (Some("bytes=0-255"), false, 206, Some((0, 255))),
         (Some("bytes=1000-1255"), false, 206, Some((1000, 1255))),

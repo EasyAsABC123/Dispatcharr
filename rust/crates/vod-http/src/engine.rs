@@ -17,13 +17,16 @@ use dispatcharr_contracts::PlaybackRequest;
 use dispatcharr_coordination::Coordinator;
 use dispatcharr_store::{AuthService, RequestAuthMethod, Store, StoreError, User};
 use futures_util::{stream, StreamExt};
+use http_body::{Body as HttpBody, Frame};
 use serde_json::json;
 use std::{
     collections::HashMap,
     future::{poll_fn, Future},
     io,
     net::SocketAddr,
+    pin::Pin,
     sync::{atomic::Ordering, Arc},
+    task::{Context, Poll},
     time::Duration,
 };
 
@@ -302,9 +305,9 @@ impl VodEngine {
             .playback
             .header("range")
             .filter(|value| !value.is_empty());
+        let known_total = ticket.session.content_length.load(Ordering::Relaxed);
         if let Some(range) = original_range {
-            let total = ticket.session.content_length.load(Ordering::Relaxed);
-            let Some(range) = validate_range(range, total) else {
+            let Some(range) = validate_range(range, known_total) else {
                 return Ok(range_not_satisfiable());
             };
             upstream_request = upstream_request.header("range", range);
@@ -390,6 +393,14 @@ impl VodEngine {
                 .collect(),
         };
         let provider_body_length = upstream.content_length();
+        let cold_suffix_length = cold_suffix_body_length(
+            original_range,
+            known_total,
+            total,
+            upstream.status(),
+            upstream.headers(),
+            provider_body_length,
+        );
         let progress = ticket.progress();
         let (start_body, body_started) = tokio::sync::oneshot::channel();
         // Upstream EOF can leave a frame queued for the downstream body.
@@ -463,7 +474,12 @@ impl VodEngine {
                 }
             }
         });
-        let mut response = Response::new(Body::from_stream(body));
+        let body = Body::from_stream(body);
+        let body = match cold_suffix_length {
+            Some(remaining) => Body::new(ColdSuffixBody { body, remaining }),
+            None => body,
+        };
+        let mut response = Response::new(body);
         *response.status_mut() = status;
         *response.headers_mut() = headers;
         Ok(response)
@@ -473,6 +489,35 @@ struct CancelTask(tokio::task::JoinHandle<()>);
 impl Drop for CancelTask {
     fn drop(&mut self) {
         self.0.abort();
+    }
+}
+
+// Original can advertise the prefix length while forwarding a cold provider's
+// shorter tail. Mark the actual final frame so HTTP/1 flushes it before closing.
+struct ColdSuffixBody {
+    body: Body,
+    remaining: u64,
+}
+
+impl HttpBody for ColdSuffixBody {
+    type Data = Bytes;
+    type Error = axum::Error;
+
+    fn poll_frame(
+        mut self: Pin<&mut Self>,
+        cx: &mut Context<'_>,
+    ) -> Poll<Option<Result<Frame<Self::Data>, Self::Error>>> {
+        let result = Pin::new(&mut self.body).poll_frame(cx);
+        if let Poll::Ready(Some(Ok(frame))) = &result {
+            if let Some(data) = frame.data_ref() {
+                self.remaining = self.remaining.saturating_sub(data.len() as u64);
+            }
+        }
+        result
+    }
+
+    fn is_end_stream(&self) -> bool {
+        self.remaining == 0
     }
 }
 
@@ -933,18 +978,30 @@ fn decimal(value: &str) -> Option<u64> {
     value.parse().ok()
 }
 
-fn source_prefix_end(value: &str) -> Option<u64> {
-    decimal(value.strip_prefix("bytes=-")?)
+fn cold_suffix_body_length(
+    range: Option<&str>,
+    known_total: u64,
+    total: u64,
+    status: StatusCode,
+    headers: &HeaderMap,
+    length: Option<u64>,
+) -> Option<u64> {
+    if known_total != 0 || status != StatusCode::PARTIAL_CONTENT {
+        return None;
+    }
+    let suffix = decimal(range?.strip_prefix("bytes=-")?)?;
+    let length = length?;
+    if length == 0 || length != suffix.min(total) || suffix == u64::MAX {
+        return None;
+    }
+    let expected = format!("bytes {}-{}/{total}", total - length, total - 1);
+    (headers.get(header::CONTENT_RANGE)?.to_str().ok()? == expected).then_some(length)
 }
 
-// Original's warm session interprets an omitted start as byte zero.
-// Apply the same prefix interpretation before contacting a cold provider.
+// Preserve the provider's suffix semantics until Original has saved a length.
 fn validate_range(value: &str, total: u64) -> Option<String> {
     if total == 0 {
-        return Some(match source_prefix_end(value) {
-            Some(end) => format!("bytes=0-{end}"),
-            None => value.into(),
-        });
+        return Some(value.into());
     }
     match range_bounds(value, total) {
         Some((start, end)) if outside_range(start, end, total) => None,
@@ -1794,10 +1851,10 @@ mod existing_range_admission {
     }
 
     #[test]
-    fn cold_suffix_uses_original_prefix_and_leaves_other_ranges_alone() {
+    fn cold_suffix_remains_a_provider_suffix_until_length_is_known() {
         for (range, expected) in [
-            ("bytes=-256", "bytes=0-256"),
-            ("bytes=-0", "bytes=0-0"),
+            ("bytes=-256", "bytes=-256"),
+            ("bytes=-0", "bytes=-0"),
             ("bytes=1000-1255", "bytes=1000-1255"),
             ("bytes=9000000-", "bytes=9000000-"),
             ("bytes=-1,3-4", "bytes=-1,3-4"),
