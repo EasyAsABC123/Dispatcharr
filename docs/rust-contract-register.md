@@ -761,3 +761,13 @@ Django, Django REST Framework and dependency authors retain full credit.
 ## Retained model and command-help observations
 
 The [reviewed observation packet](../scripts/rust-contracts/retained-model-command-observations.json) attaches seven UserAgent cache and three StreamProfile consumer successes from the pinned Original suite to their model candidates. It also attaches the exact exit, standard output and standard error for three Original help commands. These are retained observations from a disposable fixture. The three command handlers and the Native implementations still require their own execution results. No new Original executions or milestone closures are counted.
+
+The register also attaches nine retained Original stock bootstrap requests
+to seven existing operations. One disposable PostgreSQL application
+instance exercised first-admin setup, token login, signed group and profile
+reads, settings and environment reads, and anonymous version and final
+setup reads. The attachment preserves the observed methods and response
+predicates. The original capture verified retirement of its isolated services and
+retained no credentials or raw response bodies. Rust execution and the
+wider role matrix remain open. Original Dispatcharr and dependency authors
+retain full credit.

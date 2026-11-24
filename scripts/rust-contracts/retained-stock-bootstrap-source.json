@@ -1,0 +1,235 @@
+{
+  "schema": "dispatcharr.retained-stock-bootstrap.Source.v1",
+  "baseline_ref": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "owner_project": "dispatcharr-accountapi-u5xptkaq-original-e28aea5d4f6a",
+  "receipt_sha256": "5955d3a101791febfd884dda8498efc7b56b6667cd1b4586a520ecf2d67b17fd",
+  "executed_guest_sha256": "7f859daf32c2a035e23264a97af825cf03ae66ed20e3403dd2a44ad1ff34182c",
+  "Source_observations": [
+    {
+      "case_id": "stock-bootstrap-source-setup-get",
+      "sequence_index": 0,
+      "method_observed": "GET",
+      "path": "/api/accounts/initialize-superuser/",
+      "role_context": "anonymous",
+      "status": 200,
+      "predicate": "exact keys superuser_exists/setup_allowed/client_ip; false/true/private IP",
+      "binding": {
+        "route": {
+          "route_id": "route-1486c7d150ac1a2ebe13",
+          "resolver_ordinal": 3,
+          "pattern_exact": "api/accounts/initialize-superuser/",
+          "source_handler": "apps.accounts.api_views.initialize_superuser"
+        },
+        "operation": {
+          "contract_id": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+          "method": null,
+          "source_action": null
+        }
+      }
+    },
+    {
+      "case_id": "stock-bootstrap-source-setup-post",
+      "sequence_index": 1,
+      "method_observed": "POST",
+      "path": "/api/accounts/initialize-superuser/",
+      "role_context": "anonymous first administrator setup",
+      "status": 200,
+      "predicate": "exact singleton superuser_exists=true; generated actor username/password/email",
+      "binding": {
+        "route": {
+          "route_id": "route-1486c7d150ac1a2ebe13",
+          "resolver_ordinal": 3,
+          "pattern_exact": "api/accounts/initialize-superuser/",
+          "source_handler": "apps.accounts.api_views.initialize_superuser"
+        },
+        "operation": {
+          "contract_id": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+          "method": null,
+          "source_action": null
+        }
+      }
+    },
+    {
+      "case_id": "stock-bootstrap-source-normal-token-login",
+      "sequence_index": 2,
+      "method_observed": "POST",
+      "path": "/api/accounts/token/",
+      "role_context": "new administrator credentials",
+      "status": 200,
+      "predicate": "same actor; exact access/refresh keys, bounded strings, three-segment JWT syntax",
+      "binding": {
+        "route": {
+          "route_id": "route-f7c174fdedb4d5f479b2",
+          "resolver_ordinal": 5,
+          "pattern_exact": "api/accounts/token/",
+          "source_handler": "apps.accounts.api_views.TokenObtainPairView"
+        },
+        "operation": {
+          "contract_id": "route-f7c174fdedb4d5f479b2:METHOD_UNRESOLVED",
+          "method": null,
+          "source_action": null
+        }
+      }
+    },
+    {
+      "case_id": "stock-bootstrap-source-groups-get",
+      "sequence_index": 3,
+      "method_observed": "GET",
+      "path": "/api/channels/groups/",
+      "role_context": "issued administrator access bearer",
+      "status": 200,
+      "predicate": "empty list",
+      "binding": {
+        "route": {
+          "route_id": "route-db3a78dbace6356b715c",
+          "resolver_ordinal": 59,
+          "pattern_exact": "api/channels/^groups/$",
+          "source_handler": "apps.channels.api_views.ChannelGroupViewSet"
+        },
+        "operation": {
+          "contract_id": "route-db3a78dbace6356b715c:GET",
+          "method": "GET",
+          "source_action": "list"
+        }
+      }
+    },
+    {
+      "case_id": "stock-bootstrap-source-profile-get",
+      "sequence_index": 4,
+      "method_observed": "GET",
+      "path": "/api/accounts/users/me/",
+      "role_context": "same issued access bearer",
+      "status": 200,
+      "predicate": "same actor username; user_level==10; staff and superuser flags are true",
+      "binding": {
+        "route": {
+          "route_id": "route-e26d7a42abc653fff1d5",
+          "resolver_ordinal": 13,
+          "pattern_exact": "api/accounts/^users/me/$",
+          "source_handler": "apps.accounts.api_views.UserViewSet"
+        },
+        "operation": {
+          "contract_id": "route-e26d7a42abc653fff1d5:GET",
+          "method": "GET",
+          "source_action": "me"
+        }
+      }
+    },
+    {
+      "case_id": "stock-bootstrap-source-settings-get",
+      "sequence_index": 5,
+      "method_observed": "GET",
+      "path": "/api/core/settings/",
+      "role_context": "same issued access bearer",
+      "status": 200,
+      "predicate": "nonempty list; each row exact id/key/name/value keys",
+      "binding": {
+        "route": {
+          "route_id": "route-4e613bb9583a369dde8a",
+          "resolver_ordinal": 232,
+          "pattern_exact": "api/core/^settings/$",
+          "source_handler": "core.api_views.CoreSettingsViewSet"
+        },
+        "operation": {
+          "contract_id": "route-4e613bb9583a369dde8a:GET",
+          "method": "GET",
+          "source_action": "list"
+        }
+      }
+    },
+    {
+      "case_id": "stock-bootstrap-source-environment-get",
+      "sequence_index": 6,
+      "method_observed": "GET",
+      "path": "/api/core/settings/env/",
+      "role_context": "same issued access bearer",
+      "status": 200,
+      "predicate": "dict",
+      "binding": {
+        "route": {
+          "route_id": "route-46e4e7d942da8497bfd6",
+          "resolver_ordinal": 212,
+          "pattern_exact": "api/core/settings/env/",
+          "source_handler": "core.api_views.WrappedAPIView"
+        },
+        "operation": {
+          "contract_id": "route-46e4e7d942da8497bfd6:METHOD_UNRESOLVED",
+          "method": null,
+          "source_action": null
+        }
+      }
+    },
+    {
+      "case_id": "stock-bootstrap-source-version-get",
+      "sequence_index": 7,
+      "method_observed": "GET",
+      "path": "/api/core/version/",
+      "role_context": "anonymous",
+      "status": 200,
+      "predicate": "dict",
+      "binding": {
+        "route": {
+          "route_id": "route-5bebee38a2a56b0dd8e1",
+          "resolver_ordinal": 213,
+          "pattern_exact": "api/core/version/",
+          "source_handler": "core.api_views.WrappedAPIView"
+        },
+        "operation": {
+          "contract_id": "route-5bebee38a2a56b0dd8e1:METHOD_UNRESOLVED",
+          "method": null,
+          "source_action": null
+        }
+      }
+    },
+    {
+      "case_id": "stock-bootstrap-source-setup-closed-get",
+      "sequence_index": 8,
+      "method_observed": "GET",
+      "path": "/api/accounts/initialize-superuser/",
+      "role_context": "anonymous after setup",
+      "status": 200,
+      "predicate": "exact singleton superuser_exists=true",
+      "binding": {
+        "route": {
+          "route_id": "route-1486c7d150ac1a2ebe13",
+          "resolver_ordinal": 3,
+          "pattern_exact": "api/accounts/initialize-superuser/",
+          "source_handler": "apps.accounts.api_views.initialize_superuser"
+        },
+        "operation": {
+          "contract_id": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+          "method": null,
+          "source_action": null
+        }
+      }
+    }
+  ],
+  "actual_requests": 9,
+  "register_operation_work_ids": 7,
+  "Source_run_started_at": "2026-11-22T20:36:14.359159169Z",
+  "current_Rust_execution": false,
+  "complete_role_matrix": false,
+  "independent_offline_JWT_signature_verification": false,
+  "raw_response_bodies_retained": false,
+  "cleanup_evidence": {
+    "journal_commands": 74,
+    "retired_container_ids": [
+      "1220911e083c5fd44bc5395b1c161eaa20bc8b525542a6a6c7aeaae486a51e14",
+      "18cef0f0c4bae80c9238f81f2d0b83da65f4a7abf071702bc577ee37d21b3a1c",
+      "9d3fbc7df3ab7a885c21702c43222ad176df5d3bf1ced4e026b6bfd555944635",
+      "a83c5f8fe54d07585dcf1b573a2a9981b3946efb0c94d230bc5284ea981b4cc3",
+      "aca718dcb3e2154cd6c6399e76624a691d1331f3bf4d5e419a26917c294edca9",
+      "cbc65d3543d30163cbcad58cd9638009b91864b2128612327cb6a1d62fe7c900"
+    ],
+    "exact_not_found_diagnostics_independently_reduced": true,
+    "empty_inventory_stdout": "not retained; executed owner and cleanup receipt attestation only"
+  },
+  "limits": [
+    "Retained actual Original run, not a new host execution",
+    "Only admin settings/environment and anonymous version shape, no ordinary/viewer/inactive roles",
+    "One first-admin creation, ordinary token login; no settings/scanner/backup/EPG writes",
+    "Status, predicates and safe checkpoints retained, no invented wire-byte oracle",
+    "No Rust parity, final freeze qualification, performance or release acceptance"
+  ]
+}

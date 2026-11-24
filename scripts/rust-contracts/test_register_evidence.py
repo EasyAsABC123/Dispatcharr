@@ -258,6 +258,15 @@ class CapturedEvidenceRegister(unittest.TestCase):
         self.assertEqual(attachment['observed_roles'], ['admin'])
         self.assertEqual([case['source_index'] for case in attachment['cases']], [2, 3, 4, 5])
         self.assertEqual(actual['runtime_routes'], self.baseline['runtime_routes'])
+        from retained_stock_bootstrap import ATTACHMENTS, INPUT, INPUT_SHA256
+        boot = [entry for operation in operations.values()
+                for entry in operation.get(ATTACHMENTS, [])
+                if entry.get('authority_packet_relative_path') == INPUT]
+        self.assertEqual(len(boot), 7)
+        self.assertEqual(sum(len(entry['Source_case_ids']) for entry in boot), 9)
+        self.assertTrue(all(entry['current_Rust_execution'] is False
+                            and entry['complete_role_matrix'] is False for entry in boot))
+        self.assertEqual(actual['input_sha256'][INPUT], INPUT_SHA256)
         scoped = {
             op['contract_id']: len(op['scoped_Original_role_method_observations'])
             for op in operations.values() if 'scoped_Original_role_method_observations' in op
@@ -318,6 +327,15 @@ class CapturedEvidenceRegister(unittest.TestCase):
                 for item in self.bindings['evidence_datasets']:
                     path = item['attestation']['path']
                     shutil.copyfile(REPO / path, self.root / path)
+        with self.subTest(control='tampered_stock_bootstrap_authority'):
+            path = self.root / INPUT
+            raw = path.read_bytes()
+            try:
+                path.write_bytes(raw + b"\n")
+                with self.assertRaisesRegex(ValueError, 'retained Original stock bootstrap changed'):
+                    self.build(self.bindings)
+            finally:
+                path.write_bytes(raw)
         with self.subTest(control='deep_mode_requires_missing_private_artifacts'):
             with self.assertRaises(FileNotFoundError):
                 self.build(self.bindings, deep=True)
@@ -327,7 +345,7 @@ class CapturedEvidenceRegister(unittest.TestCase):
         self.module.ROOT = REPO
         result = self.module.build(REPO / 'scripts/rust-contracts/case-bindings.json', deep_evidence=True)
         self.assertEqual(result['counts']['fully_verified_route_operations'], 0)
-        self.assertEqual(result['counts']['mapped_packaged_case_observations'], 427)
+        self.assertEqual(result['counts']['mapped_packaged_case_observations'], 455)
 
 
 if __name__ == '__main__':
