@@ -74,7 +74,7 @@ impl HandlerImpl {
         let stopped = Arc::new(AtomicBool::new(false));
         app.inner
             .jobs
-            .bind_shared(jobs.clone(), identity, stopped.clone())
+            .bind_shared(jobs.clone(), identity)
             .map_err(|_| "normal TVG shared broker binding failed")?;
         app.inner.jobs.enable_normal_intake();
         Ok(Arc::new(Self {

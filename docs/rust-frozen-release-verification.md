@@ -338,9 +338,12 @@ operator path remain part of the frozen verification.
 Closing worker intake now lets an already admitted XML TVG task make its
 first retry publication. An old-versus-new test against private Redis
 confirmed that the patched worker publishes one child with the original
-lineage and records the parent as Deferred. The full-queue control
-confirmed that shutdown is bounded and preserves the occupied sibling.
-Retaining the parent in that full-queue case remains open.
+lineage and records the parent as Deferred. The parent and its
+retry now exchange atomically in Redis. A focused control confirmed that
+a full queue retains the exact reserved parent and its visibility entry,
+that a ready parent can be replaced without growing the queue, and that
+an eligible exchange publishes exactly one child. The signed packaged
+worker and ambiguous broker reply still need verification.
 
 The Schedules Direct verifier now requires exactly one retry publication
 for the deferred parent. It compares the recorded frame with the actual

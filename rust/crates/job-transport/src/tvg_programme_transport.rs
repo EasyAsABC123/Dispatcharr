@@ -12,7 +12,6 @@ pub struct TvgJobs {
 struct Shared {
     jobs: Jobs,
     identity: dispatcharr_store::ProducerIdentitySource,
-    stopped: Arc<std::sync::atomic::AtomicBool>,
 }
 pub struct Candidate {
     pub(crate) message: Envelope,
@@ -66,17 +65,12 @@ impl TvgJobs {
         &self,
         jobs: Jobs,
         identity: dispatcharr_store::ProducerIdentitySource,
-        stopped: Arc<std::sync::atomic::AtomicBool>,
     ) -> Result<(), Error> {
         if !jobs.allows_defaults() {
             return Err(Error::Configuration);
         }
         self.shared
-            .set(Shared {
-                jobs,
-                identity,
-                stopped,
-            })
+            .set(Shared { jobs, identity })
             .map_err(|_| Error::Configuration)
     }
     pub(crate) fn reserved_candidate(
@@ -226,31 +220,13 @@ impl TvgJobs {
             .map_err(|_| Error::Protocol)?;
             Some((id, raw))
         };
-        let claimed = self.claim(candidate, owner.clone()).await?;
-        let children = if let Some((id, raw)) = retry {
-            // The parent has already been accepted. Closing intake must
-            // allow its first publication and terminal result to settle.
-            let mut first_attempt = true;
-            loop {
-                if !first_attempt && shared.stopped.load(std::sync::atomic::Ordering::Acquire) {
-                    return Err(Error::Closed);
-                }
-                first_attempt = false;
-                match shared.jobs.publish_xml_tvg(&raw, owner.clone()).await {
-                    Ok(actual) if actual.task_id == id => break,
-                    Err(Error::Capacity) => {
-                        if shared.stopped.load(std::sync::atomic::Ordering::Acquire) {
-                            return Err(Error::Closed);
-                        }
-                        tokio::time::sleep(Duration::from_millis(100)).await;
-                    }
-                    Err(error) => return Err(error),
-                    _ => return Err(Error::Corrupt),
-                }
-            }
-            vec![id]
+        let (claimed, children) = if let Some((id, raw)) = retry {
+            let claimed = self
+                .replace_with_retry(candidate, id, &raw, owner.clone())
+                .await?;
+            (claimed, vec![id])
         } else {
-            Vec::new()
+            (self.claim(candidate, owner.clone()).await?, Vec::new())
         };
         let value = if crate::xml_tvg_protocol::deferral(message.defer)
             == crate::xml_tvg_protocol::Deferral::Exhausted
@@ -271,6 +247,60 @@ impl TvgJobs {
             .await?;
         Ok(message.common.id)
     }
+    async fn replace_with_retry(
+        &self,
+        candidate: Candidate,
+        child: Uuid,
+        raw: &[u8],
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Claimed, Error> {
+        let jobs = self.active_jobs();
+        if !jobs.allows_defaults() || !Arc::ptr_eq(&candidate.origin, &jobs.inner) {
+            return Err(Error::UnsupportedTask);
+        }
+        let (mode, parent_bytes, tag) = if let Some(reserved) = candidate.reserved.as_ref() {
+            jobs.owns_xml_tvg_reservation(reserved)?;
+            (
+                b"reserved".as_slice(),
+                reserved.tuple_bytes(),
+                reserved.delivery_tag().to_string(),
+            )
+        } else {
+            (b"ready".as_slice(), candidate.raw.as_slice(), String::new())
+        };
+        let lease = jobs.lease(Arc::new((owner, candidate.reserved.clone())))?;
+        let maximum = jobs.inner.config.max_queued_jobs.to_string();
+        let keys = [
+            "celery".to_owned(),
+            "_kombu.binding.celery".to_owned(),
+            "unacked".to_owned(),
+            "unacked_index".to_owned(),
+        ];
+        match jobs
+            .inner
+            .broker
+            .command_classified::<i64, _>(
+                REPLACE_WITH_RETRY,
+                &keys,
+                &[mode, parent_bytes, tag.as_bytes(), raw, maximum.as_bytes()],
+                lease,
+            )
+            .await
+        {
+            Ok((1, _)) => Ok(Claimed {
+                message: candidate.message,
+                parent: candidate.parent,
+                origin: candidate.origin,
+            }),
+            Ok((0, _)) if candidate.reserved.is_some() => Err(Error::LostReservation),
+            Ok((0, _)) => Err(Error::ClaimRace),
+            Ok((-2, _)) => Err(Error::Capacity),
+            Ok(_) => Err(Error::Corrupt),
+            Err(ClassifiedError::Backend) => Err(Error::AmbiguousPublication(child)),
+            Err(error) => Err(map(error)),
+        }
+    }
+
     pub async fn write_normal(
         &self,
         claimed: Claimed,
@@ -327,3 +357,40 @@ impl TvgJobs {
         self.jobs.shutdown(timeout).await
     }
 }
+
+// Compound exact parent-to-retry exchange. Capacity changes neither delivery.
+// Publish before retirement inside the script so a rejected write cannot drop
+// the parent. Other clients observe both successful effects together.
+const REPLACE_WITH_RETRY: &str = r#"
+local q=redis.call('TYPE',KEYS[1]).ok
+local binding=redis.call('TYPE',KEYS[2]).ok
+if (q~='none' and q~='list') or (binding~='none' and binding~='set') then return -3 end
+local maximum=tonumber(ARGV[5])
+if not maximum or maximum<1 or maximum>10000 or #ARGV[4]>65536 then return -3 end
+local queued=redis.call('LLEN',KEYS[1])
+if ARGV[1]=='ready' then
+ if #ARGV[2]>65536 or #ARGV[3]~=0 then return -3 end
+ if redis.call('LINDEX',KEYS[1],-1)~=ARGV[2] then return 0 end
+ if queued>maximum then return -2 end
+elseif ARGV[1]=='reserved' then
+ local h=redis.call('TYPE',KEYS[3]).ok
+ local z=redis.call('TYPE',KEYS[4]).ok
+ if h=='none' and z=='none' then return 0 end
+ if h~='hash' or z~='zset' or #ARGV[3]~=36 or #ARGV[2]>131072 then return -3 end
+ if redis.call('HSTRLEN',KEYS[3],ARGV[3])~=#ARGV[2] then return 0 end
+ if redis.call('HGET',KEYS[3],ARGV[3])~=ARGV[2] then return 0 end
+ if not redis.call('ZSCORE',KEYS[4],ARGV[3]) then return 0 end
+ if queued>=maximum then return -2 end
+else
+ return -3
+end
+redis.call('SADD',KEYS[2],'celery'..string.char(6,22)..string.char(6,22)..'celery')
+redis.call('LPUSH',KEYS[1],ARGV[4])
+if ARGV[1]=='ready' then
+ redis.call('RPOP',KEYS[1])
+else
+ redis.call('ZREM',KEYS[4],ARGV[3])
+ redis.call('HDEL',KEYS[3],ARGV[3])
+end
+return 1
+"#;

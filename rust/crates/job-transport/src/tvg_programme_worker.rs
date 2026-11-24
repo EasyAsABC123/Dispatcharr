@@ -227,7 +227,10 @@ async fn run(
                     .jobs
                     .complete_deferred(candidate, owner.clone())
                     .await
-                    .map_err(Error::Transport)?;
+                    .map_err(|error| match error {
+                        crate::transport::Error::Capacity => Error::Capacity,
+                        other => Error::Transport(other),
+                    })?;
                 return Ok(Run::Completed(completed));
             }
             if context.mapped || candidate.message.force {
