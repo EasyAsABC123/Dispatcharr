@@ -480,6 +480,67 @@ impl StreamEngine {
         Ok(url)
     }
 
+    pub(crate) async fn switch_assigned_local_source(
+        &self,
+        channel: &str,
+        stream_id: i64,
+        resolver: &dyn PlaybackResolver,
+    ) -> Result<String, PlaybackError> {
+        let session = self
+            .local_switch_session(channel)
+            .ok_or_else(|| PlaybackError::new(404, "Channel not found"))?;
+        let (previous, capacity) = {
+            let active = session.current.lock().unwrap();
+            (source_switch::source(&active), active.provider_max_streams)
+        };
+        let saved = if previous.0 == stream_id {
+            let profile = previous.1.map(|profile| (profile, capacity));
+            let ordered = resolver.ordered_channel_streams(channel, profile).await?;
+            let url = ordered
+                .into_iter()
+                .find(|assignment| assignment.id == stream_id)
+                .and_then(|assignment| assignment.direct_url)
+                .ok_or_else(|| {
+                    PlaybackError::new(
+                    501,
+                    "Active assigned stream requires a current direct profile with the same limit",
+                )
+                })?;
+            if !self
+                .local_switch_session(channel)
+                .is_some_and(|active| Arc::ptr_eq(&active, &session))
+            {
+                return Err(PlaybackError::new(409, "Local source owner changed"));
+            }
+            Some(url)
+        } else {
+            None
+        };
+        let (_, _, url) = self
+            .switch_in_local_session(&session, |active| {
+                if let Some(saved) = saved.as_deref() {
+                    if (source_switch::source(active), active.provider_max_streams)
+                        != (previous, capacity)
+                    {
+                        return Err(PlaybackError::new(
+                            409,
+                            "Active source changed while selecting stream",
+                        ));
+                    }
+                    Ok((stream_id, Some(saved)))
+                } else if active.stream_id == stream_id {
+                    Err(PlaybackError::new(
+                        409,
+                        "Active source changed while selecting stream",
+                    ))
+                } else {
+                    Ok((stream_id, None))
+                }
+            })
+            .await?;
+        Ok(url)
+    }
+
     pub(crate) async fn next_local_source(
         &self,
         channel: &str,
@@ -564,24 +625,26 @@ impl StreamEngine {
                 return Err(PlaybackError::new(409, "Local provider slot is not ready"));
             }
             let target = (stream_id, current.1);
-            if target == current {
-                return Err(PlaybackError::new(
-                    409,
-                    "Requested stream is already active",
-                ));
-            }
-            let primary = session.source.primary();
-            let mut matches = std::iter::once(&primary)
-                .chain(&session.source.alternates)
-                .filter(|candidate| {
-                    source_switch::source(candidate) == target
-                        && source_switch::supported(candidate)
-                });
-            let Some(candidate) = matches.next().filter(|_| matches.next().is_none()) else {
-                return Err(PlaybackError::new(
-                    404,
-                    "Requested stream is outside the local switch scope",
-                ));
+            let primary;
+            let candidate = if target == current {
+                &*active
+            } else {
+                primary = session.source.primary();
+                let mut matches = std::iter::once(&primary)
+                    .chain(&session.source.alternates)
+                    .filter(|candidate| {
+                        source_switch::source(candidate) == target
+                            && source_switch::supported(candidate)
+                    });
+                matches
+                    .next()
+                    .filter(|_| matches.next().is_none())
+                    .ok_or_else(|| {
+                        PlaybackError::new(
+                            404,
+                            "Requested stream is outside the local switch scope",
+                        )
+                    })?
             };
             if active.provider_max_streams != candidate.provider_max_streams {
                 return Err(PlaybackError::new(
@@ -592,10 +655,10 @@ impl StreamEngine {
             if saved_url.is_some_and(|url| url != candidate.url) {
                 return Err(PlaybackError::new(
                     409,
-                    "Next stream URL differs from the active configuration",
+                    "Requested stream URL differs from the active configuration",
                 ));
             }
-            if candidate.url == active.url {
+            if target != current && candidate.url == active.url {
                 return Err(PlaybackError::new(409, "Requested URL is already active"));
             }
             (
@@ -2863,6 +2926,13 @@ async fn channel_metadata_worker(
                 }
             }
         }
+        if let Some(at) = session
+            .source_switch
+            .as_ref()
+            .and_then(|control| control.last_confirmed_at())
+        {
+            fields.insert("stream_switch_time".into(), at.to_string());
+        }
         for (name, value) in [
             ("state", state.to_string()),
             ("state_changed_at", state_changed.to_string()),
@@ -3116,6 +3186,15 @@ async fn drive_candidate(
             _ = stop.changed() => break,
             _ = lost.changed() => break,
             request = async { control.unwrap().receive().await }, if control.is_some() => {
+                let current_source = source_switch::source(candidate);
+                if request.target == current_source {
+                    // Original acknowledges the already-active stream, clears
+                    // rotation history and refreshes metadata without redialing.
+                    retry.stable(current);
+                    control.unwrap().confirm(request, current_source, epoch_seconds());
+                    session.metadata_wake.notify_one();
+                    continue;
+                }
                 requested_switch = Some(request);
                 break;
             }
@@ -3178,7 +3257,8 @@ async fn drive_candidate(
             {
                 let current_source = source_switch::source(candidate);
                 if let Some(request) = pending_switch.take() {
-                    control.confirm(request, current_source);
+                    control.confirm(request, current_source, epoch_seconds());
+                    session.metadata_wake.notify_one();
                 } else {
                     control.arm(current_source);
                 }

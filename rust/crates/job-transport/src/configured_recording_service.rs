@@ -1,7 +1,9 @@
 //! PRIVATE uncompiled configured-Series/UTC-recurring service draft.
 //! Normal inert library path; no task consumer or Main constructor is changed.
 //! Original Dispatcharr authors retain rule/signal/event behavior credit.
-use crate::configured_recordings::{self as decisions, Existing, Intent, Programme, Recurring};
+use crate::configured_recordings::{
+    self as decisions, Existing, Intent, Programme, Recurring, SeriesEpisode,
+};
 use crate::recording_artwork::DirectTask;
 use chrono::{DateTime, Utc};
 use dispatcharr_contracts::{BoxFuture, UpdateEventError, UpdateEventSink};
@@ -11,7 +13,10 @@ use dispatcharr_store::{
 };
 use serde_json::{json, Value};
 use sqlx::PgPool;
-use std::{collections::HashSet, sync::Arc};
+use std::{
+    collections::{HashMap, HashSet},
+    sync::Arc,
+};
 use tokio::sync::oneshot;
 use uuid::Uuid;
 
@@ -314,7 +319,7 @@ fn normal_rules(group: &Value) -> Result<Vec<NormalRule>, Error> {
     if !group.is_object() {
         return Err(Error::Unsupported);
     }
-    let mut stations = HashSet::new();
+    let mut stations = HashMap::new();
     let mut selected = Vec::new();
     for mut value in group["series_rules"]
         .as_array()
@@ -328,14 +333,40 @@ fn normal_rules(group: &Value) -> Result<Vec<NormalRule>, Error> {
         }
         let mode = normalize_normal_series_rule(&mut value)?;
         let tvg = small(&value["tvg_id"])?;
-        // Across distinct stations, neither Original's exact-airing key nor
-        // its stable episode key can collide across prepared rule lists.
-        if !stations.insert(tvg.to_owned()) {
+        let channel = value["channel_id"].as_i64().ok_or(Error::Unsupported)?;
+        let source = value["epg_source_id"].as_i64().ok_or(Error::Unsupported)?;
+        // Match a repeated station only in the same fully pinned mapping.
+        // The executor shares successful episode keys between its rules.
+        if stations
+            .insert(tvg.to_owned(), (channel, source))
+            .is_some_and(|previous| previous != (channel, source))
+        {
             return Err(Error::Unsupported);
         }
         selected.push(NormalRule { value, mode });
     }
     Ok(selected)
+}
+
+fn already_booked(booked: &HashSet<SeriesEpisode>, intent: &Intent) -> bool {
+    intent
+        .episode
+        .as_ref()
+        .is_some_and(|episode| booked.contains(episode))
+}
+
+fn record_settled_booking(
+    booked: &mut HashSet<SeriesEpisode>,
+    episode: Option<SeriesEpisode>,
+    result: Result<Option<recording_schedule::Created>, recording_schedule::Error>,
+) -> Result<Option<recording_schedule::Created>, recording_schedule::Error> {
+    let row = result?;
+    if row.is_some() {
+        if let Some(episode) = episode {
+            booked.insert(episode);
+        }
+    }
+    Ok(row)
 }
 
 fn series_offsets(group: &Value) -> Result<(), Error> {
@@ -707,16 +738,25 @@ impl Service {
         intents: Vec<Intent>,
         task: DirectTask,
         owner: Arc<dyn Send + Sync>,
+        booked: &mut HashSet<SeriesEpisode>,
     ) -> Result<IntentOutcome, Error> {
         // Source11 captures one eligible failing programme/rule. Preserve the
         // existing32-cap normal domain, without inferring multi-error parity.
-        let one_eligible = intents.len() == 1;
+        let one_eligible = intents
+            .iter()
+            .filter(|intent| !already_booked(booked, intent))
+            .take(2)
+            .count()
+            == 1;
         let mut created = 0;
         let mut children = Vec::new();
         let mut caught_insert_errors = Vec::new();
         let mut artwork_targets = Vec::new();
         let mut artwork_frames = Vec::new();
         for intent in intents {
+            if already_booked(booked, &intent) {
+                continue;
+            }
             let input = FutureRecording::new(
                 intent.channel_id,
                 intent.start,
@@ -725,22 +765,21 @@ impl Service {
                 Utc::now(),
             )
             .ok_or(Error::Unsupported)?;
-            let row =
-                match recording_schedule::create_future(self.pool.clone(), input, owner.clone())
-                    .await
-                {
-                    Ok(Some(row)) => row,
-                    Ok(None) => continue,
-                    Err(error) => {
-                        if one_eligible {
-                            if let Some(observed) = error.known_source_insert_failure() {
-                                caught_insert_errors.push(observed);
-                                continue;
-                            }
+            let result =
+                recording_schedule::create_future(self.pool.clone(), input, owner.clone()).await;
+            let row = match record_settled_booking(booked, intent.episode, result) {
+                Ok(Some(row)) => row,
+                Ok(None) => continue,
+                Err(error) => {
+                    if one_eligible {
+                        if let Some(observed) = error.known_source_insert_failure() {
+                            caught_insert_errors.push(observed);
+                            continue;
                         }
-                        return Err(Error::Sql(error));
                     }
-                };
+                    return Err(Error::Sql(error));
+                }
+            };
             // Source signal publishes once; Series body publishes a SECOND time.
             // Keep both attempts, even if the first has a settled failure.
             for _ in 0..intent.artwork_publications {
@@ -815,13 +854,16 @@ impl Service {
             if prepared.rules.is_empty() {
                 return Ok(report);
             }
+            let mut booked = HashSet::new();
             for PreparedRule {
                 title,
                 tvg,
                 intents,
             } in prepared.rules
             {
-                let outcome = self.execute_intents(intents, task, owner.clone()).await?;
+                let outcome = self
+                    .execute_intents(intents, task, owner.clone(), &mut booked)
+                    .await?;
                 report.add_rule(tvg, title, outcome);
             }
             self.event(Some(report.created), owner).await?;
@@ -843,7 +885,12 @@ impl Service {
         tokio::spawn(async move {
             let intent = decisions::recurring(now, &rule, false).map_err(|_| Error::Unsupported)?;
             let outcome = self
-                .execute_intents(intent.into_iter().collect(), task, owner.clone())
+                .execute_intents(
+                    intent.into_iter().collect(),
+                    task,
+                    owner.clone(),
+                    &mut HashSet::new(),
+                )
                 .await?;
             if outcome.created > 0 {
                 self.event(None, owner).await?;
@@ -1157,7 +1204,7 @@ mod normal_defaults_controls {
     }
 
     #[test]
-    fn disjoint_same_source_rules_preserve_order_and_reject_overlaps_before_snapshot() {
+    fn same_station_overlap_requires_exact_shared_pins_before_snapshot() {
         let first = pinned_rule("test.channel.1", "Show A", 1);
         let second = pinned_rule("test.channel.2", "Show B", 2);
         let group = json!({"series_rules":[null,first,second]});
@@ -1172,6 +1219,16 @@ mod normal_defaults_controls {
         assert_eq!(selected[0].value["title"], "Show A");
         assert_eq!(selected[1].value["title"], "Show B");
 
+        let same_station = pinned_rule(" test.channel.1 ", "Test overlap", 1);
+        let accepted = normal_rules(&json!({"series_rules":[first,same_station]})).unwrap();
+        assert_eq!(accepted[0].value["title"], "Show A");
+        assert_eq!(accepted[1].value["title"], "Test overlap");
+        let mut changed_source = pinned_rule("test.channel.1", "Different source", 1);
+        changed_source["epg_source_id"] = json!(2);
+        assert!(matches!(
+            normal_rules(&json!({"series_rules":[first,changed_source]})),
+            Err(Error::Unsupported)
+        ));
         let repeated_station = pinned_rule(" test.channel.1 ", "Unqualified overlap", 9);
         assert!(matches!(
             normal_rules(&json!({"series_rules":[first,repeated_station]})),
@@ -1184,6 +1241,65 @@ mod normal_defaults_controls {
             normal_rules(&json!({"series_rules":too_many})),
             Err(Error::Unsupported)
         ));
+    }
+
+    #[test]
+    fn overlap_shares_only_settled_success_across_stored_rule_order() {
+        let make = |id, hour| {
+            let row = guide_row(id, hour, json!({"season":1,"episode":7}));
+            let now = row.start_time - chrono::Duration::hours(hour);
+            let programme = programme(row, 2, 1, None, false).unwrap().unwrap();
+            decisions::series(
+                now,
+                ("Test Show", SeriesTitle::Exact),
+                "test.channel.1",
+                2,
+                1,
+                &[programme],
+                &[],
+            )
+            .unwrap()
+            .pop()
+            .unwrap()
+        };
+        let early = make(1, 2);
+        let late = make(2, 4);
+        assert_ne!(early.start, late.start);
+        let row = || recording_schedule::Created {
+            recording_id: 1,
+            clocked_id: 1,
+            periodic_id: 1,
+            task_name: "dvr-recording-1".into(),
+        };
+
+        for (narrow, broad) in [(&late, &early), (&early, &late)] {
+            let mut booked = HashSet::new();
+            assert!(!already_booked(&booked, narrow));
+            record_settled_booking(&mut booked, narrow.episode.clone(), Ok(Some(row()))).unwrap();
+            assert!(already_booked(&booked, broad));
+        }
+
+        let mut booked = HashSet::new();
+        assert!(record_settled_booking(
+            &mut booked,
+            late.episode.clone(),
+            Err(recording_schedule::Error {
+                stage: recording_schedule::Stage::InsertRecording,
+                source: sqlx::Error::Protocol("owned insert did not create a row".into()),
+                committed_recording: None,
+                settlement_error: None,
+            })
+        )
+        .is_err());
+        assert!(!already_booked(&booked, &early));
+        assert!(
+            record_settled_booking(&mut booked, late.episode.clone(), Ok(None))
+                .unwrap()
+                .is_none()
+        );
+        assert!(!already_booked(&booked, &early));
+        record_settled_booking(&mut booked, early.episode.clone(), Ok(Some(row()))).unwrap();
+        assert!(already_booked(&booked, &late));
     }
 
     #[test]

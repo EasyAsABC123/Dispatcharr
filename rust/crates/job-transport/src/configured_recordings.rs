@@ -40,12 +40,16 @@ pub struct Existing {
     pub season: Option<u32>,
     pub episode: Option<u32>,
 }
+/// A committed episode has the same identity across different airing slots.
+#[derive(Clone, Debug, Eq, Hash, PartialEq)]
+pub struct SeriesEpisode(String, String, String);
 #[derive(Clone, Debug)]
 pub struct Intent {
     pub channel_id: i64,
     pub start: DateTime<Utc>,
     pub end: DateTime<Utc>,
     pub properties: Value,
+    pub episode: Option<SeriesEpisode>,
     /// Source signal publishes once; Series explicitly publishes once more.
     pub artwork_publications: u8,
 }
@@ -148,7 +152,7 @@ pub fn series(
             return Err(Refusal::Date);
         }
         exact.insert((p.tvg_id.clone(), p.start, p.end));
-        episodes.insert((
+        episodes.insert(SeriesEpisode(
             p.tvg_id.clone(),
             p.title.trim().to_ascii_lowercase(),
             episode_key(p.season, p.episode, p.subtitle.as_deref()).ok_or(Refusal::Identity)?,
@@ -156,14 +160,14 @@ pub fn series(
     }
     let mut output = Vec::new();
     for ((title, identity), p) in unique {
-        if exact.contains(&(p.tvg_id.clone(), p.start, p.end))
-            || episodes.contains(&(p.tvg_id.clone(), title.clone(), identity.clone()))
-        {
+        let episode = SeriesEpisode(p.tvg_id.clone(), title, identity);
+        if exact.contains(&(p.tvg_id.clone(), p.start, p.end)) || episodes.contains(&episode) {
             continue;
         }
         exact.insert((p.tvg_id.clone(), p.start, p.end));
-        episodes.insert((p.tvg_id.clone(), title, identity));
+        episodes.insert(episode.clone());
         output.push(Intent { channel_id, start:p.start, end:p.end, artwork_publications:2,
+            episode: Some(episode),
             properties:json!({"program":{"id":p.id,"tvg_id":p.tvg_id,"title":p.title,"sub_title":p.subtitle,"description":p.description,"original_air_date":p.original_air_date,"start_time":iso(p.start),"end_time":iso(p.end),"season":p.season,"episode":p.episode,"onscreen_episode":null,"epg_source_id":source_id}}) });
     }
     Ok(output)
@@ -222,6 +226,7 @@ pub fn recurring(
         start,
         end,
         artwork_publications: 1,
+        episode: None,
         properties: json!({"rule":{"type":"recurring","id":r.id,"days_of_week":[r.weekday],"name":r.name},"status":"scheduled","description":r.name,"program":{"title":r.name,"description":r.name,"start_time":iso(start),"end_time":iso(end)}}),
     }))
 }

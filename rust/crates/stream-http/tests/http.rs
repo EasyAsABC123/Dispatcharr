@@ -2059,14 +2059,14 @@ async fn local_source_switch(source_initialization: bool) {
     wait_for(|| primary_counts.active.load(Ordering::SeqCst) == 0).await;
     assert_eq!(target_counts.active.load(Ordering::SeqCst), 1);
     assert_eq!(target_counts.connections.load(Ordering::SeqCst), 1);
-    assert_eq!(
-        engine
-            .switch_local_source("manual", 2)
-            .await
-            .unwrap_err()
-            .status,
-        409
-    );
+    let repeated = engine.switch_local_source("manual", 2).await.unwrap();
+    assert_eq!(repeated, format!("{base}/target"));
+    observe_pid(&mut first, 200).await;
+    observe_pid(&mut second, 200).await;
+    assert_eq!(engine.status()[0].stream_id, 2);
+    assert_eq!(engine.status()[0].viewer_count, 2);
+    assert_eq!(primary_counts.connections.load(Ordering::SeqCst), 1);
+    assert_eq!(target_counts.connections.load(Ordering::SeqCst), 1);
     engine.switch_local_source("manual", 1).await.unwrap();
     assert_eq!(engine.status()[0].stream_id, 1);
     assert_eq!(engine.status()[0].viewer_count, 2);

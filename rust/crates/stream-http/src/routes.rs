@@ -315,7 +315,7 @@ async fn change_stream(
             }),
         })
     } else {
-        match change_assigned_stream(&app.engine, &id, incoming).await {
+        match change_assigned_stream(&app.engine, app.resolver.as_ref(), &id, incoming).await {
             Ok(body) => ([(header::CONTENT_TYPE, "application/json")], body).into_response(),
             Err(reason) => error(reason),
         }
@@ -402,6 +402,7 @@ fn next_stream_response(
 
 async fn change_assigned_stream(
     engine: &StreamEngine,
+    resolver: &dyn PlaybackResolver,
     channel: &str,
     request: Request,
 ) -> Result<String, PlaybackError> {
@@ -432,7 +433,9 @@ async fn change_assigned_stream(
     let worker = engine
         .local_source_switch_worker()
         .ok_or_else(|| PlaybackError::new(501, "Local source switch requires worker identity"))?;
-    let url = engine.switch_local_source(channel, stream_id).await?;
+    let url = engine
+        .switch_assigned_local_source(channel, stream_id, resolver)
+        .await?;
     Ok(changed_stream_response(channel, &url, worker, stream_id))
 }
 

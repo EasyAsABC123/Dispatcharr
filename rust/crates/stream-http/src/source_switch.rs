@@ -1,7 +1,10 @@
 //! A local command slot for one warm TS producer. Original application credit
 //! belongs to Dispatcharr's authors.
 use dispatcharr_contracts::{PlaybackCandidate, PlaybackError};
-use std::sync::Mutex;
+use std::sync::{
+    atomic::{AtomicU64, Ordering},
+    Mutex,
+};
 use tokio::sync::{oneshot, Notify};
 
 pub(super) type Source = (i64, Option<i64>);
@@ -44,6 +47,7 @@ enum State {
 pub(super) struct Control {
     state: Mutex<State>,
     queued: Notify,
+    last_confirmed_at: AtomicU64,
 }
 
 impl Control {
@@ -51,6 +55,7 @@ impl Control {
         Self {
             state: Mutex::new(State::Unavailable),
             queued: Notify::new(),
+            last_confirmed_at: AtomicU64::new(0),
         }
     }
 
@@ -111,8 +116,15 @@ impl Control {
         }
     }
 
-    pub fn confirm(&self, request: Request, current: Source) {
+    pub fn last_confirmed_at(&self) -> Option<f64> {
+        let at = self.last_confirmed_at.load(Ordering::Acquire);
+        (at != 0).then(|| f64::from_bits(at))
+    }
+
+    pub fn confirm(&self, request: Request, current: Source, at: f64) {
         let mut state = self.state.lock().unwrap();
+        self.last_confirmed_at
+            .store(at.to_bits(), Ordering::Release);
         *state = State::Ready(current);
         let _ = request.reply.send(Ok(()));
     }
@@ -144,8 +156,10 @@ mod tests {
         control.disarm();
         control.arm(alternate);
         assert!(control.submit(alternate, primary).is_err());
-        control.confirm(request, alternate);
+        assert_eq!(control.last_confirmed_at(), None);
+        control.confirm(request, alternate, 100.25);
         assert!(result.await.unwrap().is_ok());
+        assert_eq!(control.last_confirmed_at(), Some(100.25));
         let result = control.submit(alternate, primary).unwrap();
         control.disarm();
         assert!(result.await.is_err());
