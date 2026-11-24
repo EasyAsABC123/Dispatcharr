@@ -757,3 +757,7 @@ unchanged. There are 353 HTTP rows without a typed Source result disposition.
 Some have other scopes of retained observations. Full role and route coverage,
 Native parity and milestone acceptance remain open. Original Dispatcharr,
 Django, Django REST Framework and dependency authors retain full credit.
+
+## Retained model and command-help observations
+
+The [reviewed observation packet](../scripts/rust-contracts/retained-model-command-observations.json) attaches seven UserAgent cache and three StreamProfile consumer successes from the pinned Original suite to their model candidates. It also attaches the exact exit, standard output and standard error for three Original help commands. These are retained observations from a disposable fixture. The three command handlers and the Native implementations still require their own execution results. No new Original executions or milestone closures are counted.

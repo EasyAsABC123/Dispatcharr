@@ -51,6 +51,8 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update({'scripts/rust-contracts/framework-auth/' + name for name in ['bindings.json', 'full-suite-reference.json', 'observations.json', 'original/test_accounts.py', 'original/test_login_rate_limit_inbox.py']})
         account_input = json.loads((REPO / 'scripts/rust-contracts/accounts-settings/bindings.json').read_text())
         refs.add('docs/rust-contract-register.json')
+        from retained_model_command_observations import INPUT as model_command_input
+        refs.add(model_command_input)
         refs.update(programme.INPUT_SHA256)
         refs.update(epg_library.INPUT_SHA256)
         refs.add('scripts/rust-integration/m0-recording-hls-canonical-precedence.json')

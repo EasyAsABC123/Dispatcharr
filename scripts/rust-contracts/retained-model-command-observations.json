@@ -1,0 +1,452 @@
+{
+  "Original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "authority_tier": "retained qualified public named-log/help attestation replay; no fresh Original execution",
+  "contracts": [
+    {
+      "candidate_id": "candidate-04d0067947b1e7b35bef",
+      "cases": [
+        {
+          "Original_method_source": "def test_second_read_does_not_query_stream_profile(self):\n        self.assertTrue(CoreSettings.is_default_stream_profile_redirect())\n        with self.assertNumQueries(0):\n            self.assertTrue(CoreSettings.is_default_stream_profile_redirect())",
+          "assertion_expressions": [
+            "self.assertTrue(CoreSettings.is_default_stream_profile_redirect())",
+            "self.assertNumQueries(0)",
+            "self.assertTrue(CoreSettings.is_default_stream_profile_redirect())"
+          ],
+          "assertion_scope": "whole unmodified workflow; no unrelated model mutation attributed to an HTTP call",
+          "authentication_statements": [],
+          "class": "DefaultStreamProfileRedirectCacheTests",
+          "fixture_id": "core/tests/test_core.py:DefaultStreamProfileRedirectCacheTests",
+          "framework_log_block": "test_second_read_does_not_query_stream_profile (core.tests.test_core.DefaultStreamProfileRedirectCacheTests.test_second_read_does_not_query_stream_profile) ... ok\n",
+          "framework_log_block_sha256": "5ea648e4d0c48e13301b1f4bb0993e2502691801b44a66c4e4e2f19eb99a4778",
+          "historical_result": "ok",
+          "method": "test_second_read_does_not_query_stream_profile",
+          "method_decorators": [],
+          "patch_contexts": [],
+          "request_sites": [],
+          "source_ast_sha256": "14fb3ec21cc3f17915a2b97cc93a6104aea6a25524b6b2c1c306eb5107c3af70",
+          "source_path": "core/tests/test_core.py",
+          "test_id": "core.tests.test_core.DefaultStreamProfileRedirectCacheTests.test_second_read_does_not_query_stream_profile",
+          "transport": "Original Django TestCase/model/cache/serializer, no HTTP endpoint claim"
+        },
+        {
+          "Original_method_source": "def test_false_when_default_is_proxy(self):\n        obj = CoreSettings.objects.get(key=STREAM_SETTINGS_KEY)\n        obj.value = {**obj.value, \"default_stream_profile\": self.proxy.id}\n        obj.save()\n        cache.clear()\n\n        self.assertFalse(CoreSettings.is_default_stream_profile_redirect())\n        with self.assertNumQueries(0):\n            self.assertFalse(CoreSettings.is_default_stream_profile_redirect())",
+          "assertion_expressions": [
+            "self.assertFalse(CoreSettings.is_default_stream_profile_redirect())",
+            "self.assertNumQueries(0)",
+            "self.assertFalse(CoreSettings.is_default_stream_profile_redirect())"
+          ],
+          "assertion_scope": "whole unmodified workflow; no unrelated model mutation attributed to an HTTP call",
+          "authentication_statements": [],
+          "class": "DefaultStreamProfileRedirectCacheTests",
+          "fixture_id": "core/tests/test_core.py:DefaultStreamProfileRedirectCacheTests",
+          "framework_log_block": "test_false_when_default_is_proxy (core.tests.test_core.DefaultStreamProfileRedirectCacheTests.test_false_when_default_is_proxy) ... ok\n",
+          "framework_log_block_sha256": "2868d3354df912cfdfd1f07b15a52f4bab70b6452bb7abf4231f920ce27463b6",
+          "historical_result": "ok",
+          "method": "test_false_when_default_is_proxy",
+          "method_decorators": [],
+          "patch_contexts": [],
+          "request_sites": [],
+          "source_ast_sha256": "7f23cf755ec85c14e38f0808c060a0f035265f4ec32902d38ebbef57ff107e48",
+          "source_path": "core/tests/test_core.py",
+          "test_id": "core.tests.test_core.DefaultStreamProfileRedirectCacheTests.test_false_when_default_is_proxy",
+          "transport": "Original Django TestCase/model/cache/serializer, no HTTP endpoint claim"
+        },
+        {
+          "Original_method_source": "def test_false_when_default_unset(self):\n        CoreSettings.objects.filter(key=STREAM_SETTINGS_KEY).delete()\n        cache.clear()\n        self.assertFalse(CoreSettings.is_default_stream_profile_redirect())",
+          "assertion_expressions": [
+            "self.assertFalse(CoreSettings.is_default_stream_profile_redirect())"
+          ],
+          "assertion_scope": "whole unmodified workflow; no unrelated model mutation attributed to an HTTP call",
+          "authentication_statements": [],
+          "class": "DefaultStreamProfileRedirectCacheTests",
+          "fixture_id": "core/tests/test_core.py:DefaultStreamProfileRedirectCacheTests",
+          "framework_log_block": "test_false_when_default_unset (core.tests.test_core.DefaultStreamProfileRedirectCacheTests.test_false_when_default_unset) ... ok\n",
+          "framework_log_block_sha256": "e3816367360909e711c8d6efe8194aa07c8addfa9fc6f7954096c5ba68e4c7e0",
+          "historical_result": "ok",
+          "method": "test_false_when_default_unset",
+          "method_decorators": [],
+          "patch_contexts": [],
+          "request_sites": [],
+          "source_ast_sha256": "ae089718c1d691eacbee819fa68df773d0eed4e0308709091b94efb08543289f",
+          "source_path": "core/tests/test_core.py",
+          "test_id": "core.tests.test_core.DefaultStreamProfileRedirectCacheTests.test_false_when_default_unset",
+          "transport": "Original Django TestCase/model/cache/serializer, no HTTP endpoint claim"
+        }
+      ],
+      "fixture": {
+        "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "assertion_transport": "Django TestCase model/cache; no HTTP",
+        "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "class_AST_sha256": "9ad59a799a52daf8fc500ec5731fbf050e75f7f960972cb7544aaf1a73e5297d",
+        "class_source": "class DefaultStreamProfileRedirectCacheTests(TestCase):\n    \"\"\"Default-is-Redirect check compares ids without a per-request StreamProfile get.\"\"\"\n\n    def setUp(self):\n        from core.models import StreamProfile, REDIRECT_PROFILE_NAME, PROXY_PROFILE_NAME\n\n        cache.clear()\n        CoreSettings.objects.filter(key=STREAM_SETTINGS_KEY).delete()\n        self.StreamProfile = StreamProfile\n        self.redirect = StreamProfile.objects.filter(\n            name=REDIRECT_PROFILE_NAME, locked=True\n        ).first()\n        if self.redirect is None:\n            self.redirect = StreamProfile.objects.create(\n                name=REDIRECT_PROFILE_NAME,\n                command=\"\",\n                parameters=\"\",\n                is_active=True,\n                locked=True,\n            )\n        self.proxy = StreamProfile.objects.filter(\n            name=PROXY_PROFILE_NAME, locked=True\n        ).first()\n        if self.proxy is None:\n            self.proxy = StreamProfile.objects.create(\n                name=PROXY_PROFILE_NAME,\n                command=\"\",\n                parameters=\"\",\n                is_active=True,\n                locked=True,\n            )\n        CoreSettings.objects.create(\n            key=STREAM_SETTINGS_KEY,\n            name=\"Stream Settings\",\n            value={\"default_stream_profile\": self.redirect.id},\n        )\n\n    def tearDown(self):\n        cache.clear()\n\n    def test_second_read_does_not_query_stream_profile(self):\n        self.assertTrue(CoreSettings.is_default_stream_profile_redirect())\n        with self.assertNumQueries(0):\n            self.assertTrue(CoreSettings.is_default_stream_profile_redirect())\n\n    def test_false_when_default_is_proxy(self):\n        obj = CoreSettings.objects.get(key=STREAM_SETTINGS_KEY)\n        obj.value = {**obj.value, \"default_stream_profile\": self.proxy.id}\n        obj.save()\n        cache.clear()\n\n        self.assertFalse(CoreSettings.is_default_stream_profile_redirect())\n        with self.assertNumQueries(0):\n            self.assertFalse(CoreSettings.is_default_stream_profile_redirect())\n\n    def test_false_when_default_unset(self):\n        CoreSettings.objects.filter(key=STREAM_SETTINGS_KEY).delete()\n        cache.clear()\n        self.assertFalse(CoreSettings.is_default_stream_profile_redirect())",
+        "existing_CoreSettings_fixture": "model:CoreSettings",
+        "module_source_sha256": "a2b9baa587280a7b960d176c57878e982cf32f696be808311eccbf802ac8cccc",
+        "setUp": "def setUp(self):\n        from core.models import StreamProfile, REDIRECT_PROFILE_NAME, PROXY_PROFILE_NAME\n\n        cache.clear()\n        CoreSettings.objects.filter(key=STREAM_SETTINGS_KEY).delete()\n        self.StreamProfile = StreamProfile\n        self.redirect = StreamProfile.objects.filter(\n            name=REDIRECT_PROFILE_NAME, locked=True\n        ).first()\n        if self.redirect is None:\n            self.redirect = StreamProfile.objects.create(\n                name=REDIRECT_PROFILE_NAME,\n                command=\"\",\n                parameters=\"\",\n                is_active=True,\n                locked=True,\n            )\n        self.proxy = StreamProfile.objects.filter(\n            name=PROXY_PROFILE_NAME, locked=True\n        ).first()\n        if self.proxy is None:\n            self.proxy = StreamProfile.objects.create(\n                name=PROXY_PROFILE_NAME,\n                command=\"\",\n                parameters=\"\",\n                is_active=True,\n                locked=True,\n            )\n        CoreSettings.objects.create(\n            key=STREAM_SETTINGS_KEY,\n            name=\"Stream Settings\",\n            value={\"default_stream_profile\": self.redirect.id},\n        )",
+        "suite_platform": "linux/amd64",
+        "tearDown": "def tearDown(self):\n        cache.clear()"
+      },
+      "fully_verified": false,
+      "historical_named_cases": 3,
+      "kind": "retained_Original_model_consumer_workflows",
+      "newly_executed_Original_cases": 0,
+      "original_assertions_preserved": true,
+      "remaining": [
+        "other model methods and branches",
+        "fresh/current Native model behavior",
+        "HTTP roles and signed HTTP lane"
+      ],
+      "scope": "Whole unmodified DefaultStreamProfileRedirectCacheTests outcomes, including original mocks and conditionals; no branch trace or full StreamProfile method coverage inferred",
+      "source": {
+        "kind": "model_candidate",
+        "line": 81,
+        "name": "StreamProfile",
+        "path": "core/models.py"
+      }
+    },
+    {
+      "candidate_id": "candidate-28156bb1f8d7874a97af",
+      "cases": [
+        {
+          "argv": [
+            "dropdb",
+            "--help"
+          ],
+          "command": "dropdb",
+          "exit_code": 0,
+          "scope": "actual subprocess help/startup only; command handle not invoked",
+          "stderr": "",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "usage: manage.py dropdb [-h] [--version] [-v {0,1,2,3}] [--settings SETTINGS]\n                        [--pythonpath PYTHONPATH] [--traceback] [--no-color]\n                        [--force-color] [--skip-checks]\n\nDrop the entire database (schema and data) and recreate it. (PostgreSQL only)\n\noptions:\n  -h, --help            show this help message and exit\n  --version             Show program's version number and exit.\n  -v, --verbosity {0,1,2,3}\n                        Verbosity level; 0=minimal output, 1=normal output,\n                        2=verbose output, 3=very verbose output\n  --settings SETTINGS   The Python path to a settings module, e.g.\n                        \"myproject.settings.main\". If this isn't provided, the\n                        DJANGO_SETTINGS_MODULE environment variable will be\n                        used.\n  --pythonpath PYTHONPATH\n                        A directory to add to the Python path, e.g.\n                        \"/home/djangoprojects/myproject\".\n  --traceback           Display a full stack trace on CommandError exceptions.\n  --no-color            Don't colorize the command output.\n  --force-color         Force colorization of the command output.\n  --skip-checks         Skip system checks.\n",
+          "stdout_sha256": "387768d657adab91baa1c09ade56ebf8789488bdc7a04861417e55a179d66af0"
+        }
+      ],
+      "fixture": {
+        "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "capture_definition": "inputs/help-probe.py",
+        "default_database_unchanged": true,
+        "exact_owned_cleanup": true
+      },
+      "fully_verified": false,
+      "historical_actual_help_subprocesses": 1,
+      "kind": "retained_Original_management_help_subprocess",
+      "management_handle_execution_verified": false,
+      "newly_executed_Original_cases": 0,
+      "remaining": [
+        "command handle and external effects",
+        "fresh/current Native CLI behavior"
+      ],
+      "source": {
+        "kind": "management_command",
+        "line": 8,
+        "name": "Command",
+        "path": "core/management/commands/dropdb.py"
+      }
+    },
+    {
+      "candidate_id": "candidate-8738db7f5c7a632f8932",
+      "cases": [
+        {
+          "argv": [
+            "proxy",
+            "--help"
+          ],
+          "command": "proxy",
+          "exit_code": 0,
+          "scope": "actual subprocess help/startup only; command handle not invoked",
+          "stderr": "",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "usage: manage.py proxy [-h] [--type {hls,ts,all}] [--channel CHANNEL]\n                       [--url URL] [--version] [-v {0,1,2,3}]\n                       [--settings SETTINGS] [--pythonpath PYTHONPATH]\n                       [--traceback] [--no-color] [--force-color]\n                       [--skip-checks]\n                       {start,stop,restart}\n\nManage proxy servers\n\npositional arguments:\n  {start,stop,restart}  Action to perform\n\noptions:\n  -h, --help            show this help message and exit\n  --type {hls,ts,all}   Type of proxy to manage\n  --channel CHANNEL     Channel ID to manage\n  --url URL             Stream URL (required for start)\n  --version             Show program's version number and exit.\n  -v, --verbosity {0,1,2,3}\n                        Verbosity level; 0=minimal output, 1=normal output,\n                        2=verbose output, 3=very verbose output\n  --settings SETTINGS   The Python path to a settings module, e.g.\n                        \"myproject.settings.main\". If this isn't provided, the\n                        DJANGO_SETTINGS_MODULE environment variable will be\n                        used.\n  --pythonpath PYTHONPATH\n                        A directory to add to the Python path, e.g.\n                        \"/home/djangoprojects/myproject\".\n  --traceback           Display a full stack trace on CommandError exceptions.\n  --no-color            Don't colorize the command output.\n  --force-color         Force colorization of the command output.\n  --skip-checks         Skip system checks.\n",
+          "stdout_sha256": "2f8c9a0a0fd0a8bdb9488996528eb67143ed79e4b661473e212e22b1c54c929a"
+        }
+      ],
+      "fixture": {
+        "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "capture_definition": "inputs/help-probe.py",
+        "default_database_unchanged": true,
+        "exact_owned_cleanup": true
+      },
+      "fully_verified": false,
+      "historical_actual_help_subprocesses": 1,
+      "kind": "retained_Original_management_help_subprocess",
+      "management_handle_execution_verified": false,
+      "newly_executed_Original_cases": 0,
+      "remaining": [
+        "command handle and external effects",
+        "fresh/current Native CLI behavior"
+      ],
+      "source": {
+        "kind": "management_command",
+        "line": 7,
+        "name": "Command",
+        "path": "apps/proxy/management/commands/proxy.py"
+      }
+    },
+    {
+      "candidate_id": "candidate-8f35ebf6514bac73716d",
+      "cases": [
+        {
+          "Original_method_source": "def test_second_read_does_not_query_database(self):\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")\n        with self.assertNumQueries(0):\n            self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\"\n            )",
+          "assertion_expressions": [
+            "self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")",
+            "self.assertNumQueries(0)",
+            "self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\"\n            )"
+          ],
+          "assertion_scope": "whole unmodified workflow; no unrelated model mutation attributed to an HTTP call",
+          "authentication_statements": [],
+          "class": "DefaultUserAgentCacheTests",
+          "fixture_id": "core/tests/test_core.py:DefaultUserAgentCacheTests",
+          "framework_log_block": "test_second_read_does_not_query_database (core.tests.test_core.DefaultUserAgentCacheTests.test_second_read_does_not_query_database) ... ok\n",
+          "framework_log_block_sha256": "6c5481bcd1ad0803d9ae00b5efe6cbf8192f4c372d007e7bb704da7527c8b931",
+          "historical_result": "ok",
+          "method": "test_second_read_does_not_query_database",
+          "method_decorators": [],
+          "patch_contexts": [],
+          "request_sites": [],
+          "source_ast_sha256": "6b378f88aeb8f92e41a21e8af89f51e8f196c6033dd2dba24eec00200418dc7b",
+          "source_path": "core/tests/test_core.py",
+          "test_id": "core.tests.test_core.DefaultUserAgentCacheTests.test_second_read_does_not_query_database",
+          "transport": "Original Django TestCase/model/cache/serializer, no HTTP endpoint claim"
+        },
+        {
+          "Original_method_source": "def test_stream_settings_save_invalidates_string_cache(self):\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")\n\n        other = self.UserAgent.objects.create(\n            name=\"Other UA\",\n            user_agent=\"OtherAgent/2.0\",\n        )\n        obj = CoreSettings.objects.get(key=STREAM_SETTINGS_KEY)\n        obj.value = {**obj.value, \"default_user_agent\": other.id}\n        obj.save()\n\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"OtherAgent/2.0\")",
+          "assertion_expressions": [
+            "self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")",
+            "self.assertEqual(CoreSettings.get_default_user_agent(), \"OtherAgent/2.0\")"
+          ],
+          "assertion_scope": "whole unmodified workflow; no unrelated model mutation attributed to an HTTP call",
+          "authentication_statements": [],
+          "class": "DefaultUserAgentCacheTests",
+          "fixture_id": "core/tests/test_core.py:DefaultUserAgentCacheTests",
+          "framework_log_block": "test_stream_settings_save_invalidates_string_cache (core.tests.test_core.DefaultUserAgentCacheTests.test_stream_settings_save_invalidates_string_cache) ... ok\n",
+          "framework_log_block_sha256": "c499525ccc8c9c19a2db0a1ded95b86a417658cc08a6f476d74811b016e859e4",
+          "historical_result": "ok",
+          "method": "test_stream_settings_save_invalidates_string_cache",
+          "method_decorators": [],
+          "patch_contexts": [],
+          "request_sites": [],
+          "source_ast_sha256": "523bc44bcff74e1e70d35e5170f6fcf9858a0a148b5dad22abe05c20af6a8073",
+          "source_path": "core/tests/test_core.py",
+          "test_id": "core.tests.test_core.DefaultUserAgentCacheTests.test_stream_settings_save_invalidates_string_cache",
+          "transport": "Original Django TestCase/model/cache/serializer, no HTTP endpoint claim"
+        },
+        {
+          "Original_method_source": "def test_user_agent_save_invalidates_string_cache(self):\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")\n\n        self.ua.user_agent = \"CacheTestAgent/1.1\"\n        self.ua.save()\n\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.1\")",
+          "assertion_expressions": [
+            "self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")",
+            "self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.1\")"
+          ],
+          "assertion_scope": "whole unmodified workflow; no unrelated model mutation attributed to an HTTP call",
+          "authentication_statements": [],
+          "class": "DefaultUserAgentCacheTests",
+          "fixture_id": "core/tests/test_core.py:DefaultUserAgentCacheTests",
+          "framework_log_block": "test_user_agent_save_invalidates_string_cache (core.tests.test_core.DefaultUserAgentCacheTests.test_user_agent_save_invalidates_string_cache) ... ok\n",
+          "framework_log_block_sha256": "e946d1172cbbe63e9f1569f218bb22ba958324283875e29d0e969d2a5286abdd",
+          "historical_result": "ok",
+          "method": "test_user_agent_save_invalidates_string_cache",
+          "method_decorators": [],
+          "patch_contexts": [],
+          "request_sites": [],
+          "source_ast_sha256": "d84abf1e8814c7485759ffb064695daa9119271083635a223dd50cda9e3bcd31",
+          "source_path": "core/tests/test_core.py",
+          "test_id": "core.tests.test_core.DefaultUserAgentCacheTests.test_user_agent_save_invalidates_string_cache",
+          "transport": "Original Django TestCase/model/cache/serializer, no HTTP endpoint claim"
+        },
+        {
+          "Original_method_source": "def test_user_agent_delete_falls_back_to_dispatcharr(self):\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")\n\n        ua_id = self.ua.id\n        self.ua.delete()\n\n        with patch(\"version.__version__\", \"9.9.9\"), self.assertLogs(\n            \"core.models\", level=\"WARNING\"\n        ) as logs:\n            # Stale id remains in stream settings; missing row uses fallback.\n            self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"Dispatcharr/9.9.9\"\n            )\n        self.assertTrue(\n            any(\"not found\" in message for message in logs.output),\n            logs.output,\n        )\n        # Id is still the deleted one (settings not rewritten).\n        self.assertEqual(\n            str(CoreSettings.get_default_user_agent_id()), str(ua_id)\n        )",
+          "assertion_expressions": [
+            "self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")",
+            "self.assertTrue(\n            any(\"not found\" in message for message in logs.output),\n            logs.output,\n        )",
+            "self.assertEqual(\n            str(CoreSettings.get_default_user_agent_id()), str(ua_id)\n        )",
+            "self.assertLogs(\n            \"core.models\", level=\"WARNING\"\n        )",
+            "self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"Dispatcharr/9.9.9\"\n            )"
+          ],
+          "assertion_scope": "whole unmodified workflow; no unrelated model mutation attributed to an HTTP call",
+          "authentication_statements": [],
+          "class": "DefaultUserAgentCacheTests",
+          "fixture_id": "core/tests/test_core.py:DefaultUserAgentCacheTests",
+          "framework_log_block": "test_user_agent_delete_falls_back_to_dispatcharr (core.tests.test_core.DefaultUserAgentCacheTests.test_user_agent_delete_falls_back_to_dispatcharr) ... ok\n",
+          "framework_log_block_sha256": "fdcf77b606e5922dd521c09f45385fbe5cbc6b7c82c6d9bc1751b82bacef8b9d",
+          "historical_result": "ok",
+          "method": "test_user_agent_delete_falls_back_to_dispatcharr",
+          "method_decorators": [],
+          "patch_contexts": [
+            "patch(\"version.__version__\", \"9.9.9\")"
+          ],
+          "request_sites": [],
+          "source_ast_sha256": "2254855fdc0230bee797c4edb9f85b07ccdf71fef059ab4f658d83f34e09c02e",
+          "source_path": "core/tests/test_core.py",
+          "test_id": "core.tests.test_core.DefaultUserAgentCacheTests.test_user_agent_delete_falls_back_to_dispatcharr",
+          "transport": "Original Django TestCase/model/cache/serializer, no HTTP endpoint claim"
+        },
+        {
+          "Original_method_source": "def test_missing_default_falls_back_without_warning(self):\n        CoreSettings.objects.filter(key=STREAM_SETTINGS_KEY).delete()\n        cache.clear()\n\n        with self.assertNoLogs(\"core.models\", level=\"WARNING\"):\n            self.assertEqual(CoreSettings.get_default_user_agent(), \"Dispatcharr/1.2.3\")\n        with self.assertNumQueries(0):\n            self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"Dispatcharr/1.2.3\"\n            )",
+          "assertion_expressions": [
+            "self.assertNoLogs(\"core.models\", level=\"WARNING\")",
+            "self.assertEqual(CoreSettings.get_default_user_agent(), \"Dispatcharr/1.2.3\")",
+            "self.assertNumQueries(0)",
+            "self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"Dispatcharr/1.2.3\"\n            )"
+          ],
+          "assertion_scope": "whole unmodified workflow; no unrelated model mutation attributed to an HTTP call",
+          "authentication_statements": [],
+          "class": "DefaultUserAgentCacheTests",
+          "fixture_id": "core/tests/test_core.py:DefaultUserAgentCacheTests",
+          "framework_log_block": "test_missing_default_falls_back_without_warning (core.tests.test_core.DefaultUserAgentCacheTests.test_missing_default_falls_back_without_warning) ... ok\n",
+          "framework_log_block_sha256": "6df66d4fcdac33b6dd729013ef1a460003ec5edd336cc544575a0e4a22dfba22",
+          "historical_result": "ok",
+          "method": "test_missing_default_falls_back_without_warning",
+          "method_decorators": [
+            "patch(\"version.__version__\", \"1.2.3\")"
+          ],
+          "patch_contexts": [
+            "patch(\"version.__version__\", \"1.2.3\")"
+          ],
+          "request_sites": [],
+          "source_ast_sha256": "7bd80e1ac23bd41a4d716992a29dbebe1955646e02754cdd32172f6bdbfbaeed",
+          "source_path": "core/tests/test_core.py",
+          "test_id": "core.tests.test_core.DefaultUserAgentCacheTests.test_missing_default_falls_back_without_warning",
+          "transport": "Original Django TestCase/model/cache/serializer, no HTTP endpoint claim"
+        },
+        {
+          "Original_method_source": "def test_stale_fill_does_not_repoison_after_invalidate(self):\n        cache.delete(core_models._DEFAULT_USER_AGENT_CACHE_KEY)\n\n        real_get = self.UserAgent.objects.get\n        cached_sets = []\n\n        def racing_get(*args, **kwargs):\n            row = real_get(*args, **kwargs)\n            CoreSettings.invalidate_default_user_agent_cache()\n            return row\n\n        real_set = cache.set\n\n        def tracking_set(key, value, timeout=None, **kwargs):\n            cached_sets.append(key)\n            return real_set(key, value, timeout=timeout, **kwargs)\n\n        with patch.object(self.UserAgent.objects, \"get\", side_effect=racing_get), \\\n             patch.object(cache, \"set\", side_effect=tracking_set):\n            CoreSettings.get_default_user_agent()\n\n        self.assertNotIn(core_models._DEFAULT_USER_AGENT_CACHE_KEY, cached_sets)",
+          "assertion_expressions": [
+            "self.assertNotIn(core_models._DEFAULT_USER_AGENT_CACHE_KEY, cached_sets)"
+          ],
+          "assertion_scope": "whole unmodified workflow; no unrelated model mutation attributed to an HTTP call",
+          "authentication_statements": [],
+          "class": "DefaultUserAgentCacheTests",
+          "fixture_id": "core/tests/test_core.py:DefaultUserAgentCacheTests",
+          "framework_log_block": "test_stale_fill_does_not_repoison_after_invalidate (core.tests.test_core.DefaultUserAgentCacheTests.test_stale_fill_does_not_repoison_after_invalidate) ... ok\n",
+          "framework_log_block_sha256": "fb3ac348e536ce4bd5f6e395188e7e7c1702934cd0ba7281b35f2fdf28dbec79",
+          "historical_result": "ok",
+          "method": "test_stale_fill_does_not_repoison_after_invalidate",
+          "method_decorators": [],
+          "patch_contexts": [
+            "patch.object(self.UserAgent.objects, \"get\", side_effect=racing_get)",
+            "patch.object(cache, \"set\", side_effect=tracking_set)"
+          ],
+          "request_sites": [],
+          "source_ast_sha256": "db81dc1e8da64076e3888b1129fa66f256c6705691f53ac083d4fba30306911c",
+          "source_path": "core/tests/test_core.py",
+          "test_id": "core.tests.test_core.DefaultUserAgentCacheTests.test_stale_fill_does_not_repoison_after_invalidate",
+          "transport": "Original Django TestCase/model/cache/serializer, no HTTP endpoint claim"
+        },
+        {
+          "Original_method_source": "def test_redis_down_falls_back_to_postgres(self):\n        from redis.exceptions import ConnectionError as RedisConnectionError\n\n        cache.clear()\n        with patch.object(cache, \"get\", side_effect=RedisConnectionError(\"down\")), \\\n             patch.object(cache, \"set\", side_effect=RedisConnectionError(\"down\")):\n            self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\"\n            )",
+          "assertion_expressions": [
+            "self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\"\n            )"
+          ],
+          "assertion_scope": "whole unmodified workflow; no unrelated model mutation attributed to an HTTP call",
+          "authentication_statements": [],
+          "class": "DefaultUserAgentCacheTests",
+          "fixture_id": "core/tests/test_core.py:DefaultUserAgentCacheTests",
+          "framework_log_block": "test_redis_down_falls_back_to_postgres (core.tests.test_core.DefaultUserAgentCacheTests.test_redis_down_falls_back_to_postgres) ... 2026-11-09 07:41:08,226 WARNING core.models CoreSettings group cache get failed for coresettings:default_user_agent (ConnectionError: down); falling back to Postgres\nok\n",
+          "framework_log_block_sha256": "244d95c97226022b3ad6d89f3c5924f25002c6bd853485215eea43451adfa767",
+          "historical_result": "ok",
+          "method": "test_redis_down_falls_back_to_postgres",
+          "method_decorators": [],
+          "patch_contexts": [
+            "patch.object(cache, \"get\", side_effect=RedisConnectionError(\"down\"))",
+            "patch.object(cache, \"set\", side_effect=RedisConnectionError(\"down\"))"
+          ],
+          "request_sites": [],
+          "source_ast_sha256": "de725b83bdf90632a118f0557477aa99c7838a5140d0267879fae3f0a3ac26d4",
+          "source_path": "core/tests/test_core.py",
+          "test_id": "core.tests.test_core.DefaultUserAgentCacheTests.test_redis_down_falls_back_to_postgres",
+          "transport": "Original Django TestCase/model/cache/serializer, no HTTP endpoint claim"
+        }
+      ],
+      "fixture": {
+        "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "assertion_transport": "Django TestCase model/cache; no HTTP",
+        "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "class_AST_sha256": "0877026ddb27bbb5ff81440c13051d9398153617364ff5ea11f92afbfa3f0c5d",
+        "class_source": "class DefaultUserAgentCacheTests(TestCase):\n    \"\"\"Resolved default User-Agent string is Redis-cached and invalidated.\"\"\"\n\n    def setUp(self):\n        from core.models import UserAgent\n\n        cache.clear()\n        CoreSettings.objects.filter(key=STREAM_SETTINGS_KEY).delete()\n        self.UserAgent = UserAgent\n        self.ua = UserAgent.objects.create(\n            name=\"Cache Test UA\",\n            user_agent=\"CacheTestAgent/1.0\",\n        )\n        CoreSettings.objects.create(\n            key=STREAM_SETTINGS_KEY,\n            name=\"Stream Settings\",\n            value={\"default_user_agent\": self.ua.id},\n        )\n\n    def tearDown(self):\n        cache.clear()\n\n    def test_second_read_does_not_query_database(self):\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")\n        with self.assertNumQueries(0):\n            self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\"\n            )\n\n    def test_stream_settings_save_invalidates_string_cache(self):\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")\n\n        other = self.UserAgent.objects.create(\n            name=\"Other UA\",\n            user_agent=\"OtherAgent/2.0\",\n        )\n        obj = CoreSettings.objects.get(key=STREAM_SETTINGS_KEY)\n        obj.value = {**obj.value, \"default_user_agent\": other.id}\n        obj.save()\n\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"OtherAgent/2.0\")\n\n    def test_user_agent_save_invalidates_string_cache(self):\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")\n\n        self.ua.user_agent = \"CacheTestAgent/1.1\"\n        self.ua.save()\n\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.1\")\n\n    def test_user_agent_delete_falls_back_to_dispatcharr(self):\n        self.assertEqual(CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\")\n\n        ua_id = self.ua.id\n        self.ua.delete()\n\n        with patch(\"version.__version__\", \"9.9.9\"), self.assertLogs(\n            \"core.models\", level=\"WARNING\"\n        ) as logs:\n            # Stale id remains in stream settings; missing row uses fallback.\n            self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"Dispatcharr/9.9.9\"\n            )\n        self.assertTrue(\n            any(\"not found\" in message for message in logs.output),\n            logs.output,\n        )\n        # Id is still the deleted one (settings not rewritten).\n        self.assertEqual(\n            str(CoreSettings.get_default_user_agent_id()), str(ua_id)\n        )\n\n    @patch(\"version.__version__\", \"1.2.3\")\n    def test_missing_default_falls_back_without_warning(self):\n        CoreSettings.objects.filter(key=STREAM_SETTINGS_KEY).delete()\n        cache.clear()\n\n        with self.assertNoLogs(\"core.models\", level=\"WARNING\"):\n            self.assertEqual(CoreSettings.get_default_user_agent(), \"Dispatcharr/1.2.3\")\n        with self.assertNumQueries(0):\n            self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"Dispatcharr/1.2.3\"\n            )\n    def test_stale_fill_does_not_repoison_after_invalidate(self):\n        cache.delete(core_models._DEFAULT_USER_AGENT_CACHE_KEY)\n\n        real_get = self.UserAgent.objects.get\n        cached_sets = []\n\n        def racing_get(*args, **kwargs):\n            row = real_get(*args, **kwargs)\n            CoreSettings.invalidate_default_user_agent_cache()\n            return row\n\n        real_set = cache.set\n\n        def tracking_set(key, value, timeout=None, **kwargs):\n            cached_sets.append(key)\n            return real_set(key, value, timeout=timeout, **kwargs)\n\n        with patch.object(self.UserAgent.objects, \"get\", side_effect=racing_get), \\\n             patch.object(cache, \"set\", side_effect=tracking_set):\n            CoreSettings.get_default_user_agent()\n\n        self.assertNotIn(core_models._DEFAULT_USER_AGENT_CACHE_KEY, cached_sets)\n\n    def test_redis_down_falls_back_to_postgres(self):\n        from redis.exceptions import ConnectionError as RedisConnectionError\n\n        cache.clear()\n        with patch.object(cache, \"get\", side_effect=RedisConnectionError(\"down\")), \\\n             patch.object(cache, \"set\", side_effect=RedisConnectionError(\"down\")):\n            self.assertEqual(\n                CoreSettings.get_default_user_agent(), \"CacheTestAgent/1.0\"\n            )",
+        "existing_CoreSettings_fixture": "model:CoreSettings",
+        "module_source_sha256": "a2b9baa587280a7b960d176c57878e982cf32f696be808311eccbf802ac8cccc",
+        "setUp": "def setUp(self):\n        from core.models import UserAgent\n\n        cache.clear()\n        CoreSettings.objects.filter(key=STREAM_SETTINGS_KEY).delete()\n        self.UserAgent = UserAgent\n        self.ua = UserAgent.objects.create(\n            name=\"Cache Test UA\",\n            user_agent=\"CacheTestAgent/1.0\",\n        )\n        CoreSettings.objects.create(\n            key=STREAM_SETTINGS_KEY,\n            name=\"Stream Settings\",\n            value={\"default_user_agent\": self.ua.id},\n        )",
+        "suite_platform": "linux/amd64",
+        "tearDown": "def tearDown(self):\n        cache.clear()"
+      },
+      "fully_verified": false,
+      "historical_named_cases": 7,
+      "kind": "retained_Original_model_consumer_workflows",
+      "newly_executed_Original_cases": 0,
+      "original_assertions_preserved": true,
+      "remaining": [
+        "other model methods and branches",
+        "fresh/current Native model behavior",
+        "HTTP roles and signed HTTP lane"
+      ],
+      "scope": "Whole unmodified DefaultUserAgentCacheTests outcomes, including original mocks and conditionals; no branch trace or full UserAgent method coverage inferred",
+      "source": {
+        "kind": "model_candidate",
+        "line": 26,
+        "name": "UserAgent",
+        "path": "core/models.py"
+      }
+    },
+    {
+      "candidate_id": "candidate-d379ec88e7a6c81f1ca6",
+      "cases": [
+        {
+          "argv": [
+            "kill_processes",
+            "--help"
+          ],
+          "command": "kill_processes",
+          "exit_code": 0,
+          "scope": "actual subprocess help/startup only; command handle not invoked",
+          "stderr": "",
+          "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "usage: manage.py kill_processes [-h] [--version] [-v {0,1,2,3}]\n                                [--settings SETTINGS]\n                                [--pythonpath PYTHONPATH] [--traceback]\n                                [--no-color] [--force-color] [--skip-checks]\n\nKills all processes with 'ffmpeg' or 'streamlink' in their name or command\nline.\n\noptions:\n  -h, --help            show this help message and exit\n  --version             Show program's version number and exit.\n  -v, --verbosity {0,1,2,3}\n                        Verbosity level; 0=minimal output, 1=normal output,\n                        2=verbose output, 3=very verbose output\n  --settings SETTINGS   The Python path to a settings module, e.g.\n                        \"myproject.settings.main\". If this isn't provided, the\n                        DJANGO_SETTINGS_MODULE environment variable will be\n                        used.\n  --pythonpath PYTHONPATH\n                        A directory to add to the Python path, e.g.\n                        \"/home/djangoprojects/myproject\".\n  --traceback           Display a full stack trace on CommandError exceptions.\n  --no-color            Don't colorize the command output.\n  --force-color         Force colorization of the command output.\n  --skip-checks         Skip system checks.\n",
+          "stdout_sha256": "0ce2511ad1a5c87e19ff2d71eb7f1884a3955c7f566212db97a432f02b0fd9fa"
+        }
+      ],
+      "fixture": {
+        "archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+        "baseline_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+        "capture_definition": "inputs/help-probe.py",
+        "default_database_unchanged": true,
+        "exact_owned_cleanup": true
+      },
+      "fully_verified": false,
+      "historical_actual_help_subprocesses": 1,
+      "kind": "retained_Original_management_help_subprocess",
+      "management_handle_execution_verified": false,
+      "newly_executed_Original_cases": 0,
+      "remaining": [
+        "command handle and external effects",
+        "fresh/current Native CLI behavior"
+      ],
+      "source": {
+        "kind": "management_command",
+        "line": 6,
+        "name": "Command",
+        "path": "core/management/commands/kill_processes.py"
+      }
+    }
+  ],
+  "credit": "Original Dispatcharr and dependency authors retain application/algorithm authorship; AGPL retained.",
+  "engine_calls": 0,
+  "historical_help_subprocesses_reused": 3,
+  "historical_model_named_successes_reused": 10,
+  "limits": {
+    "M0_complete": false,
+    "Native_coverage_increased": false,
+    "current_Rust_results_accepted": false,
+    "fresh_HTTP_requests": 0,
+    "fresh_Original_executions": 0,
+    "fully_verified": false,
+    "performance_verified": false,
+    "release_authorized": false
+  },
+  "network_calls": 0,
+  "register_raw_sha256": "c203f143521fcec08c3a7b0305280c20585ed5e0c09cdb0cf4d2ee7374edcb71",
+  "register_revision": "46901aa4a",
+  "schema": "dispatcharr-m0-non-http-batch/1",
+  "selected_candidates": 5,
+  "status": "offline_assertions_passed",
+  "unique_new_Original_executions": 0
+}

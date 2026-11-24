@@ -338,8 +338,10 @@ def build(bindings_path=None,deep_evidence=False):
         'observations_for_methods_not_declared_in_discovery':case_bindings.get('observations_for_methods_not_declared_in_discovery',[])if case_bindings is not None else[],
         'unrepresented_contract_families':['Environment defaults and precedence','Periodic schedule trigger/crash semantics','Plugin context/capability APIs','Admin workflows and CSRF/session behavior','Signals and background startup/shutdown hooks'],
         'runtime_routes':rows,'openapi_operations':operations,'non_HTTP_candidates':non_http}
-    from runtime_dispatch_metadata import attach
-    return attach(ROOT, report)
+    import retained_model_command_observations
+    import runtime_dispatch_metadata
+    runtime_dispatch_metadata.attach(ROOT, report)
+    return retained_model_command_observations.attach(ROOT, report)
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',type=Path,default=ROOT/'docs/rust-contract-register.json');parser.add_argument('--bindings',type=Path,default=ROOT/'scripts/rust-contracts/case-bindings.json');parser.add_argument('--deep-evidence',action='store_true',help='Revalidate private raw captures/build matrix; default validates committed sanitized attestations');args=parser.parse_args();value=build(args.bindings,args.deep_evidence);data=(json.dumps(value,indent=2,ensure_ascii=False)+'\n').encode();args.output.write_bytes(data)
