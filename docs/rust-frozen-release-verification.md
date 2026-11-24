@@ -931,3 +931,18 @@ on the checkout filesystem and rejected unlocked, shared and replaced
 inodes. The subsequent Native API202 attempt reached the application
 fixture and retired it exactly after a seed collision. API202 remains
 open.
+
+### Workspace gate corrections
+
+The packaged `52cdd387` source passed formatting and its targeted tests,
+but its initial full host gate failed. The recording schema test expected an
+obsolete SQL statement count following shared nullable DVR reads. A settings
+authentication test could hit its 15-second HTTP deadline while its intentionally
+unavailable database used SQLx's 30-second default acquisition timeout. Strict
+Clippy also rejected an equivalent playback validation expression.
+
+The corrected source passed formatting, strict Clippy and all selected targets
+across the Rust workspace on Rust 1.90. The host run recorded 1,980 passing,
+zero failing and 838 ignored tests across 194 test targets. The ignored probes
+retain their own acceptance requirements. The workspace changes require a new
+frozen package qualification.

@@ -66,10 +66,8 @@ fn std_transform<'a>(
     // credential components. The shared bounded replacement engine handles
     // this fixed unanchored form without widening the remaining regex domain.
     let captured_live_path = search == r"/live/([^/]+)/([^/]+)/";
-    if !captured_live_path
-        && !(search.starts_with('^') && search.ends_with('$'))
-        && regex::escape(search) != search
-    {
+    let anchored = search.starts_with('^') && search.ends_with('$');
+    if !(captured_live_path || anchored || regex::escape(search) == search) {
         return Err(StoreError::Unsupported(
             "STD provider URL needs a qualified literal or anchored transform",
         ));

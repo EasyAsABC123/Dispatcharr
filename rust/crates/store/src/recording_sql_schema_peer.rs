@@ -61,20 +61,20 @@ fn parameter_types(index: usize) -> Vec<PgTypeInfo> {
     let time = <DateTime<Utc> as Type<sqlx::Postgres>>::type_info();
     let uuid = <Uuid as Type<sqlx::Postgres>>::type_info();
     match index {
-        0 | 1 | 19 | 22 | 23 | 24 | 28 | 29 | 30 | 32 | 34 | 35 | 36 | 38 | 39 | 40 | 44 | 45
-        | 46 | 48 | 50 | 51 | 52 | 53 | 54 | 55 | 56 | 60 | 61 | 62 | 64 | 66 | 67 | 68 | 70
-        | 74 | 78 => vec![],
-        2 | 6 | 9 | 10 | 12 | 13 | 14 | 17 | 18 | 25 | 26 | 31 | 33 | 41 | 42 | 47 | 49 | 57
-        | 58 | 63 | 65 | 80 | 81 | 83 | 84 | 85 => vec![int],
-        3 | 21 | 37 | 72 | 75 | 76 | 77 => vec![text],
-        5 => vec![boolean],
-        82 => vec![uuid],
-        4 | 8 | 73 => vec![int.clone(), int],
-        7 => vec![text, time.clone(), time],
-        11 | 15 => vec![int, value.clone(), value],
-        16 | 20 | 79 => vec![text.clone(), time, uuid, text, value],
-        27 | 43 | 59 => vec![int.clone(), text, int],
-        69 | 71 => vec![time],
+        0 | 3 | 7 | 10 | 12 | 13 | 16 | 17 | 24 | 25 | 30 | 32 | 40 | 41 | 46 | 48 | 56 | 57
+        | 62 | 64 | 79 | 80 | 82 | 83 | 84 => vec![int],
+        1 | 2 | 18 | 21 | 22 | 23 | 27 | 28 | 29 | 31 | 33 | 34 | 35 | 37 | 38 | 39 | 43 | 44
+        | 45 | 47 | 49 | 50 | 51 | 52 | 53 | 54 | 55 | 59 | 60 | 61 | 63 | 65 | 66 | 67 | 69
+        | 73 | 77 => vec![],
+        4 | 20 | 36 | 71 | 74 | 75 | 76 => vec![text],
+        5 | 9 | 72 => vec![int.clone(), int],
+        6 => vec![boolean],
+        8 => vec![text, time.clone(), time],
+        11 | 14 => vec![int, value.clone(), value],
+        15 | 19 | 78 => vec![text.clone(), time, uuid, text, value],
+        26 | 42 | 58 => vec![int.clone(), text, int],
+        68 | 70 => vec![time],
+        81 => vec![uuid],
         _ => panic!("unreviewed production statement index"),
     }
 }
@@ -82,9 +82,9 @@ fn parameter_types(index: usize) -> Vec<PgTypeInfo> {
 #[test]
 fn compiled_statement_inventory_and_actual_bound_types() {
     let statements = actual_statements();
-    assert_eq!(statements.len(), 86);
-    assert_eq!(statements[0].1, statements[19].1);
-    assert!(statements[0]
+    assert_eq!(statements.len(), 85);
+    assert_eq!(statements[1].1, statements[18].1);
+    assert!(statements[1]
         .1
         .contains("FROM dispatcharr_connect_integration)"));
     assert!(!statements
@@ -103,10 +103,10 @@ fn compiled_statement_inventory_and_actual_bound_types() {
             "statement {index}: actual source ordinal/type authority"
         );
     }
-    assert_eq!(parameter_types(5)[0].name(), "BOOL");
-    assert_eq!(parameter_types(16)[2].name(), "UUID");
-    assert_eq!(parameter_types(79)[2].name(), "UUID");
-    assert_eq!(parameter_types(82)[0].name(), "UUID");
+    assert_eq!(parameter_types(6)[0].name(), "BOOL");
+    assert_eq!(parameter_types(15)[2].name(), "UUID");
+    assert_eq!(parameter_types(78)[2].name(), "UUID");
+    assert_eq!(parameter_types(81)[0].name(), "UUID");
     assert_eq!(parameter_types(11)[1].name(), "JSONB");
 }
 
@@ -136,7 +136,7 @@ async fn actual_compiled_dvr_schema_prepare_only() {
         .expect("actual read-only setting");
     assert_eq!(readonly, "on");
     let statements = actual_statements();
-    assert_eq!(statements.len(), 86);
+    assert_eq!(statements.len(), 85);
     let mut rows = Vec::new();
     for (index, (source, sql)) in statements.into_iter().enumerate() {
         let types = parameter_types(index);

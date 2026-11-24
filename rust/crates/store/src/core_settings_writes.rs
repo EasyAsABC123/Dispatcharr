@@ -1611,14 +1611,17 @@ mod tests {
     fn local_service() -> CoreSettingsWrites {
         let pool = sqlx::postgres::PgPoolOptions::new()
             .max_connections(4)
+            // A cold, best-effort Source timezone callback precedes auth.
+            // Let the unreachable test pool settle before the HTTP observer.
+            .acquire_timeout(Duration::from_millis(50))
             .connect_lazy("postgres://unit:unit@127.0.0.1:9/not_contacted")
             .unwrap();
         let auth = AuthService::new(
             crate::Store::from_pool(pool),
             crate::AuthConfig::new("local-core-tests-only-secret-32".to_owned()).unwrap(),
         );
-        // No constructor/cache claim: this only exercises actual shared permit
-        // and response-byte ownership, with no authentication/SQL/cache calls.
+        // The lazy, unreachable pool supplies deterministic callback failure
+        // without a database, cache adapter or separate writer budget.
         CoreSettingsWrites {
             state: Arc::new(StateData {
                 auth,
@@ -1700,7 +1703,17 @@ mod tests {
                 let response = app.clone().oneshot(request).await.unwrap();
                 assert_eq!(response.status(), status, "{method} {path}: {mime}");
                 if status == StatusCode::UNAUTHORIZED {
-                    assert!(response.headers().contains_key(header::WWW_AUTHENTICATE));
+                    assert_eq!(
+                        response.headers()[header::WWW_AUTHENTICATE],
+                        "Bearer realm=\"api\""
+                    );
+                    let body = axum::body::to_bytes(response.into_body(), OUTPUT_LIMIT)
+                        .await
+                        .unwrap();
+                    assert_eq!(
+                        body.as_ref(),
+                        br#"{"detail":"Authentication credentials were not provided."}"#
+                    );
                 }
             }
         }
