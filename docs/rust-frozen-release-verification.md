@@ -633,6 +633,16 @@ Version epoch retains its exit 0. Admission forbids replay and requires
 separate Native results for each dependent workflow. All 34 coordinator
 controls passed on the combined scripts.
 
+## Scheduled Version check with an upstream 503
+
+The coordinator can dispatch the ordinary Native Version503 case after
+the account warning and expiry check. The retained Original evidence links
+one scheduled task to the upstream HTTP 503, a successful null result,
+and exact cleanup. The Native fixture reuses the existing disconnected
+Version owner and verifies its actual outcome and cleanup. Seventeen
+offline controls and the 34 coordinator tests passed. The final Native
+package run remains open.
+
 ## Recording with a held PostgreSQL ReadyForQuery
 
 The M6 coordinator can dispatch the recording check that holds

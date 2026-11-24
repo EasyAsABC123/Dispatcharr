@@ -317,6 +317,16 @@ def owner_readiness(nodes, document, output=None):
                 if bindings[key] != expected:
                     raise ValueError("M6 Stats exact sealed campaign binding required")
                 continue
+            if key == "m6/version503":
+                owner = module(HERE / "m6/version503_owner.py", "readiness_m6_version503")
+                context = owners.get("m6", {}).get("version503")
+                if not context or node["depends_on"] != [owner.PREDECESSOR]:
+                    raise ValueError("M6 Version503 sealed owner and exact account warning predecessor required")
+                expected = owner.dispatch_spec(Path(context["stage"]), context["seal"], Path(context["output"]),
+                                               document["candidate"], HERE.parents[1], node["entrypoint"], Path(output))
+                if bindings[key] != expected:
+                    raise ValueError("M6 Version503 exact ordinary current-package binding required")
+                continue
             if key == "m6/version200-update-no-update-malformed":
                 owner = module(HERE / "m6/version200_owner.py", "readiness_m6_version200")
                 context = owners.get("m6", {}).get("version200")
