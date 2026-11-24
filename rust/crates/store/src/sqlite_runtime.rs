@@ -97,7 +97,7 @@ impl CopiedSqliteRuntime {
             .route("/api/accounts/token/refresh/", axum::routing::any(refresh))
             .route(
                 "/api/accounts/initialize-superuser/",
-                axum::routing::get(setup_status),
+                axum::routing::get(setup_status).post(setup_status),
             )
             .route("/api/accounts/users/", axum::routing::get(profile::users))
             .route("/api/accounts/users/me/", axum::routing::any(profile::me))
@@ -192,6 +192,7 @@ impl CopiedSqliteRuntime {
             )
             .route("/api/m3u/accounts/", axum::routing::get(provider_accounts))
             .route("/healthz", axum::routing::get(readiness))
+            .route("/health/ready", axum::routing::get(ready_for_requests))
             .with_state(self.clone())
     }
 
@@ -670,6 +671,7 @@ fn setup_document(
 async fn setup_status(
     State(runtime): State<CopiedSqliteRuntime>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    method: Method,
     headers: HeaderMap,
 ) -> Result<Response, StoreError> {
     let exists = runtime
@@ -679,14 +681,32 @@ async fn setup_status(
         .await?;
     let ip = source_client_ip_for_config(&runtime.config, &request(peer, headers));
     let override_ip = std::env::var("DISPATCHARR_SETUP_ALLOWED_IP").unwrap_or_default();
-    Ok((
+    Ok(setup_status_response(method, exists, &ip, &override_ip))
+}
+
+fn setup_status_response(
+    method: Method,
+    exists: bool,
+    ip: &dispatcharr_contracts::SourceIpAddr,
+    override_ip: &str,
+) -> Response {
+    // Match the pinned Original's already-configured response without reading
+    // the POST body or enabling first-user creation on the copied runtime.
+    if method == Method::POST && !exists {
+        return (
+            StatusCode::METHOD_NOT_ALLOWED,
+            [(axum::http::header::ALLOW, "GET,HEAD")],
+        )
+            .into_response();
+    }
+    (
         [
             (axum::http::header::CONTENT_TYPE, "application/json"),
             (axum::http::header::VARY, "origin"),
         ],
-        setup_document(exists, &ip, &override_ip),
+        setup_document(exists, ip, override_ip),
     )
-        .into_response())
+        .into_response()
 }
 
 #[cfg(test)]
@@ -705,6 +725,33 @@ fn copied_setup_keeps_source_json_spacing_and_local_gate() {
         setup_document(false, &ip, "192.0.2.1"),
         r#"{"superuser_exists": false, "client_ip": "127.0.0.1", "setup_allowed": false}"#
     );
+}
+
+#[cfg(test)]
+#[tokio::test]
+async fn copied_setup_post_only_reports_an_existing_administrator() {
+    use axum::{body::to_bytes, http::header};
+
+    let ip = "192.0.2.1".parse().unwrap();
+    let configured = setup_status_response(Method::POST, true, &ip, "127.0.0.1");
+    assert_eq!(configured.status(), StatusCode::OK);
+    assert_eq!(
+        configured.headers()[header::CONTENT_TYPE],
+        "application/json"
+    );
+    assert_eq!(configured.headers()[header::VARY], "origin");
+    assert_eq!(
+        to_bytes(configured.into_body(), 64).await.unwrap().as_ref(),
+        br#"{"superuser_exists": true}"#
+    );
+
+    let unconfigured = setup_status_response(Method::POST, false, &ip, "192.0.2.1");
+    assert_eq!(unconfigured.status(), StatusCode::METHOD_NOT_ALLOWED);
+    assert_eq!(unconfigured.headers()[header::ALLOW], "GET,HEAD");
+    assert!(to_bytes(unconfigured.into_body(), 64)
+        .await
+        .unwrap()
+        .is_empty());
 }
 
 async fn version(
@@ -1005,19 +1052,65 @@ async fn stream_filter_options(
 }
 
 async fn readiness(State(runtime): State<CopiedSqliteRuntime>) -> (StatusCode, Json<Value>) {
-    let ready = runtime.identity.setting("proxy_settings").await.is_ok();
-    let status = if ready {
+    readiness_response(
+        runtime
+            .identity
+            .setting("proxy_settings")
+            .await
+            .is_err()
+            .then_some("database_unavailable"),
+    )
+}
+
+async fn ready_for_requests(
+    State(runtime): State<CopiedSqliteRuntime>,
+) -> (StatusCode, Json<Value>) {
+    if runtime.identity.setting("proxy_settings").await.is_err() {
+        return readiness_response(Some("database_unavailable"));
+    }
+    let ping = runtime.cache.command::<String>(redis::cmd("PING")).await;
+    readiness_response(
+        (!matches!(ping, Ok(reply) if reply == "PONG")).then_some("redis_unavailable"),
+    )
+}
+
+fn readiness_response(failure: Option<&'static str>) -> (StatusCode, Json<Value>) {
+    let status = if failure.is_none() {
         StatusCode::OK
     } else {
         StatusCode::SERVICE_UNAVAILABLE
     };
     (
         status,
-        Json(
-            json!({"status": if ready {"ready"} else {"database_unavailable"},
-                        "backend": "rust", "scope": "sqlite_copied_data", "parity_complete": false}),
-        ),
+        Json(json!({"status": failure.unwrap_or("ready"),
+                        "backend": "rust", "scope": "sqlite_copied_data", "parity_complete": false})),
     )
+}
+
+#[cfg(test)]
+#[test]
+fn copied_readiness_reports_dependency_status() {
+    for (failure, expected, state) in [
+        (None, StatusCode::OK, "ready"),
+        (
+            Some("database_unavailable"),
+            StatusCode::SERVICE_UNAVAILABLE,
+            "database_unavailable",
+        ),
+        (
+            Some("redis_unavailable"),
+            StatusCode::SERVICE_UNAVAILABLE,
+            "redis_unavailable",
+        ),
+    ] {
+        let (status, Json(body)) = readiness_response(failure);
+        assert_eq!(status, expected);
+        assert_eq!(
+            body,
+            json!({"status":state, "backend":"rust", "scope":"sqlite_copied_data",
+                   "parity_complete":false})
+        );
+    }
 }
 
 #[cfg(test)]

@@ -6,9 +6,10 @@ license.workspace = true
 
 # Integration-only primitive; ordinary SQLite Main/worker wiring remains separate.
 [features]
-sqlite-backup-snapshot = []
+sqlite-backup-snapshot = ["dep:libsqlite3-sys"]
 
 [dependencies]
+libsqlite3-sys = { version = "=0.30.1", features = ["bundled"], optional = true }
 serde = {version="1",features=["derive"]}
 serde_json = {version="1",features=["arbitrary_precision","preserve_order"]}
 zip = {version="=9.5.0",default-features=false,features=["deflate-flate2-zlib-rs"]}

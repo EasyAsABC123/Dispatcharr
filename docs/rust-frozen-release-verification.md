@@ -41,11 +41,13 @@ The backup library now selects its snapshot from the admitted runtime datastore 
 
 The optional restore path checks archive type and reads the staged SQLite catalogue before touching the target. With a quiesced datastore owner, it rejects open journal companions, retains the previous database as a rollback copy, and installs and verifies the recovered file. Linux passed 28 feature-enabled and 17 default backup tests.
 
+The backup component uses the locked bundled SQLite library already used by the copied runtime's SQL driver. The copied runtime now answers a repeated setup POST when an administrator exists and exposes `/health/ready` with SQLite and Redis checks. The copied-runtime Store tests passed, and the application and backup test targets linked with both optional features enabled.
+
 The ordinary package still needs SQLite startup, ownership wiring, migration compatibility, and image linkage. The SQLite component tests alone do not close M8 or M9.
 
 ## One frozen verification campaign
 
-1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution.
+1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.
 2. Use the coordinator binding preflight for each phase. Each host uses one common candidate object for its local image. Owner contexts keep separate audit files, fixtures and output paths. Resolve unbound rows and replace partial probes with complete owners before launching the required phase.
 3. Run the functional matrix on Beepboop and the assigned architecture and browser scopes on Lappy. The AMD64 coordinator keeps up to three ordinary fixtures in flight, protects shared reservations, and gives each heavy fixture the engine to itself. Lappy keeps its Compose projects and artifact custody independent. A test starts only once per sealed binding and phase.
 4. Reconcile literal execution, teardown and evaluator receipts against the frozen revision. Required dependencies must be satisfied before later workflows. Run the two-hour soak and quiet equal-work benchmarks after their prerequisites. Compare CPU, working memory, useful throughput and first-byte latency under the recorded thresholds. Keep the previously deferred full-scan comparison separate.

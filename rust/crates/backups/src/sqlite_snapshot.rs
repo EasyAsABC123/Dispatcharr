@@ -1,8 +1,14 @@
 //! SQLite online backup primitive. Original Dispatcharr and SQLite authors retain credit.
 //! This is not a SQLite Main/router/restore implementation. The caller must hold
 //! its owned AppData/path admission and account this synchronous work in its role.
+use libsqlite3_sys::{
+    sqlite3 as Db, sqlite3_backup as Copy, sqlite3_backup_finish, sqlite3_backup_init,
+    sqlite3_backup_step, sqlite3_close, sqlite3_errcode, sqlite3_exec, sqlite3_open_v2,
+    SQLITE_BUSY, SQLITE_DONE, SQLITE_LOCKED, SQLITE_OK, SQLITE_OPEN_READONLY,
+    SQLITE_OPEN_READWRITE,
+};
 use std::{
-    ffi::{c_char, c_int, c_void, CString},
+    ffi::CString,
     fs::{self, OpenOptions},
     io,
     marker::PhantomData,
@@ -11,42 +17,6 @@ use std::{
     ptr, thread,
     time::{Duration, Instant},
 };
-#[repr(C)]
-struct Db {
-    _private: [u8; 0],
-}
-#[repr(C)]
-struct Copy {
-    _private: [u8; 0],
-}
-#[link(name = "sqlite3")]
-unsafe extern "C" {
-    fn sqlite3_open_v2(
-        path: *const c_char,
-        db: *mut *mut Db,
-        flags: c_int,
-        vfs: *const c_char,
-    ) -> c_int;
-    fn sqlite3_close_v2(db: *mut Db) -> c_int;
-    fn sqlite3_backup_init(
-        to: *mut Db,
-        name: *const c_char,
-        from: *mut Db,
-        source: *const c_char,
-    ) -> *mut Copy;
-    fn sqlite3_backup_step(copy: *mut Copy, pages: c_int) -> c_int;
-    fn sqlite3_backup_finish(copy: *mut Copy) -> c_int;
-    fn sqlite3_errcode(db: *mut Db) -> c_int;
-    fn sqlite3_exec(
-        db: *mut Db,
-        sql: *const c_char,
-        callback: Option<
-            unsafe extern "C" fn(*mut c_void, c_int, *mut *mut c_char, *mut *mut c_char) -> c_int,
-        >,
-        context: *mut c_void,
-        error: *mut *mut c_char,
-    ) -> c_int;
-}
 #[derive(Debug)]
 pub enum SnapshotError {
     Io(io::Error),
@@ -74,9 +44,9 @@ impl Database {
         let mut db = ptr::null_mut();
         // SAFETY: name is NUL-terminated for the call; sqlite owns a returned handle.
         let code = unsafe { sqlite3_open_v2(name.as_ptr(), &mut db, flags, ptr::null()) };
-        if code != 0 || db.is_null() {
+        if code != SQLITE_OK || db.is_null() {
             if !db.is_null() {
-                unsafe { sqlite3_close_v2(db) };
+                unsafe { sqlite3_close(db) };
             }
             return Err(SnapshotError::Sqlite(code));
         }
@@ -85,7 +55,7 @@ impl Database {
 }
 impl Drop for Database {
     fn drop(&mut self) {
-        unsafe { sqlite3_close_v2(self.0) };
+        unsafe { sqlite3_close(self.0) };
     }
 }
 struct Backup<'a> {
@@ -107,7 +77,7 @@ impl<'a> Backup<'a> {
     fn finish(mut self) -> Result<(), SnapshotError> {
         let code = unsafe { sqlite3_backup_finish(self.raw) };
         self.raw = ptr::null_mut();
-        if code == 0 {
+        if code == SQLITE_OK {
             Ok(())
         } else {
             Err(SnapshotError::Sqlite(code))
@@ -173,8 +143,8 @@ pub fn snapshot_sqlite(
         keep: false,
     };
     let result = (|| -> Result<u64, SnapshotError> {
-        let src = Database::open(source, 1)?; // SQLITE_OPEN_READONLY
-        let dst = Database::open(destination, 2)?; // SQLITE_OPEN_READWRITE, existing fresh file
+        let src = Database::open(source, SQLITE_OPEN_READONLY)?;
+        let dst = Database::open(destination, SQLITE_OPEN_READWRITE)?;
         let backup = Backup::begin(&dst, &src)?;
         loop {
             if cancelled() {
@@ -189,9 +159,9 @@ pub fn snapshot_sqlite(
                 return Err(SnapshotError::ByteLimit);
             }
             match code {
-                101 => break, // SQLITE_DONE
-                0 => {}
-                5 | 6 => thread::sleep(
+                SQLITE_DONE => break,
+                SQLITE_OK => {}
+                SQLITE_BUSY | SQLITE_LOCKED => thread::sleep(
                     Duration::from_millis(5).min(limits.timeout.saturating_sub(began.elapsed())),
                 ),
                 other => return Err(SnapshotError::Sqlite(other)),
@@ -224,7 +194,7 @@ pub fn snapshot_sqlite(
 pub(super) fn verify_catalogue(path: &Path) -> Result<(), SnapshotError> {
     // Like Original, open the extracted copy read/write so SQLite may create
     // private WAL companions before opening its catalogue. No current DB is used.
-    let database = Database::open(path, 2)?;
+    let database = Database::open(path, SQLITE_OPEN_READWRITE)?;
     let code = unsafe {
         sqlite3_exec(
             database.0,
@@ -234,7 +204,7 @@ pub(super) fn verify_catalogue(path: &Path) -> Result<(), SnapshotError> {
             ptr::null_mut(),
         )
     };
-    if code == 0 {
+    if code == SQLITE_OK {
         Ok(())
     } else {
         Err(SnapshotError::Sqlite(code))
@@ -244,11 +214,13 @@ pub(super) fn verify_catalogue(path: &Path) -> Result<(), SnapshotError> {
 #[cfg(test)]
 pub(super) mod tests {
     use super::*;
+    use libsqlite3_sys::SQLITE_OPEN_CREATE;
     use std::{
-        ffi::CStr,
+        ffi::{c_char, c_int, c_void, CStr},
         sync::atomic::{AtomicUsize, Ordering},
         time::SystemTime,
     };
+
     struct Temp(PathBuf);
     impl Temp {
         fn new() -> Self {
@@ -311,12 +283,12 @@ pub(super) mod tests {
     }
 
     pub(crate) fn create_fixture(path: &Path, sql: &str) {
-        let database = Database::open(path, 2 | 4).unwrap();
+        let database = Database::open(path, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE).unwrap();
         exec(&database, sql);
     }
 
     pub(crate) fn read_fixture_value(path: &Path, sql: &std::ffi::CStr) -> i64 {
-        let database = Database::open(path, 2).unwrap();
+        let database = Database::open(path, SQLITE_OPEN_READWRITE).unwrap();
         query_one(&database, sql)
     }
 
@@ -331,7 +303,7 @@ pub(super) mod tests {
         let t = Temp::new();
         let source = t.0.join("source.db");
         let out = t.0.join("snapshot.db");
-        let db = Database::open(&source, 2 | 4).unwrap();
+        let db = Database::open(&source, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE).unwrap();
         exec(
             &db,
             "PRAGMA journal_mode=WAL;PRAGMA wal_autocheckpoint=0;CREATE TABLE owned(id INTEGER);INSERT INTO owned VALUES(1),(2);",
@@ -341,7 +313,7 @@ pub(super) mod tests {
         exec(&db, "INSERT INTO owned VALUES(3)");
         // Source restore verifies through sqlite3.connect(), a read/write connection.
         // A WAL-mode snapshot need not pre-create read-only -wal/-shm companions.
-        let saved = Database::open(&out, 2).unwrap();
+        let saved = Database::open(&out, SQLITE_OPEN_READWRITE).unwrap();
         assert_eq!(count(&saved), 2);
         assert_eq!(count(&db), 3);
     }
@@ -350,7 +322,7 @@ pub(super) mod tests {
         let t = Temp::new();
         let source = t.0.join("source.db");
         let out = t.0.join("keep.db");
-        let db = Database::open(&source, 2 | 4).unwrap();
+        let db = Database::open(&source, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE).unwrap();
         exec(&db, "CREATE TABLE owned(id INTEGER)");
         fs::write(&out, b"owned sentinel").unwrap();
         assert!(snapshot_sqlite(&source, &out, limits(), || false).is_err());
@@ -361,7 +333,7 @@ pub(super) mod tests {
         let t = Temp::new();
         let source = t.0.join("source.db");
         let out = t.0.join("cancelled.db");
-        let db = Database::open(&source, 2 | 4).unwrap();
+        let db = Database::open(&source, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE).unwrap();
         exec(&db, "CREATE TABLE owned(id INTEGER)");
         let calls = AtomicUsize::new(0);
         assert!(matches!(
@@ -378,7 +350,7 @@ pub(super) mod tests {
         let t = Temp::new();
         let source = t.0.join("source.db");
         let out = t.0.join("timeout.db");
-        let db = Database::open(&source, 2 | 4).unwrap();
+        let db = Database::open(&source, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE).unwrap();
         exec(&db, "CREATE TABLE owned(id INTEGER)");
         let short = SnapshotLimits {
             timeout: Duration::from_nanos(1),
@@ -396,7 +368,7 @@ pub(super) mod tests {
         let t = Temp::new();
         let source = t.0.join("source.db");
         let out = t.0.join("small.db");
-        let db = Database::open(&source, 2 | 4).unwrap();
+        let db = Database::open(&source, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE).unwrap();
         exec(&db, "CREATE TABLE owned(id INTEGER)");
         let small = SnapshotLimits {
             bytes: 16,
