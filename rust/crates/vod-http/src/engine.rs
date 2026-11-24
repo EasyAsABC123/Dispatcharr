@@ -304,12 +304,7 @@ impl VodEngine {
             .filter(|value| !value.is_empty());
         if let Some(range) = original_range {
             let total = ticket.session.content_length.load(Ordering::Relaxed);
-            let validated = if total > 0 {
-                validate_range(range, total)
-            } else {
-                Some(range.into())
-            };
-            let Some(range) = validated else {
+            let Some(range) = validate_range(range, total) else {
                 return Ok(range_not_satisfiable());
             };
             upstream_request = upstream_request.header("range", range);
@@ -325,6 +320,11 @@ impl VodEngine {
             response = upstream_request.send() => response.map_err(|_| StoreError::StatusBody(500,json!("Streaming error: VOD provider request failed")))?,
             _ = stopped(&ticket) => return Err(StoreError::StatusBody(503,json!({"error":"VOD session stopped"}))),
         };
+        if original_range.is_some_and(|range| {
+            provider_rejects_explicit_range(upstream.status(), upstream.headers(), range)
+        }) {
+            return Ok(range_not_satisfiable());
+        }
         if upstream.status().is_client_error() || upstream.status().is_server_error() {
             // Avoid reflecting provider credentials from requests' exception URL.
             return Ok((
@@ -926,8 +926,26 @@ pub(crate) fn range_is_unsatisfiable(value: &str, total: u64) -> bool {
         )
 }
 
-// Literal compatibility port of RedisBackedVODConnection._validate_range_header.
+fn decimal(value: &str) -> Option<u64> {
+    if value.is_empty() || !value.bytes().all(|byte| byte.is_ascii_digit()) {
+        return None;
+    }
+    value.parse().ok()
+}
+
+fn source_prefix_end(value: &str) -> Option<u64> {
+    decimal(value.strip_prefix("bytes=-")?)
+}
+
+// Original's warm session interprets an omitted start as byte zero.
+// Apply the same prefix interpretation before contacting a cold provider.
 fn validate_range(value: &str, total: u64) -> Option<String> {
+    if total == 0 {
+        return Some(match source_prefix_end(value) {
+            Some(end) => format!("bytes=0-{end}"),
+            None => value.into(),
+        });
+    }
     match range_bounds(value, total) {
         Some((start, end)) if outside_range(start, end, total) => None,
         Some((start, end)) => Some(format!("bytes={start}-{end}")),
@@ -935,6 +953,32 @@ fn validate_range(value: &str, total: u64) -> Option<String> {
         None => Some(value.into()),
     }
 }
+// A cold session has no length yet. Reuse ordinary range admission only
+// when a provider 416 supplies a concrete length and confirms the request.
+fn provider_rejects_explicit_range(status: StatusCode, headers: &HeaderMap, range: &str) -> bool {
+    if status != StatusCode::RANGE_NOT_SATISFIABLE {
+        return false;
+    }
+    let Some((start, end)) = range
+        .strip_prefix("bytes=")
+        .and_then(|value| value.split_once('-'))
+    else {
+        return false;
+    };
+    let Some(start) = decimal(start) else {
+        return false;
+    };
+    if !end.is_empty() && !decimal(end).is_some_and(|end| end >= start) {
+        return false;
+    }
+    headers
+        .get(header::CONTENT_RANGE)
+        .and_then(|value| value.to_str().ok())
+        .and_then(|value| value.strip_prefix("bytes */"))
+        .and_then(decimal)
+        .is_some_and(|total| total == 0 || range_is_unsatisfiable(range, total))
+}
+
 // Original uses the provider reply header when present, then the originally
 // resolved stream path. A redirect's destination or URL query does not change
 // which explicit provider extension determines the fallback media type.
@@ -1747,6 +1791,42 @@ mod existing_range_admission {
             assert_eq!(validate_range(range, 100).as_deref(), normalized);
             assert!(!range_is_unsatisfiable(range, 0));
         }
+    }
+
+    #[test]
+    fn cold_suffix_uses_original_prefix_and_leaves_other_ranges_alone() {
+        for (range, expected) in [
+            ("bytes=-256", "bytes=0-256"),
+            ("bytes=-0", "bytes=0-0"),
+            ("bytes=1000-1255", "bytes=1000-1255"),
+            ("bytes=9000000-", "bytes=9000000-"),
+            ("bytes=-1,3-4", "bytes=-1,3-4"),
+        ] {
+            assert_eq!(validate_range(range, 0).as_deref(), Some(expected));
+        }
+    }
+
+    #[test]
+    fn cold_provider_416_requires_a_confirmed_unsatisfiable_explicit_range() {
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            header::CONTENT_RANGE,
+            HeaderValue::from_static("bytes */4299455"),
+        );
+        let rejected = |status, headers: &HeaderMap, range| {
+            provider_rejects_explicit_range(status, headers, range)
+        };
+        let status = StatusCode::RANGE_NOT_SATISFIABLE;
+        assert!(rejected(status, &headers, "bytes=9000000-"));
+        assert!(!rejected(status, &headers, "bytes=1000-1255"));
+        assert!(!rejected(status, &headers, "bytes=9000000-5"));
+        assert!(!rejected(status, &headers, "bytes=9000000-bad"));
+        assert!(!rejected(status, &HeaderMap::new(), "bytes=9000000-"));
+        assert!(!rejected(
+            StatusCode::BAD_GATEWAY,
+            &headers,
+            "bytes=9000000-"
+        ));
     }
 
     #[test]

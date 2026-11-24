@@ -48,29 +48,45 @@ impl VodResolver for Resolver {
     }
 }
 async fn origin(request: Request) -> Response {
+    let size: u32 = if request.uri().path() == "/wire-range" {
+        4096
+    } else {
+        256
+    };
     let range = request.headers().get("range").and_then(|v| v.to_str().ok());
     let (status, start, end) = match range {
-        Some("bytes=900-") => {
-            return Response::builder()
-                .status(416)
-                .header("content-range", "bytes */256")
-                .body(Body::empty())
-                .unwrap()
-        }
-        Some("bytes=-10") => (206, 246, 255),
         Some(value) => {
             let (start, end) = value
                 .strip_prefix("bytes=")
                 .unwrap()
                 .split_once('-')
                 .unwrap();
-            (
-                206,
-                start.parse::<u32>().unwrap(),
-                end.parse::<u32>().unwrap(),
-            )
+            if start.is_empty() {
+                (
+                    206,
+                    size.saturating_sub(end.parse::<u32>().unwrap()),
+                    size - 1,
+                )
+            } else {
+                let start = start.parse::<u32>().unwrap();
+                if start >= size {
+                    return Response::builder()
+                        .status(416)
+                        .header("content-range", format!("bytes */{size}"))
+                        .body(Body::empty())
+                        .unwrap();
+                }
+                let end = if end.is_empty() {
+                    size - 1
+                } else {
+                    end.parse::<u32>().unwrap()
+                };
+                // Reject an unrelated change that forwards If-Range.
+                assert!(!request.headers().contains_key("if-range"));
+                (206, start, end)
+            }
         }
-        None => (200, 0, 255),
+        None => (200, 0, size - 1),
     };
     let mut response = Response::builder()
         .status(status)
@@ -80,7 +96,7 @@ async fn origin(request: Request) -> Response {
         .header("etag", "\"fixture-v1\"")
         .header("last-modified", "Wed, 01 Jan 2020 00:00:00 GMT");
     if status == 206 {
-        response = response.header("content-range", format!("bytes {start}-{end}/256"));
+        response = response.header("content-range", format!("bytes {start}-{end}/{size}"));
     }
     response
         .body(Body::from(
@@ -212,6 +228,7 @@ async fn fixture_with_idle_grace(
     let (base, task) = serve(
         Router::new()
             .route("/bytes", get(origin))
+            .route("/wire-range", get(origin))
             .route("/paced", get(paced))
             .route(
                 "/retry",
@@ -382,6 +399,83 @@ async fn python_range_suffix_if_range_and_416_quirks_are_preserved() {
         (10..=19).collect::<Vec<u8>>()
     );
     clean(&mut redis, &session, profile).await;
+    origin.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback networking"]
+async fn fresh_vod_ranges_match_original_selected_wire() {
+    let (engine, mut redis, profile, origin) = fixture("wire-range").await;
+    let (base, server) = serve(engine.clone().router()).await;
+    let client = reqwest::Client::new();
+    let movie = uuid::Uuid::new_v4();
+    let head = client
+        .head(format!("{base}/proxy/vod/movie/{movie}"))
+        .header("range", "bytes=-256")
+        .send()
+        .await
+        .unwrap();
+    assert_eq!(head.status(), StatusCode::METHOD_NOT_ALLOWED);
+    assert_eq!(head.headers()["allow"], "OPTIONS, GET");
+    assert_eq!(head.headers()["content-type"], "application/json");
+    assert_eq!(head.headers()["content-length"], "41");
+    assert!(!head.headers().contains_key("content-range"));
+    assert!(head.bytes().await.unwrap().is_empty());
+
+    // Every case uses a new session; suffix and 416 run before any full GET.
+    for (range, conditional, status, bounds) in [
+        (Some("bytes=-256"), false, 206, Some((0, 256))),
+        (Some("bytes=9000000-"), false, 416, None),
+        (Some("bytes=0-255"), false, 206, Some((0, 255))),
+        (Some("bytes=1000-1255"), false, 206, Some((1000, 1255))),
+        (Some("bytes=1000-"), false, 206, Some((1000, 4095))),
+        (Some("bytes=0-255"), true, 206, Some((0, 255))),
+        (None, false, 200, None),
+    ] {
+        let session = format!("test-{}", uuid::Uuid::new_v4());
+        let mut req = client.get(format!("{base}/proxy/vod/movie/{movie}/{session}"));
+        if let Some(range) = range {
+            req = req.header("range", range);
+        }
+        if conditional {
+            req = req.header("if-range", "\"different\"");
+        }
+        let response = req.send().await.unwrap();
+        assert_eq!(response.status().as_u16(), status);
+        assert_eq!(response.headers()["allow"], "GET, OPTIONS");
+        assert!(!response.headers().contains_key("etag"));
+        let body = if status == 416 {
+            assert_eq!(
+                response.headers()["content-type"],
+                "text/html; charset=utf-8"
+            );
+            b"Requested Range Not Satisfiable".to_vec()
+        } else {
+            assert_eq!(response.headers()["content-type"], "video/mp4");
+            let (start, end) = bounds.unwrap_or((0, 4095));
+            (start..=end).map(|value| value as u8).collect::<Vec<_>>()
+        };
+        if let Some((start, end)) = bounds {
+            assert_eq!(
+                response.headers()["content-range"].to_str().unwrap(),
+                format!("bytes {start}-{end}/4096")
+            );
+        } else {
+            assert!(!response.headers().contains_key("content-range"));
+        }
+        assert_eq!(
+            response.headers()["content-length"]
+                .to_str()
+                .unwrap()
+                .parse::<usize>()
+                .unwrap(),
+            body.len()
+        );
+        assert_eq!(response.bytes().await.unwrap().as_ref(), body.as_slice());
+        clean(&mut redis, &session, profile).await;
+    }
+    assert!(engine.shutdown().await);
+    server.abort();
     origin.abort();
 }
 
