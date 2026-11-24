@@ -2,13 +2,15 @@
 //! Original Dispatcharr authors retain model/serializer/signal/application credit.
 //! No Main registration, new pool, default worker or task-coupled write exists.
 use crate::{
-    admin_writes::character, catalogue_options, core_reads::JsonReadId, AuthService,
-    RestReadLimits, StoreError, XcUserReadLimits,
+    admin_writes::character,
+    catalogue_options,
+    core_reads::{negotiate_literal_json_alias, JsonReadId},
+    AuthService, RestReadLimits, StoreError, XcUserReadLimits,
 };
 use axum::{
     body::HttpBody,
     extract::{ConnectInfo, Path, Request, State},
-    http::{HeaderMap, StatusCode},
+    http::{HeaderMap, Method, StatusCode},
     response::{IntoResponse, Response},
     routing::{get, post},
     Router,
@@ -150,9 +152,14 @@ impl CoreSettingsWrites {
         Router::new()
             .route("/api/core/settings/", post(create))
             .route("/api/core/settings/check/", post(check))
+            .route("/api/core/settings.json", post(create_json))
+            .route("/api/core/settings/check.json", post(check_json))
             .route(
                 "/api/core/settings/{json_id}",
-                catalogue_options::json_alias(read_json, catalogue_options::DETAIL_ALLOW),
+                catalogue_options::json_alias(read_json, catalogue_options::DETAIL_ALLOW)
+                    .put(write_json)
+                    .patch(write_json)
+                    .delete(write_json),
             )
             .route(
                 "/api/core/settings/{id}/",
@@ -1174,6 +1181,15 @@ async fn create(
 ) -> Result<Response, StoreError> {
     s.run(p, None, r, Kind::Create).await
 }
+async fn create_json(
+    state: State<CoreSettingsWrites>,
+    peer: ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    negotiate_literal_json_alias(request.headers())?;
+    create(state, peer, request).await
+}
+
 async fn read(
     State(s): State<CoreSettingsWrites>,
     ConnectInfo(p): ConnectInfo<SocketAddr>,
@@ -1189,6 +1205,22 @@ async fn read_json(
     request: Request,
 ) -> Result<Response, StoreError> {
     read(state, peer, Path(id), request).await
+}
+
+async fn write_json(
+    State(service): State<CoreSettingsWrites>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    JsonReadId(id): JsonReadId,
+    request: Request,
+) -> Result<Response, StoreError> {
+    let kind = match *request.method() {
+        Method::PUT => Kind::Update(false),
+        Method::PATCH => Kind::Update(true),
+        Method::DELETE => Kind::Delete,
+        _ => return Err(StoreError::NotFound),
+    };
+    negotiate_literal_json_alias(request.headers())?;
+    service.run(peer, Some(id), request, kind).await
 }
 
 async fn put(
@@ -1221,6 +1253,15 @@ async fn check(
     r: Request,
 ) -> Result<Response, StoreError> {
     s.run(p, None, r, Kind::Check).await
+}
+
+async fn check_json(
+    state: State<CoreSettingsWrites>,
+    peer: ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    negotiate_literal_json_alias(request.headers())?;
+    check(state, peer, request).await
 }
 
 #[cfg(test)]
@@ -1464,6 +1505,57 @@ mod tests {
         );
         assert!(foreign.router_with_core_settings(service).is_err());
     }
+    #[tokio::test]
+    async fn settings_json_writes_share_main_mount_and_admission() {
+        use axum::{body::Body, http::header};
+        use tower::ServiceExt;
+
+        let service = local_service();
+        let app = service
+            .state
+            .auth
+            .clone()
+            .router_with_core_settings(service.clone())
+            .unwrap();
+        let cases = [
+            (Method::POST, "/api/core/settings.json"),
+            (Method::POST, "/api/core/settings/check.json"),
+            (Method::PUT, "/api/core/settings/32.json"),
+            (Method::PATCH, "/api/core/settings/30.json"),
+            (Method::DELETE, "/api/core/settings/24.json"),
+        ];
+        for (method, path) in cases {
+            for (mime, status) in [
+                ("application/json", StatusCode::UNAUTHORIZED),
+                ("text/html", StatusCode::NOT_ACCEPTABLE),
+            ] {
+                let mut request = Request::builder()
+                    .method(method.clone())
+                    .uri(path)
+                    .header(header::ACCEPT, mime)
+                    .header(header::CONTENT_TYPE, "application/json")
+                    .body(Body::from("{}"))
+                    .unwrap();
+                request
+                    .extensions_mut()
+                    .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1_234))));
+                let response = app.clone().oneshot(request).await.unwrap();
+                assert_eq!(response.status(), status, "{method} {path}: {mime}");
+                if status == StatusCode::UNAUTHORIZED {
+                    assert!(response.headers().contains_key(header::WWW_AUTHENTICATE));
+                }
+            }
+        }
+        let request = Request::builder()
+            .method(Method::HEAD)
+            .uri("/api/core/settings/30.json")
+            .body(Body::empty())
+            .unwrap();
+        let response = app.oneshot(request).await.unwrap();
+        assert_eq!(response.status(), StatusCode::NOT_FOUND);
+        assert_eq!(service.active_requests(), 0);
+    }
+
     #[tokio::test]
     async fn internal_group_read_keeps_original_quote_until_retired() {
         let service = local_service();
