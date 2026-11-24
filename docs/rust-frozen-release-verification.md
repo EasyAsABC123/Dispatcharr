@@ -725,3 +725,32 @@ workflow while the release row remains open.
 The coordinator’s multi-document binding check is an offline preparation step. Its result lists partial or missing inputs, while physical receipts establish release status. [Coordinator commands](../scripts/rust-milestone-batches/README.md)
 
 Dispatcharr’s original authors and the authors of its dependencies retain full credit. [Attribution](../ATTRIBUTION.md)
+
+### Channel Group action metadata and copied SQLite channel name replacement
+
+The canonical Channel Group cleanup and unclaim actions now expose their JSON
+`OPTIONS` metadata. Pinned Original Dispatcharr with Django 6.0.9 and DRF 3.18.3
+served 16 isolated requests across collection, claim, unclaim and cleanup. Each
+new action returned 200 for administrators, 403 for Standard and Streamer, and
+401 for anonymous. Both preserve `POST, OPTIONS` and `Vary: Accept`. The Rust
+tests compare the two exact administrator JSON bodies and exercise anonymous
+router requests. The canonical source route IDs are
+`route-73e3a2ec965d642de991` and `route-43655576925d1457c856`.
+
+The copied SQLite companion accepts a canonical name-only JSON `PUT` for the
+same bounded manual, single-stream channel shape as the existing name edit.
+Missing name returns the exact required-field response without writing. A
+successful update changes name and its modification timestamp in one transaction.
+The disposable-file tests survey stored rows and SQLite types across all 63
+captured tables and verify the updated name after close and reopen. Retained
+Original evidence covers required-name refusal and a broader scalar replacement.
+The copied SQLite name-only implementation is supported by the pinned Original
+serializer's treatment of omitted optional fields and stream links.
+
+Pinned Linux Rust checks cover the copied-data Main build, both Channel Group
+metadata tests, 19 copied SQLite create and name-edit tests, and seven profile
+alias reads. Signed packaged requests, browser and WebSocket coverage, and
+same-package restart remain in the final acceptance fixtures.
+
+The original Dispatcharr authors, Django, Django REST framework, SQLite and
+dependency contributors retain full credit and their existing licenses.

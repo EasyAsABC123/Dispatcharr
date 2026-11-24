@@ -162,7 +162,8 @@ fn router(owner: TestOwner) -> Router {
         .route(
             "/api/channels/channels/{id}/",
             axum::routing::get(readback)
-                .patch(crate::auth::sqlite_runtime::channel_name_patch::handle::<TestOwner>),
+                .patch(crate::auth::sqlite_runtime::channel_name_patch::handle::<TestOwner>)
+                .put(crate::auth::sqlite_runtime::channel_name_patch::put::<TestOwner>),
         )
         .with_state(owner)
 }

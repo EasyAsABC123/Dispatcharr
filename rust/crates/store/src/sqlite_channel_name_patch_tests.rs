@@ -277,12 +277,7 @@ async fn sqlite_channel_name_patch_exact_validation_and_unsupported_keep_file_un
             StatusCode::NOT_IMPLEMENTED
         );
     }
-    let mut put = patch(&url, json!({"name":"not ported PUT"}), Some(&admin));
-    *put.method_mut() = axum::http::Method::PUT;
-    assert_eq!(
-        router(owner.clone()).oneshot(put).await.unwrap().status(),
-        StatusCode::METHOD_NOT_ALLOWED
-    );
+    // Canonical PUT now has separate required-name and durable-omission tests.
     let missing = value(
         router(owner.clone())
             .oneshot(patch(
@@ -427,3 +422,6 @@ async fn sqlite_channel_name_patch_owned_scope_fences_precede_dml_and_unicode_na
     assert_eq!(result["effective_name"], result["name"]);
     close(path, owner).await;
 }
+
+#[path = "sqlite_channel_name_put_tests.rs"]
+mod name_put_tests;

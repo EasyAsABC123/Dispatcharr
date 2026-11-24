@@ -158,13 +158,14 @@ async fn copied_setup_writes_a_real_django_sqlite_administrator() {
 
 impl RetainedSqliteRestReads {
     #[cfg(feature = "sqlite-copied-data-runtime")]
-    pub(crate) async fn channel_name_patch(
+    pub(crate) async fn channel_name_update(
         &self,
         peer: SocketAddr,
         headers: HeaderMap,
         uri: axum::http::Uri,
         raw: String,
         body: crate::auth::sqlite_runtime::single_from_stream::Body,
+        method: crate::auth::sqlite_runtime::channel_name_patch::NameMethod,
     ) -> Result<axum::response::Response, StoreError> {
         use axum::response::IntoResponse;
         let subject = self
@@ -175,9 +176,14 @@ impl RetainedSqliteRestReads {
                 .get("accept")
                 .is_some_and(|v| !matches!(v.to_str(), Ok("application/json" | "*/*")))
         {
-            return Err(StoreError::Unsupported(
-                "Copied SQLite name PATCH query/renderer options unqualified",
-            ));
+            return Err(StoreError::Unsupported(match method {
+                crate::auth::sqlite_runtime::channel_name_patch::NameMethod::Patch => {
+                    "Copied SQLite name PATCH query/renderer options unqualified"
+                }
+                crate::auth::sqlite_runtime::channel_name_patch::NameMethod::Put => {
+                    "Copied SQLite name PUT query/renderer options unqualified"
+                }
+            }));
         }
         let base = crate::channels::base_url(&headers, &uri)?;
         let pool = self.pool.clone();
@@ -191,6 +197,7 @@ impl RetainedSqliteRestReads {
                 body,
                 &base,
                 limit,
+                method,
             )
             .await;
             settle(connection).await?;

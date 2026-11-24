@@ -153,7 +153,8 @@ impl CopiedSqliteRuntime {
             .route(
                 "/api/channels/channels/{id}/",
                 axum::routing::get(channel_detail)
-                    .patch(channel_name_patch::handle::<CopiedSqliteRuntime>),
+                    .patch(channel_name_patch::handle::<CopiedSqliteRuntime>)
+                    .put(channel_name_patch::put::<CopiedSqliteRuntime>),
             )
             .route(
                 "/api/core/notifications/",

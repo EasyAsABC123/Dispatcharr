@@ -43,6 +43,8 @@ enum GroupOptions {
     ExistingDetail,
     MissingDetail,
     Claim,
+    Unclaim,
+    Cleanup,
 }
 
 impl GroupOptions {
@@ -50,14 +52,14 @@ impl GroupOptions {
         let allow = match self {
             Self::Collection => COLLECTION_ALLOW,
             Self::ExistingDetail | Self::MissingDetail => DETAIL_ALLOW,
-            Self::Claim => CLAIM_ALLOW,
+            Self::Claim | Self::Unclaim | Self::Cleanup => CLAIM_ALLOW,
         };
         HeaderValue::from_static(allow)
     }
 
     fn entity(self, indentation: usize) -> Result<Response, StoreError> {
-        static RENDERED: [[OnceLock<Option<Bytes>>; 9]; 4] =
-            [const { [const { OnceLock::new() }; 9] }; 4];
+        static RENDERED: [[OnceLock<Option<Bytes>>; 9]; 6] =
+            [const { [const { OnceLock::new() }; 9] }; 6];
         let body = if self == Self::Collection && indentation == 0 {
             Bytes::from_static(GROUP_OPTIONS)
         } else {
@@ -77,11 +79,24 @@ impl GroupOptions {
                                 actions.insert("PUT".into(), fields);
                             }
                         }
-                        Self::Claim => {
-                            *metadata.get_mut("name")? = "Claim custom".into();
-                            *metadata.get_mut("description")? =
-                                "Mark a group as custom so provider cleanup cannot remove it."
-                                    .into();
+                        Self::Claim | Self::Unclaim | Self::Cleanup => {
+                            let (name, description) = match self {
+                                Self::Claim => (
+                                    "Claim custom",
+                                    "Mark a group as custom so provider cleanup cannot remove it.",
+                                ),
+                                Self::Unclaim => (
+                                    "Unclaim custom",
+                                    "Remove custom ownership from a group with no assigned channels.",
+                                ),
+                                Self::Cleanup => (
+                                    "Cleanup unused groups",
+                                    "Delete unused provider-only groups, optionally including custom groups.",
+                                ),
+                                _ => unreachable!(),
+                            };
+                            *metadata.get_mut("name")? = name.into();
+                            *metadata.get_mut("description")? = description.into();
                         }
                     }
                     serialize_options_json(&metadata, indentation)
@@ -164,6 +179,24 @@ async fn claim_options(
 ) -> Response {
     // DRF's POST metadata does not look up the group or execute the action.
     group_options(auth, peer, headers, uri, GroupOptions::Claim, None).await
+}
+
+async fn unclaim_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    group_options(auth, peer, headers, uri, GroupOptions::Unclaim, None).await
+}
+
+async fn cleanup_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    group_options(auth, peer, headers, uri, GroupOptions::Cleanup, None).await
 }
 
 fn group_response(body: impl IntoResponse, allow: Option<&'static str>) -> Response {
@@ -545,7 +578,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/channels/groups.json",
             catalogue_options::json_alias(list, catalogue_options::COLLECTION_ALLOW),
         )
-        .route("/api/channels/groups/cleanup/", post(cleanup))
+        .route(
+            "/api/channels/groups/cleanup/",
+            post(cleanup).options(cleanup_options),
+        )
         .route(
             "/api/channels/groups/{json_id}",
             get(retrieve_json_alias)
@@ -568,7 +604,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/channels/groups/{id}/claim-custom/",
             post(claim).options(claim_options),
         )
-        .route("/api/channels/groups/{id}/unclaim-custom/", post(unclaim))
+        .route(
+            "/api/channels/groups/{id}/unclaim-custom/",
+            post(unclaim).options(unclaim_options),
+        )
         .with_state(auth)
 }
 
@@ -601,6 +640,16 @@ mod tests {
                 1993,
                 "35069a5e5a547591f2198efa6619b8d8dc7d464c1eaa52eebabffe5bdb491135",
             ),
+            (
+                GroupOptions::Unclaim,
+                1998,
+                "1d5a5c6c35f788b84bbe3b569434d41a3296485828dbc1909a89c69c239d0bf8",
+            ),
+            (
+                GroupOptions::Cleanup,
+                2013,
+                "a113630b2a6ce35d465a0fbc2bdce277c74c3474d40c64b2fccf6b4831203a47",
+            ),
         ] {
             let response = channel_options_headers(scope.entity(0).unwrap(), scope.allow());
             assert_eq!(response.status(), StatusCode::OK);
@@ -632,6 +681,8 @@ mod tests {
             ("/api/channels/groups/", COLLECTION_ALLOW),
             ("/api/channels/groups/1/", DETAIL_ALLOW),
             ("/api/channels/groups/1/claim-custom/", CLAIM_ALLOW),
+            ("/api/channels/groups/1/unclaim-custom/", CLAIM_ALLOW),
+            ("/api/channels/groups/cleanup/", CLAIM_ALLOW),
         ] {
             let request = Request::builder()
                 .method(Method::OPTIONS)

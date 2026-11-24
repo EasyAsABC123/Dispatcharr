@@ -1,4 +1,4 @@
-//! Ordinary React string-name PATCH on the admitted manual one-stream domain.
+//! Bounded ordinary string-name PATCH and canonical required-name PUT.
 //! Original Dispatcharr, Django and DRF authors retain contract and application credit.
 use super::single_from_stream::{Body, Owner};
 use crate::{StoreError, User};
@@ -12,6 +12,12 @@ use sqlx::{Connection, Row, SqliteConnection};
 use std::{collections::HashMap, net::SocketAddr};
 use url::Url;
 
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub(crate) enum NameMethod {
+    Patch,
+    Put,
+}
+
 pub(crate) async fn handle<O: Owner>(
     State(owner): State<O>,
     Path(raw): Path<String>,
@@ -22,11 +28,25 @@ pub(crate) async fn handle<O: Owner>(
 ) -> Result<Response, StoreError> {
     owner
         .request()?
-        .channel_name_patch(peer, headers, uri, raw, body)
+        .channel_name_update(peer, headers, uri, raw, body, NameMethod::Patch)
         .await
 }
+pub(crate) async fn put<O: Owner>(
+    State(owner): State<O>,
+    Path(raw): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+    body: Body,
+) -> Result<Response, StoreError> {
+    owner
+        .request()?
+        .channel_name_update(peer, headers, uri, raw, body, NameMethod::Put)
+        .await
+}
+
 fn outside() -> StoreError {
-    StoreError::Unsupported("Copied SQLite name PATCH supports only a string name on a manual one-stream channel with an already custom group and no Guide/override work")
+    StoreError::Unsupported("Copied SQLite name update supports only a string name on a manual one-stream channel with an already custom group and no Guide/override work")
 }
 
 /// BEGIN IMMEDIATE holds object qualification, update, snapshot and commit together.
@@ -39,6 +59,7 @@ pub(crate) async fn command(
     body: Body,
     base: &Url,
     limit: usize,
+    method: NameMethod,
 ) -> Result<Vec<u8>, StoreError> {
     let body = crate::admin_writes::body_object(body)?;
     let id: i64 = raw
@@ -48,6 +69,14 @@ pub(crate) async fn command(
     let row=sqlx::query("SELECT auto_created,auto_created_by_id,channel_group_id,epg_data_id,logo_id,stream_profile_id FROM dispatcharr_channels_channel WHERE id=?").bind(id).fetch_optional(&mut *tx).await?.ok_or_else(crate::channels::missing)?;
     if body.keys().any(|k| !matches!(k.as_str(), "id" | "name")) {
         return Err(outside());
+    }
+    // DRF UpdateModelMixin uses partial=False for PUT. Optional omitted
+    // fields are still retained by ChannelSerializer.update; name is required.
+    // PATCH keeps its previously bounded missing-name refusal, not PUT's 400.
+    if method == NameMethod::Put && !body.contains_key("name") {
+        return Err(StoreError::InvalidInput(
+            json!({"name":["This field is required."]}),
+        ));
     }
     let name = body
         .get("name")
