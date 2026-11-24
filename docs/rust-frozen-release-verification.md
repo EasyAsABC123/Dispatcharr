@@ -1023,3 +1023,41 @@ read back the rename from cold Original. Five database checkpoints matched,
 and the two boots were limited to the four expected clock-bounded startup
 effects. The 16 containers, six volumes and one network retired. M11
 remains on hold. [M10 rollback rehearsal evidence](rust-m10-m11-arm64-cold-return-3d8f9672.md)
+
+### Current ARM64 HLS, VOD and copied SQLite
+
+The current ordinary ARM64 package passed a two-viewer signed HLS
+functional replay and a separate quiet resource pair on Lappy. At equal
+media and decode work, Rust used 30.4% less CPU and 75.1% less peak working
+memory. Media goodput matched. The first-byte result passed the scoped
+latency gate using the common 50 ms floor. The current VOD reconnect pair
+also passed with signed session and provider-slot readback and exact
+teardown. [Measured HLS proof](rust-m3-arm64-signed-hls-performance-3d8f9672.md)
+[Signed VOD reconnect proof](rust-m4-arm64-vod-reconnect-3d8f9672.md)
+
+The feature-scoped ARM64 SQLite package passed the signed copied-archive
+preview and restore-route omission checks. The two applications used a
+synthetic closed Original archive, retained its rows and verified AppData
+through restart. The preview ran from a distinct opt-in image with the
+three required SQLite notices. The exact build and preview resources
+retired. The scope covers the copied preview. [Copied SQLite proof](rust-m8-arm64-copied-sqlite-preview-3d8f9672.md)
+
+Lappy also passed the exact current Core settings read comparison.
+Each backend served two signed Administrator HTML GETs and two Standard
+JSON GETs. Rust also returned the corresponding JSON for two signed
+Standard HTML requests. The independent audit verified the compared page
+and data projections and exact cleanup. The React settings interaction,
+writes and the wider Core workflows remain open.
+[Core settings read proof](rust-m5-arm64-core-read-scope-3d8f9672.json)
+
+### Current AMD64 signed live resource comparison
+
+Nine Original–Rust pairs passed at one, ten and one hundred viewers.
+The median CPU reductions were 39.9%, 60.2% and 88.1%, respectively.
+The median peak working memory reductions were 50.4%, 45.1% and 47.3%.
+Native delivered at least 97.97% of Original's measured goodput across
+all pairs and passed every first-byte latency gate. Each paired window
+had at most one upstream connection with signed media playback and decode
+checks. Independent recomputation verified 1,062 measurement samples,
+all nine pair results and exact cleanup.
+[Measured live resource proof](rust-m1-amd64-signed-live-resource-3d8f9672.md)

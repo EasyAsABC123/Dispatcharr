@@ -1,0 +1,155 @@
+{
+  "auditor_engine_calls": 0,
+  "auditor_exit": 0,
+  "no_payload_transfer": true,
+  "pair": {
+    "actual_exit": 0,
+    "arm_media_expected_sha256": "f4a7cbe4e50eaf6cd1578933b8eb8701eb83b384182d6af1f488461e5586dd2f",
+    "cross_architecture_gate_failure_pair_sha256": "cbccc67177fa3fe588d8251383bf44ec78f92393a5a14a756b8a954d7f483a69",
+    "cross_architecture_media_byte_identity": false,
+    "exact_cleanup": true,
+    "image": "sha256:a76af8a46b8bcfbef0e7d7425edb7ee1fc93e5d43d1bd08af0a134e4ad8c9731",
+    "native": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+    "package_manifest_sha256": "f515da15616f3b3c03f3ac8c5f8e27c707747a0bf91f906e649823119341f406",
+    "pair_passed": true,
+    "physical": true,
+    "roles": {
+      "native": 0,
+      "original": 0
+    },
+    "source": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+  },
+  "pair_sha256": "74cac63b09bbd938bcc14a53b24750f432daac0a9ff8ea5d0f51b2cea683a285",
+  "roles": {
+    "native": {
+      "actual_exit": 0,
+      "application_started": true,
+      "business_probe_started": true,
+      "exact_cleanup": true,
+      "ledger_sha256": "4dd463ca47727a6addd2c1ab2cb98e14c958f7fe9d469c0e9882a3ace41c276d",
+      "network_id_and_name_absent": true,
+      "owned_inventories_empty": true,
+      "payload_manifest": {
+        "container_duration_seconds": 30.0,
+        "ffmpeg_version": "ffmpeg version 9.0.2-Dispatcharr Copyright (c) 2000-2026 the FFmpeg developers",
+        "independent_file_sha256": "f4a7cbe4e50eaf6cd1578933b8eb8701eb83b384182d6af1f488461e5586dd2f",
+        "streams": [
+          [
+            "audio",
+            "aac"
+          ],
+          [
+            "video",
+            "h264"
+          ]
+        ],
+        "vod": {
+          "audio": "aac",
+          "bytes": 0,
+          "bytes_per_second": 262144,
+          "duration_seconds": 30,
+          "fixture_bytes": 4299461,
+          "fixture_sha256": "f4a7cbe4e50eaf6cd1578933b8eb8701eb83b384182d6af1f488461e5586dd2f",
+          "head_requests": 0,
+          "requests": 0,
+          "video": "h264"
+        }
+      },
+      "phase": "completed",
+      "physical_observations": {
+        "media": {
+          "HTTP_status_each": 200,
+          "bytes_each": 4299461,
+          "content_type": "video/mp4",
+          "decoded_video_and_audio_each": true,
+          "reads": 2,
+          "sha256_each": "f4a7cbe4e50eaf6cd1578933b8eb8701eb83b384182d6af1f488461e5586dd2f"
+        },
+        "metadata_idle_after_first_EOF": true,
+        "ordinary_mint_HTTP_status": 301,
+        "ordinary_origin_requests": 2,
+        "payload_retained": false,
+        "provider_slot_released_after_each_read": true,
+        "request_count_sequence": [
+          1,
+          2
+        ],
+        "same_authenticated_client": true,
+        "same_metadata_creation_after_reconnect": true,
+        "same_server_issued_session": true,
+        "session_retired_after_second_EOF": true
+      },
+      "receipt_sha256": "1ed1784a2e303b8f2beef455f1704c3f8eb876cda19af821526af270424e49fe",
+      "resources_retired": {
+        "container": 7,
+        "network": 1,
+        "volume": 2
+      }
+    },
+    "original": {
+      "actual_exit": 0,
+      "application_started": true,
+      "business_probe_started": true,
+      "exact_cleanup": true,
+      "ledger_sha256": "98dd912da32c68465678b84897059106c57a4e6a803036052f16e670012cb284",
+      "network_id_and_name_absent": true,
+      "owned_inventories_empty": true,
+      "payload_manifest": {
+        "container_duration_seconds": 30.0,
+        "ffmpeg_version": "ffmpeg version 9.0.2-Dispatcharr Copyright (c) 2000-2026 the FFmpeg developers",
+        "independent_file_sha256": "f4a7cbe4e50eaf6cd1578933b8eb8701eb83b384182d6af1f488461e5586dd2f",
+        "streams": [
+          [
+            "audio",
+            "aac"
+          ],
+          [
+            "video",
+            "h264"
+          ]
+        ],
+        "vod": {
+          "audio": "aac",
+          "bytes": 0,
+          "bytes_per_second": 262144,
+          "duration_seconds": 30,
+          "fixture_bytes": 4299461,
+          "fixture_sha256": "f4a7cbe4e50eaf6cd1578933b8eb8701eb83b384182d6af1f488461e5586dd2f",
+          "head_requests": 0,
+          "requests": 0,
+          "video": "h264"
+        }
+      },
+      "phase": "completed",
+      "physical_observations": {
+        "media": {
+          "HTTP_status_each": 200,
+          "bytes_each": 4299461,
+          "content_type": "video/mp4",
+          "decoded_video_and_audio_each": true,
+          "reads": 2,
+          "sha256_each": "f4a7cbe4e50eaf6cd1578933b8eb8701eb83b384182d6af1f488461e5586dd2f"
+        },
+        "metadata_idle_after_first_EOF": true,
+        "ordinary_mint_HTTP_status": 301,
+        "ordinary_origin_requests": 2,
+        "payload_retained": false,
+        "provider_slot_released_after_each_read": true,
+        "request_count_sequence": [
+          1,
+          2
+        ],
+        "same_authenticated_client": true,
+        "same_metadata_creation_after_reconnect": true,
+        "same_server_issued_session": true,
+        "session_retired_after_second_EOF": true
+      },
+      "receipt_sha256": "39e882c5873f3e0312d4fee8fec62149cd9b6876e724eb401c00497bc4955ead",
+      "resources_retired": {
+        "container": 7,
+        "network": 1,
+        "volume": 2
+      }
+    }
+  }
+}
