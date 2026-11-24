@@ -29,9 +29,11 @@ pub fn port(
         engine,
         dvr,
         series,
+        offset_effects: Arc::new(tokio::sync::Mutex::new(())),
     })
 }
 struct Bridge {
+    offset_effects: Arc<tokio::sync::Mutex<()>>,
     store: Store,
     cache: String,
     publisher: NormalRecordingPublisher,
@@ -65,10 +67,16 @@ impl RecordingJobs for Bridge {
     fn supports_task_session(&self) -> bool {
         true
     }
-    fn schedule_from_task_on<'a>(
+
+    fn lock_offset_effects(
+        &self,
+    ) -> BoxFuture<'_, Result<tokio::sync::OwnedMutexGuard<()>, Effect>> {
+        Box::pin(async { Ok(self.offset_effects.clone().lock_owned().await) })
+    }
+    fn schedule_offset_save_on<'a>(
         &'a self,
         recording: i64,
-        parent: dispatcharr_store::recording_http::RecordingChannelId,
+        parent: Option<dispatcharr_store::recording_http::RecordingChannelId>,
         revoked_before_date_save: bool,
         connection: &'a mut dispatcharr_store::recording_http::RecordingTaskConnection,
         owner: Arc<dyn Send + Sync>,
@@ -77,7 +85,7 @@ impl RecordingJobs for Bridge {
             self.admit_scheduling(owner.clone()).await?;
             let published = self
                 .publisher
-                .schedule_booking_child_on(
+                .schedule_booking_save_on(
                     recording,
                     parent,
                     revoked_before_date_save,

@@ -1,14 +1,14 @@
-//! Booking save signals on the task's existing physical SQL session.
+//! Offset save signals on the rescheduler's existing physical SQL session.
 //! Original Dispatcharr/Django/Celery authors retain all application credit.
 use super::*;
 use sqlx::PgConnection;
 impl NormalRecordingPublisher {
-    /// Called only inside an actual supervised task owning this connection.
+    /// Called only by the supervised offset worker or admitted HTTP fallback.
     /// No pool checkout or detached borrowed future can deadlock its HOLD cursor.
-    pub async fn schedule_booking_child_on(
+    pub async fn schedule_booking_save_on(
         &self,
         recording: i64,
-        parent: Uuid,
+        parent: Option<Uuid>,
         revoked_before_date_save: bool,
         connection: &mut PgConnection,
         caller: Arc<dyn Send + Sync>,
@@ -59,7 +59,7 @@ impl NormalRecordingPublisher {
             let key = format!("dvr-now-{recording}-{}", Uuid::new_v4().simple());
             let bytes = booking_lineage(
                 immediate_frame(&row, &key, reply_oid(&self.inner)?)?,
-                Some(parent),
+                parent,
             )?;
             let message = crate::normal_named_recording::parse_head(&bytes)
                 .map_err(|_| Error::Unsupported("immediate booking envelope"))?;
@@ -96,10 +96,8 @@ impl NormalRecordingPublisher {
                 .ok_or(Error::Unsupported(
                     "booking root artwork publisher not composed",
                 ))?;
-            let bytes = booking_lineage(
-                artwork_frame(recording, reply_oid(&self.inner)?)?,
-                Some(parent),
-            )?;
+            let bytes =
+                booking_lineage(artwork_frame(recording, reply_oid(&self.inner)?)?, parent)?;
             Some(
                 publisher
                     .publish_when_ready(&bytes, owner, &self.inner.booking_backpressure_closed)
@@ -204,6 +202,23 @@ mod save_signal_tests {
             recurring_times: None,
         }
     }
+    #[test]
+    fn inline_offset_keeps_real_signal_root_and_worker_preserves_parent() {
+        let id = Uuid::new_v4();
+        let parent = Uuid::new_v4();
+        let wire = serde_json::to_vec(&json!({
+            "headers": {"id": id, "root_id": id, "parent_id": null}
+        }))
+        .unwrap();
+        assert_eq!(booking_lineage(wire.clone(), None).unwrap(), wire);
+        let child: Value =
+            serde_json::from_slice(&booking_lineage(wire, Some(parent)).unwrap()).unwrap();
+        assert_eq!(
+            child["headers"],
+            json!({"id":id, "root_id":parent, "parent_id":parent})
+        );
+    }
+
     #[test]
     fn offset_date_only_save_preserves_persisted_key_when_shifted_entirely_past() {
         let now = Utc::now();

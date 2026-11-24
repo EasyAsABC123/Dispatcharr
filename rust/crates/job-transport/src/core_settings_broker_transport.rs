@@ -1,7 +1,7 @@
 //! Actual bounded publication through Main's already connected broker transport.
 use super::*;
 use crate::decode::{Metadata, State};
-use dispatcharr_store::ProviderRehashResult;
+use dispatcharr_store::{CoreOffsetPublication, ProviderRehashResult};
 use sha2::{Digest, Sha256};
 use std::{future::Future, sync::Mutex};
 
@@ -119,7 +119,40 @@ where
     }
 }
 
+fn offset_outcome(result: Result<i64, Error>) -> Result<CoreOffsetPublication, Error> {
+    match result {
+        Ok(n) if n > 0 => Ok(CoreOffsetPublication::Acknowledged),
+        // Capacity returns before admission or before SADD/LPUSH. The
+        // reviewed explicit LPUSH rejection returns -4 with no queue effect.
+        Ok(-2 | -4) | Err(Error::Capacity) => Ok(CoreOffsetPublication::NotEnqueued),
+        Ok(_) => Err(Error::Corrupt),
+        Err(error) => Err(error),
+    }
+}
+
 impl Jobs {
+    pub(crate) async fn publish_dvr_offsets(
+        &self,
+        publication: dispatcharr_store::CoreTaskPublication,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<CoreOffsetPublication, Error> {
+        let message =
+            crate::normal_core_tasks::parse(publication.bytes()).map_err(|_| Error::Protocol)?;
+        if !matches!(message.kind, crate::normal_core_tasks::Kind::Offsets) {
+            return Err(Error::Protocol);
+        }
+        offset_outcome(
+            self.publish_core_frame(
+                publication,
+                owner,
+                message.id,
+                PUBLISH_PROVIDER_REHASH,
+                false,
+            )
+            .await,
+        )
+    }
+
     pub(crate) async fn publish_core_settings(
         &self,
         publication: dispatcharr_store::CoreTaskPublication,
@@ -238,6 +271,31 @@ impl Jobs {
 mod tests {
     use super::*;
     use std::future::ready;
+
+    #[test]
+    fn dvr_offset_fallback_requires_proven_non_enqueue() {
+        let id = Uuid::new_v4();
+        for result in [Ok(-4), Ok(-2), Err(Error::Capacity)] {
+            assert_eq!(
+                offset_outcome(result),
+                Ok(CoreOffsetPublication::NotEnqueued)
+            );
+        }
+        assert_eq!(
+            offset_outcome(Ok(1)),
+            Ok(CoreOffsetPublication::Acknowledged)
+        );
+        for error in [
+            Error::AmbiguousPublication(id),
+            Error::Closed,
+            Error::Protocol,
+            Error::Corrupt,
+            Error::Backend,
+        ] {
+            assert_eq!(offset_outcome(Err(error)), Err(error));
+        }
+        assert_eq!(offset_outcome(Ok(-3)), Err(Error::Corrupt));
+    }
 
     fn metadata(task_id: Uuid, state: State) -> Metadata {
         Metadata {

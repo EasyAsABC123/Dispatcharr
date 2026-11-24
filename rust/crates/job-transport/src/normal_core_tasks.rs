@@ -634,7 +634,7 @@ impl Worker {
                                 selected.store.clone(),
                                 selected.recordings.clone(),
                                 inner.events.clone(),
-                                message.id,
+                                Some(message.id),
                                 owner.clone(),
                             )
                             .await

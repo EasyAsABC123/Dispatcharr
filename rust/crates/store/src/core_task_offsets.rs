@@ -114,11 +114,12 @@ pub async fn execute(
     store: Store,
     jobs: Arc<dyn RecordingJobs>,
     events: Arc<dyn UpdateEventSink>,
-    task: uuid::Uuid,
+    parent: Option<uuid::Uuid>,
     owner: Arc<dyn Send + Sync>,
 ) -> Result<Report, StoreError> {
     // Reject an unsupported recording domain before settings, SQL or revocation.
     jobs.admit_scheduling(owner.clone()).await.map_err(effect)?;
+    let _offset_effects = jobs.lock_offset_effects().await.map_err(effect)?;
     let now = Utc::now();
     let settings = match jobs.dvr_settings(owner.clone()).await {
         Ok(v) => v,
@@ -156,7 +157,20 @@ pub async fn execute(
                 }
                 let update=sqlx::query("UPDATE dispatcharr_channels_recording SET start_time=$2,end_time=$3 WHERE id=$1::bigint").bind(id).bind(start).bind(end).execute(&mut*connection).await;
                 match update{Ok(v)if v.rows_affected()==1=>{},Ok(_)=>continue,Err(error)if error.as_database_error().is_some()=>continue,Err(error)=>return Err(error.into())}
-                match jobs.schedule_from_task_on(id,task,revoke.is_some(),&mut connection,owner.clone()).await{Ok(ids)=>{for id in ids{let bytes=serde_json::to_vec(&json!([[id,null],null])).map_err(|_|unsupported())?.len()+1;child_bytes=child_bytes.checked_add(bytes).ok_or_else(unsupported)?;if child_bytes>240000{return Err(StoreError::Unsupported("Offset descendants exceed existing backend wire budget; scalable encoding is unqualified"));}children.push(id);}},Err(RecordingEffectError::SettledFailure)=>{},Err(e)=>return Err(effect(e))}
+                match jobs.schedule_offset_save_on(id, parent, revoke.is_some(), &mut connection, owner.clone()).await {
+                    Ok(ids) if parent.is_some() => {
+                        for id in ids {
+                            let bytes = serde_json::to_vec(&json!([[id, null], null])).map_err(|_| unsupported())?.len() + 1;
+                            child_bytes = child_bytes.checked_add(bytes).ok_or_else(unsupported)?;
+                            if child_bytes > 240000 {
+                                return Err(StoreError::Unsupported("Offset descendants exceed existing backend wire budget; scalable encoding is unqualified"));
+                            }
+                            children.push(id);
+                        }
+                    }
+                    Ok(_) | Err(RecordingEffectError::SettledFailure) => {}
+                    Err(e) => return Err(effect(e)),
+                }
                 changed+=1;
             }
         }

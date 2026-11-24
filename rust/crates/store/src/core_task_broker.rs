@@ -34,6 +34,13 @@ pub enum CoreProfilePublication {
     Acknowledged,
     CapacityRefused,
 }
+/// Only a positively known non-enqueue may start the inline offset worker.
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+pub enum CoreOffsetPublication {
+    Acknowledged,
+    NotEnqueued,
+}
+
 pub trait CoreTaskBroker: Send + Sync {
     /// Acknowledgement must follow the actual existing broker command reply.
     /// No retry/replay or cache DB fallback is authorized by this port.
@@ -42,6 +49,17 @@ pub trait CoreTaskBroker: Send + Sync {
         publication: CoreTaskPublication,
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), StoreError>>;
+    fn publish_dvr_offsets(
+        &self,
+        publication: CoreTaskPublication,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<CoreOffsetPublication, StoreError>> {
+        Box::pin(async move {
+            self.publish(publication, owner).await?;
+            Ok(CoreOffsetPublication::Acknowledged)
+        })
+    }
+
     /// Inline XC may continue after a proven capacity refusal. The default
     /// cannot prove that distinction and forwards every error unchanged.
     fn publish_profiles_root(

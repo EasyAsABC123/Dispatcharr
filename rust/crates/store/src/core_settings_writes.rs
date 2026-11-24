@@ -1126,9 +1126,18 @@ async fn act(
             pending.take(); // only actual successful LPUSH hands off owned locks
         }
         if dvr {
-            // Source's synchronous reschedule fallback on publication error is
-            // a separate unqualified downstream gate. Never invent its effects.
-            crate::core_settings_special_broker::publish(&auth,&lease.scratch,"apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",json!([]),json!({})).await?;
+            let publication = crate::core_settings_special_broker::publish_dvr_offsets(
+                &auth, &lease.scratch,
+            ).await?;
+            if publication == crate::CoreOffsetPublication::NotEnqueued {
+                let jobs = auth.recording_collector_jobs()?
+                    .ok_or(StoreError::Unsupported("Recording domain admission is unbound"))?;
+                let events = auth.event_sink.clone()
+                    .ok_or(StoreError::Unsupported("DVR offset event publisher is unbound"))?;
+                // Original's inline implementation is a real worker execution
+                // inside this same admitted request, without a Celery parent.
+                crate::core_task_offsets::execute(auth.store.clone(), jobs, events, None, lease.clone()).await?;
+            }
         }
     }
     reply(

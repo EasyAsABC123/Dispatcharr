@@ -172,6 +172,23 @@ pub(crate) async fn publish(
     Ok(id)
 }
 
+pub(crate) async fn publish_dvr_offsets(
+    auth: &AuthService,
+    scratch: &Scratch,
+) -> Result<crate::CoreOffsetPublication, StoreError> {
+    let task = "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change";
+    if let Some(broker) = auth.core_task_broker.get() {
+        let (raw, id, charge) = build_frame(auth, scratch, task, json!([]), json!({}))?;
+        let publication = CoreTaskPublication::new(raw, &id)?;
+        broker
+            .publish_dvr_offsets(publication, auth.core_publication_owner(charge))
+            .await
+    } else {
+        publish(auth, scratch, task, json!([]), json!({})).await?;
+        Ok(crate::CoreOffsetPublication::Acknowledged)
+    }
+}
+
 pub(crate) async fn publish_provider_rehash(
     auth: &AuthService,
     scratch: &Scratch,

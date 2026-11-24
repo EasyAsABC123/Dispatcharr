@@ -121,6 +121,8 @@ The Version200 scheduler owner evaluates four pinned Original outcomes in an ind
 
 Saving DVR settings now uses pinned Original’s equality rules for offset values. An absent key and a null value compare equal, as do numeric-equivalent values. Equivalent saves avoid scheduling a rescan. Eighteen Core settings tests and the direct offset comparison tests passed. The paired fixture checks no-publication saves and a real change with its parent task, artwork tasks and future and shifted-past recording state.
 
+A definite broker refusal now runs the DVR offset rescheduler inline in ordinary Main, matching the Original fallback. The shared recording port serializes this branch with queued offset work before either reads the current settings. The inline run leaves parentless save-signal tasks. Ambiguous acknowledgements remain on the current error path, and the queued worker retains its parent. The outcome and lineage tests passed, and the combined app compiled. The final wave has separate live fixtures for an acknowledged refusal and for a lost reply after an actual enqueue.
+
 Category searches accept the pinned Original single- and double-quoted search terms, including mixed words, and keep the existing term cap and bound SQL. The focused parser check passed. The existing browser cohort can verify the quoted queries under its signed movie-only and series-only roles.
 
 ## VOD artwork and Xtream information

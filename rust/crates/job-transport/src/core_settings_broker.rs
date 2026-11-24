@@ -2,7 +2,9 @@
 //! Original Dispatcharr/Celery authors retain all application/protocol credit.
 use crate::transport::{Error, Jobs};
 use dispatcharr_contracts::BoxFuture;
-use dispatcharr_store::{CoreProfilePublication, CoreTaskBroker, CoreTaskPublication, StoreError};
+use dispatcharr_store::{
+    CoreOffsetPublication, CoreProfilePublication, CoreTaskBroker, CoreTaskPublication, StoreError,
+};
 use dispatcharr_store::{
     ProviderRehashAdmission, ProviderRehashBroker, ProviderRehashPublication, ProviderRehashResult,
 };
@@ -38,6 +40,23 @@ impl CoreTaskBroker for Publisher {
                     )
                 })?;
             Ok(())
+        })
+    }
+
+    fn publish_dvr_offsets(
+        &self,
+        publication: CoreTaskPublication,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<CoreOffsetPublication, StoreError>> {
+        Box::pin(async move {
+            self.jobs
+                .publish_dvr_offsets(publication, owner)
+                .await
+                .map_err(|_| {
+                    StoreError::Unsupported(
+                        "Actual DVR offset broker publication did not acknowledge",
+                    )
+                })
         })
     }
 

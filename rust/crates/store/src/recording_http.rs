@@ -81,10 +81,18 @@ pub trait RecordingJobs: Send + Sync {
     fn supports_task_session(&self) -> bool {
         false
     }
-    fn schedule_from_task_on<'a>(
+
+    /// Serialize offsets from the normal queue and the HTTP fallback on the
+    /// same recording port before either reads current settings.
+    fn lock_offset_effects(
+        &self,
+    ) -> BoxFuture<'_, Result<tokio::sync::OwnedMutexGuard<()>, RecordingEffectError>> {
+        Box::pin(async { Err(RecordingEffectError::Unsupported) })
+    }
+    fn schedule_offset_save_on<'a>(
         &'a self,
         _recording: i64,
-        _parent: Uuid,
+        _parent: Option<Uuid>,
         _revoked_before_date_save: bool,
         _connection: &'a mut RecordingTaskConnection,
         _owner: Arc<dyn Send + Sync>,

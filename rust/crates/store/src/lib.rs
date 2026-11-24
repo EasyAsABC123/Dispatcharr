@@ -534,9 +534,9 @@ pub mod channel_maintenance_http;
 
 mod core_task_broker;
 pub use core_task_broker::{
-    CoreProfilePublication, CoreTaskBroker, CoreTaskPublication, ProviderRehashAdmission,
-    ProviderRehashBroker, ProviderRehashPublication, ProviderRehashResult, SdGuideRootPublication,
-    SdGuideRootPublisher, TvgProgrammePublication, TvgProgrammePublisher,
+    CoreOffsetPublication, CoreProfilePublication, CoreTaskBroker, CoreTaskPublication,
+    ProviderRehashAdmission, ProviderRehashBroker, ProviderRehashPublication, ProviderRehashResult,
+    SdGuideRootPublication, SdGuideRootPublisher, TvgProgrammePublication, TvgProgrammePublisher,
 };
 pub mod xc_account_http;
 mod xc_account_provider;
