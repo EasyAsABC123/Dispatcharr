@@ -781,3 +781,19 @@ representations remain pending.
 
 The original Dispatcharr authors, Django, Django REST framework and
 dependency contributors retain full credit and their existing licenses.
+
+### Stream table text filters
+
+Stream name, provider name and TVG ID filters now strip surrounding Python
+whitespace, keep meaningful interior spaces and treat whitespace-only
+values as absent. The stream list and ID endpoints return ordered 400
+errors for fields containing a NUL character. Filter options drop the
+invalid fields and keep applying valid filters, matching the Original's
+direct FilterSet use.
+
+Pinned Original ran 27 whitespace and control requests and 45 NUL
+requests. List and ID validation errors occurred before fixture SQL.
+Filter options continued to perform two read-only queries, with no NUL
+sent to SQL. Four focused Rust tests cover normalization, ordered errors
+and the SQL predicates. These checks precede signed packaged and browser
+verification.

@@ -36,6 +36,27 @@ fn number(value: &str) -> Result<i64, StoreError> {
 fn flag(value: Option<&String>) -> bool {
     value.is_some_and(|value| ["1", "true", "yes", "on"].contains(&value.to_lowercase().as_str()))
 }
+const CHAR_FILTERS: [(&str, &str); 3] = [
+    ("name", "s.name"),
+    ("m3u_account_name", "a.name"),
+    ("tvg_id", "s.tvg_id"),
+];
+
+fn invalid_char_filters(
+    params: &HashMap<String, String>,
+) -> impl Iterator<Item = &'static str> + '_ {
+    CHAR_FILTERS
+        .into_iter()
+        .map(|(field, _)| field)
+        .filter(|field| params.get(*field).is_some_and(|value| value.contains('\0')))
+}
+
+fn char_filter_value(value: &str) -> Option<&str> {
+    // Django CharFilter strips Python whitespace before checking for empty.
+    let value = value.trim_matches(|c: char| c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}'));
+    (!value.is_empty()).then_some(value)
+}
+
 pub(crate) fn filters(
     query: &mut QueryBuilder<'_, Postgres>,
     params: &HashMap<String, String>,
@@ -55,12 +76,21 @@ pub(crate) fn filters(
             query.push(condition);
         }
     }
-    for (param, column) in [
-        ("name", "s.name"),
-        ("m3u_account_name", "a.name"),
-        ("tvg_id", "s.tvg_id"),
-    ] {
-        if let Some(value) = params.get(param).filter(|value| !value.is_empty()) {
+    // Normal FilterBackend validation aggregates every invalid CharField
+    // in declaration order before Django applies the valid predicates.
+    let errors: Map<String, Value> = invalid_char_filters(params)
+        .map(|field| {
+            (
+                field.to_owned(),
+                json!(["Null characters are not allowed."]),
+            )
+        })
+        .collect();
+    if !errors.is_empty() {
+        return Err(StoreError::InvalidInput(Value::Object(errors)));
+    }
+    for (param, column) in CHAR_FILTERS {
+        if let Some(value) = params.get(param).and_then(|value| char_filter_value(value)) {
             query
                 .push(" AND UPPER(")
                 .push(column)
@@ -490,6 +520,11 @@ async fn filter_options(
     params.remove("channel_group");
     params.remove("channel_group_name");
     params.remove("search");
+    // This action reads FilterSet.qs manually, so Django skips invalid fields
+    // while keeping every valid one. Preserve the original slow-path choice.
+    for field in invalid_char_filters(&params).collect::<Vec<_>>() {
+        params.remove(field);
+    }
     let mut groups = QueryBuilder::new(format!("SELECT DISTINCT g.name{FROM}"));
     if slow {
         filters(&mut groups, &params)?;
@@ -814,5 +849,93 @@ mod by_ids_tests {
                 .unwrap(),
             52
         );
+    }
+}
+
+#[cfg(test)]
+mod filter_tests {
+    use super::*;
+
+    #[test]
+    fn source_char_filters_strip_only_the_outer_python_whitespace() {
+        for (raw, expected) in [
+            ("Alpha", Some("Alpha")),
+            ("\u{a0}Alpha\t  ", Some("Alpha")),
+            ("\u{1e}Alpha\u{1f}", Some("Alpha")),
+            ("\u{2003} \t", None),
+            ("  Alpha  News ", Some("Alpha  News")),
+            ("\tOwned Source \u{2003}", Some("Owned Source")),
+            (" news.1\t ", Some("news.1")),
+            ("", None),
+        ] {
+            assert_eq!(char_filter_value(raw), expected);
+        }
+    }
+
+    #[test]
+    fn source_char_filter_errors_are_aggregated_in_declaration_order() {
+        let params = HashMap::from([
+            ("tvg_id".into(), "news.1\0".into()),
+            ("m3u_account_name".into(), " Owned\0 Source ".into()),
+            ("name".into(), "\0Alpha".into()),
+        ]);
+        let mut query = QueryBuilder::<Postgres>::new("SELECT 1 WHERE true");
+        let Err(StoreError::InvalidInput(errors)) = filters(&mut query, &params) else {
+            panic!("invalid text must fail before SQL execution");
+        };
+        assert_eq!(
+            errors.to_string(),
+            r#"{"name":["Null characters are not allowed."],"m3u_account_name":["Null characters are not allowed."],"tvg_id":["Null characters are not allowed."]}"#
+        );
+        assert_eq!(query.sql(), "SELECT 1 WHERE true");
+    }
+
+    #[test]
+    fn source_filter_options_can_ignore_invalid_fields_and_keep_the_valid_predicate() {
+        let mut params = HashMap::from([
+            ("name".into(), "Alpha\0".into()),
+            ("tvg_id".into(), " sports.2 ".into()),
+        ]);
+        let invalid: Vec<_> = invalid_char_filters(&params).collect();
+        assert_eq!(invalid, ["name"]);
+        for field in invalid {
+            params.remove(field);
+        }
+        let mut query = QueryBuilder::<Postgres>::new("SELECT 1 WHERE true");
+        filters(&mut query, &params).unwrap();
+        assert_eq!(
+            query.sql(),
+            "SELECT 1 WHERE true AND UPPER(s.tvg_id) LIKE UPPER($1)"
+        );
+    }
+
+    #[test]
+    fn source_char_filter_empty_is_absent_but_exact_group_filter_is_still_applied() {
+        let sql = |params: &[(&str, &str)]| {
+            let params = params
+                .iter()
+                .map(|(k, v)| (k.to_string(), v.to_string()))
+                .collect();
+            let mut query = QueryBuilder::<Postgres>::new("SELECT 1 WHERE true");
+            filters(&mut query, &params).unwrap();
+            query.sql().to_owned()
+        };
+        for (param, column) in [
+            ("name", "s.name"),
+            ("m3u_account_name", "a.name"),
+            ("tvg_id", "s.tvg_id"),
+        ] {
+            assert_eq!(sql(&[(param, " \u{a0}\t")]), "SELECT 1 WHERE true");
+            assert_eq!(
+                sql(&[(param, " value ")]),
+                format!("SELECT 1 WHERE true AND UPPER({column}) LIKE UPPER($1)")
+            );
+        }
+        for param in ["channel_group", "channel_group_name"] {
+            assert_eq!(
+                sql(&[(param, " Owned News Group ")]),
+                "SELECT 1 WHERE true AND g.name=ANY($1)"
+            );
+        }
     }
 }
