@@ -48,3 +48,18 @@ engine-free fixture controls passed. Final signed Compose verification
 still needs the selected release image.
 
 Original Dispatcharr and dependency authors retain full credit.
+
+### DVR offset timestamp forms
+
+Prepare an unused stock plan with the actual final build manifest, then
+pass that plan and its exact build manifest hash to
+`bind_core_offset_iso.py`. It writes a new `core-offset-iso-plan.json`
+in the same output directory. Run that plan with `prepare.py run --plan`.
+One ordinary `core-produced` context per application books three
+programme timestamps, submits one signed settings PATCH, and observes
+the parent task, replacement schedules, artwork lineage, recordings
+refresh event, and exact cleanup. Offline controls passed. Final signed
+Compose verification remains pending.
+
+Original Dispatcharr, Django, Celery, and dependency authors retain
+full credit.

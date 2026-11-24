@@ -273,7 +273,10 @@ class Workflow:
  def run(self):
   cases=[('authorization',self.authorization),('artwork',self.artwork),('grouped-m6',self.grouped_m6),('channel-maintenance',self.channel_maintenance),('normal-backup',self.normal_backup),('core-produced',self.core_produced),('overlap',self.overlap),('controls',self.controls),('nonempty-restart',self.nonempty_restart),('streams-denial',self.streams_denial)]
   if self.fixture.backend=='Native':cases.append(('held-drain',self.held_drain))
-  else:cases=[('source-slow-reader',self.source_slow_reader),('nonempty-restart',self.nonempty_restart),('normal-backup',self.normal_backup)]
+  else:
+   cases=[('source-slow-reader',self.source_slow_reader),('nonempty-restart',self.nonempty_restart),('normal-backup',self.normal_backup)]
+   if self.fixture.binding.get('core_offset_iso_pair') is True:
+    cases.append(('core-produced',self.core_produced))
   physical=[('backup-held-graceful',self.backup_physical),('backup-delete-refusal',self.backup_physical)]
   if self.fixture.backend=='Native':physical.append(('backup-held-deadline',self.backup_physical))
   cases.extend(physical)

@@ -33,6 +33,14 @@ print(json.dumps({'settings':list(CoreSettings.objects.filter(key__in=['system_s
 def run(fixture, output):
     if fixture.case != 'core-produced':
         raise ValueError('DistinctCoreContextRequired')
+    if fixture.binding.get('core_offset_iso_pair') is True:
+        path = Path(fixture.binding['core_offset_iso_case'])
+        if hashlib.sha256(path.read_bytes()).hexdigest() != fixture.binding['core_offset_iso_case_sha256']:
+            raise ValueError('ExactCoreOffsetIsoCallbackRequired')
+        spec = importlib.util.spec_from_file_location('bound_core_offset_iso_case', path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        return module.run(fixture)
     path=Path(fixture.binding['core_scale_cases'])
     if hashlib.sha256(path.read_bytes()).hexdigest()!=fixture.binding['core_scale_cases_sha256']:
         raise ValueError('ExactCoreScaleCallbackRequired')
