@@ -1,0 +1,152 @@
+{
+  "actual_owned_empty_HTTP204_deletions": 2,
+  "candidate_image_id": "sha256:3cb8dff78119b1d0a40740a9f31f5ab8814a063a509f1891be9fef93ee2d39a6",
+  "candidate_revision": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+  "delete_receipt_sha256": "88bac467e5f7c49ea06fc3bc6e3dfa1ae63cff14a98b6f3535147a92734c3c73",
+  "exact_cleanup": true,
+  "formal_M8_native_backup_workflow_accepted": false,
+  "native_original_matching_refusal_messages": 2,
+  "physical_receipt_sha256": "2ac26d3de6aebcec601f5f5c21fe25b942c603b415373fa6683165b31c58fb31",
+  "postgres_runtime": {
+    "actual_versions": {
+      "pg_dump": "pg_dump (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg26.04+2)",
+      "pg_restore": "pg_restore (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg26.04+2)",
+      "psql": "psql (PostgreSQL) 17.11 (Ubuntu 17.11-1.pgdg26.04+2)"
+    },
+    "architecture": "linux/amd64",
+    "files_verified": 528,
+    "linked_libraries": {
+      "pg_dump": [
+        "ld-linux-x86-64.so.2",
+        "libc.so.6",
+        "libcom_err.so.2",
+        "libcrypto.so.3",
+        "libgssapi_krb5.so.2",
+        "libk5crypto.so.3",
+        "libkeyutils.so.1",
+        "libkrb5.so.3",
+        "libkrb5support.so.0",
+        "liblber.so.2",
+        "libldap.so.2",
+        "liblz4.so.1",
+        "libpq.so.5",
+        "libresolv.so.2",
+        "libsasl2.so.2",
+        "libssl.so.3",
+        "libxxhash.so.0",
+        "libz.so.1",
+        "libzstd.so.1"
+      ],
+      "pg_restore": [
+        "ld-linux-x86-64.so.2",
+        "libc.so.6",
+        "libcom_err.so.2",
+        "libcrypto.so.3",
+        "libgssapi_krb5.so.2",
+        "libk5crypto.so.3",
+        "libkeyutils.so.1",
+        "libkrb5.so.3",
+        "libkrb5support.so.0",
+        "liblber.so.2",
+        "libldap.so.2",
+        "liblz4.so.1",
+        "libpq.so.5",
+        "libresolv.so.2",
+        "libsasl2.so.2",
+        "libssl.so.3",
+        "libxxhash.so.0",
+        "libz.so.1",
+        "libzstd.so.1"
+      ],
+      "psql": [
+        "ld-linux-x86-64.so.2",
+        "libc.so.6",
+        "libcom_err.so.2",
+        "libcrypto.so.3",
+        "libgssapi_krb5.so.2",
+        "libk5crypto.so.3",
+        "libkeyutils.so.1",
+        "libkrb5.so.3",
+        "libkrb5support.so.0",
+        "liblber.so.2",
+        "libldap.so.2",
+        "libm.so.6",
+        "libpq.so.5",
+        "libreadline.so.8",
+        "libresolv.so.2",
+        "libsasl2.so.2",
+        "libssl.so.3",
+        "libtinfo.so.6",
+        "libz.so.1",
+        "libzstd.so.1"
+      ]
+    },
+    "manifest_sha256": "cb2e55b60d80febe0e6ef43549a634b6207006594fed35aa1f2ba3c43db6878f",
+    "owning_notices_verified": 20
+  },
+  "restore_readback": {
+    "fresh_password_HTTP": [
+      200,
+      200,
+      401
+    ],
+    "range_sha256": "1f8921ff01109efbf94c9bf0806411bc8999f25b9584de00b7f273efc1d3c710",
+    "recording_range_HTTP": [
+      206,
+      404,
+      206
+    ],
+    "same_owned_media_bytes": true,
+    "same_packaged_schema": true,
+    "same_password_hash": true,
+    "same_recording_reference": true,
+    "same_typed_actor": true,
+    "schema_rows": 1013,
+    "schema_sha256": "c553706333ee44e0d655f26dcfe64102d31d02dad342db32412692123bfa0a44"
+  },
+  "scoped_workflow_passed": true,
+  "sql_boundary": {
+    "copied_scope_row_counts": {
+      "accounts.user.owned": 1,
+      "accounts.user.peers": 4,
+      "dispatcharr_channels.channel": 13,
+      "dispatcharr_channels.channelstream": 20,
+      "dispatcharr_channels.stream": 23,
+      "owned_setting": 1
+    },
+    "immediate_restore_business_sha256": "2cefe66d494ff26088bf472ecde3b921a61ccf446525901b68bc060b2ab234a5",
+    "immediate_restore_equals_pre_backup": true,
+    "immediate_restore_typed_matrix_sha256": "93b0b126f1660a1d2c5a0ce2c8dbfc0eb7f64f9cd7930b5e520abe8b76a0c816",
+    "post_schedule_business_sha256": "f13983a00f5ec83b6bc59feaf06a3ffd9de2ff97556347b854f4d2317616c2c2",
+    "post_schedule_copied_business_unchanged": true,
+    "post_schedule_typed_matrix_sha256": "ffaaf586b4aad4b3be0cec7456a476475747191a384048321846801e74bb054e",
+    "readback_changed_columns": [
+      "accounts.user.owned.last_login"
+    ],
+    "readback_login_advanced_in_sample_window": true,
+    "ready_for_schedule_business_sha256": "f13983a00f5ec83b6bc59feaf06a3ffd9de2ff97556347b854f4d2317616c2c2",
+    "ready_for_schedule_typed_matrix_sha256": "ffaaf586b4aad4b3be0cec7456a476475747191a384048321846801e74bb054e",
+    "separate_template_sha256": "8161ccd99f69deb2eb1e9aec6ed12c644ef7512b81a277dc3fe0314ee5b092e3",
+    "separate_template_unchanged_after_readback_and_schedule": true,
+    "typed_columns_compared": 82
+  },
+  "independent_proof_sha256": "fb06ff4d5ed8334b5f12f5fc89a43c302b29b4ead06d2d7af77635895ceef791",
+  "exact_engine_empty_after_cleanup": true,
+  "literal_phase_exits": {
+    "preflight": 0,
+    "execution": 0,
+    "evaluation": 0,
+    "owner": 0
+  },
+  "default_AIO": true,
+  "worker_publications": 5,
+  "retention": {
+    "retention": 2,
+    "archives_removed": 3,
+    "archives_remaining": 2,
+    "initial_run_count": 0,
+    "durable_run_count": 1
+  },
+  "independent_template_DB_unchanged": true,
+  "performance_measured": false
+}

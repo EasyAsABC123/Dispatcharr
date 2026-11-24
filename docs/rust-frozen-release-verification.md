@@ -1168,3 +1168,23 @@ p95 was 263.75 ms for Rust and 266.42 ms for Original across four
 observations per backend. The independent reducer reproduced the
 results and verified equal work and exact cleanup.
 [Measured AMD64 VOD proof](rust-m4-amd64-vod-resource-3d8f9672.md)
+
+### Current AMD64 copied PostgreSQL backup and restore
+
+The exact ordinary Rust package passed signed backup creation, inventory,
+and byte-identical download. Two inert restores returned the exact
+Original failure messages and left the copied database unchanged. A
+real restore recovered the recorded schema, administrator credentials,
+recording reference and media. Signed readback changed only the owned
+account's last-login field. Scheduled retention then retired three of
+five archives, kept two, and recorded one durable run. The independent
+template database and the expected copied business rows stayed unchanged
+through scheduling. All owned resources retired. The proof covers this
+synthetic copied database workflow.
+[Copied PostgreSQL proof](rust-m8-amd64-postgres-workflow-3d8f9672.json)
+
+The fresh pinned Original passive metadata capture observed candidate
+methods on 166 of 592 resolver identities. The isolated probe recorded
+zero prohibited attempts, and its separate observer verified that the
+default database stayed unchanged and the exact engine scope retired.
+The capture adds Original metadata evidence without dispatching the views.
