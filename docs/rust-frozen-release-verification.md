@@ -8,6 +8,8 @@ On ARM64, one default AIO Producer and one modular Main Consumer shared an upstr
 
 The AMD64 automatic TS Connect comparison completed both 270-second fixture windows with identical useful media and callback results. Rust used 38.3% less CPU and 30.5% less peak process RSS. Media first-body p95 moved from 4,603 ms to 4,106 ms, and peak cgroup-charged memory rose from 406.9 MB to 541.8 MB. The cgroup memory gate stays open. Both arms retired their exact resources. [AMD64 automatic TS Connect performance evidence](rust-m7-amd64-automatic-ts-connect-3d8f9672.json)
 
+Pinned Original served twelve signed requests through its packaged nginx and uWSGI for the two plugin repository read routes. Admin and Standard HEAD responses matched their paired GET representation headers with empty bodies. Admin OPTIONS returned metadata, while Standard OPTIONS returned HTTP 403. The fixture confirmed unchanged SQL and independent teardown. [Original plugin method evidence](rust-m0-original-plugin-read-methods-3d8f9672.json)
+
 ## Parallel implementation
 
 | Canonical owner | Open rows | Work before the freeze |

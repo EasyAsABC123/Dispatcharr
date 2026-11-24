@@ -1,0 +1,205 @@
+{
+  "actual_phase_exits": {
+    "cleanup": 0,
+    "create": 0,
+    "probe": 0,
+    "readiness": 0,
+    "startup": 0
+  },
+  "application_revision": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+  "canonical_rows_added": 0,
+  "exact_engine_empty": true,
+  "head_options_observations": 8,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "owned_cid_and_generation_absent": true,
+  "raw_receipt_hashes": {
+    "independent-cleanup.json": "1ea39352aca6265bf4da48695e735940b1a11b33060f4c68594dfb4320abd16e",
+    "receipt.json": "fe189a110efa5067f5e48f55f868f40b2826c8176a2ffd5a2b5937cfb2a6bf0c"
+  },
+  "register_identities": [
+    {
+      "contract_id": "route-352ac21f542db133f7bd:METHOD_UNRESOLVED",
+      "coverage_state": "partial_executable_Source_contract",
+      "pattern_exact": "api/plugins/repos/available/",
+      "route_id": "route-352ac21f542db133f7bd"
+    },
+    {
+      "contract_id": "route-8ac946974be6a8f08e27:METHOD_UNRESOLVED",
+      "coverage_state": "partial_executable_Source_contract",
+      "pattern_exact": "api/plugins/repos/settings/",
+      "route_id": "route-8ac946974be6a8f08e27"
+    }
+  ],
+  "signed_http_observations": 12,
+  "sql_unchanged": true,
+  "wire": [
+    {
+      "actor": "admin",
+      "entity_bytes": 14,
+      "entity_sha256": "ca220a4fef7f7c73305ba5cdb0ecc7cc3ba6ebf98c66990085183850438b5e3c",
+      "method": "GET",
+      "selected": {
+        "Allow": "GET, HEAD, OPTIONS",
+        "Content-Length": "14",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 200,
+      "target": "available"
+    },
+    {
+      "actor": "admin",
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "method": "HEAD",
+      "selected": {
+        "Allow": "GET, HEAD, OPTIONS",
+        "Content-Length": "14",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 200,
+      "target": "available"
+    },
+    {
+      "actor": "admin",
+      "entity_bytes": 230,
+      "entity_sha256": "c351da8fba553ee6034beaa6a3a3e14a582f090991b6690c64d3104471e00a32",
+      "method": "OPTIONS",
+      "selected": {
+        "Allow": "GET, HEAD, OPTIONS",
+        "Content-Length": "230",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 200,
+      "target": "available"
+    },
+    {
+      "actor": "admin",
+      "entity_bytes": 28,
+      "entity_sha256": "204022dd911b181a83c7f45524a79752499d52ea4566ed9d59112ba1ff3beaa5",
+      "method": "GET",
+      "selected": {
+        "Allow": "GET, PUT, HEAD, OPTIONS",
+        "Content-Length": "28",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 200,
+      "target": "settings"
+    },
+    {
+      "actor": "admin",
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "method": "HEAD",
+      "selected": {
+        "Allow": "GET, PUT, HEAD, OPTIONS",
+        "Content-Length": "28",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 200,
+      "target": "settings"
+    },
+    {
+      "actor": "admin",
+      "entity_bytes": 255,
+      "entity_sha256": "890245566c5e9904d1e88ebc8cf9e1230952b988c266a292900d4fd056b3b88a",
+      "method": "OPTIONS",
+      "selected": {
+        "Allow": "GET, PUT, HEAD, OPTIONS",
+        "Content-Length": "255",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 200,
+      "target": "settings"
+    },
+    {
+      "actor": "standard",
+      "entity_bytes": 14,
+      "entity_sha256": "ca220a4fef7f7c73305ba5cdb0ecc7cc3ba6ebf98c66990085183850438b5e3c",
+      "method": "GET",
+      "selected": {
+        "Allow": "GET, HEAD, OPTIONS",
+        "Content-Length": "14",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 200,
+      "target": "available"
+    },
+    {
+      "actor": "standard",
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "method": "HEAD",
+      "selected": {
+        "Allow": "GET, HEAD, OPTIONS",
+        "Content-Length": "14",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 200,
+      "target": "available"
+    },
+    {
+      "actor": "standard",
+      "entity_bytes": 63,
+      "entity_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "method": "OPTIONS",
+      "selected": {
+        "Allow": "GET, HEAD, OPTIONS",
+        "Content-Length": "63",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 403,
+      "target": "available"
+    },
+    {
+      "actor": "standard",
+      "entity_bytes": 28,
+      "entity_sha256": "204022dd911b181a83c7f45524a79752499d52ea4566ed9d59112ba1ff3beaa5",
+      "method": "GET",
+      "selected": {
+        "Allow": "GET, PUT, HEAD, OPTIONS",
+        "Content-Length": "28",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 200,
+      "target": "settings"
+    },
+    {
+      "actor": "standard",
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "method": "HEAD",
+      "selected": {
+        "Allow": "GET, PUT, HEAD, OPTIONS",
+        "Content-Length": "28",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 200,
+      "target": "settings"
+    },
+    {
+      "actor": "standard",
+      "entity_bytes": 63,
+      "entity_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "method": "OPTIONS",
+      "selected": {
+        "Allow": "GET, PUT, HEAD, OPTIONS",
+        "Content-Length": "63",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "status": 403,
+      "target": "settings"
+    }
+  ]
+}
