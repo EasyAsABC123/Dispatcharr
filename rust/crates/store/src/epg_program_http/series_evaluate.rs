@@ -1,6 +1,7 @@
 //! Synchronous series evaluation from Dispatcharr 1241b3f7.
 //! Original Dispatcharr, Django and dependency contributors retain credit.
-use super::{is_new, mapped_epg_ids, parse_text, programme_query_error, Expression, Match};
+pub use super::is_new;
+use super::{mapped_epg_ids, parse_text, programme_query_error, Expression, Match};
 use crate::{
     channels::truthy,
     recording_http::{python_int, python_iso, settle},
@@ -339,7 +340,7 @@ impl Programme {
     }
 }
 
-fn original_air_date(props: &Value) -> String {
+pub fn original_air_date(props: &Value) -> String {
     static SHAPE: LazyLock<regex::Regex> = LazyLock::new(|| {
         regex::Regex::new(
         r"^(?:[0-9]{4}-[0-9]{2}-[0-9]{2}(?:T.+|\s+[0-9]{2}:[0-9]{2}:[0-9]{2}.*)?|[0-9]{8}|[0-9]{14}(?:\s+[+-][0-9]{4})?)$",

@@ -21,20 +21,22 @@ pub struct Programme {
     pub channel_id: i64,
     pub tvg_id: String,
     pub title: String,
-    pub subtitle: String,
+    pub subtitle: Option<String>,
+    pub original_air_date: String,
     pub start: DateTime<Utc>,
     pub end: DateTime<Utc>,
-    pub season: u32,
-    pub episode: u32,
+    pub season: Option<u32>,
+    pub episode: Option<u32>,
 }
 #[derive(Clone, Debug)]
 pub struct Existing {
+    pub subtitle: Option<String>,
     pub tvg_id: String,
     pub title: String,
     pub start: DateTime<Utc>,
     pub end: DateTime<Utc>,
-    pub season: u32,
-    pub episode: u32,
+    pub season: Option<u32>,
+    pub episode: Option<u32>,
 }
 #[derive(Clone, Debug)]
 pub struct Intent {
@@ -47,6 +49,19 @@ pub struct Intent {
 }
 fn text(v: &str, max: usize) -> bool {
     !v.is_empty() && v.len() <= max && v.is_ascii() && !v.bytes().any(|b| b.is_ascii_control())
+}
+pub fn episode_key(
+    season: Option<u32>,
+    episode: Option<u32>,
+    subtitle: Option<&str>,
+) -> Option<String> {
+    if let (Some(season), Some(episode)) = (season, episode) {
+        return (season > 0 && episode > 0).then(|| format!("s{season}e{episode}"));
+    }
+    subtitle
+        .filter(|subtitle| text(subtitle, 255))
+        .map(|subtitle| subtitle.trim().to_ascii_lowercase())
+        .filter(|identity| !identity.is_empty())
 }
 fn iso(v: DateTime<Utc>) -> String {
     // Python aware datetime.isoformat() uses +00:00, preserves nonzero micros.
@@ -61,8 +76,8 @@ fn date(v: DateTime<Utc>) -> bool {
     v.timestamp_subsec_nanos().is_multiple_of(1_000)
 }
 
-/// Exact ASCII title/tvg, positive numeric season+episode, zero offsets, one
-/// channel/source, no date/title modes, drift or identity-less historical rows.
+/// This bounded planner consumes one exact ASCII title/TVG and one pinned
+/// channel/source, with stable episode identity and zero offsets.
 /// SQL loader must refuse all other programme/property shapes BEFORE ACK.
 /// Input ordering MUST be the captured Source queryset order; never sort after
 /// comparison. Earliest airing replaces in-place, preserving insertion order.
@@ -81,7 +96,7 @@ pub fn series(
     if !text(title, 255) || !text(tvg, 255) || channel_id <= 0 || source_id <= 0 {
         return Err(Refusal::Shape);
     }
-    let mut unique: Vec<&Programme> = Vec::new();
+    let mut unique: Vec<(String, &Programme)> = Vec::new();
     for p in programmes {
         if p.id <= 0
             || p.source_id != source_id
@@ -89,9 +104,9 @@ pub fn series(
             || !p.title.eq_ignore_ascii_case(title)
             || p.tvg_id != tvg
             || !text(&p.title, 255)
-            || !text(&p.subtitle, 255)
-            || p.season == 0
-            || p.episode == 0
+            || p.subtitle
+                .as_deref()
+                .is_some_and(|subtitle| !text(subtitle, 255))
         {
             return Err(Refusal::Shape);
         }
@@ -103,15 +118,14 @@ pub fn series(
         {
             return Err(Refusal::Date);
         }
-        if let Some(slot) = unique
-            .iter_mut()
-            .find(|x| x.season == p.season && x.episode == p.episode)
-        {
+        let identity =
+            episode_key(p.season, p.episode, p.subtitle.as_deref()).ok_or(Refusal::Shape)?;
+        if let Some((_, slot)) = unique.iter_mut().find(|(key, _)| *key == identity) {
             if p.start < slot.start {
                 *slot = p;
             }
         } else {
-            unique.push(p);
+            unique.push((identity, p));
         }
     }
     let mut exact = HashSet::new();
@@ -119,8 +133,6 @@ pub fn series(
     for p in existing {
         if !text(&p.tvg_id, 255)
             || !text(&p.title, 255)
-            || p.season == 0
-            || p.episode == 0
             || !date(p.start)
             || !date(p.end)
             || p.end <= p.start
@@ -136,18 +148,16 @@ pub fn series(
         episodes.insert((
             p.tvg_id.clone(),
             p.title.trim().to_ascii_lowercase(),
-            p.season,
-            p.episode,
+            episode_key(p.season, p.episode, p.subtitle.as_deref()).ok_or(Refusal::Identity)?,
         ));
     }
     let mut output = Vec::new();
-    for p in unique {
+    for (identity, p) in unique {
         if exact.contains(&(p.tvg_id.clone(), p.start, p.end))
             || episodes.contains(&(
                 p.tvg_id.clone(),
                 p.title.trim().to_ascii_lowercase(),
-                p.season,
-                p.episode,
+                identity.clone(),
             ))
         {
             continue;
@@ -156,11 +166,10 @@ pub fn series(
         episodes.insert((
             p.tvg_id.clone(),
             p.title.trim().to_ascii_lowercase(),
-            p.season,
-            p.episode,
+            identity,
         ));
         output.push(Intent { channel_id, start:p.start, end:p.end, artwork_publications:2,
-            properties:json!({"program":{"id":p.id,"tvg_id":p.tvg_id,"title":p.title,"sub_title":p.subtitle,"description":null,"original_air_date":"","start_time":iso(p.start),"end_time":iso(p.end),"season":p.season,"episode":p.episode,"onscreen_episode":null,"epg_source_id":source_id}}) });
+            properties:json!({"program":{"id":p.id,"tvg_id":p.tvg_id,"title":p.title,"sub_title":p.subtitle,"description":null,"original_air_date":p.original_air_date,"start_time":iso(p.start),"end_time":iso(p.end),"season":p.season,"episode":p.episode,"onscreen_episode":null,"epg_source_id":source_id}}) });
     }
     Ok(output)
 }
@@ -235,11 +244,12 @@ mod tests {
             channel_id: 2,
             tvg_id: "rust.owned.configured".into(),
             title: "Owned Exact Series".into(),
-            subtitle: format!("Owned Episode {episode}"),
+            subtitle: Some(format!("Owned Episode {episode}")),
+            original_air_date: String::new(),
             start: now() + Duration::hours(hours),
             end: now() + Duration::hours(hours + 1),
-            season: 1,
-            episode,
+            season: Some(1),
+            episode: Some(episode),
         }
     }
     fn plan(programmes: &[Programme], existing: &[Existing]) -> Result<Vec<Intent>, Refusal> {
@@ -273,15 +283,16 @@ mod tests {
             title: original.title,
             start: original.start,
             end: original.end,
-            season: 1,
-            episode: 1,
+            season: Some(1),
+            episode: Some(1),
+            subtitle: None,
         };
         assert!(plan(&[shifted], &[existing]).unwrap().is_empty());
     }
     #[test]
     fn missing_identity_refuses_instead_of_suppressing_unrelated_airings() {
         let mut programme = p(1, 1, 24);
-        programme.season = 0;
+        programme.season = Some(0);
         assert_eq!(plan(&[programme], &[]).unwrap_err(), Refusal::Shape);
     }
     #[test]
@@ -344,11 +355,12 @@ mod source_normal_cases {
                         channel_id: rules["channel_id"].as_i64().unwrap(),
                         tvg_id: p["tvg_id"].as_str().unwrap().into(),
                         title: p["title"].as_str().unwrap().into(),
-                        subtitle: p["sub_title"].as_str().unwrap().into(),
+                        subtitle: p["sub_title"].as_str().map(str::to_owned),
+                        original_air_date: String::new(),
                         start: time(&p["start_time"]),
                         end: time(&p["end_time"]),
-                        season: p["custom_properties"]["season"].as_u64().unwrap() as u32,
-                        episode: p["custom_properties"]["episode"].as_u64().unwrap() as u32,
+                        season: p["custom_properties"]["season"].as_u64().map(|n| n as u32),
+                        episode: p["custom_properties"]["episode"].as_u64().map(|n| n as u32),
                     })
                     .collect();
                 let existing: Vec<Existing> = c["source_recordings_before"]
@@ -363,8 +375,9 @@ mod source_normal_cases {
                             title: p["title"].as_str().unwrap().into(),
                             start: time(&p["start_time"]),
                             end: time(&p["end_time"]),
-                            season: p["season"].as_u64().unwrap() as u32,
-                            episode: p["episode"].as_u64().unwrap() as u32,
+                            subtitle: p["sub_title"].as_str().map(str::to_owned),
+                            season: p["season"].as_u64().map(|n| n as u32),
+                            episode: p["episode"].as_u64().map(|n| n as u32),
                         }
                     })
                     .collect();

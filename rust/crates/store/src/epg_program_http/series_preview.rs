@@ -322,7 +322,7 @@ fn programme_query_error(error: sqlx::Error) -> StoreError {
     }
 }
 
-fn is_new(props: &Value, untagged: bool) -> bool {
+pub fn is_new(props: &Value, untagged: bool) -> bool {
     truthy(props.get("new")) || (untagged && !truthy(props.get("previously_shown")))
 }
 

@@ -5,7 +5,10 @@ use crate::configured_recordings::{self as decisions, Existing, Intent, Programm
 use crate::recording_artwork::DirectTask;
 use chrono::{DateTime, Utc};
 use dispatcharr_contracts::{BoxFuture, UpdateEventError, UpdateEventSink};
-use dispatcharr_store::recording_schedule::{self, FutureRecording, SeriesScope};
+use dispatcharr_store::{
+    recording_schedule::{self, FutureRecording, ProgrammeRow, SeriesScope},
+    series_evaluate::{is_new, original_air_date},
+};
 use serde_json::{json, Value};
 use sqlx::PgPool;
 use std::sync::Arc;
@@ -199,9 +202,9 @@ fn number(v: &Value) -> Result<u32, Error> {
         .ok_or(Error::Unsupported)
 }
 /// The signed editor persists description fields even for title-only exact
-/// rules. Keep the first configured decision domain while admitting that
-/// ordinary shape and Original's defaults for saved rules.
-fn normalize_normal_series_rule(rule: &mut Value) -> Result<(), Error> {
+/// rules. Normal Main carries new-only selection separately from the
+/// existing preclaim shape. Legacy configured callers stay exact/all.
+fn normalize_normal_series_rule(rule: &mut Value) -> Result<Option<bool>, Error> {
     let rule = rule.as_object_mut().ok_or(Error::Unsupported)?;
     let strip = |value: &str| {
         value
@@ -222,21 +225,100 @@ fn normalize_normal_series_rule(rule: &mut Value) -> Result<(), Error> {
                     .any(|mode| value.eq_ignore_ascii_case(mode)) => {}
         _ => return Err(Error::Unsupported),
     }
-    for (key, supported) in [("mode", "all"), ("title_mode", "exact")] {
-        match rule.get(key) {
-            None | Some(Value::Null) => {}
-            Some(Value::String(value))
-                if value.is_empty() || value.eq_ignore_ascii_case(supported) => {}
-            _ => return Err(Error::Unsupported),
-        }
-        rule.insert(key.into(), json!(supported));
+    let normalize = |key, default: &str| match rule.get(key) {
+        None | Some(Value::Null) => Ok(default.to_owned()),
+        Some(Value::String(value)) if value.is_empty() => Ok(default.to_owned()),
+        Some(Value::String(value)) => Ok(value.to_ascii_lowercase()),
+        _ => Err(Error::Unsupported),
+    };
+    let mode = normalize("mode", "all")?;
+    let title_mode = normalize("title_mode", "exact")?;
+    if title_mode != "exact" || !matches!(mode.as_str(), "all" | "new") {
+        return Err(Error::Unsupported);
     }
+    let untagged = rule.remove("untagged_is_new");
+    let new_only = if mode == "new" {
+        Some(match untagged {
+            None | Some(Value::Null) => false,
+            Some(Value::Bool(enabled)) => enabled,
+            _ => return Err(Error::Unsupported),
+        })
+    } else {
+        None
+    };
+    rule.insert("mode".into(), json!(mode));
+    rule.insert("title_mode".into(), json!(title_mode));
     for key in ["title", "tvg_id"] {
         if let Some(Value::String(value)) = rule.get_mut(key) {
             *value = strip(value);
         }
     }
-    Ok(())
+    Ok(new_only)
+}
+
+fn optional_episode(value: Option<&Value>) -> Result<Option<u32>, Error> {
+    value
+        .filter(|value| !value.is_null())
+        .map(number)
+        .transpose()
+}
+
+fn programme(
+    row: ProgrammeRow,
+    channel: i64,
+    source: i64,
+    new_only: Option<bool>,
+) -> Result<Option<Programme>, Error> {
+    let properties = row.custom_properties.unwrap_or(Value::Null);
+    let original = properties.as_object();
+    let (season, episode, subtitle, air_date) = if let Some(untagged) = new_only {
+        if !(properties.is_null() || original.is_some()) || !is_new(&properties, untagged) {
+            return Ok(None);
+        }
+        if original.is_some_and(|props| {
+            props.keys().any(|key| {
+                !matches!(
+                    key.as_str(),
+                    "season" | "episode" | "new" | "previously_shown" | "previously_shown_details"
+                )
+            })
+        }) || row.description.is_some()
+        {
+            return Err(Error::Unsupported);
+        }
+        let season = optional_episode(properties.get("season"))?;
+        let episode = optional_episode(properties.get("episode"))?;
+        (
+            season,
+            episode,
+            row.sub_title,
+            original_air_date(&properties),
+        )
+    } else {
+        let props = original.ok_or(Error::Unsupported)?;
+        if props.len() != 2 || row.description.is_some() {
+            return Err(Error::Unsupported);
+        }
+        (
+            Some(number(&properties["season"])?),
+            Some(number(&properties["episode"])?),
+            Some(row.sub_title.ok_or(Error::Unsupported)?),
+            String::new(),
+        )
+    };
+    Ok(Some(Programme {
+        id: row.id,
+        source_id: source,
+        channel_id: channel,
+        tvg_id: row.tvg_id.ok_or(Error::Unsupported)?,
+        title: row.title.ok_or(Error::Unsupported)?,
+        subtitle,
+        original_air_date: air_date,
+        start: row.start_time,
+        end: row.end_time,
+        season,
+        episode,
+    }))
 }
 
 impl Service {
@@ -285,11 +367,12 @@ impl Service {
                 intents: vec![],
             });
         }
-        if let [rule] = rules.as_mut_slice() {
-            normalize_normal_series_rule(rule)?;
-        }
+        let new_only = match rules.as_mut_slice() {
+            [rule] => normalize_normal_series_rule(rule)?,
+            _ => return Err(Error::Unsupported),
+        };
         group.insert("series_rules".into(), Value::Array(rules));
-        self.prepare_series(&Value::Object(group), now, task, owner)
+        self.prepare_series_mode(&Value::Object(group), now, task, owner, new_only)
             .await
     }
     pub async fn prepare_series(
@@ -299,6 +382,19 @@ impl Service {
         task: DirectTask,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<PreparedSeries, Error> {
+        self.prepare_series_mode(group, now, task, owner, None)
+            .await
+    }
+
+    async fn prepare_series_mode(
+        &self,
+        group: &Value,
+        now: DateTime<Utc>,
+        task: DirectTask,
+        owner: Arc<dyn Send + Sync>,
+        new_only: Option<bool>,
+    ) -> Result<PreparedSeries, Error> {
+        let expected_mode = if new_only.is_some() { "new" } else { "all" };
         if group.get("pre_offset_minutes").and_then(Value::as_i64) != Some(0)
             || group.get("post_offset_minutes").and_then(Value::as_i64) != Some(0)
         {
@@ -321,7 +417,7 @@ impl Service {
         if rule.len() != keys.len()
             || rule.keys().any(|k| !keys.contains(&k.as_str()))
             || rule.get("title_mode") != Some(&json!("exact"))
-            || rule.get("mode") != Some(&json!("all"))
+            || rule.get("mode").and_then(Value::as_str) != Some(expected_mode)
         {
             return Err(Error::Unsupported);
         }
@@ -343,27 +439,9 @@ impl Service {
             .map_err(Error::Snapshot)?;
         let mut programmes = Vec::new();
         for row in snapshot.programmes {
-            let cp = row.custom_properties.ok_or(Error::Unsupported)?;
-            let cp = cp.as_object().ok_or(Error::Unsupported)?;
-            if cp.len() != 2
-                || !cp.contains_key("season")
-                || !cp.contains_key("episode")
-                || row.description.is_some()
-            {
-                return Err(Error::Unsupported);
+            if let Some(programme) = programme(row, channel, source, new_only)? {
+                programmes.push(programme);
             }
-            programmes.push(Programme {
-                id: row.id,
-                source_id: source,
-                channel_id: channel,
-                tvg_id: row.tvg_id.ok_or(Error::Unsupported)?,
-                title: row.title.ok_or(Error::Unsupported)?,
-                subtitle: row.sub_title.ok_or(Error::Unsupported)?,
-                start: row.start_time,
-                end: row.end_time,
-                season: number(&cp["season"])?,
-                episode: number(&cp["episode"])?,
-            });
         }
         let mut existing = Vec::new();
         for cp in snapshot.existing_properties {
@@ -392,8 +470,18 @@ impl Service {
                 title: small(program.get("title").ok_or(Error::Unsupported)?)?.to_owned(),
                 start: moment(program.get("start_time").ok_or(Error::Unsupported)?)?,
                 end: moment(program.get("end_time").ok_or(Error::Unsupported)?)?,
-                season: number(program.get("season").ok_or(Error::Unsupported)?)?,
-                episode: number(program.get("episode").ok_or(Error::Unsupported)?)?,
+                season: if new_only.is_some() {
+                    optional_episode(program.get("season"))?
+                } else {
+                    Some(number(program.get("season").ok_or(Error::Unsupported)?)?)
+                },
+                episode: if new_only.is_some() {
+                    optional_episode(program.get("episode"))?
+                } else {
+                    Some(number(program.get("episode").ok_or(Error::Unsupported)?)?)
+                },
+                subtitle: new_only
+                    .and_then(|_| program.get("sub_title")?.as_str().map(str::to_owned)),
             });
         }
         let intents = decisions::series(now, &title, &tvg, channel, source, &programmes, &existing)
@@ -774,7 +862,7 @@ mod normal_defaults_controls {
             json!({"description":false}),
             json!({"description_mode":"unknown"}),
             json!({"title_mode":"contains"}),
-            json!({"mode":"new"}),
+            json!({"mode":"new","untagged_is_new":"unqualified"}),
         ] {
             let mut saved = canonical.clone();
             saved
@@ -786,6 +874,107 @@ mod normal_defaults_controls {
                 Err(Error::Unsupported)
             ));
         }
+    }
+
+    fn guide_row(id: i64, hour: i64, properties: Value) -> ProgrammeRow {
+        let now: DateTime<Utc> = "2026-11-24T00:00:00+00:00".parse().unwrap();
+        ProgrammeRow {
+            id,
+            start_time: now + chrono::Duration::hours(hour),
+            end_time: now + chrono::Duration::hours(hour + 1),
+            title: Some("Test Show".into()),
+            sub_title: Some("Episode 1".into()),
+            description: None,
+            custom_properties: Some(properties),
+            tvg_id: Some("test.channel.1".into()),
+            supported: true,
+        }
+    }
+
+    #[test]
+    fn configured_series_new_mode_follows_source_flags_and_selects_before_dedup() {
+        let mut signed = json!({
+            "tvg_id":"test.channel.1", "mode":"NEW", "title":"Test Show",
+            "title_mode":"exact", "channel_id":2, "epg_source_id":1,
+            "description":"", "description_mode":"contains", "untagged_is_new":true
+        });
+        let policy = normalize_normal_series_rule(&mut signed).unwrap();
+        assert_eq!(policy, Some(true));
+        assert_eq!(signed["mode"], "new");
+
+        for (properties, default_new, opted_new) in [
+            (json!({"new":true}), true, true),
+            (json!({"season":22,"episode":13}), false, true),
+            (json!({"previously_shown":true}), false, false),
+            (json!({"new":true,"previously_shown":true}), true, true),
+            (
+                json!({"previously_shown_details":{"start":"2026-06-24"}}),
+                false,
+                true,
+            ),
+        ] {
+            for (untagged, admitted) in [(false, default_new), (true, opted_new)] {
+                assert_eq!(
+                    programme(guide_row(1, 2, properties.clone()), 2, 1, Some(untagged))
+                        .unwrap()
+                        .is_some(),
+                    admitted,
+                    "{properties} {untagged}"
+                );
+            }
+        }
+
+        let inputs = [
+            guide_row(1, 2, json!({"previously_shown":true})),
+            guide_row(
+                2,
+                3,
+                json!({"new":true,"previously_shown":true,
+                "previously_shown_details":{"start":"2026-06-24"}}),
+            ),
+            guide_row(3, 4, json!({"new":true})),
+        ];
+        let now = inputs[0].start_time - chrono::Duration::hours(2);
+        let programmes: Vec<_> = inputs
+            .into_iter()
+            .filter_map(|row| programme(row, 2, 1, Some(false)).unwrap())
+            .collect();
+        let intents =
+            decisions::series(now, "Test Show", "test.channel.1", 2, 1, &programmes, &[]).unwrap();
+        assert_eq!(intents.len(), 1);
+        let snapshot = &intents[0].properties["program"];
+        assert_eq!(snapshot["id"], 2);
+        assert_eq!(snapshot["original_air_date"], "2026-06-24");
+        assert!(snapshot["season"].is_null() && snapshot["episode"].is_null());
+        assert_eq!(intents[0].artwork_publications, 2);
+
+        let booking = Existing {
+            tvg_id: "test.channel.1".into(),
+            title: "Test Show".into(),
+            start: programmes[0].start,
+            end: programmes[0].end,
+            season: None,
+            episode: None,
+            subtitle: Some(" EPISODE 1 ".into()),
+        };
+        assert!(decisions::series(
+            now,
+            "Test Show",
+            "test.channel.1",
+            2,
+            1,
+            &programmes[1..],
+            &[booking]
+        )
+        .unwrap()
+        .is_empty());
+        assert!(
+            matches!(
+                programme(guide_row(4, 5, json!({"new":true})), 2, 1, None),
+                Err(Error::Unsupported)
+            ),
+            "legacy preclaim shape stays unchanged"
+        );
     }
 
     #[tokio::test]
