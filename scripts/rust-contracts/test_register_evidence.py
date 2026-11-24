@@ -50,7 +50,9 @@ class CapturedEvidenceRegister(unittest.TestCase):
         refs.update({'scripts/rust-contracts/executable-source-inputs.json', 'scripts/rust-contracts/executable-source-bindings.json'})
         refs.update({'scripts/rust-contracts/framework-auth/' + name for name in ['bindings.json', 'full-suite-reference.json', 'observations.json', 'original/test_accounts.py', 'original/test_login_rate_limit_inbox.py']})
         account_input = json.loads((REPO / 'scripts/rust-contracts/accounts-settings/bindings.json').read_text())
+        self.baseline = json.loads((REPO / 'docs/rust-contract-register.json').read_text())
         refs.add('docs/rust-contract-register.json')
+        refs.update(self.baseline['input_sha256'])
         from retained_model_command_observations import INPUT as model_command_input
         refs.add(model_command_input)
         refs.update(programme.INPUT_SHA256)
@@ -210,7 +212,6 @@ class CapturedEvidenceRegister(unittest.TestCase):
         self.module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(self.module)
         self.module.ROOT = self.root
-        self.baseline = json.loads((REPO / 'docs/rust-contract-register.json').read_text())
 
     def build(self, value, deep=False):
         path = self.root / 'scripts/rust-contracts/case-bindings.json'
@@ -279,7 +280,7 @@ class CapturedEvidenceRegister(unittest.TestCase):
         self.assertEqual(actual['openapi_operations'], self.baseline['openapi_operations'])
         self.assertEqual(actual['non_HTTP_candidates'], self.baseline['non_HTTP_candidates'])
         counts = actual['counts']
-        self.assertEqual((counts['runtime_routes'], counts['runtime_operation_work_items'], counts['operations_with_partial_case_bindings'], counts['mapped_packaged_case_observations'], counts['fully_verified_route_operations']), (592, 798, 17, 427, 0))
+        self.assertEqual((counts['runtime_routes'], counts['runtime_operation_work_items'], counts['operations_with_partial_case_bindings'], counts['mapped_packaged_case_observations'], counts['fully_verified_route_operations']), (592, 798, 20, 455, 0))
         self.assertEqual(len(actual['observations_for_methods_not_declared_in_discovery']), 265)
         first = lambda v: v['bindings'][2]
         dataset = lambda v: v['evidence_datasets'][0]
