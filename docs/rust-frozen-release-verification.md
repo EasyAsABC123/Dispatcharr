@@ -133,6 +133,15 @@ The EPG import route now attaches the declared POST and OPTIONS methods and the 
 
 The first positive local XMLTV import now has its own evaluator using the existing paired two-import fixture. It checks the signed response, owned file, Original worker arguments, exact typed results, expiry and realtime updates. This uses the same paired package reservation as Guide and the second import. Thirty M6 and 34 coordinator tests passed offline.
 
+## Account permission catalogue
+
+The administrator permission picker now receives Original's JSON OPTIONS
+metadata. A HEAD request applies the account and role checks before giving
+an administrator the 405 response. Pinned Django and DRF identified the
+allowed methods and response bodies. Seventeen signed and anonymous calls
+against a private PostgreSQL fixture verified the Rust route, including
+unchanged permission rows. The packaged ingress and HTML cases remain open.
+
 ## Account API-key generation
 
 The key and the returned user projection now come from the same

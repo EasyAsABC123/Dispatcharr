@@ -1,8 +1,16 @@
 //! Account API shapes and permissions mirror apps/accounts serializers and views.
-use crate::{auth::request, core_reads::JsonReadId, AuthService, Store, StoreError, User};
+use crate::{
+    auth::request,
+    channels::{
+        channel_options_headers, channel_options_indentation, options_json_response,
+        serialize_options_json,
+    },
+    core_reads::JsonReadId,
+    AuthService, Store, StoreError, User,
+};
 use axum::{
     extract::{ConnectInfo, FromRequest, FromRequestParts, Path, Request, State},
-    http::{HeaderMap, HeaderValue, Method, StatusCode},
+    http::{HeaderMap, HeaderValue, Method, StatusCode, Uri},
     middleware::{from_fn_with_state, Next},
     response::{IntoResponse, Response},
     routing::{get, post},
@@ -83,7 +91,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
                 .layer(Extension(AccountDetail::Group))
                 .fallback(crate::core_reads::omitted_json_method),
         )
-        .route("/api/accounts/permissions/", get(permissions))
+        .route(
+            "/api/accounts/permissions/",
+            get(permissions).head(permissions).options(permissions),
+        )
         .route("/api/accounts/api-keys/", get(api_key))
         .route(
             "/api/accounts/api-keys/generate/",
@@ -364,13 +375,56 @@ async fn account_detail_json_alias(
     }
 }
 
+const PERMISSIONS_ALLOW: HeaderValue = HeaderValue::from_static("GET, OPTIONS");
+
 async fn permissions(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    method: Method,
+    uri: Uri,
     headers: HeaderMap,
-) -> Result<Json<Value>, StoreError> {
-    auth.account_user(peer, headers, true).await?;
-    Ok(Json(auth.store.serialized_permissions().await?))
+) -> Response {
+    let result = async {
+        let indentation = if method == Method::OPTIONS {
+            let Ok(indentation) = channel_options_indentation(&uri, &headers) else {
+                return Ok(StatusCode::METHOD_NOT_ALLOWED.into_response());
+            };
+            indentation
+        } else {
+            0
+        };
+        auth.account_user(peer, headers, true).await?;
+        match method {
+            Method::GET => Ok(Json(auth.store.serialized_permissions().await?).into_response()),
+            Method::HEAD => Err(StoreError::StatusBody(
+                405,
+                json!({"detail": "Method \"HEAD\" not allowed."}),
+            )),
+            Method::OPTIONS => permissions_options_entity(indentation),
+            _ => Err(StoreError::NotFound),
+        }
+    }
+    .await;
+    channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        PERMISSIONS_ALLOW,
+    )
+}
+
+fn permissions_options_entity(indentation: usize) -> Result<Response, StoreError> {
+    let metadata = json!({
+        "name": "List Permissions",
+        "description": "Returns a list of all available Django permissions (admin only).",
+        "renders": ["application/json", "text/html"],
+        "parses": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"]
+    });
+    options_json_response(
+        serialize_options_json(
+            metadata.as_object().expect("permission metadata"),
+            indentation,
+        )
+        .ok_or(StoreError::UnhandledRestFault)?,
+    )
 }
 async fn api_key(
     State(auth): State<AuthService>,
