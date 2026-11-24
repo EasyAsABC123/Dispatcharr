@@ -128,6 +128,16 @@ The EPG import route now attaches the declared POST and OPTIONS methods and the 
 
 The first positive local XMLTV import now has its own evaluator using the existing paired two-import fixture. It checks the signed response, owned file, Original worker arguments, exact typed results, expiry and realtime updates. This uses the same paired package reservation as Guide and the second import. Thirty M6 and 34 coordinator tests passed offline.
 
+## Account API-key generation
+
+The key and the returned user projection now come from the same
+PostgreSQL transaction. The pinned Original component returned a
+consistent saved response during a concurrent revoke. The Rust baseline
+reproduced a mixed response when the revoke won the race. The patched
+PostgreSQL component returned a consistent response, then allowed the
+revoke to complete. Neither receipt retains generated key bytes. A
+signed package and browser comparison remains open.
+
 ## Core timezone choices
 
 The existing React timezone selector receives Original's JSON field order

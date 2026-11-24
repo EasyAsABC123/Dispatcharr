@@ -354,16 +354,16 @@ async fn change_key(
         let mut bytes = [0u8; 40];
         rand::rngs::OsRng.fill_bytes(&mut bytes);
         let key = URL_SAFE_NO_PAD.encode(bytes);
+        let mut transaction = auth.store.pool().begin().await?;
         sqlx::query("UPDATE accounts_user SET api_key=$2 WHERE id=$1")
             .bind(id)
             .bind(&key)
-            .execute(auth.store.pool())
+            .execute(&mut *transaction)
             .await?;
-        Ok((
-            StatusCode::CREATED,
-            Json(json!({"key":key,"user":auth.store.serialized_user(id).await?})),
-        )
-            .into_response())
+        // Keep the key and returned user in the same saved state until commit.
+        let saved = crate::admin_writes::transaction_user(&mut transaction, id).await?;
+        transaction.commit().await?;
+        Ok((StatusCode::CREATED, Json(json!({"key":key,"user":saved}))).into_response())
     } else {
         sqlx::query("UPDATE accounts_user SET api_key=NULL WHERE id=$1")
             .bind(id)
