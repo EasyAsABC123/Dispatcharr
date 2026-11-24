@@ -3,7 +3,8 @@ use axum::{
 };
 use bytes::Bytes;
 use dispatcharr_contracts::{
-    BoxFuture, PlaybackCandidate, PlaybackError, PlaybackRequest, PlaybackResolver, PlaybackSource,
+    BoxFuture, OrderedChannelStream, PlaybackCandidate, PlaybackError, PlaybackRequest,
+    PlaybackResolver, PlaybackSource,
 };
 use dispatcharr_stream_http::{EngineConfig, StreamEngine};
 use http_body_util::BodyExt;
@@ -2182,5 +2183,84 @@ async fn assigned_source_switch_bounds_authenticated_delayed_body() {
         r#"{"error":"Stream change request body timed out"}"#
     );
     assert_eq!(resolver.resolutions.load(Ordering::SeqCst), 0);
+    assert!(engine.status().is_empty());
+}
+
+struct NextStreamResolver {
+    order_lookups: AtomicUsize,
+}
+
+impl PlaybackResolver for NextStreamResolver {
+    fn resolve(&self, _: PlaybackRequest) -> BoxFuture<'_, Result<PlaybackSource, PlaybackError>> {
+        Box::pin(async { panic!("Next Stream cannot start a new playback session") })
+    }
+
+    fn authorize_admin(
+        &self,
+        request: PlaybackRequest,
+    ) -> BoxFuture<'_, Result<(), PlaybackError>> {
+        Box::pin(async move {
+            if request.header("authorization") == Some("Bearer admin") {
+                Ok(())
+            } else {
+                Err(PlaybackError::new(403, "Forbidden"))
+            }
+        })
+    }
+
+    fn ordered_channel_streams(
+        &self,
+        channel: &str,
+        active_profile: Option<i64>,
+    ) -> BoxFuture<'_, Result<Vec<OrderedChannelStream>, PlaybackError>> {
+        assert_eq!(channel, "owned");
+        assert_eq!(active_profile, None);
+        self.order_lookups.fetch_add(1, Ordering::SeqCst);
+        Box::pin(async {
+            Ok([8, 5]
+                .into_iter()
+                .map(|id| OrderedChannelStream {
+                    id,
+                    unlimited_direct_url: None,
+                })
+                .collect())
+        })
+    }
+}
+
+#[tokio::test]
+async fn next_stream_idle_never_starts_playback_and_checks_admin_before_order() {
+    let resolver = Arc::new(NextStreamResolver {
+        order_lookups: AtomicUsize::new(0),
+    });
+    let engine = StreamEngine::new(config()).unwrap();
+    let router = engine.controls_router(resolver.clone());
+    for (method, actor, status, lookups) in [
+        ("POST", "viewer", 403, 0),
+        ("GET", "admin", 405, 0),
+        ("POST", "admin", 404, 1),
+    ] {
+        let request = axum::http::Request::builder()
+            .method(method)
+            .uri("/proxy/ts/next_stream/owned")
+            .header("authorization", format!("Bearer {actor}"))
+            .body(Body::from_stream(futures_util::stream::pending::<
+                Result<Bytes, Infallible>,
+            >()))
+            .unwrap();
+        let response = time::timeout(Duration::from_secs(1), router.clone().oneshot(request))
+            .await
+            .expect("Original selection does not need the request body")
+            .unwrap();
+        assert_eq!(response.status(), status);
+        assert_eq!(response.headers()["allow"], "OPTIONS, POST");
+        assert_eq!(resolver.order_lookups.load(Ordering::SeqCst), lookups);
+        if status == 404 {
+            assert_eq!(
+                response.into_body().collect().await.unwrap().to_bytes(),
+                r#"{"error": "No current stream found for channel"}"#
+            );
+        }
+    }
     assert!(engine.status().is_empty());
 }

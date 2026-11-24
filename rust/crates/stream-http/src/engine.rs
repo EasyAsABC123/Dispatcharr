@@ -12,7 +12,8 @@ use axum::{body::Body, http::Response};
 use bytes::Bytes;
 use dispatcharr_clients::{ClientLease, ClientStore};
 use dispatcharr_contracts::{
-    PlaybackCandidate, PlaybackError, PlaybackSource, PlaybackViewer, UserLimitPolicy,
+    OrderedChannelStream, PlaybackCandidate, PlaybackError, PlaybackResolver, PlaybackSource,
+    PlaybackViewer, UserLimitPolicy,
 };
 use dispatcharr_coordination::{AcquireRequest, Coordinator, ProviderReservation};
 use dispatcharr_input_store::InputStore;
@@ -264,6 +265,53 @@ pub(crate) struct LocalManagerStatus {
     pub last_data_time: f64,
 }
 
+pub(crate) struct NextStreamSwitch<'a> {
+    pub previous: i64,
+    pub next: i64,
+    pub url: String,
+    pub worker: &'a str,
+}
+
+fn next_assigned_stream(
+    ordered: &[OrderedChannelStream],
+    current: i64,
+) -> Result<&OrderedChannelStream, PlaybackError> {
+    if ordered.len() <= 1 {
+        return Err(PlaybackError {
+            status: 404,
+            body: serde_json::json!({
+                "error": "No alternate streams available for this channel",
+                "current_stream_id": current,
+            }),
+        });
+    }
+    let index = ordered
+        .iter()
+        .position(|stream| stream.id == current)
+        .map_or(0, |index| (index + 1) % ordered.len());
+    Ok(&ordered[index])
+}
+
+#[cfg(test)]
+#[test]
+fn next_stream_uses_persisted_order_and_wraps_without_filtering() {
+    let ordered = [71, 94, 12].map(|id| OrderedChannelStream {
+        id,
+        unlimited_direct_url: (id != 94).then(|| "http://localhost/unused".into()),
+    });
+    let next = next_assigned_stream(&ordered, 71).unwrap();
+    assert_eq!(next.id, 94);
+    assert!(next.unlimited_direct_url.is_none());
+    assert_eq!(next_assigned_stream(&ordered, 94).unwrap().id, 12);
+    assert_eq!(next_assigned_stream(&ordered, 12).unwrap().id, 71);
+    assert_eq!(next_assigned_stream(&ordered, 203).unwrap().id, 71);
+    let Err(single) = next_assigned_stream(&ordered[..1], 71) else {
+        panic!("single assignment must not clear the current source");
+    };
+    assert_eq!(single.status, 404);
+    assert_eq!(single.body["current_stream_id"], 71);
+}
+
 impl StreamEngine {
     pub(crate) fn local_manager_status(&self, id: &str) -> Option<LocalManagerStatus> {
         let session = self.inner.sessions.lock().unwrap().get(id)?.clone();
@@ -402,26 +450,104 @@ impl StreamEngine {
         stream_id: i64,
     ) -> Result<String, PlaybackError> {
         let session = self
-            .inner
-            .sessions
-            .lock()
-            .unwrap()
-            .get(channel)
-            .cloned()
+            .local_switch_session(channel)
             .ok_or_else(|| PlaybackError::new(404, "Channel not found"))?;
-        let control = session
-            .source_switch
+        let (_, _, url) = self
+            .switch_in_local_session(&session, |_| Ok((stream_id, None)))
+            .await?;
+        Ok(url)
+    }
+
+    pub(crate) async fn next_local_source(
+        &self,
+        channel: &str,
+        resolver: &dyn PlaybackResolver,
+    ) -> Result<Option<NextStreamSwitch<'_>>, PlaybackError> {
+        let session = self.local_switch_session(channel);
+        let previous = session
             .as_ref()
-            .ok_or_else(|| PlaybackError::new(409, "Local source switch is unavailable"))?;
-        let (reply, url) = {
+            .map(|session| source_switch::source(&session.current.lock().unwrap()));
+        let ordered = resolver
+            .ordered_channel_streams(channel, previous.and_then(|(_, profile)| profile))
+            .await?;
+        let Some((session, previous)) = session.zip(previous) else {
+            if let Some(store) = &self.inner.clients {
+                let metadata = store
+                    .channel_snapshot(channel)
+                    .await
+                    .map_err(|_| PlaybackError::new(503, "Channel metadata unavailable"))?;
+                if metadata.is_some_and(|(fields, _)| {
+                    fields.get("stream_id").is_some_and(|id| !id.is_empty())
+                }) {
+                    return Err(PlaybackError::new(
+                        501,
+                        "Next Stream requires the local owner",
+                    ));
+                }
+            }
+            return Ok(None);
+        };
+        if !matches!(*session.startup.borrow(), Startup::Ready) {
+            return Err(PlaybackError::new(409, "Local source has not started"));
+        }
+        let worker = self.local_source_switch_worker().ok_or_else(|| {
+            PlaybackError::new(501, "Local source switch requires worker identity")
+        })?;
+        if !self
+            .local_switch_session(channel)
+            .is_some_and(|active| Arc::ptr_eq(&active, &session))
+        {
+            return Err(PlaybackError::new(409, "Local source owner changed"));
+        }
+        let (previous, next, url) = self
+            .switch_in_local_session(&session, |current| {
+                if current != previous {
+                    return Err(PlaybackError::new(
+                        409,
+                        "Active source changed while selecting next",
+                    ));
+                }
+                let selected = next_assigned_stream(&ordered, current.0)?;
+                let url = selected.unlimited_direct_url.as_deref().ok_or_else(|| {
+                    PlaybackError::new(
+                        501,
+                        "Next Stream requires a current direct unlimited profile",
+                    )
+                })?;
+                Ok((selected.id, Some(url)))
+            })
+            .await?;
+        Ok(Some(NextStreamSwitch {
+            previous,
+            next,
+            url,
+            worker,
+        }))
+    }
+
+    fn local_switch_session(&self, channel: &str) -> Option<Arc<Session>> {
+        self.inner.sessions.lock().unwrap().get(channel).cloned()
+    }
+
+    async fn switch_in_local_session<'a>(
+        &self,
+        session: &Session,
+        select: impl FnOnce(source_switch::Source) -> Result<(i64, Option<&'a str>), PlaybackError>,
+    ) -> Result<(i64, i64, String), PlaybackError> {
+        let (reply, previous, stream_id, url) = {
             let active = session.current.lock().unwrap();
+            let current = source_switch::source(&active);
+            let (stream_id, saved_url) = select(current)?;
+            let control = session
+                .source_switch
+                .as_ref()
+                .ok_or_else(|| PlaybackError::new(409, "Local source switch is unavailable"))?;
             if !source_switch::supported(&active) {
                 return Err(PlaybackError::new(
                     409,
                     "Active source is outside the local switch scope",
                 ));
             }
-            let current = source_switch::source(&active);
             let target = (stream_id, current.1);
             if target == current {
                 return Err(PlaybackError::new(
@@ -442,15 +568,26 @@ impl StreamEngine {
                     "Requested stream is outside the local switch scope",
                 ));
             };
+            if saved_url.is_some_and(|url| url != candidate.url) {
+                return Err(PlaybackError::new(
+                    409,
+                    "Next stream URL differs from the active configuration",
+                ));
+            }
             if candidate.url == active.url {
                 return Err(PlaybackError::new(409, "Requested URL is already active"));
             }
-            (control.submit(current, target)?, candidate.url.clone())
+            (
+                control.submit(current, target)?,
+                current.0,
+                stream_id,
+                candidate.url.clone(),
+            )
         };
         // Once a producer begins a handoff it owns the bounded transition even
         // if this waiter times out. A timeout never queues another handoff.
         match time::timeout(self.inner.config.startup_timeout, reply).await {
-            Ok(Ok(result)) => result.map(|()| url),
+            Ok(Ok(result)) => result.map(|()| (previous, stream_id, url)),
             Ok(Err(_)) => Err(PlaybackError::new(
                 502,
                 "Source attempt ended before switching",

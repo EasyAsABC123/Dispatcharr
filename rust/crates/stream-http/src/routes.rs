@@ -37,6 +37,10 @@ impl StreamEngine {
                 "/proxy/ts/change_stream/{channel_id}",
                 post(change_stream).get(change_stream),
             )
+            .route(
+                "/proxy/ts/next_stream/{channel_id}",
+                post(next_stream).get(next_stream),
+            )
             .route("/internal/proxy/ts/v1/memory", get(memory).head(admin_head))
             .route(
                 "/proxy/ts/stop_client/{channel_id}",
@@ -301,7 +305,7 @@ async fn change_stream(
         Ok(request) => request,
         Err(failure) => return error(failure),
     };
-    let mut response = if let Err(reason) = app.resolver.authorize_admin(request).await {
+    let response = if let Err(reason) = app.resolver.authorize_admin(request).await {
         error(reason)
     } else if incoming.method() != axum::http::Method::POST {
         error(PlaybackError {
@@ -316,6 +320,10 @@ async fn change_stream(
             Err(reason) => error(reason),
         }
     };
+    stream_switch_headers(response)
+}
+
+fn stream_switch_headers(mut response: Response) -> Response {
     response.headers_mut().insert(
         header::ALLOW,
         axum::http::HeaderValue::from_static("OPTIONS, POST"),
@@ -324,6 +332,72 @@ async fn change_stream(
         .headers_mut()
         .append(header::VARY, axum::http::HeaderValue::from_static("Accept"));
     response
+}
+
+async fn next_stream(
+    State(app): State<App>,
+    Path(id): Path<String>,
+    Query(query): Query<Vec<(String, String)>>,
+    headers: HeaderMap,
+    peer: Option<Extension<ConnectInfo<SocketAddr>>>,
+    method: axum::http::Method,
+) -> Response {
+    let result = async {
+        app.resolver
+            .authorize_admin(request(id.clone(), query, headers, peer)?)
+            .await?;
+        if method != axum::http::Method::POST {
+            return Err(PlaybackError {
+                status: 405,
+                body: serde_json::json!({"detail": format!("Method \"{method}\" not allowed.")}),
+            });
+        }
+        // Original ignores the React request's stream_id and uses current state.
+        Ok(
+            match app
+                .engine
+                .next_local_source(&id, app.resolver.as_ref())
+                .await?
+            {
+                Some(selected) => (
+                    StatusCode::OK,
+                    next_stream_response(
+                        &id,
+                        selected.previous,
+                        selected.next,
+                        &selected.url,
+                        selected.worker,
+                    ),
+                ),
+                None => (
+                    StatusCode::NOT_FOUND,
+                    r#"{"error": "No current stream found for channel"}"#.to_owned(),
+                ),
+            },
+        )
+    }
+    .await;
+    stream_switch_headers(match result {
+        Ok((status, body)) => {
+            (status, [(header::CONTENT_TYPE, "application/json")], body).into_response()
+        }
+        Err(reason) => error(reason),
+    })
+}
+
+fn next_stream_response(
+    channel: &str,
+    previous: i64,
+    next: i64,
+    url: &str,
+    worker: &str,
+) -> String {
+    let channel = serde_json::Value::from(channel);
+    let url = serde_json::Value::from(url);
+    let worker = serde_json::Value::from(worker);
+    format!(
+        r#"{{"message": "Stream switched to next available", "channel": {channel}, "previous_stream_id": {previous}, "new_stream_id": {next}, "new_url": {url}, "owner": true, "worker_id": {worker}}}"#
+    )
 }
 
 async fn change_assigned_stream(

@@ -313,6 +313,14 @@ pub enum PlaybackResolution {
     Redirect(Box<PlaybackRedirectPlan>),
 }
 
+/// One saved channel assignment, even when its provider cannot currently play it.
+pub struct OrderedChannelStream {
+    pub id: i64,
+    /// Present only where the selected profile is still active, default and
+    /// unlimited for this stream, and the stored URL fits the live route's limit.
+    pub unlimited_direct_url: Option<String>,
+}
+
 pub trait PlaybackResolver: Send + Sync + 'static {
     /// Existing adapters retain their ordinary streaming implementation.
     fn resolve_response(
@@ -353,6 +361,20 @@ pub trait PlaybackResolver: Send + Sync + 'static {
     }
     fn authorize_admin(&self, request: PlaybackRequest)
         -> BoxFuture<'_, Result<(), PlaybackError>>;
+    /// The current channel association order, including inputs ineligible for playback.
+    /// Call only after admin authorization.
+    fn ordered_channel_streams(
+        &self,
+        _channel: &str,
+        _active_profile: Option<i64>,
+    ) -> BoxFuture<'_, Result<Vec<OrderedChannelStream>, PlaybackError>> {
+        Box::pin(async {
+            Err(PlaybackError::new(
+                501,
+                "Channel stream order is unavailable",
+            ))
+        })
+    }
     /// Standard-user permissions precede method dispatch and capability lookup.
     /// STREAMS ACL applies to DELETE handlers, not unsupported HEAD dispatch.
     fn authorize_hls_control(

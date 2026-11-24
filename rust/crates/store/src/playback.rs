@@ -1,7 +1,8 @@
 use crate::{AuthService, Store, StoreError, User};
 use dispatcharr_contracts::{
-    BoxFuture, OutputFormat, PlaybackCandidate, PlaybackError, PlaybackRequest, PlaybackResolution,
-    PlaybackResolver, PlaybackSource, PlaybackViewer, UserLimitPolicy,
+    BoxFuture, OrderedChannelStream, OutputFormat, PlaybackCandidate, PlaybackError,
+    PlaybackRequest, PlaybackResolution, PlaybackResolver, PlaybackSource, PlaybackViewer,
+    UserLimitPolicy,
 };
 use sqlx::Row;
 use std::{collections::BTreeMap, time::Duration};
@@ -1155,6 +1156,62 @@ impl PlaybackResolver for AuthService {
                 return Err(playback_error(StoreError::PermissionDenied));
             }
             Ok(())
+        })
+    }
+
+    fn ordered_channel_streams(
+        &self,
+        channel: &str,
+        active_profile: Option<i64>,
+    ) -> BoxFuture<'_, Result<Vec<OrderedChannelStream>, PlaybackError>> {
+        let channel = uuid::Uuid::parse_str(channel).map_err(|_| StoreError::NotFound);
+        Box::pin(async move {
+            // Original orders the relationship independently of provider eligibility.
+            // The LEFT JOIN distinguishes an existing channel without assignments.
+            let rows = sqlx::query_as::<_, (Option<i64>, Option<i32>, Option<String>)>(
+                r#"SELECT cs.stream_id::bigint, cs."order",
+                       CASE WHEN p.is_active AND p.is_default AND p.max_streams=0
+                                 AND (p.search_pattern='' OR p.replace_pattern=''
+                                      OR (p.search_pattern='^(.*)$' AND p.replace_pattern='$1'))
+                                 AND strpos(s.url, chr(10))=0 AND strpos(s.url, chr(13))=0
+                                 AND a.is_active AND a.account_type<>'XC'
+                                 AND octet_length(s.url)<=65536
+                            THEN s.url END
+                   FROM dispatcharr_channels_channel c
+                   LEFT JOIN dispatcharr_channels_channelstream cs ON cs.channel_id=c.id
+                   LEFT JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id
+                   LEFT JOIN m3u_m3uaccountprofile p ON p.id=$2 AND p.m3u_account_id=s.m3u_account_id
+                   LEFT JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id
+                   WHERE c.uuid=$1
+                   ORDER BY cs."order"
+                   LIMIT $3"#,
+            )
+            .bind(channel.map_err(playback_error)?)
+            .bind(active_profile)
+            .bind((MAX_CANDIDATES + 1) as i64)
+            .fetch_all(self.store.pool())
+            .await
+            .map_err(StoreError::from)
+            .map_err(playback_error)?;
+            if rows.is_empty() {
+                return Err(playback_error(StoreError::NotFound));
+            }
+            if rows.len() > MAX_CANDIDATES {
+                return Err(playback_error(playback_capacity()));
+            }
+            // Equal positions have no stable order in the Original query.
+            if rows.windows(2).any(|pair| pair[0].1 == pair[1].1) {
+                return Err(PlaybackError::new(501, "Channel stream order is ambiguous"));
+            }
+            Ok(rows
+                .into_iter()
+                .filter_map(|(id, _, unlimited_direct_url)| {
+                    id.map(|id| OrderedChannelStream {
+                        id,
+                        unlimited_direct_url,
+                    })
+                })
+                .collect())
         })
     }
 
