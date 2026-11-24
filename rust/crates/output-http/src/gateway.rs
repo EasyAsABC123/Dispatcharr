@@ -25,6 +25,8 @@ use std::{
     time::Duration,
 };
 use tokio::sync::{watch, OwnedSemaphorePermit, Semaphore};
+
+const XC_EXPORT_PATHS: [&str; 2] = ["/get.php", "/get.php/"];
 // Additional sealed dependency + driver allocation grant in the SAME output pool.
 const PROFILE_REGEX_MEMORY: usize = 64 * 1024 * 1024;
 const NOT_FOUND:&str="\n<!doctype html>\n<html lang=\"en\">\n<head>\n  <title>Not Found</title>\n</head>\n<body>\n  <h1>Not Found</h1><p>The requested resource was not found on this server.</p>\n</body>\n</html>\n";
@@ -136,7 +138,8 @@ impl OutputGateway {
             .route("/output/m3u/", any(dispatch))
             .route("/output/m3u/{profile}", any(dispatch))
             .route("/output/m3u/{profile}/", any(dispatch))
-            .route("/get.php", any(dispatch))
+            .route(XC_EXPORT_PATHS[0], any(dispatch))
+            .route(XC_EXPORT_PATHS[1], any(dispatch))
             .with_state(self)
     }
     pub async fn shutdown(&self) -> bool {
@@ -256,7 +259,7 @@ impl OutputGateway {
         if let Err(failure) = csrf::check(&method, &headers, &body) {
             return Ok(html(StatusCode::FORBIDDEN, failure.body()));
         }
-        let xc = path == "/get.php";
+        let xc = XC_EXPORT_PATHS.contains(&path.as_str());
         let profile = path
             .strip_prefix("/output/m3u/")
             .map(|value| percent_path(value.trim_end_matches('/')))

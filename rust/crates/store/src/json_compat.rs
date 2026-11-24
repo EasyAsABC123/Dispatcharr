@@ -129,6 +129,20 @@ pub fn source_channel_number(value: f64) -> Option<String> {
     }
 }
 
+/// Decode a Django path component once without form-urlencoded plus handling.
+pub(crate) fn unquote_path(raw: &str) -> std::borrow::Cow<'_, str> {
+    if !raw.contains('%') {
+        return std::borrow::Cow::Borrowed(raw);
+    }
+    let input = format!("v={}", raw.replace('+', "%2B").replace('&', "%26"));
+    url::form_urlencoded::parse(input.as_bytes())
+        .next()
+        .map_or_else(
+            || std::borrow::Cow::Borrowed(raw),
+            |(_, value)| std::borrow::Cow::Owned(value.into_owned()),
+        )
+}
+
 fn is_float(number: &Number) -> bool {
     number
         .to_string()

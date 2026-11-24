@@ -1,6 +1,6 @@
 # Dispatcharr Rust release implementation and verification
 
-The current `2d3ffe53` package has 14 verified executions, four retained Original authorities, and 109 open rows in the 127-row release matrix. Each open row requires a concrete implementation result, a complete executable owner and evaluator, a prerequisite result, or a release decision. The matrix identifies every row and its outstanding predecessors. [Current release matrix](../scripts/rust-integration/2d3ffe53-amd64-release-matrix-with-baseline.json)
+The last reconciled package, `2d3ffe53`, has 14 verified executions, four retained Original authorities, and 109 open rows in the 127-row release matrix. Each open row requires a concrete implementation result, a complete executable owner and evaluator, a prerequisite result, or a release decision. The matrix identifies every row and its outstanding predecessors. [Current release matrix](../scripts/rust-integration/2d3ffe53-amd64-release-matrix-with-baseline.json)
 
 ## Parallel implementation
 
@@ -17,7 +17,7 @@ A lane records the affected row, the evidence for a product gap, and the exact p
 
 Grouped XC catch-up now derives the Original-compatible shared credential counter from the selected transformed login. Limited profiles use it alongside their profile counters during archive reservations, reopens and the read-only Redirect capacity check. Unlimited profiles bypass both counters. Grouped STD live playback accepts a sample with a plain query in the qualified format and preserves the same counter when the normal route selects FFmpeg or a configured input command. Ordinary grouped STD Redirect also carries this counter for both assigned stream selection and requests with a provider profile allowlist.
 
-Grouped STD credential selection now checks typed live, movie, and series paths before stored account credentials, then checks short-form URLs. Ordinary media paths can use the stored login. A profile’s qualified literal or anchored rewrite applies to both the selected media URL and the pool sample. The final paired playback fixtures still need to verify live counters and release.
+Grouped STD credential selection now checks typed live, movie, and series paths before stored account credentials, then checks short-form URLs. It decodes escaped short-form credentials once and preserves the raw typed-path spelling, matching Original’s two parsers. Ordinary media paths can use the stored login. A profile’s qualified literal or anchored rewrite applies to both the selected media URL and the pool sample. The final paired playback fixtures still need to verify live counters and release.
 
 The catch-up and STD units passed, and the signed PostgreSQL resolver and real-Redis test targets compiled. The final paired workload will exercise shared capacity and release under playback, distinct profiles with the same login, an idle cross-worker reopen, and the direct and command-based STD formats. The existing preview, redirect, and transformed credential domain limits stay in the test plan.
 
@@ -42,6 +42,8 @@ Registered public HDHomeRun data routes also accept the Original browser format 
 M3U, XMLTV, and HDHomeRun also share Origin URL formatting for trusted proxy headers. Empty optional forwarding headers fall back to the normal host or port. The existing per-request proxy trust check supplies that decision. Both output crates compiled and the shared formatter matched Original across 2,520 header combinations.
 
 M3U, named XMLTV, and HDHomeRun now share the Original channel-number formatter. It preserves the fractional digits for binary64 ties in both displayed channel numbers and generated guide IDs. Focused Store, output, and all 15 HDHomeRun tests passed, and a separate comparison matched the pinned Python formatter across 49,990 finite inputs.
+
+Xtream playlist and XMLTV requests with the single trailing slash now reach the same authenticated routes as `/get.php` and `/xmltv.php`. Both output crates compiled. The final signed fixture will compare the slash forms and their response bodies.
 
 ## SQLite backup creation and restore
 

@@ -29,6 +29,8 @@ use std::{
 };
 use tokio::sync::{watch, OwnedSemaphorePermit, Semaphore};
 
+const XC_EXPORT_PATHS: [&str; 2] = ["/xmltv.php", "/xmltv.php/"];
+
 #[derive(Clone)]
 pub struct Config {
     pub max_requests: usize,
@@ -160,7 +162,8 @@ impl Gateway {
             .route("/output/epg/", any(dispatch))
             .route("/output/epg/{profile}", any(dispatch))
             .route("/output/epg/{profile}/", any(dispatch))
-            .route("/xmltv.php", any(dispatch))
+            .route(XC_EXPORT_PATHS[0], any(dispatch))
+            .route(XC_EXPORT_PATHS[1], any(dispatch))
             .with_state(self)
     }
     fn worker(&self) -> Worker {
@@ -233,7 +236,7 @@ impl Gateway {
             .strip_prefix("/output/epg/")
             .map(|s| decode_path(s.trim_end_matches('/')))
             .filter(|s| !s.is_empty());
-        let xc = path == "/xmltv.php";
+        let xc = XC_EXPORT_PATHS.contains(&path.as_str());
         let user = if xc {
             match self
                 .inner

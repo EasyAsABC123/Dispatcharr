@@ -256,7 +256,8 @@ pub(super) async fn library_read(
         let value = match target {
             LibraryRead::Collection => recording_http::list_value(&auth, &user).await?,
             LibraryRead::Detail(id) => {
-                recording_http::detail_value(&auth, &user, &percent_decode(id)?).await?
+                recording_http::detail_value(&auth, &user, &crate::json_compat::unquote_path(id))
+                    .await?
             }
             LibraryRead::SeriesRules => {
                 recording_http::series_rules_value(&auth, owner.clone()).await?
@@ -465,7 +466,7 @@ async fn execute(
             .await
     } else if let Some(segment) = action.strip_prefix("hls/") {
         // Axum's catchall extraction is decoded by Path, URI.path itself is encoded.
-        let segment = percent_decode(segment)?;
+        let segment = crate::json_compat::unquote_path(segment);
         super::recording_playback_files::hls(
             &auth,
             id,
@@ -499,33 +500,23 @@ fn recording_lookup_miss(id: &str, action: &str, head: bool) -> Response {
     }
     // These spellings only affect the observed not-found response headers.
     // The parsed recording key for actual data lookup is unchanged.
-    if let Ok(spelling) = percent_decode(id) {
-        let digits = spelling.strip_prefix(['+', '-']).unwrap_or(&spelling);
-        if !digits.is_empty()
-            && digits
-                .chars()
-                .all(|value| value.is_ascii_digit() || ('٠'..='٩').contains(&value))
-        {
-            response.headers_mut().insert(
-                axum::http::header::ALLOW,
-                axum::http::HeaderValue::from_static("GET, HEAD, OPTIONS"),
-            );
-            response.headers_mut().insert(
-                axum::http::header::VARY,
-                axum::http::HeaderValue::from_static("Accept"),
-            );
-        }
+    let spelling = crate::json_compat::unquote_path(id);
+    let digits = spelling.strip_prefix(['+', '-']).unwrap_or(&spelling);
+    if !digits.is_empty()
+        && digits
+            .chars()
+            .all(|value| value.is_ascii_digit() || ('٠'..='٩').contains(&value))
+    {
+        response.headers_mut().insert(
+            axum::http::header::ALLOW,
+            axum::http::HeaderValue::from_static("GET, HEAD, OPTIONS"),
+        );
+        response.headers_mut().insert(
+            axum::http::header::VARY,
+            axum::http::HeaderValue::from_static("Accept"),
+        );
     }
     response
-}
-
-fn percent_decode(raw: &str) -> Result<String, StoreError> {
-    // form_urlencoded uses '+' as space; protect literal path plus signs.
-    let encoded = format!("v={}", raw.replace('+', "%2B").replace('&', "%26"));
-    url::form_urlencoded::parse(encoded.as_bytes())
-        .next()
-        .map(|(_, v)| v.into_owned())
-        .ok_or(StoreError::NotFound)
 }
 
 #[cfg(test)]

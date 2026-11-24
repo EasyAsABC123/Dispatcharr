@@ -164,7 +164,10 @@ fn std_sample_credential_pool(
         || url.as_str() != sample
         || !url.username().is_empty()
         || url.password().is_some()
-        || !url.path().bytes().all(|byte| byte == b'/' || plain(byte))
+        || !url
+            .path()
+            .bytes()
+            .all(|byte| plain(byte) || matches!(byte, b'/' | b'%' | b'+'))
         || url.query().is_some_and(|query| {
             !query
                 .bytes()
@@ -185,26 +188,44 @@ fn std_sample_credential_pool(
                 capture.get(2).unwrap().as_str(),
             )
         });
-    let pair = typed.or(saved).or_else(|| {
-        let mut segments = url.path_segments()?;
-        let user = segments.next().filter(|value| !value.is_empty())?;
-        let pass = segments.next().filter(|value| !value.is_empty())?;
-        let _stream = segments.next().filter(|value| !value.is_empty())?;
-        let reserved = [
-            "live",
-            "movie",
-            "series",
-            "timeshift",
-            "player_api.php",
-            "panel_api.php",
-            "xmltv.php",
-        ]
+    if let Some((user, pass)) = typed.or(saved) {
+        return xc_credential_pool(group, maximum, user, pass).map(Some);
+    }
+    let Some(mut segments) = url.path_segments() else {
+        return Ok(None);
+    };
+    let (Some(user), Some(pass), Some(stream), None) = (
+        segments.next().filter(|value| !value.is_empty()),
+        segments.next().filter(|value| !value.is_empty()),
+        segments.next().filter(|value| !value.is_empty()),
+        segments.next(),
+    ) else {
+        return Ok(None);
+    };
+    let user = crate::json_compat::unquote_path(user);
+    let pass = crate::json_compat::unquote_path(pass);
+    let stream = crate::json_compat::unquote_path(stream);
+    if [user.as_ref(), pass.as_ref(), stream.as_ref()]
         .iter()
-        .any(|root| user.eq_ignore_ascii_case(root));
-        (segments.next().is_none() && !reserved).then_some((user, pass))
-    });
-    pair.map(|(user, pass)| xc_credential_pool(group, maximum, user, pass))
-        .transpose()
+        .any(|value| value.chars().any(char::is_control))
+    {
+        return Err(unsupported_std_sample());
+    }
+    let reserved = [
+        "live",
+        "movie",
+        "series",
+        "timeshift",
+        "player_api.php",
+        "panel_api.php",
+        "xmltv.php",
+    ]
+    .iter()
+    .any(|root| user.eq_ignore_ascii_case(root));
+    if reserved {
+        return Ok(None);
+    }
+    xc_credential_pool(group, maximum, &user, &pass).map(Some)
 }
 
 struct StdSample {
@@ -1466,12 +1487,39 @@ mod output_tests {
     }
 
     #[test]
+    fn ordinary_std_account_sample_decodes_only_short_form_credentials() {
+        for (path, username, password) in [
+            ("/live/u%2Bname/p%20x/44.ts", "u%2Bname", "p%20x"),
+            ("/u%2Bname/p%20x/44.ts", "u+name", "p x"),
+            ("/u+name/p%20x/44.ts", "u+name", "p x"),
+            ("/name/p%F0%9F%92%A1/44.ts", "name", "p💡"),
+        ] {
+            let url = format!("http://origin.invalid{path}");
+            assert_eq!(
+                std_sample_credential_pool(7, 1, Some(&url), "", "").unwrap(),
+                Some(xc_credential_pool(7, 1, username, password).unwrap())
+            );
+        }
+        assert_eq!(
+            std_sample_credential_pool(
+                7,
+                1,
+                Some("http://origin.invalid/%6Cive/pass/44.ts"),
+                "",
+                ""
+            )
+            .unwrap(),
+            None
+        );
+    }
+
+    #[test]
     fn ordinary_std_account_sample_rejects_unqualified_path_shapes() {
         for suffix in [
             "/a/b/1.ts?key=/live/other/pair/id.ts",
             "/a/b/1.ts?key=%2Flive%2Fother%2Fpair%2Fid.ts",
             "/a/b/1.ts?key=abc#fragment",
-            "/a%20b/c/1.ts",
+            "/a%00b/c/1.ts",
         ] {
             let sample = format!("http://origin.invalid{suffix}");
             assert!(std_sample_credential_pool(7, 1, Some(&sample), "", "").is_err());
