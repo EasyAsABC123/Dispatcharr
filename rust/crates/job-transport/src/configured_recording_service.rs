@@ -198,6 +198,47 @@ fn number(v: &Value) -> Result<u32, Error> {
         .filter(|v| *v > 0)
         .ok_or(Error::Unsupported)
 }
+/// The signed editor persists description fields even for title-only exact
+/// rules. Keep the first configured decision domain while admitting that
+/// ordinary shape and Original's defaults for saved rules.
+fn normalize_normal_series_rule(rule: &mut Value) -> Result<(), Error> {
+    let rule = rule.as_object_mut().ok_or(Error::Unsupported)?;
+    let strip = |value: &str| {
+        value
+            .trim_matches(|c: char| c.is_whitespace() || ('\u{1c}'..='\u{1f}').contains(&c))
+            .to_owned()
+    };
+    match rule.remove("description") {
+        None | Some(Value::Null) => {}
+        Some(Value::String(value)) if strip(&value).is_empty() => {}
+        _ => return Err(Error::Unsupported),
+    }
+    match rule.remove("description_mode") {
+        None | Some(Value::Null) => {}
+        Some(Value::String(value))
+            if value.is_empty()
+                || ["contains", "search", "regex"]
+                    .iter()
+                    .any(|mode| value.eq_ignore_ascii_case(mode)) => {}
+        _ => return Err(Error::Unsupported),
+    }
+    for (key, supported) in [("mode", "all"), ("title_mode", "exact")] {
+        match rule.get(key) {
+            None | Some(Value::Null) => {}
+            Some(Value::String(value))
+                if value.is_empty() || value.eq_ignore_ascii_case(supported) => {}
+            _ => return Err(Error::Unsupported),
+        }
+        rule.insert(key.into(), json!(supported));
+    }
+    for key in ["title", "tvg_id"] {
+        if let Some(Value::String(value)) = rule.get_mut(key) {
+            *value = strip(value);
+        }
+    }
+    Ok(())
+}
+
 impl Service {
     /// Inert assembly only. The worker must use a matching retained policy/SQL
     /// pool and keep its global lease until all service/result work settles.
@@ -223,7 +264,7 @@ impl Service {
         owner: Arc<dyn Send + Sync>,
     ) -> Result<PreparedSeries, Error> {
         let mut group = group.as_object().cloned().ok_or(Error::Unsupported)?;
-        let rules = group
+        let mut rules = group
             .get("series_rules")
             .and_then(Value::as_array)
             .map(|rules| {
@@ -243,6 +284,9 @@ impl Service {
                 tvg: String::new(),
                 intents: vec![],
             });
+        }
+        if let [rule] = rules.as_mut_slice() {
+            normalize_normal_series_rule(rule)?;
         }
         group.insert("series_rules".into(), Value::Array(rules));
         self.prepare_series(&Value::Object(group), now, task, owner)
@@ -698,6 +742,52 @@ mod normal_defaults_controls {
             Box::pin(async { panic!("Source no-rules returns before events") })
         }
     }
+    #[test]
+    fn normal_series_admits_exact_title_only_rules_saved_by_the_signed_editor() {
+        let canonical = json!({
+            "tvg_id":"station", "mode":"all", "title":"Evening News",
+            "title_mode":"exact", "channel_id":7, "epg_source_id":13
+        });
+        for fields in [
+            json!({"description":"", "description_mode":"contains"}),
+            json!({"description":" \t", "description_mode":"REGEX", "mode":"ALL",
+                   "title_mode":"EXACT", "title":" Evening News ", "tvg_id":" station "}),
+            json!({"description":null, "description_mode":null, "mode":null, "title_mode":""}),
+        ] {
+            let mut saved = canonical.clone();
+            saved
+                .as_object_mut()
+                .unwrap()
+                .extend(fields.as_object().unwrap().clone());
+            normalize_normal_series_rule(&mut saved).unwrap();
+            assert_eq!(saved, canonical);
+        }
+
+        let mut imported = canonical.clone();
+        imported.as_object_mut().unwrap().remove("mode");
+        imported.as_object_mut().unwrap().remove("title_mode");
+        normalize_normal_series_rule(&mut imported).unwrap();
+        assert_eq!(imported, canonical);
+
+        for unsupported in [
+            json!({"description":"world news"}),
+            json!({"description":false}),
+            json!({"description_mode":"unknown"}),
+            json!({"title_mode":"contains"}),
+            json!({"mode":"new"}),
+        ] {
+            let mut saved = canonical.clone();
+            saved
+                .as_object_mut()
+                .unwrap()
+                .extend(unsupported.as_object().unwrap().clone());
+            assert!(matches!(
+                normalize_normal_series_rule(&mut saved),
+                Err(Error::Unsupported)
+            ));
+        }
+    }
+
     #[tokio::test]
     async fn normal_no_rules_uses_source_filter_before_offsets_sql_or_events() {
         let pool = sqlx::postgres::PgPoolOptions::new()
