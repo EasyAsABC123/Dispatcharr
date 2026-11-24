@@ -914,3 +914,97 @@ async fn index_driver_intake_result_foreign_head_and_shared_close_order() {
         .unwrap();
     assert_eq!(n, 1);
 }
+
+#[tokio::test]
+#[ignore = "requires an isolated owned Redis fixture for the refresh broker"]
+async fn refresh_publication_recovers_idle_broker_once() {
+    use dispatcharr_job_transport::refresh_protocol::{parse, RefreshCall, RefreshMessage};
+    use redis::aio::MultiplexedConnection;
+    use serde_json::json;
+    use std::collections::BTreeSet;
+
+    let proxy = proxy().await;
+    let raw = std::env::var("JOB_REDIS_TEST_URL").unwrap();
+    let mut endpoint = redis::Client::open(raw)
+        .unwrap()
+        .get_connection_info()
+        .clone();
+    endpoint.redis.db = 8;
+    let mut broker = redis::Client::open(endpoint)
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    async fn broker_clients(connection: &mut MultiplexedConnection) -> BTreeSet<u64> {
+        let list: String = redis::cmd("CLIENT")
+            .arg("LIST")
+            .query_async(connection)
+            .await
+            .unwrap();
+        list.lines()
+            .filter(|row| row.split_whitespace().any(|field| field == "db=8"))
+            .map(|row| {
+                row.split_whitespace()
+                    .find_map(|field| field.strip_prefix("id="))
+                    .unwrap()
+                    .parse()
+                    .unwrap()
+            })
+            .collect()
+    }
+    let baseline = broker_clients(&mut broker).await;
+    let queue: Vec<Vec<u8>> = redis::cmd("LRANGE")
+        .arg("celery")
+        .arg(0)
+        .arg(-1)
+        .query_async(&mut broker)
+        .await
+        .unwrap();
+    assert!(queue.is_empty(), "fixture broker must start empty");
+    let jobs = Jobs::connect_refresh(
+        &format!("{}/8", proxy.base),
+        &format!("{}/9", proxy.base),
+        Config::default(),
+    )
+    .await
+    .unwrap();
+    let current = broker_clients(&mut broker).await;
+    let [stale] = current.difference(&baseline).copied().collect::<Vec<_>>()[..] else {
+        panic!("identify exactly one new owned broker socket");
+    };
+    let closed: i64 = redis::cmd("CLIENT")
+        .arg("KILL")
+        .arg("ID")
+        .arg(stale)
+        .query_async(&mut broker)
+        .await
+        .unwrap();
+    assert_eq!(closed, 1);
+    let task_id = Uuid::new_v4();
+    let message = RefreshMessage {
+        task_id,
+        source_id: 3,
+        force: true,
+        retry: 0,
+        root: task_id,
+        parent: None,
+        eta: None,
+        call: RefreshCall {
+            args: vec![json!(3)],
+            kwargs: json!({"force": true}).as_object().unwrap().clone(),
+            list_args: false,
+        },
+    };
+    let receipt = jobs.publish_refresh(&message, Arc::new(())).await;
+    let queued: Vec<Vec<u8>> = redis::cmd("LRANGE")
+        .arg("celery")
+        .arg(0)
+        .arg(-1)
+        .query_async(&mut broker)
+        .await
+        .unwrap();
+    let receipt = receipt.expect("first request after owned broker idle close must publish");
+    assert_eq!((receipt.task_id, receipt.queue_length), (task_id, 1));
+    assert_eq!(queued.len(), 1);
+    assert_eq!(parse(&queued[0]).unwrap(), message);
+}
