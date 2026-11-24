@@ -159,7 +159,7 @@ def prepare(args):
  if args.workflow=='redirect-provider-framing':
   assert not args.all_native,'all-native applies only to the recording Connect workflow'
   for name,expected in {
-   'rust/crates/store/src/playback.rs':'032be5c0a36e8ad4208e9d5f8462a66fc5eceafc4cd6198fe61c19d8f52b00d1',
+   'rust/crates/store/src/playback.rs':'d28be27614f7a810a3b363ae91dbacc4545d416f6b07ead9266397a20ee75d16',
    'rust/crates/stream-http/src/redirect.rs':'577ee7b9e39c6a34ca12b9b9774a4c1497e3675aa1c054583b6974195c91f10a',
    'rust/crates/coordination/src/redirect_assignment.rs':'c11816f1c85a4006533dd776858388c5f7e2e06e6b853bcd24e7ca9aca6df023',
   }.items():assert build['source_sha256'].get(name)==expected,('ExactQualifiedRedirectProductLeaf',name)

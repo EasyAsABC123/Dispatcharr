@@ -1177,7 +1177,7 @@ impl PlaybackResolver for AuthService {
                 .map_or((None, None), |(profile, capacity)| {
                     (Some(profile), Some(i64::from(capacity)))
                 });
-            let rows = sqlx::query_as::<_, (Option<i64>, Option<i32>, Option<String>)>(
+            let rows = sqlx::query_as::<_, (Option<i64>, Option<i32>, Option<String>, bool)>(
                 r#"SELECT cs.stream_id::bigint, cs."order",
                        CASE WHEN p.is_active AND p.is_default AND p.max_streams::bigint=$3
                                  AND (p.search_pattern='' OR p.replace_pattern=''
@@ -1185,12 +1185,17 @@ impl PlaybackResolver for AuthService {
                                  AND strpos(s.url, chr(10))=0 AND strpos(s.url, chr(13))=0
                                  AND a.is_active AND a.account_type<>'XC'
                                  AND octet_length(s.url)<=65536
-                            THEN s.url END
+                            THEN s.url END,
+                       COALESCE(a.is_active AND a.account_type='STD' AND NOT EXISTS (
+                           SELECT 1 FROM m3u_m3uaccountprofile default_profile
+                           WHERE default_profile.m3u_account_id=a.id
+                             AND default_profile.is_active AND default_profile.is_default
+                       ), false) AS missing_active_default_profile
                    FROM dispatcharr_channels_channel c
                    LEFT JOIN dispatcharr_channels_channelstream cs ON cs.channel_id=c.id
                    LEFT JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id
                    LEFT JOIN m3u_m3uaccountprofile p ON p.id=$2 AND p.m3u_account_id=s.m3u_account_id
-                   LEFT JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id
+                   LEFT JOIN m3u_m3uaccount a ON a.id=s.m3u_account_id
                    WHERE c.uuid=$1
                    ORDER BY cs."order"
                    LIMIT $4"#,
@@ -1215,8 +1220,12 @@ impl PlaybackResolver for AuthService {
             }
             Ok(rows
                 .into_iter()
-                .filter_map(|(id, _, direct_url)| {
-                    id.map(|id| OrderedChannelStream { id, direct_url })
+                .filter_map(|(id, _, direct_url, missing_active_default_profile)| {
+                    id.map(|id| OrderedChannelStream {
+                        id,
+                        direct_url,
+                        missing_active_default_profile,
+                    })
                 })
                 .collect())
         })

@@ -3061,6 +3061,19 @@ mod tests {
                 .fetch_one(&mut pg)
                 .await
                 .unwrap(),
+            0
+        );
+        assert!(matches!(
+            save_checkpoint(&mut pg, &entry, Checkpoint::Required)
+                .await
+                .unwrap(),
+            CheckpointResult::Saved
+        ));
+        assert_eq!(
+            sqlx::query_scalar::<_, i64>(counter)
+                .fetch_one(&mut pg)
+                .await
+                .unwrap(),
             1
         );
     }

@@ -319,6 +319,9 @@ pub struct OrderedChannelStream {
     /// Present only for a direct URL on the verified default active profile,
     /// with the same unlimited or one-slot limit as the active session.
     pub direct_url: Option<String>,
+    /// True for an attached active Standard account without any active
+    /// default profile, independently of this request's direct profile.
+    pub missing_active_default_profile: bool,
 }
 
 pub trait PlaybackResolver: Send + Sync + 'static {

@@ -359,7 +359,7 @@ async fn next_stream(
                 .next_local_source(&id, app.resolver.as_ref())
                 .await?
             {
-                Some(selected) => (
+                crate::engine::NextStreamOutcome::Switched(selected) => (
                     StatusCode::OK,
                     next_stream_response(
                         &id,
@@ -369,9 +369,13 @@ async fn next_stream(
                         selected.worker,
                     ),
                 ),
-                None => (
+                crate::engine::NextStreamOutcome::Idle => (
                     StatusCode::NOT_FOUND,
                     r#"{"error": "No current stream found for channel"}"#.to_owned(),
+                ),
+                crate::engine::NextStreamOutcome::MissingActiveDefault { previous, next } => (
+                    StatusCode::NOT_FOUND,
+                    next_stream_missing_default_response(previous, next),
                 ),
             },
         )
@@ -383,6 +387,21 @@ async fn next_stream(
         }
         Err(reason) => error(reason),
     })
+}
+
+fn next_stream_missing_default_response(previous: i64, next: i64) -> String {
+    format!(
+        r#"{{"error": "M3U account has no default profile", "current_stream_id": {previous}, "next_stream_id": {next}}}"#
+    )
+}
+
+#[cfg(test)]
+#[test]
+fn next_stream_missing_default_response_matches_original_wire() {
+    assert_eq!(
+        next_stream_missing_default_response(11, 12),
+        r#"{"error": "M3U account has no default profile", "current_stream_id": 11, "next_stream_id": 12}"#
+    );
 }
 
 fn next_stream_response(

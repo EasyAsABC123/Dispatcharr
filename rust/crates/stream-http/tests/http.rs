@@ -2335,6 +2335,7 @@ impl PlaybackResolver for NextStreamResolver {
                 .map(|id| OrderedChannelStream {
                     id,
                     direct_url: None,
+                    missing_active_default_profile: false,
                 })
                 .collect())
         })

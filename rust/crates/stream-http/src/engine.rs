@@ -272,6 +272,18 @@ pub(crate) struct NextStreamSwitch<'a> {
     pub worker: &'a str,
 }
 
+pub(crate) enum NextStreamOutcome<'a> {
+    Idle,
+    Switched(NextStreamSwitch<'a>),
+    MissingActiveDefault { previous: i64, next: i64 },
+}
+
+#[derive(Debug, PartialEq, Eq)]
+enum NextDirectAssignment<'a> {
+    MissingActiveDefault { target: i64 },
+    Direct { target: i64, url: &'a str },
+}
+
 fn next_assigned_stream(
     ordered: &[OrderedChannelStream],
     current: i64,
@@ -296,16 +308,24 @@ fn next_direct_switch<'a>(
     ordered: &'a [OrderedChannelStream],
     previous: (source_switch::Source, u32),
     active: &PlaybackCandidate,
-) -> Result<(i64, Option<&'a str>), PlaybackError> {
+) -> Result<NextDirectAssignment<'a>, PlaybackError> {
     verify_next_active(previous, active)?;
     let selected = next_assigned_stream(ordered, active.stream_id)?;
+    if selected.missing_active_default_profile {
+        return Ok(NextDirectAssignment::MissingActiveDefault {
+            target: selected.id,
+        });
+    }
     let url = selected.direct_url.as_deref().ok_or_else(|| {
         PlaybackError::new(
             501,
             "Next Stream requires a current direct profile with the same limit",
         )
     })?;
-    Ok((selected.id, Some(url)))
+    Ok(NextDirectAssignment::Direct {
+        target: selected.id,
+        url,
+    })
 }
 
 fn verify_next_active(
@@ -331,7 +351,10 @@ fn next_transfer_profile<'a>(
     let next = next_assigned_stream(ordered, active.stream_id)?;
     // Original selects the immediate saved assignment before resolving it.
     // Only that assignment may become a transfer candidate.
-    if active.provider_max_streams != 0 || next.direct_url.is_some() {
+    if active.provider_max_streams != 0
+        || next.direct_url.is_some()
+        || next.missing_active_default_profile
+    {
         return Ok(None);
     }
     Ok(assigned_transfer_profile(active, next.id, candidates).map(|profile| (next.id, profile)))
@@ -357,6 +380,7 @@ fn next_stream_uses_persisted_order_and_wraps_without_filtering() {
     let ordered = [71, 94, 12].map(|id| OrderedChannelStream {
         id,
         direct_url: (id != 94).then(|| "http://localhost/unused".into()),
+        missing_active_default_profile: false,
     });
     let next = next_assigned_stream(&ordered, 71).unwrap();
     assert_eq!(next.id, 94);
@@ -600,7 +624,7 @@ impl StreamEngine {
         &self,
         channel: &str,
         resolver: &dyn PlaybackResolver,
-    ) -> Result<Option<NextStreamSwitch<'_>>, PlaybackError> {
+    ) -> Result<NextStreamOutcome<'_>, PlaybackError> {
         let session = self.local_switch_session(channel);
         let previous = session.as_ref().map(|session| {
             let active = session.current.lock().unwrap();
@@ -624,7 +648,7 @@ impl StreamEngine {
                     ));
                 }
             }
-            return Ok(None);
+            return Ok(NextStreamOutcome::Idle);
         };
         if !matches!(*session.startup.borrow(), Startup::Ready) {
             return Err(PlaybackError::new(409, "Local source has not started"));
@@ -654,12 +678,27 @@ impl StreamEngine {
         {
             return Err(PlaybackError::new(409, "Local source owner changed"));
         }
+        let selection = {
+            let active = session.current.lock().unwrap();
+            next_direct_switch(&ordered, previous, &active)?
+        };
+        let (target, target_url) = match selection {
+            NextDirectAssignment::MissingActiveDefault { target } => {
+                let ((current, _), _) = previous;
+                return Ok(NextStreamOutcome::MissingActiveDefault {
+                    previous: current,
+                    next: target,
+                });
+            }
+            NextDirectAssignment::Direct { target, url } => (target, url),
+        };
         let (previous, next, url) = self
             .switch_in_local_session(&session, transfer.map(|(_, profile)| profile), |active| {
-                next_direct_switch(&ordered, previous, active)
+                verify_next_active(previous, active)?;
+                Ok((target, Some(target_url)))
             })
             .await?;
-        Ok(Some(NextStreamSwitch {
+        Ok(NextStreamOutcome::Switched(NextStreamSwitch {
             previous,
             next,
             url,
@@ -2007,14 +2046,17 @@ mod retained_source_tests {
             OrderedChannelStream {
                 id: 11,
                 direct_url: Some("http://owned-origin/11.ts".into()),
+                missing_active_default_profile: false,
             },
             OrderedChannelStream {
                 id: 12,
                 direct_url: None,
+                missing_active_default_profile: false,
             },
             OrderedChannelStream {
                 id: 13,
                 direct_url: Some("http://owned-origin/13.ts".into()),
+                missing_active_default_profile: false,
             },
         ];
         assert_eq!(
@@ -2026,7 +2068,10 @@ mod retained_source_tests {
         ordered[1].direct_url = Some("http://owned-origin/12.ts".into());
         assert_eq!(
             next_direct_switch(&ordered, previous, &active).unwrap(),
-            (12, Some("http://owned-origin/12.ts"))
+            NextDirectAssignment::Direct {
+                target: 12,
+                url: "http://owned-origin/12.ts"
+            }
         );
         let new_limit = PlaybackCandidate {
             provider_max_streams: 0,
@@ -2037,6 +2082,57 @@ mod retained_source_tests {
                 .unwrap_err()
                 .status,
             409
+        );
+    }
+
+    #[test]
+    fn next_stream_distinguishes_a_missing_default_from_an_unsupported_active_default() {
+        let active = PlaybackCandidate {
+            credential_pool: None,
+            provider_max_streams: 0,
+            ..candidate(11)
+        };
+        let target = PlaybackCandidate {
+            credential_pool: None,
+            provider_max_streams: 0,
+            provider_profile_id: Some(4),
+            ..candidate(12)
+        };
+        let previous = (source_switch::source(&active), 0);
+        let mut ordered = [
+            OrderedChannelStream {
+                id: 11,
+                direct_url: Some(active.url.clone()),
+                missing_active_default_profile: false,
+            },
+            OrderedChannelStream {
+                id: 12,
+                direct_url: None,
+                missing_active_default_profile: true,
+            },
+            OrderedChannelStream {
+                id: 13,
+                direct_url: Some("http://owned-origin/13.ts".into()),
+                missing_active_default_profile: false,
+            },
+        ];
+        let candidates = [&active, &target];
+        assert_eq!(
+            next_transfer_profile(&ordered, previous, &active, candidates.into_iter()).unwrap(),
+            None,
+        );
+        assert_eq!(
+            next_direct_switch(&ordered, previous, &active).unwrap(),
+            NextDirectAssignment::MissingActiveDefault { target: 12 },
+        );
+        // An unchanged assignment with an active default may lack an
+        // eligible direct route (finite/command/transform). Keep that error.
+        ordered[1].missing_active_default_profile = false;
+        assert_eq!(
+            next_direct_switch(&ordered, previous, &active)
+                .unwrap_err()
+                .status,
+            501
         );
     }
 
@@ -2059,14 +2155,17 @@ mod retained_source_tests {
             OrderedChannelStream {
                 id: 11,
                 direct_url: Some(active.url.clone()),
+                missing_active_default_profile: false,
             },
             OrderedChannelStream {
                 id: 12,
                 direct_url: None,
+                missing_active_default_profile: false,
             },
             OrderedChannelStream {
                 id: 13,
                 direct_url: None,
+                missing_active_default_profile: false,
             },
         ];
         assert_eq!(
@@ -2077,7 +2176,10 @@ mod retained_source_tests {
         assert!(verify_transfer_order(&ordered, 11, 12).is_ok());
         assert_eq!(
             next_direct_switch(&ordered, previous, &active).unwrap(),
-            (12, Some(target.url.as_str()))
+            NextDirectAssignment::Direct {
+                target: 12,
+                url: target.url.as_str()
+            }
         );
         ordered[1].direct_url = None;
         assert_eq!(
@@ -2101,10 +2203,12 @@ mod retained_source_tests {
             OrderedChannelStream {
                 id: 11,
                 direct_url: None,
+                missing_active_default_profile: false,
             },
             OrderedChannelStream {
                 id: 12,
                 direct_url: Some(target.url.clone()),
+                missing_active_default_profile: false,
             },
         ];
         let target_state = (source_switch::source(&target), 0);
