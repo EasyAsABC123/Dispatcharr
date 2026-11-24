@@ -28,6 +28,9 @@ use std::{
 };
 use tokio::sync::{Notify, OwnedSemaphorePermit, Semaphore};
 
+const PLAYER_PATHS: [&str; 2] = ["/player_api.php", "/player_api.php/"];
+const PANEL_PATHS: [&str; 2] = ["/panel_api.php", "/panel_api.php/"];
+
 #[derive(Clone)]
 pub struct XcConfig {
     pub max_requests: usize,
@@ -191,8 +194,10 @@ impl XcGateway {
     /// are separate gates; no app route is installed by constructing this value.
     pub fn router(&self) -> Router {
         Router::new()
-            .route("/player_api.php", any(dispatch))
-            .route("/panel_api.php", any(dispatch))
+            .route(PLAYER_PATHS[0], any(dispatch))
+            .route(PLAYER_PATHS[1], any(dispatch))
+            .route(PANEL_PATHS[0], any(dispatch))
+            .route(PANEL_PATHS[1], any(dispatch))
             .with_state(self.clone())
     }
     /// Explicit staged capability; the application keeps these actions guarded
@@ -357,7 +362,7 @@ impl XcGateway {
         // body limit cannot retain a larger uncharged header/URI clone.
         bounded_header_size(header_bytes, config.max_body_bytes)?;
         let method = request.method().clone();
-        let panel = request.uri().path() == "/panel_api.php";
+        let panel = PANEL_PATHS.contains(&request.uri().path());
         let identity = identity(&request);
         let (parts, body) = request.into_parts();
         // Safe Django views do not wait for a request body before responding.

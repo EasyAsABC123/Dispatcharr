@@ -69,6 +69,12 @@ The ordinary backend now returns Original’s permanent redirect from `/output` 
 
 `scripts/rust-baseline/runtime_dispatch_methods.py` can run inside pinned Original to supplement the existing route inventory with Django class handlers and explicit method decorators. It cross-checks the exact retained resolver ordinal, callback, and router action map before reporting declarations. Five offline controls passed. Runtime discovery, signed responses, and Rust request parity still require separate receipts.
 
+## Accounts and Xtream compatibility aliases
+
+The ordinary Accounts User detail route accepts the numeric JSON suffix for GET and keeps the existing administrator permission check and response shape. The signed fixture pairs it with the existing Group and recurring-recording aliases and checks that the target and scoped SQL state stay inert. Two Accounts tests passed.
+
+The Xtream gateway also accepts one trailing slash for `/player_api.php` and `/panel_api.php`. The gateway suite passed 65 tests. The ARM64 fixture signs in as a Standard user and checks that the same live-stream request returns the expected list in the player and full account document in the panel, with the same behavior through the slash aliases.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.

@@ -15,7 +15,14 @@ use std::net::SocketAddr;
 
 pub(crate) fn router(auth: AuthService) -> Router {
     let app_data = crate::app_data::router(auth.clone());
-    let group_read = get(group).layer(from_fn_with_state(auth.clone(), group_json_alias));
+    let user_read = get(user).layer(from_fn_with_state(
+        (auth.clone(), AccountDetail::User),
+        account_detail_json_alias,
+    ));
+    let group_read = get(group).layer(from_fn_with_state(
+        (auth.clone(), AccountDetail::Group),
+        account_detail_json_alias,
+    ));
     Router::new()
         .route(
             "/api/accounts/users/",
@@ -27,10 +34,17 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/accounts/users/{id}/",
-            get(user)
+            user_read
+                .clone()
                 .patch(crate::admin_writes::patch_user)
                 .put(crate::admin_writes::put_user)
                 .delete(crate::admin_writes::delete_user),
+        )
+        .route(
+            "/api/accounts/users/{id}",
+            user_read
+                .head(crate::core_reads::omitted_json_method)
+                .fallback(crate::core_reads::omitted_json_method),
         )
         .route(
             "/api/accounts/groups/",
@@ -223,8 +237,23 @@ async fn group(
     Ok(Json(auth.store.serialized_groups(Some(id)).await?))
 }
 
-async fn group_json_alias(
-    State(auth): State<AuthService>,
+#[derive(Clone, Copy)]
+enum AccountDetail {
+    User,
+    Group,
+}
+
+impl AccountDetail {
+    fn path(self) -> &'static str {
+        match self {
+            Self::User => "/api/accounts/users/",
+            Self::Group => "/api/accounts/groups/",
+        }
+    }
+}
+
+async fn account_detail_json_alias(
+    State((auth, owner)): State<(AuthService, AccountDetail)>,
     request: Request,
     next: Next,
 ) -> Response {
@@ -232,7 +261,7 @@ async fn group_json_alias(
     let numeric = path
         .strip_suffix('/')
         .unwrap_or(path)
-        .strip_prefix("/api/accounts/groups/")
+        .strip_prefix(owner.path())
         .and_then(|tail| tail.strip_suffix(".json"))
         .filter(|id| !id.is_empty() && id.bytes().all(|byte| byte.is_ascii_digit()));
     if let Some(id) = numeric.filter(|_| request.method() == Method::GET) {
@@ -245,7 +274,10 @@ async fn group_json_alias(
         let result = async {
             crate::core_reads::negotiate_literal_json_alias(&parts.headers)?;
             let id = id.map_err(|_| StoreError::NotFound)?;
-            group(State(auth), Path(id), peer, parts.headers).await
+            match owner {
+                AccountDetail::User => user(State(auth), Path(id), peer, parts.headers).await,
+                AccountDetail::Group => group(State(auth), Path(id), peer, parts.headers).await,
+            }
         }
         .await;
         return crate::channels::channel_options_headers(
@@ -281,6 +313,99 @@ async fn api_key(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn ordinary_account_user_detail_json_uses_the_admin_read_handler() {
+        use axum::{
+            body::{to_bytes, Body},
+            http::header,
+        };
+        use tower::ServiceExt;
+
+        let auth = AuthService::new(
+            Store::from_pool(
+                sqlx::postgres::PgPoolOptions::new()
+                    .connect_lazy("postgresql://unused@127.0.0.1:1/unused")
+                    .unwrap(),
+            ),
+            crate::AuthConfig::new("owned-user-detail-fixture".into()).unwrap(),
+        );
+        let app = router(auth);
+        for (method, path, accept, expected) in [
+            (
+                Method::GET,
+                "/api/accounts/users/25.json",
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                Method::GET,
+                "/api/accounts/users/25.json/?format=api",
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                Method::GET,
+                "/api/accounts/users/25.json",
+                "text/html",
+                StatusCode::NOT_ACCEPTABLE,
+            ),
+            (
+                Method::GET,
+                "/api/accounts/users/unqualified/",
+                "application/json",
+                StatusCode::BAD_REQUEST,
+            ),
+            (
+                Method::GET,
+                "/api/accounts/users/me.json",
+                "application/json",
+                StatusCode::NOT_FOUND,
+            ),
+            (
+                Method::HEAD,
+                "/api/accounts/users/25.json",
+                "application/json",
+                StatusCode::NOT_FOUND,
+            ),
+            (
+                Method::PATCH,
+                "/api/accounts/users/25.json",
+                "application/json",
+                StatusCode::NOT_FOUND,
+            ),
+        ] {
+            let response = app
+                .clone()
+                .oneshot(
+                    Request::builder()
+                        .method(method)
+                        .uri(path)
+                        .header(header::ACCEPT, accept)
+                        .extension(ConnectInfo("127.0.0.1:1234".parse::<SocketAddr>().unwrap()))
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), expected, "{path}");
+            if expected == StatusCode::UNAUTHORIZED {
+                assert_eq!(
+                    response.headers()[header::WWW_AUTHENTICATE],
+                    "Bearer realm=\"api\""
+                );
+                assert_eq!(
+                    response.headers()[header::ALLOW],
+                    "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+                );
+                let body = to_bytes(response.into_body(), 128).await.unwrap();
+                assert_eq!(
+                    body.as_ref(),
+                    br#"{"detail":"Authentication credentials were not provided."}"#
+                );
+            }
+        }
+    }
 
     #[tokio::test]
     async fn ordinary_account_group_detail_json_uses_the_admin_read_handler() {
