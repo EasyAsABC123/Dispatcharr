@@ -15,6 +15,8 @@ ARCHIVE = "be82700e942b1df0fffe00bcf58f03d8b25a3ce29ea56b2cd5a0e6ac4b374f4a"
 PROOF_COMMIT = "7cda686b8ab705c3362ef1956055b152b20745f7"
 RECORD = "docs/rust-m8-m9-datastore-scope-3d8f9672.json"
 DOCUMENT = "docs/rust-m9-datastore-release-scope.md"
+PUBLISHED_INSTRUCTIONS = "0cd97b9ae5af723bdf46cf275a996c852ff67b9a"
+INSTRUCTIONS_SHA256 = "fe39513fa148fcdc7ba116ec8679ef3e25c9855d0d0dd3bf6624797bc4af8b4c"
 PROOF = "docs/rust-m8-amd64-copied-sqlite-operator-3d8f9672.json"
 PINS = {
     RECORD: "3276943072c6200be13560809cd146d09de6e93e2cb102a7cdc2ca263b42f318",
@@ -50,8 +52,19 @@ def git(repo, *argv):
 def verified_blob(repo, revision, path):
     raw = git(repo, "show", f"{revision}:{path}")
     leaf = repo / path
-    need(sha(raw) == PINS[path] and leaf.resolve() == leaf
-         and leaf.is_file() and leaf.read_bytes() == raw, "committed datastore record missing or altered: " + path)
+    need(sha(raw) == PINS[path] and leaf.resolve() == leaf and leaf.is_file(),
+         "committed datastore record missing or altered: " + path)
+    current = leaf.read_bytes()
+    if path == DOCUMENT and current != raw:
+        # The coordinator publication appended the reviewed invocation instructions.
+        # The decision always uses the original pinned blob.
+        appendix = git(repo, "show", f"{PUBLISHED_INSTRUCTIONS}:{DOCUMENT}")
+        need(git(repo, "merge-base", PUBLISHED_INSTRUCTIONS, "HEAD").decode().strip()
+             == PUBLISHED_INSTRUCTIONS
+             and sha(appendix) == INSTRUCTIONS_SHA256 and current == appendix,
+             "datastore invocation instructions differ from their published bytes")
+    else:
+        need(current == raw, "committed datastore record missing or altered: " + path)
     return raw
 
 
