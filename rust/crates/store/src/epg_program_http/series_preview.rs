@@ -394,6 +394,30 @@ impl Expression {
     }
 }
 
+pub(super) struct SearchText(Expression);
+
+impl SearchText {
+    pub(super) fn parse(
+        value: &str,
+        use_regex: bool,
+        whole_words: bool,
+    ) -> Result<Option<Self>, StoreError> {
+        let mode = if use_regex {
+            "regex"
+        } else if whole_words {
+            "search"
+        } else {
+            "contains"
+        };
+        Ok(parse_text(value, mode)?.map(Self))
+    }
+
+    pub(super) fn append(&self, query: &mut QueryBuilder<'_, Postgres>, field: &'static str) {
+        query.push(" AND ");
+        self.0.write_sql(query, field);
+    }
+}
+
 pub(crate) fn append_contains(
     query: &mut QueryBuilder<'_, Postgres>,
     value: &str,

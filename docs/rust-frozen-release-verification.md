@@ -444,6 +444,18 @@ that the importer retries a failed batch once after all first-pass
 transactions. A second signed refresh requires that retry to observe a
 row from the successful sibling transaction.
 
+## Programme search
+
+The ordinary Rust programme search now returns role-scoped pages,
+including channels linked through a guide override. It applies the stored
+date and guide filters and uses the existing title and description
+parser for quoted phrases, AND and OR, grouping, whole words and regex.
+Eleven pinned Original view cases and twelve parser cases ran against
+owned fixtures. The focused Rust suite and a real private PostgreSQL
+test checked projection, paging, role visibility and text matching.
+The channel, stream, group and signed package cases still need their
+own evidence.
+
 ## Channel logo pagination and Xtream information
 
 The ordinary PostgreSQL Logo API uses the same Python-style integer parsing

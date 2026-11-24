@@ -32,6 +32,7 @@ use tokio::sync::{oneshot, OwnedSemaphorePermit, Semaphore};
 
 mod mutations;
 mod programme_html;
+mod search;
 pub(crate) mod series_preview;
 
 #[derive(Clone, Copy, Debug)]
@@ -389,6 +390,7 @@ impl EpgProgramReads {
                 list_json.clone().post(mutations::create_json),
             )
             .route("/api/epg/programs.json/", list_json)
+            .route(search::PATH, get(search::handle))
             .route(
                 "/api/epg/programs/{json_id}",
                 get(detail_json_alias)
