@@ -171,8 +171,8 @@ def run(f):
  # Last business cell: actual Source post-viewer retention is observed literally;
  # normal Main/role drain and exact fixture cleanup remain outer requirements.
  def extensions():
-  import redirect_extensions,inactive_input_cases,channel_delete_cases,direct_redirect_cases,account_custom_cases
-  observed=redirect_extensions.run(f,[('account-custom-scalars',account_custom_cases.run),('inactive-input-profile',inactive_input_cases.run),('Channel-Recording-Collector',channel_delete_cases.run),('saved-Redirect-characterization',direct_redirect_cases.run)])
+  import redirect_extensions,inactive_input_cases,channel_delete_cases,direct_redirect_cases,account_custom_cases,redirect_provider_framing
+  observed=redirect_extensions.run(f,[('account-custom-scalars',account_custom_cases.run),('inactive-input-profile',inactive_input_cases.run),('Channel-Recording-Collector',channel_delete_cases.run),('saved-Redirect-characterization',direct_redirect_cases.run),('pooled-Redirect-fixed-probe-fallback',redirect_provider_framing.run)])
   if observed['status']!='passed':raise AssertionError('RequiredRedirectExtensionsFailed')
   return observed
  cell('same-context-inactive-input-Collector-and-characterization',extensions)

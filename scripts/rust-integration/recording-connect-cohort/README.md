@@ -34,3 +34,17 @@ python3 -B scripts/rust-integration/recording-connect-cohort/check-equivalence.p
 `--all-native` adds the five independent M8/boundary/restore/grouped contexts and nonempty restart to the fresh Native run. Nonempty restart currently has a known strict decoder failure; it remains failed rather than becoming an accepted scenario. No historical private results bypass these fresh executions. A selected run does not establish full M8, all datastores, soak, rollback or resource gains.
 
 The 107 cohort Python files and two adapters are exported with original credit headers. Historical captured JSON and assembly metadata are omitted. The existing 224 canonical baseline/bootstrap support files are reused from `scripts/rust-playback-baseline`, `scripts/rust-baseline`, the port/account helpers and `docker/compose.rust-playback.yml`. Legacy artifact-only validation CLIs now require explicit local input paths. They are not part of the default application run. The default path/authority changes passed the linked Source/Native qualification. Wider contexts, interruption/fault campaigns, independently observed per-event Host/SQL receipts and complete M0 coverage remain open.
+
+### Redirect provider framing
+
+Use `prepare.py prepare --workflow redirect-provider-framing` with the
+final ordinary build manifest to run one `redirect-common` context per
+application. The fixture holds a short, fixed-length provider GET after
+HEAD refusal. It checks that the signed request remains pending while the
+credential pool is held, then verifies fallback to the alternate provider
+and exact SQL, Redis, and process retirement. The same owned role also
+observes the original encoded query on the provider request. The
+engine-free fixture controls passed. Final signed Compose verification
+still needs the selected release image.
+
+Original Dispatcharr and dependency authors retain full credit.

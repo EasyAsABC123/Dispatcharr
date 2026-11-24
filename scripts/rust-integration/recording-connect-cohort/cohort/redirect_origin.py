@@ -17,6 +17,22 @@ def main():
     with lock:
      if len(entries)>=128:raise RuntimeError('OriginJournal128Bound')
      entries.append({'method':self.command,'path':self.path,'monotonic':time.monotonic()});save('requests',entries)
+    pooled=re.fullmatch(r'/pooled-frame/([a-f0-9]{32})/(primary[.]ts[?]Policy=owned%2Fsample~&Signature=abc[+]def%2Bgh%3D|fallback[.]ts)',self.path)
+    if pooled and pooled[2].startswith('primary'):
+     if self.command=='HEAD':
+      self.send_response(405);self.send_header('Content-Length','0');self.send_header('Connection','close');self.end_headers()
+      return
+     self.send_response(200);self.send_header('Content-Length','1880');self.send_header('Connection','close');self.end_headers()
+     self.wfile.write(b'x'*32);self.wfile.flush()
+     ident=pooled[1]
+     save(ident+'-pooled-entered',{'method':'GET','initial_bytes':32,'declared_bytes':1880})
+     until=time.monotonic()+4.5
+     while not stop.is_set() and not(root/(ident+'.pooled-release')).exists() and time.monotonic()<until:stop.wait(.01)
+     save(ident+'-pooled-closed',{'released_by_fixture':(root/(ident+'.pooled-release')).exists()})
+     return
+    if pooled and pooled[2]=='fallback.ts':
+     self.send_response(200);self.send_header('Content-Length','0');self.send_header('Connection','close');self.end_headers()
+     return
     if match and self.command=='HEAD':
      ident=match.group(1)
      with lock:

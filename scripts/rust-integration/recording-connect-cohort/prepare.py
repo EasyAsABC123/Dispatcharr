@@ -156,6 +156,12 @@ def prepare(args):
  if args.workflow in('catalogue-series-comskip-vlc','catalogue-six','catalogue-seven','catalogue-eight','catalogue-nine','catalogue-twelve','catalogue-thirteen','catalogue-fourteen'):
   assert not args.all_native,'all-native applies only to the recording Connect workflow'
   prepare_catalogue(args,repo,out,build,archive,source);return
+ if args.workflow=='redirect-provider-framing':
+  assert not args.all_native,'all-native applies only to the recording Connect workflow'
+  for name,expected in {
+   'rust/crates/store/src/playback.rs':'0ffd1afbf3af4c285159556bc1562307fa5086ae405d2e37a9f24728a8d015b9',
+   'rust/crates/stream-http/src/redirect.rs':'dfc812f7e51467ccb6be265fcb567001b47a45594260f1a1d96dd1de4b60614c',
+  }.items():assert build['source_sha256'].get(name)==expected,('ExactQualifiedRedirectProductLeaf',name)
  public=[p for p in HERE.rglob('*')if p.is_file()and'__pycache__'not in p.parts]
  inputs={str(p):sha(p)for p in [*public,*support_inputs(repo),*[repo/name for name in build['source_sha256']if name.startswith('rust/')],archive,args.build.resolve(),repo/'rust/crates/job-transport/datasets/source-default-stats-wire.json']}
  binding={'status':'prepared_not_run','performance':False,'full_milestone_accepted':False,'candidate_image_id':build['image_id'],'candidate_git_revision':build['git_revision'],'candidate_source_tree_sha256':build['source_tree_sha256'],'candidate_build':str(args.build.resolve()),'docker':args.docker,'support_root':str(repo),'functional_pids_limit':1600,'functional_budget_scope':'Functional cohort only; no performance-equivalence claim','fixture_output':str(out/'fixtures'),'Original_archive':str(archive),'Original_source_root':str(out/'Original-source'),'Original_source_sha256':source,'adapter_sha256':sha(HERE/'fixture_adapter.py'),'instrumented_fixture_adapter':str(HERE/'fixture_adapter.py'),'m6_adapter':str(HERE/'m6_adapter.py'),'m6_adapter_sha256':sha(HERE/'m6_adapter.py'),'normal_backup_case':str(HERE/'cohort/normal_backup_case.py'),'normal_backup_case_sha256':sha(HERE/'cohort/normal_backup_case.py'),'backup_physical_case_sha256':sha(HERE/'cohort/backup_physical_case.py'),'retained_Source_playback':str(out/'unmeasured-exceptional-playback.json'),'retained_source_contexts':{},'retained_native_contexts':{},'restore_callbacks':{},'inputs':[{'path':p,'sha256':h}for p,h in sorted(inputs.items())]}
@@ -170,7 +176,11 @@ def prepare(args):
   binding[f'custom_guide_{variant}_acceptance']=True
   plan.update(workflow=args.workflow,source_contexts=contexts,native_contexts=contexts,native_seconds=1200,
               qualification=f'Fresh Original and Native schedules-direct fixtures with the {variant}-only custom guide XMLTV, grid and XC cases.')
- save(out/'plan.json',plan);print(json.dumps({'plan':str(out/'plan.json'),'state':plan['state'],'applications_started':0,'native_contexts':contexts}))
+ if args.workflow=='redirect-provider-framing':
+  plan.update(workflow=args.workflow,source_contexts=['redirect-common'],native_contexts=['redirect-common'],
+              source_seconds=600,native_seconds=600,
+              qualification='One grouped Redirect context per backend, under the existing exact lease and fixture cleanup.')
+ save(out/'plan.json',plan);print(json.dumps({'plan':str(out/'plan.json'),'state':plan['state'],'applications_started':0,'native_contexts':plan['native_contexts']}))
 
 def uid_probe(plan,coordinator):
  out=Path(plan['output'])/'uid';out.mkdir();base=plan['base_binding'];tools=Path(plan.get('cohort_root',str(HERE)));cidfile=out/'probe.cid';name='dispatcharr-public-connect-uid-'+os.urandom(6).hex();expected={str(Path(row['path']).relative_to(tools)):row['sha256']for row in base['inputs']if Path(row['path']).is_relative_to(tools)}
@@ -257,7 +267,7 @@ def run(args):
 
 def main():
  parser=argparse.ArgumentParser(description=__doc__);sub=parser.add_subparsers(dest='command',required=True)
- p=sub.add_parser('prepare');p.add_argument('--repo',type=Path,default=HERE.parents[2]);p.add_argument('--output',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--source-archive',type=Path);p.add_argument('--docker',default='docker');p.add_argument('--docker-host');p.add_argument('--all-native',action='store_true',help='Run all seven affected Native contexts; strict restart remains a known open failure.');p.add_argument('--workflow',choices=['recording-connect','custom-guide-dates','custom-guide-times','catalogue-series-comskip-vlc','catalogue-six','catalogue-seven','catalogue-eight','catalogue-nine','catalogue-twelve','catalogue-thirteen','catalogue-fourteen'],default='recording-connect',help='Select the Connect pair, paired date-only or UTC time-only custom guides or retained-Source Native catalogue/comskip/VLC cohort.')
+ p=sub.add_parser('prepare');p.add_argument('--repo',type=Path,default=HERE.parents[2]);p.add_argument('--output',type=Path,required=True);p.add_argument('--build',type=Path,required=True);p.add_argument('--source-archive',type=Path);p.add_argument('--docker',default='docker');p.add_argument('--docker-host');p.add_argument('--all-native',action='store_true',help='Run all seven affected Native contexts; strict restart remains a known open failure.');p.add_argument('--workflow',choices=['recording-connect','custom-guide-dates','custom-guide-times','catalogue-series-comskip-vlc','catalogue-six','catalogue-seven','catalogue-eight','catalogue-nine','catalogue-twelve','catalogue-thirteen','catalogue-fourteen','redirect-provider-framing'],default='recording-connect',help='Select the Connect pair, paired date-only or UTC time-only custom guides or retained-Source Native catalogue/comskip/VLC cohort.')
  p=sub.add_parser('run');p.add_argument('--plan',type=Path,required=True)
  args=parser.parse_args()
  if args.command=='prepare':prepare(args);return 0
