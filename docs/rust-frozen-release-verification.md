@@ -285,8 +285,15 @@ An automatic Stream Settings update now maps a confirmed global rehash
 broker rejection to the measured 500 response. A pinned Original
 component confirmed that the setting remains saved and the owned locks
 release after a definite rejection. The Rust transport controls keep a
-lost or ambiguous reply distinct. Signed packaged execution and manual
-endpoint errors have separate verification.
+lost or ambiguous reply distinct. The signed packaged PUT still needs verification.
+
+The unchanged React manual rehash action now reaches the ordinary
+Rust application. The administrator POST uses the saved global fields,
+holds the same eligible account locks and returns Source's queued task
+response or the manual conflict body. The pinned Original component
+checked both responses. The focused Rust suite passed 21 tests. Broker
+exception details on the manual action and signed packaged worker
+effects remain open.
 
 The ordinary scanner skips Programme Index admission after its first
 successful scan in the same process. Its grouped fixture runs the first

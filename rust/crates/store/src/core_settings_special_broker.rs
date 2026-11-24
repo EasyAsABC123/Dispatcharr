@@ -172,6 +172,26 @@ pub(crate) async fn publish(
     Ok(id)
 }
 
+pub(crate) async fn publish_global_rehash(
+    auth: &AuthService,
+    scratch: &Scratch,
+    fields: Vec<String>,
+    locks: &RehashLocks,
+) -> Result<String, StoreError> {
+    publish(
+        auth,
+        scratch,
+        "core.tasks.rehash_streams",
+        json!([fields]),
+        json!({
+            "locks_preacquired": true,
+            "preacquired_lock_ids": locks.ids,
+            "preacquired_lock_token": locks.token,
+        }),
+    )
+    .await
+}
+
 pub(crate) async fn publish_dvr_offsets(
     auth: &AuthService,
     scratch: &Scratch,

@@ -97,6 +97,7 @@ enum Kind {
     Update(bool),
     Delete,
     Check,
+    ManualRehash,
 }
 impl CoreSettingsWrites {
     /// Normal Main never substitutes the settings/cache Redis DB for Celery.
@@ -152,6 +153,7 @@ impl CoreSettingsWrites {
         Router::new()
             .route("/api/core/settings/", post(create))
             .route("/api/core/settings/check/", post(check))
+            .route("/api/core/rehash-streams/", post(manual_rehash))
             .route("/api/core/settings.json", post(create_json))
             .route("/api/core/settings/check.json", post(check_json))
             .route(
@@ -984,6 +986,10 @@ async fn act(
         let v = checked_network(&auth, peer, headers, body(request).await?)?;
         return reply(StatusCode::OK, Some(v), lease);
     }
+    if matches!(kind, Kind::ManualRehash) {
+        drop(request);
+        return trigger_rehash(&auth, lease).await;
+    }
     let old = if matches!(kind, Kind::Create) {
         None
     } else {
@@ -1093,97 +1099,174 @@ async fn act(
             }
         }
     }
-    let outcome=async {
-    let row = validate(&auth, input, old, partial,special.is_some()).await?;
-    if dvr && auth.normal_core_task_broker {
-        // Main's early Auth clones share the actual selected RecordingJobs port.
-        // Refuse before row save/cache invalidation or offset task publication.
-        let jobs = auth.recording_collector_jobs()?
-            .ok_or(StoreError::Unsupported("Recording domain admission is unbound"))?;
-        jobs.admit_scheduling(lease.clone()).await.map_err(|error| match error {
-            crate::recording_http::RecordingEffectError::Unsupported =>
-                StoreError::Unsupported("Configured recording plugin domain is unsupported"),
-            _ => StoreError::StatusBody(503, json!({"detail":"Recording domain admission is unsettled."})),
-        })?;
-    }
-    let creation = matches!(kind, Kind::Create);
-    let mut row = row;
-    let mut c = auth.store.pool().acquire().await?;
-    if creation {
-        let result = sqlx::query_scalar::<_, i64>(
-            "INSERT INTO core_coresettings(key,name,value)VALUES($1,$2,$3)RETURNING id::bigint",
-        )
-        .bind(&row.key)
-        .bind(&row.name)
-        .bind(sqlx::types::Json(&row.value))
-        .fetch_one(&mut *c)
-        .await;
-        finish(c).await?;
-        row.id = result?;
-    } else {
-        let r =
-            sqlx::query("UPDATE core_coresettings SET key=$2,name=$3,value=$4 WHERE id::bigint=$1")
-                .bind(row.id)
-                .bind(&row.key)
-                .bind(&row.name)
-                .bind(sqlx::types::Json(&row.value))
-                .execute(&mut *c)
-                .await;
-        finish(c).await?;
-        if r?.rows_affected() != 1 {
-            return Err(StoreError::Unsupported(
-                "Concurrent CoreSettings row disappearance is outside Source32",
-            ));
+    let outcome = async {
+        let row = validate(&auth, input, old, partial, special.is_some()).await?;
+        if dvr && auth.normal_core_task_broker {
+            // Main's early Auth clones share the actual selected RecordingJobs port.
+            // Refuse before row save/cache invalidation or offset task publication.
+            let jobs = auth
+                .recording_collector_jobs()?
+                .ok_or(StoreError::Unsupported(
+                    "Recording domain admission is unbound",
+                ))?;
+            jobs.admit_scheduling(lease.clone())
+                .await
+                .map_err(|error| match error {
+                    crate::recording_http::RecordingEffectError::Unsupported => {
+                        StoreError::Unsupported("Configured recording plugin domain is unsupported")
+                    }
+                    _ => StoreError::StatusBody(
+                        503,
+                        json!({"detail":"Recording domain admission is unsettled."}),
+                    ),
+                })?;
         }
-    }
-    // Source post_save runs after an autocommitted save; a cache command error
-    // must not invent a rollback of the already saved row.
-    if let Some(effects)=&special {
-        if row.key=="system_settings" {effects.system_save(&auth,&row.value,&lease.scratch).await?;}
-    }
-    invalidate(&auth, &row.key).await?;
-    if let Some(effects)=&special {
-        match row.key.as_str() {
-            "proxy_settings"=>effects.clear_proxy(),
-            "stream_settings"=>invalidate_user_agent(&auth).await?,
-            "network_access"=>crate::core_settings_special_network::save(&auth,&lease.scratch).await,
-            _=>{}
-        }
-        if let Some(fields)=keys {
-            let locks=pending.as_ref().ok_or_else(capacity)?;
-            crate::core_settings_special_broker::publish(&auth,&lease.scratch,"core.tasks.rehash_streams",json!([fields]),json!({"locks_preacquired":true,"preacquired_lock_ids":locks.ids,"preacquired_lock_token":locks.token})).await?;
-            pending.take(); // only actual successful LPUSH hands off owned locks
-        }
-        if dvr {
-            let publication = crate::core_settings_special_broker::publish_dvr_offsets(
-                &auth, &lease.scratch,
-            ).await?;
-            if publication == crate::CoreOffsetPublication::NotEnqueued {
-                let jobs = auth.recording_collector_jobs()?
-                    .ok_or(StoreError::Unsupported("Recording domain admission is unbound"))?;
-                let events = auth.event_sink.clone()
-                    .ok_or(StoreError::Unsupported("DVR offset event publisher is unbound"))?;
-                // Original's inline implementation is a real worker execution
-                // inside this same admitted request, without a Celery parent.
-                crate::core_task_offsets::execute(auth.store.clone(), jobs, events, None, lease.clone()).await?;
+        let creation = matches!(kind, Kind::Create);
+        let mut row = row;
+        let mut c = auth.store.pool().acquire().await?;
+        if creation {
+            let result = sqlx::query_scalar::<_, i64>(
+                "INSERT INTO core_coresettings(key,name,value)VALUES($1,$2,$3)RETURNING id::bigint",
+            )
+            .bind(&row.key)
+            .bind(&row.name)
+            .bind(sqlx::types::Json(&row.value))
+            .fetch_one(&mut *c)
+            .await;
+            finish(c).await?;
+            row.id = result?;
+        } else {
+            let r = sqlx::query(
+                "UPDATE core_coresettings SET key=$2,name=$3,value=$4 WHERE id::bigint=$1",
+            )
+            .bind(row.id)
+            .bind(&row.key)
+            .bind(&row.name)
+            .bind(sqlx::types::Json(&row.value))
+            .execute(&mut *c)
+            .await;
+            finish(c).await?;
+            if r?.rows_affected() != 1 {
+                return Err(StoreError::Unsupported(
+                    "Concurrent CoreSettings row disappearance is outside Source32",
+                ));
             }
         }
+        // Source post_save runs after an autocommitted save; a cache command error
+        // must not invent a rollback of the already saved row.
+        if let Some(effects) = &special {
+            if row.key == "system_settings" {
+                effects
+                    .system_save(&auth, &row.value, &lease.scratch)
+                    .await?;
+            }
+        }
+        invalidate(&auth, &row.key).await?;
+        if let Some(effects) = &special {
+            match row.key.as_str() {
+                "proxy_settings" => effects.clear_proxy(),
+                "stream_settings" => invalidate_user_agent(&auth).await?,
+                "network_access" => {
+                    crate::core_settings_special_network::save(&auth, &lease.scratch).await
+                }
+                _ => {}
+            }
+            if let Some(fields) = keys {
+                let locks = pending.as_ref().ok_or_else(capacity)?;
+                crate::core_settings_special_broker::publish_global_rehash(
+                    &auth,
+                    &lease.scratch,
+                    fields,
+                    locks,
+                )
+                .await?;
+                pending.take(); // only actual successful LPUSH hands off owned locks
+            }
+            if dvr {
+                let publication =
+                    crate::core_settings_special_broker::publish_dvr_offsets(&auth, &lease.scratch)
+                        .await?;
+                if publication == crate::CoreOffsetPublication::NotEnqueued {
+                    let jobs = auth
+                        .recording_collector_jobs()?
+                        .ok_or(StoreError::Unsupported(
+                            "Recording domain admission is unbound",
+                        ))?;
+                    let events = auth.event_sink.clone().ok_or(StoreError::Unsupported(
+                        "DVR offset event publisher is unbound",
+                    ))?;
+                    // Original's inline implementation is a real worker execution
+                    // inside this same admitted request, without a Celery parent.
+                    crate::core_task_offsets::execute(
+                        auth.store.clone(),
+                        jobs,
+                        events,
+                        None,
+                        lease.clone(),
+                    )
+                    .await?;
+                }
+            }
+        }
+        reply(
+            if creation {
+                StatusCode::CREATED
+            } else {
+                StatusCode::OK
+            },
+            Some(serde_json::to_value(row).map_err(|_| capacity())?),
+            lease.clone(),
+        )
     }
-    reply(
-        if creation {
-            StatusCode::CREATED
-        } else {
-            StatusCode::OK
-        },
-        Some(serde_json::to_value(row).map_err(|_| capacity())?),
-        lease.clone(),
-    )
-    }.await;
+    .await;
     if let Some(locks) = pending {
         locks.release(&auth).await?;
     }
     outcome
 }
+fn manual_rehash_conflict(error: StoreError) -> StoreError {
+    match error {
+        StoreError::StatusBody(409, details) => StoreError::StatusBody(
+            409,
+            json!({
+                "success": false,
+                "message": "Stream rehash blocked: one or more M3U accounts that use the global hash key are currently refreshing. Try again after those refreshes finish.",
+                "blocked_accounts": details["blocked_accounts"],
+            }),
+        ),
+        other => other,
+    }
+}
+
+async fn trigger_rehash(auth: &AuthService, lease: Arc<Lease>) -> Result<Response, StoreError> {
+    use crate::core_settings_special_broker::{publish_global_rehash, RehashLocks};
+    if lease.state.special.is_none() {
+        return Err(StoreError::Unsupported("Special context not configured"));
+    }
+    let settings =
+        crate::core_settings_special_effects::load_group(auth, "stream_settings", json!({}))
+            .await?;
+    let fields = crate::core_settings_special::hash_fields(settings.get("m3u_hash_key"))?;
+    let locks = RehashLocks::acquire(auth, &lease.scratch)
+        .await
+        .map_err(manual_rehash_conflict)?;
+    let result = publish_global_rehash(auth, &lease.scratch, fields, &locks).await;
+    let task_id = match result {
+        Ok(id) => id,
+        Err(error) => {
+            locks.release(auth).await?;
+            return Err(error);
+        }
+    };
+    reply(
+        StatusCode::OK,
+        Some(
+            json!({"success":true,"message":"Stream rehashing task has been queued","task_id":task_id}),
+        ),
+        lease,
+    )
+}
+
 async fn invalidate_user_agent(auth: &AuthService) -> Result<(), StoreError> {
     let version = SystemTime::now()
         .duration_since(UNIX_EPOCH)
@@ -1277,6 +1360,14 @@ async fn check(
     s.run(p, None, r, Kind::Check).await
 }
 
+async fn manual_rehash(
+    State(service): State<CoreSettingsWrites>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    service.run(peer, None, request, Kind::ManualRehash).await
+}
+
 async fn check_json(
     state: State<CoreSettingsWrites>,
     peer: ConnectInfo<SocketAddr>,
@@ -1289,6 +1380,33 @@ async fn check_json(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn manual_rehash_conflict_preserves_the_source_response_and_blocked_accounts() {
+        let automatic = StoreError::StatusBody(
+            409,
+            json!({
+                "detail": "automatic message",
+                "m3u_hash_key": ["automatic field error"],
+                "blocked_accounts": [18, 12],
+            }),
+        );
+        match manual_rehash_conflict(automatic) {
+            StoreError::StatusBody(409, body) => assert_eq!(
+                body,
+                json!({
+                    "success": false,
+                    "message": "Stream rehash blocked: one or more M3U accounts that use the global hash key are currently refreshing. Try again after those refreshes finish.",
+                    "blocked_accounts": [18, 12],
+                })
+            ),
+            other => panic!("{other:?}"),
+        }
+        assert!(matches!(
+            manual_rehash_conflict(StoreError::PermissionDenied),
+            StoreError::PermissionDenied
+        ));
+    }
 
     #[test]
     fn ts_health_defaults_only_for_owned_database_availability_failures() {
