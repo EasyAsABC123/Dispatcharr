@@ -30,6 +30,7 @@ mod test_integration;
 // Bound the total projection in the same read that obtains the response.
 // The quote covers nested rows, JSON-escaped strings, field names and separators.
 const RESPONSE_LIMIT: i64 = 1024 * 1024;
+const INTEGRATIONS_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
 const LIST: &str = r#"
 WITH size_bound AS (
     SELECT (SELECT COALESCE(SUM(octet_length(to_json(i.name)::text)::bigint
@@ -72,6 +73,9 @@ fn capacity() -> StoreError {
 }
 
 pub(crate) fn router(auth: AuthService) -> Router {
+    let integrations_json = get(fixed_json_integrations)
+        .head(crate::core_reads::omitted_json_method)
+        .fallback(crate::core_reads::omitted_json_method);
     let subscription_collection = get(list_subscriptions).post(create_subscription);
     let subscription_detail = get(retrieve_subscription)
         .put(write_subscription)
@@ -79,6 +83,8 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .delete(delete_subscription);
     Router::new()
         .route("/api/connect/integrations/", get(list).post(create))
+        .route("/api/connect/integrations.json", integrations_json.clone())
+        .route("/api/connect/integrations.json/", integrations_json)
         .route("/api/connect/logs/", get(logs))
         .route("/api/connect/logs.json", get(fixed_json_logs))
         .route("/api/connect/logs.json/", get(fixed_json_logs))
@@ -284,7 +290,33 @@ async fn list(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
 ) -> Result<Response, StoreError> {
-    execute(auth, peer, headers, ConnectRequest::Integrations).await
+    execute(
+        auth,
+        peer,
+        headers,
+        ConnectRequest::Integrations { fixed_json: false },
+    )
+    .await
+}
+
+async fn fixed_json_integrations(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+) -> Response {
+    let response = if accepts_log_json(&headers) {
+        execute(
+            auth,
+            peer,
+            headers,
+            ConnectRequest::Integrations { fixed_json: true },
+        )
+        .await
+        .into_response()
+    } else {
+        unacceptable_log_media()
+    };
+    crate::channels::channel_options_headers(response, HeaderValue::from_static(INTEGRATIONS_ALLOW))
 }
 
 async fn logs(
@@ -367,7 +399,7 @@ fn accepts_log_media(headers: &HeaderMap, wildcard: &str, media_type: &str) -> b
 }
 
 enum ConnectRequest {
-    Integrations,
+    Integrations { fixed_json: bool },
     Integration(String),
     IntegrationSubscriptions(String, bool),
     Subscriptions,
@@ -453,7 +485,7 @@ async fn execute(
     headers: HeaderMap,
     request: ConnectRequest,
 ) -> Result<Response, StoreError> {
-    let fixed_json_log = uses_fixed_json_log_response(&request);
+    let fixed_json_allow = fixed_json_response_allow(&request);
     let permit = Arc::new(
         auth.user_agent_workers
             .clone()
@@ -472,7 +504,7 @@ async fn execute(
             .then(|| subject.user().username.clone());
         drop(subject);
         let (status, payload) = match request {
-            ConnectRequest::Integrations => (
+            ConnectRequest::Integrations { .. } => (
                 StatusCode::OK,
                 sqlx::query_scalar::<_, Option<String>>(LIST)
                     .bind(RESPONSE_LIMIT)
@@ -549,15 +581,25 @@ async fn execute(
                 subscriptions::replace(&auth.store, id, request).await?,
             ),
         };
-        json_response(status, payload, permit, fixed_json_log)
+        json_response(status, payload, permit, fixed_json_allow)
     })
     .await
     .map_err(|_| capacity())?
 }
 
-fn uses_fixed_json_log_response(request: &ConnectRequest) -> bool {
-    matches!(request, ConnectRequest::Logs(uri)
-        if matches!(uri.path(), "/api/connect/logs.json" | "/api/connect/logs.json/"))
+fn fixed_json_response_allow(request: &ConnectRequest) -> Option<&'static str> {
+    match request {
+        ConnectRequest::Integrations { fixed_json: true } => Some(INTEGRATIONS_ALLOW),
+        ConnectRequest::Logs(uri)
+            if matches!(
+                uri.path(),
+                "/api/connect/logs.json" | "/api/connect/logs.json/"
+            ) =>
+        {
+            Some("GET, HEAD, OPTIONS")
+        }
+        _ => None,
+    }
 }
 
 fn compact_projected_json(bytes: &mut Vec<u8>) {
@@ -587,7 +629,7 @@ fn json_response(
     status: StatusCode,
     payload: String,
     permit: Arc<OwnedSemaphorePermit>,
-    fixed_json_log: bool,
+    fixed_json_allow: Option<&'static str>,
 ) -> Result<Response, StoreError> {
     let mut bytes = payload.into_bytes();
     if bytes.len() > RESPONSE_LIMIT as usize {
@@ -596,9 +638,9 @@ fn json_response(
     let mut response = Response::builder()
         .status(status)
         .header(header::CONTENT_TYPE, "application/json");
-    if fixed_json_log && status == StatusCode::OK {
+    if let Some(allow) = fixed_json_allow.filter(|_| status == StatusCode::OK) {
         compact_projected_json(&mut bytes);
-        response = response.header(header::ALLOW, "GET, HEAD, OPTIONS");
+        response = response.header(header::ALLOW, allow);
     }
     response
         .header(header::CONTENT_LENGTH, bytes.len())
@@ -612,6 +654,69 @@ fn json_response(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn connect_integration_collection_json_reuses_admin_reads_only() {
+        use axum::{body::to_bytes, http::Request};
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://unused@127.0.0.1:1/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store { pool },
+            crate::AuthConfig::new("local-owned-integration-fixture".into()).unwrap(),
+        );
+        let app = router(auth);
+        for uri in [
+            "/api/connect/integrations.json",
+            "/api/connect/integrations.json/",
+        ] {
+            for (method, accept, expected) in [
+                (Method::GET, "application/json", StatusCode::UNAUTHORIZED),
+                (Method::GET, "text/html", StatusCode::NOT_ACCEPTABLE),
+                (Method::POST, "application/json", StatusCode::NOT_FOUND),
+                (Method::HEAD, "application/json", StatusCode::NOT_FOUND),
+            ] {
+                let request = Request::builder()
+                    .method(method)
+                    .uri(uri)
+                    .header(header::ACCEPT, accept)
+                    .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 19000))))
+                    .body(Body::empty())
+                    .unwrap();
+                let response = app.clone().oneshot(request).await.unwrap();
+                assert_eq!(response.status(), expected);
+                if expected != StatusCode::NOT_FOUND {
+                    assert_eq!(response.headers()[header::ALLOW], INTEGRATIONS_ALLOW);
+                    assert_eq!(response.headers()[header::VARY], "Accept");
+                    assert_eq!(
+                        response.headers().contains_key(header::WWW_AUTHENTICATE),
+                        expected == StatusCode::UNAUTHORIZED
+                    );
+                }
+            }
+        }
+
+        let capacity = Arc::new(tokio::sync::Semaphore::new(1));
+        let response = json_response(
+            StatusCode::OK,
+            r#"[{"id" : 7, "name" : "Owned integration", "config" : {}, "subscriptions" : []}]"#
+                .into(),
+            Arc::new(capacity.clone().try_acquire_owned().unwrap()),
+            fixed_json_response_allow(&ConnectRequest::Integrations { fixed_json: true }),
+        )
+        .unwrap();
+        assert_eq!(response.headers()[header::ALLOW], INTEGRATIONS_ALLOW);
+        assert_eq!(capacity.available_permits(), 0);
+        let body = to_bytes(response.into_body(), 128).await.unwrap();
+        assert_eq!(
+            body.as_ref(),
+            br#"[{"id":7,"name":"Owned integration","config":{},"subscriptions":[]}]"#
+        );
+        drop(body);
+        assert_eq!(capacity.available_permits(), 1);
+    }
 
     #[tokio::test]
     async fn fixed_json_log_success_keeps_order_and_literal_spaces_with_method_metadata() {
@@ -629,7 +734,7 @@ mod tests {
                 status,
                 projected.to_owned(),
                 Arc::new(owner.clone().try_acquire_owned().unwrap()),
-                uses_fixed_json_log_response(&request),
+                fixed_json_response_allow(&request),
             )
             .unwrap();
             let expected = if fixed { compact } else { projected };
