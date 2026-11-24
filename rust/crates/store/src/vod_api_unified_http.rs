@@ -4,7 +4,7 @@
 //! Original Dispatcharr authors/contributors retain credit and AGPL licensing.
 use super::vod_api_owned_read::HttpScope;
 use super::{
-    vod_api_http::{json_indent, pretty_document, HttpGate},
+    vod_api_http::{json_indent, json_list_path, pretty_document, HttpGate},
     vod_api_owned_read::{ReadError, ReadRuntime},
     vod_api_read_component::HttpRead,
     vod_api_unified_dispatch::{UnifiedReads, UnifiedRequest},
@@ -12,7 +12,7 @@ use super::{
 use axum::{
     body::{to_bytes, Body},
     extract::ConnectInfo,
-    http::{HeaderValue, Method},
+    http::{HeaderValue, Method, StatusCode},
     response::{IntoResponse, Response},
     routing::any,
     Router,
@@ -46,7 +46,12 @@ impl UnifiedHttp {
     }
     pub fn router(&self) -> Router {
         let mut router = Router::new();
-        for (path, detail) in [("/api/vod/all/", false), ("/api/vod/all/{id}/", true)] {
+        for (path, detail, json_only) in [
+            ("/api/vod/all/", false, false),
+            ("/api/vod/all/{id}/", true, false),
+            ("/api/vod/all.json", false, true),
+            ("/api/vod/all.json/", false, true),
+        ] {
             let state = self.clone();
             router = router.route(
                 path,
@@ -54,7 +59,13 @@ impl UnifiedHttp {
                     move |ConnectInfo(peer): ConnectInfo<SocketAddr>,
                           request: axum::extract::Request| {
                         let state = state.clone();
-                        async move { state.respond(peer, detail, request).await }
+                        async move {
+                            if json_only && !json_list_path(request.method(), request.uri().path())
+                            {
+                                return StatusCode::NOT_FOUND.into_response();
+                            }
+                            state.respond(peer, detail, request).await
+                        }
                     },
                 ),
             );

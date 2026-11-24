@@ -23,7 +23,9 @@ The catch-up and STD units passed, and the signed PostgreSQL resolver and real-R
 
 Administrator Channel Batch now accepts ordered stream replacement and explicit clearing. Stream references are validated across the request before writing, surviving links retain their IDs, and the existing catch-up rollup updates the persisted channel. PATCH preserves the previously loaded catch-up values, which a fresh GET then reads from the updated channel.
 
-Movie, Series, and Episode numeric detail GETs accept the Source's literal JSON suffix. These aliases use the existing authorization and bounded SQL read and preserve JSON negotiation. Sixteen Channel Batch and two VOD Store tests passed. The final Compose fixtures still need to verify persisted ordering, catch-up response timing, and the signed roles on the ordinary packaged handlers.
+Channel Batch also accepts raw channel numbers, TVG IDs, guide station IDs, and EPG assignments. It distinguishes explicit clears from omitted fields and preserves the existing compact-number behavior when a request also changes visibility. Raw EPG writes preserve Original's bulk-update behavior and skip guide publication.
+
+Numeric Movie, Series, Episode and Category detail GETs and Movie, Series, Episode and Unified collection GETs accept Original's literal JSON suffix. The aliases reuse authorization, bounded SQL reads, and JSON negotiation. Focused Store tests passed. The final Compose fixtures still need to verify persisted ordering, catch-up response timing, and signed role behavior on the ordinary packaged handlers.
 
 ## One frozen verification campaign
 

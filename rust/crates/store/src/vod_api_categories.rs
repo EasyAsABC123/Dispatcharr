@@ -455,7 +455,15 @@ impl CategoryReads {
             let indent=http.as_ref().and_then(|_|super::vod_api_http::json_indent(&request.headers));
             let result=async {
             work.check()?;
-            if let Some(http)=&http {category_negotiate(&request.headers,&http.uri)?;request.query=url::form_urlencoded::parse(http.uri.query().unwrap_or("").as_bytes()).into_owned().collect();}
+            if let Some(http)=&http {
+                if let Some(id)=request.detail.as_deref().and_then(|raw|super::vod_api_http::json_detail_id(&http.method,raw)) {
+                    crate::core_reads::negotiate_literal_json_alias(&request.headers)?;
+                    request.detail=Some(id.to_owned());
+                } else {
+                    category_negotiate(&request.headers,&http.uri)?;
+                }
+                request.query=url::form_urlencoded::parse(http.uri.query().unwrap_or("").as_bytes()).into_owned().collect();
+            }
             let guard=work.io_guard()?.erased();let guard:Arc<dyn Send+Sync>=match http.as_ref().and_then(|value|value.scope.as_ref()){Some(scope)=>Arc::new((guard,scope.clone())),None=>guard};
             let scoped=state.auth.clone().with_retained_scope(guard);let user=scoped.account_user(request.peer,request.headers,false).await?;
             work.check()?;

@@ -407,6 +407,17 @@ pub(super) fn json_detail_id<'a>(method: &Method, segment: &'a str) -> Option<&'
     (!id.is_empty() && id.bytes().all(|byte| byte.is_ascii_digit())).then_some(id)
 }
 
+pub(super) fn json_list_path(method: &Method, path: &str) -> bool {
+    *method == Method::GET
+        && matches!(
+            path.strip_suffix('/').unwrap_or(path),
+            "/api/vod/movies.json"
+                | "/api/vod/series.json"
+                | "/api/vod/episodes.json"
+                | "/api/vod/all.json"
+        )
+}
+
 pub(crate) fn router(reader: SqlReads, auth: crate::AuthService) -> Router {
     let gate = HttpGate::new(super::vod_api_owned_read::ReadLimits::default())
         .expect("default HTTP budget");
@@ -424,6 +435,16 @@ pub(crate) fn router_with_gate(
             (root.clone(), false, false),
             (format!("{root}{{id}}/"), true, false),
             (format!("{root}{{id}}"), true, true),
+            (
+                format!("/api/vod/{}.json", resource_name(resource)),
+                false,
+                true,
+            ),
+            (
+                format!("/api/vod/{}.json/", resource_name(resource)),
+                false,
+                true,
+            ),
         ] {
             let reader = reader.clone();
             let auth = auth.clone();
@@ -440,7 +461,12 @@ pub(crate) fn router_with_gate(
                             if json_only {
                                 let segment =
                                     request.uri().path().rsplit('/').next().unwrap_or_default();
-                                if json_detail_id(request.method(), segment).is_none() {
+                                let valid = if detail {
+                                    json_detail_id(request.method(), segment).is_some()
+                                } else {
+                                    json_list_path(request.method(), request.uri().path())
+                                };
+                                if !valid {
                                     return StatusCode::NOT_FOUND.into_response();
                                 }
                             }
@@ -753,6 +779,46 @@ mod tests {
                     serde_json::from_slice::<Value>(&body).unwrap(),
                     json!({"detail":"Could not satisfy the request Accept header."})
                 );
+            }
+        }
+        assert!(service.shutdown(Duration::from_secs(1)).await);
+    }
+
+    #[tokio::test]
+    async fn json_collection_aliases_use_normal_ordinary_and_unified_routers() {
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://fixture:fixture@127.0.0.1:1/fixture")
+            .unwrap();
+        let auth = crate::AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("fixture-only".into()).unwrap(),
+        );
+        let service = VodReads::new(
+            auth,
+            super::super::vod_api_owned_read::ReadLimits::default(),
+        )
+        .unwrap();
+        let router = service.router().merge(service.unified_router());
+        for name in ["movies", "series", "episodes", "all"] {
+            for slash in ["", "/"] {
+                for (method, media, status) in [
+                    (Method::GET, "text/html", StatusCode::NOT_ACCEPTABLE),
+                    (Method::POST, "application/json", StatusCode::NOT_FOUND),
+                ] {
+                    let mut request = axum::http::Request::builder()
+                        .method(method)
+                        .uri(format!("/api/vod/{name}.json{slash}?format=api"))
+                        .header("accept", media)
+                        .body(Body::empty())
+                        .unwrap();
+                    request
+                        .extensions_mut()
+                        .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1234))));
+                    let response = router.clone().oneshot(request).await.unwrap();
+                    assert_eq!(response.status(), status);
+                }
             }
         }
         assert!(service.shutdown(Duration::from_secs(1)).await);

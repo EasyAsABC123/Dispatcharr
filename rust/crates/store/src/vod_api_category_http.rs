@@ -3,14 +3,14 @@
 use super::vod_api_owned_read::HttpScope;
 use super::{
     vod_api_categories::{CategoryReads, CategoryRequest},
-    vod_api_http::{json_indent, pretty_document, HttpGate},
+    vod_api_http::{json_detail_id, json_indent, pretty_document, HttpGate},
     vod_api_owned_read::{ReadError, ReadRuntime},
     vod_api_read_component::HttpRead,
 };
 use axum::{
     body::{to_bytes, Body},
     extract::ConnectInfo,
-    http::{HeaderValue, Method},
+    http::{HeaderValue, Method, StatusCode},
     response::{IntoResponse, Response},
     routing::any,
     Router,
@@ -54,9 +54,10 @@ impl CategoryHttp {
     }
     pub(super) fn router(&self) -> Router {
         let mut router = Router::new();
-        for (path, detail) in [
-            ("/api/vod/categories/", false),
-            ("/api/vod/categories/{id}/", true),
+        for (path, detail, json_only) in [
+            ("/api/vod/categories/", false, false),
+            ("/api/vod/categories/{id}/", true, false),
+            ("/api/vod/categories/{id}", true, true),
         ] {
             let state = self.clone();
             router = router.route(
@@ -65,7 +66,16 @@ impl CategoryHttp {
                     move |ConnectInfo(peer): ConnectInfo<SocketAddr>,
                           request: axum::extract::Request| {
                         let state = state.clone();
-                        async move { state.respond(peer, detail, request).await }
+                        async move {
+                            if json_only {
+                                let segment =
+                                    request.uri().path().rsplit('/').next().unwrap_or_default();
+                                if json_detail_id(request.method(), segment).is_none() {
+                                    return StatusCode::NOT_FOUND.into_response();
+                                }
+                            }
+                            state.respond(peer, detail, request).await
+                        }
                     },
                 ),
             );
@@ -978,4 +988,59 @@ pub(super) async fn compare_default_fault_wire() {
     )
     .unwrap();
     assert_eq!(report["passed"], true, "default wire differences retained");
+}
+
+#[cfg(test)]
+mod json_detail_tests {
+    use super::*;
+    use axum::http::Request;
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn numeric_category_json_alias_negotiates_get_at_the_normal_router() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://fixture:fixture@127.0.0.1:1/fixture")
+            .unwrap();
+        let auth = crate::AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("fixture-only".into()).unwrap(),
+        );
+        let service = CategoryHttp::new(auth, ReadLimits::default()).unwrap();
+        let router = service.router();
+        for path in [
+            "/api/vod/categories/42.json?format=api",
+            "/api/vod/categories/42.json/?format=api",
+        ] {
+            let mut request = Request::builder()
+                .uri(path)
+                .header("accept", "text/html")
+                .body(Body::empty())
+                .unwrap();
+            request
+                .extensions_mut()
+                .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1234))));
+            let reply = router.clone().oneshot(request).await.unwrap();
+            assert_eq!(reply.status(), StatusCode::NOT_ACCEPTABLE);
+            assert_eq!(reply.headers()["vary"], "Accept, origin");
+        }
+        for (method, path) in [
+            (Method::GET, "/api/vod/categories/42.api"),
+            (Method::GET, "/api/vod/categories/42"),
+            (Method::POST, "/api/vod/categories/42.json"),
+        ] {
+            let mut request = Request::builder()
+                .method(method)
+                .uri(path)
+                .body(Body::empty())
+                .unwrap();
+            request
+                .extensions_mut()
+                .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1234))));
+            assert_eq!(
+                router.clone().oneshot(request).await.unwrap().status(),
+                StatusCode::NOT_FOUND
+            );
+        }
+        assert!(service.shutdown(Duration::from_secs(1)).await);
+    }
 }

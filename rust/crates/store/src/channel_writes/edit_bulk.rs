@@ -91,11 +91,90 @@ impl FromIterator<References> for ReferenceColumns {
 }
 
 #[derive(Debug, Default, PartialEq, Eq)]
+struct RawMetadata {
+    columns: Map<String, Value>,
+    validation_errors: Map<String, Value>,
+    epg: Option<(i64, String)>,
+}
+
+impl RawMetadata {
+    fn parse(raw: &Map<String, Value>) -> Result<Self, StoreError> {
+        let mut result = Self::default();
+        for field in [
+            "channel_number",
+            "tvg_id",
+            "tvc_guide_stationid",
+            "epg_data_id",
+        ] {
+            let Some(value) = raw.get(field) else {
+                continue;
+            };
+            let parsed = match field {
+                "channel_number" => super::decimal(field, value, None),
+                "epg_data_id" => {
+                    let display = value
+                        .as_str()
+                        .map(str::to_owned)
+                        .unwrap_or_else(|| value.to_string());
+                    if value.is_null() || value.as_str() == Some("") {
+                        Ok(Value::Null)
+                    } else {
+                        match primary_key(value).map_err(|error| rename(error, "channel", field)) {
+                            Ok(Some(id)) => {
+                                result.epg = Some((id, display));
+                                Ok(json!(id))
+                            }
+                            Ok(None) => Err(err(field, &invalid_epg_pk_message(&display))),
+                            Err(error) => Err(error),
+                        }
+                    }
+                }
+                _ if value.is_null() => Ok(Value::Null),
+                _ => character(field, value, Some(255), true).map(Value::String),
+            };
+            match parsed {
+                Ok(value) => {
+                    result.columns.insert(field.to_owned(), value);
+                }
+                // Source checks Channel existence before serializer errors.
+                Err(StoreError::InvalidInput(Value::Object(errors))) => {
+                    result.validation_errors.extend(errors);
+                }
+                Err(error) => return Err(error),
+            }
+        }
+        Ok(result)
+    }
+
+    fn errors(&self, epgs: &BTreeSet<i64>) -> Map<String, Value> {
+        let mut errors = self.validation_errors.clone();
+        if let Some((_, display)) = self.epg.as_ref().filter(|(id, _)| !epgs.contains(id)) {
+            errors.insert(
+                "epg_data_id".into(),
+                json!([invalid_epg_pk_message(display)]),
+            );
+        }
+        errors
+    }
+
+    fn has_number_after_scalars(&self, before: &LockedChannel) -> bool {
+        self.columns
+            .get("channel_number")
+            .map_or(before.has_raw_number, |number| !number.is_null())
+    }
+}
+
+fn invalid_epg_pk_message(display: &str) -> String {
+    format!("Invalid pk \"{display}\" - object does not exist.")
+}
+
+#[derive(Debug, Default, PartialEq, Eq)]
 struct Edit {
     id: i64,
     name: Option<String>,
     name_error: Option<Value>,
     group: Option<i64>,
+    raw_metadata: RawMetadata,
     override_group: Option<i64>,
     mature: Option<bool>,
     radio: Option<bool>,
@@ -113,6 +192,14 @@ impl Edit {
         self.override_group.is_some()
             || self.override_radio.is_some()
             || self.override_references.present()
+    }
+
+    fn changes_compact_number(&self, before: &LockedChannel, hidden: bool) -> bool {
+        if hidden {
+            before.can_change_compact_number(true)
+        } else {
+            before.managed && before.hidden && !self.raw_metadata.has_number_after_scalars(before)
+        }
     }
 
     fn changes_override(&self) -> bool {
@@ -258,6 +345,10 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                     key.as_str(),
                     "id" | "name"
                         | "channel_group_id"
+                        | "channel_number"
+                        | "tvg_id"
+                        | "tvc_guide_stationid"
+                        | "epg_data_id"
                         | "is_adult"
                         | "is_radio"
                         | "user_level"
@@ -314,6 +405,7 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                 name,
                 name_error,
                 group: row.get("channel_group_id").map(group).transpose()?,
+                raw_metadata: RawMetadata::parse(row)?,
                 override_group,
                 override_radio,
                 override_references,
@@ -383,6 +475,7 @@ fn reference_errors(
     .collect()
 }
 
+#[derive(Default)]
 struct LockedChannel {
     managed: bool,
     hidden: bool,
@@ -410,6 +503,14 @@ async fn validate_and_lock(
         "SELECT id FROM dispatcharr_channels_channelgroup WHERE id = ANY($1) ORDER BY id FOR KEY SHARE",
         edits.iter().flat_map(|edit| [edit.group, edit.override_group].into_iter().flatten()),
     ).await?;
+    let epgs = lock_references(
+        tx,
+        "SELECT id FROM epg_epgdata WHERE id = ANY($1) ORDER BY id FOR KEY SHARE",
+        edits
+            .iter()
+            .filter_map(|edit| edit.raw_metadata.epg.as_ref().map(|(id, _)| *id)),
+    )
+    .await?;
     let profiles = lock_references(
         tx,
         "SELECT id FROM core_streamprofile WHERE id = ANY($1) ORDER BY id FOR KEY SHARE",
@@ -505,6 +606,7 @@ async fn validate_and_lock(
             return Err(unsupported());
         }
         let mut fields = reference_errors(edit.group, edit.references, &groups, &profiles, &logos);
+        fields.extend(edit.raw_metadata.errors(&epgs));
         let nested = reference_errors(
             edit.override_group,
             edit.override_references,
@@ -561,7 +663,7 @@ async fn apply(
     for edit in edits {
         if let Some(hidden) = edit
             .hidden
-            .filter(|hidden| selected[&edit.id].can_change_compact_number(*hidden))
+            .filter(|hidden| edit.changes_compact_number(&selected[&edit.id], *hidden))
         {
             if hidden {
                 hide.push(edit.id);
@@ -576,6 +678,7 @@ async fn apply(
             || edit.radio.is_some()
             || edit.hidden.is_some()
             || edit.references.present()
+            || !edit.raw_metadata.columns.is_empty()
         {
             scalar_edits.push(edit);
         }
@@ -597,6 +700,21 @@ async fn apply(
         let hidden: Vec<_> = chunk.iter().map(|edit| edit.hidden).collect();
         let names: Vec<_> = chunk.iter().map(|edit| edit.name.as_deref()).collect();
         let refs: ReferenceColumns = chunk.iter().map(|edit| edit.references).collect();
+        let metadata: Vec<_> = chunk
+            .iter()
+            .map(|edit| sqlx::types::Json(&edit.raw_metadata.columns))
+            .collect();
+        // Use a bound float to preserve the sign of negative zero; JSONB stores
+        // every zero identically.
+        let numbers: Vec<_> = chunk
+            .iter()
+            .map(|edit| {
+                edit.raw_metadata
+                    .columns
+                    .get("channel_number")
+                    .and_then(Value::as_f64)
+            })
+            .collect();
         // Stock bulk_update leaves channel row clocks unchanged.
         sqlx::query(
             "UPDATE dispatcharr_channels_channel AS channel
@@ -607,11 +725,15 @@ async fn apply(
                  stream_profile_id = CASE WHEN change.has_profile THEN change.profile ELSE channel.stream_profile_id END,
                  logo_id = CASE WHEN change.has_logo THEN change.logo ELSE channel.logo_id END,
                  hidden_from_output = COALESCE(change.hidden, channel.hidden_from_output),
-                 name = COALESCE(change.name, channel.name)
+                 name = COALESCE(change.name, channel.name),
+                 channel_number = CASE WHEN change.metadata ? 'channel_number' THEN change.number ELSE channel.channel_number END,
+                 tvg_id = CASE WHEN change.metadata ? 'tvg_id' THEN change.metadata->>'tvg_id' ELSE channel.tvg_id END,
+                 tvc_guide_stationid = CASE WHEN change.metadata ? 'tvc_guide_stationid' THEN change.metadata->>'tvc_guide_stationid' ELSE channel.tvc_guide_stationid END,
+                 epg_data_id = CASE WHEN change.metadata ? 'epg_data_id' THEN (change.metadata->>'epg_data_id')::bigint ELSE channel.epg_data_id END
              FROM unnest($1::bigint[], $2::bigint[], $3::boolean[], $4::boolean[], $5::integer[],
                          $6::boolean[], $7::bigint[], $8::boolean[], $9::bigint[], $10::boolean[],
-                         $11::text[])
-                 AS change(id, group_id, mature, radio, level, has_profile, profile, has_logo, logo, hidden, name)
+                         $11::text[], $12::jsonb[], $13::float8[])
+                 AS change(id, group_id, mature, radio, level, has_profile, profile, has_logo, logo, hidden, name, metadata, number)
              WHERE channel.id = change.id",
         )
         .bind(ids)
@@ -625,6 +747,8 @@ async fn apply(
         .bind(refs.logos)
         .bind(hidden)
         .bind(names)
+        .bind(metadata)
+        .bind(numbers)
         .execute(&mut **tx)
         .await?;
     }
@@ -776,7 +900,7 @@ async fn update_and_read(
                 row["catchup_days"] = json!(before.catchup_days);
             }
             if edit.hidden == Some(false)
-                && before.can_change_compact_number(false)
+                && edit.changes_compact_number(before, false)
                 && !row["channel_number"].is_null()
             {
                 project_unhide_response(&mut row);
@@ -1119,6 +1243,82 @@ mod tests {
                 }
             }
         }
+    }
+
+    #[test]
+    fn raw_metadata_keeps_clears_distinct_and_validates_source_field_contracts() {
+        let rows = edits(json!([
+            {"id": 1, "channel_number": "31.25", "tvg_id": "  typed  ",
+             "tvc_guide_stationid": "   ", "epg_data_id": "08"},
+            {"id": 2, "channel_number": null, "tvg_id": null, "epg_data_id": null},
+            {"id": 3, "channel_number": [], "tvg_id": true,
+             "tvc_guide_stationid": "x".repeat(256), "epg_data_id": false},
+            {"id": 4}
+        ]))
+        .unwrap();
+        assert_eq!(rows[0].raw_metadata.columns, json!({
+            "channel_number": 31.25, "tvg_id": "typed", "tvc_guide_stationid": "", "epg_data_id": 8
+        }).as_object().unwrap().clone());
+        assert_eq!(
+            rows[0].raw_metadata.errors(&BTreeSet::new())["epg_data_id"],
+            json!(["Invalid pk \"08\" - object does not exist."])
+        );
+        assert!(rows[0].raw_metadata.errors(&BTreeSet::from([8])).is_empty());
+        assert_eq!(
+            rows[1].raw_metadata.columns,
+            json!({
+                "channel_number": null, "tvg_id": null, "epg_data_id": null
+            })
+            .as_object()
+            .unwrap()
+            .clone()
+        );
+        assert_eq!(
+            rows[2].raw_metadata.errors(&BTreeSet::new()),
+            json!({
+                "channel_number": ["Channel number must be a valid decimal number."],
+                "tvg_id": ["Not a valid string."],
+                "tvc_guide_stationid": ["Ensure this field has no more than 255 characters."],
+                "epg_data_id": ["Incorrect type. Expected pk value, received bool."]
+            })
+            .as_object()
+            .unwrap()
+            .clone()
+        );
+        assert!(rows[3].raw_metadata.columns.is_empty());
+        assert!(rows[3].raw_metadata.errors(&BTreeSet::new()).is_empty());
+    }
+
+    #[test]
+    fn explicit_batch_numbers_feed_unhide_but_hide_uses_the_old_candidate() {
+        let rows = edits(json!([
+            {"id": 1, "hidden_from_output": false, "channel_number": 1111.5},
+            {"id": 2, "hidden_from_output": false, "channel_number": null},
+            {"id": 3, "hidden_from_output": true, "channel_number": 1222.5}
+        ]))
+        .unwrap();
+        let before = LockedChannel {
+            managed: true,
+            hidden: true,
+            has_raw_number: false,
+            ..LockedChannel::default()
+        };
+        assert!(!rows[0].changes_compact_number(&before, false));
+        let before = LockedChannel {
+            has_raw_number: true,
+            ..before
+        };
+        assert!(rows[1].changes_compact_number(&before, false));
+        let before = LockedChannel {
+            hidden: false,
+            ..before
+        };
+        assert!(rows[2].changes_compact_number(&before, true));
+        let before = LockedChannel {
+            has_raw_number: false,
+            ..before
+        };
+        assert!(!rows[2].changes_compact_number(&before, true));
     }
 
     #[test]

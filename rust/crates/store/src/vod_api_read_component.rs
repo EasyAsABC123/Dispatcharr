@@ -144,8 +144,10 @@ impl SqlReads {
             let result=async {
             work.check()?;
             if let Some(http)=&http {
-                let fixed_json = http.raw_detail.as_deref()
-                    .and_then(|raw| super::vod_api_http::json_detail_id(&http.method, raw)).is_some();
+                let fixed_json = match http.raw_detail.as_deref() {
+                    Some(raw) => super::vod_api_http::json_detail_id(&http.method, raw).is_some(),
+                    None => super::vod_api_http::json_list_path(&http.method, http.uri.path()),
+                };
                 if fixed_json {
                     crate::core_reads::negotiate_literal_json_alias(&request.headers)?;
                 } else {

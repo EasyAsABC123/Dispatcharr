@@ -3,7 +3,7 @@
 //! browsable HTML/query/property grammar remain separate acceptance gates.
 //! Original Dispatcharr authors/contributors retain credit and AGPL licensing.
 use super::{
-    vod_api_http::{json_indent, negotiate, pretty_document},
+    vod_api_http::{json_indent, json_list_path, negotiate, pretty_document},
     vod_api_owned_read::{ReadError, ReadRuntime},
     vod_api_projection::visibility,
     vod_api_read_component::HttpRead,
@@ -58,12 +58,14 @@ impl UnifiedReads {
         let completed = metadata.clone();
         let bytes=self.runtime.run_scoped(input,Some(http.deadline),http.scope.clone(),move |work| async move {
             let indent=json_indent(&request.headers);
-            let html=super::vod_api_unified_html::requested(&request.headers);
+            let fixed_json=json_list_path(&http.method,http.uri.path());
+            let html=!fixed_json&&super::vod_api_unified_html::requested(&request.headers);
             let cookie=super::vod_api_unified_html::cookie(&request.headers);
             let mut identity=None;
             let result=async {
                 work.check()?;
-                if !html {negotiate(&request.headers,&http.uri)?;}
+                if fixed_json {crate::core_reads::negotiate_literal_json_alias(&request.headers)?;}
+                else if !html {negotiate(&request.headers,&http.uri)?;}
                 else if !matches!(http.method,Method::GET|Method::HEAD) {return Err(ReadError::Unsupported("Browsable method template context is not captured"));}
                 let guard=work.io_guard()?.erased();
                 let guard:Arc<dyn Send+Sync>=match &http.scope {Some(scope)=>Arc::new((guard,scope.clone())),None=>guard};
