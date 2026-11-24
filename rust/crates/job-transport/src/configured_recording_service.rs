@@ -6,7 +6,7 @@ use crate::recording_artwork::DirectTask;
 use chrono::{DateTime, Utc};
 use dispatcharr_contracts::{BoxFuture, UpdateEventError, UpdateEventSink};
 use dispatcharr_store::{
-    recording_schedule::{self, FutureRecording, ProgrammeRow, SeriesScope},
+    recording_schedule::{self, FutureRecording, ProgrammeRow, SeriesScope, SeriesTitle},
     series_evaluate::{is_new, original_air_date},
 };
 use serde_json::{json, Value};
@@ -204,7 +204,7 @@ fn number(v: &Value) -> Result<u32, Error> {
 /// The signed editor persists description fields even for title-only exact
 /// rules. Normal Main carries new-only selection separately from the
 /// existing preclaim shape. Legacy configured callers stay exact/all.
-fn normalize_normal_series_rule(rule: &mut Value) -> Result<Option<bool>, Error> {
+fn normalize_normal_series_rule(rule: &mut Value) -> Result<(Option<bool>, SeriesTitle), Error> {
     let rule = rule.as_object_mut().ok_or(Error::Unsupported)?;
     let strip = |value: &str| {
         value
@@ -233,7 +233,12 @@ fn normalize_normal_series_rule(rule: &mut Value) -> Result<Option<bool>, Error>
     };
     let mode = normalize("mode", "all")?;
     let title_mode = normalize("title_mode", "exact")?;
-    if title_mode != "exact" || !matches!(mode.as_str(), "all" | "new") {
+    let title_match = match title_mode.as_str() {
+        "exact" => SeriesTitle::Exact,
+        "contains" => SeriesTitle::Contains,
+        _ => return Err(Error::Unsupported),
+    };
+    if !matches!(mode.as_str(), "all" | "new") {
         return Err(Error::Unsupported);
     }
     let untagged = rule.remove("untagged_is_new");
@@ -253,7 +258,7 @@ fn normalize_normal_series_rule(rule: &mut Value) -> Result<Option<bool>, Error>
             *value = strip(value);
         }
     }
-    Ok(new_only)
+    Ok((new_only, title_match))
 }
 
 fn optional_episode(value: Option<&Value>) -> Result<Option<u32>, Error> {
@@ -367,13 +372,19 @@ impl Service {
                 intents: vec![],
             });
         }
-        let new_only = match rules.as_mut_slice() {
+        let (new_only, title_match) = match rules.as_mut_slice() {
             [rule] => normalize_normal_series_rule(rule)?,
             _ => return Err(Error::Unsupported),
         };
         group.insert("series_rules".into(), Value::Array(rules));
-        self.prepare_series_mode(&Value::Object(group), now, task, owner, new_only)
-            .await
+        self.prepare_series_mode(
+            &Value::Object(group),
+            now,
+            task,
+            owner,
+            (new_only, title_match),
+        )
+        .await
     }
     pub async fn prepare_series(
         &self,
@@ -382,7 +393,7 @@ impl Service {
         task: DirectTask,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<PreparedSeries, Error> {
-        self.prepare_series_mode(group, now, task, owner, None)
+        self.prepare_series_mode(group, now, task, owner, (None, SeriesTitle::Exact))
             .await
     }
 
@@ -392,8 +403,12 @@ impl Service {
         now: DateTime<Utc>,
         task: DirectTask,
         owner: Arc<dyn Send + Sync>,
-        new_only: Option<bool>,
+        (new_only, title_match): (Option<bool>, SeriesTitle),
     ) -> Result<PreparedSeries, Error> {
+        let title_mode = match title_match {
+            SeriesTitle::Exact => "exact",
+            SeriesTitle::Contains => "contains",
+        };
         let expected_mode = if new_only.is_some() { "new" } else { "all" };
         if group.get("pre_offset_minutes").and_then(Value::as_i64) != Some(0)
             || group.get("post_offset_minutes").and_then(Value::as_i64) != Some(0)
@@ -416,7 +431,7 @@ impl Service {
         ];
         if rule.len() != keys.len()
             || rule.keys().any(|k| !keys.contains(&k.as_str()))
-            || rule.get("title_mode") != Some(&json!("exact"))
+            || rule.get("title_mode").and_then(Value::as_str) != Some(title_mode)
             || rule.get("mode").and_then(Value::as_str) != Some(expected_mode)
         {
             return Err(Error::Unsupported);
@@ -432,7 +447,7 @@ impl Service {
         let source = rules[0]["epg_source_id"]
             .as_i64()
             .ok_or(Error::Unsupported)?;
-        let scope = SeriesScope::new(channel, source, tvg.clone(), title.clone())
+        let scope = SeriesScope::new(channel, source, tvg.clone(), title.clone(), title_match)
             .ok_or(Error::Unsupported)?;
         let snapshot = recording_schedule::series_snapshot(self.pool.clone(), scope, now, owner)
             .await
@@ -484,8 +499,16 @@ impl Service {
                     .and_then(|_| program.get("sub_title")?.as_str().map(str::to_owned)),
             });
         }
-        let intents = decisions::series(now, &title, &tvg, channel, source, &programmes, &existing)
-            .map_err(|_| Error::Unsupported)?;
+        let intents = decisions::series(
+            now,
+            (&title, title_match),
+            &tvg,
+            channel,
+            source,
+            &programmes,
+            &existing,
+        )
+        .map_err(|_| Error::Unsupported)?;
         Ok(PreparedSeries {
             no_rules: false,
             origin: self.identity.clone(),
@@ -861,7 +884,7 @@ mod normal_defaults_controls {
             json!({"description":"world news"}),
             json!({"description":false}),
             json!({"description_mode":"unknown"}),
-            json!({"title_mode":"contains"}),
+            json!({"title_mode":"regex"}),
             json!({"mode":"new","untagged_is_new":"unqualified"}),
         ] {
             let mut saved = canonical.clone();
@@ -899,7 +922,7 @@ mod normal_defaults_controls {
             "description":"", "description_mode":"contains", "untagged_is_new":true
         });
         let policy = normalize_normal_series_rule(&mut signed).unwrap();
-        assert_eq!(policy, Some(true));
+        assert_eq!(policy, (Some(true), SeriesTitle::Exact));
         assert_eq!(signed["mode"], "new");
 
         for (properties, default_new, opted_new) in [
@@ -939,8 +962,16 @@ mod normal_defaults_controls {
             .into_iter()
             .filter_map(|row| programme(row, 2, 1, Some(false)).unwrap())
             .collect();
-        let intents =
-            decisions::series(now, "Test Show", "test.channel.1", 2, 1, &programmes, &[]).unwrap();
+        let intents = decisions::series(
+            now,
+            ("Test Show", SeriesTitle::Exact),
+            "test.channel.1",
+            2,
+            1,
+            &programmes,
+            &[],
+        )
+        .unwrap();
         assert_eq!(intents.len(), 1);
         let snapshot = &intents[0].properties["program"];
         assert_eq!(snapshot["id"], 2);
@@ -959,7 +990,7 @@ mod normal_defaults_controls {
         };
         assert!(decisions::series(
             now,
-            "Test Show",
+            ("Test Show", SeriesTitle::Exact),
             "test.channel.1",
             2,
             1,

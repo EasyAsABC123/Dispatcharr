@@ -394,6 +394,18 @@ impl Expression {
     }
 }
 
+pub(crate) fn append_contains_title(
+    query: &mut QueryBuilder<'_, Postgres>,
+    title: &str,
+) -> Result<bool, StoreError> {
+    let Some(predicate) = parse_text(title, "contains")? else {
+        return Ok(false);
+    };
+    query.push(" AND ");
+    predicate.write_sql(query, "title");
+    Ok(true)
+}
+
 fn parse_text(value: &str, mode: &str) -> Result<Option<Expression>, StoreError> {
     if value.len() > 4096 || value.contains('\0') {
         return Err(StoreError::InvalidInput(

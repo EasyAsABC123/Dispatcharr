@@ -2,9 +2,10 @@
 //! Derived from Dispatcharr Recording post_save and django-celery-beat models;
 //! original authors retain credit. No application or task registration.
 //! Serial owned execution only: concurrent model/sentinel writers are unproved.
+use crate::epg_program_http::series_preview::append_contains_title;
 use chrono::{DateTime, Utc};
 use serde_json::Value;
-use sqlx::{Connection, PgConnection, PgPool};
+use sqlx::{Connection, PgConnection, PgPool, Postgres, QueryBuilder};
 use std::sync::Arc;
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -339,15 +340,28 @@ pub enum SnapshotError {
     Physical(Error),
     Supervisor,
 }
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum SeriesTitle {
+    Exact,
+    Contains,
+}
+
 #[derive(Debug)]
 pub struct SeriesScope {
     channel: i64,
     source: i64,
     tvg: String,
     title: String,
+    mode: SeriesTitle,
 }
 impl SeriesScope {
-    pub fn new(channel: i64, source: i64, tvg: String, title: String) -> Option<Self> {
+    pub fn new(
+        channel: i64,
+        source: i64,
+        tvg: String,
+        title: String,
+        mode: SeriesTitle,
+    ) -> Option<Self> {
         let valid = |s: &str| {
             !s.is_empty()
                 && s.len() <= 255
@@ -368,7 +382,30 @@ impl SeriesScope {
             source,
             tvg,
             title,
+            mode,
         })
+    }
+
+    fn append_title<'a>(
+        &self,
+        query: &mut QueryBuilder<'a, Postgres>,
+    ) -> Result<(), SnapshotError> {
+        match self.mode {
+            SeriesTitle::Exact => {
+                query
+                    .push(" AND UPPER(title::text)=UPPER(")
+                    .push_bind(self.title.clone())
+                    .push(")");
+            }
+            SeriesTitle::Contains => {
+                if !append_contains_title(query, &self.title).unwrap_or(false) {
+                    return Err(SnapshotError::Unsupported(
+                        "bounded Series title expression",
+                    ));
+                }
+            }
+        }
+        Ok(())
     }
 }
 async fn admit_schema(connection: &mut PgConnection) -> Result<(), SnapshotError> {
@@ -403,9 +440,27 @@ pub async fn series_snapshot(
                 .map_err(|e|SnapshotError::Physical(error(Stage::SnapshotChannel,e,None)))?;
             if ids.len()!=1 {return Err(SnapshotError::Unsupported("pinned channel/source requires one unoverridden EPG row"));}
             type ProgrammeTuple=(i64,DateTime<Utc>,DateTime<Utc>,Option<String>,Option<String>,Option<String>,Option<Value>,Option<String>,bool);
-            let programme_rows:Vec<ProgrammeTuple>=sqlx::query_as("SELECT id::bigint,start_time,end_time,CASE WHEN octet_length(title)<=255 THEN title ELSE NULL END AS title,CASE WHEN octet_length(sub_title)<=255 THEN sub_title ELSE NULL END AS sub_title,CASE WHEN octet_length(description)<=8192 THEN description ELSE NULL END AS description,CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END AS custom_properties,CASE WHEN octet_length(tvg_id)<=255 THEN tvg_id ELSE NULL END AS tvg_id,(octet_length(title)<=255 AND (sub_title IS NULL OR octet_length(sub_title)<=255) AND (description IS NULL OR octet_length(description)<=8192) AND (custom_properties IS NULL OR octet_length(custom_properties::text)<=8192) AND (tvg_id IS NULL OR octet_length(tvg_id)<=255)) AS supported FROM epg_programdata WHERE epg_id=$1 AND end_time>$2 AND start_time<=$3 AND UPPER(title::text)=UPPER($4) ORDER BY start_time LIMIT 33")
-                .bind(ids[0]).bind(now).bind(now+chrono::Duration::days(7)).bind(&scope.title)
-                .fetch_all(&mut *connection).await.map_err(|e|SnapshotError::Physical(error(Stage::SnapshotProgrammes,e,None)))?;
+            let mut query = QueryBuilder::<Postgres>::new(
+                "SELECT id::bigint,start_time,end_time,
+                   CASE WHEN octet_length(title)<=255 THEN title ELSE NULL END AS title,
+                   CASE WHEN octet_length(sub_title)<=255 THEN sub_title ELSE NULL END AS sub_title,
+                   CASE WHEN octet_length(description)<=8192 THEN description ELSE NULL END AS description,
+                   CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END AS custom_properties,
+                   CASE WHEN octet_length(tvg_id)<=255 THEN tvg_id ELSE NULL END AS tvg_id,
+                   (octet_length(title)<=255
+                    AND (sub_title IS NULL OR octet_length(sub_title)<=255)
+                    AND (description IS NULL OR octet_length(description)<=8192)
+                    AND (custom_properties IS NULL OR octet_length(custom_properties::text)<=8192)
+                    AND (tvg_id IS NULL OR octet_length(tvg_id)<=255)) AS supported
+                 FROM epg_programdata WHERE epg_id=",
+            );
+            query.push_bind(ids[0]).push(" AND end_time>").push_bind(now)
+                .push(" AND start_time<=").push_bind(now + chrono::Duration::days(7));
+            scope.append_title(&mut query)?;
+            let programme_rows: Vec<ProgrammeTuple> = query
+                .push(" ORDER BY start_time LIMIT 33").build_query_as()
+                .fetch_all(&mut *connection).await
+                .map_err(|e| SnapshotError::Physical(error(Stage::SnapshotProgrammes,e,None)))?;
             let programmes:Vec<ProgrammeRow>=programme_rows.into_iter().map(|(id,start_time,end_time,title,sub_title,description,custom_properties,tvg_id,supported)|ProgrammeRow{id,start_time,end_time,title,sub_title,description,custom_properties,tvg_id,supported}).collect();
             if programmes.len()>32||programmes.iter().any(|p|!p.supported){return Err(SnapshotError::Unsupported("programme snapshot bound"));}
             let existing:Vec<(Option<Value>,bool)>=sqlx::query_as("SELECT CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,(custom_properties IS NULL OR octet_length(custom_properties::text)<=8192) FROM dispatcharr_channels_recording WHERE end_time>=$1 LIMIT 33")
@@ -520,5 +575,39 @@ mod caught_insert_tests {
             settlement_error: None,
         };
         assert!(io.known_source_insert_failure().is_none());
+    }
+}
+
+#[cfg(test)]
+mod series_title_tests {
+    use super::*;
+    use sqlx::Execute;
+
+    #[test]
+    fn queued_contains_reuses_bound_source_expression_without_widening_exact() {
+        let rule = |title: &str, mode| {
+            SeriesScope::new(2, 1, "station".into(), title.into(), mode).unwrap()
+        };
+        let mut sql = QueryBuilder::<Postgres>::new("SELECT title FROM epg_programdata WHERE true");
+        rule(
+            "News AND (Evening OR \"Day and Night\")",
+            SeriesTitle::Contains,
+        )
+        .append_title(&mut sql)
+        .unwrap();
+        let query = sql.build();
+        assert_eq!(query.sql(), "SELECT title FROM epg_programdata WHERE true AND (strpos(upper(title), upper($1)) > 0 AND (strpos(upper(title), upper($2)) > 0 OR strpos(upper(title), upper($3)) > 0))");
+        assert!(!query.sql().contains("Night"));
+        let mut sql = QueryBuilder::<Postgres>::new("SELECT title FROM epg_programdata WHERE true");
+        rule("News", SeriesTitle::Exact)
+            .append_title(&mut sql)
+            .unwrap();
+        assert!(sql
+            .build()
+            .sql()
+            .ends_with("AND UPPER(title::text)=UPPER($1)"));
+        assert!(rule("(", SeriesTitle::Contains)
+            .append_title(&mut sql)
+            .is_err());
     }
 }

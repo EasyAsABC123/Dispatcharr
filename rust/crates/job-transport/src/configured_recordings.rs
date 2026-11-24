@@ -3,6 +3,7 @@
 //! PRIVATE UNCOMPILED DRAFT: private module registration only, no worker/application authority.
 //! Callers must load a bounded immutable SQL snapshot under the retained owner.
 use chrono::{DateTime, Datelike, Duration, NaiveDate, NaiveTime, Utc};
+use dispatcharr_store::recording_schedule::SeriesTitle;
 use serde_json::{json, Value};
 use std::collections::HashSet;
 
@@ -83,7 +84,7 @@ fn date(v: DateTime<Utc>) -> bool {
 /// comparison. Earliest airing replaces in-place, preserving insertion order.
 pub fn series(
     now: DateTime<Utc>,
-    title: &str,
+    (title, title_match): (&str, SeriesTitle),
     tvg: &str,
     channel_id: i64,
     source_id: i64,
@@ -96,12 +97,12 @@ pub fn series(
     if !text(title, 255) || !text(tvg, 255) || channel_id <= 0 || source_id <= 0 {
         return Err(Refusal::Shape);
     }
-    let mut unique: Vec<(String, &Programme)> = Vec::new();
+    let mut unique: Vec<((String, String), &Programme)> = Vec::new();
     for p in programmes {
         if p.id <= 0
             || p.source_id != source_id
             || p.channel_id != channel_id
-            || !p.title.eq_ignore_ascii_case(title)
+            || (title_match == SeriesTitle::Exact && !p.title.eq_ignore_ascii_case(title))
             || p.tvg_id != tvg
             || !text(&p.title, 255)
             || p.subtitle
@@ -120,12 +121,13 @@ pub fn series(
         }
         let identity =
             episode_key(p.season, p.episode, p.subtitle.as_deref()).ok_or(Refusal::Shape)?;
-        if let Some((_, slot)) = unique.iter_mut().find(|(key, _)| *key == identity) {
+        let key = (p.title.trim().to_ascii_lowercase(), identity);
+        if let Some((_, slot)) = unique.iter_mut().find(|(owned, _)| *owned == key) {
             if p.start < slot.start {
                 *slot = p;
             }
         } else {
-            unique.push((identity, p));
+            unique.push((key, p));
         }
     }
     let mut exact = HashSet::new();
@@ -152,22 +154,14 @@ pub fn series(
         ));
     }
     let mut output = Vec::new();
-    for (identity, p) in unique {
+    for ((title, identity), p) in unique {
         if exact.contains(&(p.tvg_id.clone(), p.start, p.end))
-            || episodes.contains(&(
-                p.tvg_id.clone(),
-                p.title.trim().to_ascii_lowercase(),
-                identity.clone(),
-            ))
+            || episodes.contains(&(p.tvg_id.clone(), title.clone(), identity.clone()))
         {
             continue;
         }
         exact.insert((p.tvg_id.clone(), p.start, p.end));
-        episodes.insert((
-            p.tvg_id.clone(),
-            p.title.trim().to_ascii_lowercase(),
-            identity,
-        ));
+        episodes.insert((p.tvg_id.clone(), title, identity));
         output.push(Intent { channel_id, start:p.start, end:p.end, artwork_publications:2,
             properties:json!({"program":{"id":p.id,"tvg_id":p.tvg_id,"title":p.title,"sub_title":p.subtitle,"description":null,"original_air_date":p.original_air_date,"start_time":iso(p.start),"end_time":iso(p.end),"season":p.season,"episode":p.episode,"onscreen_episode":null,"epg_source_id":source_id}}) });
     }
@@ -255,7 +249,7 @@ mod tests {
     fn plan(programmes: &[Programme], existing: &[Existing]) -> Result<Vec<Intent>, Refusal> {
         series(
             now(),
-            "Owned Exact Series",
+            ("Owned Exact Series", SeriesTitle::Exact),
             "rust.owned.configured",
             2,
             1,
@@ -274,6 +268,50 @@ mod tests {
         assert_eq!(intents[1].properties["program"]["id"], 3);
         assert!(intents.iter().all(|i| i.artwork_publications == 2));
     }
+    #[test]
+    fn contains_keeps_same_episode_number_for_each_matching_title() {
+        let mut morning = p(1, 1, 24);
+        morning.title = "Morning News".into();
+        let mut evening = p(2, 1, 25);
+        evening.title = "Evening News".into();
+        let mut replay = p(3, 1, 26);
+        replay.title = "EVENING NEWS".into();
+        let inputs = [morning, evening, replay];
+        let choose = |scope, existing: &[Existing]| {
+            series(
+                now(),
+                ("News", scope),
+                "rust.owned.configured",
+                2,
+                1,
+                &inputs,
+                existing,
+            )
+        };
+        let selected = choose(SeriesTitle::Contains, &[]).unwrap();
+        assert_eq!(
+            selected
+                .iter()
+                .map(|r| r.properties["program"]["id"].as_i64().unwrap())
+                .collect::<Vec<_>>(),
+            vec![1, 2]
+        );
+
+        let saved = Existing {
+            tvg_id: inputs[1].tvg_id.clone(),
+            title: "  EVENING NEWS  ".into(),
+            start: inputs[1].start,
+            end: inputs[1].end,
+            season: Some(1),
+            episode: Some(1),
+            subtitle: None,
+        };
+        let remaining = choose(SeriesTitle::Contains, &[saved]).unwrap();
+        assert_eq!(remaining.len(), 1);
+        assert_eq!(remaining[0].properties["program"]["id"], 1);
+        assert_eq!(choose(SeriesTitle::Exact, &[]).unwrap_err(), Refusal::Shape);
+    }
+
     #[test]
     fn refresh_changes_programme_id_and_times_but_episode_still_deduplicates() {
         let original = p(1, 1, 24);
@@ -383,7 +421,7 @@ mod source_normal_cases {
                     .collect();
                 series(
                     now,
-                    rules["title"].as_str().unwrap(),
+                    (rules["title"].as_str().unwrap(), SeriesTitle::Exact),
                     rules["tvg_id"].as_str().unwrap(),
                     rules["channel_id"].as_i64().unwrap(),
                     rules["epg_source_id"].as_i64().unwrap(),
