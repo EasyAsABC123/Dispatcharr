@@ -28,7 +28,14 @@ const TEXT_FIELDS: &[&str] = &[
     "stream_stats_updated_at",
 ];
 const ROW_TEXT_LIMIT: i64 = 65_536;
-const SUPPORTED_PARAMS: &[&str] = &["page", "page_size", "ordering", "name", "m3u_account"];
+const SUPPORTED_PARAMS: &[&str] = &[
+    "page",
+    "page_size",
+    "ordering",
+    "name",
+    "m3u_account",
+    "ids",
+];
 const ACCOUNT_MATCH: &str = " AND s.m3u_account_id IN (SELECT value FROM json_each(?))";
 const NAME_MATCH: &str = r" AND s.name LIKE ? ESCAPE '\'";
 
@@ -123,6 +130,13 @@ impl Projection {
         base: &Url,
         limit: usize,
     ) -> Result<Vec<u8>, StoreError> {
+        // Original StreamViewSet.list uses the model directly for nonempty ids:
+        // no pagination, active-provider predicate, or ordinary list filters.
+        if matches!(self, Self::Page) {
+            if let Some(ids) = params.get("ids").filter(|value| !value.is_empty()) {
+                return read_selected(db, admin, ids, base, limit).await;
+            }
+        }
         if params
             .keys()
             .any(|key| !SUPPORTED_PARAMS.contains(&key.as_str()))
@@ -214,25 +228,82 @@ async fn read_page(
             remaining = remaining
                 .checked_sub(row.len() + 512)
                 .ok_or_else(capacity)?;
-            let mut raw: Value =
-                serde_json::from_str(&row).map_err(|_| StoreError::UnhandledRestFault)?;
-            sqlite_list::normalize_stream_timestamps(&mut raw);
-            let stream = channels::stream(&json!({"raw": raw}), admin, base);
-            let encoded = crate::json_compat::compact_json_bytes(&stream)
-                .map_err(|_| StoreError::UnhandledRestFault)?;
-            let encoded = String::from_utf8(encoded).map_err(|_| StoreError::UnhandledRestFault)?;
-            let encoded = encoded
-                .replace('\u{2028}', "\\u2028")
-                .replace('\u{2029}', "\\u2029");
+            let encoded = encode_stream(&row, admin, base)?;
             if !first {
                 append(&mut document, b",", limit)?;
             }
-            append(&mut document, encoded.as_bytes(), limit)?;
+            append(&mut document, &encoded, limit)?;
             first = false;
         }
     }
     transaction.commit().await?;
     append(&mut document, b"]}", limit)?;
+    Ok(document)
+}
+
+// Reuse the exact existing field, URL-redaction and timestamp projection.
+fn encode_stream(row: &str, admin: bool, base: &Url) -> Result<Vec<u8>, StoreError> {
+    let mut raw: Value = serde_json::from_str(row).map_err(|_| StoreError::UnhandledRestFault)?;
+    sqlite_list::normalize_stream_timestamps(&mut raw);
+    let stream = channels::stream(&json!({"raw": raw}), admin, base);
+    let encoded = crate::json_compat::compact_json_bytes(&stream)
+        .map_err(|_| StoreError::UnhandledRestFault)?;
+    let encoded = String::from_utf8(encoded).map_err(|_| StoreError::UnhandledRestFault)?;
+    Ok(encoded
+        .replace('\u{2028}', "\\u2028")
+        .replace('\u{2029}', "\\u2029")
+        .into_bytes())
+}
+
+async fn read_selected(
+    db: &mut SqliteConnection,
+    admin: bool,
+    ids: &str,
+    base: &Url,
+    limit: usize,
+) -> Result<Vec<u8>, StoreError> {
+    if ids.len() > limit {
+        return Err(capacity());
+    }
+    // Match the existing Native PG integer parser; bind one JSON array instead
+    // of interpolating IDs or constructing an unbounded SQL placeholder list.
+    let ids = ids
+        .split(',')
+        .map(|value| value.trim().parse::<i64>())
+        .collect::<Result<Vec<_>, _>>()
+        .map_err(|_| StoreError::StatusBody(500, json!({"detail":"Invalid stream filter."})))?;
+    let ids = serde_json::to_string(&ids).map_err(|_| StoreError::UnhandledRestFault)?;
+    let sql = format!(
+        "SELECT {} FROM dispatcharr_channels_stream s \
+         WHERE s.id IN (SELECT value FROM json_each(?)) ORDER BY s.updated_at DESC",
+        stream_selection(admin),
+    );
+    let mut rows = sqlx::query_scalar::<_, Option<String>>(&sql)
+        .bind(ROW_TEXT_LIMIT)
+        .bind(ids)
+        .fetch(db);
+    let mut document = vec![b'['];
+    let mut remaining = limit;
+    let mut found = false;
+    while let Some(row) = rows.try_next().await? {
+        let row = row.ok_or_else(capacity)?;
+        remaining = remaining
+            .checked_sub(row.len() + 512)
+            .ok_or_else(capacity)?;
+        let encoded = encode_stream(&row, admin, base)?;
+        if found {
+            append(&mut document, b",", limit)?;
+        }
+        append(&mut document, &encoded, limit)?;
+        found = true;
+    }
+    if !found {
+        return Err(StoreError::StatusBody(
+            404,
+            json!({"detail":"No Stream matches the given query."}),
+        ));
+    }
+    append(&mut document, b"]", limit)?;
     Ok(document)
 }
 
@@ -300,6 +371,107 @@ mod tests {
         .await
         .unwrap();
         db
+    }
+
+    #[tokio::test]
+    async fn selected_streams_override_is_a_model_ordered_unpaginated_array() {
+        let mut db = fixture().await;
+        sqlx::raw_sql("UPDATE dispatcharr_channels_stream SET updated_at='2026-01-01 00:00:00' WHERE id=1;
+                       UPDATE dispatcharr_channels_stream SET updated_at='2026-01-02 00:00:00' WHERE id=2;
+                       UPDATE dispatcharr_channels_stream SET updated_at='2026-01-03 00:00:00' WHERE id=3;")
+            .execute(&mut db).await.unwrap();
+        let base =
+            Url::parse("http://localhost:8300/api/channels/streams/?ids=1,3,2,1,999").unwrap();
+        let mut params: HashMap<_, _> = base.query_pairs().into_owned().collect();
+        for (key, value) in [
+            ("page", "-1"),
+            ("page_size", "1"),
+            ("name", "absent"),
+            ("m3u_account", "bad"),
+            ("ordering", "name"),
+            ("assigned", "bad"),
+        ] {
+            params.insert(key.into(), value.into());
+        }
+        for admin in [false, true] {
+            let bytes = Projection::Page
+                .read(&mut db, admin, &params, &base, 16384)
+                .await
+                .unwrap();
+            let result: Value = serde_json::from_slice(&bytes).unwrap();
+            let rows = result.as_array().unwrap();
+            assert_eq!(
+                rows.iter()
+                    .map(|row| row["id"].as_i64().unwrap())
+                    .collect::<Vec<_>>(),
+                [3, 2, 1]
+            );
+            assert_eq!(rows[1].get("url").is_some(), admin);
+            assert_eq!(rows[1]["stream_stats"], json!({"nested":[true,2]}));
+            assert_eq!(rows[1]["updated_at"], "2026-01-02T00:00:00Z");
+        }
+        // An empty ids value follows the ordinary paginated collection path.
+        params.clear();
+        params.insert("ids".into(), String::new());
+        let page: Value = serde_json::from_slice(
+            &Projection::Page
+                .read(&mut db, false, &params, &base, 16384)
+                .await
+                .unwrap(),
+        )
+        .unwrap();
+        assert_eq!(page["count"], 2);
+        assert!(page["results"]
+            .as_array()
+            .unwrap()
+            .iter()
+            .all(|row| row["id"] != 3));
+        // The /streams/ids/ action is a separate filtered ID projection.
+        params.insert("ids".into(), "3".into());
+        let ids: Value = serde_json::from_slice(
+            &Projection::Ids
+                .read(&mut db, false, &params, &base, 16384)
+                .await
+                .unwrap(),
+        )
+        .unwrap();
+        assert_eq!(ids.as_array().unwrap().len(), 2);
+        assert!(!ids.as_array().unwrap().contains(&json!(3)));
+    }
+
+    #[tokio::test]
+    async fn selected_streams_missing_invalid_and_budget_controls_do_not_write() {
+        let mut db = fixture().await;
+        let before: i64 = sqlx::query_scalar("SELECT total_changes()")
+            .fetch_one(&mut db)
+            .await
+            .unwrap();
+        let base = Url::parse("http://localhost:8300/api/channels/streams/").unwrap();
+        for (csv, status) in [
+            ("999", 404),
+            ("0,-1", 404),
+            ("bad", 500),
+            ("2,", 500),
+            ("2) OR 1=1--", 500),
+        ] {
+            let params = HashMap::from([("ids".into(), csv.into())]);
+            assert!(
+                matches!(Projection::Page.read(&mut db,true,&params,&base,16384).await,
+                Err(StoreError::StatusBody(code,_)) if code==status)
+            );
+        }
+        let params = HashMap::from([("ids".into(), "1,2,3".into())]);
+        assert!(matches!(
+            Projection::Page
+                .read(&mut db, true, &params, &base, 32)
+                .await,
+            Err(StoreError::StatusBody(503, _))
+        ));
+        let after: i64 = sqlx::query_scalar("SELECT total_changes()")
+            .fetch_one(&mut db)
+            .await
+            .unwrap();
+        assert_eq!(before, after);
     }
 
     #[tokio::test]

@@ -168,15 +168,19 @@ advancing through saved PostgreSQL channel assignments in order, including
 wraparound. The switch keeps the existing viewer bodies through the
 producer transition. Focused route, selection, ticket, media-body and Main
 build checks passed. The prepared signed pair covers the same owner and
-reader with one active origin. Remote owners, changed provider state,
-finite capacities and transformed streams have separate required coverage.
+reader with one active origin. The local owner can also switch assigned
+sources and advance through saved order when it holds the only slot on the
+same direct profile. The focused capacity and ordering controls passed.
+The paired final images will verify the live Redis reservation and viewer
+continuity. Remote owners, profile changes and transformed streams still
+require coverage.
 
 The ordinary Series DVR API can save a signed rule through the existing
 DVR permission and settings writer. The worker evaluates a saved exact-title
-rule, filters new-only episodes before deduplication, and can apply bounded
-title-contains expressions to a pinned source and channel. One prepared
-paired workflow keeps signed saves, programme refreshes, prior booking
-deduplication, and new artwork jobs in the same fixture. The focused Store
+rule, filters new-only episodes before deduplication, and can combine bounded
+title and description predicates. It handles disjoint stations in one import
+task. One prepared paired workflow keeps signed saves, programme refreshes,
+prior booking deduplication, and new artwork jobs in the same fixture. The focused Store
 and job tests passed. The package still needs the signed worker, SQL,
 Redis, and lifecycle receipts.
 
@@ -185,6 +189,19 @@ context. The Redirect scope covers encoded provider queries, credential pool sel
 short fixed-length GET, and fallback. The DVR offset scope covers three
 timestamp spellings with one signed settings update and its worker effects.
 Cold fixture controls passed. [Paired runner instructions](../scripts/rust-integration/recording-connect-cohort/README.md)
+
+## Copied SQLite stream selections and saved schedules
+
+The copied SQLite backend now returns an ordered stream array for the signed
+selection request that React makes when a selected row has moved off-page.
+Six focused runtime tests passed. The existing projection keeps role-based URL
+redaction and read budgets. Signed packaged replay and the downstream channel
+writes remain pending.
+
+Ordinary Main now recognizes a saved, operator-named daily account-expiry
+schedule under the existing interval, routing and argument guards. Twenty-six
+focused scheduler tests passed. The final paired fixture needs to observe
+the saved task name, publication, durable tick and notification effects.
 
 ## One frozen verification campaign
 
