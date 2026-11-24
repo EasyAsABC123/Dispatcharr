@@ -1,0 +1,80 @@
+{
+  "accepted_samples": 73,
+  "actual_owner_exit": 1,
+  "base_application": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+  "broker_key_observations": {
+    "binding": {
+      "count": 1,
+      "type": "set"
+    },
+    "celery": {
+      "count": 0,
+      "type": "none"
+    },
+    "dvr": {
+      "count": 0,
+      "type": "none"
+    },
+    "unacked": {
+      "count": 0,
+      "type": "none"
+    },
+    "unacked_index": {
+      "count": 0,
+      "type": "none"
+    }
+  },
+  "cleanup": {
+    "actual_cleanup": 0,
+    "exact_owned_absence": true,
+    "typed_retirements": 6
+  },
+  "completed_refreshes": 0,
+  "diagnostic_derivative": true,
+  "elapsed_active_window_seconds": 360,
+  "guide_and_lock_observations": {
+    "guide": {
+      "index_present": true,
+      "programme_present": false,
+      "source_active": true,
+      "source_success": false
+    },
+    "locks": {
+      "file": false,
+      "refresh": false,
+      "series": false
+    }
+  },
+  "ordinary_arm64_release_credit": false,
+  "original_authors_retain_full_credit": true,
+  "platform": "linux/arm64",
+  "raw_owner_stdout_sha256": "6e76e11709f7b08376397b710e1f30430753570b14dd575a084956d9c861329a",
+  "redis_idle_timeout_seconds": 300,
+  "refresh_publication_change": "b9806b5bcbe65c87a7df4083029fa7599e698628",
+  "result_observations": {
+    "baseline_present": true,
+    "declared_child_slots": [],
+    "invalid_results": 0,
+    "lineage_counts": {},
+    "new_keys": 0,
+    "new_roots_matching_broker_envelopes": 0,
+    "outcome": "observed",
+    "status_counts": {}
+  },
+  "scheduled_guide_submission_offset_seconds": 300,
+  "schema_version": 1,
+  "signed_guide_import_http_status": 202,
+  "terminal_refresh_qualified": false,
+  "terminal_wait_budget_seconds": 28,
+  "worker_at_terminal_deadline": {
+    "celery": "Fault",
+    "celery_error_class": "execution",
+    "celery_fault_family": "refresh_execution_operational",
+    "clocked_scheduler": "other_or_missing",
+    "control": "Subscribed",
+    "dvr": "Observed",
+    "selected": true,
+    "startup": "Started",
+    "status": 503
+  }
+}
