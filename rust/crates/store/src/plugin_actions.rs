@@ -615,6 +615,17 @@ impl PluginActions {
         if matches!(action, Action::Delete) {
             registry::mutable(&snapshot)?;
             let key = key.ok_or_else(guard)?;
+            let lock_root = self.inner.root.clone();
+            let lock_owner = live.clone();
+            let lock = Arc::new(
+                tokio::task::spawn_blocking(move || {
+                    let _live = lock_owner;
+                    files::MutationLock::acquire(&lock_root)
+                })
+                .await
+                .map_err(|_| guard())??,
+            );
+            registry::mutable(&registry::snapshot(session).await?)?;
             let plugins = discovery(self.inner.clone(), false).await?;
             let folder = plugins
                 .iter()
@@ -622,6 +633,7 @@ impl PluginActions {
                 .map(|p| p.folder.clone());
             let root = self.inner.root.clone();
             let target = key.clone();
+            let tx_lock = lock.clone();
             // SQL row lock, filesystem removal and DB deletion retain THIS one
             // actual session. Source deliberately does not restore removed files
             // when a later database statement rolls back.
@@ -630,13 +642,24 @@ impl PluginActions {
                     Box::pin(async move {
                         use sqlx::Connection;
                         let mut tx = c.begin().await?;
-                        sqlx::query("SELECT id FROM plugins_pluginconfig WHERE key=$1 FOR UPDATE")
-                            .bind(&target)
-                            .fetch_optional(&mut *tx)
-                            .await?;
+                        let row = sqlx::query_as::<_, (bool, bool, Value, Value)>(
+                            "SELECT enabled, ever_enabled, owned_tasks, suspended_schedules \
+                             FROM plugins_pluginconfig WHERE key=$1 FOR UPDATE",
+                        )
+                        .bind(&target)
+                        .fetch_optional(&mut *tx)
+                        .await?;
+                        if row.is_some_and(|(enabled, ever_enabled, tasks, schedules)| {
+                            enabled
+                                || ever_enabled
+                                || tasks.as_array().is_none_or(|items| !items.is_empty())
+                                || schedules.as_array().is_none_or(|items| !items.is_empty())
+                        }) {
+                            return Err(guard());
+                        }
                         tokio::task::spawn_blocking(move || {
                             let _live = live;
-                            files::delete(&root, &key, folder.as_deref())
+                            files::delete_locked(&root, &key, folder.as_deref(), &tx_lock)
                         })
                         .await
                         .map_err(|_| guard())??;
@@ -651,6 +674,7 @@ impl PluginActions {
                 .await??;
             let plugins = discovery(self.inner.clone(), true).await?;
             registry::sync_caught(session, plugins).await?;
+            drop(lock);
             return Ok(reply(200, json!({"success":true})));
         }
         let executable_history = snapshot.configs.iter().any(|c| {

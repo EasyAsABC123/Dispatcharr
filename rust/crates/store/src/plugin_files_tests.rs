@@ -90,7 +90,9 @@ fn flat_hint_duplicate_and_atomic_replacement_keep_source_layout() {
         b"new"
     );
     assert!(!root.join("example_plugin.__backup__").exists());
-    delete(&root, "example_plugin", None).unwrap();
+    let lock = MutationLock::acquire(&root).unwrap();
+    delete_locked(&root, "example_plugin", None, &lock).unwrap();
+    delete_locked(&root, "example_plugin", None, &lock).unwrap();
     assert!(!root.join("example_plugin").exists());
 }
 #[test]

@@ -441,25 +441,25 @@ pub(super) fn discover(root: &Path) -> Result<Vec<Discovered>, StoreError> {
 }
 /// Source clean never-enabled deletion. Recorded/runtime task ownership is
 /// fenced by the caller; arbitrary Python stop hooks are never skipped.
-pub(super) fn delete(root: &Path, key: &str, folder: Option<&str>) -> Result<(), StoreError> {
-    if key == "." || key == ".." || key.contains(['/', '\\']) {
+pub(super) fn delete_locked(
+    root: &Path,
+    key: &str,
+    folder: Option<&str>,
+    _lock: &MutationLock,
+) -> Result<(), StoreError> {
+    let leaf = folder.unwrap_or(key);
+    let valid_leaf =
+        |name: &str| !name.is_empty() && name != "." && name != ".." && !name.contains(['/', '\\']);
+    if !valid_leaf(key) || !valid_leaf(leaf) {
         return Err(unsupported());
     }
-    let target = root.join(folder.unwrap_or(key));
-    fs::create_dir_all(root).map_err(io)?;
-    let lock = std::fs::OpenOptions::new()
-        .create(true)
-        .append(true)
-        .open(root.join(MUTATION_LOCK))
-        .map_err(io)?;
-    lock.lock().map_err(io)?;
-    if fs::symlink_metadata(&target).is_ok_and(|m| m.file_type().is_symlink()) {
-        return Err(unsupported());
+    let target = root.join(leaf);
+    match fs::symlink_metadata(&target) {
+        Ok(metadata) if metadata.is_dir() => fs::remove_dir_all(target).map_err(io),
+        Ok(_) => Err(unsupported()),
+        Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(error) => Err(io(error)),
     }
-    if target.is_dir() {
-        fs::remove_dir_all(target).map_err(io)?;
-    }
-    Ok(())
 }
 
 #[cfg(test)]
