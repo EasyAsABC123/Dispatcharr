@@ -314,8 +314,10 @@ pub(crate) async fn patch_me(
         .unwrap_or(row.try_get("email")?);
     sqlx::query("UPDATE accounts_user SET first_name=$2,last_name=$3,email=$4,custom_properties=$5,password=COALESCE($6,password) WHERE id=$1")
         .bind(user.id).bind(first_name).bind(last_name).bind(email).bind(properties).bind(password).execute(&mut *transaction).await?;
+    // Return the saved state from this request while its row lock is held.
+    let saved = crate::admin_writes::transaction_user(&mut transaction, user.id).await?;
     transaction.commit().await?;
-    Ok(Json(auth.store.serialized_user(user.id).await?).into_response())
+    Ok(Json(saved).into_response())
 }
 
 async fn change_key(

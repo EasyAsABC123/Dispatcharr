@@ -453,7 +453,7 @@ async fn set_user_profiles(
     .await?;
     Ok(())
 }
-async fn transaction_user(
+pub(super) async fn transaction_user(
     transaction: &mut Transaction<'_, Postgres>,
     id: i64,
 ) -> Result<Value, StoreError> {
