@@ -1,7 +1,7 @@
 //! Guide entity component from original Dispatcharr apps/epg/api_grid.py.
 //! Original authors retain full application credit. HTTP attachment is separate.
-use crate::epg_dummy;
-use chrono::{DateTime, SecondsFormat, Utc};
+use crate::{epg_custom::Window, epg_dummy};
+use chrono::{DateTime, Duration, Timelike, Utc};
 use dispatcharr_store::{
     grid_channel_profile, grid_dummy_span, grid_encode_batch, grid_resolve_window, GridTimestamp,
     Store, StoreError, User,
@@ -20,6 +20,58 @@ fn unsupported() -> StoreError {
 fn utc(value: GridTimestamp) -> DateTime<Utc> {
     value.local.and_utc() - chrono::Duration::microseconds(value.offset_micros)
 }
+fn dummy_window(
+    clock: DateTime<Utc>,
+    lookback: DateTime<Utc>,
+    cutoff: DateTime<Utc>,
+) -> Result<Window, StoreError> {
+    let (start, days) = grid_dummy_span(clock, lookback, cutoff).map_err(|_| capacity())?;
+    Ok(Window {
+        start,
+        clock,
+        days: u32::try_from(days).map_err(|_| capacity())?,
+        lookback: Some(lookback),
+        cutoff: Some(cutoff),
+    })
+}
+
+fn legacy_dummy_window(
+    now: DateTime<Utc>,
+    start: DateTime<Utc>,
+    end: DateTime<Utc>,
+    requested_offset_micros: i64,
+    utc_window: Window,
+) -> Result<(Window, i64), StoreError> {
+    let current_hour = now
+        .with_minute(0)
+        .and_then(|value| value.with_second(0))
+        .and_then(|value| value.with_nanosecond(0))
+        .ok_or_else(capacity)?;
+    if requested_offset_micros == 0 || start < current_hour {
+        return Ok((utc_window, 0));
+    }
+
+    // The Source future branch truncates the requested start in its own
+    // timezone. Run the ordinary dummy generator in that fixed wall clock
+    // so slot alignment, template hour, and overlap agree with the source.
+    let shift = |time: DateTime<Utc>| {
+        time.checked_add_signed(Duration::microseconds(requested_offset_micros))
+            .ok_or_else(capacity)
+    };
+    Ok((
+        dummy_window(shift(current_hour)?, shift(start)?, shift(end)?)?,
+        requested_offset_micros,
+    ))
+}
+
+fn dummy_timestamp(time: DateTime<Utc>, wall_offset_micros: i64) -> String {
+    GridTimestamp {
+        local: time.naive_utc(),
+        offset_micros: wall_offset_micros,
+    }
+    .source_isoformat()
+}
+
 /// Produce the original complete JSON entity for stored and standard dummy
 /// guides. Retained frames are capped at32MiB, metadata16MiB and each frame
 ///16MiB. No HTTP admission/body lease is supplied by this component.
@@ -54,6 +106,7 @@ pub async fn stored_scoped_entity(
             json!({"error":e.message}),
         )
     })?;
+    let requested_offset = start.offset_micros;
     let (start, end) = (utc(start), utc(end));
     let profile = grid_channel_profile(params)
         .map_err(|message| StoreError::StatusBody(400, json!({"error":message})))?;
@@ -91,8 +144,9 @@ pub async fn stored_scoped_entity(
         .await?;
     let mut retained: usize = frames.iter().map(Vec::len).sum();
     let mut first = frames.is_empty();
-    let (base, days) = grid_dummy_span(now, start, end).map_err(|_| capacity())?;
-    let days = u32::try_from(days).map_err(|_| capacity())?;
+    let window = dummy_window(now, start, end)?;
+    let (legacy_window, legacy_offset) =
+        legacy_dummy_window(now, start, end, requested_offset, window)?;
     let mut batch = Vec::new();
     let mut batch_bytes = 0usize;
     for custom in [true, false] {
@@ -103,18 +157,19 @@ pub async fn stored_scoped_entity(
                 c.epg_id.is_none()
             }
         }) {
+            let properties = custom.then_some(&channel.source_properties);
+            let simple = epg_dummy::simple_config(properties).is_ok();
+            let (window, offset) = if simple {
+                (legacy_window, legacy_offset)
+            } else {
+                (window, 0)
+            };
             let plan = crate::epg_custom::prepare(
                 scope,
                 &channel.uuid.to_string(),
                 names[index].as_deref().unwrap_or(&channel.name),
-                custom.then_some(&channel.source_properties),
-                crate::epg_custom::Window {
-                    start: base,
-                    clock: now,
-                    days,
-                    lookback: Some(start),
-                    cutoff: Some(end),
-                },
+                properties,
+                window,
                 1024 * 1024,
             )
             .await?;
@@ -133,17 +188,7 @@ pub async fn stored_scoped_entity(
                 } else {
                     p.properties
                 };
-                let format = |time: DateTime<Utc>| {
-                    time.to_rfc3339_opts(
-                        if time.timestamp_subsec_micros() == 0 {
-                            SecondsFormat::Secs
-                        } else {
-                            SecondsFormat::Micros
-                        },
-                        false,
-                    )
-                };
-                let row = json!({"id":format!("{prefix}-{}-{}",channel.id,p.start_time.format("%Y%m%dT%H%M%S")),"start_time":format(p.start_time),"end_time":format(p.end_time),"title":p.title,"description":p.description,"tvg_id":channel.uuid.to_string(),"sub_title":p.sub_title,"custom_properties":properties,"season":null,"episode":null,"is_new":is_new,"is_live":is_live,"is_premiere":false,"is_finale":false});
+                let row = json!({"id":format!("{prefix}-{}-{}",channel.id,p.start_time.format("%Y%m%dT%H%M%S")),"start_time":dummy_timestamp(p.start_time,offset),"end_time":dummy_timestamp(p.end_time,offset),"title":p.title,"description":p.description,"tvg_id":channel.uuid.to_string(),"sub_title":p.sub_title,"custom_properties":properties,"season":null,"episode":null,"is_new":is_new,"is_live":is_live,"is_premiere":false,"is_finale":false});
                 let charge = crate::epg_custom::metadata_bytes(&row)?;
                 if charge > 1024 * 1024 {
                     return Err(capacity());
@@ -192,4 +237,78 @@ pub async fn stored_scoped_entity(
     frames.insert(0, b"{\"data\":[".to_vec());
     frames.push(b"]}".to_vec());
     Ok(frames)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn future_dummy_grid_preserves_its_requested_offset_and_local_template_hour() {
+        let now = "2026-04-06T10:05:00Z".parse::<DateTime<Utc>>().unwrap();
+        for (offset, start, end, expected_start, expected_end) in [
+            (
+                19_800_000_000,
+                "2026-04-07T07:07:00Z",
+                "2026-04-07T08:00:00Z",
+                "2026-04-07T12:00:00+05:30",
+                "2026-04-07T16:00:00+05:30",
+            ),
+            (
+                -14_400_000_000,
+                "2026-04-07T16:37:00Z",
+                "2026-04-07T17:00:00Z",
+                "2026-04-07T12:00:00-04:00",
+                "2026-04-07T16:00:00-04:00",
+            ),
+        ] {
+            let start = start.parse::<DateTime<Utc>>().unwrap();
+            let end = end.parse::<DateTime<Utc>>().unwrap();
+            let old = dummy_window(now, start, end).unwrap();
+            let (window, format_offset) =
+                legacy_dummy_window(now, start, end, offset, old).unwrap();
+            let standard: Vec<_> = epg_dummy::configured(
+                "owned",
+                "Owned guide",
+                window.start,
+                window.days,
+                window.lookback,
+                window.cutoff,
+                None,
+            )
+            .unwrap()
+            .collect();
+            assert_eq!(standard.len(), 1);
+            assert_eq!(
+                standard[0].start_time.format("%Y%m%dT%H%M%S").to_string(),
+                "20260407T120000"
+            );
+            assert_eq!(
+                dummy_timestamp(standard[0].start_time, format_offset),
+                expected_start
+            );
+            assert_eq!(
+                dummy_timestamp(standard[0].end_time, format_offset),
+                expected_end
+            );
+            let utc_noon = "2026-04-07T12:00:00Z".parse::<DateTime<Utc>>().unwrap();
+            let expected = epg_dummy::standard("owned", "Owned guide", utc_noon, 1, None, None)
+                .unwrap()
+                .next()
+                .unwrap();
+            assert_eq!(standard[0].description, expected.description);
+        }
+        let earlier = "2026-04-06T09:55:00Z".parse::<DateTime<Utc>>().unwrap();
+        let end = "2026-04-06T11:00:00Z".parse::<DateTime<Utc>>().unwrap();
+        let expected = dummy_window(now, earlier, end).unwrap();
+        let (ordinary, offset) =
+            legacy_dummy_window(now, earlier, end, 19_800_000_000, expected).unwrap();
+        assert_eq!(offset, 0);
+        assert_eq!(ordinary.start, expected.start);
+        assert_eq!(ordinary.days, expected.days);
+        assert_eq!(
+            dummy_timestamp(ordinary.start, offset),
+            "2026-04-06T10:00:00+00:00"
+        );
+    }
 }

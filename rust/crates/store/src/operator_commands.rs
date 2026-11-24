@@ -86,7 +86,11 @@ impl OperatorCommand {
                 .map(|user| Self::ResetUser(Some(user.to_owned())))
                 .ok_or(OperatorError::Arguments),
             [name, flag, user]
-                if name == "reset_user_network" && flag == "--user" && user.len() <= 1024 =>
+                if name == "reset_user_network"
+                    && flag == "--user"
+                    && (!user.starts_with("--")
+                        || (user.contains(' ') && !user.starts_with("--user=")))
+                    && user.len() <= 1024 =>
             {
                 Ok(Self::ResetUser(Some(user.clone())))
             }
@@ -536,6 +540,39 @@ mod tests {
             parse(&[&oversized, "--user=bounded"]),
             Err(OperatorError::Arguments)
         ));
+    }
+
+    #[test]
+    fn separated_user_argument_cannot_consume_a_long_option() {
+        let parse = |value: &str| {
+            OperatorCommand::parse(&["reset_user_network".into(), "--user".into(), value.into()])
+        };
+        for value in [
+            "--help",
+            "--user",
+            "--user=someone",
+            "--owned-unknown",
+            "--user=with space",
+            "--",
+        ] {
+            assert!(matches!(parse(value), Err(OperatorError::Arguments)));
+        }
+        assert_eq!(
+            OperatorCommand::parse(&["reset_user_network".into(), "--user=--help".into()]).unwrap(),
+            OperatorCommand::ResetUser(Some("--help".into()))
+        );
+        assert_eq!(
+            parse("-1").unwrap(),
+            OperatorCommand::ResetUser(Some("-1".into()))
+        );
+        assert_eq!(
+            parse("").unwrap(),
+            OperatorCommand::ResetUser(Some("".into()))
+        );
+        assert_eq!(
+            parse("--other value").unwrap(),
+            OperatorCommand::ResetUser(Some("--other value".into()))
+        );
     }
 
     #[test]

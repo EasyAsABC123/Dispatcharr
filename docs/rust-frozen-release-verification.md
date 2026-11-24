@@ -107,6 +107,14 @@ For public HDHomeRun output, an explicit JSON selector limits negotiation to JSO
 
 Xtream live category filters now return an empty channel selection when a valid integer falls outside PostgreSQL’s signed 64-bit range. The panel still returns its full account and category document. The focused Rust test passed and 14 cases ran against pinned Django’s PostgreSQL query compiler without a database connection. The ARM64 fixture adds eight signed form and range checks.
 
+## Guide Grid and operator compatibility
+
+Future standard dummy Guide Grid windows keep the requested wall-clock offset for slot timestamps, programme IDs, and descriptions. The focused output test passed. The signed paired fixture adds ten requests per backend for future windows and checks unchanged fixture SQL.
+
+The network-reset utility now rejects measured option-like tokens in the separated `--user` value position. The explicit `--user=--help` form still supplies the literal username. Five Rust operator tests passed, and the standalone parser comparison matched all twelve measured invocations of pinned Original. The final package fixture checks the actual CLI exit and datastore effects.
+
+The Version200 scheduler owner evaluates four pinned Original outcomes in an independent ordinary Native clone in the same wave. It joins HTTP calls, broker task IDs, Redis results, saved counts, notification SQL and Channels events. The current focused suite passed 27 M6 tests and 34 coordinator tests offline. The final frozen run must supply the fresh worker and cleanup receipts.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.

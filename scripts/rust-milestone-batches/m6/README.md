@@ -172,3 +172,36 @@ comparator is the retained successful Beat SIGTERM/exit receipt. This row covers
 ordinary stop after the two due ticks. Held SQL replies, cancellation, and a
 publication-free interval beyond the recorded ready/reserved observations
 remain outside its scope.
+
+### Scheduled Version HTTP 200
+
+The `m6/version200-update-no-update-malformed` binding runs one fresh Native
+clone in the coordinated wave. It follows the existing version503 and grouped
+Source dependencies. The shared scheduler startup clone has no owned version
+HTTP target, so the dedicated Version clone configures the loopback origin at
+Main startup and uses the existing guarded daily-row fixture. The only app
+ownership setting is ordinary `DISPATCHARR_ENV=aio`; the existing disposable
+fixture guards isolate unscheduled startup publications and outside services.
+
+Supply an absolute fresh fixture path as `owner_bindings.m6.version200.output`.
+Build the exact binding with
+`version200_owner.dispatch_spec(output, candidate, repository, entrypoint,
+coordinator_output)`. No prior physical result is needed to assemble the
+binding. The live controller verifies the active coordinator attempt and
+borrows its exclusive dispatcher lock. It starts no new Original application
+arm. The four Original case records are pinned by their retained report hash.
+
+The evaluator checks actual ordered Origin requests, one saved-row
+advance per case, four distinct scheduled broker roots and matching DB2
+SUCCESS/null receipts, full scoped notification SQL transitions and the exact
+Channels events. It checks literal exits, private CLI receipt custody, five
+owned container IDs and host generations, and empty owned inventories. Old
+Core-mode Native output is accepted only through the historical replay
+command. The current ordinary worker, scheduler readiness and exact teardown
+must be observed during frozen verification.
+
+```sh
+M6_REPLAY_ARTIFACTS=/home/justin/github/Dispatcharr/artifacts/rust \
+M6_VERSION_COLD_CANDIDATE=/absolute/path/to/common-candidate.json \
+  python3 -B -m unittest discover -s scripts/rust-milestone-batches/m6 -p test_version200_owner.py
+```

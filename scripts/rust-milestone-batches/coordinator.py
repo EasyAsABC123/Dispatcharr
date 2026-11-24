@@ -265,6 +265,16 @@ def owner_readiness(nodes, document, output=None):
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
         elif key in bindings and node["owner"] == "m6":
+            if key == "m6/version200-update-no-update-malformed":
+                owner = module(HERE / "m6/version200_owner.py", "readiness_m6_version200")
+                context = owners.get("m6", {}).get("version200")
+                if not context:
+                    raise ValueError("M6 Version200 independent owned fixture output required")
+                expected = owner.dispatch_spec(Path(context["output"]), document["candidate"],
+                                               HERE.parents[1], node["entrypoint"], Path(output))
+                if bindings[key] != expected:
+                    raise ValueError("M6 Version200 exact ordinary owner binding required")
+                continue
             if key in {"m6/scheduler-install-known-defaults", "m6/scheduler-tick-publication",
                        "m6/scheduler-normal-stop"}:
                 owner = module(HERE / "m6/scheduler_install_owner.py", "readiness_m6_scheduler_install")
