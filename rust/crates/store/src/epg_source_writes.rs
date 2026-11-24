@@ -207,9 +207,10 @@ fn validate(
         let next = saved["url"].as_str().ok_or_else(unsupported)?;
         let previous = url::Url::parse(&previous).map_err(|_| unsupported())?;
         let next = url::Url::parse(next).map_err(|_| unsupported())?;
-        // The ordinary URL-only edit retains the selected origin, the saved
-        // source values and the existing recurrence.
+        // The XMLTV editor can rename a source while changing its URL.
+        // Preserve the selected origin, other saved fields and recurrence.
         let mut unchanged = saved.clone();
+        unchanged["name"] = old["name"].clone();
         unchanged["url"] = old["url"].clone();
         if previous.origin() != next.origin()
             || unchanged != *old
@@ -320,11 +321,16 @@ async fn schedule_refresh(
         .await?
 }
 
-async fn update_remote_url(
+struct RemoteLocation {
+    name: String,
+    url: String,
+}
+
+async fn update_remote_location(
     session: &TaskSqlSession,
     id: i64,
     old: Value,
-    new_url: String,
+    location: RemoteLocation,
     interval: i32,
     cron: String,
     zone: String,
@@ -356,11 +362,19 @@ async fn update_remote_url(
                 if current.as_deref() != Some(cron.as_str()) {
                     return Err(unsupported());
                 }
-                sqlx::query("UPDATE epg_epgsource SET url=$2 WHERE id=$1")
+                sqlx::query("UPDATE epg_epgsource SET name=$2,url=$3 WHERE id=$1")
                     .bind(id)
-                    .bind(new_url)
+                    .bind(location.name)
+                    .bind(location.url)
                     .execute(&mut *transaction)
-                    .await?;
+                    .await
+                    .map_err(|error| {
+                        if error.as_database_error().is_some_and(|error| error.is_unique_violation()) {
+                            field("name", "epg source with this name already exists.")
+                        } else {
+                            error.into()
+                        }
+                    })?;
                 schedule_refresh_on_connection(&mut transaction, id, true, interval, &cron, &zone).await?;
                 transaction.commit().await?;
                 Ok(())
@@ -860,9 +874,10 @@ async fn change(
             if dummy && (!old["refresh_task_id"].is_null() || auth.event_sink.is_none() || !captured_dummy_name_domain(&saved)){return Err(unsupported());}
             let zone=if dummy {"UTC".into()}else{schedule_timezone(&session,auth.clone(),&cron).await?};
             if url_changed {
+                let name = saved["name"].as_str().ok_or_else(unsupported)?.to_owned();
                 let url = saved["url"].as_str().ok_or_else(unsupported)?.to_owned();
                 let interval = saved["refresh_interval"].as_i64().and_then(|value| i32::try_from(value).ok()).ok_or_else(unsupported)?;
-                update_remote_url(&session,id,old,url,interval,cron.clone(),zone).await?;
+                update_remote_location(&session,id,old,RemoteLocation {name,url},interval,cron.clone(),zone).await?;
                 return Ok((project(&session,id,Some(cron)).await?,true));
             }
             let saved_name=saved["name"].as_str().ok_or_else(unsupported)?.to_owned();
@@ -1217,7 +1232,7 @@ mod tests {
         assert!(validate(input.clone(), &old, cron, false).is_err());
         for (key, value) in [
             ("url", json!("https://another.example.invalid/guide.xml")),
-            ("name", json!("Renamed")),
+            ("priority", json!(23)),
             ("is_active", json!(false)),
             ("cron_expression", json!("18 4 29 2 *")),
         ] {
@@ -1225,6 +1240,31 @@ mod tests {
             extra.insert(key.into(), value);
             assert!(validate(extra, &old, cron, true).is_err(), "{key}");
         }
+    }
+
+    #[test]
+    fn active_xmltv_form_can_rename_and_update_the_same_origin_url() {
+        let mut old = old();
+        old["source_type"] = json!("xmltv");
+        old["url"] = json!("https://guide.example.invalid/old.xml");
+        old["is_active"] = json!(true);
+        old["username"] = json!("");
+        old["password"] = json!("");
+        old["refresh_interval"] = json!(24);
+        old["priority"] = json!(0);
+        old["refresh_task_id"] = json!(97);
+        let input = json!({
+            "name":"Owned new guide","source_type":"xmltv",
+            "url":"https://guide.example.invalid/new.xml","username":"","password":"",
+            "is_active":true,"refresh_interval":24,"cron_expression":"","priority":0
+        });
+        let validated = validate(input.as_object().unwrap().clone(), &old, "", true).unwrap();
+        assert!(validated.url_changed);
+        let mut expected = old;
+        expected["name"] = input["name"].clone();
+        expected["url"] = input["url"].clone();
+        assert_eq!(validated.saved, expected);
+        assert!(validated.cron.is_empty());
     }
 
     #[test]

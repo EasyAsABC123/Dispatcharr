@@ -516,6 +516,16 @@ that the importer retries a failed batch once after all first-pass
 transactions. A second signed refresh requires that retry to observe a
 row from the successful sibling transaction.
 
+## XMLTV source editor
+
+The existing React edit can rename an active XMLTV source and change the
+path of its URL on the same origin in one save. Rust updates both fields
+in one transaction and retains the existing refresh schedule. The pinned
+Original Django component kept the scheduled task and existing guide
+index and queued no immediate refresh. A duplicate name returned 400.
+Eleven focused Rust tests passed. The signed package and browser replay
+still need verification.
+
 ## Programme search
 
 The ordinary Rust programme search now returns role-scoped pages,
