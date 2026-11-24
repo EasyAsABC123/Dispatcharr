@@ -285,3 +285,22 @@ coordinator's exclusive lock. The signed API202 row remains its formal
 predecessor. The existing scanner-logo Original capture is reused and
 programme-index acceptance, repeated and restarted scanners, and file-failure
 semantics stay outside this first-occurrence row.
+
+### Programme Index task failures
+
+The ordinary scheduled Index worker now uses the bounded typed result
+classifier. Known Directory, confirmed cache permission denial, and
+confirmed P0001 failures retain their task reference, arguments and
+failure status. Ambiguous commits and unsettled leases still follow the
+worker's operational error path.
+
+Four offline classifier tests and the ordinary App compile passed. The
+sealed component record in `verified-index-terminal-results-9.json`
+provides the retained Original and earlier Rust authority. The common
+final package still needs to write and read the actual DB2 result for each
+covered branch and verify exact PostgreSQL and Redis cleanup. Native
+diagnostics identify the actual stage and leave Python traceback parity
+open.
+
+Original Dispatcharr, Django, Celery, Redis, PostgreSQL, and dependency
+contributors retain credit.

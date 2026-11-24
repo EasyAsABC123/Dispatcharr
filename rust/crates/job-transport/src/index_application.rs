@@ -2,6 +2,7 @@
 //! retain application/algorithm credit and AGPL licensing. Intake starts only
 //! after the application explicitly calls start(); workflow gates are separate.
 use crate::{
+    index_classifier::ClassifiedServiceExecutor,
     index_dispatch::ProgrammeIndexDispatcher,
     index_driver::{Config as DriverConfig, IndexDriver},
     index_worker::ServiceExecutor,
@@ -171,7 +172,7 @@ impl IndexApplication {
             .map_err(|_| "normal reservation pool")?;
         let worker = crate::scheduled_index::ScheduledIndexWorker::new(
             self.inner.jobs.clone(),
-            Arc::new(ServiceExecutor::new(self.inner.service.clone())),
+            Arc::new(ClassifiedServiceExecutor::new(self.inner.service.clone())),
             config.scheduling,
         )
         .map_err(|_| "normal scheduled worker")?;

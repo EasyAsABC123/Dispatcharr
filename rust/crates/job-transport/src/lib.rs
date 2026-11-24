@@ -26,9 +26,8 @@ pub mod index_failure;
 // Source-first bounded P0001 field renderer; classification is stage-scoped.
 pub mod pg_failure_format;
 
-// Known observed stage mappings only; production service adapter is unchanged.
-#[cfg(test)]
-pub mod index_classifier;
+// Known observed stage mappings for the ordinary scheduled Index worker.
+mod index_classifier;
 
 // Observed bounded refresh wire shapes; raw Source API shapes beyond this model remain unsupported.
 pub mod refresh_protocol;
