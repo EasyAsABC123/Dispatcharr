@@ -141,7 +141,7 @@ fn clock(bytes: &[u8], start: usize, end: usize) -> Option<([u32; 4], bool)> {
     }
     Some((values, bytes.get(pos).copied().unwrap_or(0) != 0))
 }
-fn time(bytes: &[u8]) -> Option<([u32; 4], i64)> {
+fn time(bytes: &[u8]) -> Option<([u32; 4], i64, bool)> {
     let zone = bytes
         .iter()
         .position(|v| matches!(v, b'Z' | b'+' | b'-'))
@@ -170,26 +170,35 @@ fn time(bytes: &[u8]) -> Option<([u32; 4], i64)> {
     if values[0] > 23 || values[1] > 59 || values[2] > 59 || offset.abs() >= 86_400_000_000 {
         return None;
     }
-    Some((values, offset))
+    Some((values, offset, zone < bytes.len()))
 }
-pub(super) fn datetime(raw: &str) -> Option<GridTimestamp> {
+pub(super) fn datetime_with_awareness(raw: &str) -> Option<(GridTimestamp, bool)> {
     let bytes = raw.as_bytes();
     let sep = separator(bytes)?;
     let date = iso_date(bytes, sep)?;
     if bytes.len() == sep {
-        return Some(GridTimestamp {
-            local: date.and_hms_opt(0, 0, 0)?,
-            offset_micros: 0,
-        });
+        return Some((
+            GridTimestamp {
+                local: date.and_hms_opt(0, 0, 0)?,
+                offset_micros: 0,
+            },
+            false,
+        ));
     }
     let tail = raw.get(sep..)?;
     let separator = tail.chars().next()?;
     let time_start = sep + separator.len_utf8();
-    let (values, offset_micros) = time(bytes.get(time_start..)?)?;
-    Some(GridTimestamp {
-        local: date.and_hms_micro_opt(values[0], values[1], values[2], values[3])?,
-        offset_micros,
-    })
+    let (values, offset_micros, aware) = time(bytes.get(time_start..)?)?;
+    Some((
+        GridTimestamp {
+            local: date.and_hms_micro_opt(values[0], values[1], values[2], values[3])?,
+            offset_micros,
+        },
+        aware,
+    ))
+}
+pub(super) fn datetime(raw: &str) -> Option<GridTimestamp> {
+    datetime_with_awareness(raw).map(|(value, _)| value)
 }
 /// Local date and clock from CPython's datetime.fromisoformat grammar.
 pub fn source_iso_local_datetime(raw: &str) -> Option<chrono::NaiveDateTime> {

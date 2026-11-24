@@ -76,11 +76,22 @@ fn when(raw: &Value) -> Option<(DateTime<Utc>, bool)> {
                 .then_some((value.and_utc(), false));
         }
     }
-    NaiveDate::parse_from_str(text, "%Y-%m-%d")
-        .ok()?
-        .and_hms_opt(0, 0, 0)
-        .filter(|v| (1..=9999).contains(&v.year()))
-        .map(|v| (v.and_utc(), false))
+    if let Some(value) = NaiveDate::parse_from_str(text, "%Y-%m-%d")
+        .ok()
+        .and_then(|value| value.and_hms_opt(0, 0, 0))
+        .filter(|value| (1..=9999).contains(&value.year()))
+    {
+        return Some((value.and_utc(), false));
+    }
+    // Django first tries datetime.fromisoformat, including ISO values
+    // without seconds. Keep explicit UTC distinct from naive wall time
+    // when the task compares the saved programme time with the DB row.
+    let (value, aware) = crate::epg_grid_iso::datetime_with_awareness(text)?;
+    let utc = value
+        .local
+        .and_utc()
+        .checked_sub_signed(chrono::Duration::microseconds(value.offset_micros))?;
+    Some((utc, aware))
 }
 fn shifted(time: DateTime<Utc>, minutes: &Value, subtract: bool) -> DateTime<Utc> {
     minutes
@@ -218,6 +229,23 @@ pub(crate) async fn retained_event(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn offset_task_accepts_saved_iso_programme_times_without_seconds() {
+        for (raw, utc, aware) in [
+            ("2026-11-09T12:34", "2026-11-09T12:34:00Z", false),
+            ("2026-11-09 12:34", "2026-11-09T12:34:00Z", false),
+            ("2026-11-09T12:34Z", "2026-11-09T12:34:00Z", true),
+            ("2026-11-09T12:34+00:00", "2026-11-09T12:34:00Z", true),
+            ("2026-11-09T12:34+05:30", "2026-11-09T07:04:00Z", true),
+            ("2026-11-09T12:34-01:00", "2026-11-09T13:34:00Z", true),
+            ("2026-11-09T1234-0100", "2026-11-09T13:34:00Z", true),
+        ] {
+            let expected: DateTime<Utc> = utc.parse().unwrap();
+            assert_eq!(when(&json!(raw)), Some((expected, aware)), "{raw}");
+        }
+        assert!(when(&json!("2026-11-09T12:99+00:00")).is_none());
+    }
+
     #[test]
     fn integer_offsets_and_overflow_preserve_result_values() {
         assert_eq!(integer(Some(&json!(true))), json!(1));
