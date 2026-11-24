@@ -219,7 +219,11 @@ producer opens it. A request-specific operation keeps older assigned-only
 listeners from processing Next as an assigned switch. A signed remote
 reselect can refresh the current stream when the stored URL still matches
 the owned producer. The paired fixture checks that both viewers continue
-and no new upstream connection opens.
+and no new upstream connection opens. If the saved direct URL changes,
+the owner verifies the open input before replacing it. The existing
+producer and viewers keep their lease and stream ID. The final fixture
+will require exactly one new upstream connection and decoded audio and
+video after the edit.
 
 The ordinary Series DVR API can save a signed rule through the existing
 DVR permission and settings writer. The worker evaluates a saved exact-title
@@ -230,6 +234,12 @@ successfully books an episode keeps it. One paired owner keeps signed saves,
 programme refreshes, booking history and artwork jobs together. Focused
 Store and job tests passed, with signed worker and lifecycle receipts still
 pending on the final package.
+
+The ordinary recurring worker now settles supported one-date UTC rules
+with zero bookings when the saved date and weekday fall outside the
+active window. The focused checks cover past dates, the 14-day boundary,
+weekday mismatches and the existing repeat behavior. The paired natural
+tick still needs the real result and unchanged recording state.
 
 The Redirect comparison reuses one project per backend for pooled framing,
 one-slot fallback, saved three-stream ordering, and grouped STD previews.

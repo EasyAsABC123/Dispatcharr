@@ -475,7 +475,12 @@ async fn submit_owned(
             "Remote source owner or target changed",
         ));
     }
-    engine.submit_in_local_session(session, None, true, |active| {
+    let admission = if kind == RemoteSwitchKind::Assigned && intent.source.stream == intent.target {
+        SwitchAdmission::RemoteOwnerReselect
+    } else {
+        SwitchAdmission::RemoteOwner
+    };
+    engine.submit_in_local_session(session, None, admission, |active| {
         if (source_switch::source(active), active.provider_max_streams)
             != ((intent.source.stream, Some(intent.source.profile)), 0)
         {

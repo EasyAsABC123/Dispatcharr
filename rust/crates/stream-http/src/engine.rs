@@ -247,6 +247,7 @@ struct Session {
     input_owner: Mutex<Option<String>>,
     source_switch: Option<Box<source_switch::Control>>,
     remote_switch_inbox: Mutex<remote_source_switch::RemoteInbox>,
+    edited_source_urls: Mutex<HashMap<source_switch::Source, String>>,
     _permit: Arc<OwnedSemaphorePermit>,
 }
 
@@ -274,6 +275,13 @@ pub(crate) struct NextStreamSwitch<'a> {
     pub next: i64,
     pub url: String,
     pub worker: &'a str,
+}
+
+#[derive(Clone, Copy, PartialEq, Eq)]
+enum SwitchAdmission {
+    Existing,
+    RemoteOwner,
+    RemoteOwnerReselect,
 }
 
 struct PendingSourceSwitch {
@@ -573,11 +581,7 @@ impl StreamEngine {
         let (previous, capacity, transfer_profile) = {
             let active = session.current.lock().unwrap();
             let transfer = if active.stream_id != stream_id && active.provider_max_streams == 0 {
-                assigned_transfer_profile(
-                    &active,
-                    stream_id,
-                    std::iter::once(&session.source.primary()).chain(&session.source.alternates),
-                )
+                assigned_transfer_profile(&active, stream_id, session.switch_candidates().iter())
             } else {
                 None
             };
@@ -681,7 +685,7 @@ impl StreamEngine {
                 &ordered,
                 previous,
                 &active,
-                std::iter::once(&session.source.primary()).chain(&session.source.alternates),
+                session.switch_candidates().iter(),
             )?
         };
         if let Some((target, profile)) = transfer {
@@ -740,7 +744,12 @@ impl StreamEngine {
             previous,
             target: stream_id,
             url,
-        } = self.submit_in_local_session(session, transfer_profile, false, select)?;
+        } = self.submit_in_local_session(
+            session,
+            transfer_profile,
+            SwitchAdmission::Existing,
+            select,
+        )?;
         // Once a producer begins a handoff it owns the bounded transition even
         // if this waiter times out. A timeout never queues another handoff.
         match time::timeout(self.inner.config.startup_timeout, reply).await {
@@ -760,7 +769,7 @@ impl StreamEngine {
         &self,
         session: &Session,
         transfer_profile: Option<i64>,
-        require_owned: bool,
+        admission: SwitchAdmission,
         select: impl FnOnce(&PlaybackCandidate) -> Result<(i64, Option<&'a str>), PlaybackError>,
     ) -> Result<PendingSourceSwitch, PlaybackError> {
         let active = session.current.lock().unwrap();
@@ -777,23 +786,21 @@ impl StreamEngine {
             ));
         }
         let requires_ready_slot = active.provider_max_streams == 1
+            || admission != SwitchAdmission::Existing
             || transfer_profile.is_some()
             || (stream_id != current.0 && session.source_slot_published.load(Ordering::Acquire));
         if requires_ready_slot && !matches!(*session.startup.borrow(), Startup::Ready) {
             return Err(PlaybackError::new(409, "Local provider slot is not ready"));
         }
         let target = (stream_id, transfer_profile.or(current.1));
-        let primary;
+        let available;
         let candidate = if target == current {
             &*active
         } else {
-            primary = session.source.primary();
-            let mut matches = std::iter::once(&primary)
-                .chain(&session.source.alternates)
-                .filter(|candidate| {
-                    source_switch::source(candidate) == target
-                        && source_switch::supported(candidate)
-                });
+            available = session.switch_candidates();
+            let mut matches = available.iter().filter(|candidate| {
+                source_switch::source(candidate) == target && source_switch::supported(candidate)
+            });
             matches
                 .next()
                 .filter(|_| matches.next().is_none())
@@ -815,16 +822,42 @@ impl StreamEngine {
                 "Requested stream cannot transfer the local provider slot",
             ));
         }
-        if saved_url.is_some_and(|url| url != candidate.url) {
-            return Err(PlaybackError::new(
-                409,
-                "Requested stream URL differs from the active configuration",
-            ));
+        if let Some(url) = saved_url.filter(|url| *url != candidate.url) {
+            if admission != SwitchAdmission::RemoteOwnerReselect || target != current {
+                return Err(PlaybackError::new(
+                    409,
+                    "Requested stream URL differs from the active configuration",
+                ));
+            }
+            let edit = source_switch::CurrentUrlEdit {
+                previous: active.url.clone(),
+                replacement: url.to_owned(),
+            };
+            let unique = session
+                .switch_candidates()
+                .iter()
+                .filter(|saved| source_switch::source(saved) == current)
+                .take(2)
+                .count()
+                == 1;
+            if !unique || !edit.matches(&active) {
+                return Err(PlaybackError::new(
+                    409,
+                    "Current source URL cannot be replaced",
+                ));
+            }
+            let reply = control.submit_owned_url_edit(current, edit)?;
+            return Ok(PendingSourceSwitch {
+                reply,
+                previous: current.0,
+                target: stream_id,
+                url: url.to_owned(),
+            });
         }
         if target != current && candidate.url == active.url {
             return Err(PlaybackError::new(409, "Requested URL is already active"));
         }
-        let reply = if require_owned {
+        let reply = if admission != SwitchAdmission::Existing {
             control.submit_with_owner(current, target, true)?
         } else {
             control.submit(current, target)?
@@ -1057,6 +1090,7 @@ impl StreamEngine {
                     input_owner: Mutex::new(None),
                     source_switch,
                     remote_switch_inbox: Mutex::new(remote_source_switch::RemoteInbox::default()),
+                    edited_source_urls: Mutex::new(HashMap::new()),
                     _permit: Arc::new(permit),
                 });
                 sessions.insert(key.clone(), session.clone());
@@ -2070,6 +2104,42 @@ mod retained_source_tests {
     }
 
     #[test]
+    fn current_url_edit_checks_the_exact_direct_old_input_and_refuses_other_profile_shapes() {
+        let active = PlaybackCandidate {
+            credential_pool: None,
+            provider_max_streams: 0,
+            ..candidate(11)
+        };
+        let edit = source_switch::CurrentUrlEdit {
+            previous: active.url.clone(),
+            replacement: "http://owned-origin/edited.ts".into(),
+        };
+        assert!(edit.matches(&active));
+        assert!(!edit.matches(&PlaybackCandidate {
+            url: "http://owned-origin/other.ts".into(),
+            ..active.clone()
+        }));
+        assert!(!edit.matches(&PlaybackCandidate {
+            provider_max_streams: 1,
+            ..active.clone()
+        }));
+        assert!(!edit.matches(&PlaybackCandidate {
+            provider_profile_id: None,
+            ..active.clone()
+        }));
+        let wrong = source_switch::CurrentUrlEdit {
+            previous: active.url.clone(),
+            replacement: "rtsp://owned-origin/alternate".into(),
+        };
+        assert!(!wrong.matches(&active));
+        let same = source_switch::CurrentUrlEdit {
+            previous: active.url.clone(),
+            replacement: active.url.clone(),
+        };
+        assert!(!same.matches(&active));
+    }
+
+    #[test]
     fn finite_next_stream_requires_fresh_direct_target_and_same_active_cap() {
         let active = PlaybackCandidate {
             credential_pool: None,
@@ -2670,6 +2740,7 @@ async fn run_upstream(
     let mut retained_source_slot = false;
     let mut transfer_previous_profile = None;
     let mut last_candidate = None;
+    let mut edited_discontinuity = false;
     let mut capacity_wait = (numeric_channel.is_some()
         && session.native_initializing.load(Ordering::Acquire)
         && lease.is_some()
@@ -2887,7 +2958,8 @@ async fn run_upstream(
                         session.reconnects.fetch_add(1, Ordering::Relaxed);
                     }
                     let discontinuity = if inner.config.source_initialization {
-                        last_candidate.is_some_and(|previous| previous != current)
+                        std::mem::take(&mut edited_discontinuity)
+                            || last_candidate.is_some_and(|previous| previous != current)
                     } else {
                         attempts > 0
                     };
@@ -2941,15 +3013,24 @@ async fn run_upstream(
                     && session.received_bytes.load(Ordering::Relaxed) > bytes_at_admission;
                 retained_source_slot = if let Some(request) = requested_switch.as_ref() {
                     let transferring = request.target.1 != candidate.provider_profile_id;
-                    requested_target = candidates.iter().position(|target| {
-                        source_switch::source(target) == request.target
-                            && if transferring {
-                                source_switch::compatible_unlimited_transfer(candidate, target)
-                            } else {
-                                source_switch::compatible(candidate, target)
-                            }
-                    });
-                    let retain = if transferring {
+                    let editing = request.current_url_edit.is_some();
+                    if let Some(edit) = request.current_url_edit.as_ref() {
+                        if request.target == source_switch::source(candidate)
+                            && edit.matches(candidate)
+                        {
+                            requested_target = Some(current);
+                        }
+                    } else {
+                        requested_target = candidates.iter().position(|target| {
+                            source_switch::source(target) == request.target
+                                && if transferring {
+                                    source_switch::compatible_unlimited_transfer(candidate, target)
+                                } else {
+                                    source_switch::compatible(candidate, target)
+                                }
+                        });
+                    }
+                    let retain = if transferring || editing {
                         ready_owned_slot && numeric_channel.is_some() && requested_target.is_some()
                     } else {
                         retain_explicit_slot(
@@ -2961,7 +3042,7 @@ async fn run_upstream(
                     if transferring && retain {
                         transfer_previous_profile = candidate.provider_profile_id;
                     }
-                    if (transferring || candidate.provider_max_streams > 0) && !retain {
+                    if (transferring || editing || candidate.provider_max_streams > 0) && !retain {
                         let control = session
                             .source_switch
                             .as_ref()
@@ -2991,6 +3072,15 @@ async fn run_upstream(
         }
         if let (Some(control), Some(request)) = (&session.source_switch, requested_switch.take()) {
             if let Some(target) = requested_target {
+                if let Some(edit) = request.current_url_edit.as_ref() {
+                    candidates[target].url.clone_from(&edit.replacement);
+                    session
+                        .edited_source_urls
+                        .lock()
+                        .unwrap()
+                        .insert(request.target, edit.replacement.clone());
+                    edited_discontinuity = true;
+                }
                 current = target;
                 retry.tried.clear();
                 retry.rotations = 0;
@@ -3180,6 +3270,19 @@ fn epoch_seconds() -> f64 {
 }
 
 impl Session {
+    fn switch_candidates(&self) -> Vec<PlaybackCandidate> {
+        let edits = self.edited_source_urls.lock().unwrap();
+        std::iter::once(self.source.primary())
+            .chain(self.source.alternates.iter().cloned())
+            .map(|mut candidate| {
+                if let Some(url) = edits.get(&source_switch::source(&candidate)) {
+                    candidate.url.clone_from(url);
+                }
+                candidate
+            })
+            .collect()
+    }
+
     fn has_local_demand(&self) -> bool {
         self.channel.viewer_count() > 0 || self.profile_demands.load(Ordering::Acquire) > 0
     }
@@ -3256,6 +3359,7 @@ async fn channel_metadata_worker(
     let mut previous_state = String::new();
     let mut state_changed = session.started_at;
     let mut published_provider_epoch = 0;
+    let mut published_edit_at = None;
     loop {
         if *stop.borrow() {
             break;
@@ -3379,6 +3483,13 @@ async fn channel_metadata_worker(
         {
             fields.insert("stream_switch_time".into(), at.to_string());
         }
+        let edit_at = session
+            .source_switch
+            .as_ref()
+            .and_then(|control| control.last_confirmed_edit_at());
+        if edit_at.is_some() && edit_at != published_edit_at {
+            fields.insert("stream_switch_reason".into(), "manual".into());
+        }
         for (name, value) in [
             ("state", state.to_string()),
             ("state_changed_at", state_changed.to_string()),
@@ -3419,6 +3530,7 @@ async fn channel_metadata_worker(
             break;
         }
         published_provider_epoch = provider_epoch;
+        published_edit_at = edit_at;
         if promotion {
             session.startup.send_replace(Startup::Ready);
         }
@@ -3550,6 +3662,10 @@ async fn drive_candidate(
             }
         }
     }
+    let mut opened_direct_url = false;
+    let edited_attempt = pending_switch
+        .as_ref()
+        .is_some_and(|request| request.current_url_edit.is_some());
     let mut bytes = if let Some(command) = &candidate.input_command {
         let scope: Arc<dyn Send + Sync> =
             Arc::new((session.clone(), worker.clone(), provider.cloned()));
@@ -3573,9 +3689,10 @@ async fn drive_candidate(
             }
         }
     } else {
-        let Ok(attempt) = crate::upstream::Attempt::new_playback_requests(
+        let Ok(attempt) = crate::upstream::Attempt::new_playback_requests_with_redirects(
             inner.config.connect_timeout,
             inner.config.read_timeout,
+            !edited_attempt,
         ) else {
             return None;
         };
@@ -3598,6 +3715,17 @@ async fn drive_candidate(
         };
         if response.status() != reqwest::StatusCode::OK || attempt.cookie_budget_exceeded() {
             return None;
+        }
+        if (published_local_slot
+            && candidate.provider_max_streams == 0
+            && session.source_switch.is_some())
+            || edited_attempt
+        {
+            opened_direct_url = reqwest::Url::parse(&candidate.url)
+                .is_ok_and(|requested| requested == *response.url());
+            if edited_attempt && !opened_direct_url {
+                return None;
+            }
         }
         let Ok(body) = crate::upstream::body(response) else {
             return None;
@@ -3633,7 +3761,13 @@ async fn drive_candidate(
             _ = lost.changed() => break,
             request = async { control.unwrap().receive().await }, if control.is_some() => {
                 let current_source = source_switch::source(candidate);
-                if request.target == current_source {
+                if let Some(edit) = request.current_url_edit.as_ref() {
+                    if request.target != current_source || !published_local_slot || !opened_direct_url || !edit.matches(candidate) {
+                        control.unwrap().reject_active(request, current_source, published_local_slot,
+                            PlaybackError::new(409, "Current physical input changed before replacement"));
+                        continue;
+                    }
+                } else if request.target == current_source {
                     // Original acknowledges the already-active stream, clears
                     // rotation history and refreshes metadata without redialing.
                     retry.stable(current);

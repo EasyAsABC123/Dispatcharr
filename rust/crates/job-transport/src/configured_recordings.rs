@@ -199,7 +199,16 @@ pub fn recurring(
     if r.id <= 0 || r.channel_id <= 0 || !text(&r.name, 255) || r.weekday > 6 {
         return Err(Refusal::Shape);
     }
-    if r.day.weekday().num_days_from_monday() != r.weekday || r.end == r.start {
+    // The Source maintenance task intersects the saved date range with
+    // [today, today + 14 days], then filters by weekday. An empty
+    // intersection is a successful no-op, including expired enabled rules.
+    if r.day < now.date_naive()
+        || r.day > (now + Duration::days(14)).date_naive()
+        || r.day.weekday().num_days_from_monday() != r.weekday
+    {
+        return Ok(None);
+    }
+    if r.end == r.start {
         return Err(Refusal::Date);
     }
     let start = r.day.and_time(r.start).and_utc();
@@ -211,11 +220,7 @@ pub fn recurring(
     } else {
         end
     };
-    if !date(start)
-        || !date(end)
-        || r.day < now.date_naive()
-        || r.day > (now + Duration::days(14)).date_naive()
-    {
+    if !date(start) || !date(end) {
         return Err(Refusal::Date);
     }
     if start <= now || existing {
@@ -348,6 +353,36 @@ mod tests {
         );
         assert_eq!(iso(now()), "2026-11-12T23:34:44+00:00");
     }
+    #[test]
+    fn recurring_enabled_empty_calendar_window_is_a_normal_noop() {
+        let now = now();
+        let mut rule = Recurring {
+            id: 1,
+            channel_id: 2,
+            name: "Owned Recurring".into(),
+            enabled: true,
+            day: now.date_naive() + Duration::days(14),
+            weekday: now.date_naive().weekday().num_days_from_monday(),
+            start: NaiveTime::from_hms_opt(22, 0, 0).unwrap(),
+            end: NaiveTime::from_hms_opt(23, 0, 0).unwrap(),
+        };
+        assert!(recurring(now, &rule, false).unwrap().is_some());
+        rule.day += Duration::days(1);
+        rule.weekday = rule.day.weekday().num_days_from_monday();
+        assert!(recurring(now, &rule, false).unwrap().is_none());
+        rule.day = now.date_naive() - Duration::days(1);
+        rule.weekday = rule.day.weekday().num_days_from_monday();
+        assert!(recurring(now, &rule, false).unwrap().is_none());
+        rule.day = now.date_naive() + Duration::days(2);
+        assert!(recurring(now, &rule, false).unwrap().is_none());
+        rule.day = now.date_naive();
+        rule.weekday = rule.day.weekday().num_days_from_monday();
+        assert!(recurring(now, &rule, false).unwrap().is_none());
+        rule.day += Duration::days(7);
+        rule.end = rule.start;
+        assert!(matches!(recurring(now, &rule, false), Err(Refusal::Date)));
+    }
+
     #[test]
     fn recurring_disabled_is_noop_and_repeat_creates_no_second_intent() {
         let mut rule = Recurring {

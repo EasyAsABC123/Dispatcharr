@@ -181,7 +181,17 @@ impl Attempt {
         connect: Duration,
         read: Duration,
     ) -> Result<Self, reqwest::Error> {
-        Self::configured_with_roots(connect, read, true, true, playback_ca_roots())
+        Self::new_playback_requests_with_redirects(connect, read, true)
+    }
+
+    /// One explicit provider input replacement may require the physical
+    /// destination to be exactly the configured direct URL.
+    pub fn new_playback_requests_with_redirects(
+        connect: Duration,
+        read: Duration,
+        follow: bool,
+    ) -> Result<Self, reqwest::Error> {
+        Self::configured_with_roots(connect, read, follow, true, playback_ca_roots())
     }
     fn configured(
         connect: Duration,

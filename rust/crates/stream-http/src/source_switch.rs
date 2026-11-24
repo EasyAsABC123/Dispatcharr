@@ -58,8 +58,28 @@ struct ReadySource {
     owns_published_slot: bool,
 }
 
+pub(super) struct CurrentUrlEdit {
+    pub previous: String,
+    pub replacement: String,
+}
+
+impl CurrentUrlEdit {
+    pub fn matches(&self, candidate: &PlaybackCandidate) -> bool {
+        candidate.provider_max_streams == 0
+            && candidate
+                .provider_profile_id
+                .is_some_and(|profile| profile > 0)
+            && supported(candidate)
+            && candidate.url == self.previous
+            && self.previous != self.replacement
+            && reqwest::Url::parse(&self.replacement)
+                .is_ok_and(|url| matches!(url.scheme(), "http" | "https"))
+    }
+}
+
 pub(super) struct Request {
     pub target: Source,
+    pub current_url_edit: Option<CurrentUrlEdit>,
     reply: oneshot::Sender<Receipt>,
 }
 
@@ -74,6 +94,7 @@ pub(super) struct Control {
     state: Mutex<State>,
     queued: Notify,
     last_confirmed_at: AtomicU64,
+    last_confirmed_edit_at: AtomicU64,
 }
 
 impl Control {
@@ -82,6 +103,7 @@ impl Control {
             state: Mutex::new(State::Unavailable),
             queued: Notify::new(),
             last_confirmed_at: AtomicU64::new(0),
+            last_confirmed_edit_at: AtomicU64::new(0),
         }
     }
 
@@ -111,6 +133,24 @@ impl Control {
         target: Source,
         require_owned: bool,
     ) -> Result<oneshot::Receiver<Receipt>, PlaybackError> {
+        self.enqueue(current, target, require_owned, None)
+    }
+
+    pub fn submit_owned_url_edit(
+        &self,
+        current: Source,
+        edit: CurrentUrlEdit,
+    ) -> Result<oneshot::Receiver<Receipt>, PlaybackError> {
+        self.enqueue(current, current, true, Some(edit))
+    }
+
+    fn enqueue(
+        &self,
+        current: Source,
+        target: Source,
+        require_owned: bool,
+        current_url_edit: Option<CurrentUrlEdit>,
+    ) -> Result<oneshot::Receiver<Receipt>, PlaybackError> {
         let mut state = self.state.lock().unwrap();
         let State::Ready(ready) = *state else {
             return Err(PlaybackError::new(
@@ -127,7 +167,14 @@ impl Control {
             ));
         }
         let (reply, result) = oneshot::channel();
-        *state = State::Queued(ready, Request { target, reply });
+        *state = State::Queued(
+            ready,
+            Request {
+                target,
+                current_url_edit,
+                reply,
+            },
+        );
         self.queued.notify_one();
         Ok(result)
     }
@@ -167,8 +214,31 @@ impl Control {
         (at != 0).then(|| f64::from_bits(at))
     }
 
+    pub fn last_confirmed_edit_at(&self) -> Option<f64> {
+        let at = self.last_confirmed_edit_at.load(Ordering::Acquire);
+        (at != 0).then(|| f64::from_bits(at))
+    }
+
+    pub fn reject_active(
+        &self,
+        request: Request,
+        current: Source,
+        owns_published_slot: bool,
+        error: PlaybackError,
+    ) {
+        *self.state.lock().unwrap() = State::Ready(ReadySource {
+            source: current,
+            owns_published_slot,
+        });
+        let _ = request.reply.send(Err(error));
+    }
+
     pub fn confirm(&self, request: Request, current: Source, owns_published_slot: bool, at: f64) {
         let mut state = self.state.lock().unwrap();
+        if request.current_url_edit.is_some() {
+            self.last_confirmed_edit_at
+                .store(at.to_bits(), Ordering::Release);
+        }
         self.last_confirmed_at
             .store(at.to_bits(), Ordering::Release);
         *state = State::Ready(ReadySource {
@@ -270,5 +340,46 @@ mod tests {
         control.confirm(request, alternate, false, 100.25);
         assert!(reply.await.unwrap().is_ok());
         assert!(control.submit(alternate, primary).is_err());
+    }
+
+    #[tokio::test]
+    async fn owned_url_edit_requires_owner_and_media_and_preserves_active_on_rejection() {
+        let control = Control::new();
+        let source = (5, Some(7));
+        let edit = || CurrentUrlEdit {
+            previous: "http://owned-origin/old.ts".into(),
+            replacement: "http://owned-origin/new.ts".into(),
+        };
+        control.arm(source, false);
+        assert!(control.submit_owned_url_edit(source, edit()).is_err());
+        control.disarm();
+        control.arm(source, true);
+
+        let failed = control.submit_owned_url_edit(source, edit()).unwrap();
+        let request = control.receive().await;
+        assert_eq!(request.target, source);
+        assert!(request.current_url_edit.is_some());
+        control.reject_active(
+            request,
+            source,
+            true,
+            PlaybackError::new(409, "old input changed"),
+        );
+        assert_eq!(failed.await.unwrap().unwrap_err().status, 409);
+        assert_eq!(control.last_confirmed_at(), None);
+
+        let mut applied = control.submit_owned_url_edit(source, edit()).unwrap();
+        let request = control.receive().await;
+        assert!(applied.try_recv().is_err());
+        assert!(control.submit(source, source).is_err());
+        control.confirm(request, source, true, 21.5);
+        assert!(applied.await.unwrap().is_ok());
+        assert_eq!(control.last_confirmed_edit_at(), Some(21.5));
+        let repeat = control.submit(source, source).unwrap();
+        let request = control.receive().await;
+        control.confirm(request, source, true, 22.0);
+        assert!(repeat.await.unwrap().is_ok());
+        assert_eq!(control.last_confirmed_at(), Some(22.0));
+        assert_eq!(control.last_confirmed_edit_at(), Some(21.5));
     }
 }
