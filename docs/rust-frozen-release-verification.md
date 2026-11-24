@@ -10,6 +10,8 @@ The AMD64 automatic TS Connect comparison completed both 270-second fixture wind
 
 Pinned Original served twelve signed requests through its packaged nginx and uWSGI for the two plugin repository read routes. Admin and Standard HEAD responses matched their paired GET representation headers with empty bodies. Admin OPTIONS returned metadata, while Standard OPTIONS returned HTTP 403. The fixture confirmed unchanged SQL and independent teardown. [Original plugin method evidence](rust-m0-original-plugin-read-methods-3d8f9672.json)
 
+The Native ARM64 120-second M9 predecessor completed with ten signed viewers, 25 active samples, 20 strict audio/video decodes and two signed XMLTV refresh lineages. The run measured 9.28 CPU core-seconds and a 265.7 MB peak group working set. Both idle descriptor censuses completed, and exact teardown and independent verification passed. The six-minute successor, full soak, and paired release-performance gates remain open. [ARM64 120-second soak evidence](rust-m9-arm64-s120-soak-3d8f9672.json)
+
 ## Parallel implementation
 
 | Canonical owner | Open rows | Work before the freeze |
