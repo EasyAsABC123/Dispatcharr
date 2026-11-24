@@ -201,6 +201,7 @@ const BACKUP_PERIODIC_NAME: &str = "backup-scheduled-task";
 const BACKUP_PERIODIC_TASK: &str = "apps.backups.tasks.scheduled_backup_task";
 const CLEANUP_PERIODIC_TASK: &str = "celery.backend_cleanup";
 const CLOCKED_DVR_TASK: &str = "apps.channels.tasks.run_recording";
+const LINKED_XMLTV_DAILY_ZONES: &[&str] = &["UTC", "America/New_York"];
 const EXPIRATION_PERIODIC_NAME: &str = "check-account-expirations";
 const EXPIRATION_PERIODIC_TASK: &str = "apps.m3u.tasks.check_account_expirations";
 const VERSION_PERIODIC_NAME: &str = "check-version-updates";
@@ -460,7 +461,7 @@ impl ScheduleScope {
                 && entry.enabled
                 && entry.interval.is_none()
                 && entry.expire_seconds.is_none()
-                && daily_utc_crontab(entry).is_some();
+                && linked_xmltv_daily_crontab(entry).is_some();
             let selected_default =
                 self.selected_default_interval(&entry.name, &entry.task)
                     .is_some_and(|seconds| {
@@ -521,6 +522,18 @@ impl ScheduleScope {
     }
 }
 fn daily_utc_crontab(entry: &Entry) -> Option<(&str, &str)> {
+    let (minute, hour, zone) = numeric_daily_crontab(entry)?;
+    (zone == "UTC").then_some((minute, hour))
+}
+
+fn linked_xmltv_daily_crontab(entry: &Entry) -> Option<(&str, &str, &str)> {
+    let fields = numeric_daily_crontab(entry)?;
+    LINKED_XMLTV_DAILY_ZONES
+        .contains(&fields.2)
+        .then_some(fields)
+}
+
+fn numeric_daily_crontab(entry: &Entry) -> Option<(&str, &str, &str)> {
     fn clock_value(value: &str, upper_bound: u8) -> bool {
         value.len() <= 2
             && value.bytes().all(|digit| digit.is_ascii_digit())
@@ -528,13 +541,12 @@ fn daily_utc_crontab(entry: &Entry) -> Option<(&str, &str)> {
     }
 
     let (minute, hour, weekday, day, month, zone) = entry.crontab.as_ref()?;
-    (zone == "UTC"
-        && clock_value(minute, 60)
+    (clock_value(minute, 60)
         && clock_value(hour, 24)
         && weekday == "*"
         && day == "*"
         && month == "*")
-        .then_some((minute.as_str(), hour.as_str()))
+        .then_some((minute.as_str(), hour.as_str(), zone.as_str()))
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -1539,7 +1551,7 @@ WHERE p.id=$2::bigint AND p.name=$3::text AND p.task=$4::text
 FOR SHARE OF p,i NOWAIT"#;
 
 // Lock the source first, as for the interval path. Require the identical
-// current numeric UTC fields before reserving the cached occurrence.
+// current numeric schedule fields and zone before reserving the occurrence.
 const LOCK_CURRENT_XMLTV_CRON: &str = r#"
 WITH source AS MATERIALIZED (
     SELECT refresh_task_id FROM epg_epgsource
@@ -1555,10 +1567,10 @@ WHERE p.id=$2::bigint AND p.name=$3::text AND p.task=$4::text
   AND p.clocked_id IS NULL AND p.interval_id IS NULL
   AND p.start_time IS NULL AND p.expires IS NULL AND p.expire_seconds IS NULL
   AND p.queue IS NULL AND p.exchange IS NULL AND p.routing_key IS NULL AND p.priority IS NULL
-  AND c.minute=$5::text AND c.hour=$6::text AND c.timezone='UTC'
+  AND c.minute=$5::text AND c.hour=$6::text AND c.timezone=$7::text
   AND c.day_of_week='*' AND c.day_of_month='*' AND c.month_of_year='*'
-  AND p.total_run_count=$7::bigint
-  AND COALESCE(p.last_run_at,p.date_changed)=$8::timestamptz
+  AND p.total_run_count=$8::bigint
+  AND COALESCE(p.last_run_at,p.date_changed)=$9::timestamptz
   AND octet_length(p.args)<=65536 AND octet_length(p.kwargs)<=65536
   AND octet_length(p.headers)<=65536
 FOR SHARE OF p,c NOWAIT"#;
@@ -1697,7 +1709,7 @@ async fn reserve_linked_xmltv_cron(
     source_id: i64,
     snapshot: &mut Entry,
 ) -> Result<LinkedReservation, Error> {
-    let (minute, hour) = daily_utc_crontab(snapshot).ok_or(Error::Supervisor)?;
+    let (minute, hour, zone) = linked_xmltv_daily_crontab(snapshot).ok_or(Error::Supervisor)?;
     let mut transaction = connection.begin().await?;
     let current = sqlx::query_as::<_, (String, String, String)>(LOCK_CURRENT_XMLTV_CRON)
         .bind(source_id)
@@ -1706,6 +1718,7 @@ async fn reserve_linked_xmltv_cron(
         .bind(&snapshot.task)
         .bind(minute)
         .bind(hour)
+        .bind(zone)
         .bind(snapshot.total_run_count)
         .bind(snapshot.last_run_at)
         .fetch_optional(&mut *transaction)
@@ -2189,7 +2202,7 @@ const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
            AND EXISTS (SELECT 1 FROM epg_epgsource s
                        WHERE s.id>0 AND s.is_active AND s.source_type='xmltv' AND s.refresh_interval=0
                          AND s.refresh_task_id=p.id AND p.name='epg_source-refresh-' || s.id::text)
-           AND cr.timezone='UTC' AND cr.minute ~ '^[0-5]?[0-9]$'
+           AND cr.timezone=ANY($28::text[]) AND cr.minute ~ '^[0-5]?[0-9]$'
            AND cr.hour ~ '^(0?[0-9]|1[0-9]|2[0-3])$'
            AND cr.day_of_week='*' AND cr.day_of_month='*' AND cr.month_of_year='*')
         OR (p.interval_id IS NOT NULL AND p.crontab_id IS NULL
@@ -2352,6 +2365,7 @@ async fn load(
             .bind(CLOCKED_DVR_TASK)
             .bind(scope.includes_saved_xc())
             .bind(RESERVED_PERIODIC_NAMES)
+            .bind(LINKED_XMLTV_DAILY_ZONES)
     } else {
         query
     };
@@ -2901,7 +2915,7 @@ mod tests {
     }
 
     #[test]
-    fn selected_core_linked_xmltv_cron_keeps_the_daily_utc_boundary() {
+    fn selected_core_linked_xmltv_cron_keeps_the_exact_daily_boundary() {
         let scope = ScheduleScope::core_with_xmltv(false, true, false, true).unwrap();
         let due = "2026-11-23T00:01:00Z".parse::<DateTime<Utc>>().unwrap();
         let mut entry = model(crate::refresh_protocol::NAME);
@@ -2954,7 +2968,13 @@ mod tests {
         changed.one_off = true;
         assert!(!scope.admits(&changed));
         assert!(LOCK_CURRENT_XMLTV_CRON.contains("AND refresh_interval=0"));
-        assert!(LOCK_CURRENT_XMLTV_CRON.contains("c.minute=$5::text AND c.hour=$6::text"));
+        assert!(LOCK_CURRENT_XMLTV_CRON
+            .contains("c.minute=$5::text AND c.hour=$6::text AND c.timezone=$7::text"));
+        assert!(LOCK_CURRENT_XMLTV_CRON.contains("p.total_run_count=$8::bigint"));
+        assert!(LOCK_CURRENT_XMLTV_CRON
+            .contains("COALESCE(p.last_run_at,p.date_changed)=$9::timestamptz"));
+        assert!(LOAD_SELECTED_CORE_QUERY.contains("cr.timezone=ANY($28::text[])"));
+        assert!(!LOAD_QUERY.contains("$28"));
         assert!(LOCK_CURRENT_XMLTV_CRON.contains("FOR SHARE OF p,c NOWAIT"));
         assert!(!LOAD_QUERY.contains("epg_epgsource"));
         assert!(
@@ -2962,6 +2982,86 @@ mod tests {
                 .find("AND s.refresh_interval=0")
                 .unwrap()
                 < LOAD_SELECTED_CORE_QUERY.find("LIMIT 257").unwrap()
+        );
+    }
+
+    #[tokio::test]
+    #[ignore = "requires a disposable PostgreSQL connection in DISPATCHARR_BEAT_TEST_DATABASE_URL"]
+    async fn linked_xmltv_cron_reservation_rechecks_cached_timezone_under_sql_lock() {
+        let mut pg =
+            PgConnection::connect(&std::env::var("DISPATCHARR_BEAT_TEST_DATABASE_URL").unwrap())
+                .await
+                .unwrap();
+        sqlx::raw_sql(r#"
+            CREATE TEMP TABLE epg_epgsource (id bigint, refresh_task_id bigint,
+                is_active bool, source_type text, refresh_interval integer);
+            CREATE TEMP TABLE django_celery_beat_crontabschedule (id bigint, minute text,
+                hour text, timezone text, day_of_week text, day_of_month text, month_of_year text);
+            CREATE TEMP TABLE django_celery_beat_periodictask (id bigint, name text, task text,
+                crontab_id bigint, enabled bool, one_off bool, solar_id bigint, clocked_id bigint,
+                interval_id bigint, start_time timestamptz, expires timestamptz, expire_seconds integer,
+                queue text, exchange text, routing_key text, priority integer, total_run_count bigint,
+                last_run_at timestamptz, date_changed timestamptz, args text, kwargs text, headers text);
+            INSERT INTO epg_epgsource VALUES (17, 29, true, 'xmltv', 0);
+            INSERT INTO django_celery_beat_crontabschedule VALUES
+                (6, '30', '1', 'America/New_York', '*', '*', '*');
+            INSERT INTO django_celery_beat_periodictask (id,name,task,crontab_id,enabled,one_off,
+                total_run_count,last_run_at,args,kwargs,headers) VALUES
+                (29,'epg_source-refresh-17','apps.epg.tasks.refresh_epg_data',6,true,false,
+                 0,'2026-10-31T05:30:00Z','[]','{"source_id":17}','{}');
+        "#).execute(&mut pg).await.unwrap();
+        let mut entry = model(crate::refresh_protocol::NAME);
+        entry.id = 29;
+        entry.name = "epg_source-refresh-17".into();
+        entry.kwargs = json!({"source_id": 17});
+        entry.interval = None;
+        entry.crontab = Some((
+            "30".into(),
+            "1".into(),
+            "*".into(),
+            "*".into(),
+            "*".into(),
+            "America/New_York".into(),
+        ));
+        entry.last_run_at = "2026-10-31T05:30:00Z".parse().unwrap();
+        sqlx::query("UPDATE django_celery_beat_crontabschedule SET timezone='UTC' WHERE id=6")
+            .execute(&mut pg)
+            .await
+            .unwrap();
+        assert!(matches!(
+            reserve_linked_xmltv_cron(&mut pg, 17, &mut entry)
+                .await
+                .unwrap(),
+            LinkedReservation::Stale
+        ));
+        assert_eq!(entry.total_run_count, 0);
+        let counter = "SELECT total_run_count FROM django_celery_beat_periodictask WHERE id=29";
+        assert_eq!(
+            sqlx::query_scalar::<_, i64>(counter)
+                .fetch_one(&mut pg)
+                .await
+                .unwrap(),
+            0
+        );
+        sqlx::query(
+            "UPDATE django_celery_beat_crontabschedule SET timezone='America/New_York' WHERE id=6",
+        )
+        .execute(&mut pg)
+        .await
+        .unwrap();
+        assert!(matches!(
+            reserve_linked_xmltv_cron(&mut pg, 17, &mut entry)
+                .await
+                .unwrap(),
+            LinkedReservation::Reserved
+        ));
+        assert_eq!(entry.total_run_count, 1);
+        assert_eq!(
+            sqlx::query_scalar::<_, i64>(counter)
+                .fetch_one(&mut pg)
+                .await
+                .unwrap(),
+            1
         );
     }
 
@@ -3966,6 +4066,61 @@ mod tests {
                 .due
         );
     }
+    #[test]
+    fn ordinary_cached_saved_cron_replays_pinned_new_york_boundary_decisions() {
+        let clock = |value: &str| {
+            DateTime::parse_from_rfc3339(value)
+                .unwrap()
+                .with_timezone(&Utc)
+        };
+        let scope = ScheduleScope::core_with_xmltv(false, true, false, false).unwrap();
+        let row = |hour: &str, last: &str| {
+            let mut entry = model(crate::refresh_protocol::NAME);
+            entry.name = "epg_source-refresh-17".into();
+            entry.kwargs = json!({"source_id":17});
+            entry.interval = None;
+            entry.crontab = Some((
+                "30".into(),
+                hour.into(),
+                "*".into(),
+                "*".into(),
+                "*".into(),
+                "America/New_York".into(),
+            ));
+            entry.last_run_at = clock(last);
+            assert_eq!(
+                linked_xmltv_daily_crontab(&entry),
+                Some(("30", hour, "America/New_York"))
+            );
+            assert_eq!(daily_utc_crontab(&entry), None);
+            assert!(scope.admits(&entry));
+            Cached {
+                entry,
+                clocked: None,
+                saved_xc: false,
+                when: 0.0,
+                identity: Arc::new(()),
+            }
+        };
+        // The pinned real Beat gap fixture reports one fire at 07:30 UTC,
+        // starting from its prior 02:30 EST occurrence and 07:00 UTC sample.
+        let gap = row("2", "2026-03-07T07:30:00Z");
+        let before_gap = decision(&gap, clock("2026-03-08T07:00:00Z")).unwrap();
+        assert!(!before_gap.due);
+        assert_eq!(before_gap.next_seconds, 1_800.0);
+        assert!(decision(&gap, clock("2026-03-08T07:30:00Z")).unwrap().due);
+
+        // The retained Original eager scheduler saved the first fold once.
+        let mut fold = row("1", "2026-10-31T05:30:00Z");
+        let before = clock("2026-11-01T05:29:59Z");
+        let first = clock("2026-11-01T05:30:00Z");
+        let second = clock("2026-11-01T06:30:00Z");
+        assert!(!decision(&fold, before).unwrap().due);
+        assert!(decision(&fold, first).unwrap().due);
+        fold.entry.last_run_at = first;
+        assert!(!decision(&fold, second).unwrap().due);
+    }
+
     #[test]
     fn saved_timezone_catalogue_drives_existing_sql_window_and_reload() {
         let winter = DateTime::parse_from_rfc3339("2026-01-05T10:30:00Z")
