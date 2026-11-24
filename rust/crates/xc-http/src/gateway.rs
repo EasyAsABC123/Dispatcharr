@@ -101,11 +101,10 @@ fn unsupported_action() -> StoreError {
 }
 fn ordinary_cached_info_request(method: &Method, id: Option<&str>) -> bool {
     method == Method::GET
-        && id.is_some_and(|raw| {
-            matches!(raw.as_bytes().first(), Some(b'1'..=b'9'))
-                && raw.bytes().all(|byte| byte.is_ascii_digit())
-                && raw.parse::<i64>().is_ok()
-        })
+        && id
+            .and_then(dispatcharr_ingest_core::source_integer_literal)
+            .and_then(|raw| raw.parse::<i64>().ok())
+            .is_some_and(|id| id > 0)
 }
 struct Worker(Arc<Inner>);
 impl Drop for Worker {

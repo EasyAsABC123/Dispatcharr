@@ -11,8 +11,8 @@ use super::{
 };
 use axum::{
     body::{to_bytes, Body},
-    extract::ConnectInfo,
-    http::{HeaderValue, Method},
+    extract::{rejection::PathRejection, ConnectInfo, Path},
+    http::{HeaderValue, Method, StatusCode},
     response::{IntoResponse, Response},
     routing::any,
     Router,
@@ -74,6 +74,28 @@ impl ImageHttp {
                     },
                 ),
             );
+            // The pinned Django URLconf uses the numeric path converter on
+            // these explicit routes. Serve them directly through image/cache.
+            let state = self.clone();
+            router = router.route(
+                path.trim_end_matches('/'),
+                any(
+                    move |path_id: Result<Path<String>, PathRejection>,
+                          ConnectInfo(peer): ConnectInfo<SocketAddr>,
+                          request: axum::extract::Request| {
+                        let state = state.clone();
+                        async move {
+                            let Ok(Path(id)) = path_id else {
+                                return StatusCode::NOT_FOUND.into_response();
+                            };
+                            if id.is_empty() || !id.bytes().all(|byte| byte.is_ascii_digit()) {
+                                return StatusCode::NOT_FOUND.into_response();
+                            }
+                            state.respond_with_id(image, peer, request, Some(id)).await
+                        }
+                    },
+                ),
+            );
         }
         router
     }
@@ -83,15 +105,25 @@ impl ImageHttp {
         peer: SocketAddr,
         request: axum::extract::Request,
     ) -> Response {
-        let (parts, body) = request.into_parts();
-        drop(body);
-        let raw = parts
-            .uri
+        let raw = request
+            .uri()
             .path()
             .trim_end_matches('/')
             .rsplit('/')
             .nth(1)
             .map(str::to_owned);
+        self.respond_with_id(image, peer, request, raw).await
+    }
+
+    async fn respond_with_id(
+        &self,
+        image: Image,
+        peer: SocketAddr,
+        request: axum::extract::Request,
+        raw: Option<String>,
+    ) -> Response {
+        let (parts, body) = request.into_parts();
+        drop(body);
         let raw_image = matches!(parts.method, Method::GET | Method::HEAD);
         let head = parts.method == Method::HEAD;
         let input = parts
@@ -257,5 +289,57 @@ impl ImageHttp {
         };
         headers(&mut response);
         response
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::{
+        http::{header, Request},
+        Extension,
+    };
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn vod_artwork_direct_paths_use_the_numeric_source_converter() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = crate::AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-vod-artwork-route-fixture".into()).unwrap(),
+        );
+        let limits = super::super::vod_api_owned_read::ReadLimits::default();
+        let reads = super::super::VodReads::new(auth, limits).unwrap();
+        let peer: SocketAddr = "127.0.0.1:12345".parse().unwrap();
+        let app = reads.vod_image_router().layer(Extension(ConnectInfo(peer)));
+        for (resource, action) in [
+            ("movies", "image"),
+            ("series", "image"),
+            ("episodes", "image"),
+            ("vodlogos", "cache"),
+        ] {
+            for (id, status) in [
+                ("12", StatusCode::NOT_ACCEPTABLE),
+                ("0%31", StatusCode::NOT_ACCEPTABLE),
+                ("sample", StatusCode::NOT_FOUND),
+            ] {
+                let uri = format!("/api/vod/{resource}/{id}/{action}");
+                let response = app
+                    .clone()
+                    .oneshot(
+                        Request::builder()
+                            .uri(&uri)
+                            .method(Method::OPTIONS)
+                            .header(header::ACCEPT, "application/xml")
+                            .body(Body::empty())
+                            .unwrap(),
+                    )
+                    .await
+                    .unwrap();
+                assert_eq!(response.status(), status, "{uri}");
+                assert!(!response.headers().contains_key(header::LOCATION), "{uri}");
+            }
+        }
     }
 }

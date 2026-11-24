@@ -123,6 +123,12 @@ Saving DVR settings now uses pinned Original’s equality rules for offset value
 
 Category searches accept the pinned Original single- and double-quoted search terms, including mixed words, and keep the existing term cap and bound SQL. The focused parser check passed. The existing browser cohort can verify the quoted queries under its signed movie-only and series-only roles.
 
+## VOD artwork and Xtream information
+
+Movie, Series, Episode, and VODLogo artwork now accept Original’s numeric URLs without a trailing slash. Twelve requests passed the focused router check. The provider-modal browser fixture adds paired signed SVG reads with both spellings and checks bytes, cache behavior, decoding and restoration of the owned provider state.
+
+Signed Xtream Movie and Series information requests accept valid positive IDs written with leading zeros, an encoded plus sign, Unicode digits, or underscores. The focused gateway test and fourteen pinned Django query compiler controls passed. The paired fixture will check fresh provider lookups and byte-identical canonical warm responses.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.
