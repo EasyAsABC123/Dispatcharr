@@ -430,6 +430,15 @@ or public wire checks and compares exact status, headers and body.
 4. Reconcile literal execution, teardown and evaluator receipts against the frozen revision. Required dependencies must be satisfied before later workflows. Run the two-hour soak and quiet equal-work benchmarks after their prerequisites. Compare CPU, working memory, useful throughput and first-byte latency under the recorded thresholds. Keep the previously deferred full-scan comparison separate.
 5. Record the exact current result for every row and verify the same-application rollback and operator intake. Final deployment and default-switch approval are separate decisions after the release evidence is complete.
 
+The M6 playback-during-refresh probe can now bind a reviewed read-only
+fixture through the coordinator. The planned paired phase uses one
+ordinary application context per backend for two signed viewers,
+a held and released XMLTV refresh, a second guide import, and the
+strict timed recording. Its offline admission checks preserve the same
+127 matrix rows and the durable retry, cancellation and restart
+prerequisite. A successful run supplies scoped evidence for this
+workflow while the release row remains open.
+
 The coordinator’s multi-document binding check is an offline preparation step. Its result lists partial or missing inputs, while physical receipts establish release status. [Coordinator commands](../scripts/rust-milestone-batches/README.md)
 
 Dispatcharr’s original authors and the authors of its dependencies retain full credit. [Attribution](../ATTRIBUTION.md)

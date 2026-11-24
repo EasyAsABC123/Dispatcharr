@@ -17,7 +17,7 @@ import time
 
 HERE = Path(__file__).resolve().parent
 STATES = {"passed", "failed", "blocked", "not_run"}
-PARTIAL_PROBES = {"m6/api202-publication", "m6/default-job-graph", "m6/programme-index", "m6/schedules-direct-guide"}
+PARTIAL_PROBES = {"m6/api202-publication", "m6/default-job-graph", "m6/programme-index", "m6/schedules-direct-guide", "m6/playback-during-refresh"}
 
 
 def save(path, value):
@@ -360,6 +360,17 @@ def owner_readiness(nodes, document, output=None):
                                                output, HERE.parents[1], node=key)
                 if bindings[key] != expected:
                     raise ValueError("M6 complete-refresh exact checker, cleanup, and evaluator binding required")
+                continue
+            if key == "m6/playback-during-refresh":
+                owner = module(HERE / "m6/playback_overlap_owner.py", "readiness_m6_playback_overlap")
+                context = owners.get("m6", {}).get("playback_overlap")
+                if not context:
+                    raise ValueError("M6 playback overlap sealed partial owner required")
+                expected = owner.dispatch_spec(Path(context["stage"]), context["seal"],
+                                               document["candidate"], HERE.parents[1],
+                                               Path(context["receiving"]), node["entrypoint"], output)
+                if bindings[key] != expected:
+                    raise ValueError("M6 playback overlap exact partial checker and lease required")
                 continue
             # This export currently offers bounded partial probes, not complete
             # functional or performance workflows. Do not invent a green binding.
