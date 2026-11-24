@@ -893,16 +893,28 @@ def main():
     parser.add_argument("--bindings", action="append", type=Path,
                         help="reviewed binding document for the common candidate; may be repeated")
     parser.add_argument("--output", type=Path)
-    parser.add_argument("--graph-profile", choices=("historical", "postgresql-copied-sqlite-v1"),
+    parser.add_argument("--graph-profile", choices=("historical", "postgresql-copied-sqlite-v1", "postgresql-copied-sqlite-successor"),
                         default="historical")
     parser.add_argument("--datastore-decision-commit")
+    parser.add_argument("--datastore-evidence-commit")
+    parser.add_argument("--datastore-evidence-sha256")
+    parser.add_argument("--datastore-application")
     args = parser.parse_args()
+    successor = args.graph_profile == "postgresql-copied-sqlite-successor"
+    evidence = (args.datastore_evidence_commit, args.datastore_evidence_sha256, args.datastore_application)
+    if (successor and not all(evidence)) or (not successor and any(evidence)):
+        parser.error("only the successor profile requires explicit evidence commit, digest and application")
     nodes = inventory()
     release_policy = None
     metadata = {}
     if args.graph_profile != "historical":
         policy = module(HERE / "datastore_release.py", "datastore_release_policy")
-        nodes, metadata = policy.project(HERE.parents[1], nodes, args.datastore_decision_commit)
+        nodes, metadata = policy.project(HERE.parents[1], nodes, args.datastore_decision_commit,
+                                         use_legacy_proof=not successor)
+        if successor:
+            adapter = module(HERE / "datastore_successor.py", "datastore_successor")
+            metadata = adapter.admit(HERE.parents[1], policy, metadata, *evidence)
+            policy = adapter
         validate(nodes, {})
         release_policy = (policy, metadata)
     elif args.datastore_decision_commit:

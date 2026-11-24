@@ -68,7 +68,7 @@ def verified_blob(repo, revision, path):
     return raw
 
 
-def project(repo, nodes, decision_commit):
+def project(repo, nodes, decision_commit, *, use_legacy_proof=True):
     need(decision_commit == COMMIT, "exact Root decision commit required")
     need(graph_hash(nodes) == GRAPH_SHA256, "historical graph differs from the approved snapshot")
     need(git(repo, "rev-parse", COMMIT + "^").decode().strip() == OLD_GRAPH,
@@ -90,8 +90,9 @@ def project(repo, nodes, decision_commit):
          and all(approval[key] is False for key in ("live_sqlite_service_required_in_selected_release",
                  "live_sqlite_same_engine_backup_restore_required_in_selected_release", "production_or_cutover_authorized")),
          "Root approval does not match the current candidate and supported domain")
-    proof = json.loads(verified_blob(repo, PROOF_COMMIT, PROOF))
-    verify_operator(proof)
+    if use_legacy_proof:
+        proof = json.loads(verified_blob(repo, PROOF_COMMIT, PROOF))
+        verify_operator(proof)
     updates = {row["id"]: row for row in contract["proposed_direct_dependency_updates"]}
     need(set(contract["historical_rows"]) == set(OMIT)
          and contract["base_graph_revision"] == OLD_GRAPH
