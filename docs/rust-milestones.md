@@ -1527,6 +1527,9 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 - **M5** The current ARM64 Chromium pair verified first-admin setup, signed Administrator and Standard account roles, and the same 112 served React assets. [Current browser evidence](rust-m5-2d3ffe53-arm64-current-browser.md)
 - **M4 and M9** The pinned Original archive diagnostic identified the WSGI response for the live upstream socket. Its decoder transport remains unlinked. The separate idle accounting associated the readable Celery processes with most of the anonymous increase during the short idle observation. [Archive and idle attribution](rust-2d3ffe53-original-archive-and-idle-attribution.md)
 
+- **M2** The current ordinary Main package passed five health and Redis reply scenarios, including PostgreSQL fallback and graceful shutdown. [Current Main health evidence](rust-m2-2d3ffe53-ordinary-main-health.md)
+- **M4** The current AMD64 VOD comparison passed one functional and four measured pairs. Median paired CPU and peak working set fell by 5.91% and 34.29%, with matching strict decodes. [Current VOD performance](rust-m4-2d3ffe53-amd64-vod-performance.md)
+
 ## Latest scoped runtime evidence for 2ee64c43
 
 - **M6** Eleven signed invalid string IDs now match the Original 500 response, with no broker publication. Both ordinary packages passed signed startup and the exact source passed 1,775 workspace tests. [Invalid guide input evidence](rust-m6-2ee64c43-invalid-guide-ids.md)

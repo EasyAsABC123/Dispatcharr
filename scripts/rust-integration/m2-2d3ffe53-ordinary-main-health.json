@@ -1,0 +1,106 @@
+{
+  "Core_Engine_component_waiters_admitted": false,
+  "Main_ordinary_decisions": [
+    {
+      "actual_exit": 0,
+      "exact_cleanup": true,
+      "execution_sha256": "33d5ab001068e494665d9b3bb5cca60307ab06dfdc5dcd5ae4c40c06f8deadac",
+      "in_window_samples": 6,
+      "opted_in": false,
+      "passed": true,
+      "report_sha256": "3c3944dbe97b3a1865e9b4092ddecc0faaf9d0a63cc0577abe82ad44e446721f",
+      "role": "default",
+      "same_origin_recovery": true
+    },
+    {
+      "actual_exit": 0,
+      "exact_cleanup": true,
+      "execution_sha256": "d23f96e1a990e7913954af6dc5d16d634e3650aeb8a5ea75c3cf35d390e3885e",
+      "in_window_samples": 5,
+      "opted_in": true,
+      "passed": true,
+      "report_sha256": "6533e3f762b912bc3d4ab8f0d31ee0fc1f0eb4b763f65f5c42b24046fbf9af4b",
+      "role": "dynamic",
+      "same_origin_recovery": true
+    }
+  ],
+  "Main_physical_reply_faults": {
+    "campaign_passed": true,
+    "candidate": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1",
+    "cases": [
+      {
+        "actual_exit": 0,
+        "case": "delayed",
+        "exact_cleanup": true,
+        "literal_execution_sha256": "57f31cbdf1c0e5030d6d5e8f86966e6e43e9f1bbc7c24c78a42be55a1a4706fc",
+        "passed": true,
+        "ran": true,
+        "signed_ts_media_bytes": 13160,
+        "wire": {
+          "disposition": "release",
+          "gate_role_drained": true,
+          "held_reply_bytes": 5,
+          "held_reply_sha256": "8b731f85850fac625747bb8f9e4d99f93a230f8ba98898830ade3698b666fc6b",
+          "held_seconds": 1.072351653012447,
+          "selected_reply_forwarded": true,
+          "unrelated_frames_retained": 0
+        },
+        "work_sha256": "6dbc747a281c44ede99001264a8f2684c8857a805f131e367349389be5b26582",
+        "workload_passed": true
+      },
+      {
+        "actual_exit": 0,
+        "case": "dropped",
+        "exact_cleanup": true,
+        "literal_execution_sha256": "5bbc8d4e30d56a098216e8ed99b4c0ab435ff8916eeb5fc896f90403d9d21a73",
+        "passed": true,
+        "ran": true,
+        "same_clone_exact_pg_blocker": true,
+        "signed_ts_media_bytes": 13160,
+        "wire": {
+          "disposition": "disconnect",
+          "gate_role_drained": true,
+          "held_reply_bytes": 5,
+          "held_reply_sha256": "8b731f85850fac625747bb8f9e4d99f93a230f8ba98898830ade3698b666fc6b",
+          "held_seconds": 0.5591703649843112,
+          "selected_reply_forwarded": false,
+          "unrelated_frames_retained": 0
+        },
+        "work_sha256": "8f46fa1d685ab700c8dc1ffde9aab735df35bc1cfd433dc3763bec1a365ef411",
+        "workload_passed": true
+      },
+      {
+        "actual_exit": 0,
+        "actual_main_stop": 0,
+        "case": "shutdown",
+        "exact_cleanup": true,
+        "literal_execution_sha256": "5a9dbbe792a0ad7f522e05cfef005e4faa9b01ce7feb29a9e72ee9fadb685671",
+        "passed": true,
+        "ran": true,
+        "wire": {
+          "disposition": "release",
+          "gate_role_drained": true,
+          "held_reply_bytes": 5,
+          "held_reply_sha256": "8b731f85850fac625747bb8f9e4d99f93a230f8ba98898830ade3698b666fc6b",
+          "held_seconds": 0.6611861070268787,
+          "selected_reply_forwarded": true,
+          "unrelated_frames_retained": 0
+        },
+        "work_sha256": "ac4fa46bffbeaac4e638c74b3bafbedc4e6186904582988f8a9f6cb25c99d9d2",
+        "workload_passed": true
+      }
+    ],
+    "formal_required_nodes_added": 0,
+    "image": "sha256:248614e76779972352315362fe306d60fac47c817dff924f1a7535644bc164c5",
+    "manifest_sha256": "ebcae7bc9c03c00fb21d9ee4a653b9ac3261bf83c81fe1198cbaa16bfb293b75",
+    "per_waiter_join_observed": false
+  },
+  "candidate": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1",
+  "credit": "Original Dispatcharr and dependency authors retain all credit.",
+  "formal_native_proxy_health_qualified": false,
+  "historical_Native_results_imported": 0,
+  "image": "sha256:248614e76779972352315362fe306d60fac47c817dff924f1a7535644bc164c5",
+  "manifest_sha256": "ebcae7bc9c03c00fb21d9ee4a653b9ac3261bf83c81fe1198cbaa16bfb293b75",
+  "normal_HTTP_specific_waiter_join_observed": false,
+  "verified_current_physical_arms": 5
+}

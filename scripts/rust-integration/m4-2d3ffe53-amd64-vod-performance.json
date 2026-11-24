@@ -1,0 +1,176 @@
+{
+  "bytes_per_capture": 1048576,
+  "candidate_revision": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1",
+  "capture_sha256": "a823ca14e15388f4503cdd2d03621d53a1a8cf31bc87ba7903f8dc08d0d7bd02",
+  "image": "sha256:248614e76779972352315362fe306d60fac47c817dff924f1a7535644bc164c5",
+  "independent_replay_verified": true,
+  "manifest_sha256": "ebcae7bc9c03c00fb21d9ee4a653b9ac3261bf83c81fe1198cbaa16bfb293b75",
+  "medians_by_arm": {
+    "candidate": {
+      "capture_throughput_bytes_per_second": 279612.78054108075,
+      "cpu_core_seconds": 1.1977595,
+      "peak_sampled_working_set_bytes": 528756736.0
+    },
+    "source": {
+      "capture_throughput_bytes_per_second": 279623.83178355126,
+      "cpu_core_seconds": 1.276485,
+      "peak_sampled_working_set_bytes": 804290560.0
+    }
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "paired_measurements": {
+    "by_protocol": {
+      "vod": {
+        "median_pair_change_percent": {
+          "capture_throughput_bytes_per_second": -0.003650407888022844,
+          "cpu_core_seconds": -5.912363381916341,
+          "peak_sampled_working_set_bytes": -34.29058454003202
+        },
+        "pairs": [
+          {
+            "block": 1,
+            "candidate_change_percent": {
+              "capture_throughput_bytes_per_second": -0.005627629022109115,
+              "cpu_core_seconds": -7.731052383606585,
+              "peak_sampled_working_set_bytes": -33.82149046793761
+            }
+          },
+          {
+            "block": 2,
+            "candidate_change_percent": {
+              "capture_throughput_bytes_per_second": -0.00046529105919290714,
+              "cpu_core_seconds": -4.093674380226098,
+              "peak_sampled_working_set_bytes": -34.26647514847754
+            }
+          },
+          {
+            "block": 3,
+            "candidate_change_percent": {
+              "capture_throughput_bytes_per_second": -0.006231091006980716,
+              "cpu_core_seconds": -3.963607102352651,
+              "peak_sampled_working_set_bytes": -34.572336253502435
+            }
+          },
+          {
+            "block": 4,
+            "candidate_change_percent": {
+              "capture_throughput_bytes_per_second": -0.001673186753936573,
+              "cpu_core_seconds": -9.330098769174612,
+              "peak_sampled_working_set_bytes": -34.314693931586504
+            }
+          }
+        ],
+        "prefix_ttfb_p95_change_percent": -2.943364737940757,
+        "prefix_ttfb_p95_ms": {
+          "candidate": 258.61989200348035,
+          "source": 266.462866042275
+        },
+        "prefix_ttfb_samples_per_backend": 4
+      }
+    },
+    "matched_work": true,
+    "measurement_claim_eligible": true,
+    "mock": false,
+    "phases": [
+      {
+        "block": 1,
+        "capture_throughput_bytes_per_second": 279632.1772824928,
+        "cpu_core_seconds": 1.275609,
+        "duration_seconds": 16.723764914029744,
+        "memory_samples": 17,
+        "peak_sampled_working_set_bytes": 803553280,
+        "phase": "vod/source",
+        "ttfb_ms": 266.462866042275
+      },
+      {
+        "block": 1,
+        "capture_throughput_bytes_per_second": 279616.4406209289,
+        "cpu_core_seconds": 1.176991,
+        "duration_seconds": 16.78769576200284,
+        "memory_samples": 17,
+        "peak_sampled_working_set_bytes": 531779584,
+        "phase": "vod/candidate",
+        "ttfb_ms": 258.61989200348035
+      },
+      {
+        "block": 2,
+        "capture_throughput_bytes_per_second": 279609.5233207742,
+        "cpu_core_seconds": 1.22507,
+        "duration_seconds": 16.68932861700887,
+        "memory_samples": 17,
+        "peak_sampled_working_set_bytes": 528596992,
+        "phase": "vod/candidate",
+        "ttfb_ms": 258.01067700376734
+      },
+      {
+        "block": 2,
+        "capture_throughput_bytes_per_second": 279610.82432494033,
+        "cpu_core_seconds": 1.277361,
+        "duration_seconds": 16.700554251961876,
+        "memory_samples": 17,
+        "peak_sampled_working_set_bytes": 804151296,
+        "phase": "vod/source",
+        "ttfb_ms": 264.8818930028938
+      },
+      {
+        "block": 3,
+        "capture_throughput_bytes_per_second": 279629.1103317767,
+        "cpu_core_seconds": 1.268819,
+        "duration_seconds": 16.730406630027574,
+        "memory_samples": 17,
+        "peak_sampled_working_set_bytes": 808398848,
+        "phase": "vod/source",
+        "ttfb_ms": 265.9265370457433
+      },
+      {
+        "block": 3,
+        "capture_throughput_bytes_per_second": 279611.68638742995,
+        "cpu_core_seconds": 1.218528,
+        "duration_seconds": 16.69589646498207,
+        "memory_samples": 17,
+        "peak_sampled_working_set_bytes": 528916480,
+        "phase": "vod/candidate",
+        "ttfb_ms": 257.72529997630045
+      },
+      {
+        "block": 4,
+        "capture_throughput_bytes_per_second": 279613.87469473155,
+        "cpu_core_seconds": 1.172467,
+        "duration_seconds": 16.77922597597353,
+        "memory_samples": 17,
+        "peak_sampled_working_set_bytes": 528392192,
+        "phase": "vod/candidate",
+        "ttfb_ms": 258.4759339806624
+      },
+      {
+        "block": 4,
+        "capture_throughput_bytes_per_second": 279618.55323532585,
+        "cpu_core_seconds": 1.293116,
+        "duration_seconds": 16.735783723997883,
+        "memory_samples": 17,
+        "peak_sampled_working_set_bytes": 804429824,
+        "phase": "vod/source",
+        "ttfb_ms": 265.4799029696733
+      }
+    ]
+  },
+  "phases": {
+    "functional": {
+      "exact_owned_cleanup": true,
+      "literal_controller_exit": 0,
+      "literal_owner_exit": 0,
+      "physical_report_sha256": "ff1f6430d6c36e3dbbcad1b8427786efc47154ec3e5b3bff8b0cae743e18ca80"
+    },
+    "measure": {
+      "exact_owned_cleanup": true,
+      "literal_controller_exit": 0,
+      "literal_owner_exit": 0,
+      "physical_report_sha256": "5f65a5cfdcf465a4016720d0f7bb39b14155a431a39e26ea729344f8dfdf7c30"
+    }
+  },
+  "physical_comparison_sha256": "efb58b3ed8d2e1bc725491c007ac977c93c00b9add8f280c2a80304589256c87",
+  "protocol_sha256": "354a7ca074ff6ca6a3ca063dc1b992490a5e9a85201ee3082726701bc21b6e03",
+  "raw_measurement_sha256": "2b7e69ccd78829c28157c882dc5f3c3e227b78ae9cd194196e2495d5805d4c64",
+  "strict_decoder_checks": 10,
+  "video_frames_per_decode": 200
+}
