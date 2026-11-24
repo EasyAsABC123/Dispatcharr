@@ -269,6 +269,19 @@ It checks actual Redis reservations and origin requests. The DVR offset
 comparison uses one signed settings update for three timestamp spellings
 and their worker effects. Cold fixture controls passed. [Paired runner instructions](../scripts/rust-integration/recording-connect-cohort/README.md)
 
+The mapped-file scanner now uses the pinned Original auto-import
+defaults for absent and falsey settings. Eighteen Original decision
+cases and six private PostgreSQL projection cases distinguished those
+defaults from an explicit inactive choice and an oversized database
+value. Two focused Rust tests passed.
+
+An automatic Stream Settings update now maps a confirmed global rehash
+broker rejection to the measured 500 response. A pinned Original
+component confirmed that the setting remains saved and the owned locks
+release after a definite rejection. The Rust transport controls keep a
+lost or ambiguous reply distinct. Signed packaged execution and manual
+endpoint errors have separate verification.
+
 The ordinary scanner skips Programme Index admission after its first
 successful scan in the same process. Its grouped fixture runs the first
 scan, a repeat while the Index table is locked, and a cold Main restart with

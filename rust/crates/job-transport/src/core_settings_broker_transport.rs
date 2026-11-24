@@ -1,5 +1,6 @@
 //! Actual bounded publication through Main's already connected broker transport.
 use super::*;
+use crate::core_settings_broker::CoreSettingsPublication;
 use crate::decode::{Metadata, State};
 use dispatcharr_store::{CoreOffsetPublication, ProviderRehashResult};
 use sha2::{Digest, Sha256};
@@ -130,6 +131,18 @@ fn offset_outcome(result: Result<i64, Error>) -> Result<CoreOffsetPublication, E
     }
 }
 
+fn core_settings_outcome(
+    result: Result<i64, Error>,
+    global_rehash: bool,
+) -> Result<CoreSettingsPublication, Error> {
+    match result? {
+        n if n > 0 => Ok(CoreSettingsPublication::Acknowledged),
+        -4 if global_rehash => Ok(CoreSettingsPublication::GlobalRehashRefused),
+        -2 => Err(Error::Capacity),
+        _ => Err(Error::Corrupt),
+    }
+}
+
 impl Jobs {
     pub(crate) async fn publish_dvr_offsets(
         &self,
@@ -157,16 +170,30 @@ impl Jobs {
         &self,
         publication: dispatcharr_store::CoreTaskPublication,
         owner: Arc<dyn Send + Sync>,
-    ) -> Result<(), Error> {
+    ) -> Result<CoreSettingsPublication, Error> {
         // The same sealed Store producer also owns Source's new STD-account
         // refresh_m3u_groups.delay publication; normal queue dispatch already
         // delegates this exact root envelope to its existing STD implementation.
-        let (task_id, programme_root) = if let Ok(message) =
+        let (task_id, programme_root, global_rehash) = if let Ok(message) =
             crate::normal_core_tasks::parse(publication.bytes())
         {
-            (message.id, false)
+            // The settings update owns a global lock handoff. An explicit
+            // LPUSH refusal reaches Original's unhandled HTTP 500; its
+            // finally block releases the locks after the already saved row.
+            let global_rehash = matches!(
+                message.kind,
+                crate::normal_core_tasks::Kind::Rehash(
+                    dispatcharr_store::core_task_rehash::Request {
+                        account: None,
+                        preacquired: true,
+                        token: Some(_),
+                        ..
+                    }
+                )
+            );
+            (message.id, false, global_rehash)
         } else if let Ok(message) = crate::normal_xc_live::parse(publication.bytes()) {
-            (message.id, false)
+            (message.id, false, false)
         } else if let Ok(message) = crate::normal_xc_accounts::parse(publication.bytes()) {
             // Direct HTTP Groups publishes an actual unparented Profiles
             // root. It is not a synthetic Groups child or Info request.
@@ -174,7 +201,7 @@ impl Jobs {
             {
                 return Err(Error::Protocol);
             }
-            (message.id, false)
+            (message.id, false, false)
         } else {
             let message =
                 crate::xml_tvg_protocol::parse(publication.bytes()).map_err(|_| Error::Protocol)?;
@@ -185,16 +212,18 @@ impl Jobs {
             {
                 return Err(Error::Protocol);
             }
-            (message.common.id, true)
+            (message.common.id, true, false)
         };
-        match self
-            .publish_core_frame(publication, owner, task_id, PUBLISH, programme_root)
-            .await?
-        {
-            n if n > 0 => Ok(()),
-            -2 => Err(Error::Capacity),
-            _ => Err(Error::Corrupt),
-        }
+        let script = if global_rehash {
+            PUBLISH_PROVIDER_REHASH
+        } else {
+            PUBLISH
+        };
+        core_settings_outcome(
+            self.publish_core_frame(publication, owner, task_id, script, programme_root)
+                .await,
+            global_rehash,
+        )
     }
 
     pub(crate) async fn publish_provider_rehash(
@@ -271,6 +300,22 @@ impl Jobs {
 mod tests {
     use super::*;
     use std::future::ready;
+
+    #[test]
+    fn only_explicit_lpush_refusal_classifies_as_global_rehash_refused() {
+        let ambiguous = Error::AmbiguousPublication(Uuid::new_v4());
+        assert_eq!(
+            core_settings_outcome(Ok(-4), true),
+            Ok(CoreSettingsPublication::GlobalRehashRefused)
+        );
+        assert_eq!(core_settings_outcome(Ok(-4), false), Err(Error::Corrupt));
+        assert_eq!(core_settings_outcome(Ok(-2), true), Err(Error::Capacity));
+        assert_eq!(core_settings_outcome(Err(ambiguous), true), Err(ambiguous));
+        assert_eq!(
+            core_settings_outcome(Ok(1), true),
+            Ok(CoreSettingsPublication::Acknowledged)
+        );
+    }
 
     #[test]
     fn dvr_offset_fallback_requires_proven_non_enqueue() {

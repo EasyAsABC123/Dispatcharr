@@ -17,6 +17,7 @@ use std::{
 use tokio::sync::{oneshot, Semaphore};
 use uuid::Uuid;
 pub type Owner = Arc<dyn Send + Sync>;
+const AUTO_IMPORT_SETTING: &str = "SELECT CASE WHEN octet_length(value::text)<=65536 THEN value END FROM core_coresettings WHERE key='system_settings' LIMIT 1";
 #[derive(Debug)]
 pub enum Error {
     HeadChanged,
@@ -250,10 +251,11 @@ impl Service {
             }
         }
         let mut c = self.connection().await?;
-        let settings=sqlx::query_scalar::<_,Option<Value>>("SELECT CASE WHEN octet_length(value::text)<=65536 THEN value END FROM core_coresettings WHERE key='system_settings' LIMIT 1").fetch_optional(&mut c).await;
+        let settings = sqlx::query_scalar::<_, Option<Value>>(AUTO_IMPORT_SETTING)
+            .fetch_optional(&mut c)
+            .await;
         let validation = match &settings {
-            Ok(Some(None)) => Err(Error::Unsupported),
-            Ok(value) => auto_import(value.as_ref().and_then(Option::as_ref)).map(|_| ()),
+            Ok(value) => auto_import(value.as_ref()).map(|_| ()),
             Err(_) => Err(Error::Operational),
         };
         if validation.is_err() {
@@ -566,7 +568,9 @@ impl Service {
         file: &WatchFile,
         context: &mut RunContext,
     ) -> Result<Object, Error> {
-        let settings:Option<Value>=sqlx::query_scalar("SELECT CASE WHEN octet_length(value::text)<=65536 THEN value END FROM core_coresettings WHERE key='system_settings' LIMIT 1").fetch_optional(&mut *c).await?.flatten();
+        let settings = sqlx::query_scalar::<_, Option<Value>>(AUTO_IMPORT_SETTING)
+            .fetch_optional(&mut *c)
+            .await?;
         let active = auto_import(settings.as_ref())?;
         let select = if file.epg {
             "SELECT id::bigint,is_active FROM epg_epgsource WHERE file_path=$1 LIMIT 2"
@@ -679,19 +683,25 @@ async fn schedule(
     sentinel(tx).await?;
     Ok(result)
 }
-fn auto_import(settings: Option<&Value>) -> Result<bool, Error> {
-    let value = match settings {
-        None => return Ok(false),
-        Some(Value::Object(v)) => v.get("auto_import_mapped_files").unwrap_or(&Value::Null),
-        _ => return Err(Error::Unsupported),
+fn auto_import(settings: Option<&Option<Value>>) -> Result<bool, Error> {
+    // SQL NULL here means a stored row failed the query's byte limit. An
+    // absent row, empty map or scalar JSON uses the Original group defaults.
+    let group = match settings {
+        Some(None) => return Err(Error::Unsupported),
+        Some(Some(value)) => value.as_object().filter(|group| !group.is_empty()),
+        None => None,
     };
-    match value {
-        Value::Null => Ok(false),
-        Value::Bool(v) => Ok(*v),
-        Value::String(v) if matches!(v.as_str(), "true" | "True" | "TRUE") => Ok(v != "TRUE"),
-        Value::Number(v) if v.as_i64() == Some(1) => Ok(true),
-        _ => Err(Error::Unsupported),
-    }
+    let Some(group) = group else {
+        return Ok(true);
+    };
+    // The scanner uses Python membership in [True, "true", "True"], including
+    // Python's numeric equality to True and no overlay on nonempty groups.
+    Ok(match group.get("auto_import_mapped_files") {
+        Some(Value::Bool(value)) => *value,
+        Some(Value::String(value)) => matches!(value.as_str(), "true" | "True"),
+        Some(Value::Number(value)) => value.as_f64() == Some(1.0),
+        _ => false,
+    })
 }
 fn parse_marker(raw: &str) -> Result<Option<f64>, Error> {
     if raw.is_empty() {
@@ -789,4 +799,43 @@ fn inspect_domain(roots: Roots, mixed: bool) -> Result<Vec<WatchFile>, Error> {
         }
     }
     Ok(files)
+}
+
+#[cfg(test)]
+mod auto_import_tests {
+    use super::*;
+
+    #[test]
+    fn mapped_file_scanner_uses_stock_system_defaults_and_explicit_setting_values() {
+        let defaults = dispatcharr_store::source_system_settings_defaults();
+        assert_eq!(defaults["auto_import_mapped_files"], json!(true));
+        assert!(auto_import(None).unwrap());
+        for value in [json!({}), Value::Null, json!(false)] {
+            assert!(auto_import(Some(&Some(value))).unwrap());
+        }
+        assert!(!auto_import(Some(&Some(json!({"time_zone":"UTC"})))).unwrap());
+        for (field, expected) in [
+            (Value::Null, false),
+            (json!(true), true),
+            (json!(false), false),
+            (json!("true"), true),
+            (json!("True"), true),
+            (json!("TRUE"), false),
+            (json!("false"), false),
+            (json!("False"), false),
+            (json!(1), true),
+            (json!(1.0), true),
+            (json!(0), false),
+            (json!("1"), false),
+            (json!([true]), false),
+        ] {
+            let row = Some(json!({"auto_import_mapped_files":field}));
+            assert_eq!(auto_import(Some(&row)).unwrap(), expected);
+        }
+    }
+
+    #[test]
+    fn mapped_file_scanner_preserves_oversized_settings_refusal() {
+        assert!(matches!(auto_import(Some(&None)), Err(Error::Unsupported)));
+    }
 }

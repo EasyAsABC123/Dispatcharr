@@ -19,6 +19,13 @@ use tokio::sync::{OwnedSemaphorePermit, Semaphore};
 pub struct Publisher {
     jobs: Jobs,
 }
+
+#[derive(Debug, PartialEq, Eq)]
+pub(crate) enum CoreSettingsPublication {
+    Acknowledged,
+    GlobalRehashRefused,
+}
+
 impl Publisher {
     pub fn new(jobs: Jobs) -> Self {
         Self { jobs }
@@ -31,15 +38,18 @@ impl CoreTaskBroker for Publisher {
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), StoreError>> {
         Box::pin(async move {
-            self.jobs
+            match self
+                .jobs
                 .publish_core_settings(publication, owner)
                 .await
                 .map_err(|_| {
                     StoreError::Unsupported(
                         "Actual shared Core broker publication did not acknowledge",
                     )
-                })?;
-            Ok(())
+                })? {
+                CoreSettingsPublication::Acknowledged => Ok(()),
+                CoreSettingsPublication::GlobalRehashRefused => Err(StoreError::UnhandledRestFault),
+            }
         })
     }
 
@@ -67,13 +77,17 @@ impl CoreTaskBroker for Publisher {
     ) -> BoxFuture<'_, Result<CoreProfilePublication, StoreError>> {
         Box::pin(async move {
             match self.jobs.publish_core_settings(publication, owner).await {
-                Ok(()) => Ok(CoreProfilePublication::Acknowledged),
+                Ok(CoreSettingsPublication::Acknowledged) => {
+                    Ok(CoreProfilePublication::Acknowledged)
+                }
                 // Jobs and broker admission return Capacity before dispatch.
                 // The Lua queue-bound branch returns it before SADD or LPUSH.
                 Err(Error::Capacity) => Ok(CoreProfilePublication::CapacityRefused),
-                Err(_) => Err(StoreError::Unsupported(
-                    "Actual shared Core broker publication did not acknowledge",
-                )),
+                Ok(CoreSettingsPublication::GlobalRehashRefused) | Err(_) => {
+                    Err(StoreError::Unsupported(
+                        "Actual shared Core broker publication did not acknowledge",
+                    ))
+                }
             }
         })
     }
