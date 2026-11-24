@@ -115,6 +115,20 @@ pub(crate) fn float_string(value: f64) -> String {
     result
 }
 
+/// Original output channel number display. Integral values use Python int
+/// spelling while fractional values use Python's shortest round-to-even digits.
+pub fn source_channel_number(value: f64) -> Option<String> {
+    if !value.is_finite() {
+        None
+    } else if value == 0.0 {
+        Some("0".into())
+    } else if value == value.trunc() {
+        Some(format!("{value:.0}"))
+    } else {
+        Some(float_string(value))
+    }
+}
+
 fn is_float(number: &Number) -> bool {
     number
         .to_string()
@@ -417,6 +431,23 @@ mod tests {
             String::from_utf8(compact_json_bytes(&value).unwrap()).unwrap(),
             r#"{"a":1e-06,"b":1e+16,"c":-0.0,"d":10000000000000000000000001}"#
         );
+    }
+    #[test]
+    fn channel_number_preserves_original_fractional_ties_and_integer_spelling() {
+        for (value, expected) in [
+            (795.6304321289062, "795.6304321289062"),
+            (-795.6304321289062, "-795.6304321289062"),
+            (2_f64.powi(-25), "2.9802322387695312e-08"),
+            (1e-5, "1e-05"),
+            (1e-4, "0.0001"),
+            (42.0, "42"),
+            (-0.0, "0"),
+            (1e30, "1000000000000000019884624838656"),
+        ] {
+            assert_eq!(source_channel_number(value).as_deref(), Some(expected));
+        }
+        assert_eq!(source_channel_number(f64::INFINITY), None);
+        assert_eq!(source_channel_number(f64::NAN), None);
     }
     #[test]
     fn overflow_floats_reject_and_underflow_matches_python_zero() {

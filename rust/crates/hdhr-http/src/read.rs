@@ -265,25 +265,8 @@ fn python_int(value: Option<&Value>) -> Option<String> {
     }
 }
 fn display_number(value: f64) -> Result<String, StoreError> {
-    if !value.is_finite() {
-        return Err(StoreError::StatusBody(
-            500,
-            json!({"detail":"Invalid channel number."}),
-        ));
-    }
-    if value == 0.0 {
-        return Ok("0".into());
-    }
-    if value.fract() == 0.0 {
-        return Ok(format!("{value:.0}"));
-    }
-    if value.abs() < 0.0001 {
-        let text = format!("{value:e}");
-        let (mantissa, exponent) = text.split_once('e').unwrap();
-        let exponent: i32 = exponent.parse().unwrap();
-        return Ok(format!("{mantissa}e{exponent:+03}"));
-    }
-    Ok(value.to_string())
+    dispatcharr_store::source_channel_number(value)
+        .ok_or_else(|| StoreError::StatusBody(500, json!({"detail":"Invalid channel number."})))
 }
 #[cfg(test)]
 mod tests {

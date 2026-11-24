@@ -87,6 +87,7 @@ pub use import_groups::{
 };
 pub use import_pipeline::{CacheBatchCounts, CacheBatchRequest};
 mod json_compat;
+pub use json_compat::source_channel_number;
 pub mod realtime;
 mod startup;
 mod startup_bootstrap;

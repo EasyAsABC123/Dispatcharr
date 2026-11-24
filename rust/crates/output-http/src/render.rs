@@ -72,22 +72,7 @@ pub fn display_number(value: Option<f64>) -> Result<String, Error> {
     let Some(value) = value else {
         return Ok(String::new());
     };
-    if !value.is_finite() {
-        return Err(Error::InvalidNumber);
-    }
-    if value == 0.0 {
-        return Ok("0".into());
-    }
-    if value == value.trunc() {
-        return Ok(format!("{value:.0}"));
-    }
-    if value.abs() < 1e-4 {
-        let raw = format!("{value:e}");
-        let (mantissa, exponent) = raw.split_once('e').unwrap();
-        let exponent: i32 = exponent.parse().unwrap();
-        return Ok(format!("{mantissa}e{exponent:+03}"));
-    }
-    Ok(value.to_string())
+    dispatcharr_store::source_channel_number(value).ok_or(Error::InvalidNumber)
 }
 fn append(output: &mut Vec<u8>, text: &str, limit: usize) -> Result<(), Error> {
     if output
@@ -302,6 +287,44 @@ pub fn render(context: &Context<'_>, channels: &[Channel]) -> Result<Vec<u8>, Er
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn playlist_number_uses_original_fractional_digits_for_tvg_id_and_chno() {
+        let body = render(
+            &Context {
+                origin: "http://localhost:9192",
+                profile: None,
+                query: &[],
+                xc: None,
+                direct: false,
+                restricted_direct: false,
+                catchup: false,
+                max_bytes: 4096,
+            },
+            &[Channel {
+                id: 123,
+                uuid: uuid::Uuid::nil(),
+                number: Some(795.6304321289062),
+                name: "Fractional".into(),
+                group: None,
+                logo: None,
+                tvg_id: None,
+                guide: None,
+                radio: false,
+                catchup_days: 0,
+                direct: None,
+            }],
+        )
+        .unwrap();
+        let output = String::from_utf8(body).unwrap();
+        assert!(output.contains(r#"tvg-id="795.6304321289062""#));
+        assert!(output.contains(r#"tvg-chno="795.6304321289062""#));
+        assert_eq!(display_number(None).unwrap(), "");
+        assert!(matches!(
+            display_number(Some(f64::NAN)),
+            Err(Error::InvalidNumber)
+        ));
+    }
 
     #[test]
     fn direct_playlist_preserves_unusable_udp_urls_and_marks_multicast_hosts() {

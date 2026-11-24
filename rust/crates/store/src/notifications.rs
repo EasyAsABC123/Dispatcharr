@@ -13,7 +13,7 @@ use axum::{
     http::{HeaderMap, HeaderValue, Method, StatusCode, Uri},
     middleware::{self, Next},
     response::{IntoResponse, Response},
-    routing::{get, post, MethodRouter},
+    routing::{any, get, post, MethodRouter},
     Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
@@ -698,6 +698,40 @@ async fn detail(
     order_notification_fields(&mut notice);
     Ok(Json(notice))
 }
+
+async fn detail_wire(
+    auth: State<AuthService>,
+    Path(raw): Path<String>,
+    peer: ConnectInfo<SocketAddr>,
+    method: Method,
+    OriginalUri(uri): OriginalUri,
+    headers: HeaderMap,
+) -> Response {
+    let path = uri.path();
+    let id = path
+        .strip_suffix('/')
+        .unwrap_or(path)
+        .rsplit('/')
+        .next()
+        .and_then(|part| part.strip_suffix(".json"))
+        .filter(|id| !id.is_empty() && id.bytes().all(|byte| byte.is_ascii_digit()));
+    if let Some(id) = id.filter(|_| method == Method::GET) {
+        let result = async {
+            crate::core_reads::negotiate_literal_json_alias(&headers)?;
+            detail(auth, Path(id.to_owned()), peer, headers).await
+        }
+        .await;
+        return channel_options_headers(
+            result.into_response(),
+            HeaderValue::from_static(DETAIL_ALLOW),
+        );
+    }
+    if !path.ends_with('/') {
+        return StatusCode::NOT_FOUND.into_response();
+    }
+    detail(auth, Path(raw), peer, headers).await.into_response()
+}
+
 async fn count(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -1333,12 +1367,13 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/core/notifications/{id}/",
-            notification_ui_route(get(detail), Method::GET, DETAIL_ALLOW, true)
+            notification_ui_route(get(detail_wire), Method::GET, DETAIL_ALLOW, true)
                 .put(update)
                 .patch(update)
                 .delete(destroy)
                 .options(detail_options),
         )
+        .route("/api/core/notifications/{id}", any(detail_wire))
         .route(
             "/api/core/notifications/{id}/dismiss/",
             notification_ui_route(post(dismiss), Method::POST, DISMISS_ALLOW, false),
@@ -1348,6 +1383,82 @@ pub(crate) fn router(auth: AuthService) -> Router {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn notification_detail_json_alias_uses_the_normal_router_and_authentication() {
+        use axum::{body::to_bytes, http::header};
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://fixture:fixture@127.0.0.1:1/fixture")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("fixture-only".into()).unwrap(),
+        );
+        let app = router(auth);
+        for (method, path, accept, expected) in [
+            (
+                Method::GET,
+                "/api/core/notifications/2.json",
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                Method::GET,
+                "/api/core/notifications/2.json/?format=api",
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                Method::GET,
+                "/api/core/notifications/2.json",
+                "text/html",
+                StatusCode::NOT_ACCEPTABLE,
+            ),
+            (
+                Method::GET,
+                "/api/core/notifications/2.api",
+                "application/json",
+                StatusCode::NOT_FOUND,
+            ),
+            (
+                Method::GET,
+                "/api/core/notifications/2",
+                "application/json",
+                StatusCode::NOT_FOUND,
+            ),
+            (
+                Method::POST,
+                "/api/core/notifications/2.json",
+                "application/json",
+                StatusCode::NOT_FOUND,
+            ),
+        ] {
+            let mut request = Request::builder()
+                .method(method)
+                .uri(path)
+                .header(header::ACCEPT, accept)
+                .body(axum::body::Body::empty())
+                .unwrap();
+            request
+                .extensions_mut()
+                .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1234))));
+            let reply = app.clone().oneshot(request).await.unwrap();
+            assert_eq!(reply.status(), expected);
+            if expected != StatusCode::NOT_FOUND {
+                assert_eq!(reply.headers()[header::ALLOW], DETAIL_ALLOW);
+                assert_eq!(reply.headers()[header::VARY], "Accept");
+            }
+            if expected == StatusCode::UNAUTHORIZED {
+                assert!(reply.headers().contains_key(header::WWW_AUTHENTICATE));
+                assert_eq!(
+                    to_bytes(reply.into_body(), 128).await.unwrap().as_ref(),
+                    br#"{"detail":"Authentication credentials were not provided."}"#
+                );
+            }
+        }
+    }
 
     #[tokio::test]
     async fn notification_options_keeps_source_entity_and_omits_missing_action() {
