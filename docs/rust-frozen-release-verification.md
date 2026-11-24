@@ -6,6 +6,8 @@ The historical `2d3ffe53` package ledger recorded 14 verified executions, four r
 
 On ARM64, one default AIO Producer and one modular Main Consumer shared an upstream and a marked FFmpeg generation. Two signed viewers each received a Ready/empty HLS playlist marker. The Consumer relayed one unchanged Core proxy-health response and both signed stops returned HTTP 204. The owner and independent verifier passed, retiring nine containers, one network and four volumes. Default two-AIO, Starting/empty and measured watch identity remain open. [ARM64 HLS mixed-deployment evidence](rust-m3-arm64-hls-ready-empty-3d8f9672.json)
 
+The AMD64 automatic TS Connect comparison completed both 270-second fixture windows with identical useful media and callback results. Rust used 38.3% less CPU and 30.5% less peak process RSS. Media first-body p95 moved from 4,603 ms to 4,106 ms, and peak cgroup-charged memory rose from 406.9 MB to 541.8 MB. The cgroup memory gate stays open. Both arms retired their exact resources. [AMD64 automatic TS Connect performance evidence](rust-m7-amd64-automatic-ts-connect-3d8f9672.json)
+
 ## Parallel implementation
 
 | Canonical owner | Open rows | Work before the freeze |

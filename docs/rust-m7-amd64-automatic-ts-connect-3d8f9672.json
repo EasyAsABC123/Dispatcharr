@@ -1,0 +1,157 @@
+{
+  "Native": {
+    "callback_receipts": 12,
+    "callback_throughput_per_second": 0.044444444444444446,
+    "cpu_core_seconds": 2.417005,
+    "limits_by_role": {
+      "baseline": {
+        "cpu_max": "max 100000",
+        "memory_max": "max"
+      },
+      "candidate": {
+        "cpu_max": "max 100000",
+        "memory_max": "max"
+      },
+      "origin": {
+        "cpu_max": "max 100000",
+        "memory_max": "max"
+      }
+    },
+    "media_bytes": 451200,
+    "media_first_body_p95_ms": 4105.975612,
+    "peak_cgroup_charged_bytes": 541777920,
+    "peak_sum_process_rss_bytes": 388980736,
+    "receiver_to_durable_observation_p95_ms": 5127.104749,
+    "samples": 1345,
+    "seconds": 271.069723812
+  },
+  "Original": {
+    "callback_receipts": 12,
+    "callback_throughput_per_second": 0.044444444444444446,
+    "cpu_core_seconds": 3.916987,
+    "limits_by_role": {
+      "baseline": {
+        "cpu_max": "max 100000",
+        "memory_max": "max"
+      },
+      "origin": {
+        "cpu_max": "max 100000",
+        "memory_max": "max"
+      }
+    },
+    "media_bytes": 451200,
+    "media_first_body_p95_ms": 4602.629157,
+    "peak_cgroup_charged_bytes": 406896640,
+    "peak_sum_process_rss_bytes": 559665152,
+    "receiver_to_durable_observation_p95_ms": 5185.121293,
+    "samples": 1346,
+    "seconds": 271.107461144
+  },
+  "bars": {
+    "callback_throughput": true,
+    "charged_memory": false,
+    "cpu": true,
+    "durable_observation": true,
+    "media_ttfb": true,
+    "rss": true
+  },
+  "candidate": {
+    "architecture": "linux/amd64",
+    "image_id": "sha256:3cb8dff78119b1d0a40740a9f31f5ab8814a063a509f1891be9fef93ee2d39a6",
+    "manifest": "4127965d9e780ceb2b459f3b2feff0e80035f0d4768dc7f4ea966315207ee164",
+    "revision": "3d8f96725ed90f5d37e406492e264e7c4d37f89a"
+  },
+  "canonical_rows_added": 0,
+  "engine_empty_after": true,
+  "exact_cleanup": true,
+  "full_m7_performance_accepted": false,
+  "literal_exits": {
+    "proof": 1,
+    "run": 0
+  },
+  "matched_media_payloads_and_callback_projections": true,
+  "memory_attribution": "The Native arm began with more charged memory across all measured cgroups. The Origin began with 102580224 charged bytes versus 27205632 for Original, with 10919936 anonymous bytes in each arm. The measurement does not resolve the components of that charge or its cause.",
+  "memory_role_samples": {
+    "Native": {
+      "first": {
+        "baseline": {
+          "cgroup_anon_bytes": 23416832,
+          "memory_current_bytes": 242708480,
+          "sum_process_rss_bytes": 124243968
+        },
+        "candidate": {
+          "cgroup_anon_bytes": 5201920,
+          "memory_current_bytes": 80326656,
+          "sum_process_rss_bytes": 38617088
+        },
+        "origin": {
+          "cgroup_anon_bytes": 10919936,
+          "memory_current_bytes": 102580224,
+          "sum_process_rss_bytes": 23310336
+        }
+      },
+      "peak_combined_charge": {
+        "baseline": {
+          "cgroup_anon_bytes": 129191936,
+          "memory_current_bytes": 352964608,
+          "sum_process_rss_bytes": 317067264
+        },
+        "candidate": {
+          "cgroup_anon_bytes": 7036928,
+          "memory_current_bytes": 83140608,
+          "sum_process_rss_bytes": 46841856
+        },
+        "origin": {
+          "cgroup_anon_bytes": 11063296,
+          "memory_current_bytes": 105672704,
+          "sum_process_rss_bytes": 23961600
+        }
+      }
+    },
+    "Original": {
+      "first": {
+        "baseline": {
+          "cgroup_anon_bytes": 160378880,
+          "memory_current_bytes": 262213632,
+          "sum_process_rss_bytes": 341532672
+        },
+        "origin": {
+          "cgroup_anon_bytes": 10919936,
+          "memory_current_bytes": 27205632,
+          "sum_process_rss_bytes": 23248896
+        }
+      },
+      "peak_combined_charge": {
+        "baseline": {
+          "cgroup_anon_bytes": 266526720,
+          "memory_current_bytes": 375091200,
+          "sum_process_rss_bytes": 534077440
+        },
+        "origin": {
+          "cgroup_anon_bytes": 11120640,
+          "memory_current_bytes": 31805440,
+          "sum_process_rss_bytes": 23896064
+        }
+      }
+    }
+  },
+  "ratios": {
+    "callback_throughput_per_second": 1.0,
+    "cpu_core_seconds": 0.6170571921734741,
+    "first_media_over_floored_source": 0.8920935126296989,
+    "peak_cgroup_charged_bytes": 1.3314878196094222,
+    "peak_sum_process_rss_bytes": 0.6950240418041965,
+    "receiver_to_durable_observation_p95_ms": 0.9888109572136098
+  },
+  "raw_receipt_hashes": {
+    "independent_proof": "16f80009f7aa56024a2b8d448bd08b8a461e20cbbce07ffb0c5b58a7285f7ed6",
+    "native/cleanup.json": "4afef73a133f1107228b6a6fe330a35db6f0856d8e1c2079392c1e6260f29ca1",
+    "native/receipt.json": "f864587ee1094564cd2f682f8c1388a9c3dbfbef99af649ce5e68b34250a462c",
+    "native/resources.json": "c3d22b4531390bf0e93eee6624c0f5a130d4671ccf53316d5805bbd3bce92bb8",
+    "original/cleanup.json": "f6ef1c9a16a3ebfea8de05d38a67711761b07c36fac7db879d421b2c65378c75",
+    "original/receipt.json": "227d38a6514e992f9f6045b359348accdd8075cf5685e779bc5eea7d8ae59ebf",
+    "original/resources.json": "e74c049377d525748fb7f9210aeab311b18436ee923baa09678ebda1dc827468"
+  },
+  "scoped_bars_passed": false,
+  "window_seconds_per_arm": 270
+}
