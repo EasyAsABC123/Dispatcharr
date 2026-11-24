@@ -379,6 +379,15 @@ changes passed focused tests and still need the signed packaged comparison.
 
 ## Copied SQLite stream selections and saved schedules
 
+Copied SQLite now accepts the existing React inline name PATCH within
+the admitted manual one-stream channel scope. The write and returned
+channel projection share one SQLite transaction. The tests checked the
+signed denial paths, committed bytes after reopening the file, and
+rollback after a projection failure. The 17 focused channel tests and
+seven profile alias tests passed on both hosts. The Linux application
+compiled with the copied runtime feature. Packaged execution and other
+write domains remain open.
+
 Copied SQLite accepts signed Channel Profile collection and detail JSON
 aliases using the existing administrator and assigned-user scopes. The
 suffix takes precedence over the format query. Twenty-five focused

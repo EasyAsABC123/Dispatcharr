@@ -159,7 +159,11 @@ fn router(owner: TestOwner) -> Router {
             "/api/channels/channels/from-stream/",
             axum::routing::post(entry::handle::<TestOwner>),
         )
-        .route("/api/channels/channels/{id}/", axum::routing::get(readback))
+        .route(
+            "/api/channels/channels/{id}/",
+            axum::routing::get(readback)
+                .patch(crate::auth::sqlite_runtime::channel_name_patch::handle::<TestOwner>),
+        )
         .with_state(owner)
 }
 fn token(owner: &TestOwner, id: i64) -> String {
@@ -905,3 +909,6 @@ async fn sqlite_single_entry_explicit_none_profile_is_durable_and_publishes_once
     }
     std::fs::remove_file(path).unwrap();
 }
+
+#[path = "sqlite_channel_name_patch_tests.rs"]
+mod channel_name_patch_tests;

@@ -158,6 +158,60 @@ async fn copied_setup_writes_a_real_django_sqlite_administrator() {
 
 impl RetainedSqliteRestReads {
     #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn channel_name_patch(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        uri: axum::http::Uri,
+        raw: String,
+        body: crate::auth::sqlite_runtime::single_from_stream::Body,
+    ) -> Result<axum::response::Response, StoreError> {
+        use axum::response::IntoResponse;
+        let subject = self
+            .bearer_account_user(peer, headers.clone(), true)
+            .await?;
+        if uri.query().is_some_and(|q| !q.is_empty())
+            || headers
+                .get("accept")
+                .is_some_and(|v| !matches!(v.to_str(), Ok("application/json" | "*/*")))
+        {
+            return Err(StoreError::Unsupported(
+                "Copied SQLite name PATCH query/renderer options unqualified",
+            ));
+        }
+        let base = crate::channels::base_url(&headers, &uri)?;
+        let pool = self.pool.clone();
+        let limit = self.limits.work_bytes;
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = crate::auth::sqlite_runtime::channel_name_patch::command(
+                &mut connection,
+                subject.user(),
+                raw,
+                body,
+                &base,
+                limit,
+            )
+            .await;
+            settle(connection).await?;
+            Ok((
+                axum::http::StatusCode::OK,
+                [
+                    (
+                        axum::http::header::ALLOW,
+                        crate::catalogue_options::DETAIL_ALLOW,
+                    ),
+                    (axum::http::header::CONTENT_TYPE, "application/json"),
+                    (axum::http::header::VARY, "Accept, origin"),
+                ],
+                result?,
+            )
+                .into_response())
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
     pub(crate) async fn single_from_stream(
         &self,
         peer: SocketAddr,

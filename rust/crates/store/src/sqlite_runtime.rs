@@ -16,6 +16,8 @@ use chrono::Utc;
 pub(crate) mod application_data;
 #[path = "sqlite_channel_logos.rs"]
 pub(crate) mod channel_logos;
+#[path = "sqlite_channel_name_patch.rs"]
+pub(crate) mod channel_name_patch;
 #[path = "sqlite_channel_profile_aliases.rs"]
 pub(crate) mod channel_profile_aliases;
 #[path = "sqlite_core_catalog.rs"]
@@ -150,7 +152,8 @@ impl CopiedSqliteRuntime {
             )
             .route(
                 "/api/channels/channels/{id}/",
-                axum::routing::get(channel_detail),
+                axum::routing::get(channel_detail)
+                    .patch(channel_name_patch::handle::<CopiedSqliteRuntime>),
             )
             .route(
                 "/api/core/notifications/",
