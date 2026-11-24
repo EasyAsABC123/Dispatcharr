@@ -96,11 +96,19 @@ pub enum FileJobOutcome {
     MissingSource(String),
     MissingLocalFileReported,
     LocalTruncationReported,
+    InvalidLocalParseCounterReported,
     Failed,
     DownloadRejected(dispatcharr_store::xmltv_download::Rejected),
     PendingDownloadRejected(dispatcharr_store::epg_task_hooks::PendingXmlRejection),
     Unsupported(&'static str),
 }
+fn plain_parse_counter_error(value: &str) -> bool {
+    !value.is_empty()
+        && value
+            .bytes()
+            .all(|byte| matches!(byte, b' '..=b'~') && !matches!(byte, b'\'' | b'\\'))
+}
+
 /// A reason known from the exact busy/exhaustion branches. This is not a
 /// classification of the coarse Failed outcome or of channel/SQL errors.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -616,7 +624,8 @@ impl Execution<'_> {
                 if matches!(
                     &result,
                     Ok(FileJobOutcome::MissingLocalFileReported
-                        | FileJobOutcome::LocalTruncationReported)
+                        | FileJobOutcome::LocalTruncationReported
+                        | FileJobOutcome::InvalidLocalParseCounterReported)
                 ) =>
             {
                 return Err(ImportError::Worker);
@@ -708,16 +717,28 @@ impl Execution<'_> {
         let (counter,_): (Option<String>,_)=self.transport.command("if redis.call('STRLEN',KEYS[1])>4096 then return redis.error_reply('counter capacity') end return redis.call('GET',KEYS[1])",&[format!("epg_source_tvg_parse_{}",source.id)],&[],context.retained.clone()).await.map_err(|_|ImportError::Worker)?;
         if let Some(value) = counter {
             let Some(number) = source_integer_literal(&value) else {
+                let admitted = scalar.is_none()
+                    && request.force
+                    && request.defer_retry == 0
+                    && source.url.as_deref().is_none_or(str::is_empty)
+                    && plain_parse_counter_error(&value);
                 let error = format!("invalid literal for int() with base 10: '{value}'");
-                self.failure(
-                    &source,
-                    format!("Error refreshing EPG data: {error}"),
-                    error,
-                    false,
-                    context,
-                )
-                .await?;
-                return Ok(FileJobOutcome::Failed);
+                let report = self
+                    .failure(
+                        &source,
+                        format!("Error refreshing EPG data: {error}"),
+                        error,
+                        false,
+                        context,
+                    )
+                    .await?;
+                return Ok(
+                    if admitted && matches!(report, ReportObservation::FailureStatusSaved) {
+                        FileJobOutcome::InvalidLocalParseCounterReported
+                    } else {
+                        FileJobOutcome::Failed
+                    },
+                );
             };
             if !number.starts_with('-') && number != "0" {
                 if scalar.is_some() {
@@ -1243,6 +1264,23 @@ impl TerminalFailure {
         match self {
             Self::Acquire(cause) | Self::Read(cause) => cause.into(),
             Self::Other(cause) => cause,
+        }
+    }
+}
+
+#[cfg(test)]
+mod counter_error_tests {
+    use super::{plain_parse_counter_error, source_integer_literal};
+
+    #[test]
+    fn admits_only_plain_malformed_counter_spellings() {
+        let is_admitted =
+            |value| source_integer_literal(value).is_none() && plain_parse_counter_error(value);
+        for value in ["not-an-integer", "1.5", "1__2", "has\"quote"] {
+            assert!(is_admitted(value), "{value:?}");
+        }
+        for value in ["1", "", "bad'\n", "bad\\value", "é"] {
+            assert!(!is_admitted(value), "{value:?}");
         }
     }
 }

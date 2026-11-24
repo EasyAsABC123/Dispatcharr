@@ -283,7 +283,10 @@ fault fixture must show the job staying active while that reply is held.
 Local XMLTV refreshes with a missing file or a readable nonempty truncated
 file preserve guide data. After status and locks settle, the worker returns
 the measured null result. Their paired API fixture shares the signed
-publication, worker, Redis, SQL and event checks.
+publication, worker, Redis, SQL and event checks. The same owner can check
+the initial forced local refresh when its saved TVG parse counter contains
+plain malformed text. The worker records the observed error and returns
+null after cleanup without acquiring the file lock or starting a child.
 
 An interrupted plain HTTP M3U download with a bounded declared length
 preserves both old cache files and publishes the same saved connection
