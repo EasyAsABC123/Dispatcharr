@@ -1,0 +1,78 @@
+{
+  "application_table_count": 62,
+  "architecture": "linux/amd64",
+  "canonical_rows_added": 0,
+  "cases": {
+    "default-help": {
+      "actual_exit": 0,
+      "exact_cleanup": true,
+      "files_sha256": {
+        "dispatcharr-rs": "76030dfa33004886d91a7f744c618bfc721c162f523f33642d20590f32338964"
+      },
+      "image_id": "sha256:3cb8dff78119b1d0a40740a9f31f5ab8814a063a509f1891be9fef93ee2d39a6",
+      "network": "none",
+      "runtime_user": "65532:65532"
+    },
+    "opt-in-help": {
+      "actual_exit": 0,
+      "exact_cleanup": true,
+      "files_sha256": {
+        "dispatcharr-rs": "76030dfa33004886d91a7f744c618bfc721c162f523f33642d20590f32338964"
+      },
+      "image_id": "sha256:5a0df8a4a45b1da64c557a5f7f17aabcfced55adfbfe429336b546c2a3a495de",
+      "network": "none",
+      "runtime_user": "65532:65532"
+    },
+    "staged-collision": {
+      "actual_exit": 1,
+      "exact_cleanup": true,
+      "files_sha256": {},
+      "image_id": "sha256:5a0df8a4a45b1da64c557a5f7f17aabcfced55adfbfe429336b546c2a3a495de",
+      "input_after_sha256": "96ccc34e5e6cf2470defd16b27bbf35698a09c2e02318863eb09eedd0c32d269",
+      "input_before_sha256": "96ccc34e5e6cf2470defd16b27bbf35698a09c2e02318863eb09eedd0c32d269",
+      "network": "none",
+      "runtime_user": "65532:65532"
+    },
+    "unknown-history": {
+      "actual_exit": 1,
+      "exact_cleanup": true,
+      "files_sha256": {},
+      "image_id": "sha256:5a0df8a4a45b1da64c557a5f7f17aabcfced55adfbfe429336b546c2a3a495de",
+      "input_after_sha256": "58dfc494dfcecd4961ed1aecd27aa553c78464ab266dd938b62dd9f3e14e87ba",
+      "input_before_sha256": "58dfc494dfcecd4961ed1aecd27aa553c78464ab266dd938b62dd9f3e14e87ba",
+      "network": "none",
+      "runtime_user": "65532:65532"
+    },
+    "upgrade": {
+      "actual_exit": 0,
+      "exact_cleanup": true,
+      "files_sha256": {
+        "ATTRIBUTION.md": "1202a089caf31b613a39ac819c8b362cd939cf828328a3880d1ffa16a45ffea7",
+        "LICENSE": "8486a10c4393cee1c25392769ddd3b2d6c242d6ec7928e1414efff7dfb2f07ef",
+        "libsqlite3-sys-LICENSE": "f59ba65550f2a5adff98ec6478d783402c8e0a3eb515025c0b3438f3d30dc39e",
+        "sqlx-sqlite-LICENSE-APACHE": "9be39331309bc958aab10457c1a8459c038ae95662f26dfcf6c9088e2b3d653f",
+        "sqlx-sqlite-LICENSE-MIT": "44b1600a26039a75b28e1ce154a5dd163b16549f50e34fa577d9efe9c1bae179"
+      },
+      "image_id": "sha256:5a0df8a4a45b1da64c557a5f7f17aabcfced55adfbfe429336b546c2a3a495de",
+      "input_after_sha256": "46505a7a8837b2beef0ed38c1c56b7af83e23637a16d672c3f98b7f76baaa5e7",
+      "input_before_sha256": "46505a7a8837b2beef0ed38c1c56b7af83e23637a16d672c3f98b7f76baaa5e7",
+      "network": "none",
+      "runtime_user": "65532:65532"
+    }
+  },
+  "copied_input_unchanged": true,
+  "default_manifest_sha256": "4127965d9e780ceb2b459f3b2feff0e80035f0d4768dc7f4ea966315207ee164",
+  "engine_empty_after": true,
+  "engine_executed": true,
+  "exact_cleanup": true,
+  "historical_proof_sha256": "ecbb85153f859e3be8321c8d34a1e0909aaa82f051fba44a680e14ed0e3fd1e9",
+  "host_proof_sha256": "b294770aa43a554803249261b5c0b17840fac2c057178d9a84d98b3979027e4d",
+  "identical_main_binary": true,
+  "migration_record_count": 184,
+  "original_authors_retain_full_credit": true,
+  "proof_sha256": "3ee7f88152a256a2444568b324ba704b29436f941242f0660542c371ccd40c0e",
+  "receipt_sha256": "483200e73abdc6e3269efc9e54d838d52651d20f79a7dd2b235617821eda1401",
+  "revision": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+  "source_archive_sha256": "be82700e942b1df0fffe00bcf58f03d8b25a3ce29ea56b2cd5a0e6ac4b374f4a",
+  "sqlite_main_or_performance_verified": false
+}

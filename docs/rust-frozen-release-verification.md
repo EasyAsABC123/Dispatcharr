@@ -14,6 +14,8 @@ The Native ARM64 120-second M9 predecessor completed with ten signed viewers, 25
 
 The frozen AMD64 Rust Main passed 102 signed catalogue comparisons across 34 routes, including 68 GETs and 34 HEAD and OPTIONS observations. The checked GETs matched owned SQL, and the fixture state remained unchanged. Independent teardown confirmed all four role generations and owned resources retired. The comparisons used retained Original route authority. [Signed Main catalogue evidence](rust-m1-amd64-signed-main-catalogue-3d8f9672.json)
 
+The separate AMD64 SQLite operator passed its five copied-data cases. The ordinary image and the opt-in companion had byte-identical Main binaries. The companion upgraded copied history to 184 migration records and rejected unknown history and a staged collision with unchanged input. Each case ran without a network and proved exact teardown. The same-engine Main workflow remains open. [Copied SQLite operator evidence](rust-m8-amd64-copied-sqlite-operator-3d8f9672.json)
+
 ## Parallel implementation
 
 | Canonical owner | Open rows | Work before the freeze |
