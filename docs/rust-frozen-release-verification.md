@@ -582,6 +582,14 @@ two Rust libraries passed 35 focused tests. Twenty-four external
 fixture tests were reserved. The combined ARM64 owner adds two paired
 wire comparisons to its existing output and HDHomeRun checks.
 
+An M3U POST that passes the ordinary request checks now matches
+Original's response when its body cannot be decoded as UTF-8. The
+pinned Django component checked ten cases across the named playlist
+and Xtream export. It returned HTML 500 for the decoding failure
+and 403 for valid nonempty UTF-8 bodies other than the accepted empty
+object. A focused Rust test matched the exact failure bytes. The
+ARM64 paired package still needs its signed replay.
+
 ## HDHomeRun metadata
 
 Public HDHomeRun OPTIONS metadata uses the selected JSON indentation

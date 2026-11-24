@@ -312,11 +312,10 @@ impl OutputGateway {
                 .insert("content-type", "text/html; charset=utf-8".parse().unwrap());
             return Ok(response);
         }
-        if method == Method::POST && !body.is_empty() && body != b"{}" {
-            return Ok(html(
-                StatusCode::FORBIDDEN,
-                "POST requests with body are not allowed.",
-            ));
+        if method == Method::POST {
+            if let Some(response) = m3u_post_body_response(&body)? {
+                return Ok(response);
+            }
         }
         let origin = crate::source_output_origin(&self.inner.auth, &identity);
         let username = user
@@ -446,6 +445,17 @@ impl OutputGateway {
         Ok(self.attachment(body, reservation))
     }
 }
+/// Django decodes request.body as UTF-8 before testing for a literal {}.
+fn m3u_post_body_response(body: &[u8]) -> Result<Option<Response>, StoreError> {
+    match std::str::from_utf8(body).map_err(|_| StoreError::UnhandledRestFault)? {
+        "" | "{}" => Ok(None),
+        _ => Ok(Some(html(
+            StatusCode::FORBIDDEN,
+            "POST requests with body are not allowed.",
+        ))),
+    }
+}
+
 fn truthy(value: &Value) -> bool {
     match value {
         Value::Null => false,
@@ -669,6 +679,35 @@ async fn dispatch(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn m3u_post_utf8_check_precedes_literal_empty_object_test() {
+        for allowed in [b"".as_slice(), b"{}"] {
+            assert!(m3u_post_body_response(allowed).unwrap().is_none());
+        }
+        for ordinary in [b"{}\n".as_slice(), br#"{"client":"playlist"}"#] {
+            let response = m3u_post_body_response(ordinary).unwrap().unwrap();
+            assert_eq!(response.status(), StatusCode::FORBIDDEN);
+            let bytes = axum::body::to_bytes(response.into_body(), 40)
+                .await
+                .unwrap();
+            assert_eq!(bytes, "POST requests with body are not allowed.");
+        }
+        let response = m3u_post_body_response(&[0xA0]).unwrap_err().into_response();
+        assert_eq!(response.status(), StatusCode::INTERNAL_SERVER_ERROR);
+        assert_eq!(
+            response.headers()["content-type"],
+            "text/html; charset=utf-8"
+        );
+        assert_eq!(response.headers()["content-length"], "145");
+        let bytes = axum::body::to_bytes(response.into_body(), 145)
+            .await
+            .unwrap();
+        assert_eq!(
+            format!("{:x}", sha2::Sha256::digest(&bytes)),
+            "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624",
+        );
+    }
+
     #[tokio::test]
     async fn m3u_denials_match_django_body_bytes_and_keep_retry_after() {
         let cases = [
