@@ -1,0 +1,60 @@
+{
+  "application_revision": "b9806b5bcbe65c87a7df4083029fa7599e698628",
+  "build_manifest_sha256": "04e0daef7bd2558b4ab118d71995301a06a7c59b425de8a7d1edaf8be007bc87",
+  "detailed_diagnostic_application_scope": "separate R20 derivative",
+  "docker_running_after": 0,
+  "image_index": "sha256:8127bc15e6eb7069267f5ec4e3d9593ccb9074ae488f9b8d2ba1706c53fea5f0",
+  "ordinary_labeled_duration_seconds": 360,
+  "ordinary_soak_passed": false,
+  "original_authors_retain_full_credit": true,
+  "owner_actual_exit": 1,
+  "paired_performance_accepted": false,
+  "platform": "linux/arm64",
+  "reported_candidate_read_channel": "unconfirmed cause of timed import failure",
+  "run_proof_started": false,
+  "safe_physical_observations": {
+    "cleanup.json": {
+      "observations": {
+        "actual_cleanup": 0
+      },
+      "sha256": "67ec18f28264cf6a7a754ae65bccb46d42cd1a64d01089a04b01c9e8fe0a4a60"
+    },
+    "reader-failure-before-close.json": {
+      "observations": {
+        "error_type": "ValueError",
+        "stage": "timed_workload"
+      },
+      "sha256": "83aa0c5328cdcbe3ec23829dd634661b1df5111b0542001a3a97311093f52a00"
+    },
+    "signed-refresh-http-0.json": {
+      "observations": {
+        "offset_seconds": 300,
+        "status": 202
+      },
+      "sha256": "59be699058ad3719225e591073dde5089d13acabf7434e10f1ab3105bde14f94"
+    },
+    "terminal_file_exists": false,
+    "timed-progress.json": {
+      "observations": {
+        "accepted_sample_count": 73,
+        "completed_refresh_futures": 0,
+        "stage": "refresh_future"
+      },
+      "sha256": "535bb25eacf1904681f6b376bc968fe1b3d94f643548c30f4f60206739af4643"
+    }
+  },
+  "same_binary_predecessor": {
+    "replayed": true,
+    "s120_input_sha256": "4e8cf8dd99dfa7f76d337b30d4a4c41f0d7c1934ce6a8be7b78da087a07e4145",
+    "s120_proof_sha256": "6b31632f9c34d2f196857f6cb5b4d0517eb533c5a54f2e2655462e6f637126c9",
+    "tool_manifest_sha256": "cbebc0159c8ae7cba09fc054dfca21b7d370e6ede2d250f3aa6c3f8e967c6820"
+  },
+  "schema_version": 1,
+  "separate_component_observation": {
+    "exact_cleanup": true,
+    "passed": true,
+    "platform": "linux/amd64",
+    "read_result": "immediate ordinary read on closed isolated connection failed, guarded read succeeded",
+    "test_output_sha256": "5827627a56e6987edb61210bffaae21a3eb846012f0e39099217ac064f624533"
+  }
+}
