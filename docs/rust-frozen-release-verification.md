@@ -13,6 +13,26 @@ The last reconciled package, `2d3ffe53`, has 14 verified executions, four retain
 
 A lane records the affected row, the evidence for a product gap, and the exact prepared runner and evaluator. Existing Original observations remain bound to their verified Original revision and selectors. Rust behavior receives release credit from the frozen current package. A failed earlier receipt stays attached to its original fixture or package. When behavior is already present, the lane completes the executable owner and independent evaluator for the required scope.
 
+### Focused checks while implementation moves
+
+Keep a named selector and its actual selected-test count with each Rust
+patch. Verify the compiler's path for the changed crate and its affected
+workspace dependencies against the isolated checkout. A shared Cargo target
+can retain metadata from another source snapshot. If a receipt shows that
+mismatch, preserve it and refresh the affected sources in the isolated
+checkout before building again. Keep unrelated owners' compiled output
+available. Require the rebuilt test binary to list the exact test and record
+its actual pass.
+
+Use explicit Python test selectors for the public register as well. Its
+entry module imports historical suites for the broad SDK run. The broad
+offline run selected 384 tests, and 25 historical projection checks exposed
+later evidence the reverse-projection helpers had yet to account for.
+The repair regenerates the exact later attachments before removing them
+and preserves the original historical hashes. All 25 failing selectors
+passed in focused reruns. The whole SDK suite will run again with the
+final candidate.
+
 ## Provider playback implementation
 
 Grouped XC catch-up now derives the Original-compatible shared credential counter from the selected transformed login. Limited profiles use it alongside their profile counters during archive reservations, reopens and the read-only Redirect capacity check. Unlimited profiles bypass both counters. Grouped STD live playback accepts a sample with a plain query in the qualified format and preserves the same counter when the normal route selects FFmpeg or a configured input command. Ordinary grouped STD Redirect also carries this counter for both assigned stream selection and requests with a provider profile allowlist.
@@ -140,6 +160,31 @@ Signed Xtream Movie and Series information requests accept valid positive IDs wr
 The scheduler calendar owner now prepares a pinned Original fall-fold workflow. It records the first and repeated local 01:30, ties them to one publication and one durable SQL run, and checks the process and fixture retirement. The ordinary Native binder has checked Chicago and Newfoundland saved schedules offline. Fresh controlled daylight-saving transitions remain required to close the calendar row. The M6 owner suite passed all 34 offline tests.
 
 The shipped `createsuperuser` parser also accepts attached short verbosity values from `-v0` through `-v3`. Three focused Rust parser tests passed and the standalone Original comparison matched all ten measured invocations. The signed operator fixture will check quiet output and durable admin creation.
+
+## Paired controls and worker coverage
+
+The owner-local TS controls support switching to an assigned stream and
+advancing through saved PostgreSQL channel assignments in order, including
+wraparound. The switch keeps the existing viewer bodies through the
+producer transition. Focused route, selection, ticket, media-body and Main
+build checks passed. The prepared signed pair covers the same owner and
+reader with one active origin. Remote owners, changed provider state,
+finite capacities and transformed streams have separate required coverage.
+
+The ordinary Series DVR API can save a signed rule through the existing
+DVR permission and settings writer. The worker evaluates a saved exact-title
+rule, filters new-only episodes before deduplication, and can apply bounded
+title-contains expressions to a pinned source and channel. One prepared
+paired workflow keeps signed saves, programme refreshes, prior booking
+deduplication, and new artwork jobs in the same fixture. The focused Store
+and job tests passed. The package still needs the signed worker, SQL,
+Redis, and lifecycle receipts.
+
+The Redirect and DVR offset comparisons each reuse an existing application
+context. The Redirect scope covers encoded provider queries, credential pool selection, a held
+short fixed-length GET, and fallback. The DVR offset scope covers three
+timestamp spellings with one signed settings update and its worker effects.
+Cold fixture controls passed. [Paired runner instructions](../scripts/rust-integration/recording-connect-cohort/README.md)
 
 ## One frozen verification campaign
 
