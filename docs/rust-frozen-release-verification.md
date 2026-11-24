@@ -896,8 +896,15 @@ checks, 36 Guide and Channel checks, and 30 VOD cleanup and metadata
 checks. The copied PostgreSQL catalogue and file assertions passed.
 Two earlier attempts failed during fixture setup and retired their
 owned resources. The successful attempt removed all owned processes,
-containers, networks and volumes. Browser coverage and the rest of
-M5 remain open.
+containers, networks and volumes.
+
+Chromium on AMD64 then passed a signed journey through Streams filtering,
+Guide filtering, VOD logo cleanup cancellation, confirmation and the
+empty-state control. The database and artwork checks passed. Chromium
+reported zero uncaught exceptions and made one cleanup POST. The relay,
+browser profile, browser process group and Compose project all retired.
+The independent proof SHA-256 is `f958cff95f2f709aec30c08d2477a964fb9d4f411999be626d07ce7d873d12a1`. This covers the three
+React surfaces and the 138 signed cases above. Full M5 remains open.
 
 Lappy ran the signed two-viewer HLS pair through Original and the
 current ARM64 image. Both arms served two independently signed
@@ -932,6 +939,9 @@ inodes. The subsequent Native API202 attempt reached the application
 fixture and retired it exactly after a seed collision. API202 remains
 open.
 
+M4 also passed a signed same-session VOD reconnect pair on the scoped
+ARM64 package. [M4 VOD reconnect evidence](rust-m4-arm64-vod-reconnect-52cdd387.md)
+
 ### Workspace gate corrections
 
 The packaged `52cdd387` source passed formatting and its targeted tests,
@@ -946,3 +956,15 @@ across the Rust workspace on Rust 1.90. The host run recorded 1,980 passing,
 zero failing and 838 ignored tests across 194 test targets. The ignored probes
 retain their own acceptance requirements. The workspace changes require a new
 frozen package qualification.
+
+### Backup result status parity
+
+The pinned Original backup status endpoint returned HTTP 500 JSON for
+an authenticated read of a result whose stored bytes begin with an invalid
+JSON token. The diagnostic was `Expecting value: line 1 column 1 (char 0)`.
+The ordinary Rust status handler now maps this bounded stored-data error to
+the observed response. Transport failures continue to return HTTP 503.
+The restore worker keeps its existing result decoder and task-identity
+checks. Focused Rust tests check the response, malformed UTF-8 and the size
+limit, valid result projection and worker identity. The packaged signed
+HTTP replay with real result Redis is still required.

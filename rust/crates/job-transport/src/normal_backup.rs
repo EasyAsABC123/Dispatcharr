@@ -464,6 +464,16 @@ impl Lifecycle for Application {
 fn api_error() -> StoreError {
     StoreError::StatusBody(503, json!({"detail":"Backup transport unavailable"}))
 }
+
+fn backup_status_error(error: TransportError) -> StoreError {
+    match error {
+        TransportError::BackupResultInvalidJsonAtStart => StoreError::StatusBody(
+            500,
+            json!({"detail":"Failed to get task status: Expecting value: line 1 column 1 (char 0)"}),
+        ),
+        _ => api_error(),
+    }
+}
 impl BackupJobApi for Application {
     fn create(&self, caller: Arc<dyn Send + Sync>) -> BoxFuture<'_, Result<String, StoreError>> {
         Box::pin(async move {
@@ -527,9 +537,9 @@ impl BackupJobApi for Application {
             let id = id.to_string();
             tokio::spawn(async move {
                 let observed = jobs
-                    .read_normal_backup(&id, owner)
+                    .read_normal_backup_status(&id, owner)
                     .await
-                    .map_err(|_| api_error())?;
+                    .map_err(backup_status_error)?;
                 if let Some(meta) = &observed {
                     if let Some(exception) = &meta.exception {
                         let first = exception.arguments.first().and_then(Value::as_str);
@@ -582,5 +592,34 @@ impl BackupJobApi for Application {
     }
     fn shutdown(&self, budget: Duration) -> BoxFuture<'_, bool> {
         Box::pin(self.drain(budget))
+    }
+}
+
+#[cfg(test)]
+mod backup_status_error_tests {
+    use super::*;
+
+    #[test]
+    fn backup_status_maps_bad_stored_json_to_source_and_keeps_transport_503() {
+        assert!(matches!(
+            backup_status_error(TransportError::BackupResultInvalidJsonAtStart),
+            StoreError::StatusBody(500, body)
+                if body == json!({
+                    "detail":"Failed to get task status: Expecting value: line 1 column 1 (char 0)"
+                })
+        ));
+        for error in [
+            TransportError::Backend,
+            TransportError::Closed,
+            TransportError::Corrupt,
+            TransportError::Decode(crate::decode::DecodeError::Identity),
+            TransportError::Decode(crate::decode::DecodeError::Malformed),
+        ] {
+            assert!(matches!(
+                backup_status_error(error),
+                StoreError::StatusBody(503, body)
+                    if body == json!({"detail":"Backup transport unavailable"})
+            ));
+        }
     }
 }

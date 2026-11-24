@@ -52,6 +52,26 @@ fn backup_kind_allowed(authority: Authority, kind: &Kind) -> bool {
         || (authority == Authority::BackupRestore && matches!(kind, Kind::Restore(_)))
 }
 
+fn decode_backup_metadata(id: &str, raw: &[u8]) -> Result<Metadata, Error> {
+    let expected = Uuid::parse_str(id).map_err(|_| Error::UnsupportedTask)?;
+    decode::decode(raw, expected).map_err(Error::Decode)
+}
+
+fn decode_backup_status(id: &str, raw: &[u8]) -> Result<Metadata, Error> {
+    // These leading UTF-8 tokens cannot start a value for the Original JSON
+    // backend. Leave later syntax errors, Python constants, and other encodings
+    // to the existing bounded metadata/identity decoder.
+    if raw.len() <= decode::MAX_RESULT_BYTES
+        && raw
+            .first()
+            .is_some_and(|byte| byte.is_ascii() && !b" \t\r\n{[\"-0123456789tfnNI".contains(byte))
+        && std::str::from_utf8(raw).is_ok()
+    {
+        return Err(Error::BackupResultInvalidJsonAtStart);
+    }
+    decode_backup_metadata(id, raw)
+}
+
 impl Jobs {
     pub(crate) async fn peek_normal_backup(
         &self,
@@ -196,6 +216,25 @@ impl Jobs {
         id: &str,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<Option<Metadata>, Error> {
+        self.read_normal_backup_result(id, owner, decode_backup_metadata)
+            .await
+    }
+
+    pub(crate) async fn read_normal_backup_status(
+        &self,
+        id: &str,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Result<Option<Metadata>, Error> {
+        self.read_normal_backup_result(id, owner, decode_backup_status)
+            .await
+    }
+
+    async fn read_normal_backup_result(
+        &self,
+        id: &str,
+        owner: Arc<dyn Send + Sync>,
+        decode: fn(&str, &[u8]) -> Result<Metadata, Error>,
+    ) -> Result<Option<Metadata>, Error> {
         if (!self.allows_defaults() && !self.allows_backup() && !self.allows_manual_restore())
             || id.is_empty()
             || id.len() > 1024
@@ -216,12 +255,7 @@ impl Jobs {
             .map_err(map)?;
         match reply.0 {
             0 => Ok(None),
-            1 => decode::decode(
-                &reply.1,
-                Uuid::parse_str(id).map_err(|_| Error::UnsupportedTask)?,
-            )
-            .map(Some)
-            .map_err(Error::Decode),
+            1 => decode(id, &reply.1).map(Some),
             _ => Err(Error::Corrupt),
         }
     }
@@ -356,5 +390,75 @@ mod manual_authority_tests {
         assert!(backup_kind_allowed(Authority::DefaultServices, &restore));
         assert!(backup_kind_allowed(Authority::DefaultServices, &scheduled));
         assert!(!backup_kind_allowed(Authority::Index, &create));
+    }
+}
+
+#[cfg(test)]
+mod backup_status_decode_tests {
+    use super::*;
+
+    #[test]
+    fn backup_status_distinguishes_original_bad_json_from_metadata_and_worker_identity() {
+        let id = Uuid::new_v4();
+        let key = id.to_string();
+        assert!(matches!(
+            decode_backup_status("rust-probe-corrupt", b"invalid json"),
+            Err(Error::BackupResultInvalidJsonAtStart)
+        ));
+        assert!(matches!(
+            decode_backup_status(&key, b"invalid json"),
+            Err(Error::BackupResultInvalidJsonAtStart)
+        ));
+        assert!(matches!(
+            decode_backup_metadata("rust-probe-corrupt", b"invalid json"),
+            Err(Error::UnsupportedTask)
+        ));
+        assert!(matches!(
+            decode_backup_metadata(&key, b"invalid json"),
+            Err(Error::Decode(decode::DecodeError::Malformed))
+        ));
+
+        for raw in [
+            b"[]".as_slice(),
+            b"null",
+            b"  invalid json",
+            b"{invalid json",
+            b"NaN",
+            b"Infinity",
+            b"i\xff",
+        ] {
+            assert!(matches!(
+                decode_backup_status(&key, raw),
+                Err(Error::Decode(decode::DecodeError::Malformed))
+            ));
+        }
+        let too_big = vec![b'i'; decode::MAX_RESULT_BYTES + 1];
+        assert!(matches!(
+            decode_backup_status(&key, &too_big),
+            Err(Error::Decode(decode::DecodeError::Capacity))
+        ));
+
+        let valid = serde_json::to_vec(&serde_json::json!({
+            "task_id": key, "status":"SUCCESS", "result":[1], "children":[],
+            "date_done":null, "traceback":null
+        }))
+        .unwrap();
+        assert!(matches!(
+            decode_backup_status("rust-probe-corrupt", &valid),
+            Err(Error::UnsupportedTask)
+        ));
+        assert!(matches!(
+            decode_backup_status(&Uuid::new_v4().to_string(), &valid),
+            Err(Error::Decode(decode::DecodeError::Identity))
+        ));
+        let metadata = decode_backup_status(&key, &valid).unwrap();
+        assert_eq!(metadata.task_id, id);
+        assert!(matches!(
+            crate::backup_application::project_status(Some(metadata)),
+            Err(dispatcharr_store::StoreError::StatusBody(500, body))
+                if body == serde_json::json!({
+                    "detail":"Failed to get task status: 'list' object has no attribute 'get'"
+                })
+        ));
     }
 }

@@ -1,0 +1,9 @@
+# M4 ARM64 signed VOD reconnect on 52cdd387
+
+On Lappy, Docker Compose ran pinned Original `1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430` and ordinary Rust `52cdd3871937a0693a0f7ba9f4f5a26cc2bec053` sequentially. Each signed client used the same server-issued session for two HTTP 200 `video/mp4` reads. Both reads strictly decoded H.264 video and AAC audio and matched the locally generated 4,299,461-byte ARM64 fixture at SHA-256 `f4a7cbe4e50eaf6cd1578933b8eb8701eb83b384182d6af1f488461e5586dd2f`. The origin was paced at 262,144 B/s and recorded one request per read in each arm. The provider slot released after each read. Session metadata became idle after the first EOF and kept its creation time on reconnect. The session retired after the second EOF.
+
+Preflight, execution, proof and independent audit exited 0. The two projects retired 14 containers, two networks and four volumes. A separate post-run check found both scoped inventories empty, no active containers and the fixture lease released. The [companion JSON](m4-52cdd387-arm64-vod-reconnect.json) records the package, phase, role, media and cleanup evidence.
+
+The first attempt stopped before signed playback because the test's disposable database guard still expected the prior candidate prefix. It cleaned up exactly. The retry used a fresh scope and exercised the corrected guard in both arms before playback. The historical cross-architecture input comparison still has a six-byte difference from the earlier AMD64-generated asset. The ARM64 test establishes same-host reconnect behavior. Performance, the separate five-second Original archive-retirement requirement and full M4 acceptance remain open in this scope.
+
+Dispatcharr and its React interface are the work of the original Dispatcharr authors and contributors. FFmpeg and other dependencies retain their upstream credit and license notices.

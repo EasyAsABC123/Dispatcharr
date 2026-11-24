@@ -31,6 +31,7 @@ pub enum Error {
     Backend,
     Corrupt,
     Decode(decode::DecodeError),
+    BackupResultInvalidJsonAtStart,
     Protocol,
     UnsupportedTask,
     ClaimRace,
