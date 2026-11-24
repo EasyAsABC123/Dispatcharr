@@ -174,6 +174,7 @@ struct Account {
     message: Option<String>,
     locked: bool,
     days: i64,
+    auto_enable_new_groups_live: bool,
 }
 struct Done(Option<tokio::sync::oneshot::Sender<()>>);
 impl Drop for Done {
@@ -691,12 +692,14 @@ impl Service {
         stage: &mut &'static str,
     ) -> Result<Prepared, Error> {
         *stage = "account_sql";
-        // The Original serializer stores all four default preferences on new
-        // local accounts. They use the same groups and stream paths as {}.
+        // New local accounts save all four preferences. Admit the usual
+        // settings plus an explicit disable of new live group relationships.
         let row = sqlx::query(
             r#"SELECT id::bigint,name,file_path,is_active,status,
                CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,
                locked,stale_stream_days::bigint,
+               (custom_properties->'auto_enable_new_groups_live') IS DISTINCT FROM 'false'::jsonb
+                 AS auto_enable_new_groups_live,
                CASE WHEN octet_length((custom_properties->'hash_key')::text)<=$2
                  THEN custom_properties->'hash_key' END AS account_hash_key,
                (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL
@@ -704,7 +707,10 @@ impl Service {
                  AND CASE WHEN jsonb_typeof(custom_properties)='object' THEN
                    custom_properties - 'hash_key' IN (
                      '{}'::jsonb,
+                     '{"auto_enable_new_groups_live":false}'::jsonb,
                      '{"enable_vod":false,"auto_enable_new_groups_live":true,
+                       "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true}'::jsonb,
+                     '{"enable_vod":false,"auto_enable_new_groups_live":false,
                        "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true}'::jsonb
                    ) AND COALESCE(octet_length((custom_properties->'hash_key')::text),0)<=$2
                    ELSE FALSE END
@@ -740,6 +746,9 @@ impl Service {
             locked: row.try_get("locked").map_err(|_| Error::Operational)?,
             days: row
                 .try_get("stale_stream_days")
+                .map_err(|_| Error::Operational)?,
+            auto_enable_new_groups_live: row
+                .try_get("auto_enable_new_groups_live")
                 .map_err(|_| Error::Operational)?,
         };
         *stage = "account_path";
@@ -1222,9 +1231,14 @@ impl Service {
                     custom_properties: serde_json::Map::new(),
                 })
                 .collect();
-            self.import_groups(account.id, json!({}), groups, self.now())
-                .await?
-                .map_err(GroupsError::Import)?;
+            self.import_groups(
+                account.id,
+                json!({"auto_enable_new_groups_live": account.auto_enable_new_groups_live}),
+                groups,
+                self.now(),
+            )
+            .await?
+            .map_err(GroupsError::Import)?;
             Ok(files::result(catalog))
         }
         .await;

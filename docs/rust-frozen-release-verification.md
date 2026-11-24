@@ -166,29 +166,42 @@ The shipped `createsuperuser` parser also accepts attached short verbosity value
 The owner-local TS controls support switching to an assigned stream and
 advancing through saved PostgreSQL channel assignments in order, including
 wraparound. The switch keeps the existing viewer bodies through the
-producer transition. Focused route, selection, ticket, media-body and Main
-build checks passed. The prepared signed pair covers the same owner and
-reader with one active origin. The local owner can also switch assigned
-sources and advance through saved order when it holds the only slot on the
-same direct profile. The focused capacity and ordering controls passed.
-The paired final images will verify the live Redis reservation and viewer
-continuity. Remote owners, profile changes and transformed streams still
+producer transition. Selecting the same direct stream again acknowledges
+the request without redialing. Focused route, ticket, media-body and Main
+checks passed. The paired fixture runs unlimited and one-slot phases in
+the same application context per backend. It checks Redis ownership and
+viewer continuity, then requires full retirement before changing capacity.
+Remote owners, cross-profile switching and transformed streams still
 require coverage.
 
 The ordinary Series DVR API can save a signed rule through the existing
 DVR permission and settings writer. The worker evaluates a saved exact-title
 rule, filters new-only episodes before deduplication, and can combine bounded
-title and description predicates. It handles disjoint stations in one import
-task. One prepared paired workflow keeps signed saves, programme refreshes,
-prior booking deduplication, and new artwork jobs in the same fixture. The focused Store
-and job tests passed. The package still needs the signed worker, SQL,
-Redis, and lifecycle receipts.
+title and description predicates. The prepared comparison exercises disjoint
+stations and overlapping rules on the same station. The first rule that
+successfully books an episode keeps it. One paired owner keeps signed saves,
+programme refreshes, booking history and artwork jobs together. Focused
+Store and job tests passed, with signed worker and lifecycle receipts still
+pending on the final package.
 
-The Redirect and DVR offset comparisons each reuse an existing application
-context. The Redirect scope covers encoded provider queries, credential pool selection, a held
-short fixed-length GET, and fallback. The DVR offset scope covers three
-timestamp spellings with one signed settings update and its worker effects.
-Cold fixture controls passed. [Paired runner instructions](../scripts/rust-integration/recording-connect-cohort/README.md)
+The Redirect comparison reuses one project per backend for pooled framing,
+one-slot fallback, saved three-stream ordering, and grouped STD previews.
+It checks actual Redis reservations and origin requests. The DVR offset
+comparison uses one signed settings update for three timestamp spellings
+and their worker effects. Cold fixture controls passed. [Paired runner instructions](../scripts/rust-integration/recording-connect-cohort/README.md)
+
+The ordinary scanner skips Programme Index admission after its first
+successful scan in the same process. Its grouped fixture runs the first
+scan, a repeat while the Index table is locked, and a cold Main restart with
+the same SQL and Redis. It expects two, zero, and two Index jobs and requires
+a real database wait after restart. The five verifier controls passed offline.
+
+The output verifier now checks the exact JSON bytes of four measured M3U
+denials. The Connect log comparison checks the exact `Allow` header on
+both JSON route spellings for signed role refusals and media negotiation.
+Ordinary backup status returns Original’s observed HTTP 500 details for
+successful task records containing a string, list or null result. Those
+changes passed focused tests and still need the signed packaged comparison.
 
 ## Copied SQLite stream selections and saved schedules
 
@@ -202,6 +215,13 @@ Ordinary Main now recognizes a saved, operator-named daily account-expiry
 schedule under the existing interval, routing and argument guards. Twenty-six
 focused scheduler tests passed. The final paired fixture needs to observe
 the saved task name, publication, durable tick and notification effects.
+
+The local M3U worker honors a saved URL hash override and can use the
+global setting for an absent, null or unrecognized override. Ordinary Beat
+also admits the canonical saved URL override. For a refresh of a local
+upload, explicitly disabling automatic live group enablement applies to new
+relationships while preserving existing group toggles. The paired fixtures
+will verify the saved configuration, result and persisted stream hashes.
 
 ## One frozen verification campaign
 
