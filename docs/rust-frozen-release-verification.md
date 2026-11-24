@@ -1141,3 +1141,12 @@ stay byte-for-byte identical. The full deduplicated portable run selected
 481 controls, passed 480 and skipped the optional private capture. The
 standalone pinned-image Django passive control has its own runner.
 [Public contract test instructions](../scripts/rust-contracts/README.md)
+
+### Current ARM64 VOD reconnect resource comparison
+
+In one independently verified pair, each backend completed two signed
+4,299,461-byte reads and two H.264/AAC decodes. Rust used 40.9% less
+peak concurrent working memory and 6.0% more CPU. First-byte latency and
+delivered goodput were similar. Both arms passed equivalent-work,
+zero-throttling and exact cleanup checks.
+[ARM64 VOD resource proof](rust-m4-arm64-vod-reconnect-resource-3d8f9672.md)
