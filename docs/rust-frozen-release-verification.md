@@ -302,6 +302,12 @@ schedule under the existing interval, routing and argument guards. Twenty-six
 focused scheduler tests passed. The final paired fixture needs to observe
 the saved task name, publication, durable tick and notification effects.
 
+Global Stream Settings, provider account validation, and the remote live
+importer now trim the same field separators as the pinned Python parser.
+Three Source controls and three focused Rust tests passed, with the
+existing ordering, duplicates and fallback behavior exercised. The broader
+signed filter and local general-hash cases remain open.
+
 The local M3U worker honors a saved URL hash override and can use the
 global setting for an absent, null or unrecognized override. Ordinary Beat
 also admits the canonical saved URL override. For a refresh of a local
@@ -342,8 +348,11 @@ lineage and records the parent as Deferred. The parent and its
 retry now exchange atomically in Redis. A focused control confirmed that
 a full queue retains the exact reserved parent and its visibility entry,
 that a ready parent can be replaced without growing the queue, and that
-an eligible exchange publishes exactly one child. The signed packaged
-worker and ambiguous broker reply still need verification.
+an eligible exchange publishes exactly one child. In a separate private
+Redis check the ready exchange committed and its reply was dropped. Rust
+reported ambiguous publication without retrying. A fresh connection found
+one linked child, the same sibling, and no invented terminal result.
+The signed packaged worker still needs verification.
 
 The Schedules Direct verifier now requires exactly one retry publication
 for the deferred parent. It compares the recorded frame with the actual

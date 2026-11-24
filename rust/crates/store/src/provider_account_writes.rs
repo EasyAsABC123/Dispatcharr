@@ -104,7 +104,7 @@ fn hash_keys(value: &Value) -> Result<Vec<String>, StoreError> {
     let text = character("hash_key", value, None, true)?;
     let mut keys = Vec::new();
     let mut invalid = Vec::new();
-    for part in text.split(',').map(str::trim).filter(|p| !p.is_empty()) {
+    for part in crate::core_settings_special::hash_field_tokens(&text) {
         if !["name", "url", "tvg_id", "m3u_id", "group"].contains(&part) {
             if !invalid.iter().any(|v| v == part) {
                 invalid.push(part.to_owned());

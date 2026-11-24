@@ -204,9 +204,17 @@ pub(crate) fn hash_fields(value: Option<&Value>) -> Result<Vec<String>, StoreErr
     };
     Ok(hash_fields_text(text))
 }
+pub(crate) fn hash_field_tokens(text: &str) -> impl Iterator<Item = &str> {
+    text.split(',')
+        .map(|part| {
+            part.trim_matches(|c: char| c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}'))
+        })
+        .filter(|part| !part.is_empty())
+}
+
 pub(crate) fn hash_fields_text(text: &str) -> Vec<String> {
     let mut result = Vec::new();
-    for part in text.split(',').map(str::trim) {
+    for part in hash_field_tokens(text) {
         if ["name", "url", "tvg_id", "m3u_id", "group"].contains(&part)
             && !result.iter().any(|v| v == part)
         {
@@ -242,6 +250,14 @@ mod tests {
             assert!(!deleted.network_sync());
         }
     }
+    #[test]
+    fn hash_fields_follow_python_whitespace_without_changing_token_order() {
+        assert_eq!(
+            hash_fields_text("\u{1c}url\u{1d}, name,\u{1e},\u{1f}tvg_id, url,missing,u rl"),
+            ["url", "name", "tvg_id"]
+        );
+    }
+
     #[test]
     fn reordering_hash_fields_does_not_publish_and_offsets_use_incoming_missing() {
         assert!(!crate::core_settings_special_broker::changed(

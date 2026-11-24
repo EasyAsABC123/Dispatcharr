@@ -470,16 +470,7 @@ fn hash_keys(account: &Value, global: &Value) -> Result<Vec<String>, StoreError>
             Value::String(v) => v,
             _ => return Err(unsupported()),
         };
-        let mut result = Vec::new();
-        for key in text.split(',').map(str::trim).filter(|v| !v.is_empty()) {
-            if !["name", "url", "tvg_id", "m3u_id", "group"].contains(&key) {
-                continue;
-            }
-            if !result.iter().any(|v| v == key) {
-                result.push(key.to_owned())
-            }
-        }
-        Ok(result)
+        Ok(crate::core_settings_special::hash_fields_text(text))
     };
     let local = parse(account)?;
     if local.is_empty() {
