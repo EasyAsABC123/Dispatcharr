@@ -1,0 +1,68 @@
+{
+  "application_revision": "b9806b5bcbe65c87a7df4083029fa7599e698628",
+  "build_manifest_sha256": "a15bce71a7889b41c3e3dc6dfb0aa0f990a7c93b1191bed46dd6be549a84e0dd",
+  "evidence_sha256": {
+    "acl_counts": "ecd575468b6693293e989725383fa61770675f7e435f8f9b004038c1daeb6165",
+    "canonical_proof": "d2e85232596a2a5f3af19bd52d808169498b4bdedf4eb69c6eb7875ff30d275b",
+    "cleanup.stdout": "bafec357e5fc4648e651a56e70eeb1bbc26ad60610eabc2738cdd061eff5f5d6",
+    "engine_after": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "evaluation.stdout": "0633fe84e8a9cebad9686c1a3ebeba755a173091efcb1442a6aa817053bb2057",
+    "execution.json": "f3ea51b4cfa3aecb692ef5694c04a5de53be3b8b4c3d59d1f460dc454550bb3e",
+    "installed_package_audit": "3aef2ef278825b2178a7e9c2562861cccbfe15f58153a3b8f8ba56a25375444a",
+    "report": "37175d52b1a45a298321b61472c82a0479c17c25ad8bcd76fce78f432145123b",
+    "result.json": "a0e4015a0236c1105a16690a5294c452e437f73c86180c7272fa1ff2d24ef64f",
+    "signed_observations": "18210226c7b0755c9722a4030fc7d65ca0a9ac1000d3b6d04db634495641fcf2"
+  },
+  "exact_cleanup": true,
+  "final_acl_case": {
+    "http_status": 500,
+    "lpush_denials": 1,
+    "ping_denials": 0,
+    "worker_started": false
+  },
+  "final_engine_inventory_empty": true,
+  "full_m6_accepted": false,
+  "image_id": "sha256:62e265becbada0a2403eb038be9340d960536d85214f6f17ee4a691a1160bc3b",
+  "original_authors_retain_full_credit": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "phase_exits": {
+    "cleanup": 0,
+    "evaluation": 0,
+    "execution": 0
+  },
+  "platform": "linux/amd64",
+  "prior_failed_attempts": {
+    "output-b9806b5b-acl-retry-1": {
+      "phase_exits": {
+        "cleanup": 1,
+        "evaluation": 1,
+        "execution": 1
+      },
+      "result_sha256": "5e1af8d2dbb14449d6a146b37075bad5d79f2f864c1f7e22c058139095b4ece1"
+    },
+    "output-b9806b5b-evidence-1": {
+      "phase_exits": {
+        "cleanup": 0,
+        "evaluation": 1,
+        "execution": 1
+      },
+      "result_sha256": "5ba86980f27d7977db8f304d4a1f72230faa7cf639969a9c59333267de4821b4"
+    }
+  },
+  "receiving_commit": "721582b9eb1022267593e606357206d1a324d07b",
+  "root_owner_exit": 0,
+  "row": "m6/api202-publication",
+  "scoped_coordinator_exit": 2,
+  "signed_workflow": {
+    "fifo_rpop": 1,
+    "fifo_unchanged_younger_siblings": 2,
+    "local_failure_followons": 4,
+    "native_main_exit": 0,
+    "nonpublish_matches": 21,
+    "publish_matches": 16,
+    "response_matches": 37,
+    "settled_worker_roots": 16,
+    "typed_original_results_matched": 4
+  },
+  "status": "passed"
+}

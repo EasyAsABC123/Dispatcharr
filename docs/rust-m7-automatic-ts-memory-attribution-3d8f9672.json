@@ -1,0 +1,60 @@
+{
+  "application_revision": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+  "historical_replay_sha256": "4f3ae6f52ce28cb01b50f885620f2d17973c3a7f916e5447aade14d69ecbc4ee",
+  "kernel_charge_breakdown_complete": false,
+  "observations": {
+    "charged_peak_timestamps_differ": true,
+    "cpu_core_seconds": {
+      "original": 3.916987,
+      "rust": 2.417005
+    },
+    "origin_charge_delta_at_each_peaks_bytes": 73867264,
+    "origin_initial_anonymous_bytes": {
+      "original": 10919936,
+      "rust": 10919936
+    },
+    "origin_initial_cgroup_charge_bytes": {
+      "original": 27205632,
+      "rust": 102580224
+    },
+    "peak_summed_cgroup_charge_bytes": {
+      "original": 406896640,
+      "rust": 541777920
+    },
+    "peak_summed_process_rss_bytes": {
+      "original": 559665152,
+      "rust": 388980736
+    },
+    "total_charge_peak_delta_bytes": 134881280
+  },
+  "original_authors_retain_full_credit": true,
+  "paired_performance_gate_passed": false,
+  "schema_version": 1,
+  "score": {
+    "actual_exit": 1,
+    "bars": {
+      "callback_throughput": true,
+      "charged_memory": false,
+      "cpu": true,
+      "durable_observation": true,
+      "media_ttfb": true,
+      "rss": true
+    },
+    "ratios": {
+      "callback_throughput_per_second": 1.0,
+      "cpu_core_seconds": 0.6170571921734741,
+      "first_media_over_floored_source": 0.8920935126296989,
+      "peak_cgroup_charged_bytes": 1.3314878196094222,
+      "peak_sum_process_rss_bytes": 0.6950240418041965,
+      "receiver_to_durable_observation_p95_ms": 0.9888109572136098
+    },
+    "scorer_proof_sha256": "16f80009f7aa56024a2b8d448bd08b8a461e20cbbce07ffb0c5b58a7285f7ed6"
+  },
+  "useful_work_per_arm": {
+    "cycles": 6,
+    "media_bytes": 451200,
+    "offered_seconds": 270,
+    "signed_callback_acknowledgments": 12
+  },
+  "workload": "M7 active TS automatic Connect"
+}
