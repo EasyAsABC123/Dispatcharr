@@ -557,7 +557,7 @@ impl Execution<'_> {
         let locks = &self.services.locks;
         let acquisition = match scalar {
             Some(source) => locks.acquire_positive_refresh_scalar(source).await,
-            None => locks.acquire("refresh_epg_data", request.source_id).await,
+            None => locks.acquire_epg_refresh_root(request.source_id).await,
         };
         let lease = match acquisition {
             Ok(v) => v,

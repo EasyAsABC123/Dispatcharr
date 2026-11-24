@@ -169,3 +169,53 @@ async fn uncertain_set_is_not_replayed_and_its_owned_cleanup_uses_recovered_conn
     assert_eq!(dropped.load(Ordering::SeqCst), 2);
     assert_eq!(locks.available_leases(), 1);
 }
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires an isolated Redis service with a two-second idle timeout"]
+async fn numeric_refresh_root_recovers_from_normal_idle_expiry() {
+    assert_eq!(
+        std::env::var("JOB_DISPOSABLE_FIXTURE").as_deref(),
+        Ok("playback-fixture-only")
+    );
+    let endpoint = redis::Client::open(std::env::var("REDIS_TEST_URL").unwrap()).unwrap();
+    assert!(matches!(
+        endpoint.get_connection_info().addr,
+        redis::ConnectionAddr::Tcp(ref host, _) if host == "127.0.0.1"
+    ));
+    let mut observer = endpoint.get_multiplexed_async_connection().await.unwrap();
+    let config: Vec<String> = redis::cmd("CONFIG")
+        .arg("GET")
+        .arg("timeout")
+        .query_async(&mut observer)
+        .await
+        .unwrap();
+    assert_eq!(config, ["timeout", "2"]);
+    drop(observer);
+
+    for preflight in [false, true] {
+        let role = proxy().await;
+        let locks = TaskLocks::connect(&role.url, TaskLockConfig::default())
+            .await
+            .unwrap();
+        let bytes = uuid::Uuid::new_v4().into_bytes();
+        let source = i64::from(u32::from_le_bytes(bytes[..4].try_into().unwrap())) + 1;
+        let key = format!("task_lock_refresh_epg_data_{source}");
+
+        // Only the Redis server's configured idle timer closes the manager.
+        // Each verification socket is fresh and independent of that manager.
+        tokio::time::sleep(std::time::Duration::from_secs(5)).await;
+        let mut observer = endpoint.get_multiplexed_async_connection().await.unwrap();
+        assert!(!observer.exists::<_, bool>(&key).await.unwrap());
+        if preflight {
+            let lease = locks.acquire_epg_refresh_root(source).await.unwrap();
+            assert!(observer.exists::<_, bool>(&key).await.unwrap());
+            assert!(lease.release_owned_detailed().await.unwrap());
+        } else {
+            assert!(matches!(
+                locks.acquire("refresh_epg_data", source).await,
+                Err(dispatcharr_coordination::TaskLockError::RedisUnavailable)
+            ));
+        }
+        assert!(!observer.exists::<_, bool>(&key).await.unwrap());
+    }
+}
