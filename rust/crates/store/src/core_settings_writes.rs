@@ -261,8 +261,8 @@ impl CoreSettingsWrites {
         drop(read);
         Ok(copy)
     }
-    /// The Source TSConfig loader calls CoreSettings directly, not BaseConfig's
-    /// separate process cache. Return only copied scalars after physical Ready.
+    /// The TS-owned slot is independent of a warm inherited Base entry.
+    /// Return only copied scalars after physical Ready.
     /// TS may inherit a fresh Base slot until it performs its own cold load.
     /// Copy that inherited value without installing a separate TS slot/token.
     pub fn inherited_proxy_health_knobs(
@@ -287,7 +287,11 @@ impl CoreSettingsWrites {
     pub fn proxy_health_reads_open(&self) -> bool {
         !self.state.stopped.load(Ordering::Acquire)
     }
-    pub async fn proxy_ts_health_knobs(&self) -> Result<crate::ProxyHealthKnobs, StoreError> {
+    /// A lost or unavailable database connection uses Source TSConfig's
+    /// uncached defaults. Other errors still refuse the read.
+    pub async fn proxy_ts_health_knobs(
+        &self,
+    ) -> Result<Option<crate::ProxyHealthKnobs>, StoreError> {
         let lease = self.reserve()?;
         let auth = self
             .state
@@ -296,10 +300,13 @@ impl CoreSettingsWrites {
             .with_request_writer_permit(lease._permit.clone())?
             .with_retained_scope(lease);
         let task = tokio::spawn(async move {
-            let value = crate::core_settings_special_effects::load_proxy(&auth).await?;
-            let copied = crate::ProxyHealthKnobs::from_value(&value)?;
-            drop(value);
-            Ok::<_, StoreError>(copied)
+            let value = match crate::core_settings_special_effects::load_proxy(&auth).await {
+                Err(StoreError::Database(error)) if unavailable_proxy_database(&error) => {
+                    return Ok(None)
+                }
+                other => other?,
+            };
+            Ok(Some(crate::ProxyHealthKnobs::from_value(&value)?))
         });
         task.await
             .map_err(|_| StoreError::Unsupported("Owned TS health loader did not settle"))?
@@ -405,6 +412,21 @@ impl CoreSettingsWrites {
         }
     }
 }
+fn unavailable_proxy_database(error: &sqlx::Error) -> bool {
+    if matches!(error, sqlx::Error::Io(_) | sqlx::Error::PoolTimedOut) {
+        return true;
+    }
+    error
+        .as_database_error()
+        .and_then(|error| error.code())
+        .is_some_and(|code| {
+            matches!(
+                code.as_ref(),
+                "08000" | "08001" | "08003" | "08006" | "08007" | "57P01" | "57P02" | "57P03"
+            )
+        })
+}
+
 fn capacity() -> StoreError {
     StoreError::StatusBody(
         503,
@@ -1267,6 +1289,22 @@ async fn check_json(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn ts_health_defaults_only_for_owned_database_availability_failures() {
+        assert!(unavailable_proxy_database(&sqlx::Error::Io(
+            std::io::ErrorKind::ConnectionReset.into()
+        )));
+        assert!(unavailable_proxy_database(&sqlx::Error::PoolTimedOut));
+        assert!(!unavailable_proxy_database(&sqlx::Error::PoolClosed));
+        assert!(!unavailable_proxy_database(&sqlx::Error::ColumnNotFound(
+            "value".into()
+        )));
+        assert!(!unavailable_proxy_database(&sqlx::Error::Protocol(
+            "invalid response".into()
+        )));
+    }
+
     fn reference() -> Value {
         serde_json::from_str(include_str!("../datasets/core-settings-source32.json")).unwrap()
     }

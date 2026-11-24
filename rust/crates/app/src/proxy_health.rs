@@ -21,10 +21,10 @@ struct TypedTsSlot {
 }
 
 #[derive(Clone, Copy)]
-enum Refresh {
-    Loading,
+enum ReadOutcome {
     Loaded(HealthTimeouts),
-    Unavailable,
+    DatabaseUnavailable,
+    Refused,
 }
 
 // Retain one copied snapshot and at most one physical refresh. Joining the
@@ -32,7 +32,7 @@ enum Refresh {
 #[derive(Default)]
 struct TypedTsCache {
     slot: Option<TypedTsSlot>,
-    refresh: Option<watch::Receiver<Refresh>>,
+    refresh: Option<watch::Receiver<Option<ReadOutcome>>>,
 }
 
 impl TypedTsCache {
@@ -40,30 +40,30 @@ impl TypedTsCache {
         &mut self,
         cache: &Arc<Mutex<Self>>,
         sampled_before_load: f64,
-        load: impl Future<Output = Option<HealthTimeouts>> + Send + 'static,
-    ) -> watch::Receiver<Refresh> {
+        load: impl Future<Output = ReadOutcome> + Send + 'static,
+    ) -> watch::Receiver<Option<ReadOutcome>> {
         if let Some(refresh) = self.active_refresh() {
             return refresh.clone();
         }
-        let (sender, receiver) = watch::channel(Refresh::Loading);
+        let (sender, receiver) = watch::channel(None);
         self.refresh = Some(receiver.clone());
         let cache = cache.clone();
         tokio::spawn(async move {
             let outcome = load.await;
             let mut cache = cache.lock().unwrap_or_else(|e| e.into_inner());
-            if let Some(value) = outcome {
+            if let ReadOutcome::Loaded(value) = outcome {
                 cache.slot = Some(TypedTsSlot {
                     at: sampled_before_load,
                     value,
                 });
             }
-            sender.send_replace(outcome.map_or(Refresh::Unavailable, Refresh::Loaded));
+            sender.send_replace(Some(outcome));
             cache.refresh = None;
         });
         receiver
     }
 
-    fn active_refresh(&self) -> Option<&watch::Receiver<Refresh>> {
+    fn active_refresh(&self) -> Option<&watch::Receiver<Option<ReadOutcome>>> {
         self.refresh
             .as_ref()
             .filter(|refresh| refresh.has_changed().is_ok())
@@ -93,15 +93,17 @@ fn unavailable() -> PlaybackError {
 }
 
 async fn wait_for_refresh(
-    mut receiver: watch::Receiver<Refresh>,
+    mut receiver: watch::Receiver<Option<ReadOutcome>>,
 ) -> Result<HealthTimeouts, PlaybackError> {
     receiver
-        .wait_for(|state| !matches!(state, Refresh::Loading))
+        .wait_for(Option::is_some)
         .await
         .map_err(|_| unavailable())
         .and_then(|state| match *state {
-            Refresh::Loaded(value) => Ok(value),
-            Refresh::Unavailable | Refresh::Loading => Err(unavailable()),
+            Some(ReadOutcome::Loaded(value)) => Ok(value),
+            // Source does not assign a cache slot or refresh its age on error.
+            Some(ReadOutcome::DatabaseUnavailable) => Ok(HealthTimeouts::default()),
+            Some(ReadOutcome::Refused) | None => Err(unavailable()),
         })
 }
 
@@ -157,7 +159,11 @@ impl HealthSettingsSource for CoreProxyHealthSource {
                 }
                 let core = self.core.clone();
                 cache.start_or_join(&self.ts, sampled_before_load, async move {
-                    core.proxy_ts_health_knobs().await.ok().map(from_knobs)
+                    match core.proxy_ts_health_knobs().await {
+                        Ok(Some(knobs)) => ReadOutcome::Loaded(from_knobs(knobs)),
+                        Ok(None) => ReadOutcome::DatabaseUnavailable,
+                        Err(_) => ReadOutcome::Refused,
+                    }
                 })
             };
             wait_for_refresh(refresh).await
@@ -174,8 +180,8 @@ mod tests {
     fn join(
         cache: &Arc<Mutex<TypedTsCache>>,
         sampled: f64,
-        load: impl Future<Output = Option<HealthTimeouts>> + Send + 'static,
-    ) -> watch::Receiver<Refresh> {
+        load: impl Future<Output = ReadOutcome> + Send + 'static,
+    ) -> watch::Receiver<Option<ReadOutcome>> {
         cache.lock().unwrap().start_or_join(cache, sampled, load)
     }
 
@@ -186,12 +192,12 @@ mod tests {
         let (settle, pending) = oneshot::channel();
         let first = join(&cache, 20.0, async move {
             started.send(()).unwrap();
-            pending.await.ok()
+            ReadOutcome::Loaded(pending.await.unwrap())
         });
         claimed.await.unwrap();
         drop(first);
         let second = join(&cache, 28.0, async { panic!("refresh did not join") });
-        assert!(matches!(*second.borrow(), Refresh::Loading));
+        assert!(second.borrow().is_none());
         let third = join(&cache, 29.0, async { panic!("refresh started twice") });
         let expected = HealthTimeouts {
             connection: Duration::from_secs(4),
@@ -207,12 +213,54 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn database_failure_returns_original_defaults_without_replacing_the_expired_slot() {
+        let previous = HealthTimeouts {
+            startup: Duration::from_secs(3),
+            connection: Duration::from_secs(4),
+            initialization: Duration::from_secs(5),
+        };
+        let cache = Arc::new(Mutex::new(TypedTsCache {
+            slot: Some(TypedTsSlot {
+                at: 20.0,
+                value: previous,
+            }),
+            refresh: None,
+        }));
+        let (settle, pending) = oneshot::channel();
+        let first = join(&cache, 30.0, async move {
+            pending.await.unwrap();
+            ReadOutcome::DatabaseUnavailable
+        });
+        let joined = join(&cache, 31.0, async {
+            panic!("database retry started twice")
+        });
+        settle.send(()).unwrap();
+        for reader in [first, joined] {
+            assert_eq!(
+                wait_for_refresh(reader).await.unwrap(),
+                HealthTimeouts::default()
+            );
+        }
+
+        {
+            let old = cache.lock().unwrap();
+            let expired = old.slot.unwrap();
+            assert_eq!(expired.at, 20.0);
+            assert_eq!(expired.value, previous);
+            assert!(old.fresh(31.0).is_none());
+        }
+        let retry = join(&cache, 31.0, async move { ReadOutcome::Loaded(previous) });
+        assert_eq!(wait_for_refresh(retry).await.unwrap(), previous);
+        assert_eq!(cache.lock().unwrap().fresh(31.0), Some(previous));
+    }
+
+    #[tokio::test]
     async fn failure_reaches_joiners_without_caching_or_blocking_next_refresh() {
         let cache = Arc::new(Mutex::new(TypedTsCache::default()));
         let (settle, pending) = oneshot::channel::<()>();
         let first = join(&cache, 20.0, async move {
             let _ = pending.await;
-            None
+            ReadOutcome::Refused
         });
         let second = join(&cache, 21.0, async { panic!("refresh started twice") });
         settle.send(()).unwrap();
@@ -222,7 +270,7 @@ mod tests {
         }
         assert!(cache.lock().unwrap().slot.is_none());
         let expected = HealthTimeouts::default();
-        let retry = join(&cache, 22.0, async move { Some(expected) });
+        let retry = join(&cache, 22.0, async move { ReadOutcome::Loaded(expected) });
         assert_eq!(wait_for_refresh(retry).await.unwrap(), expected);
     }
 }
