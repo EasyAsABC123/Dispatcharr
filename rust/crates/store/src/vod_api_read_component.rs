@@ -144,7 +144,13 @@ impl SqlReads {
             let result=async {
             work.check()?;
             if let Some(http)=&http {
-                super::vod_api_http::negotiate(&request.headers,&http.uri)?;
+                let fixed_json = http.raw_detail.as_deref()
+                    .and_then(|raw| super::vod_api_http::json_detail_id(&http.method, raw)).is_some();
+                if fixed_json {
+                    crate::core_reads::negotiate_literal_json_alias(&request.headers)?;
+                } else {
+                    super::vod_api_http::negotiate(&request.headers,&http.uri)?;
+                }
                 request.query=url::form_urlencoded::parse(http.uri.query().unwrap_or("").as_bytes()).map(|(key,value)|(key.into_owned(),value.into_owned())).collect();
             }
             let guard=work.io_guard()?.erased();
@@ -166,8 +172,9 @@ impl SqlReads {
             let visible=visibility(&user.custom_properties,user.user_level)
                 .map_err(|_|ReadError::Unsupported("Nonmapping VOD properties fault contract is not captured"))?;
             let mut invalid_detail=None;
-            if let Some(raw)=http.as_ref().and_then(|h|h.raw_detail.as_ref()) {
-                request.detail=Some(match dispatcharr_ingest_core::source_integer_literal(raw) {
+            if let Some((http, raw))=http.as_ref().and_then(|h|h.raw_detail.as_deref().map(|raw|(h,raw))) {
+                let id=super::vod_api_http::json_detail_id(&http.method, raw).unwrap_or(raw);
+                request.detail=Some(match dispatcharr_ingest_core::source_integer_literal(id) {
                     None=>{invalid_detail=Some(ReadError::Source(crate::StoreError::NotFound));0},
                     Some(number)=>match number.parse() {Ok(id)=>id,Err(_)=>{invalid_detail=Some(missing(request.resource));0}},
                 });

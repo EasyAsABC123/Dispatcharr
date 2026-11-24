@@ -10,7 +10,7 @@ use crate::StoreError;
 use axum::{
     body::{to_bytes, Body},
     extract::ConnectInfo,
-    http::{HeaderMap, HeaderValue, Method, Uri},
+    http::{HeaderMap, HeaderValue, Method, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::{any, get},
     Router,
@@ -399,6 +399,14 @@ fn resource_name(resource: Resource) -> &'static str {
         Resource::Episode => "episodes",
     }
 }
+pub(super) fn json_detail_id<'a>(method: &Method, segment: &'a str) -> Option<&'a str> {
+    if *method != Method::GET {
+        return None;
+    }
+    let id = segment.strip_suffix(".json")?;
+    (!id.is_empty() && id.bytes().all(|byte| byte.is_ascii_digit())).then_some(id)
+}
+
 pub(crate) fn router(reader: SqlReads, auth: crate::AuthService) -> Router {
     let gate = HttpGate::new(super::vod_api_owned_read::ReadLimits::default())
         .expect("default HTTP budget");
@@ -412,25 +420,35 @@ pub(crate) fn router_with_gate(
     let mut router = Router::new();
     for resource in [Resource::Movie, Resource::Series, Resource::Episode] {
         let root = format!("/api/vod/{}/", resource_name(resource));
-        for (path, detail) in [(root.clone(), false), (format!("{root}{{id}}/"), true)] {
+        for (path, detail, json_only) in [
+            (root.clone(), false, false),
+            (format!("{root}{{id}}/"), true, false),
+            (format!("{root}{{id}}"), true, true),
+        ] {
             let reader = reader.clone();
             let auth = auth.clone();
             let gate = gate.clone();
-            router =
-                router.route(
-                    &path,
-                    any(
-                        move |ConnectInfo(peer): ConnectInfo<SocketAddr>,
-                              request: axum::extract::Request| {
-                            let reader = reader.clone();
-                            let auth = auth.clone();
-                            let gate = gate.clone();
-                            async move {
-                                respond(reader, auth, gate, peer, resource, detail, request).await
+            router = router.route(
+                &path,
+                any(
+                    move |ConnectInfo(peer): ConnectInfo<SocketAddr>,
+                          request: axum::extract::Request| {
+                        let reader = reader.clone();
+                        let auth = auth.clone();
+                        let gate = gate.clone();
+                        async move {
+                            if json_only {
+                                let segment =
+                                    request.uri().path().rsplit('/').next().unwrap_or_default();
+                                if json_detail_id(request.method(), segment).is_none() {
+                                    return StatusCode::NOT_FOUND.into_response();
+                                }
                             }
-                        },
-                    ),
-                );
+                            respond(reader, auth, gate, peer, resource, detail, request).await
+                        }
+                    },
+                ),
+            );
         }
     }
     router
@@ -530,8 +548,8 @@ async fn respond_to(
     };
     let head = parts.method == Method::HEAD;
     let selected_indent = json_indent(&parts.headers);
-    // Only this peer's clean trailing-slash routes are registered. Suffix,
-    // no-slash and other VOD families remain separate compatibility gates.
+    // Ordinary numeric .json detail GETs register both Source slash forms.
+    // The SQL reader recognizes the literal suffix before negotiation.
     let raw_detail = detail.then(|| {
         parts
             .uri
@@ -688,6 +706,58 @@ mod tests {
         assert_eq!(service.scheduler_state()["inputs_used"], 0);
         assert_eq!(service.scheduler_state()["bytes"], 0);
     }
+    #[test]
+    fn literal_numeric_json_detail_get_isolated_from_other_formats_and_methods() {
+        assert_eq!(json_detail_id(&Method::GET, "0042.json"), Some("0042"));
+        for segment in ["42", "42.api", "42.xml", ".json", "42.5.json", "a.json"] {
+            assert_eq!(json_detail_id(&Method::GET, segment), None);
+        }
+        for method in [Method::HEAD, Method::OPTIONS, Method::POST, Method::DELETE] {
+            assert_eq!(json_detail_id(&method, "42.json"), None);
+        }
+    }
+
+    #[tokio::test]
+    async fn normal_vod_router_registers_measured_json_alias_negotiation_before_sql() {
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://fixture:fixture@127.0.0.1:1/fixture")
+            .unwrap();
+        let auth = crate::AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("fixture-only".into()).unwrap(),
+        );
+        let service = VodReads::new(
+            auth,
+            super::super::vod_api_owned_read::ReadLimits::default(),
+        )
+        .unwrap();
+        let router = service.router();
+        for resource in ["movies", "series", "episodes"] {
+            for slash in ["", "/"] {
+                let mut request = axum::http::Request::builder()
+                    .uri(format!("/api/vod/{resource}/42.json{slash}?format=api"))
+                    .header("accept", "text/html")
+                    .body(Body::empty())
+                    .unwrap();
+                request
+                    .extensions_mut()
+                    .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1234))));
+                let response = router.clone().oneshot(request).await.unwrap();
+                assert_eq!(response.status(), StatusCode::NOT_ACCEPTABLE);
+                assert_eq!(response.headers()["allow"], "GET, HEAD, OPTIONS");
+                assert_eq!(response.headers()["vary"], "Accept, origin");
+                let body = to_bytes(response.into_body(), 1024).await.unwrap();
+                assert_eq!(
+                    serde_json::from_slice::<Value>(&body).unwrap(),
+                    json!({"detail":"Could not satisfy the request Accept header."})
+                );
+            }
+        }
+        assert!(service.shutdown(Duration::from_secs(1)).await);
+    }
+
     #[test]
     fn bounded_formatter_preserves_nested_string_syntax_and_capacity() {
         let value = json!({"quote":"[\"{},]","nested":[{},[],{"x":1}],"empty":{}});

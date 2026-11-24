@@ -105,6 +105,7 @@ struct Edit {
     override_references: References,
     clear_override: bool,
     hidden: Option<bool>,
+    stream_replacement: Option<StreamReplacement>,
 }
 
 impl Edit {
@@ -138,6 +139,83 @@ fn user_level(value: &Value) -> Result<i32, StoreError> {
         };
         err("user_level", message)
     })
+}
+
+#[derive(Debug, PartialEq, Eq)]
+struct StreamReference {
+    id: Option<i64>,
+    display: String,
+}
+
+fn stream_reference(value: &Value) -> Result<StreamReference, Value> {
+    let id = match value {
+        Value::Null => None,
+        Value::String(value) if value.is_empty() => {
+            return Err(json!(["Incorrect type. Expected pk value, received str."]));
+        }
+        _ => primary_key(value).map_err(|error| match error {
+            StoreError::InvalidInput(fields) => fields["channel"].clone(),
+            _ => unreachable!("primary_key only returns field validation errors"),
+        })?,
+    };
+    let display = match value {
+        Value::Null => "None".to_owned(),
+        Value::String(value) => value.clone(),
+        _ => value.to_string(),
+    };
+    Ok(StreamReference { id, display })
+}
+
+#[derive(Debug, Default, PartialEq, Eq)]
+struct StreamReplacement {
+    references: Vec<StreamReference>,
+    first_type_error: Option<Value>,
+}
+
+impl StreamReplacement {
+    fn parse(input: &Value) -> Self {
+        let mut result = Self::default();
+        let collect = |item| match item {
+            Ok(reference) => {
+                result.references.push(reference);
+                None
+            }
+            Err(error) => Some(error),
+        };
+        result.first_type_error = match input {
+            Value::Array(items) => items.iter().map(stream_reference).find_map(collect),
+            // DRF's many-related field iterates dictionary keys.
+            Value::Object(items) => items
+                .keys()
+                .map(|key| stream_reference(&Value::String(key.clone())))
+                .find_map(collect),
+            Value::Null => Some(json!(["This field may not be null."])),
+            value => Some(json!([format!(
+                "Expected a list of items but got type \"{}\".",
+                crate::channel_memberships::datatype(value)
+            )])),
+        };
+        result
+    }
+
+    fn validate(&self, existing: &BTreeSet<i64>) -> Result<Vec<i64>, Value> {
+        let ids = self
+            .references
+            .iter()
+            .map(|item| {
+                item.id.filter(|id| existing.contains(id)).ok_or_else(|| {
+                    json!([format!(
+                        "Invalid pk \"{}\" - object does not exist.",
+                        item.display
+                    )])
+                })
+            })
+            .collect::<Result<Vec<_>, _>>()?;
+        match &self.first_type_error {
+            Some(error) => Err(error.clone()),
+            None => Ok(ids),
+        }
+    }
 }
 
 fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
@@ -187,6 +265,7 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                         | "stream_profile_id"
                         | "logo_id"
                         | "hidden_from_output"
+                        | "streams"
                 )
             }) {
                 return Err(unsupported());
@@ -248,6 +327,7 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                     })
                     .transpose()?,
                 references: References::parse(row)?,
+                stream_replacement: row.get("streams").map(StreamReplacement::parse),
                 radio: row
                     .get("is_radio")
                     .map(|value| boolean("is_radio", value))
@@ -307,6 +387,9 @@ struct LockedChannel {
     managed: bool,
     hidden: bool,
     has_raw_number: bool,
+    is_catchup: bool,
+    catchup_days: i32,
+    stream_replacement: Option<Vec<i64>>,
 }
 
 impl LockedChannel {
@@ -340,8 +423,19 @@ async fn validate_and_lock(
         }),
     )
     .await?;
-    let selected: HashMap<_, _> = sqlx::query_as::<_, (i64, bool, bool, bool)>(
-        "SELECT id, auto_created, hidden_from_output, channel_number IS NOT NULL
+    let streams = lock_references(
+        tx,
+        "SELECT id FROM dispatcharr_channels_stream WHERE id = ANY($1) ORDER BY id FOR KEY SHARE",
+        edits
+            .iter()
+            .filter_map(|edit| edit.stream_replacement.as_ref())
+            .flat_map(|replacement| &replacement.references)
+            .filter_map(|reference| reference.id),
+    )
+    .await?;
+    let mut selected: HashMap<_, _> = sqlx::query_as::<_, (i64, bool, bool, bool, bool, i32)>(
+        "SELECT id, auto_created, hidden_from_output, channel_number IS NOT NULL,
+                is_catchup, catchup_days
          FROM dispatcharr_channels_channel
          WHERE id = ANY($1) ORDER BY id FOR UPDATE",
     )
@@ -349,16 +443,21 @@ async fn validate_and_lock(
     .fetch_all(&mut **tx)
     .await?
     .into_iter()
-    .map(|(id, managed, hidden, has_raw_number)| {
-        (
-            id,
-            LockedChannel {
-                managed,
-                hidden,
-                has_raw_number,
-            },
-        )
-    })
+    .map(
+        |(id, managed, hidden, has_raw_number, is_catchup, catchup_days)| {
+            (
+                id,
+                LockedChannel {
+                    managed,
+                    hidden,
+                    has_raw_number,
+                    is_catchup,
+                    catchup_days,
+                    stream_replacement: None,
+                },
+            )
+        },
+    )
     .collect();
     // Logo collectors clear channel and existing override links before
     // deleting logo rows. Lock the same children before the logo reference,
@@ -398,7 +497,7 @@ async fn validate_and_lock(
     .await?;
     let mut errors = Vec::new();
     for edit in edits {
-        let Some(channel) = selected.get(&edit.id) else {
+        let Some(channel) = selected.get_mut(&edit.id) else {
             errors.push(json!({"channel_id":edit.id,"error":"Channel not found"}));
             continue;
         };
@@ -418,6 +517,14 @@ async fn validate_and_lock(
         }
         if let Some(error) = &edit.name_error {
             fields.insert("name".into(), error.clone());
+        }
+        if let Some(replacement) = &edit.stream_replacement {
+            match replacement.validate(&streams) {
+                Ok(replacement) => channel.stream_replacement = Some(replacement),
+                Err(error) => {
+                    fields.insert("streams".into(), error);
+                }
+            }
         }
         if !fields.is_empty() {
             errors.push(json!({"channel_id":edit.id,"errors":fields}));
@@ -590,6 +697,13 @@ async fn apply(
             .await?;
         }
     }
+    // Source writes through ChannelStream after scalar and override changes.
+    // Existing links retain their IDs. Membership changes recompute catch-up.
+    for edit in edits {
+        if let Some(replacement) = &selected[&edit.id].stream_replacement {
+            super::streams(tx, edit.id, replacement.clone()).await?;
+        }
+    }
     Ok(())
 }
 
@@ -654,8 +768,15 @@ async fn update_and_read(
             let mut row = rows
                 .remove(&edit.id)
                 .ok_or(StoreError::UnhandledRestFault)?;
+            let before = &selected[&edit.id];
+            if before.stream_replacement.is_some() {
+                // Stock serializes its original Channel instance after the
+                // signal writes the catch-up rollup through a fresh queryset.
+                row["is_catchup"] = json!(before.is_catchup);
+                row["catchup_days"] = json!(before.catchup_days);
+            }
             if edit.hidden == Some(false)
-                && selected[&edit.id].can_change_compact_number(false)
+                && before.can_change_compact_number(false)
                 && !row["channel_number"].is_null()
             {
                 project_unhide_response(&mut row);
@@ -986,6 +1107,9 @@ mod tests {
                         managed,
                         hidden,
                         has_raw_number,
+                        is_catchup: false,
+                        catchup_days: 0,
+                        stream_replacement: None,
                     };
                     assert!(!row.can_change_compact_number(hidden));
                     assert_eq!(
@@ -1089,12 +1213,58 @@ mod tests {
     }
 
     #[test]
-    fn unrelated_mutations_cannot_be_silently_accepted() {
-        for request in [
-            json!([{"id":1,"streams":[4]}]),
-            json!([{"id":1,"override":{"channel_group_id":3,"epg_data_id":7}}]),
+    fn stream_replacement_keeps_omission_empty_order_and_last_duplicate_payload() {
+        let rows = edits(json!([
+            {"id": 4, "streams": [1]},
+            {"id": 2, "streams": []},
+            {"id": 3},
+            {"id": 4, "streams": ["2", 1, 2]}
+        ]))
+        .unwrap();
+        assert_eq!(
+            rows.iter().map(|edit| edit.id).collect::<Vec<_>>(),
+            [4, 2, 3]
+        );
+        let existing = BTreeSet::from([1, 2]);
+        let resolved: Vec<_> = rows
+            .iter()
+            .map(|row| {
+                row.stream_replacement
+                    .as_ref()
+                    .map(|refs| refs.validate(&existing).unwrap())
+            })
+            .collect();
+        assert_eq!(resolved, [Some(vec![2, 1, 2]), Some(vec![]), None]);
+    }
+
+    #[test]
+    fn stream_validation_keeps_the_first_source_related_field_error() {
+        let existing = BTreeSet::from([1]);
+        for (input, expected) in [
+            (
+                json!([1, "9", false]),
+                json!(["Invalid pk \"9\" - object does not exist."]),
+            ),
+            (
+                json!([1, false, 9]),
+                json!(["Incorrect type. Expected pk value, received bool."]),
+            ),
+            (json!(null), json!(["This field may not be null."])),
+            (
+                json!(4),
+                json!(["Expected a list of items but got type \"int\"."]),
+            ),
         ] {
-            assert!(matches!(edits(request), Err(StoreError::Unsupported(_))));
+            let parsed = StreamReplacement::parse(&input);
+            assert_eq!(parsed.validate(&existing), Err(expected));
         }
+    }
+
+    #[test]
+    fn unrelated_mutations_cannot_be_silently_accepted() {
+        assert!(matches!(
+            edits(json!([{"id":1,"override":{"channel_group_id":3,"epg_data_id":7}}])),
+            Err(StoreError::Unsupported(_))
+        ));
     }
 }

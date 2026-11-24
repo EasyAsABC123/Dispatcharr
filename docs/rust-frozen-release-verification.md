@@ -19,6 +19,12 @@ Grouped XC catch-up now derives the Original-compatible shared credential counte
 
 The catch-up and STD units passed, and the signed PostgreSQL resolver and real-Redis test targets compiled. The final paired workload will exercise shared capacity and release under playback, distinct profiles with the same login, an idle cross-worker reopen, and the direct and command-based STD formats. The existing preview, redirect, and transformed credential domain limits stay in the test plan.
 
+## Channel Batch and VOD routes
+
+Administrator Channel Batch now accepts ordered stream replacement and explicit clearing. Stream references are validated across the request before writing, surviving links retain their IDs, and the existing catch-up rollup updates the persisted channel. PATCH preserves the previously loaded catch-up values, which a fresh GET then reads from the updated channel.
+
+Movie, Series, and Episode numeric detail GETs accept the Source's literal JSON suffix. These aliases use the existing authorization and bounded SQL read and preserve JSON negotiation. Sixteen Channel Batch and two VOD Store tests passed. The final Compose fixtures still need to verify persisted ordering, catch-up response timing, and the signed roles on the ordinary packaged handlers.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution.
