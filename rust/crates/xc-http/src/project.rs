@@ -69,6 +69,26 @@ async fn tuners(store: &Store) -> Result<i64, sqlx::Error> {
         .max(1))
 }
 
+#[derive(Debug, PartialEq, Eq)]
+enum LiveCategory {
+    All,
+    Exact(i64),
+    OutsideDatabase,
+}
+
+fn live_category(value: Option<&str>) -> Result<LiveCategory, StoreError> {
+    let Some(value) = value else {
+        return Ok(LiveCategory::All);
+    };
+    let decimal = dispatcharr_ingest_core::source_integer_literal(value).ok_or_else(|| {
+        StoreError::StatusBody(500, json!({"error":"XC category lookup failed."}))
+    })?;
+    Ok(match decimal.parse() {
+        Ok(id) => LiveCategory::Exact(id),
+        Err(_) => LiveCategory::OutsideDatabase,
+    })
+}
+
 pub(crate) struct LiveRows {
     rows: Vec<Channel>,
     numbers: HashMap<i64, String>,
@@ -83,16 +103,13 @@ impl LiveRows {
         user: &User,
         limits: &ReadLimit,
     ) -> Result<Vec<Channel>, StoreError> {
-        let category = request
-            .parameter("category_id")
-            .map(|value| {
-                dispatcharr_ingest_core::source_integer_literal(value)
-                    .and_then(|value| value.parse::<i64>().ok())
-                    .ok_or_else(|| {
-                        StoreError::StatusBody(500, json!({"error":"XC category lookup failed."}))
-                    })
-            })
-            .transpose()?;
+        let category = match live_category(request.parameter("category_id"))? {
+            LiveCategory::All => None,
+            LiveCategory::Exact(id) => Some(id),
+            // Django's BigAutoField equality compiles out-of-range integers to
+            // EmptyResultSet. This must not become an unfiltered category.
+            LiveCategory::OutsideDatabase => return Ok(Vec::new()),
+        };
         reader::channels(store, user, category, limits).await
     }
     pub(crate) async fn project(
@@ -257,6 +274,46 @@ impl JsonBytes {
                 }
                 self.raw(b"}")
             }
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn live_category_distinguishes_numeric_overflow_from_malformed_input() {
+        assert_eq!(live_category(None).unwrap(), LiveCategory::All);
+        for (value, expected) in [
+            ("+0_07", 7),
+            (" +００7 ", 7),
+            ("0", 0),
+            ("-1", -1),
+            ("9223372036854775807", i64::MAX),
+            ("-9223372036854775808", i64::MIN),
+        ] {
+            assert_eq!(
+                live_category(Some(value)).unwrap(),
+                LiveCategory::Exact(expected)
+            );
+        }
+        for value in [
+            "9223372036854775808",
+            "-9223372036854775809",
+            " +٩_٢٢٣٣٧٢٠٣٦٨٥٤٧٧٥٨٠٨ ",
+            &"9".repeat(4300),
+        ] {
+            assert_eq!(
+                live_category(Some(value)).unwrap(),
+                LiveCategory::OutsideDatabase
+            );
+        }
+        for value in ["", "7.0", "bad", &"9".repeat(4301)] {
+            assert!(matches!(
+                live_category(Some(value)),
+                Err(StoreError::StatusBody(500, body)) if body == json!({"error":"XC category lookup failed."})
+            ));
         }
     }
 }

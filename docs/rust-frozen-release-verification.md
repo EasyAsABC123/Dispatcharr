@@ -87,6 +87,8 @@ Both numeric EPG Programme JSON routes accept a trailing slash for GET through t
 
 For public HDHomeRun output, an explicit JSON selector limits negotiation to JSON. A client that accepts only HTML receives 406. MIME matching accepts case variations. The HDHomeRun library passed 15 tests, and focused comparison with the retained Original negotiator matched all 85 cases.
 
+Xtream live category filters now return an empty channel selection when a valid integer falls outside PostgreSQL’s signed 64-bit range. The panel still returns its full account and category document. The focused Rust test passed and 14 cases ran against pinned Django’s PostgreSQL query compiler without a database connection. The ARM64 fixture adds eight signed form and range checks.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.
