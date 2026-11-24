@@ -259,14 +259,18 @@ The ordinary PostgreSQL Logo API uses the same Python-style integer parsing
 for pagination as the copied SQLite API. Supplied forms include Unicode
 decimal digits, underscores and explicit plus signs. The existing paired
 Logo fixture adds six signed cases and checks exact JSON bytes alongside its
-existing SQL, file and Origin checks.
+existing SQL, file and Origin checks. Copied SQLite also supports repeated
+logo IDs and name filters, including literal SQL wildcard characters.
+Eight pinned Django SQLite checks and ten focused Rust tests passed.
 
 Ordinary Xtream Movie and Series information GETs with an omitted ID now
 pass through the existing authenticated lookup to the measured HTTP 404.
 The paired Xtream fixture reuses its signed catalogue and metadata owner.
 It checks the two missing-ID cases for exact response bytes and no further
-provider or datastore effects. Focused Rust tests passed for both API
-changes. Packaged acceptance still uses the final common revision.
+provider or datastore effects. The same fixture adds signed zero, negative
+and malformed identifiers. Pinned Original view and database components
+established the expected responses. The final packaged run will verify
+their wire behavior on the common revision.
 
 ## One frozen verification campaign
 

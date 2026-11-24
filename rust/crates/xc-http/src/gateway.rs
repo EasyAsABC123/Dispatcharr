@@ -100,15 +100,13 @@ fn unsupported_action() -> StoreError {
     )
 }
 fn ordinary_cached_info_request(method: &Method, id: Option<&str>) -> bool {
+    // Let the existing lookup apply family-specific missing and malformed
+    // behavior. Widen the bounded SQL lookup to all representable signed IDs.
+    // The PostgreSQL behavior of out-of-range foreign-key binds is unqualified.
     method == Method::GET
-        && match id {
-            // The existing info lookup turns either missing spelling into
-            // Django's Not Found before touching the catalogue or provider.
-            None | Some("") => true,
-            Some(raw) => dispatcharr_ingest_core::source_integer_literal(raw)
-                .and_then(|raw| raw.parse::<i64>().ok())
-                .is_some_and(|id| id > 0),
-        }
+        && id
+            .and_then(dispatcharr_ingest_core::source_integer_literal)
+            .is_none_or(|raw| raw.parse::<i64>().is_ok())
 }
 struct Worker(Arc<Inner>);
 impl Drop for Worker {

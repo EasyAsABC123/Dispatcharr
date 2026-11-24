@@ -5,7 +5,7 @@ use dispatcharr_store::{AuthConfig, NotificationCache};
 use http_body_util::BodyExt;
 use std::future::IntoFuture;
 #[test]
-fn cached_info_live_scope_uses_wall_clock_and_accepts_source_positive_get_ids() {
+fn cached_info_live_scope_uses_wall_clock_and_admits_measured_get_ids() {
     for value in [
         "1",
         "20",
@@ -15,6 +15,15 @@ fn cached_info_live_scope_uses_wall_clock_and_accepts_source_positive_get_ids() 
         "١",
         "３_４",
         "9223372036854775807",
+        "0",
+        "+00",
+        "-1",
+        "-١_٢",
+        "-9223372036854775808",
+        "1.2",
+        "1__2",
+        " \t",
+        "false",
     ] {
         assert!(ordinary_cached_info_request(&Method::GET, Some(value)));
         assert!(!ordinary_cached_info_request(&Method::HEAD, Some(value)));
@@ -27,11 +36,7 @@ fn cached_info_live_scope_uses_wall_clock_and_accepts_source_positive_get_ids() 
         }
     }
     for value in [
-        Some("0"),
-        Some("-1"),
-        Some("1.0"),
-        Some("²"),
-        Some("1__0"),
+        Some("-9223372036854775809"),
         Some("9223372036854775808"),
         Some("９２２３３７２０３６８５４７７５８０８"),
     ] {
