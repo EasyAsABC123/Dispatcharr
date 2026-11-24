@@ -844,3 +844,17 @@ checks passed, including actual retained-template preparation and
 rejection of changed fixture bytes, stale package identity, a redirected
 lock and a competing lease. The final package and fresh scanner run
 remain open.
+
+### VOD logo cleanup
+
+The VOD Logos table's administrator cleanup action now removes only
+unused VOD logos. The action preserves logos attached to movies or
+series, preserves artwork files, and returns the names it removed.
+Cleanup uses one guarded PostgreSQL delete inside a transaction.
+
+Pinned Original passed five requests covering role rejection, a normal
+cleanup and an empty repeat. A disposable PostgreSQL check verified
+that a concurrent movie reference causes cleanup to roll back the
+entire transaction. A subsequent cleanup preserved the attached logo
+and removed only the remaining unused row. Signed packaged execution
+and action metadata remain open.

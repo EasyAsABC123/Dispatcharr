@@ -6,18 +6,79 @@ use super::{
     vod_api_read_component::{HttpRead, ReadRequest, SqlReads},
     vod_api_sql::Resource,
 };
-use crate::StoreError;
+use crate::{AuthService, StoreError};
 use axum::{
     body::{to_bytes, Body},
-    extract::ConnectInfo,
+    extract::{ConnectInfo, OriginalUri, State},
     http::{HeaderMap, HeaderValue, Method, StatusCode, Uri},
     response::{IntoResponse, Response},
-    routing::{any, get},
+    routing::{any, get, post},
     Router,
 };
 use serde_json::{json, Value};
 use std::{net::SocketAddr, sync::Arc, time::Duration};
 use tokio::sync::Semaphore;
+const DELETE_UNUSED_VOD_LOGOS: &str = "
+DELETE FROM vod_vodlogo AS l
+WHERE NOT EXISTS (SELECT 1 FROM vod_movie m WHERE m.logo_id = l.id)
+  AND NOT EXISTS (SELECT 1 FROM vod_series s WHERE s.logo_id = l.id)
+RETURNING name";
+
+fn cleanup_vod_logos_entity(names: Vec<String>) -> Value {
+    let count = names.len();
+    json!({
+        "deleted_count": count,
+        "deleted_logos": names,
+        "message": format!("Successfully deleted {count} unused VOD logo(s)"),
+    })
+}
+
+async fn delete_unused_vod_logos(pool: &sqlx::PgPool) -> Result<Value, StoreError> {
+    let mut tx = pool.begin().await?;
+    // Eligibility and deletion share one statement. A racing new reference
+    // remains protected by the datastore's foreign keys. Source does not
+    // declare a result order or read budget for this operation.
+    let deleted = sqlx::query_scalar::<_, String>(DELETE_UNUSED_VOD_LOGOS)
+        .fetch_all(&mut *tx)
+        .await;
+    match deleted {
+        Ok(names) => {
+            tx.commit().await?;
+            Ok(cleanup_vod_logos_entity(names))
+        }
+        Err(error) => {
+            tx.rollback().await?;
+            Err(error.into())
+        }
+    }
+}
+
+async fn cleanup_vod_logos(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    OriginalUri(uri): OriginalUri,
+    headers: HeaderMap,
+) -> Response {
+    let result = async {
+        negotiate(&headers, &uri)?;
+        let indent = json_indent(&headers);
+        auth.account_user(peer, headers, true).await?;
+        let writer = auth.task_sql_writer()?;
+        let removed = tokio::spawn(async move {
+            let _writer = writer;
+            delete_unused_vod_logos(auth.store.pool()).await
+        })
+        .await
+        .map_err(|_| StoreError::UnhandledRestFault)??;
+        crate::channel_profiles::json_response(removed, indent)
+    }
+    .await;
+    crate::channels::channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        HeaderValue::from_static("POST, OPTIONS"),
+    )
+}
+
 struct HttpFrame {
     data: bytes::Bytes,
     _slot: HttpScope,
@@ -155,7 +216,11 @@ impl VodReads {
                 .fallback(|| async { StoreError::NotFound }),
             );
         }
-        router
+        router.merge(
+            Router::new()
+                .route("/api/vod/vodlogos/cleanup/", post(cleanup_vod_logos))
+                .with_state(self.auth.clone()),
+        )
     }
     #[cfg(test)]
     pub(super) fn shared_gate(&self) -> HttpGate {
@@ -850,5 +915,212 @@ mod tests {
             ),
             Err(ReadError::Capacity)
         ));
+    }
+}
+
+#[cfg(test)]
+mod logo_cleanup_tests {
+    use super::*;
+    use sha2::{Digest, Sha256};
+    use tower::ServiceExt;
+
+    #[test]
+    fn source_vod_logo_cleanup_success_and_repeat_preserve_entity() {
+        let rows = vec!["unused_first".into(), "unused_second".into()];
+        for (removed, length, digest) in [
+            (
+                rows,
+                122,
+                "87fa1cbb2c8021a86b54fbc8c70ebc311f139d1516fd1bdce60d0d147f007e17",
+            ),
+            (
+                Vec::new(),
+                92,
+                "eebbd480b9c01ffd653c979e2d37bf800541322780764ae6b8c60011ae845078",
+            ),
+        ] {
+            let bytes = serde_json::to_vec(&cleanup_vod_logos_entity(removed)).unwrap();
+            assert_eq!(bytes.len(), length);
+            assert_eq!(format!("{:x}", Sha256::digest(bytes)), digest);
+        }
+    }
+
+    #[tokio::test]
+    #[ignore = "requires an owned local Unix-only PostgreSQL database"]
+    async fn postgres_vod_logo_cleanup_preserves_references_and_rolls_back_a_race() {
+        use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
+        use tokio::time::{sleep, timeout};
+
+        let socket = std::env::var("DISPATCHARR_OWNED_VOD_CLEANUP_SOCKET").unwrap();
+        assert!(socket.starts_with("/tmp/dispatcharr-vod-logo-pg-") && socket.ends_with("/socket"));
+        let pool = PgPoolOptions::new()
+            .max_connections(3)
+            .connect_with(
+                PgConnectOptions::new()
+                    .socket(&socket)
+                    .port(54941)
+                    .username("fixture_owner")
+                    .database("postgres"),
+            )
+            .await
+            .unwrap();
+        assert!(sqlx::query_scalar::<_, bool>(
+            "SELECT inet_server_addr() IS NULL AND current_setting('listen_addresses') = ''",
+        )
+        .fetch_one(&pool)
+        .await
+        .unwrap());
+        sqlx::raw_sql(
+            r#"
+            CREATE TABLE vod_vodlogo(id bigint PRIMARY KEY, name varchar(255) NOT NULL);
+            CREATE TABLE vod_movie(id bigint PRIMARY KEY,
+                logo_id bigint REFERENCES vod_vodlogo(id) DEFERRABLE INITIALLY DEFERRED);
+            CREATE TABLE vod_series(id bigint PRIMARY KEY,
+                logo_id bigint REFERENCES vod_vodlogo(id) DEFERRABLE INITIALLY DEFERRED);
+            INSERT INTO vod_vodlogo VALUES
+                (1,'both'), (2,'unused_first'), (3,'movie'), (4,'series'), (5,'unused_second');
+            INSERT INTO vod_movie VALUES (1,1), (2,3);
+            INSERT INTO vod_series VALUES (1,1), (2,4);
+        "#,
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+        let first = delete_unused_vod_logos(&pool).await.unwrap();
+        assert_eq!(first["deleted_count"], 2);
+        let mut names = first["deleted_logos"].as_array().unwrap().clone();
+        names.sort_by_key(|name| name.as_str().unwrap().to_owned());
+        assert_eq!(names, [json!("unused_first"), json!("unused_second")]);
+        assert_eq!(
+            first["message"],
+            "Successfully deleted 2 unused VOD logo(s)"
+        );
+        assert_eq!(
+            delete_unused_vod_logos(&pool).await.unwrap(),
+            cleanup_vod_logos_entity(Vec::new())
+        );
+        assert_eq!(
+            sqlx::query_scalar::<_, i64>("SELECT id FROM vod_vodlogo ORDER BY id")
+                .fetch_all(&pool)
+                .await
+                .unwrap(),
+            [1, 3, 4]
+        );
+        assert_eq!(
+            sqlx::query_scalar::<_, i64>("SELECT logo_id FROM vod_movie ORDER BY id")
+                .fetch_all(&pool)
+                .await
+                .unwrap(),
+            [1, 3]
+        );
+        assert_eq!(
+            sqlx::query_scalar::<_, i64>("SELECT logo_id FROM vod_series ORDER BY id")
+                .fetch_all(&pool)
+                .await
+                .unwrap(),
+            [1, 4]
+        );
+
+        sqlx::query("INSERT INTO vod_vodlogo VALUES (6,'newly used'), (7,'another unused')")
+            .execute(&pool)
+            .await
+            .unwrap();
+        let mut linking = pool.begin().await.unwrap();
+        sqlx::query("SELECT id FROM vod_vodlogo WHERE id=6 FOR KEY SHARE")
+            .execute(&mut *linking)
+            .await
+            .unwrap();
+        let subject = pool.clone();
+        let removal = tokio::spawn(async move { delete_unused_vod_logos(&subject).await });
+        timeout(Duration::from_secs(2), async {
+            loop {
+                let awaiting_logo = sqlx::query_scalar::<_, bool>(
+                    "SELECT EXISTS(SELECT 1 FROM pg_stat_activity
+                     WHERE pid <> pg_backend_pid() AND wait_event_type='Lock'
+                       AND query LIKE '%DELETE FROM vod_vodlogo AS l%')",
+                )
+                .fetch_one(&pool)
+                .await
+                .unwrap();
+                if awaiting_logo {
+                    break;
+                }
+                sleep(Duration::from_millis(10)).await;
+            }
+        })
+        .await
+        .unwrap();
+        sqlx::query("INSERT INTO vod_movie VALUES (3,6)")
+            .execute(&mut *linking)
+            .await
+            .unwrap();
+        linking.commit().await.unwrap();
+        // The removal statement started before the new reference became
+        // visible. PostgreSQL must refuse its commit and preserve both rows.
+        let result = timeout(Duration::from_secs(2), removal)
+            .await
+            .unwrap()
+            .unwrap();
+        match result {
+            Err(StoreError::Database(error)) => assert!(error
+                .as_database_error()
+                .is_some_and(|error| error.is_foreign_key_violation())),
+            other => panic!("expected foreign-key rejection, got {other:?}"),
+        }
+        assert_eq!(
+            sqlx::query_scalar::<_, i64>("SELECT id FROM vod_vodlogo ORDER BY id")
+                .fetch_all(&pool)
+                .await
+                .unwrap(),
+            [1, 3, 4, 6, 7]
+        );
+        assert_eq!(
+            sqlx::query_scalar::<_, i64>("SELECT logo_id FROM vod_movie WHERE id=3")
+                .fetch_one(&pool)
+                .await
+                .unwrap(),
+            6
+        );
+        let recovered = delete_unused_vod_logos(&pool).await.unwrap();
+        assert_eq!(recovered["deleted_logos"], json!(["another unused"]));
+        assert_eq!(
+            sqlx::query_scalar::<_, i64>("SELECT id FROM vod_vodlogo ORDER BY id")
+                .fetch_all(&pool)
+                .await
+                .unwrap(),
+            [1, 3, 4, 6]
+        );
+        pool.close().await;
+    }
+
+    #[tokio::test]
+    async fn ordinary_vod_logo_cleanup_post_reaches_existing_auth_gate() {
+        use axum::http::{header, Request};
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-vod-logo-cleanup-test".into()).unwrap(),
+        );
+        let reads = VodReads::new(
+            auth,
+            super::super::vod_api_owned_read::ReadLimits::default(),
+        )
+        .unwrap();
+        let response = reads
+            .router()
+            .oneshot(
+                Request::post("/api/vod/vodlogos/cleanup/")
+                    .header(header::ACCEPT, "application/json")
+                    .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+        assert_eq!(response.headers()[header::ALLOW], "POST, OPTIONS");
+        assert_eq!(response.headers()[header::VARY], "Accept");
     }
 }
