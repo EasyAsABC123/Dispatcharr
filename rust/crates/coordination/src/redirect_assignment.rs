@@ -41,6 +41,52 @@ impl RedirectGrant {
     pub fn profile_id(&self) -> i64 {
         self.inner.as_ref().unwrap().profile
     }
+    /// A failed primary health probe may try another URL while this exact
+    /// unshared single-slot Redirect assignment is still ours.
+    pub async fn holds_single_slot(&self, profile: i64) -> Result<bool, Error> {
+        let Some(grant) = &self.inner else {
+            return Ok(false);
+        };
+        if grant.profile != profile {
+            return Ok(false);
+        }
+        let coordinator = &grant.coordinator;
+        let permit = coordinator.permit().await?;
+        let retained = grant.retained.clone();
+        let mut connection = coordinator.inner.connection.clone();
+        let timeout = coordinator.inner.config.command_timeout;
+        let prefix = format!("{}:redirect:", coordinator.inner.config.namespace);
+        let keys = [
+            format!("{prefix}channel:{}", grant.numeric),
+            format!("{prefix}stream:{}", grant.stream),
+            format!("channel_stream:{}", grant.numeric),
+            format!("stream_profile:{}", grant.stream),
+            format!("profile_connections:{profile}"),
+            format!("profile_credential_release:{profile}"),
+            format!("live:channel:{}:owner", grant.channel),
+        ];
+        let token = grant.token.clone();
+        let stream = grant.stream;
+        let task = tokio::spawn(async move {
+            let _scope = (permit, retained);
+            let script = Script::new(OWN_SINGLE_SLOT);
+            let mut invocation = script.prepare_invoke();
+            for key in keys {
+                invocation.key(key);
+            }
+            invocation.arg(token).arg(stream).arg(profile);
+            invocation
+                .invoke_async::<i64>(&mut connection)
+                .await
+                .map(|result| result == 1)
+                .map_err(|_| Error::RedisUnavailable)
+        });
+        time::timeout(timeout, task)
+            .await
+            .map_err(|_| Error::RedisUnavailable)?
+            .map_err(|_| Error::RedisUnavailable)?
+    }
+
     pub async fn release(mut self) -> Result<bool, Error> {
         match self.inner.take() {
             Some(grant) => release(grant).await,
@@ -340,6 +386,20 @@ local function existing()
  end
  return nil
 end
+"#;
+// This validation read leaves the already-owned provider count and both
+// aliases untouched. A transfer to a live adopter invalidates the old receipt.
+const OWN_SINGLE_SLOT: &str = r#"
+if redis.call('HGET',KEYS[1],'token')~=ARGV[1] or redis.call('HGET',KEYS[1],'scope')~='redirect'
+   or redis.call('HGET',KEYS[2],'token')~=ARGV[1]
+   or redis.call('HGET',KEYS[1],'reserved')~='1'
+   or redis.call('HGET',KEYS[1],'stream')~=ARGV[2]
+   or redis.call('HGET',KEYS[1],'profile')~=ARGV[3]
+   or redis.call('HEXISTS',KEYS[1],'borrower_ledger')==1
+   or redis.call('EXISTS',KEYS[6],KEYS[7])~=0 then return 0 end
+if redis.call('GET',KEYS[3])~=ARGV[2] or redis.call('GET',KEYS[4])~=ARGV[3]
+   or redis.call('GET',KEYS[5])~='1' then return 0 end
+return 1
 "#;
 const SELECT: &str = r#"local value=existing();return value or {0,0,0}"#;
 const RESERVE: &str = r#"

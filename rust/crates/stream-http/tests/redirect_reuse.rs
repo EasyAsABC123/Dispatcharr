@@ -20,10 +20,10 @@ use std::{
     time::Duration,
 };
 use tokio::{net::TcpListener, sync::Notify, time};
-struct ActualCandidates(PlaybackCandidate);
+struct ActualCandidates(Vec<PlaybackCandidate>);
 impl RedirectAliasResolver for ActualCandidates {
     fn candidates(&self) -> BoxFuture<'_, Result<Vec<PlaybackCandidate>, PlaybackError>> {
-        Box::pin(async { Ok(vec![self.0.clone()]) })
+        Box::pin(async { Ok(self.0.clone()) })
     }
     fn resolve(
         &self,
@@ -31,10 +31,13 @@ impl RedirectAliasResolver for ActualCandidates {
         profile: i64,
     ) -> BoxFuture<'_, Result<Option<PlaybackCandidate>, PlaybackError>> {
         Box::pin(async move {
-            Ok(
-                (stream == self.0.stream_id && Some(profile) == self.0.provider_profile_id)
-                    .then(|| self.0.clone()),
-            )
+            Ok(self
+                .0
+                .iter()
+                .find(|candidate| {
+                    stream == candidate.stream_id && Some(profile) == candidate.provider_profile_id
+                })
+                .cloned())
         })
     }
 }
@@ -113,7 +116,7 @@ async fn actual_redirect_finally_consumes_shared_slot_without_metadata_tick_resu
                 assignment: Some(RedirectAssignmentPlan {
                     numeric_channel_id: numeric,
                     has_assigned_streams: true,
-                    resolver: Arc::new(ActualCandidates(selected)),
+                    resolver: Arc::new(ActualCandidates(vec![selected])),
                 }),
                 validate_urls: true,
                 selection_error: None,
@@ -194,4 +197,129 @@ async fn actual_redirect_finally_consumes_shared_slot_without_metadata_tick_resu
     clients.shutdown().await;
     origin.abort();
     let _ = origin.await;
+}
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn actual_redirect_failing_primary_uses_owned_single_slot_for_same_profile_backup() {
+    use axum::http::StatusCode;
+    use redis::AsyncCommands;
+
+    let url = std::env::var("REDIS_TEST_URL").expect("isolated Redis required");
+    let channel = uuid::Uuid::new_v4().to_string();
+    let numeric = (uuid::Uuid::new_v4().as_u128() & 0x3fff_ffff) as i64 + 100;
+    let profile = numeric + 1;
+    let stream = numeric + 2;
+    let entered = Arc::new(Notify::new());
+    let release = Arc::new(Notify::new());
+    let head_entered = entered.clone();
+    let head_release = release.clone();
+    let app = Router::new()
+        .route(
+            "/primary",
+            get(|| async { StatusCode::BAD_GATEWAY })
+                .head(|| async { StatusCode::METHOD_NOT_ALLOWED }),
+        )
+        .route(
+            "/backup",
+            get(|| async { StatusCode::NOT_FOUND }).head(move || {
+                let entered = head_entered.clone();
+                let release = head_release.clone();
+                async move {
+                    entered.notify_one();
+                    release.notified().await;
+                    StatusCode::NO_CONTENT
+                }
+            }),
+        );
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let address = listener.local_addr().unwrap();
+    let origin = tokio::spawn(async move { axum::serve(listener, app).await.unwrap() });
+    let coordinator = Coordinator::connect(&url, LeaseConfig::default())
+        .await
+        .unwrap();
+    let clients = ClientStore::connect(&url, ClientConfig::default())
+        .await
+        .unwrap();
+    let engine = StreamEngine::new_with_services(
+        EngineConfig::default(),
+        Some(coordinator),
+        Some(clients.clone()),
+    )
+    .unwrap();
+    let first = PlaybackCandidate {
+        input_command: None,
+        stream_id: stream,
+        provider_profile_id: Some(profile),
+        provider_max_streams: 1,
+        credential_pool: None,
+        url: format!("http://{address}/primary"),
+        user_agent: "owned redirect fixture".into(),
+        headers: vec![],
+        metadata: vec![],
+    };
+    let backup_url = format!("http://{address}/backup");
+    let backup = PlaybackCandidate {
+        stream_id: stream + 1,
+        url: backup_url.clone(),
+        ..first.clone()
+    };
+    let plan = PlaybackRedirectPlan {
+        channel_id: channel.clone(),
+        candidates: vec![],
+        viewer: PlaybackViewer {
+            user_id: None,
+            username: None,
+            ip_address: "127.0.0.1".parse().unwrap(),
+            user_agent: "owned redirect fixture".into(),
+            stream_limit: 0,
+            limit_policy: UserLimitPolicy::default(),
+        },
+        capacity_only: false,
+        assignment: Some(RedirectAssignmentPlan {
+            numeric_channel_id: numeric,
+            has_assigned_streams: true,
+            resolver: Arc::new(ActualCandidates(vec![first, backup])),
+        }),
+        validate_urls: true,
+        selection_error: None,
+    };
+    let worker = engine.clone();
+    let result = tokio::spawn(async move { worker.redirect(plan).await });
+    time::timeout(Duration::from_secs(3), entered.notified())
+        .await
+        .unwrap();
+    let mut redis = redis::Client::open(url)
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let counter = format!("profile_connections:{profile}");
+    let channel_alias = format!("channel_stream:{numeric}");
+    let primary_alias = format!("stream_profile:{stream}");
+    assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+    assert_eq!(redis.get::<_, i64>(&channel_alias).await.unwrap(), stream);
+    assert_eq!(redis.get::<_, i64>(&primary_alias).await.unwrap(), profile);
+    assert!(!redis
+        .exists::<_, bool>(format!("stream_profile:{}", stream + 1))
+        .await
+        .unwrap());
+    release.notify_one();
+    let response = time::timeout(Duration::from_secs(3), result)
+        .await
+        .unwrap()
+        .unwrap()
+        .unwrap();
+    assert_eq!(response.status(), StatusCode::FOUND);
+    assert_eq!(response.headers()["location"], backup_url);
+    assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 0);
+    assert!(!redis.exists::<_, bool>(&channel_alias).await.unwrap());
+    assert!(!redis.exists::<_, bool>(&primary_alias).await.unwrap());
+    assert!(!redis
+        .exists::<_, bool>(format!("live:channel:{channel}:owner"))
+        .await
+        .unwrap());
+    assert!(engine.shutdown_wait(Duration::from_secs(3)).await);
+    clients.shutdown().await;
+    origin.abort();
 }

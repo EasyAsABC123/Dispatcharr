@@ -15,6 +15,18 @@ fn reservation(candidate: &PlaybackCandidate) -> ProviderReservation {
         }),
     }
 }
+fn shared_single_profile(
+    primary: &PlaybackCandidate,
+    alternate: &PlaybackCandidate,
+) -> Option<i64> {
+    primary.provider_profile_id.filter(|id| {
+        Some(*id) == alternate.provider_profile_id
+            && primary.provider_max_streams == 1
+            && alternate.provider_max_streams == 1
+            && primary.credential_pool.is_none()
+            && alternate.credential_pool.is_none()
+    })
+}
 fn response(url: &str) -> Result<Response<Body>, PlaybackError> {
     let manual = ["rtsp://", "rtp://", "udp://"]
         .iter()
@@ -212,7 +224,14 @@ impl StreamEngine {
                 let mut tried=std::collections::HashSet::new();tried.insert(primary.stream_id);
                 for candidate in &candidates {
                     if tried.contains(&candidate.stream_id){continue}
-                    if !coordinator.redirect_profile_has_capacity(reservation(candidate),owner.clone()).await.map_err(coordination_error)?{continue}
+                    // Source exempts a channel's own current profile for its
+                    // alternate validation. Require our exact Redirect grant
+                    // before using the single-slot exception.
+                    let retains_slot = match (grant.as_ref(), shared_single_profile(&primary, candidate)) {
+                        (Some(grant), Some(profile)) => grant.holds_single_slot(profile).await.map_err(coordination_error)?,
+                        _ => false,
+                    };
+                    if !retains_slot && !coordinator.redirect_profile_has_capacity(reservation(candidate),owner.clone()).await.map_err(coordination_error)?{continue}
                     tried.insert(candidate.stream_id);
                     if validate(candidate).await{return response(&candidate.url)}
                 }
@@ -242,6 +261,27 @@ mod tests {
             metadata: Vec::new(),
         }
     }
+    #[test]
+    fn redirect_alternate_reuses_only_its_same_unshared_single_profile() {
+        let mut primary = candidate("http://origin.test/primary".to_string());
+        primary.provider_max_streams = 1;
+        let mut alternate = candidate("http://origin.test/alternate".to_string());
+        alternate.stream_id = 2;
+        alternate.provider_max_streams = 1;
+        assert_eq!(shared_single_profile(&primary, &alternate), Some(1));
+        alternate.provider_profile_id = Some(2);
+        assert_eq!(shared_single_profile(&primary, &alternate), None);
+        alternate.provider_profile_id = Some(1);
+        alternate.provider_max_streams = 2;
+        assert_eq!(shared_single_profile(&primary, &alternate), None);
+        alternate.provider_max_streams = 1;
+        alternate.credential_pool = Some(dispatcharr_contracts::PlaybackCredentialPool {
+            counter_key: "server_group_connections:owned".to_owned(),
+            max_streams: 1,
+        });
+        assert_eq!(shared_single_profile(&primary, &alternate), None);
+    }
+
     #[test]
     fn handoff_status_and_original_iri_are_source_responses_not_upstream_locations() {
         let value = response("https://provider.test/é?q=with space").unwrap();
