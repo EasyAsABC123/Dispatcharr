@@ -1,5 +1,6 @@
 """Offline custody and semantic rejection controls for the SD owner."""
 from copy import deepcopy
+from datetime import datetime
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from uuid import uuid4
@@ -31,6 +32,31 @@ class SchedulesDirect(unittest.TestCase):
         bad["cases"][1]["actual"]["unchanged_Programme_rows"] = False
         with self.assertRaisesRegex(ValueError, "differs from retained Original"):
             evidence.cases(bad, original)
+
+    def test_duplicate_sibling_mismatch_and_wrong_eta_are_refused(self):
+        frame = {"headers": {"id": str(uuid4()), "parent_id": str(uuid4())}, "body": "owned"}
+        eta = datetime.fromisoformat("2026-01-01T01:00:00+00:00")
+        record = {"headers": frame["headers"], "raw_frame": json.dumps(frame),
+                  "queue": "celery", "observed_epoch": eta.timestamp() - 90}
+        sibling = deepcopy(record)
+        sibling["headers"]["id"] = str(uuid4())
+        with TemporaryDirectory() as folder:
+            journal = Path(folder) / "journal.jsonl"
+
+            def write(*entries):
+                journal.write_text("".join(json.dumps(entry) + "\n" for entry in entries))
+
+            write(record)
+            evidence.retry_publication(journal, frame, eta)
+            for extra in (record, sibling):
+                write(record, extra)
+                with self.assertRaisesRegex(ValueError, "one broker publication"):
+                    evidence.retry_publication(journal, frame, eta)
+            for bad in (record | {"raw_frame": json.dumps(frame | {"body": "different"})},
+                        record | {"observed_epoch": eta.timestamp() - 60}):
+                write(bad)
+                with self.assertRaisesRegex(ValueError, "observed countdown"):
+                    evidence.retry_publication(journal, frame, eta)
 
     @unittest.skipUnless(ROOT and TEMPLATE and CANDIDATE, "exact retained package inputs required")
     def test_cold_owner_and_historical_raw_reservation_without_engine(self):

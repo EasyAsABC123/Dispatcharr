@@ -39,6 +39,28 @@ def cases(report, original):
     return actual[-1]["actual"]["child"]
 
 
+def retry_publication(path, frame, eta):
+    need(path.is_file() and not path.is_symlink() and 0 < path.stat().st_size <= 1048576,
+         "bounded owned SD broker publication journal required")
+    raw = path.read_bytes()
+    entries = raw.splitlines()
+    need(raw.endswith(b"\n") and len(entries) <= 64, "complete bounded SD publication journal required")
+    head = frame["headers"]
+    matches = []
+    for entry in entries:
+        observed = json.loads(entry)
+        header = observed["headers"]
+        if header["id"] == head["id"] or header.get("parent_id") == head["parent_id"]:
+            matches.append(observed)
+    need(len(matches) == 1, "one broker publication for the exact SD retry and parent required")
+    record = matches[0]
+    observed = record["observed_epoch"]
+    need(record["headers"] == head and record["queue"] == "celery"
+         and json.loads(record["raw_frame"]) == frame and type(observed) in (int, float)
+         and 85 <= eta.timestamp() - observed <= 95,
+         "SD retry publication must match its reserved frame and observed countdown")
+
+
 def retry(owned, identity):
     private = owned / CASE / "private"
     delivery, payload = read(private / "SD-durable-receipt.json")
@@ -62,6 +84,7 @@ def retry(owned, identity):
          and all(clock.utcoffset() is not None for clock in (eta, started, done))
          and 60 < (eta - started).total_seconds() <= 95 and done >= eta,
          "kept reservation, parent, retry ETA and due result differ")
+    retry_publication(owned / "data" / CASE / "sd-publications.jsonl", frame, eta)
     return delivery
 
 

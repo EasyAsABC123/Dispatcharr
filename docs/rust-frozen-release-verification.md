@@ -342,6 +342,13 @@ lineage and records the parent as Deferred. The full-queue control
 confirmed that shutdown is bounded and preserves the occupied sibling.
 Retaining the parent in that full-queue case remains open.
 
+The Schedules Direct verifier now requires exactly one retry publication
+for the deferred parent. It compares the recorded frame with the actual
+reservation and checks the observed countdown against the 90-second ETA.
+Three focused checks passed, including replay of the retained worker
+receipt and rejection of duplicate or mismatched publications. Recovering
+an already reserved retry after a cold worker restart remains open.
+
 An interrupted plain HTTP M3U download with a bounded declared length
 preserves both old cache files and publishes the same saved connection
 error as Original. Focused loopback tests passed. The grouped remote-owner
