@@ -878,3 +878,56 @@ The coordinator can verify those exact Original receipts without
 replaying the workload. The Native scheduler still needs the packaged
 counterpart to pass its own Stats, scan and teardown checks. The Original
 receipt supplies the Source prerequisite for this row.
+
+### Physical qualification at 52cdd387
+
+The ordinary AMD64 and ARM64 images were built from the same
+2,260-file application tree at
+`52cdd3871937a0693a0f7ba9f4f5a26cc2bec053`. The AMD64 installed
+binary audit verified the complete Git input map, production entrypoint
+and exact probe removal. The independent ARM64 audit verified the
+build, signed authentication and teardown. The ARM64 package was
+acquired under scoped host evidence. Its full workspace gate requires
+separate qualification.
+
+One AMD64 Native Compose project passed 138 signed M5 cases against
+the retained Original component evidence. The scope includes 72 Stream
+checks, 36 Guide and Channel checks, and 30 VOD cleanup and metadata
+checks. The copied PostgreSQL catalogue and file assertions passed.
+Two earlier attempts failed during fixture setup and retired their
+owned resources. The successful attempt removed all owned processes,
+containers, networks and volumes. Browser coverage and the rest of
+M5 remain open.
+
+Lappy ran the signed two-viewer HLS pair through Original and the
+current ARM64 image. Both arms served two independently signed
+sessions, decoded audio and video for both, shared one upstream
+connection and one profile process, and stopped both viewers normally.
+Both fixtures retired exactly. This run verifies functional sharing.
+
+A separate isolated ARM64 Compose pair measured 32 seconds of the same
+two-viewer signed HLS workload with 33 samples per arm. Both arms served
+six segments per viewer and matched the media and audio/video decodes.
+
+| Metric | Original | Rust | Change |
+| --- | ---: | ---: | ---: |
+| Total CPU time | 2.678 core-seconds | 1.933 core-seconds | 27.8% lower |
+| Peak working memory | 1,181,925,376 bytes | 400,789,504 bytes | 66.1% lower |
+| Media goodput | 187,172 bytes/s | 187,128 bytes/s | 0.024% lower |
+| Raw segment first-byte p95 | 15.84 ms | 8.13 ms | 48.7% lower |
+
+All four scoped thresholds passed. Both latency values were below the
+common 50 ms floor, yielding a gated ratio of 1.00. The independent proof
+confirmed exact teardown and has SHA-256
+`e8a0a3f4e6776bce9e9778974aac41ab10966a47539fa34ea41447ed5fce90bd`.
+This comparison covers one signed HLS workload on ARM64. Full M3,
+including internal receiver identity, remains open.
+
+The M6 coordinator now validates an exclusive parent lock by the
+exact opened descriptor, process identity and locked inode. Btrfs can
+report a different device ID in kernel lock details. The earlier check
+refused the live owner before Docker. The repaired check was exercised
+on the checkout filesystem and rejected unlocked, shared and replaced
+inodes. The subsequent Native API202 attempt reached the application
+fixture and retired it exactly after a seed collision. API202 remains
+open.

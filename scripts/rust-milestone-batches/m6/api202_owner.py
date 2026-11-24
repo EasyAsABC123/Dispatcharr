@@ -22,7 +22,7 @@ CUSTODY_PINS = {
     "fifo_reducer": "b38130ed5be888d8e5fd57508ea29b4845806ffa22dcac728c12381519612185",
     "positive_reducer": "e6b50e028f83fff993623d255a050cab5a9fe978a8f07fc11a9051028a7c0f7d",
 }
-HELPER_SHA = "f66fc1cbcbe48b39720e9163437608c96817ba7532b789cdbc590024568f247f"
+HELPER_SHA = "139a53256e6952470c0c260c53363dde66f1f3695222198e23d3bf3c175a77b0"
 NODE = "m6/api202-publication"
 ENTRY = "production-Main; owner full workflow evaluator required"
 KIND = "api202-exact-ordinary-owner-v1"

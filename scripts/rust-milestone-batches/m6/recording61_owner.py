@@ -305,10 +305,14 @@ def parent_holds_lock(parent, path):
             if (descriptor.st_dev, descriptor.st_ino) != (lock_stat.st_dev, lock_stat.st_ino):
                 continue
             for line in entry.read_text().splitlines():
-                if line.startswith("lock:") and line.split()[2:7] == [
-                    "FLOCK", "ADVISORY", "WRITE", parent.name,
-                    f"{os.major(lock_stat.st_dev):02x}:{os.minor(lock_stat.st_dev):02x}:{lock_stat.st_ino}",
-                ]:
+                if not line.startswith("lock:"):
+                    continue
+                fields = line.split()
+                # The open descriptor identifies the filesystem. Btrfs fdinfo
+                # can report the superblock device instead of stat().st_dev.
+                if (len(fields) == 9 and fields[2:6] == ["FLOCK", "ADVISORY", "WRITE", parent.name]
+                        and fields[6].rpartition(":")[2] == str(lock_stat.st_ino)
+                        and fields[7:] == ["0", "EOF"]):
                     return True
         except FileNotFoundError:
             continue

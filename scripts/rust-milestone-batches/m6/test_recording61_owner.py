@@ -23,6 +23,38 @@ VERSION = Path(__file__).resolve().parents[2] / (
 )
 
 
+class PhysicalLock(unittest.TestCase):
+    def test_parent_holds_exclusive_lock_on_the_checkout_filesystem(self):
+        # Keep this on the real checkout filesystem. A system temporary
+        # directory might use a different lock-device namespace.
+        child = """import os, sys
+from pathlib import Path
+import recording61_owner as owner
+raise SystemExit(0 if owner.parent_holds_lock(Path('/proc') / str(os.getppid()), Path(sys.argv[1])) else 1)
+"""
+        here = Path(__file__).resolve().parent
+        with TemporaryDirectory(dir=here) as directory:
+            lock = Path(directory) / "owned.lock"
+
+            def has_parent_lock():
+                run = subprocess.run(
+                    [sys.executable, "-B", "-c", child, str(lock)], cwd=here,
+                    check=False, capture_output=True, timeout=10,
+                )
+                self.assertEqual(run.stderr, b"")
+                return run.returncode == 0
+
+            with lock.open("xb") as handle:
+                self.assertFalse(has_parent_lock())
+                fcntl.flock(handle, fcntl.LOCK_SH)
+                self.assertFalse(has_parent_lock())
+                fcntl.flock(handle, fcntl.LOCK_EX)
+                self.assertTrue(has_parent_lock())
+                lock.rename(lock.with_name("held-inode"))
+                lock.touch()
+                self.assertFalse(has_parent_lock())
+
+
 class RetainedVersion(unittest.TestCase):
     def test_raw_terminal_and_distinct_notification_effects(self):
         self.assertEqual(owner.digest(VERSION), semantics.VERSION_SHA)
