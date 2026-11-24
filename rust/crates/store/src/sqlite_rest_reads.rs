@@ -561,6 +561,20 @@ impl RetainedSqliteRestReads {
     }
 
     #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn notification_count(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+    ) -> Result<usize, StoreError> {
+        let actor = self.notification_actor(peer, headers).await?;
+        let rows = self.notification_rows(actor.user()).await?;
+        crate::notifications::sqlite::unread_count(rows, |id, conditions| {
+            self.notification_visible(actor.user().id, id, conditions)
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
     async fn notification_rows(&self, actor: &User) -> Result<Vec<Value>, StoreError> {
         let pool = self.pool.clone();
         let actor_id = actor.id;

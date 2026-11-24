@@ -299,6 +299,17 @@ where
     Ok(matching)
 }
 
+pub(crate) async fn unread_count<F, Fut>(
+    rows: Vec<Value>,
+    developer_visible: F,
+) -> Result<usize, StoreError>
+where
+    F: Fn(i64, Value) -> Fut,
+    Fut: std::future::Future<Output = Result<bool, StoreError>>,
+{
+    Ok(visible_rows(rows, false, developer_visible).await?.len())
+}
+
 pub(crate) async fn render<F, Fut>(
     rows: Vec<Value>,
     include_dismissed: bool,
@@ -661,6 +672,88 @@ mod tests {
         assert!(!include_dismissed(Some(
             "include_dismissed=true&include_dismissed=false"
         )));
+    }
+
+    #[tokio::test]
+    async fn unread_count_respects_dismissal_visibility_and_copied_schema() {
+        let mut database = SqliteConnection::connect("sqlite::memory:").await.unwrap();
+        sqlx::query("CREATE TABLE accounts_user(id integer PRIMARY KEY)")
+            .execute(&mut database)
+            .await
+            .unwrap();
+        let schema = include_str!("../datasets/sqlite-core-notifications.sql");
+        for line in schema.lines() {
+            sqlx::query(line).execute(&mut database).await.unwrap();
+        }
+        for (id, source, conditions, active, admin, expires) in [
+            (11, "system", "{}", true, false, None),
+            (12, "system", "{}", true, true, None),
+            (13, "system", "{}", true, false, Some("2020-01-01 00:00:00")),
+            (14, "system", "{}", false, false, None),
+            (
+                15,
+                "developer",
+                r#"{"condition":["local"]}"#,
+                true,
+                false,
+                None,
+            ),
+            (
+                16,
+                "developer",
+                r#"{"condition":["local"]}"#,
+                true,
+                false,
+                None,
+            ),
+        ] {
+            sqlx::query(
+                "INSERT INTO core_systemnotification VALUES (
+                    ?1,?2,'system','low',?3,'Title','Message',?4,?5,?6,?7,
+                    '2025-12-01 00:00:00','2025-12-01 00:00:00'
+                )",
+            )
+            .bind(id)
+            .bind(format!("owned-{id}"))
+            .bind(source)
+            .bind(conditions)
+            .bind(active)
+            .bind(admin)
+            .bind(expires)
+            .execute(&mut database)
+            .await
+            .unwrap();
+        }
+        sqlx::raw_sql(
+            "INSERT INTO accounts_user VALUES (1),(2);
+             INSERT INTO core_notificationdismissal(
+                 dismissed_at,user_id,notification_id
+             ) VALUES ('2025-12-01 00:00:00',1,11);",
+        )
+        .execute(&mut database)
+        .await
+        .unwrap();
+        let now = "2026-01-01T00:00:00Z".parse().unwrap();
+        let limits = RestReadLimits::default();
+        for (user_id, admin, expected) in [(1, false, 1), (2, true, 3)] {
+            let rows = read(&mut database, user_id, admin, now, limits)
+                .await
+                .unwrap();
+            let count = unread_count(rows, |id, conditions| async move {
+                assert_eq!(conditions, json!(["local"]));
+                assert!(matches!(id, 15 | 16));
+                Ok(id == 16)
+            })
+            .await
+            .unwrap();
+            assert_eq!(count, expected);
+        }
+        let dismissals: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM core_notificationdismissal")
+            .fetch_one(&mut database)
+            .await
+            .unwrap();
+        assert_eq!(dismissals, 1);
+        database.close().await.unwrap();
     }
 
     #[tokio::test]

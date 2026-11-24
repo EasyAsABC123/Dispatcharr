@@ -57,6 +57,10 @@ The optional restore path checks archive type and reads the staged SQLite catalo
 
 The backup component uses the locked bundled SQLite library already used by the copied runtime's SQL driver. The copied runtime now answers a repeated setup POST when an administrator exists and exposes `/health/ready` with SQLite and Redis checks. On a migrated copy with no administrator, the same setup route can create the first account under the existing client IP policy. It uses the shared bootstrap parser and password worker, then writes an administrator row to the owned SQLite database. The copied-runtime Store tests passed, and the application and backup test targets linked with both optional features enabled.
 
+The copied SQLite notification API now serves the unread count used by the React client. GET and HEAD share the bounded role, active-window, dismissal and developer-condition selection. Six SQLite notification tests passed, with one existing external-copy test waiting for its own fixture. The feature-enabled Main compiled.
+
+The normal backup status route also returns Original’s HTTP 500 message for a decoded built-in `ValueError` with one plain string argument. Six Rust checks passed for the scoped type and byte limit. Actual task settlement, combined backup lifecycle and fresh packaged status replay still require their own receipts.
+
 The ordinary package still needs SQLite startup, ownership wiring, migration compatibility, and image linkage. The SQLite component tests alone do not close M8 or M9.
 
 ## Recording and profile delivery owners

@@ -24,6 +24,8 @@ use std::{
 };
 use tokio::sync::{Notify, OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
+#[path = "normal_backup_failure_status.rs"]
+mod failure_status;
 #[path = "normal_backup_manual.rs"]
 mod manual;
 pub use manual::ManualApplication;
@@ -520,13 +522,23 @@ impl BackupJobApi for Application {
                     .await
                     .map_err(|_| api_error())?;
                 if let Some(meta) = &observed {
-                    if meta.state == crate::decode::State::Revoked {
-                        if let Some(message) = meta
-                            .exception
-                            .as_ref()
-                            .and_then(|e| e.arguments.first())
-                            .and_then(Value::as_str)
-                        {
+                    if let Some(exception) = &meta.exception {
+                        let first = exception.arguments.first().and_then(Value::as_str);
+                        // Preserve the existing revoked projection; only the
+                        // Source-compatible plain one-string ValueError is added.
+                        let message = if meta.state == crate::decode::State::Revoked {
+                            first
+                        } else {
+                            failure_status::single_failure_message(
+                                meta.state == crate::decode::State::Failure,
+                                meta.result.get("exc_module").and_then(Value::as_str),
+                                meta.result.get("exc_type").and_then(Value::as_str),
+                                !meta.tagged_values.is_empty(),
+                                exception.arguments.len(),
+                                first,
+                            )
+                        };
+                        if let Some(message) = message {
                             return Err(StoreError::StatusBody(
                                 500,
                                 json!({"detail":format!("Failed to get task status: {message}")}),
