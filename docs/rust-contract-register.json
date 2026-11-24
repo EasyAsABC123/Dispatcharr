@@ -14,6 +14,9 @@
     "scripts/rust-contracts/observed-epg-library-4d3c/epg-library.json": "c77847527f783e55bc179d04c927d0f87c0bf83b8744b79f5deec71791f65b91",
     "scripts/rust-contracts/observed-epg-library-4d3c/verify.py": "01c0d10e844a96df80e5a610c5e0e9087a6861bab01034c679296d6f72a6eb51",
     "scripts/rust-integration/m0-e7dda7f-connect-log-json.json": "20d844e836d0cc224276a3a2ab38c98ff04b76fd2dd6721c55f94b61d729cb8e",
+    "scripts/rust-integration/m0-2d3ffe53-numeric-appdata-parity.json": "aa331ed4511aa1d62f4452958da07075b65b25854082b858d52da7a972f371c6",
+    "scripts/rust-integration/m0-0c5133b-appdata-methods.json": "c515e093ce8e0e4876ce2a7b5bc3143a830dc2cb4ed88717eb090abb4246c34d",
+    "scripts/rust-integration/m0-63ee09fc-numeric-appdata-method-differential.json": "d49f3f5e68000f9beae1d9041d3800d4c4b1e51be6e291959ec8069089aeb635",
     "scripts/rust-integration/m0-recording-hls-canonical-precedence.json": "daddfbf65a5bb5fc81e4ab82e243db7a09a0e6f21b07c325995c825b52f6823d",
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/source-report.json": "57f54204594c9f71c4fd12633818b145d96f3965e45aa2e5e8a982a082a90b62",
     "scripts/rust-milestone-batches/m6/channel-failure-source-v1/attempt3/report.json": "481bde98368d9ee2d0b996a1f2dcec0a288a171f1cf25262bedccc4cfa13ec0b",
@@ -1296,8 +1299,8 @@
     "static_non_HTTP_candidates": 250,
     "fully_verified_route_operations": 0,
     "scoped_evidence_requiring_case_mapping": 16,
-    "operations_with_partial_case_bindings": 18,
-    "mapped_packaged_case_observations": 437
+    "operations_with_partial_case_bindings": 20,
+    "mapped_packaged_case_observations": 455
   },
   "observations_for_methods_not_declared_in_discovery": [
     {
@@ -19193,6 +19196,140 @@
               "Native implementation/coverage unverified by these assignments"
             ],
             "fully_verified": false
+          },
+          "case_bindings": {
+            "contract_id": "route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED",
+            "method": null,
+            "fully_verified": false,
+            "packaged_report": "scripts/rust-integration/m0-2d3ffe53-numeric-appdata-parity.json",
+            "packaged_report_sha256": "aa331ed4511aa1d62f4452958da07075b65b25854082b858d52da7a972f371c6",
+            "packaged_report_schema": "signed_numeric_AppData_JSON_methods_v1",
+            "runtime": {
+              "git_revision": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1",
+              "manifest_sha256": "ebcae7bc9c03c00fb21d9ee4a653b9ac3261bf83c81fe1198cbaa16bfb293b75",
+              "platform": "linux/amd64"
+            },
+            "cases": [
+              {
+                "method": "GET",
+                "role": "owner",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/0"
+              },
+              {
+                "method": "HEAD",
+                "role": "owner",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/1",
+                "client_body_empty": true
+              },
+              {
+                "method": "OPTIONS",
+                "role": "owner",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/2",
+                "options_metadata": {
+                  "name": "User App Data Collection",
+                  "renders": [
+                    "application/json",
+                    "text/html"
+                  ],
+                  "parses": [
+                    "application/json"
+                  ],
+                  "actions": null
+                }
+              },
+              {
+                "method": "GET",
+                "role": "admin",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/3"
+              },
+              {
+                "method": "HEAD",
+                "role": "admin",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/4",
+                "client_body_empty": true
+              },
+              {
+                "method": "OPTIONS",
+                "role": "admin",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/5",
+                "options_metadata": {
+                  "name": "User App Data Collection",
+                  "renders": [
+                    "application/json",
+                    "text/html"
+                  ],
+                  "parses": [
+                    "application/json"
+                  ],
+                  "actions": null
+                }
+              },
+              {
+                "method": "GET",
+                "role": "other_standard",
+                "status": 403,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/6"
+              },
+              {
+                "method": "HEAD",
+                "role": "other_standard",
+                "status": 403,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/7",
+                "client_body_empty": true
+              },
+              {
+                "method": "OPTIONS",
+                "role": "other_standard",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/8",
+                "options_metadata": {
+                  "name": "User App Data Collection",
+                  "renders": [
+                    "application/json",
+                    "text/html"
+                  ],
+                  "parses": [
+                    "application/json"
+                  ],
+                  "actions": null
+                }
+              }
+            ],
+            "previous_observations": {
+              "path": "scripts/rust-integration/m0-0c5133b-appdata-methods.json",
+              "revision": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+              "methods": [
+                "GET"
+              ]
+            },
+            "coverage_limits": [
+              "Format variants, browsable HTML and unmeasured roles and inputs remain open.",
+              "Collection DELETE remains unmeasured."
+            ]
           }
         }
       ],
@@ -19782,6 +19919,142 @@
               "Native implementation/coverage unverified by these assignments"
             ],
             "fully_verified": false
+          },
+          "case_bindings": {
+            "contract_id": "route-f7f70739debd2202db5e:METHOD_UNRESOLVED",
+            "method": null,
+            "fully_verified": false,
+            "packaged_report": "scripts/rust-integration/m0-2d3ffe53-numeric-appdata-parity.json",
+            "packaged_report_sha256": "aa331ed4511aa1d62f4452958da07075b65b25854082b858d52da7a972f371c6",
+            "packaged_report_schema": "signed_numeric_AppData_JSON_methods_v1",
+            "runtime": {
+              "git_revision": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1",
+              "manifest_sha256": "ebcae7bc9c03c00fb21d9ee4a653b9ac3261bf83c81fe1198cbaa16bfb293b75",
+              "platform": "linux/amd64"
+            },
+            "cases": [
+              {
+                "method": "GET",
+                "role": "owner",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/9"
+              },
+              {
+                "method": "HEAD",
+                "role": "owner",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/10",
+                "client_body_empty": true
+              },
+              {
+                "method": "OPTIONS",
+                "role": "owner",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/11",
+                "options_metadata": {
+                  "name": "User App Data Key",
+                  "renders": [
+                    "application/json",
+                    "text/html"
+                  ],
+                  "parses": [
+                    "application/json"
+                  ],
+                  "actions": null
+                }
+              },
+              {
+                "method": "GET",
+                "role": "admin",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/12"
+              },
+              {
+                "method": "HEAD",
+                "role": "admin",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/13",
+                "client_body_empty": true
+              },
+              {
+                "method": "OPTIONS",
+                "role": "admin",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/14",
+                "options_metadata": {
+                  "name": "User App Data Key",
+                  "renders": [
+                    "application/json",
+                    "text/html"
+                  ],
+                  "parses": [
+                    "application/json"
+                  ],
+                  "actions": null
+                }
+              },
+              {
+                "method": "GET",
+                "role": "other_standard",
+                "status": 403,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/15"
+              },
+              {
+                "method": "HEAD",
+                "role": "other_standard",
+                "status": 403,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/16",
+                "client_body_empty": true
+              },
+              {
+                "method": "OPTIONS",
+                "role": "other_standard",
+                "status": 200,
+                "body_digest_matches": true,
+                "selected_headers_match": true,
+                "evidence_pointer": "/wire_differential/17",
+                "options_metadata": {
+                  "name": "User App Data Key",
+                  "renders": [
+                    "application/json",
+                    "text/html"
+                  ],
+                  "parses": [
+                    "application/json"
+                  ],
+                  "actions": null
+                }
+              }
+            ],
+            "previous_observations": {
+              "path": "scripts/rust-integration/m0-0c5133b-appdata-methods.json",
+              "revision": "0c5133b62dc9f2df0900f2228e25b75baecb6754",
+              "methods": [
+                "GET",
+                "PUT",
+                "DELETE"
+              ]
+            },
+            "coverage_limits": [
+              "Format variants, browsable HTML and unmeasured roles and inputs remain open.",
+              "Prior DELETE 204 Content-Length framing differs. Current PUT and DELETE remain unmeasured."
+            ]
           }
         }
       ],
