@@ -35,7 +35,9 @@ impl CreateSuperuser {
                 noinput = true;
                 continue;
             }
-            let (name, value) = if let Some((name, value)) = arg.split_once('=') {
+            let (name, value) = if matches!(arg.as_str(), "-v0" | "-v1" | "-v2" | "-v3") {
+                ("-v", arg[2..].to_owned())
+            } else if let Some((name, value)) = arg.split_once('=') {
                 (name, value.to_owned())
             } else {
                 let value = args.get(index).ok_or(OperatorError::Arguments)?;
@@ -242,6 +244,23 @@ mod tests {
             format!("{missing:?}"),
             "CreateSuperuser { credentials: [redacted] }"
         );
+    }
+    #[test]
+    fn attached_short_verbosity_uses_existing_parser_and_last_value() {
+        let parse = |flags: &[&str]| {
+            let args = std::iter::once("--noinput")
+                .chain(flags.iter().copied())
+                .map(str::to_owned)
+                .collect::<Vec<_>>();
+            CreateSuperuser::parse(&args, |_| None)
+        };
+        for (flag, value) in [("-v0", 0), ("-v1", 1), ("-v2", 2), ("-v3", 3)] {
+            assert_eq!(parse(&[flag]).unwrap().verbosity, value);
+        }
+        assert_eq!(parse(&["-v2", "-v0"]).unwrap().verbosity, 0);
+        assert_eq!(parse(&["-v0", "--verbosity", "2"]).unwrap().verbosity, 2);
+        assert!(matches!(parse(&["-v4"]), Err(OperatorError::Arguments)));
+        assert!(matches!(parse(&["-vquiet"]), Err(OperatorError::Arguments)));
     }
     #[test]
     fn environment_precedence_and_refusal() {

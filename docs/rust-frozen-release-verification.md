@@ -131,6 +131,12 @@ Movie, Series, Episode, and VODLogo artwork now accept Original’s numeric URLs
 
 Signed Xtream Movie and Series information requests accept valid positive IDs written with leading zeros, an encoded plus sign, Unicode digits, or underscores. The focused gateway test and fourteen pinned Django query compiler controls passed. The paired fixture will check fresh provider lookups and byte-identical canonical warm responses.
 
+## Scheduler calendar and operator verbosity
+
+The scheduler calendar owner now prepares a pinned Original fall-fold workflow. It records the first and repeated local 01:30, ties them to one publication and one durable SQL run, and checks the process and fixture retirement. The ordinary Native binder has checked Chicago and Newfoundland saved schedules offline. Fresh controlled daylight-saving transitions remain required to close the calendar row. The M6 owner suite passed all 34 offline tests.
+
+The shipped `createsuperuser` parser also accepts attached short verbosity values from `-v0` through `-v3`. Three focused Rust parser tests passed and the standalone Original comparison matched all ten measured invocations. The signed operator fixture will check quiet output and durable admin creation.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.

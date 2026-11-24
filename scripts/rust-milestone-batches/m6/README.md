@@ -219,3 +219,42 @@ The binding admits the three evaluators before the physical executions exist.
 The final wave still needs both fresh package receipts under one coordinator
 lease. Offline tests replay the older qualified pair and reject changed
 file permissions, expiry evidence, and Source task ancestry.
+
+### Calendar boundary acquisition and saved-zone scope
+
+The pinned Original calendar report already records a real Beat spring-gap
+publication 30 minutes after the controlled New York transition. Its eager
+database-scheduler fall run also recorded one publication and an unchanged
+count through the repeated local time. The remaining Original acquisition
+observes a real Beat process through both fall-fold instants. It samples the
+saved `America/New_York` 01:30 task before the first fold, at that fold, and at
+the repeated 01:30. It requires same-PID clock dependency reads, queue counts
+`[0, 1, 1]`, the same broker UUID at the second fold, the durable first-fold
+SQL count and exact process and fixture cleanup.
+
+When Root assigns the isolated engine slot, the Source-only acquisition can
+take the shared dispatcher lock as a standalone command:
+
+```sh
+/usr/bin/python3 -B scripts/rust-job-contracts/run_scheduler_calendar.py \
+  --fall-fold-source-only --output FRESH-ORIGINAL-FALL
+/usr/bin/python3 -B scripts/rust-milestone-batches/m6/calendar_boundaries_owner.py \
+  original RETAINED-ORIGINAL-CALENDAR-REPORT --fall FRESH-ORIGINAL-FALL
+```
+
+The Native preparation command rebinds the reviewed ordinary Chicago and
+Newfoundland saved-calendar fixture to the frozen candidate:
+
+```sh
+/usr/bin/python3 -B scripts/rust-milestone-batches/m6/calendar_boundaries_owner.py \
+  native-prepare /tmp/dispatcharr-2d3f-m6-calendar COMMON-CANDIDATE.json FRESH-NATIVE-STAGE
+```
+
+Its cold preflight is engine-free; the prepared campaign and `native-reduce`
+command use the existing real saved-schedule owner and reducer. The scoped
+Native cases use elapsed ordinary clocks and check the owned non-UTC cleanup
+root, DB2 outcome, persisted schedule count, and teardown. Ordinary Native
+Main currently samples its clock directly, and those fixtures exercise no
+controlled DST transition. The canonical calendar row therefore remains open,
+with normal stop still its predecessor. Both fresh Native boundary evidence
+and the separate real Original fall acquisition remain pending.
