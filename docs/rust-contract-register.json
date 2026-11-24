@@ -103,7 +103,8 @@
     "scripts/rust-contracts/recording-hls-plain-get-bindings.json": "c55548e3489eb9e0b1a43ec2d71c9fa2f8685ab98d58b9b847377393f3c84ed9",
     "scripts/rust-contracts/runtime-methods-probe-322.json": "d0b8c89d21408a1216825f7454f6f9da589b9d19a8f9d7052facaa76857b1831",
     "scripts/rust-contracts/retained-model-command-observations.json": "af292915f47ba5c3381bbb4213b04986fd812ae3a322effefc137b0613222437",
-    "scripts/rust-contracts/retained-stock-bootstrap-source.json": "a85583d7eae0c3249df891435133d340e32f83d7f885077b848266b3b03b956a"
+    "scripts/rust-contracts/retained-stock-bootstrap-source.json": "a85583d7eae0c3249df891435133d340e32f83d7f885077b848266b3b03b956a",
+    "scripts/rust-contracts/retained-method-component-observations.json": "2f145e88bcc9f4a0dcee6cdb386ddb91a2b3c4628139fc03592d6ed15b664e46"
   },
   "Source_resolver_dispositions": {
     "route-37da04e4eae7ba9df918:GET": {
@@ -13342,6 +13343,59 @@
           "path": "scripts/rust-contracts/runtime-methods-probe-322.json",
           "sha256": "d0b8c89d21408a1216825f7454f6f9da589b9d19a8f9d7052facaa76857b1831"
         }
+      },
+      "scoped_method_component_observations": {
+        "original": {
+          "allow_values": [
+            "GET, OPTIONS",
+            "OPTIONS, GET"
+          ],
+          "alternate_allow_order_receipt_sha256": "1b9c3ad71ec1bcdee02da48609000f51ee05e59996be3a59433b6397fc7e38dd",
+          "authority": "pinned_Django_DRF_with_controlled_synthetic_authentication",
+          "cases": 20,
+          "literal_exit": 0,
+          "receipt_sha256": "358a10c04b9a1e523f85597d30b77f08abcf386adea346d83cf6b09dca690a33",
+          "role_matrix_by_method": {
+            "GET": {
+              "administrator": 200,
+              "anonymous": 401,
+              "standard": 403,
+              "viewer": 403
+            },
+            "HEAD": {
+              "administrator": 405,
+              "anonymous": 401,
+              "standard": 403,
+              "viewer": 403
+            },
+            "OPTIONS": {
+              "administrator": 200,
+              "anonymous": 401,
+              "standard": 403,
+              "viewer": 403
+            }
+          },
+          "vary": "Accept"
+        },
+        "native": {
+          "HEAD_transport_body_bytes": 0,
+          "actual_exits": {
+            "initdb": 0,
+            "outer": 0,
+            "ownership": 0,
+            "postgres": 0,
+            "test": 0
+          },
+          "authority": "native_router_synthetic_signed_PostgreSQL",
+          "exact_private_postgres_retirement": true,
+          "product": {
+            "rust/crates/store/src/accounts.rs": "f3f2b17cb9aa012b515665c7115b5d6b4c62248aee180f51f8c724c1a7f1fdb4"
+          },
+          "receipt_sha256": "0390816184f8d7ba70564b62e61c6578d0a1601a6790b591ccc1f048a9d95928",
+          "rust_baseline_revision": "9db7876df4ade65d13a23d909d36b5b072204bad",
+          "signed_router_cases": 17
+        },
+        "packaged_acceptance": false
       }
     },
     {
@@ -109353,7 +109407,70 @@
             ]
           }
         }
-      ]
+      ],
+      "scoped_method_component_observations": {
+        "original": {
+          "allow_values": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "authority": "pinned_Django_DRF_with_controlled_synthetic_authentication",
+          "cases": 40,
+          "literal_exit": 0,
+          "receipt_sha256": "766ca75bcdb985c90a1178a9b19b7fc7d04087ae4bac399a72fd55e42e475daf",
+          "role_matrix_by_method": {
+            "GET": {
+              "administrator": 200,
+              "administrator:missing": 404,
+              "anonymous": 401,
+              "anonymous:missing": 401,
+              "standard": 403,
+              "standard:missing": 403,
+              "viewer": 403,
+              "viewer:missing": 403
+            },
+            "HEAD": {
+              "administrator": 200,
+              "administrator:missing": 404,
+              "anonymous": 401,
+              "anonymous:missing": 401,
+              "standard": 403,
+              "standard:missing": 403,
+              "viewer": 403,
+              "viewer:missing": 403
+            },
+            "OPTIONS": {
+              "administrator": 200,
+              "administrator:missing": 200,
+              "anonymous": 401,
+              "anonymous:missing": 401,
+              "standard": 403,
+              "standard:missing": 403,
+              "viewer": 403,
+              "viewer:missing": 403
+            }
+          },
+          "vary": "Accept"
+        },
+        "native": {
+          "HEAD_transport_body_bytes": 0,
+          "actual_exits": {
+            "initdb": 0,
+            "outer": 0,
+            "ownership": 0,
+            "postgres": 0,
+            "test": 0
+          },
+          "authority": "native_router_synthetic_signed_PostgreSQL",
+          "exact_private_postgres_retirement": true,
+          "product": {
+            "rust/crates/store/src/provider_reads.rs": "cd5cf046cd88313c99069502d6b50e204cddd15e6c7b07cf3d9e15201ae6916f"
+          },
+          "receipt_sha256": "756d2d6ca970de013edd5598f463402cf2a63d3fb403144d4db1c710678e256c",
+          "rust_baseline_revision": "a1ca31660be6a61cd5067617f683880c9c3c3e3b",
+          "signed_router_cases": 34
+        },
+        "packaged_acceptance": false
+      }
     },
     {
       "route_id": "route-c0dd09dd9844a28ca434",
@@ -120047,6 +120164,52 @@
           "path": "scripts/rust-contracts/runtime-methods-probe-322.json",
           "sha256": "d0b8c89d21408a1216825f7454f6f9da589b9d19a8f9d7052facaa76857b1831"
         }
+      },
+      "scoped_method_component_observations": {
+        "original": {
+          "allow_values": [
+            "GET, HEAD, OPTIONS"
+          ],
+          "authority": "pinned_Django_DRF_with_controlled_synthetic_authentication",
+          "cases": 20,
+          "literal_exit": 0,
+          "receipt_sha256": "be4187cf2108b54195d4603c14bb3ebd8d60375216ed5a1cfef5cbeb2118c8c7",
+          "role_matrix_by_method": {
+            "GET": {
+              "administrator": 200,
+              "anonymous": 401,
+              "standard": 200,
+              "viewer": 200
+            },
+            "HEAD": {
+              "administrator": 200,
+              "anonymous": 401,
+              "standard": 200,
+              "viewer": 200
+            },
+            "OPTIONS": {
+              "administrator": 200,
+              "anonymous": 401,
+              "standard": 200,
+              "viewer": 200
+            }
+          },
+          "vary": "Accept"
+        },
+        "native": {
+          "HEAD_transport_body_bytes": 0,
+          "anonymous_router_methods": [
+            "GET",
+            "HEAD",
+            "OPTIONS"
+          ],
+          "authority": "native_renderers_and_anonymous_router",
+          "exact_successful_entity_digests": 3,
+          "receipt_sha256": "0349458a4ee50dff8b4151e539060f928a1e66773617c7ff4633594bc1b1aff4",
+          "signed_router_cases": 0,
+          "test_exit": 0
+        },
+        "packaged_acceptance": false
       }
     },
     {
@@ -120471,6 +120634,146 @@
           "path": "scripts/rust-contracts/runtime-methods-probe-322.json",
           "sha256": "d0b8c89d21408a1216825f7454f6f9da589b9d19a8f9d7052facaa76857b1831"
         }
+      },
+      "scoped_method_component_observations": {
+        "original": {
+          "allow_values": [
+            "OPTIONS, GET"
+          ],
+          "authority": "pinned_Django_DRF_with_controlled_synthetic_authentication",
+          "cases": 24,
+          "literal_exit": 0,
+          "receipt_sha256": "84399f0eb4e6976af7dd79186dc30410f00e75fadf62bde1af5d3b3768c51f20",
+          "role_matrix_by_method": {
+            "GET": {
+              "admin": 200,
+              "anonymous": 401,
+              "standard": 403,
+              "streamer": 403
+            },
+            "HEAD": {
+              "admin": 405,
+              "anonymous": 401,
+              "standard": 403,
+              "streamer": 403
+            },
+            "OPTIONS": {
+              "admin": 200,
+              "anonymous": 401,
+              "standard": 403,
+              "streamer": 403
+            },
+            "POST": {
+              "admin": 405,
+              "anonymous": 401,
+              "standard": 403,
+              "streamer": 403
+            }
+          },
+          "unicode_pagination_cases": [
+            {
+              "query": [
+                [
+                  "limit",
+                  "２"
+                ],
+                [
+                  "offset",
+                  "٠١"
+                ]
+              ],
+              "status": 200
+            },
+            {
+              "query": [
+                [
+                  "limit",
+                  "+１"
+                ],
+                [
+                  "event_type",
+                  "channel_start"
+                ]
+              ],
+              "status": 200
+            },
+            {
+              "query": [
+                [
+                  "limit",
+                  "١_٠"
+                ],
+                [
+                  "offset",
+                  "+０"
+                ]
+              ],
+              "status": 200
+            },
+            {
+              "query": [
+                [
+                  "offset",
+                  "١"
+                ],
+                [
+                  "limit",
+                  "-١"
+                ]
+              ],
+              "status": 200
+            },
+            {
+              "query": [
+                [
+                  "offset",
+                  "-١"
+                ]
+              ],
+              "status": 500
+            },
+            {
+              "query": [
+                [
+                  "limit",
+                  "bad"
+                ],
+                [
+                  "limit",
+                  "٢"
+                ]
+              ],
+              "status": 200
+            },
+            {
+              "query": [
+                [
+                  "limit",
+                  "٢"
+                ],
+                [
+                  "limit",
+                  "bad"
+                ]
+              ],
+              "status": 500
+            }
+          ],
+          "vary": "Accept"
+        },
+        "native": {
+          "authority": "native_focused_pagination_and_metadata_tests",
+          "focused_suite_passed": 5,
+          "published_change": "f377b41ed",
+          "receipt_sha256": "3bf63f59acc2d35ff85b3d889e20c578799932e07eae89280c65fe5154321378",
+          "scoped_named_tests": [
+            "system_events_pagination_decodes_source_unicode_integers",
+            "system_event_metadata_matches_pinned_methods"
+          ],
+          "signed_router_cases": 0,
+          "test_exit": 0
+        },
+        "packaged_acceptance": false
       }
     },
     {
@@ -389344,5 +389647,15 @@
     },
     "new_declared_operation_ids": 0,
     "fully_verified": false
+  },
+  "retained_method_component_observations": {
+    "attestation": {
+      "path": "scripts/rust-contracts/retained-method-component-observations.json",
+      "sha256": "2f145e88bcc9f4a0dcee6cdb386ddb91a2b3c4628139fc03592d6ed15b664e46"
+    },
+    "routes": 4,
+    "new_operation_ids": 0,
+    "new_packaged_acceptance": 0,
+    "scope": "Pinned Original DRF and scoped Rust component observations"
   }
 }

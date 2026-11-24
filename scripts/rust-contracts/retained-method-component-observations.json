@@ -1,0 +1,369 @@
+{
+  "baseline_runtime_roster_sha256": "ee4a7d841782761cf8e93c1cd94a41eba9fe752019a1224627f938d64920827b",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "packaged_acceptance": false,
+  "release_acceptance": false,
+  "roster_count": 592,
+  "routes": [
+    {
+      "historical_operations": [
+        {
+          "contract_id": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+          "method": null,
+          "owning_milestone": "M5"
+        }
+      ],
+      "native": {
+        "HEAD_transport_body_bytes": 0,
+        "actual_exits": {
+          "initdb": 0,
+          "outer": 0,
+          "ownership": 0,
+          "postgres": 0,
+          "test": 0
+        },
+        "authority": "native_router_synthetic_signed_PostgreSQL",
+        "exact_private_postgres_retirement": true,
+        "product": {
+          "rust/crates/store/src/accounts.rs": "f3f2b17cb9aa012b515665c7115b5d6b4c62248aee180f51f8c724c1a7f1fdb4"
+        },
+        "receipt_sha256": "0390816184f8d7ba70564b62e61c6578d0a1601a6790b591ccc1f048a9d95928",
+        "rust_baseline_revision": "9db7876df4ade65d13a23d909d36b5b072204bad",
+        "signed_router_cases": 17
+      },
+      "original": {
+        "allow_values": [
+          "GET, OPTIONS",
+          "OPTIONS, GET"
+        ],
+        "alternate_allow_order_receipt_sha256": "1b9c3ad71ec1bcdee02da48609000f51ee05e59996be3a59433b6397fc7e38dd",
+        "authority": "pinned_Django_DRF_with_controlled_synthetic_authentication",
+        "cases": 20,
+        "literal_exit": 0,
+        "receipt_sha256": "358a10c04b9a1e523f85597d30b77f08abcf386adea346d83cf6b09dca690a33",
+        "role_matrix_by_method": {
+          "GET": {
+            "administrator": 200,
+            "anonymous": 401,
+            "standard": 403,
+            "viewer": 403
+          },
+          "HEAD": {
+            "administrator": 405,
+            "anonymous": 401,
+            "standard": 403,
+            "viewer": 403
+          },
+          "OPTIONS": {
+            "administrator": 200,
+            "anonymous": 401,
+            "standard": 403,
+            "viewer": 403
+          }
+        },
+        "vary": "Accept"
+      },
+      "route_identity": {
+        "declared_methods_resolved": false,
+        "name": "api:accounts:list-permissions",
+        "pattern_exact": "api/accounts/permissions/",
+        "resolver_ordinal": 4,
+        "route_id": "route-74d9c31060dfc7c91063",
+        "source_handler": "apps.accounts.api_views.WrappedAPIView"
+      }
+    },
+    {
+      "historical_operations": [
+        {
+          "contract_id": "route-3fe6d669be6baca32a21:GET",
+          "method": "GET",
+          "owning_milestone": "M5"
+        }
+      ],
+      "native": {
+        "HEAD_transport_body_bytes": 0,
+        "actual_exits": {
+          "initdb": 0,
+          "outer": 0,
+          "ownership": 0,
+          "postgres": 0,
+          "test": 0
+        },
+        "authority": "native_router_synthetic_signed_PostgreSQL",
+        "exact_private_postgres_retirement": true,
+        "product": {
+          "rust/crates/store/src/provider_reads.rs": "cd5cf046cd88313c99069502d6b50e204cddd15e6c7b07cf3d9e15201ae6916f"
+        },
+        "receipt_sha256": "756d2d6ca970de013edd5598f463402cf2a63d3fb403144d4db1c710678e256c",
+        "rust_baseline_revision": "a1ca31660be6a61cd5067617f683880c9c3c3e3b",
+        "signed_router_cases": 34
+      },
+      "original": {
+        "allow_values": [
+          "GET, HEAD, OPTIONS"
+        ],
+        "authority": "pinned_Django_DRF_with_controlled_synthetic_authentication",
+        "cases": 40,
+        "literal_exit": 0,
+        "receipt_sha256": "766ca75bcdb985c90a1178a9b19b7fc7d04087ae4bac399a72fd55e42e475daf",
+        "role_matrix_by_method": {
+          "GET": {
+            "administrator": 200,
+            "administrator:missing": 404,
+            "anonymous": 401,
+            "anonymous:missing": 401,
+            "standard": 403,
+            "standard:missing": 403,
+            "viewer": 403,
+            "viewer:missing": 403
+          },
+          "HEAD": {
+            "administrator": 200,
+            "administrator:missing": 404,
+            "anonymous": 401,
+            "anonymous:missing": 401,
+            "standard": 403,
+            "standard:missing": 403,
+            "viewer": 403,
+            "viewer:missing": 403
+          },
+          "OPTIONS": {
+            "administrator": 200,
+            "administrator:missing": 200,
+            "anonymous": 401,
+            "anonymous:missing": 401,
+            "standard": 403,
+            "standard:missing": 403,
+            "viewer": 403,
+            "viewer:missing": 403
+          }
+        },
+        "vary": "Accept"
+      },
+      "route_identity": {
+        "declared_methods_resolved": true,
+        "name": "api:m3u:m3u-account-auto-created-channels-count",
+        "pattern_exact": "api/m3u/^accounts/(?P<pk>[^/.]+)/auto-created-channels-count/$",
+        "resolver_ordinal": 190,
+        "route_id": "route-3fe6d669be6baca32a21",
+        "source_handler": "apps.m3u.api_views.M3UAccountViewSet"
+      }
+    },
+    {
+      "historical_operations": [
+        {
+          "contract_id": "route-723154c0bb4c22d1e1d4:METHOD_UNRESOLVED",
+          "method": null,
+          "owning_milestone": "M5"
+        }
+      ],
+      "native": {
+        "HEAD_transport_body_bytes": 0,
+        "anonymous_router_methods": [
+          "GET",
+          "HEAD",
+          "OPTIONS"
+        ],
+        "authority": "native_renderers_and_anonymous_router",
+        "exact_successful_entity_digests": 3,
+        "receipt_sha256": "0349458a4ee50dff8b4151e539060f928a1e66773617c7ff4633594bc1b1aff4",
+        "signed_router_cases": 0,
+        "test_exit": 0
+      },
+      "original": {
+        "allow_values": [
+          "GET, HEAD, OPTIONS"
+        ],
+        "authority": "pinned_Django_DRF_with_controlled_synthetic_authentication",
+        "cases": 20,
+        "literal_exit": 0,
+        "receipt_sha256": "be4187cf2108b54195d4603c14bb3ebd8d60375216ed5a1cfef5cbeb2118c8c7",
+        "role_matrix_by_method": {
+          "GET": {
+            "administrator": 200,
+            "anonymous": 401,
+            "standard": 200,
+            "viewer": 200
+          },
+          "HEAD": {
+            "administrator": 200,
+            "anonymous": 401,
+            "standard": 200,
+            "viewer": 200
+          },
+          "OPTIONS": {
+            "administrator": 200,
+            "anonymous": 401,
+            "standard": 200,
+            "viewer": 200
+          }
+        },
+        "vary": "Accept"
+      },
+      "route_identity": {
+        "declared_methods_resolved": false,
+        "name": "api:core:timezones",
+        "pattern_exact": "api/core/timezones/",
+        "resolver_ordinal": 215,
+        "route_id": "route-723154c0bb4c22d1e1d4",
+        "source_handler": "core.api_views.TimezoneListView"
+      }
+    },
+    {
+      "historical_operations": [
+        {
+          "contract_id": "route-11307f60cca29fe0e061:METHOD_UNRESOLVED",
+          "method": null,
+          "owning_milestone": "M5"
+        }
+      ],
+      "native": {
+        "authority": "native_focused_pagination_and_metadata_tests",
+        "focused_suite_passed": 5,
+        "published_change": "f377b41ed",
+        "receipt_sha256": "3bf63f59acc2d35ff85b3d889e20c578799932e07eae89280c65fe5154321378",
+        "scoped_named_tests": [
+          "system_events_pagination_decodes_source_unicode_integers",
+          "system_event_metadata_matches_pinned_methods"
+        ],
+        "signed_router_cases": 0,
+        "test_exit": 0
+      },
+      "original": {
+        "allow_values": [
+          "OPTIONS, GET"
+        ],
+        "authority": "pinned_Django_DRF_with_controlled_synthetic_authentication",
+        "cases": 24,
+        "literal_exit": 0,
+        "receipt_sha256": "84399f0eb4e6976af7dd79186dc30410f00e75fadf62bde1af5d3b3768c51f20",
+        "role_matrix_by_method": {
+          "GET": {
+            "admin": 200,
+            "anonymous": 401,
+            "standard": 403,
+            "streamer": 403
+          },
+          "HEAD": {
+            "admin": 405,
+            "anonymous": 401,
+            "standard": 403,
+            "streamer": 403
+          },
+          "OPTIONS": {
+            "admin": 200,
+            "anonymous": 401,
+            "standard": 403,
+            "streamer": 403
+          },
+          "POST": {
+            "admin": 405,
+            "anonymous": 401,
+            "standard": 403,
+            "streamer": 403
+          }
+        },
+        "unicode_pagination_cases": [
+          {
+            "query": [
+              [
+                "limit",
+                "\uff12"
+              ],
+              [
+                "offset",
+                "\u0660\u0661"
+              ]
+            ],
+            "status": 200
+          },
+          {
+            "query": [
+              [
+                "limit",
+                "+\uff11"
+              ],
+              [
+                "event_type",
+                "channel_start"
+              ]
+            ],
+            "status": 200
+          },
+          {
+            "query": [
+              [
+                "limit",
+                "\u0661_\u0660"
+              ],
+              [
+                "offset",
+                "+\uff10"
+              ]
+            ],
+            "status": 200
+          },
+          {
+            "query": [
+              [
+                "offset",
+                "\u0661"
+              ],
+              [
+                "limit",
+                "-\u0661"
+              ]
+            ],
+            "status": 200
+          },
+          {
+            "query": [
+              [
+                "offset",
+                "-\u0661"
+              ]
+            ],
+            "status": 500
+          },
+          {
+            "query": [
+              [
+                "limit",
+                "bad"
+              ],
+              [
+                "limit",
+                "\u0662"
+              ]
+            ],
+            "status": 200
+          },
+          {
+            "query": [
+              [
+                "limit",
+                "\u0662"
+              ],
+              [
+                "limit",
+                "bad"
+              ]
+            ],
+            "status": 500
+          }
+        ],
+        "vary": "Accept"
+      },
+      "route_identity": {
+        "declared_methods_resolved": false,
+        "name": "api:core:system_events",
+        "pattern_exact": "api/core/system-events/",
+        "resolver_ordinal": 216,
+        "route_id": "route-11307f60cca29fe0e061",
+        "source_handler": "core.api_views.WrappedAPIView"
+      }
+    }
+  ],
+  "runtime_operations_promoted": 0,
+  "schema": "scoped_method_component_observations_v1"
+}

@@ -33,6 +33,12 @@ and preserves the original historical hashes. All 25 failing selectors
 passed in focused reruns. The whole SDK suite will run again with the
 final candidate.
 
+The executable register attaches scoped method receipts to Accounts
+permissions, provider deletion preview, Core timezone choices and System
+Events. Those attachments preserve the existing route IDs, dispositions
+and packaged counts. The full pinned generator reproduced the updated
+register byte-for-byte. [Executable contract register](rust-contract-register.json)
+
 ## Provider playback implementation
 
 Grouped XC catch-up now derives the Original-compatible shared credential counter from the selected transformed login. Limited profiles use it alongside their profile counters during archive reservations, reopens and the read-only Redirect capacity check. Unlimited profiles bypass both counters. Grouped STD live playback accepts a sample with a plain query in the qualified format and preserves the same counter when the normal route selects FFmpeg or a configured input command. Ordinary grouped STD Redirect also carries this counter for both assigned stream selection and requests with a provider profile allowlist.
