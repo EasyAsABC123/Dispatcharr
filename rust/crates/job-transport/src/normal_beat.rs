@@ -369,7 +369,10 @@ impl ScheduleScope {
     fn is_named_builtin(self, name: &str, task: &str) -> bool {
         self.uses_selected_receivers()
             && !RESERVED_PERIODIC_NAMES.contains(&name)
-            && matches!(task, CLEANUP_PERIODIC_TASK | crate::version_protocol::TASK)
+            && matches!(
+                task,
+                CLEANUP_PERIODIC_TASK | EXPIRATION_PERIODIC_TASK | crate::version_protocol::TASK
+            )
     }
 
     fn admits_named_builtin(self, entry: &Entry) -> bool {
@@ -388,7 +391,7 @@ impl ScheduleScope {
                     && entry.expire_seconds == Some(43_200)
                     && daily_utc_crontab(entry).is_some()
             }
-            crate::version_protocol::TASK => {
+            EXPIRATION_PERIODIC_TASK | crate::version_protocol::TASK => {
                 entry.crontab.is_none()
                     && entry.expire_seconds.is_none()
                     && entry.interval.as_ref().is_some_and(|(every, period)| {
@@ -2205,7 +2208,7 @@ const LOAD_SELECTED_CORE_QUERY: &str = load_query!(
                   AND cr.timezone='UTC' AND cr.minute ~ '^[0-5]?[0-9]$'
                   AND cr.hour ~ '^(0?[0-9]|1[0-9]|2[0-3])$'
                   AND cr.day_of_week='*' AND cr.day_of_month='*' AND cr.month_of_year='*')
-                 OR (p.task=$11::text AND p.expire_seconds IS NULL AND p.crontab_id IS NULL
+                 OR (p.task IN ($9::text,$11::text) AND p.expire_seconds IS NULL AND p.crontab_id IS NULL
                      AND EXISTS (SELECT 1 FROM django_celery_beat_intervalschedule i
                                  WHERE i.id=p.interval_id AND i.every=$12::integer AND i.period='seconds'))))
          OR (p.task=$24::text AND p.interval_id IS NOT NULL AND p.crontab_id IS NULL
@@ -3437,7 +3440,7 @@ mod tests {
         assert!(!ScheduleScope::Core.admits(&entry));
     }
     #[tokio::test]
-    async fn selected_core_keeps_distinct_named_cleanup_and_version_rows() {
+    async fn selected_core_keeps_distinct_named_cleanup_version_and_expiration_rows() {
         let selected = ScheduleScope::core_with_xmltv(false, true, false, false).unwrap();
         let pool = sqlx::postgres::PgPoolOptions::new()
             .connect_lazy("postgresql://127.0.0.1/unused_metadata_only")
@@ -3462,7 +3465,10 @@ mod tests {
         let mut version = model(crate::version_protocol::TASK);
         version.name = "Second release check".into();
         version.interval = Some((DAILY_SECONDS, "seconds".into()));
-        for entry in [cleanup, version] {
+        let mut expiration = model(EXPIRATION_PERIODIC_TASK);
+        expiration.name = "Daily account expiration reminders".into();
+        expiration.interval = Some((DAILY_SECONDS, "seconds".into()));
+        for entry in [cleanup, version, expiration] {
             assert!(selected.admits(&entry));
             assert!(!ScheduleScope::Core.admits(&entry));
             let mut sibling = entry.clone();
@@ -3479,20 +3485,22 @@ mod tests {
                 let envelope: Value = serde_json::from_slice(published.bytes()).unwrap();
                 assert_eq!(envelope["headers"]["periodic_task_name"], saved.name);
                 assert_eq!(published.redis_queue(), "celery");
-                if saved.task == CLEANUP_PERIODIC_TASK {
-                    let parsed = crate::default_protocol::parse(published.bytes()).unwrap();
-                    assert_eq!(parsed.task_id, id);
-                    assert_eq!(
-                        parsed.kind,
-                        crate::default_protocol::Kind::RedisBackendCleanup
-                    );
-                } else {
+                if saved.task == crate::version_protocol::TASK {
                     assert_eq!(
                         crate::version_protocol::parse(published.bytes())
                             .unwrap()
                             .task_id,
                         id
                     );
+                } else {
+                    let parsed = crate::default_protocol::parse(published.bytes()).unwrap();
+                    assert_eq!(parsed.task_id, id);
+                    let expected = if saved.task == CLEANUP_PERIODIC_TASK {
+                        crate::default_protocol::Kind::RedisBackendCleanup
+                    } else {
+                        crate::default_protocol::Kind::InactiveAccountNotifications
+                    };
+                    assert_eq!(parsed.kind, expected);
                 }
             }
             let mut invalid = entry.clone();
@@ -3511,7 +3519,11 @@ mod tests {
         let candidate = LOAD_SELECTED_CORE_QUERY
             .find("p.name <> ALL($27::text[])")
             .unwrap();
-        assert!(candidate < LOAD_SELECTED_CORE_QUERY.find("LIMIT 257").unwrap());
+        let named_daily = LOAD_SELECTED_CORE_QUERY
+            .find("p.task IN ($9::text,$11::text)")
+            .unwrap();
+        assert!(candidate < named_daily);
+        assert!(named_daily < LOAD_SELECTED_CORE_QUERY.find("LIMIT 257").unwrap());
         assert!(!LOAD_QUERY.contains("$27"));
     }
     #[test]
