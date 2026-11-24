@@ -8,7 +8,9 @@ use crate::{
 };
 use dispatcharr_contracts::UpdateEventSink;
 use dispatcharr_coordination::{TaskLease, TaskLockDetailedError, TaskLockError, TaskLocks};
-use dispatcharr_ingest_core::{project_entry, stream_hash, ProjectionContext, StreamIdentity};
+use dispatcharr_ingest_core::{
+    project_entry, stream_hash, stream_hash_fields, Entry, ProjectionContext, StreamIdentity,
+};
 use dispatcharr_store::{
     AuthService, BoundedM3uBatchError, GroupCleanupAccount, GroupCleanupCounts, GroupImportCounts,
     ImportCounts, ImportedGroup, ImportedStream, M3uGroupImportFailure, M3uGroupImportStage,
@@ -216,43 +218,43 @@ impl Drop for Operation {
         }
     }
 }
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-enum HashMode {
-    Empty,
-    Url,
-}
-impl HashMode {
-    fn keys(self) -> &'static [&'static str] {
-        match self {
-            Self::Empty => &[],
-            Self::Url => &["url"],
-        }
-    }
-}
-// Bound the JSONB text carried out of the owned account query. The only
-// nonempty supported key set here is the existing local URL identity.
+// Bound the JSONB text carried out of the owned account query.
 const MAX_LOCAL_HASH_OVERRIDE_BYTES: i32 = 4096;
 
-fn local_account_hash_override(value: Option<&Value>) -> Result<Option<HashMode>, Error> {
+fn local_account_hash_override(value: Option<&Value>) -> Result<Option<Vec<&'static str>>, Error> {
     let Some(value) = value.filter(|value| !value.is_null()) else {
         return Ok(None);
     };
-    let text = value.as_str().ok_or(Error::Unsupported)?;
-    let mut mode = None;
-    for key in text.split(',').map(|token| {
-        token.trim_matches(|ch: char| ch.is_whitespace() || matches!(ch, '\u{1c}'..='\u{1f}'))
-    }) {
-        match key {
-            "url" => mode = Some(HashMode::Url),
-            "name" | "tvg_id" | "m3u_id" | "group" => return Err(Error::Unsupported),
-            _ => {}
-        }
-    }
-    Ok(mode)
+    let fields = stream_hash_fields(value.as_str().ok_or(Error::Unsupported)?);
+    Ok((!fields.is_empty()).then_some(fields))
+}
+
+fn local_candidate_hash(entry: &Entry, id: i64, keys: &[&str]) -> Result<String, Error> {
+    let url = entry.url.as_deref().ok_or(Error::Unsupported)?;
+    // The local catalogue and cache readers already bound the name and accept
+    // only these two canonical attributes. Include disabled groups as well so
+    // the admission lookup covers all results after group discovery.
+    let group = entry
+        .attributes
+        .get("group-title")
+        .map_or("Default Group", String::as_str);
+    let tvg_id = entry.attributes.get("tvg-id").map_or("", String::as_str);
+    Ok(stream_hash(
+        &StreamIdentity {
+            name: &entry.name,
+            url,
+            tvg_id,
+            m3u_id: Some(id),
+            group: Some(group),
+            account_type: "STD",
+            stream_id: None,
+        },
+        keys,
+    ))
 }
 
 pub(crate) struct Prepared {
-    hash_mode: HashMode,
+    hash_keys: Vec<&'static str>,
     account: Account,
     input: Option<Catalog>,
     missing_input: bool,
@@ -765,7 +767,7 @@ impl Service {
         let override_value: Option<Value> = row
             .try_get("account_hash_key")
             .map_err(|_| Error::Operational)?;
-        let hash_mode = match local_account_hash_override(override_value.as_ref())? {
+        let hash_keys = match local_account_hash_override(override_value.as_ref())? {
             Some(mode) => mode,
             None => self.hash_setting(owner.clone()).await?,
         };
@@ -782,7 +784,7 @@ impl Service {
             return Err(Error::Capacity);
         }
         let mut prepared = Prepared {
-            hash_mode,
+            hash_keys,
             account,
             input: None,
             missing_input: false,
@@ -829,26 +831,14 @@ impl Service {
         // admission only: never change input order or first-row deduplication.
         *stage = "input_hash_projection";
         let mut hashes = Vec::new();
-        if matches!(hash_mode, HashMode::Empty) {
+        if prepared.hash_keys.is_empty() {
             hashes.push(
                 "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a".to_owned(),
             );
         } else {
             for catalog in prepared.input.iter().chain(prepared.cached.iter()) {
                 for entry in &catalog.entries {
-                    let url = entry.url.as_deref().ok_or(Error::Unsupported)?;
-                    hashes.push(stream_hash(
-                        &StreamIdentity {
-                            name: &entry.name,
-                            url,
-                            tvg_id: "",
-                            m3u_id: Some(id),
-                            group: None,
-                            account_type: "STD",
-                            stream_id: None,
-                        },
-                        hash_mode.keys(),
-                    ));
+                    hashes.push(local_candidate_hash(entry, id, &prepared.hash_keys)?);
                 }
             }
         }
@@ -905,7 +895,7 @@ impl Service {
         *stage = "prepared";
         Ok(prepared)
     }
-    async fn hash_setting(&self, owner: Owner) -> Result<HashMode, Error> {
+    async fn hash_setting(&self, owner: Owner) -> Result<Vec<&'static str>, Error> {
         let cached = self
             .inner
             .ports
@@ -947,9 +937,8 @@ impl Service {
             }
         };
         match hash {
-            Value::Null => Ok(HashMode::Empty),
-            Value::String(value) if value.is_empty() => Ok(HashMode::Empty),
-            Value::String(value) if value == "url" => Ok(HashMode::Url),
+            Value::Null => Ok(Vec::new()),
+            Value::String(value) => Ok(stream_hash_fields(&value)),
             _ => Err(Error::Unsupported),
         }
     }
@@ -1399,7 +1388,7 @@ impl Service {
             account_id: account.id,
             account_type: "STD",
             groups: &groups,
-            hash_keys: p.hash_mode.keys(),
+            hash_keys: &p.hash_keys,
             max_name_characters: 512,
         };
         let projected = catalog
@@ -1564,7 +1553,7 @@ mod boundary_tests {
         ] {
             assert_eq!(
                 local_account_hash_override(Some(&configured)),
-                Ok(Some(HashMode::Url))
+                Ok(Some(vec!["url"]))
             );
         }
         for configured in [
@@ -1575,18 +1564,46 @@ mod boundary_tests {
         ] {
             assert_eq!(local_account_hash_override(configured.as_ref()), Ok(None));
         }
-        for configured in [
-            json!("name,url"),
-            json!("tvg_id"),
-            json!("m3u_id"),
-            json!("group"),
-            json!(["url"]),
-        ] {
-            assert_eq!(
-                local_account_hash_override(Some(&configured)),
-                Err(Error::Unsupported)
-            );
-        }
+        assert_eq!(
+            local_account_hash_override(Some(&json!("name,url,tvg_id,m3u_id,group,url"))),
+            Ok(Some(vec!["name", "url", "tvg_id", "m3u_id", "group"]))
+        );
+        assert_eq!(
+            local_account_hash_override(Some(&json!(["url"]))),
+            Err(Error::Unsupported)
+        );
+    }
+
+    #[test]
+    fn local_general_hash_guard_and_import_project_the_same_fields() {
+        let entry = Entry {
+            name: "Owned title".into(),
+            display_name: "Owned display".into(),
+            url: Some("https://owned.invalid/stream".into()),
+            attributes: BTreeMap::from([
+                ("group-title".into(), "Owned group".into()),
+                ("tvg-id".into(), "owned.guide".into()),
+            ]),
+            vlc_opts: None,
+        };
+        let fields = stream_hash_fields("group,tvg_id,name,url,m3u_id");
+        let groups = BTreeMap::from([("Owned group".to_owned(), 53)]);
+        let context = ProjectionContext {
+            account_id: 31,
+            account_type: "STD",
+            groups: &groups,
+            hash_keys: &fields,
+            max_name_characters: 512,
+        };
+        let projected = project_entry(&entry, &context).unwrap().unwrap();
+        assert_eq!(
+            local_candidate_hash(&entry, 31, &fields).unwrap(),
+            projected.stream_hash
+        );
+        assert_eq!(
+            projected.stream_hash,
+            "f081f0b016f97122c93e90b6918909dc4efafc01ce01cd36f3963c980af8c0da"
+        );
     }
 
     #[test]

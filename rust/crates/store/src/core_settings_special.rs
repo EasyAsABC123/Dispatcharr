@@ -204,24 +204,11 @@ pub(crate) fn hash_fields(value: Option<&Value>) -> Result<Vec<String>, StoreErr
     };
     Ok(hash_fields_text(text))
 }
-pub(crate) fn hash_field_tokens(text: &str) -> impl Iterator<Item = &str> {
-    text.split(',')
-        .map(|part| {
-            part.trim_matches(|c: char| c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}'))
-        })
-        .filter(|part| !part.is_empty())
-}
-
 pub(crate) fn hash_fields_text(text: &str) -> Vec<String> {
-    let mut result = Vec::new();
-    for part in hash_field_tokens(text) {
-        if ["name", "url", "tvg_id", "m3u_id", "group"].contains(&part)
-            && !result.iter().any(|v| v == part)
-        {
-            result.push(part.to_owned());
-        }
-    }
-    result
+    dispatcharr_ingest_core::stream_hash_fields(text)
+        .into_iter()
+        .map(str::to_owned)
+        .collect()
 }
 
 #[cfg(test)]

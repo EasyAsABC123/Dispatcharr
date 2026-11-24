@@ -305,8 +305,12 @@ the saved task name, publication, durable tick and notification effects.
 Global Stream Settings, provider account validation, and the remote live
 importer now trim the same field separators as the pinned Python parser.
 Three Source controls and three focused Rust tests passed, with the
-existing ordering, duplicates and fallback behavior exercised. The broader
-signed filter and local general-hash cases remain open.
+existing ordering, duplicates and fallback behavior exercised. The local
+Standard worker now supports all five saved hash fields. Its admission
+lookup and exact import projection produced the same pinned Python hash
+for a composite input. The signed fixture adds a composite override to
+its existing two-phase run. The broader filter cases and current packaged
+comparison remain open.
 
 The local M3U worker honors a saved URL hash override and can use the
 global setting for an absent, null or unrecognized override. Ordinary Beat

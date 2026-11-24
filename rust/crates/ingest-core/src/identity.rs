@@ -2,6 +2,29 @@
 use sha2::{Digest, Sha256};
 use std::{collections::BTreeMap, fmt::Write};
 
+/// Tokenize saved hash CSV with the same whitespace rules as Python.
+pub fn stream_hash_field_tokens(text: &str) -> impl Iterator<Item = &str> {
+    text.split(',')
+        .map(|part| {
+            part.trim_matches(|c: char| c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}'))
+        })
+        .filter(|part| !part.is_empty())
+}
+
+/// Return the recognized fields in first-occurrence order.
+pub fn stream_hash_fields(text: &str) -> Vec<&'static str> {
+    const ALLOWED: [&str; 5] = ["name", "url", "tvg_id", "m3u_id", "group"];
+    let mut fields = Vec::new();
+    for token in stream_hash_field_tokens(text) {
+        if let Some(field) = ALLOWED.into_iter().find(|field| *field == token) {
+            if !fields.contains(&field) {
+                fields.push(field);
+            }
+        }
+    }
+    fields
+}
+
 pub struct StreamIdentity<'a> {
     pub name: &'a str,
     pub url: &'a str,
