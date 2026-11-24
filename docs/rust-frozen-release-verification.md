@@ -392,9 +392,12 @@ The packaged worker still needs its signed comparison.
 
 Recording recovery now treats falsey saved JSON properties as an empty
 map for the active recording branch, matching Original. Eight Source
-values and two focused Rust tests exercised the decision. The retained
-Original crash scope is separate. The final paired owner still needs to
-recover a saved falsey row through a real worker restart.
+values and two focused Rust tests exercised the decision. A follow-up
+matched the pinned Django metadata behavior for all ten stored shapes
+in the snapshot, prime and finalization steps. A private PostgreSQL run
+verified the distinct SQL NULL and JSON null paths and preserved a
+concurrent STOP when the guarded write resumed. The signed packaged
+worker still needs to recover a saved falsey row through restart.
 
 An immediate XML TVG cancellation keeps its broker reservation until Redis
 confirms the REVOKED result. The visibility sweep can recover the exact

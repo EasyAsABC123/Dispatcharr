@@ -153,6 +153,18 @@ pub enum PropertyWrite {
     },
 }
 
+impl PropertyWrite {
+    fn normalizes_runtime_properties(&self) -> bool {
+        matches!(
+            self,
+            Self::PrimeRuntime(_) | Self::PermanentRuntimeUrls | Self::RemovedRuntimeHls
+        )
+    }
+}
+
+// Keep the original SQL NULL distinct from JSON null for exact compare-and-set.
+const BOUNDED_PROPERTY_ROW: &str = "SELECT CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,custom_properties IS NULL OR octet_length(custom_properties::text)<=8192 FROM dispatcharr_channels_recording WHERE id=$1 LIMIT 1";
+
 // One actual settlement implementation for every local SQL operation. The
 // surrounding supervised task still owns its original caller throughout await.
 async fn settle<T>(
@@ -388,19 +400,8 @@ impl CaptureStore {
         let properties: Option<Value> = row.try_get("properties").map_err(decode)?;
         let properties =
             properties.ok_or(Error::Unsupported("normal property transfer capacity"))?;
-        let properties = if properties.is_null()
-            || properties == serde_json::json!(false)
-            || properties == serde_json::json!(0)
-            || properties == serde_json::json!("")
-            || properties == serde_json::json!([])
-        {
-            serde_json::json!({})
-        } else {
-            properties
-        };
-        if !properties.is_object() {
-            return Err(Error::Unsupported("normal object properties"));
-        }
+        let properties = normal_object(&properties)
+            .map_err(|_| Error::Unsupported("normal object properties"))?;
         if matches!(
             properties.get("status").and_then(Value::as_str),
             Some("recording" | "completed" | "stopped")
@@ -664,9 +665,9 @@ impl CaptureStore {
         tokio::spawn(async move{
             let _owner=owner;let mut connection=self.pool.acquire().await.map_err(|source|Error::Sql{stage:Stage::Acquire,source,settlement:None})?;
             let result=async{
-                let raw:Option<(Option<Value>,bool)>=sqlx::query_as("SELECT CASE WHEN custom_properties IS NULL THEN '{}'::jsonb WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,custom_properties IS NULL OR octet_length(custom_properties::text)<=8192 FROM dispatcharr_channels_recording WHERE id=$1 LIMIT 1").bind(recording).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::MutationRead,source,settlement:None})?;
-                let before=match raw {None=>return Ok(RuntimeFinalizeOutcome::Missing),Some((Some(before),true))=>before,_=>return Err(Error::Unsupported("normal final property capacity"))};
-                let mut after=normal_object(&before)?;let properties=after.as_object_mut().ok_or(Error::Unsupported("normal fresh object properties"))?;
+                let raw:Option<(Option<Value>,bool)>=sqlx::query_as(BOUNDED_PROPERTY_ROW).bind(recording).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql{stage:Stage::MutationRead,source,settlement:None})?;
+                let before=match raw {None=>return Ok(RuntimeFinalizeOutcome::Missing),Some((before,true))=>before,_=>return Err(Error::Unsupported("normal final property capacity"))};
+                let mut after=normal_object(before.as_ref().unwrap_or(&Value::Null))?;let properties=after.as_object_mut().ok_or(Error::Unsupported("normal fresh object properties"))?;
                 let ended=if finalize.ended.timestamp_subsec_micros()==0{finalize.ended.format("%Y-%m-%d %H:%M:%S").to_string()}else{format!("{}.{:06}",finalize.ended.format("%Y-%m-%d %H:%M:%S"),finalize.ended.timestamp_subsec_micros())};
                 if !expired {properties.insert("ended_at".into(),Value::String(ended));}
                 if expired {
@@ -689,7 +690,7 @@ impl CaptureStore {
                     let url=format!("/api/channels/recordings/{recording}/file/");properties.insert("file_url".into(),Value::String(url.clone()));properties.insert("output_file_url".into(),Value::String(url));properties.insert("bytes_written".into(),Value::from(finalize.bytes_written));properties.insert("remux_success".into(),Value::Bool(finalize.remux_success));
                 }
                 if serde_json::to_vec(&after).map_err(|_|Error::Unsupported("normal final serialization"))?.len()>8192{return Err(Error::Unsupported("normal merged final capacity"));}
-                let changed=sqlx::query("UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1 AND custom_properties=$3").bind(recording).bind(&after).bind(&before).execute(&mut *connection).await;
+                let changed=sqlx::query("UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1 AND custom_properties IS NOT DISTINCT FROM $3").bind(recording).bind(&after).bind(&before).execute(&mut *connection).await;
                 match changed{Ok(value)if value.rows_affected()==1=>Ok(RuntimeFinalizeOutcome::Applied(after)),Ok(_)=>Err(Error::Unsupported("normal final row changed")),Err(source)=>Ok(RuntimeFinalizeOutcome::Caught{intended:after,code:source.as_database_error().and_then(|e|e.code()).map(|v|v.into_owned())})}
             }.await;
             // Caught SQL outcomes also cross actual Ready/close before their
@@ -761,25 +762,37 @@ impl CaptureStore {
         recording: i64,
         write: PropertyWrite,
     ) -> Result<Value, Error> {
-        let row:Option<(Option<Value>,bool)>=sqlx::query_as(
-            "SELECT CASE WHEN octet_length(custom_properties::text)<=8192 THEN custom_properties ELSE NULL END,(custom_properties IS NOT NULL AND octet_length(custom_properties::text)<=8192) FROM dispatcharr_channels_recording WHERE id=$1 LIMIT 1"
-        ).bind(recording).fetch_optional(&mut *connection).await.map_err(|source|Error::Sql {stage:Stage::MutationRead,source,settlement:None})?;
-        let before = match row {
-            Some((Some(value), true)) if value.is_object() => value,
+        let row: Option<(Option<Value>, bool)> = sqlx::query_as(BOUNDED_PROPERTY_ROW)
+            .bind(recording)
+            .fetch_optional(&mut *connection)
+            .await
+            .map_err(|source| Error::Sql {
+                stage: Stage::MutationRead,
+                source,
+                settlement: None,
+            })?;
+        let stored = match row {
+            Some((value, true))
+                if write.normalizes_runtime_properties()
+                    || value.as_ref().is_some_and(Value::is_object) =>
+            {
+                value
+            }
             _ => {
                 return Err(Error::Unsupported(
                     "fresh bounded existing recording properties",
                 ))
             }
         };
-        let after = Self::merge_properties(recording, &before, write)?;
-        if after == before {
-            return Ok(before);
+        let before = stored.as_ref().unwrap_or(&Value::Null);
+        let after = Self::merge_properties(recording, before, write)?;
+        if &after == before {
+            return Ok(after);
         }
         // Stable normal context is Source-authorized. An observed concurrent
         // change is operational, never silently overwritten/retried as normal.
-        let affected=sqlx::query("UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1 AND custom_properties=$3")
-            .bind(recording).bind(&after).bind(&before).execute(&mut *connection).await
+        let affected=sqlx::query("UPDATE dispatcharr_channels_recording SET custom_properties=$2 WHERE id=$1 AND custom_properties IS NOT DISTINCT FROM $3")
+            .bind(recording).bind(&after).bind(&stored).execute(&mut *connection).await
             .map_err(|source|Error::Sql {stage:Stage::MutationWrite,source,settlement:None})?.rows_affected();
         if affected != 1 {
             return Err(Error::Unsupported("recording changed during fresh merge"));
@@ -804,13 +817,7 @@ impl CaptureStore {
         }
         let rejected_completion =
             matches!(&write, PropertyWrite::CompletedAfterRejectedPrime { .. });
-        let runtime_object = matches!(
-            &write,
-            PropertyWrite::PrimeRuntime(_)
-                | PropertyWrite::PermanentRuntimeUrls
-                | PropertyWrite::RemovedRuntimeHls
-        );
-        let mut after = if runtime_object {
+        let mut after = if write.normalizes_runtime_properties() {
             normal_object(before)?
         } else {
             before.clone()
