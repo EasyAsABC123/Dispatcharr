@@ -1,6 +1,8 @@
 # Dispatcharr Rust release implementation and verification
 
-The frozen application candidate `3d8f9672` has **18 independently verified canonical row passes** across scoped physical runs. Seventeen are passes against the current Rust package and one is a fresh Original workflow. One other row has retained Original authority and 108 rows remain open in the 127-row release graph. This combined evidence index preserves each run and its predecessors. Full single-run release acceptance remains open. [Current exact-candidate evidence index](rust-current-amd64-acceptance-3d8f9672.json)
+The frozen application candidate `3d8f9672` has **24 verified physical row passes**. Twenty-three use the current Rust package and one uses a fresh Original workflow. The approved PostgreSQL service and copied SQLite utility graph has **125 required rows**. One retained Original authority and two recorded datastore authorities satisfy three additional rows, leaving **98 open**. Full release acceptance remains open. [Current approved-scope evidence index](rust-current-postgresql-release-acceptance-3d8f9672.json)
+
+The historical 127-row graph retains the same 24 physical passes, one retained Original authority and 102 open rows. The six latest AMD64 package passes cover Category Browser, Channel Logos, VOD Images, Provider Modal, Unified HTML and Static Chrome HTML. Each passed execution, exact cleanup and independent evaluation. [Historical-scope exact-candidate evidence](rust-current-amd64-acceptance-3d8f9672.json)
 
 The historical `2d3ffe53` package ledger recorded 14 verified executions, four retained Original authorities and 109 open rows. The implementation table below records the work allocated from that historical baseline. [Historical release matrix](../scripts/rust-integration/2d3ffe53-amd64-release-matrix-with-baseline.json)
 
