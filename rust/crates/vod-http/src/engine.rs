@@ -968,7 +968,7 @@ fn provider_rejects_explicit_range(status: StatusCode, headers: &HeaderMap, rang
     let Some(start) = decimal(start) else {
         return false;
     };
-    if !end.is_empty() && !decimal(end).is_some_and(|end| end >= start) {
+    if !end.is_empty() && decimal(end).is_none_or(|end| end < start) {
         return false;
     }
     headers
