@@ -67,6 +67,27 @@ struct Inner {
 pub struct SelectedJobs {
     inner: Arc<Inner>,
 }
+
+pub(super) struct SelectedBrokerDrain {
+    jobs: jobs::transport::Jobs,
+    startup: watch::Sender<Startup>,
+    remaining: Duration,
+    scheduler_settled: bool,
+    _startup_slot: tokio::sync::OwnedSemaphorePermit,
+}
+
+impl SelectedBrokerDrain {
+    pub(super) async fn finish(self) -> bool {
+        if self.jobs.shutdown(self.remaining).await.is_err() {
+            selected_shutdown_diagnostic("shared_jobs", None, "unsettled");
+            return false;
+        }
+        if self.scheduler_settled {
+            self.startup.send_replace(Startup::Stopped);
+        }
+        self.scheduler_settled
+    }
+}
 /// These exact existing applications retain all HTTP routers/file lookup clones.
 /// Normal handlers reserve their lifecycle and start no legacy family poller.
 pub struct Existing {
@@ -1027,13 +1048,13 @@ impl SelectedJobs {
         Duration::from_secs(12)
     }
 
-    pub async fn shutdown(&self, budget: Duration) -> bool {
+    pub(super) async fn shutdown_workers(&self, budget: Duration) -> Option<SelectedBrokerDrain> {
         self.stop_producers();
         let deadline = tokio::time::Instant::now() + budget;
         let startup =
             tokio::time::timeout_at(deadline, self.inner.startup_slots.clone().acquire_owned())
                 .await;
-        let Ok(Ok(_startup)) = startup else {
+        let Ok(Ok(startup_slot)) = startup else {
             return selected_shutdown_failed("startup");
         };
         if !self
@@ -1123,7 +1144,7 @@ impl SelectedJobs {
                 }
             }
             if self.inner.beat != Beat::Core {
-                return false;
+                return None;
             }
         }
         let drained = self
@@ -1189,19 +1210,15 @@ impl SelectedJobs {
         {
             return selected_shutdown_failed("plugin_jobs");
         }
-        if self
-            .inner
-            .shared_jobs
-            .shutdown(deadline.saturating_duration_since(tokio::time::Instant::now()))
-            .await
-            .is_err()
-        {
-            return selected_shutdown_failed("shared_jobs");
-        }
-        if scheduler_settled {
-            self.inner.startup.send_replace(Startup::Stopped);
-        }
-        scheduler_settled
+        // Carry the remaining transport budget into Main's final drain. The
+        // shared publisher must stay open while Main settles its Core actors.
+        Some(SelectedBrokerDrain {
+            jobs: self.inner.shared_jobs.clone(),
+            startup: self.inner.startup.clone(),
+            remaining: deadline.saturating_duration_since(tokio::time::Instant::now()),
+            scheduler_settled,
+            _startup_slot: startup_slot,
+        })
     }
 }
 // Opt-in, fixed-vocabulary shutdown diagnostics. Never format runtime errors,
@@ -1230,9 +1247,9 @@ fn selected_shutdown_diagnostic(
         eprintln!("selected_shutdown stage={stage} family={family:?} outcome={outcome}");
     }
 }
-fn selected_shutdown_failed(stage: &'static str) -> bool {
+fn selected_shutdown_failed(stage: &'static str) -> Option<SelectedBrokerDrain> {
     selected_shutdown_diagnostic(stage, None, "unsettled");
-    false
+    None
 }
 fn shutdown_disposition_kind(value: &jobs::milestone_dispatch::Disposition) -> &'static str {
     use jobs::milestone_dispatch::Disposition as D;

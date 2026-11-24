@@ -1938,11 +1938,11 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         .await
         .map_err(|_| "Plugin filesystem/SQL/reader drain incomplete; physical owners remain")?;
     let selected_mode = selected_jobs.is_some();
-    if let Some(selected) = selected_jobs {
+    let selected_broker = if let Some(selected) = selected_jobs {
         selected.stop_producers();
-        if !selected.shutdown(selected.shutdown_budget()).await {
+        let Some(broker) = selected.shutdown_workers(selected.shutdown_budget()).await else {
             return Err("Selected worker drain is incomplete; process termination may close outstanding resources".into());
-        }
+        };
         // The normal graph owned these actual family lifecycles/ports. Legacy
         // pollers were never started, so do not close the same ports twice.
         epg_refresh = None;
@@ -1951,7 +1951,10 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         epg_artwork = None;
         epg_tvg = None;
         version_tasks = None;
-    }
+        Some(broker)
+    } else {
+        None
+    };
     engine.shutdown();
     combined_statistics.close_admission();
     // Refresh reporter work retains the realtime publisher until actual drain.
@@ -2118,6 +2121,12 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         Some(core) => core.shutdown().await,
         None => true,
     };
+    // Core owns a publisher on the Selected Jobs transport. Its admitted
+    // settings actors can still need a first broker lease during shutdown.
+    let selected_broker_drained = match selected_broker {
+        Some(broker) => core_settings_drained && broker.finish().await,
+        None => true,
+    };
     // Accepted HTTP reads have now drained or explicitly timed out. Close the
     // file/publication services last; late missing-index publications remain
     // durable for the next startup rather than losing their transport owner.
@@ -2126,6 +2135,7 @@ async fn shutdown_components(services: ShutdownServices) -> Result<(), String> {
         None => true,
     };
     let incomplete = !core_settings_drained
+        || !selected_broker_drained
         || !combined_stats_drained
         || !refresh_drained
         || !index_intake_drained
