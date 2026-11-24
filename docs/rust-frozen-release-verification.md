@@ -4,6 +4,8 @@ The frozen application candidate `3d8f9672` has **16 independently verified cano
 
 The historical `2d3ffe53` package ledger recorded 14 verified executions, four retained Original authorities and 109 open rows. The implementation table below records the work allocated from that historical baseline. [Historical release matrix](../scripts/rust-integration/2d3ffe53-amd64-release-matrix-with-baseline.json)
 
+On ARM64, one default AIO Producer and one modular Main Consumer shared an upstream and a marked FFmpeg generation. Two signed viewers each received a Ready/empty HLS playlist marker. The Consumer relayed one unchanged Core proxy-health response and both signed stops returned HTTP 204. The owner and independent verifier passed, retiring nine containers, one network and four volumes. Default two-AIO, Starting/empty and measured watch identity remain open. [ARM64 HLS mixed-deployment evidence](rust-m3-arm64-hls-ready-empty-3d8f9672.json)
+
 ## Parallel implementation
 
 | Canonical owner | Open rows | Work before the freeze |
