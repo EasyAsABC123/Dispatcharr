@@ -453,8 +453,13 @@ parser for quoted phrases, AND and OR, grouping, whole words and regex.
 Eleven pinned Original view cases and twelve parser cases ran against
 owned fixtures. The focused Rust suite and a real private PostgreSQL
 test checked projection, paging, role visibility and text matching.
-The channel, stream, group and signed package cases still need their
-own evidence.
+Channel name, channel ID, stream name and group filters each select
+effective guides independently within the requesting role's channel
+scope. The response still includes every visible channel and stream
+linked to a matching guide. The pinned Original passed 28 relation
+requests. A private PostgreSQL run checked the new Rust filters across
+both roles, including override precedence and intersections across
+visible channels. Signed package cases remain open.
 
 ## Channel logo pagination and Xtream information
 

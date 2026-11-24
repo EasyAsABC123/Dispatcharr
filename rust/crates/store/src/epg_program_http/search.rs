@@ -46,19 +46,15 @@ struct Search {
     times: Vec<(&'static str, DateTime<Utc>)>,
     source: Option<Option<i64>>,
     tvg_id: Option<String>,
+    channel: Option<String>,
+    channel_id: Option<Option<i64>>,
+    stream: Option<String>,
+    group: Option<String>,
 }
 
 impl Search {
     fn new(pairs: Pairs) -> Result<Self, StoreError> {
         let get = |name| last_query(&pairs, name).filter(|value| !value.is_empty());
-        if ["channel", "channel_id", "stream", "group"]
-            .into_iter()
-            .any(|key| get(key).is_some())
-        {
-            return Err(StoreError::Unsupported(
-                "Programme search channel and stream filters are not yet implemented",
-            ));
-        }
         let mut text = Vec::new();
         for (key, column) in TITLE_AND_DESCRIPTION {
             let Some(value) = get(key) else { continue };
@@ -83,9 +79,16 @@ impl Search {
             let at = instant("airing_at", raw)?;
             times.extend([("p.start_time<=", at), ("p.end_time>", at)]);
         }
-        let source = get("epg_source")
-            .and_then(dispatcharr_ingest_core::source_integer_literal)
-            .map(|value| value.parse().ok());
+        let integer_filter = |key| {
+            get(key)
+                .and_then(dispatcharr_ingest_core::source_integer_literal)
+                .map(|value| value.parse().ok())
+        };
+        let source = integer_filter("epg_source");
+        let channel_id = integer_filter("channel_id");
+        let channel = get("channel").map(str::to_owned);
+        let stream = get("stream").map(str::to_owned);
+        let group = get("group").map(str::to_owned);
         let tvg_id = get("tvg_id").map(str::to_owned);
         let fields =
             get("fields").map(|value| value.split(',').map(|k| k.trim().to_owned()).collect());
@@ -96,6 +99,10 @@ impl Search {
             times,
             source,
             tvg_id,
+            channel,
+            channel_id,
+            stream,
+            group,
         })
     }
     fn includes(&self, name: &str) -> bool {
@@ -106,9 +113,7 @@ impl Search {
     fn restrict<'a>(&self, query: &mut QueryBuilder<'a, Postgres>, user: &User) {
         query.push(" FROM epg_programdata p JOIN epg_epgdata e ON e.id=p.epg_id LEFT JOIN epg_epgsource g ON g.id=e.epg_source_id WHERE TRUE");
         if user.user_level < 10 {
-            query.push(" AND EXISTS(SELECT 1 FROM dispatcharr_channels_channel c LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id WHERE COALESCE(o.epg_data_id,c.epg_data_id)=p.epg_id");
-            scope(query, user);
-            query.push(")");
+            effective_guide_exists(query, |query| scope(query, user));
         }
         for (column, value) in &self.text {
             value.append(query, column);
@@ -119,6 +124,7 @@ impl Search {
         if let Some(tvg_id) = &self.tvg_id {
             query.push(" AND e.tvg_id=").push_bind(tvg_id.clone());
         }
+        self.restrict_relations(query);
         match self.source {
             Some(Some(id)) => {
                 query.push(" AND e.epg_source_id=").push_bind(id);
@@ -129,6 +135,78 @@ impl Search {
             None => {}
         }
     }
+
+    fn restrict_relations(&self, query: &mut QueryBuilder<'_, Postgres>) {
+        // Source intersects separately resolved guide sets. Two channel
+        // filters may match different channels that share an effective guide.
+        if let Some(name) = &self.channel {
+            effective_guide_exists(query, |query| {
+                query.push(" AND ");
+                contains(query, "COALESCE(o.name,c.name)", name);
+            });
+        }
+        match self.channel_id {
+            Some(Some(id)) => {
+                effective_guide_exists(query, |query| {
+                    query.push(" AND c.id=").push_bind(id);
+                });
+            }
+            Some(None) => {
+                query.push(" AND FALSE");
+            }
+            None => {}
+        }
+        if let Some(name) = &self.stream {
+            effective_guide_exists(query, |query| {
+                query.push(
+                    " AND EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs
+                       JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id
+                       WHERE cs.channel_id=c.id AND ",
+                );
+                contains(query, "s.name", name);
+                query.push(")");
+            });
+        }
+        if let Some(name) = &self.group {
+            effective_guide_exists(query, |query| {
+                query.push(
+                    " AND (EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroup cg
+                       WHERE cg.id=COALESCE(o.channel_group_id,c.channel_group_id) AND ",
+                );
+                contains(query, "cg.name", name);
+                query.push(
+                    ") OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs
+                       JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id
+                       JOIN dispatcharr_channels_channelgroup sg ON sg.id=s.channel_group_id
+                       WHERE cs.channel_id=c.id AND ",
+                );
+                contains(query, "sg.name", name);
+                query.push("))");
+            });
+        }
+    }
+}
+
+fn effective_guide_exists(
+    query: &mut QueryBuilder<'_, Postgres>,
+    condition: impl FnOnce(&mut QueryBuilder<'_, Postgres>),
+) {
+    query.push(
+        " AND EXISTS(SELECT 1 FROM dispatcharr_channels_channel c
+           LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id
+           WHERE COALESCE(o.epg_data_id,c.epg_data_id)=p.epg_id",
+    );
+    condition(query);
+    query.push(")");
+}
+
+fn contains(query: &mut QueryBuilder<'_, Postgres>, column: &'static str, term: &str) {
+    query
+        .push("strpos(upper(")
+        .push(column)
+        .push("), upper(")
+        .push_bind(term.to_owned())
+        .push(")) > 0");
 }
 
 fn instant(name: &str, raw: &str) -> Result<DateTime<Utc>, StoreError> {
@@ -505,6 +583,49 @@ mod tests {
                 "title=%28Absent+OR+Sports%29+AND+Owned&fields=id",
                 json!([{"id": 2}]),
             ),
+        ] {
+            let data = read(&standard, query).await.unwrap();
+            let value: Value = serde_json::from_slice(&data).unwrap();
+            assert_eq!(value["results"], expected, "{query}");
+        }
+        sqlx::raw_sql(
+            r#"
+            INSERT INTO dispatcharr_channels_channelgroup VALUES
+                (2,'Override Group'),(3,'Hidden Base Group'),(4,'Stream Group');
+            UPDATE dispatcharr_channels_channel SET channel_group_id=3 WHERE id=1;
+            UPDATE dispatcharr_channels_channeloverride SET channel_group_id=2 WHERE channel_id=1;
+            INSERT INTO dispatcharr_channels_channel VALUES
+                (6,'Other Visible',6,NULL,1,NULL,0,false);
+            INSERT INTO dispatcharr_channels_channelprofilemembership VALUES (6,1,true);
+            INSERT INTO dispatcharr_channels_stream VALUES
+                (2,'Secondary _100% Feed','second',4,1,'2026-02-14 18:00Z');
+            INSERT INTO dispatcharr_channels_channelstream VALUES (6,2),(6,1);
+        "#,
+        )
+        .execute(&pool)
+        .await
+        .unwrap();
+        let both = json!([{"id":1},{"id":2}]);
+        for (query, expected) in [
+            ("channel=Owned+Override&fields=id", both.clone()),
+            ("channel=Provider+Channel&fields=id", json!([])),
+            ("channel_id=%2B006&fields=id", both.clone()),
+            ("channel_id=foo&fields=id", both.clone()),
+            ("channel_id=0&fields=id", json!([])),
+            ("channel_id=-1&fields=id", json!([])),
+            (
+                "channel_id=999999999999999999999999999&fields=id",
+                json!([]),
+            ),
+            ("group=Override+Group&fields=id", both.clone()),
+            ("group=Hidden+Base+Group&fields=id", json!([])),
+            ("group=Stream+Group&fields=id", both.clone()),
+            ("stream=_100%25&fields=id", both.clone()),
+            (
+                "channel=OwnED+Override&channel_id=6&stream=_100%25&group=Override+Group&fields=id",
+                both,
+            ),
+            ("channel=Outside&fields=id", json!([])),
         ] {
             let data = read(&standard, query).await.unwrap();
             let value: Value = serde_json::from_slice(&data).unwrap();
