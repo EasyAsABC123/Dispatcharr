@@ -1,0 +1,46 @@
+{
+  "candidate": {
+    "git": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1",
+    "image_id": "sha256:248614e76779972352315362fe306d60fac47c817dff924f1a7535644bc164c5",
+    "build_manifest_sha256": "ebcae7bc9c03c00fb21d9ee4a653b9ac3261bf83c81fe1198cbaa16bfb293b75"
+  },
+  "retention": {
+    "id": "package/retention100",
+    "proof": {
+      "authoritative_per_channel_max": 16777216,
+      "bytes_per_reader": 1500000,
+      "channels": 10,
+      "historical_readers": 100,
+      "lag_seconds": 45,
+      "late_av_decodes": 10,
+      "local_per_channel_max": 4194304,
+      "no_additional_upstream": true,
+      "performance_measured": false,
+      "reference_prefix_bytes": 65536,
+      "retained_captures_hash_verified": 10
+    },
+    "cleanup_verified": true,
+    "raw_result_sha256": "579b39e4990c8b348302a447f2b8f1a2b7f794fc09ef7caafb8c6380415d7da2"
+  },
+  "core": {
+    "id": "native/core-normal51",
+    "proof": {
+      "actual_exit": 0,
+      "actual_native_cases": 51,
+      "actual_native_controls": 290,
+      "actual_source_replays": 0,
+      "cohorts": [
+        "system_settings",
+        "network_access",
+        "reverse_proxy_auth",
+        "proxy_settings",
+        "stream_settings",
+        "dvr_settings"
+      ],
+      "exact_cleanup": true,
+      "immutable_compiler_admission_sha256": "85cb9f29de6f808b12e4418b7b52430a122114e86edabdef5a7d373e9443b6d5"
+    },
+    "cleanup_verified": true,
+    "raw_result_sha256": "1008c1c70b87d82985d806c3c9a94bc0d0fdc5b34fbac83075854d625c3c77f0"
+  }
+}

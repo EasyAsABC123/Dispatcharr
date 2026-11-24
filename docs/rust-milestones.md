@@ -1523,6 +1523,10 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 - **Release matrix** Four current AMD64 groups independently verified 9 current rows and 4 retained Original dependencies. The release matrix has 114 open rows. [Grouped acceptance and row-by-row evidence](rust-2d3ffe53-amd64-release-groups.md)
 - **M10 and M11** Lappy preserved one acknowledged Rust write through a copied-PostgreSQL return with the same Original-issued session. The matching offline intake leaves the default switch gated. [Current ARM64 rehearsal](rust-m10-m11-2d3ffe53-arm64-copied-return.md)
 
+- **M2 and M3** Four current canonical rows passed for shared TS, full worker outage, 100-reader retention and Native Core. The release matrix now records 13 current executions, 4 retained Original authorities and 110 open rows. [Current retention and Core evidence](rust-2d3ffe53-retention-and-core.md)
+- **M5** The current ARM64 Chromium pair verified first-admin setup, signed Administrator and Standard account roles, and the same 112 served React assets. [Current browser evidence](rust-m5-2d3ffe53-arm64-current-browser.md)
+- **M4 and M9** The pinned Original archive diagnostic identified the WSGI response for the live upstream socket. Its decoder transport remains unlinked. The separate idle accounting associated the readable Celery processes with most of the anonymous increase during the short idle observation. [Archive and idle attribution](rust-2d3ffe53-original-archive-and-idle-attribution.md)
+
 ## Latest scoped runtime evidence for 2ee64c43
 
 - **M6** Eleven signed invalid string IDs now match the Original 500 response, with no broker publication. Both ordinary packages passed signed startup and the exact source passed 1,775 workspace tests. [Invalid guide input evidence](rust-m6-2ee64c43-invalid-guide-ids.md)

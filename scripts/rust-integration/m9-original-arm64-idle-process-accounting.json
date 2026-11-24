@@ -1,0 +1,133 @@
+{
+  "archived_workload_growth_bytes": 155099136,
+  "causal_assessment": "Idle-only growth is primarily anonymous and correlates with readable Celery-role PSS increase. This narrows the observed idle component to that role, without proving a leak, explaining privileged members, or assigning the earlier workload failure. Different runs/windows cannot be subtracted.",
+  "cgroup_memory_stat_median_changes": {
+    "active_file": 847872,
+    "anon": 57761792,
+    "file": 1179648,
+    "inactive_file": 20480,
+    "kernel": 65536,
+    "slab": 68016
+  },
+  "coverage": {
+    "baseline": {
+      "UID0_denied_observations": 258,
+      "denied_role_partitions": {
+        "unassigned": 258
+      },
+      "missing_rollup_fields": {},
+      "other_UID_denied_observations": 0,
+      "readable_member_observations": 645,
+      "smaps_error_classes": {
+        "permission_denied": 258
+      }
+    },
+    "origin": {
+      "UID0_denied_observations": 43,
+      "denied_role_partitions": {
+        "unassigned": 43
+      },
+      "missing_rollup_fields": {},
+      "other_UID_denied_observations": 0,
+      "readable_member_observations": 0,
+      "smaps_error_classes": {
+        "permission_denied": 43
+      }
+    }
+  },
+  "idle_working_growth_bytes": 59207680,
+  "no_complete_baseline_PSS_or_USS": true,
+  "physical_new_work": false,
+  "raw_process_identifiers_or_data_exported": false,
+  "readable_named_role_median_changes": {
+    "beat": {
+      "Pss": 226304,
+      "Pss_Anon": 315392,
+      "Pss_File": -89088,
+      "Swap": 0,
+      "USS": 315392
+    },
+    "celery": {
+      "Pss": 57423872,
+      "Pss_Anon": 57098240,
+      "Pss_File": 325632,
+      "Swap": 0,
+      "USS": 118202368
+    },
+    "dvr": {
+      "Pss": -71680,
+      "Pss_Anon": 16384,
+      "Pss_File": -88064,
+      "Swap": 0,
+      "USS": 16384
+    },
+    "web": {
+      "Pss": 251904,
+      "Pss_Anon": 349184,
+      "Pss_File": -96256,
+      "Swap": 0,
+      "USS": 348160
+    }
+  },
+  "schema": "Original-idle-smaps-gap-findings/1",
+  "settled_samples": 43,
+  "source_metadata_sha256": {
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-00.json": "4d90759f39fae763b3fb189f944dbd92884e4b465abcf0779ac388b4a5863503",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-01.json": "91325bd83c721129bdb3eee52a9e03dd36ebd13f03d017c44271b1189f1f0d3d",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-02.json": "9b845b8d62edc4a92250972c46724b0f496eeec173182972efe9c4a201640957",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-03.json": "b6c02996066297ac87c40c360d0f0524bcc7bc0ba80a10006b34ab676265dd6c",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-04.json": "14b4dce5d09c236b4cb749b4920c55ff24b4226ba1e85db69954dd6fbb99d335",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-05.json": "6ddd8e0b668ba278ec922b157b436f6e2084283ddd199a23fb4d8d9568cdf446",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-06.json": "5258f8217161dfdc097a96cd46901db4f8a34df2202d2cae2dcf407733fec01e",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-07.json": "ce1f0259283827fa9db8e11633e08479ffcd1bd6560449ab227ff0820e4f0d41",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-08.json": "910645e69d32c2a60ef4f9d63aa2bdfd1a4562b66c24938f7c28b4f81dc77f0f",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-09.json": "5bcf485a5f2763747f7e2bb898a58d04aaa385456aa6c6c7f99fae52c85a1722",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-10.json": "adec5754a98b4c74df8c4acc3e9ad2453141f036ea5672d13c86c8cbb7831383",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-11.json": "79ac7aa8001b21da67095dc65a58cb2f323266a97b6a2095ec1e7a5c32576517",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-12.json": "ff111291f8ba72317e1c1a32fcbb31c4351bce69a31359b7b27a88687da6471c",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-13.json": "b9b5fc9ed26249de56c8935c92639693849b2bbfc54069076b69e84030541440",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-14.json": "d43186346f14efb3eae1805300594f69edd9fd8d3ed78b161a33455722d28404",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-15.json": "607153123447701ad3113582aeec2312e2508851d2e678cc78b4332e2a506725",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-16.json": "23964af3d808d86c7ada8dbfc4756c527e0ca973a45862503bb8f3fc2e27c07f",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-17.json": "1e54dad60d3e7aef63c75b13740c4a426a94eb0576624c74d79449b47f0599fc",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-18.json": "110b460c70d9468787132ebb6f29b7c36448b9cffbfcafa60f572e358fee39b5",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-19.json": "b4c92b37aac85c990c2cff8c2e3b53a670c3f250db4dd8e25ef0af8cfc226802",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-20.json": "917c46ccd9f4608ce783e785f53e4cfb6aa23d5c4ae97b5f2342fb14131d9b81",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-21.json": "f24935a37f37faa185b8a5ab9f9b5a9e09e44d60891b1751dd2c8d3767fc63dd",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-22.json": "c14e4e665326cadf15d510e7d2724b59390729bf22d8317e18004e336210c516",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-23.json": "8b3808e178d97dc8c70159b728a39461d337441eb21961a52d9e06b2f511acd8",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-24.json": "e2c88c4bdccbe58b72e8dc38bfa8d9bd30d39fc4e1b3852326dd1b9f271570fb",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-25.json": "6073a0d2acccbc89b01cf2e414806a4a7fd448f0e7da6a0a6c8ea7628811bb49",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-26.json": "3ddeae7b5711d0fadfcb738cb1a8e085172f555fae34294873074db8d130c3a2",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-27.json": "7dfc8f3f1ef0667ea61a2b3e9f22eda4b00dac40e82882a0d337a310ef4d047b",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-28.json": "6469ac5a1964eb896c3cc06bdf9056779e0c5d237c6b9c3bf7264dcfb1f08e43",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-29.json": "f3b756f775f32bd2c72f2d216a84c2d722e6164dcca7f9cfd9763b9ea7683b95",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-30.json": "5ccc938fe20391cd81aae270f4869e8477abed98274a747e6c78c2d27d41c69f",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-31.json": "18cca716e92e8f628595ac867cefa48755c87f3f910809b3694862d4cc7161fd",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-32.json": "d3df51b606013b621536c5b7a7226f455b6e7d01b64345f6b5a20657fc9df035",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-33.json": "bc12128ef78f214bd57732d2a273009187b2a907a23f16472f33fcc33cf8296d",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-34.json": "f00fcfb1e8a7f94f6ac1ec7a831989b8f5030cd43525bf7a74d7829fd11653c0",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-35.json": "4a569ea55458ef7e760c7bc0d4d003b469163fa473a1867494806a9f3fa769c4",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-36.json": "5463285dcf6e30f48cf23e353cf40e7405e71f3f43e61c30a792dc153c530a2d",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-37.json": "a738ce4678364047bec302935a357ca9c27924e5f74792a18c6f456db1db9bef",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-38.json": "386d662823b502c19d8e7150ac5517e9444e76f4610242472d36789ed25d117c",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-39.json": "5d199b69092c9b1f220ad6362190c41d510e4cc05239e85665c20594b56c177e",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-40.json": "c9a109d6112056fafc620de989af732ab3ebe51c244d6ddc05dbc82890e329b9",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-41.json": "6240e9120cb9240ced65d6723d7a8e06559f9c2a1b7eeeb2f55fed9dafdcfd31",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-42.json": "6918418d56f2b5996acb81de3856528b2569625e21446622015ebe7f94a440cf",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-43.json": "bf1999c2c2af4272a7e88157b8d7a11fb91067ddcdde989fe7738face0b12a6f",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-44.json": "22d002d6348e83294953013313f00c5ba58e448caf0ed801d956ecf8c1c747d4",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-45.json": "10d59ad9ff41b42e30f750e8d68604eb63d18fb4febd70697cdd2d81997ebb56",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-46.json": "3a8b739d50246367b46f259ab094df68ae0f0bfa010ead873318eeebe7fec84b",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-47.json": "fcdf240cc5d5e88391740d26085a4db666066aeb3167b278f042b20ac3f3f4fb",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-48.json": "dc0d33c491955979b4194c81ca9d1082f60ed8b1b7de37665cda6213b2227881",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-49.json": "04d422f535cf334877ab102d18c65abd6f1edbf4b2fca2238e35bb0949804e97",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-50.json": "1b502383ef07b6dcbe274a70acb928a51ab3ea4ed523067ca1b19ab547e3d2dc",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-51.json": "c4a339fe44c45464a2d31752fd4ee31e3ff668e19185f9c7cb4c4d1615397e8a",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-52.json": "b18aade26fa46f8818aa03b982e97c60a4963ec4890f754c0dc2e4493e4eed39",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-53.json": "3cb04bf0e36bf874c387769e06bb57c8343aaf7a03281c733c0d14f619fa5ff0",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/actual-1/idle-memory-54.json": "f9cd97d30da1b2807611cf0481f9ce55a97bb1a2cd58281bbb882c55b00f6ca1",
+    "/tmp/dispatcharr-original-idle-memory-attribution-r1/analysis-1/receipt.json": "afe164c8de21a13d03f5051e91e421044d046882b984983e21f39084cdf02930"
+  },
+  "stable_intervals": 42
+}
