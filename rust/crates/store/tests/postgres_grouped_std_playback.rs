@@ -160,7 +160,7 @@ async fn grouped_std_preview_resolves_the_same_pool_for_default_and_scoped_worke
     for scoped in [false, true] {
         let mut query = vec![("output_format".into(), "ts".into())];
         if scoped {
-            query.push(("skip_redirect".into(), "1".into()));
+            query.push(("skip_redirect".into(), "TRUE".into()));
         }
         let request = PlaybackRequest {
             channel_id: hash.clone(),

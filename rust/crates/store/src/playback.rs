@@ -62,7 +62,14 @@ fn std_transform<'a>(
     if search.is_empty() || replace.is_empty() || (search == "^(.*)$" && replace == "$1") {
         return Ok(Some(std::borrow::Cow::Borrowed(input)));
     }
-    if !(search.starts_with('^') && search.ends_with('$')) && regex::escape(search) != search {
+    // Original's signed live-path profile rewrites exactly two slash-bounded
+    // credential components. The shared bounded replacement engine handles
+    // this fixed unanchored form without widening the remaining regex domain.
+    let captured_live_path = search == r"/live/([^/]+)/([^/]+)/";
+    if !captured_live_path
+        && !(search.starts_with('^') && search.ends_with('$'))
+        && regex::escape(search) != search
+    {
         return Err(StoreError::Unsupported(
             "STD provider URL needs a qualified literal or anchored transform",
         ));
@@ -1525,6 +1532,60 @@ mod output_tests {
                 None
             );
         }
+    }
+
+    #[test]
+    fn std_live_path_capture_updates_assigned_url_and_sample_pool_identity() {
+        let search = r"/live/([^/]+)/([^/]+)/";
+        let replace = "/live/alias-$1/alias-$2/";
+        let media = "http://owned-origin/edge/live/raw-user/raw-pass/48.ts?token=literal%2B";
+        let sample = "http://owned-origin/live/sample-user/sample-pass/99.ts";
+        let resolved = ProviderUrl {
+            account_type: "STD",
+            stored: media,
+            server: "",
+            username: "",
+            password: "",
+            stream_id: "",
+            search,
+            replace,
+        }
+        .resolve()
+        .unwrap()
+        .unwrap();
+        assert_eq!(
+            resolved,
+            "http://owned-origin/edge/live/alias-raw-user/alias-raw-pass/48.ts?token=literal%2B"
+        );
+        let transformed_sample = std_transform(sample, search, replace).unwrap().unwrap();
+        assert_eq!(
+            transformed_sample,
+            "http://owned-origin/live/alias-sample-user/alias-sample-pass/99.ts"
+        );
+        let pool = std_sample_credential_pool(
+            31,
+            1,
+            Some(&transformed_sample),
+            "saved-user",
+            "saved-pass",
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(
+            pool,
+            xc_credential_pool(31, 1, "alias-sample-user", "alias-sample-pass").unwrap()
+        );
+        assert_ne!(
+            pool,
+            xc_credential_pool(31, 1, "sample-user", "sample-pass").unwrap()
+        );
+        assert!(std_transform("http://owned-origin/44.ts", search, replace)
+            .unwrap()
+            .is_none());
+        assert!(matches!(
+            std_transform(media, r"/live/([^/]+)/", "/live/alias-$1/"),
+            Err(StoreError::Unsupported(_))
+        ));
     }
 
     #[test]

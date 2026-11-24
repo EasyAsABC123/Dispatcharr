@@ -27,7 +27,7 @@ with transaction.atomic():
     ])
     profiles = M3UAccountProfile.objects.bulk_create([
         M3UAccountProfile(m3u_account=account, name=marker, is_default=True, is_active=True,
-                          search_pattern='', replace_pattern='', max_streams=1)
+                          search_pattern=search, replace_pattern=replace, max_streams=1)
         for account in (viewer,peer)
     ])
     view, alternate, sample, peer_sample = Stream.objects.bulk_create([
@@ -99,22 +99,36 @@ def strict_decode(f, path):
          and frames >= 70 and "progress=end" in progress, "ActualGroupedPreviewStrictAV")
 
 
-def run(f):
+def run_transformed(f):
+    return run(f, transformed=True)
+
+
+def run(f, transformed=False):
     endpoint = scope(f)
-    out = f.output / "grouped-std-preview"
+    out = f.output / ("grouped-std-preview-transformed" if transformed else "grouped-std-preview")
     out.mkdir(mode=0o700, exist_ok=False)
     nonce = uuid.uuid4().hex
     marker = "owned-std-preview-" + nonce
     worker = "owned-grouped-preview-" + nonce
     user, key = "viewer-" + nonce[:12], "owned-" + nonce[12:24]
     sample_path = f"/live/{user}/{key}/839.ts"
-    values = dict(marker=marker, worker=worker, media_url=f._redirect_seed["media_url"],
-                  sample_url=LOCAL_ORIGIN + sample_path)
-    report = {"status": "running", "backend": f.backend, "cells": []}
+    media_path = f"/live/{user}/{key}/{nonce}.ts"
+    effective_media = f"/live/alias-{user}/alias-{key}/{nonce}.ts"
+    effective_sample = f"/live/alias-{user}/alias-{key}/839.ts"
+    values = dict(marker=marker, worker=worker,
+                  media_url=LOCAL_ORIGIN + media_path if transformed else f._redirect_seed["media_url"],
+                  sample_url=LOCAL_ORIGIN + sample_path,
+                  search=r"/live/([^/]+)/([^/]+)/" if transformed else "",
+                  replace="/live/alias-$1/alias-$2/" if transformed else "")
+    report = {"status": "running", "backend": f.backend, "cells": [],
+              "transformed": transformed}
     seed = f.sql("\n".join(f"{name}={value!r}" for name, value in values.items()) + "\n" + SEED,
                  secret=True)
-    digest = hashlib.sha256((user + "\0" + key).encode()).hexdigest()[:16]
+    raw_digest = hashlib.sha256((user + "\0" + key).encode()).hexdigest()[:16]
+    selected_user, selected_key = ("alias-" + user, "alias-" + key) if transformed else (user, key)
+    digest = hashlib.sha256((selected_user + "\0" + selected_key).encode()).hexdigest()[:16]
     counter = f"server_group_connections:{seed['group']}:{digest}"
+    raw_counter = f"server_group_connections:{seed['group']}:{raw_digest}"
     profile = str(seed["profile"][0])
     scoped_worker = worker + ".p" + profile
 
@@ -142,6 +156,9 @@ def run(f):
                    30, "actual-grouped-preview-media")
             expected = active_expected(profile, scoped)
             need(observe() == expected, "OneProfilePoolSlotOnlyForItsExactPreviewAlias")
+            if transformed:
+                untouched = f.redis(0, "return redis.call('GET',ARGV[1])or'0'", raw_counter)
+                need(untouched == "0", "UntransformedCredentialCounterRemainsUnused")
             active = origin()
             need(active["connections"] == before["connections"] + 1 and active["active"] == 1,
                  "OneRealGroupedPreviewUpstream")
@@ -165,13 +182,19 @@ def run(f):
 
     try:
         need(retired(), "InitialPreviewGroupIsIdle")
-        for scoped in (False, True):
+        for scoped in ((True,) if transformed else (False, True)):
             report["cells"].append(play(scoped))
             save(out / "report.json", report)
         state = Path(f._redirect_state) / "requests.json"
         entries = json.loads(f.python("from pathlib import Path;print(Path(" + repr(str(state)) +
                                       ").read_text())", seconds=3))
-        need(all(row["path"] != sample_path for row in entries), "AccountSampleIsNeverOpened")
+        need(all(row["path"] not in (sample_path, effective_sample) for row in entries),
+             "AccountSampleIsNeverOpened")
+        if transformed:
+            requests = [(row["method"], row["path"]) for row in entries
+                        if row["path"] in (media_path, effective_media)]
+            need(requests == [("GET", effective_media)], "OneActualTransformedMediaRequest")
+            report["exact_transformed_media_and_sample_fingerprint"] = True
         report["only_assigned_media_was_opened"] = True
     except Exception as error:
         report.update(failure_type=type(error).__name__,

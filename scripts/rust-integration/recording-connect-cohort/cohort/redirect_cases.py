@@ -172,7 +172,7 @@ def run(f):
  # normal Main/role drain and exact fixture cleanup remain outer requirements.
  def extensions():
   import redirect_extensions,inactive_input_cases,channel_delete_cases,direct_redirect_cases,account_custom_cases,redirect_provider_framing,redirect_provider_order,redirect_grouped_preview
-  observed=redirect_extensions.run(f,[('account-custom-scalars',account_custom_cases.run),('inactive-input-profile',inactive_input_cases.run),('Channel-Recording-Collector',channel_delete_cases.run),('saved-Redirect-characterization',direct_redirect_cases.run),('pooled-Redirect-fixed-probe-fallback',redirect_provider_framing.run),('same-profile-one-slot-Redirect-fallback',redirect_provider_framing.run_same_slot),('saved-three-stream-Redirect-order',redirect_provider_order.run),('grouped-STD-default-and-scoped-preview-pool',redirect_grouped_preview.run)])
+  observed=redirect_extensions.run(f,[('account-custom-scalars',account_custom_cases.run),('inactive-input-profile',inactive_input_cases.run),('Channel-Recording-Collector',channel_delete_cases.run),('saved-Redirect-characterization',direct_redirect_cases.run),('pooled-Redirect-fixed-probe-fallback',redirect_provider_framing.run),('same-profile-one-slot-Redirect-fallback',redirect_provider_framing.run_same_slot),('saved-three-stream-Redirect-order',redirect_provider_order.run),('grouped-STD-default-and-scoped-preview-pool',redirect_grouped_preview.run),('grouped-STD-transformed-scoped-preview-pool',redirect_grouped_preview.run_transformed)])
   if observed['status']!='passed':raise AssertionError('RequiredRedirectExtensionsFailed')
   return observed
  cell('same-context-inactive-input-Collector-and-characterization',extensions)

@@ -72,7 +72,8 @@ def main():
       save(ident+'-entered',{'method':self.command,'pid':os.getpid(),'first_validation_request':True})
       until=time.monotonic()+4.5
       while not stop.is_set()and not(root/(ident+'.release')).exists()and time.monotonic()<until:stop.wait(.01)
-    if match and self.command=='GET':
+    transformed=re.fullmatch(r'/live/alias-viewer-[a-f0-9]{12}/alias-owned-[a-f0-9]{12}/[a-f0-9]{32}\.ts',self.path)
+    if (match or transformed) and self.command=='GET':
      upstream=http.client.HTTPConnection(args.upstream,8080,timeout=3)
      try:
       headers={'Host':'origin:8080','Connection':'close'}

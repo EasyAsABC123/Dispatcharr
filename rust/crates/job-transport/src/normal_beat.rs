@@ -1565,8 +1565,9 @@ FOR SHARE OF p,c NOWAIT"#;
 
 // Both SQL paths retain the same bounded account and default interval lane.
 // A canonical saved URL override uses the local receiver's existing URL mode
-// independently of the global settings. Leave other saved CSV forms outside
-// Beat selection until their live scheduler/receiver boundary is qualified.
+// independently of the global settings. The worker honors explicit false
+// in the same local preference shapes when creating group relationships.
+// Other saved CSV forms remain outside this scheduler scope.
 macro_rules! local_m3u_account {
     () => {
         r#"a.account_type='STD' AND a.is_active
@@ -1577,7 +1578,10 @@ macro_rules! local_m3u_account {
                      THEN a.custom_properties - 'hash_key'
                      ELSE a.custom_properties END) IN (
              '{}'::jsonb,
+             '{"auto_enable_new_groups_live":false}'::jsonb,
              '{"enable_vod":false,"auto_enable_new_groups_live":true,
+               "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true}'::jsonb,
+             '{"enable_vod":false,"auto_enable_new_groups_live":false,
                "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true}'::jsonb
            )
            AND octet_length(a.name)<=512 AND octet_length(a.file_path)<=4096
@@ -3094,6 +3098,7 @@ mod tests {
         let selection = LOAD_SELECTED_CORE_QUERY.find(account_predicate).unwrap();
         assert!(selection < LOAD_SELECTED_CORE_QUERY.find("LIMIT 257").unwrap());
         assert!(LOCK_CURRENT_LOCAL_M3U.contains(account_predicate));
+        assert!(account_predicate.contains(r#"'{"auto_enable_new_groups_live":false}'::jsonb"#));
         assert!(!LOCK_CURRENT_SAVED_XC.contains(account_predicate));
         assert!(LOCK_CURRENT_LOCAL_M3U.contains("FOR SHARE NOWAIT"));
         assert!(LOCK_CURRENT_LOCAL_M3U.contains("p.id=a.refresh_task_id"));
@@ -3125,11 +3130,21 @@ mod tests {
             "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true});
         let mut override_defaults = defaults.clone();
         override_defaults["hash_key"] = json!("url");
+        let mut disabled_defaults = defaults.clone();
+        disabled_defaults["auto_enable_new_groups_live"] = json!(false);
+        let mut disabled_override = disabled_defaults.clone();
+        disabled_override["hash_key"] = json!("url");
         let rows = vec![
             json!({}),
             defaults,
             json!({"hash_key":"url"}),
             override_defaults,
+            json!({"auto_enable_new_groups_live":false}),
+            disabled_defaults,
+            json!({"hash_key":"url","auto_enable_new_groups_live":false}),
+            disabled_override,
+            json!({"auto_enable_new_groups_live":"false"}),
+            json!({"auto_enable_new_groups_live":false,"enable_vod":true}),
             json!({"hash_key":"name,url"}),
             json!({"hash_key":null}),
             json!({"hash_key":"unknown"}),
@@ -3142,7 +3157,7 @@ mod tests {
             .fetch_all(&mut pg)
             .await
             .unwrap();
-        assert_eq!(found, [1, 2, 3, 4]);
+        assert_eq!(found, [1, 2, 3, 4, 5, 6, 7, 8]);
     }
 
     #[test]
