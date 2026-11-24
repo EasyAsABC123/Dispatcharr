@@ -508,10 +508,10 @@ impl Store {
                 return Err(playback_capacity());
             }
         }
-        // Source Channel.get_stream reserves the provider credential pool before
-        // choosing an input transport. Both the direct and command-backed channel
-        // candidates carry that pool to the same reservation owner.
-        let ordinary_std_pool = preview.is_none() && !redirect;
+        // Source Channel.get_stream resolves the credential pool for Redirect
+        // as well as direct and command-backed playback. Stream previews use a
+        // separate lookup and still require their own sample authority.
+        let ordinary_std_pool = preview.is_none();
         let mut std_accounts = Vec::new();
         if ordinary_std_pool {
             for row in &rows {

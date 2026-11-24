@@ -1,5 +1,5 @@
 //! Read-only opt-in test against a disposable Django-migrated PostgreSQL fixture.
-use dispatcharr_contracts::{PlaybackRequest, PlaybackResolver};
+use dispatcharr_contracts::{PlaybackRequest, PlaybackResolution, PlaybackResolver};
 use dispatcharr_store::{AuthConfig, AuthService, Store};
 
 fn required(name: &str) -> String {
@@ -67,6 +67,73 @@ async fn grouped_std_pool_is_preserved_for_automatic_and_configured_input_comman
                 .input_command
                 .as_ref()
                 .is_some_and(|command| command.argv.contains(&alternate.url)));
+        }
+    }
+}
+
+#[tokio::test]
+#[ignore = "requires a disposable Django-migrated PostgreSQL fixture with a grouped STD Redirect channel and signed roles"]
+async fn grouped_std_redirect_carries_pool_for_both_redirect_selection_modes() {
+    assert_eq!(required("DISPATCHARR_STORE_TEST_FIXTURE"), "isolated");
+    let store = Store::connect(&required("TEST_DATABASE_URL"), 2)
+        .await
+        .expect("isolated PostgreSQL must be available");
+    let auth = AuthService::new(
+        store,
+        AuthConfig::new(required("TEST_DJANGO_SECRET_KEY")).unwrap(),
+    );
+    let channel_id = required("TEST_STD_REDIRECT_CHANNEL_UUID");
+    let expected_counter = required("TEST_STD_SAMPLE_COUNTER_KEY");
+    for (token_env, capacity_only) in [
+        ("TEST_DJANGO_ADMIN_ACCESS_TOKEN", false),
+        ("TEST_DJANGO_ALLOWED_STD_ACCESS_TOKEN", true),
+    ] {
+        let token = required(token_env);
+        let resolved = auth
+            .resolve_response(PlaybackRequest {
+                channel_id: channel_id.clone(),
+                query: Vec::new(),
+                headers: vec![("authorization".into(), format!("Bearer {token}"))],
+                peer_ip: "127.0.0.1".parse().unwrap(),
+            })
+            .await
+            .unwrap_or_else(|error| panic!("redirect resolution returned {}", error.status));
+        let PlaybackResolution::Redirect(plan) = resolved else {
+            panic!("expected ordinary Redirect resolution");
+        };
+        assert_eq!(plan.capacity_only, capacity_only);
+        let candidates = if let Some(assignment) = plan.assignment {
+            assert!(!capacity_only && assignment.has_assigned_streams);
+            let candidates = assignment
+                .resolver
+                .candidates()
+                .await
+                .expect("resolve assigned candidates");
+            let primary = candidates.first().expect("grouped redirect candidate");
+            let borrowed = assignment
+                .resolver
+                .resolve(primary.stream_id, primary.provider_profile_id.unwrap())
+                .await
+                .expect("resolve owned fixture assignment")
+                .expect("assigned candidate");
+            assert_eq!(
+                borrowed.credential_pool.as_ref(),
+                primary.credential_pool.as_ref()
+            );
+            candidates
+        } else {
+            assert!(capacity_only);
+            plan.candidates
+        };
+        assert!(!candidates.is_empty());
+        for candidate in candidates {
+            assert!(candidate.input_command.is_none());
+            let pool = candidate.credential_pool.expect("finite grouped STD pool");
+            assert!(
+                pool.counter_key == expected_counter,
+                "redirect pool identity"
+            );
+            assert_eq!(pool.max_streams, 1);
         }
     }
 }

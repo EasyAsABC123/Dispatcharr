@@ -415,6 +415,7 @@ pub(super) fn json_list_path(method: &Method, path: &str) -> bool {
                 | "/api/vod/series.json"
                 | "/api/vod/episodes.json"
                 | "/api/vod/all.json"
+                | "/api/vod/categories.json"
         )
 }
 

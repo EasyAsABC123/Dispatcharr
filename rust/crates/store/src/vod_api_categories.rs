@@ -456,9 +456,11 @@ impl CategoryReads {
             let result=async {
             work.check()?;
             if let Some(http)=&http {
-                if let Some(id)=request.detail.as_deref().and_then(|raw|super::vod_api_http::json_detail_id(&http.method,raw)) {
+                let alias_id=request.detail.as_deref().and_then(|raw|super::vod_api_http::json_detail_id(&http.method,raw));
+                let alias_list=request.detail.is_none()&&super::vod_api_http::json_list_path(&http.method,http.uri.path());
+                if alias_id.is_some()||alias_list {
                     crate::core_reads::negotiate_literal_json_alias(&request.headers)?;
-                    request.detail=Some(id.to_owned());
+                    if let Some(id)=alias_id {request.detail=Some(id.to_owned());}
                 } else {
                     category_negotiate(&request.headers,&http.uri)?;
                 }

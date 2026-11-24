@@ -7,6 +7,53 @@ use sha2::{Digest, Sha256};
 use sqlx::{postgres::PgPoolOptions, Row};
 use std::time::Duration;
 
+#[tokio::test]
+async fn unified_json_detail_alias_negotiates_get_at_the_normal_router() {
+    use axum::http::Request;
+    use tower::ServiceExt;
+
+    let pool = PgPoolOptions::new()
+        .connect_lazy("postgresql://fixture:fixture@127.0.0.1:1/fixture")
+        .unwrap();
+    let auth = crate::AuthService::new(
+        crate::Store::from_pool(pool),
+        crate::AuthConfig::new("fixture-only".into()).unwrap(),
+    );
+    let service = VodReads::new(auth, ReadLimits::default()).unwrap();
+    let router = service.unified_router();
+    for (method, path, expected) in [
+        (
+            Method::GET,
+            "/api/vod/all/3.json",
+            StatusCode::NOT_ACCEPTABLE,
+        ),
+        (
+            Method::GET,
+            "/api/vod/all/4.json/?format=api",
+            StatusCode::NOT_ACCEPTABLE,
+        ),
+        (Method::GET, "/api/vod/all/3", StatusCode::NOT_FOUND),
+        (Method::GET, "/api/vod/all/3.api", StatusCode::NOT_FOUND),
+        (Method::POST, "/api/vod/all/3.json", StatusCode::NOT_FOUND),
+    ] {
+        let mut request = Request::builder()
+            .method(method)
+            .uri(path)
+            .header("accept", "text/html")
+            .body(Body::empty())
+            .unwrap();
+        request
+            .extensions_mut()
+            .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1234))));
+        let reply = router.clone().oneshot(request).await.unwrap();
+        assert_eq!(reply.status(), expected);
+        if expected == StatusCode::NOT_ACCEPTABLE {
+            assert_eq!(reply.headers()["vary"], "Accept, origin");
+        }
+    }
+    assert!(service.shutdown(Duration::from_secs(1)).await);
+}
+
 fn headers(case: &Value, base: &Value) -> Vec<(String, String)> {
     let mut headers = case["headers"]
         .as_object()

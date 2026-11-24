@@ -3,7 +3,7 @@
 use super::vod_api_owned_read::HttpScope;
 use super::{
     vod_api_categories::{CategoryReads, CategoryRequest},
-    vod_api_http::{json_detail_id, json_indent, pretty_document, HttpGate},
+    vod_api_http::{json_detail_id, json_indent, json_list_path, pretty_document, HttpGate},
     vod_api_owned_read::{ReadError, ReadRuntime},
     vod_api_read_component::HttpRead,
 };
@@ -56,6 +56,8 @@ impl CategoryHttp {
         let mut router = Router::new();
         for (path, detail, json_only) in [
             ("/api/vod/categories/", false, false),
+            ("/api/vod/categories.json", false, true),
+            ("/api/vod/categories.json/", false, true),
             ("/api/vod/categories/{id}/", true, false),
             ("/api/vod/categories/{id}", true, true),
         ] {
@@ -68,9 +70,14 @@ impl CategoryHttp {
                         let state = state.clone();
                         async move {
                             if json_only {
-                                let segment =
-                                    request.uri().path().rsplit('/').next().unwrap_or_default();
-                                if json_detail_id(request.method(), segment).is_none() {
+                                let path = request.uri().path();
+                                let valid = if detail {
+                                    let segment = path.rsplit('/').next().unwrap_or_default();
+                                    json_detail_id(request.method(), segment).is_some()
+                                } else {
+                                    json_list_path(request.method(), path)
+                                };
+                                if !valid {
                                     return StatusCode::NOT_FOUND.into_response();
                                 }
                             }
@@ -997,7 +1004,7 @@ mod json_detail_tests {
     use tower::ServiceExt;
 
     #[tokio::test]
-    async fn numeric_category_json_alias_negotiates_get_at_the_normal_router() {
+    async fn category_json_aliases_negotiate_get_at_the_normal_router() {
         let pool = sqlx::postgres::PgPoolOptions::new()
             .connect_lazy("postgresql://fixture:fixture@127.0.0.1:1/fixture")
             .unwrap();
@@ -1008,6 +1015,8 @@ mod json_detail_tests {
         let service = CategoryHttp::new(auth, ReadLimits::default()).unwrap();
         let router = service.router();
         for path in [
+            "/api/vod/categories.json",
+            "/api/vod/categories.json/?format=api",
             "/api/vod/categories/42.json?format=api",
             "/api/vod/categories/42.json/?format=api",
         ] {
@@ -1024,6 +1033,8 @@ mod json_detail_tests {
             assert_eq!(reply.headers()["vary"], "Accept, origin");
         }
         for (method, path) in [
+            (Method::GET, "/api/vod/categories.api"),
+            (Method::POST, "/api/vod/categories.json/"),
             (Method::GET, "/api/vod/categories/42.api"),
             (Method::GET, "/api/vod/categories/42"),
             (Method::POST, "/api/vod/categories/42.json"),

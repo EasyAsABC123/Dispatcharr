@@ -3,7 +3,7 @@
 //! browsable HTML/query/property grammar remain separate acceptance gates.
 //! Original Dispatcharr authors/contributors retain credit and AGPL licensing.
 use super::{
-    vod_api_http::{json_indent, json_list_path, negotiate, pretty_document},
+    vod_api_http::{json_detail_id, json_indent, json_list_path, negotiate, pretty_document},
     vod_api_owned_read::{ReadError, ReadRuntime},
     vod_api_projection::visibility,
     vod_api_read_component::HttpRead,
@@ -58,7 +58,8 @@ impl UnifiedReads {
         let completed = metadata.clone();
         let bytes=self.runtime.run_scoped(input,Some(http.deadline),http.scope.clone(),move |work| async move {
             let indent=json_indent(&request.headers);
-            let fixed_json=json_list_path(&http.method,http.uri.path());
+            let alias_id=http.raw_detail.as_deref().and_then(|raw|json_detail_id(&http.method,raw));
+            let fixed_json=alias_id.is_some()||json_list_path(&http.method,http.uri.path());
             let html=!fixed_json&&super::vod_api_unified_html::requested(&request.headers);
             let cookie=super::vod_api_unified_html::cookie(&request.headers);
             let mut identity=None;
@@ -85,7 +86,7 @@ impl UnifiedReads {
                     return Err(crate::StoreError::StatusBody(405,json!({"detail":format!("Method \"{}\" not allowed.",http.method)})).into());
                 }
                 if user.user_level<1 {return Err(crate::StoreError::PermissionDenied.into());}
-                if let Some(raw)=&http.raw_detail {
+                if let Some(raw)=alias_id.or(http.raw_detail.as_deref()) {
                     return Err(match dispatcharr_ingest_core::source_integer_literal(raw) {
                         Some(_)=>crate::StoreError::StatusBody(404,json!({"detail":"No Movie matches the given query."})),
                         None=>crate::StoreError::NotFound,
