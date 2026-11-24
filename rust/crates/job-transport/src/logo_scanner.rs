@@ -419,10 +419,10 @@ impl Scanner {
         tokio::spawn(async move {
             let result = async {
                 let (receipt, done) = this.receipt(owner.clone(), slot.clone());
-                let result = if let Some(hook) = &hook {
-                    hook.admit(receipt.clone()).await.map(|_| true)
-                } else {
-                    this.effects.no_index_sources(receipt.clone()).await
+                let result = match &hook {
+                    Some(_) if this.mapped_parent && this.first_scan_completed() => Ok(true),
+                    Some(hook) => hook.admit(receipt.clone()).await.map(|_| true),
+                    None => this.effects.no_index_sources(receipt.clone()).await,
                 };
                 drop(receipt);
                 done.await.map_err(|_| Error::Operational)?;
@@ -479,14 +479,20 @@ impl Scanner {
   }}}
         // Bounded admission checks precede every mutation. This intentionally excludes
         // concurrent changes and first-scan children; it is not full scanner parity.
-        if let Some(hook) = &hook {
-            let (receipt, done) = self.receipt(owner.clone(), slot.clone());
-            let result = hook.admit(receipt.clone()).await;
-            drop(receipt);
-            done.await.map_err(|_| Error::Operational)?;
-            result?;
-        } else if !physical!(no_index_sources()) {
-            return Err(Error::Unsupported);
+        match &hook {
+            Some(_) if self.mapped_parent && self.first_scan_completed() => {}
+            Some(hook) => {
+                let (receipt, done) = self.receipt(owner.clone(), slot.clone());
+                let result = hook.admit(receipt.clone()).await;
+                drop(receipt);
+                done.await.map_err(|_| Error::Operational)?;
+                result?;
+            }
+            None => {
+                if !physical!(no_index_sources()) {
+                    return Err(Error::Unsupported);
+                }
+            }
         }
         let mut files = self.inspect_files(owner.clone(), slot.clone()).await?;
         let result=async{let mut counts=Counts{total_files:files.count(),..Counts::default()};

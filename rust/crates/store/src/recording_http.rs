@@ -29,10 +29,10 @@ pub(super) mod recurring;
 mod series_bulk_remove;
 mod series_evaluate_http;
 mod series_save;
-pub(super) use series_save::PATH as SERIES_RULES_PATH;
 pub use recurring::{
     execute_recurring_purge, preflight_recurring_purge, CONFIGURED_REBUILD_HORIZON_DAYS,
 };
+pub(super) use series_save::PATH as SERIES_RULES_PATH;
 pub type RecordingChannelId = Uuid;
 pub type RecordingTaskConnection = sqlx::PgConnection;
 const SLOTS: usize = 4;

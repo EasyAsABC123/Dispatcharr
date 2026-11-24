@@ -215,7 +215,7 @@ impl Drop for Operation {
         }
     }
 }
-#[derive(Clone, Copy)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum HashMode {
     Empty,
     Url,
@@ -228,6 +228,28 @@ impl HashMode {
         }
     }
 }
+// Bound the JSONB text carried out of the owned account query. The only
+// nonempty supported key set here is the existing local URL identity.
+const MAX_LOCAL_HASH_OVERRIDE_BYTES: i32 = 4096;
+
+fn local_account_hash_override(value: Option<&Value>) -> Result<Option<HashMode>, Error> {
+    let Some(value) = value.filter(|value| !value.is_null()) else {
+        return Ok(None);
+    };
+    let text = value.as_str().ok_or(Error::Unsupported)?;
+    let mut mode = None;
+    for key in text.split(',').map(|token| {
+        token.trim_matches(|ch: char| ch.is_whitespace() || matches!(ch, '\u{1c}'..='\u{1f}'))
+    }) {
+        match key {
+            "url" => mode = Some(HashMode::Url),
+            "name" | "tvg_id" | "m3u_id" | "group" => return Err(Error::Unsupported),
+            _ => {}
+        }
+    }
+    Ok(mode)
+}
+
 pub(crate) struct Prepared {
     hash_mode: HashMode,
     account: Account,
@@ -675,18 +697,23 @@ impl Service {
             r#"SELECT id::bigint,name,file_path,is_active,status,
                CASE WHEN COALESCE(octet_length(last_message),0)<=8192 THEN last_message ELSE NULL END AS last_message,
                locked,stale_stream_days::bigint,
+               CASE WHEN octet_length((custom_properties->'hash_key')::text)<=$2
+                 THEN custom_properties->'hash_key' END AS account_hash_key,
                (account_type='STD' AND server_url IS NULL AND user_agent_id IS NULL
                  AND stream_profile_id IS NULL AND username IS NULL AND password IS NULL
-                 AND custom_properties IN (
-                   '{}'::jsonb,
-                   '{"enable_vod":false,"auto_enable_new_groups_live":true,
-                     "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true}'::jsonb
-                 )
+                 AND CASE WHEN jsonb_typeof(custom_properties)='object' THEN
+                   custom_properties - 'hash_key' IN (
+                     '{}'::jsonb,
+                     '{"enable_vod":false,"auto_enable_new_groups_live":true,
+                       "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true}'::jsonb
+                   ) AND COALESCE(octet_length((custom_properties->'hash_key')::text),0)<=$2
+                   ELSE FALSE END
                  AND octet_length(name)<=512 AND octet_length(file_path)<=4096
                  AND COALESCE(octet_length(last_message),0)<=8192) AS known
                FROM m3u_m3uaccount WHERE id=$1"#,
         )
         .bind(id)
+        .bind(MAX_LOCAL_HASH_OVERRIDE_BYTES)
         .fetch_optional(self.executor())
         .await
         .map_err(|_| Error::Operational)?
@@ -726,7 +753,13 @@ impl Service {
             return Err(Error::Unsupported);
         }
         *stage = "hash_policy_sql_or_cache";
-        let hash_mode = self.hash_setting(owner.clone()).await?;
+        let override_value: Option<Value> = row
+            .try_get("account_hash_key")
+            .map_err(|_| Error::Operational)?;
+        let hash_mode = match local_account_hash_override(override_value.as_ref())? {
+            Some(mode) => mode,
+            None => self.hash_setting(owner.clone()).await?,
+        };
         *stage = "forbidden_effects_sql";
         let forbidden:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(self.executor()).await.map_err(|_|Error::Operational)?;
         *stage = "forbidden_effects_domain";
@@ -1507,6 +1540,41 @@ fn audit_limit(settings: &Value) -> Result<i64, Error> {
 #[cfg(test)]
 mod boundary_tests {
     use super::*;
+
+    #[test]
+    fn local_account_hash_csv_keeps_url_precedence_and_global_fallback() {
+        for configured in [
+            json!("url"),
+            json!("  url,, unknown,url\t"),
+            json!("\u{1f}url\u{1c}"),
+        ] {
+            assert_eq!(
+                local_account_hash_override(Some(&configured)),
+                Ok(Some(HashMode::Url))
+            );
+        }
+        for configured in [
+            None,
+            Some(json!(null)),
+            Some(json!("")),
+            Some(json!("  , foreign")),
+        ] {
+            assert_eq!(local_account_hash_override(configured.as_ref()), Ok(None));
+        }
+        for configured in [
+            json!("name,url"),
+            json!("tvg_id"),
+            json!("m3u_id"),
+            json!("group"),
+            json!(["url"]),
+        ] {
+            assert_eq!(
+                local_account_hash_override(Some(&configured)),
+                Err(Error::Unsupported)
+            );
+        }
+    }
+
     #[test]
     fn audit_limit_has_no_unsupported_configuration_fallback() {
         for v in [

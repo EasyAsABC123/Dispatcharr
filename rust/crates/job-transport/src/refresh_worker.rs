@@ -560,7 +560,8 @@ impl ServiceExecutor {
                 FileJobOutcome::Imported
                 | FileJobOutcome::Skipped
                 | FileJobOutcome::Deferred
-                | FileJobOutcome::AlreadyRunning => Ok(NormalReturn::Null),
+                | FileJobOutcome::AlreadyRunning
+                | FileJobOutcome::MissingLocalFileReported => Ok(NormalReturn::Null),
                 FileJobOutcome::MissingSource(value) => {
                     // FileJobRunner now performs the proven retained orphan
                     // helper, including Source's caught P0001 partial commits.

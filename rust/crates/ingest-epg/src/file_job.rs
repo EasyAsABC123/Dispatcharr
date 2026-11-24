@@ -93,6 +93,7 @@ pub enum FileJobOutcome {
     Deferred,
     AlreadyRunning,
     MissingSource(String),
+    MissingLocalFileReported,
     Failed,
     DownloadRejected(dispatcharr_store::xmltv_download::Rejected),
     PendingDownloadRejected(dispatcharr_store::epg_task_hooks::PendingXmlRejection),
@@ -609,6 +610,11 @@ impl Execution<'_> {
             Ok(TerminalObservation::StatusFailure(_)) if classified => {
                 return Err(ImportError::Worker)
             }
+            Ok(TerminalObservation::StatusFailure(_))
+                if matches!(&result, Ok(FileJobOutcome::MissingLocalFileReported)) =>
+            {
+                return Err(ImportError::Worker);
+            }
             // Preserve the existing execute() guarded-error behavior for
             // nonclassified runs; no new normal Failed authority is granted.
             Ok(TerminalObservation::StatusFailure(_)) => (),
@@ -894,9 +900,26 @@ impl Execution<'_> {
         context.ensure_active()?;
         if !exists {
             let message = "No URL provided and no valid local file exists".to_string();
-            self.failure(source, message.clone(), message, true, context)
+            let report = self
+                .services
+                .reporter
+                .execute_observed(
+                    ReportAction::DownloadFailed(FailedImport {
+                        source_id: source.id,
+                        source_name: source.name.clone(),
+                        last_message: message.clone(),
+                        publication_error: message,
+                    }),
+                    context,
+                )
                 .await?;
-            return Ok(FileJobOutcome::Failed);
+            return Ok(
+                if !remote_download && matches!(report, ReportObservation::FailureStatusSaved) {
+                    FileJobOutcome::MissingLocalFileReported
+                } else {
+                    FileJobOutcome::Failed
+                },
+            );
         }
         let path = path.unwrap();
         if [".gz", ".zip", ".xz"]

@@ -269,7 +269,16 @@ impl Service {
                 _ => Err(Error::Operational),
             };
         }
-        let result=sqlx::query_scalar::<_,i64>("SELECT count(*)::bigint FROM (SELECT s.id FROM epg_epgsource s LEFT JOIN epg_epgsourceindex i ON s.id=i.source_id WHERE s.is_active AND s.source_type NOT IN ('dummy','schedules_direct') AND (i.source_id IS NULL OR i.data IS NULL) LIMIT 17) bounded").fetch_one(&mut c).await;
+        // The mixed scanner runs the index helper once per worker lifetime.
+        let result = if self.inner.logos.is_some() && self.first_completed() {
+            None
+        } else {
+            Some(sqlx::query_scalar::<_, i64>(
+                "SELECT count(*)::bigint FROM (SELECT s.id FROM epg_epgsource s LEFT JOIN epg_epgsourceindex i ON s.id=i.source_id WHERE s.is_active AND s.source_type NOT IN ('dummy','schedules_direct') AND (i.source_id IS NULL OR i.data IS NULL) LIMIT 17) bounded",
+            )
+            .fetch_one(&mut c)
+            .await)
+        };
         settle(c).await?;
         if let Some(logos) = &self.inner.logos {
             let hook = Arc::new(Execution::new(
@@ -293,7 +302,7 @@ impl Service {
                 .await
                 .map_err(|_| Error::Unsupported)?;
         }
-        if result? > 16 {
+        if result.transpose()?.is_some_and(|count| count > 16) {
             return Err(Error::Unsupported);
         }
         Ok(())

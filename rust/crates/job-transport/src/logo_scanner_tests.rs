@@ -400,3 +400,94 @@ async fn task_preflight_is_readonly_and_rejects_unqualified_marker_scope() {
     ));
     std::fs::remove_dir_all(root).unwrap();
 }
+
+#[tokio::test]
+async fn mixed_scanner_only_admits_index_helper_until_first_completion() {
+    use std::sync::atomic::AtomicUsize;
+
+    #[derive(Default)]
+    struct IndexHook {
+        admissions: AtomicUsize,
+        finishes: AtomicUsize,
+        reject: AtomicBool,
+    }
+    impl FirstScanHook for IndexHook {
+        fn admit<'a>(&'a self, _receipt: Arc<Receipt>) -> FutureResult<'a, ()> {
+            Box::pin(async move {
+                self.admissions.fetch_add(1, Ordering::Relaxed);
+                if self.reject.load(Ordering::Relaxed) {
+                    return Err(Error::Unsupported);
+                }
+                Ok(())
+            })
+        }
+
+        fn finish<'a>(&'a self, _receipt: Arc<Receipt>) -> FutureResult<'a, ()> {
+            Box::pin(async move {
+                self.finishes.fetch_add(1, Ordering::Relaxed);
+                Ok(())
+            })
+        }
+    }
+
+    let (root, roots) = fixture();
+    let path = file(&roots, "ordinary.png", 1699999992.125);
+    let ports = Arc::new(Ports::new());
+    let new_scanner = || {
+        Scanner::new(ports.clone(), roots.clone(), Limits::default())
+            .unwrap()
+            .with_mapped_parent(Arc::new(AtomicBool::new(false)))
+            .unwrap()
+    };
+    let scanner = new_scanner();
+    let hook = Arc::new(IndexHook::default());
+    hook.reject.store(true, Ordering::Relaxed);
+    assert!(matches!(
+        scanner
+            .preflight_with_first_scan(Arc::new(()), hook.clone())
+            .await,
+        Err(Error::Unsupported)
+    ));
+    assert!(!scanner.first_scan_completed());
+
+    hook.reject.store(false, Ordering::Relaxed);
+    scanner
+        .preflight_with_first_scan(Arc::new(()), hook.clone())
+        .await
+        .unwrap();
+    scanner
+        .scan_with_first_scan(1700000000.125, Arc::new(()), hook.clone())
+        .await
+        .unwrap();
+    assert_eq!(hook.admissions.load(Ordering::Relaxed), 3);
+    assert_eq!(hook.finishes.load(Ordering::Relaxed), 1);
+
+    hook.reject.store(true, Ordering::Relaxed);
+    scanner
+        .preflight_with_first_scan(Arc::new(()), hook.clone())
+        .await
+        .unwrap();
+    scanner
+        .scan_with_first_scan(1700000001.125, Arc::new(()), hook.clone())
+        .await
+        .unwrap();
+    ports.markers.lock().unwrap().insert(path, "NaN".into());
+    assert!(matches!(
+        scanner
+            .preflight_with_first_scan(Arc::new(()), hook.clone())
+            .await,
+        Err(Error::Unsupported)
+    ));
+    assert_eq!(hook.admissions.load(Ordering::Relaxed), 3);
+    assert_eq!(hook.finishes.load(Ordering::Relaxed), 1);
+
+    ports.markers.lock().unwrap().clear();
+    assert!(matches!(
+        new_scanner()
+            .preflight_with_first_scan(Arc::new(()), hook.clone())
+            .await,
+        Err(Error::Unsupported)
+    ));
+    assert_eq!(hook.admissions.load(Ordering::Relaxed), 4);
+    std::fs::remove_dir_all(root).unwrap();
+}
