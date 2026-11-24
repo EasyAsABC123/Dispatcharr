@@ -376,17 +376,26 @@ impl EpgProgramReads {
             .head(omitted_json_method)
             .fallback(omitted_json_method);
         Router::new()
-            .route("/api/epg/programs/", get(list).options(programme_options))
+            .route(
+                "/api/epg/programs/",
+                get(list).post(mutations::create).options(programme_options),
+            )
             .route(
                 series_preview::PATH,
                 axum::routing::post(series_preview::handle),
             )
-            .route("/api/epg/programs.json", list_json.clone())
+            .route(
+                "/api/epg/programs.json",
+                list_json.clone().post(mutations::create_json),
+            )
             .route("/api/epg/programs.json/", list_json)
             .route(
                 "/api/epg/programs/{json_id}",
                 get(detail_json_alias)
                     .head(omitted_json_method)
+                    .put(mutations::change_json)
+                    .patch(mutations::change_json)
+                    .delete(mutations::change_json)
                     .fallback(omitted_json_method),
             )
             .route(
@@ -838,6 +847,69 @@ mod tests {
     );
 
     #[tokio::test]
+    async fn programme_writes_admit_only_the_existing_authorized_writer() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-programme-writes-only".into()).unwrap(),
+        );
+        let programmes = EpgProgramReads::new(auth, EpgProgramReadLimits::default()).unwrap();
+        let router = programmes
+            .router()
+            .layer(Extension(ConnectInfo(SocketAddr::from((
+                [127, 0, 0, 1],
+                1234,
+            )))));
+        for (method, path) in [
+            (Method::POST, "/api/epg/programs/"),
+            (Method::POST, "/api/epg/programs.json"),
+            (Method::PUT, "/api/epg/programs/18.json"),
+            (Method::PATCH, "/api/epg/programs/18.json"),
+            (Method::DELETE, "/api/epg/programs/18.json"),
+        ] {
+            let response = router
+                .clone()
+                .oneshot(
+                    Request::builder()
+                        .method(method.clone())
+                        .uri(path)
+                        .header(header::CONTENT_TYPE, "application/json")
+                        .header(header::ACCEPT, "application/json")
+                        .body(Body::from("{"))
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(
+                response.status(),
+                StatusCode::UNAUTHORIZED,
+                "{method} {path}"
+            );
+            assert_eq!(
+                response.headers()[header::WWW_AUTHENTICATE],
+                "Bearer realm=\"api\""
+            );
+            assert_eq!(
+                to_bytes(response.into_body(), 256).await.unwrap().as_ref(),
+                br#"{"detail":"Authentication credentials were not provided."}"#
+            );
+        }
+        let response = router
+            .oneshot(
+                Request::builder()
+                    .method(Method::PATCH)
+                    .uri("/api/epg/programs/18.json?format=api")
+                    .header(header::ACCEPT, "text/html")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::NOT_ACCEPTABLE);
+    }
+
+    #[tokio::test]
     async fn epg_programme_json_trailing_slash_uses_the_existing_get_policy() {
         let pool = sqlx::postgres::PgPoolOptions::new()
             .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
@@ -938,7 +1010,10 @@ mod tests {
                     Method::POST,
                     "application/json",
                     "",
-                    if path == "/api/m3u/server-groups.json" {
+                    if matches!(
+                        path,
+                        "/api/m3u/server-groups.json" | "/api/epg/programs.json"
+                    ) {
                         StatusCode::UNAUTHORIZED
                     } else {
                         StatusCode::NOT_FOUND

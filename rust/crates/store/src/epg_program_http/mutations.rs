@@ -1,8 +1,8 @@
-//! Original Dispatcharr's administrative ProgramData detail mutations.
+//! Original Dispatcharr's administrative ProgramData mutations.
 //! Original Dispatcharr, Django and DRF authors retain full behavior credit.
 use super::{
-    json_negotiation, program_id, projected_fields, unavailable, BoundedJson, EpgProgramReads,
-    OwnedJson,
+    json_negotiation, negotiate_literal_json_alias, program_id, programme_json_id,
+    projected_fields, unavailable, BoundedJson, EpgProgramReads, OwnedJson,
 };
 use crate::{
     admin_writes::{body_object, character, parse_datetime},
@@ -11,14 +11,26 @@ use crate::{
 use axum::{
     body::{to_bytes, Body},
     extract::{ConnectInfo, Path, Request, State},
-    http::{header, StatusCode},
+    http::{header, Method, StatusCode},
     response::{IntoResponse, Response},
     Json,
 };
 use bytes::Bytes;
 use serde_json::{json, Map, Value};
-use sqlx::{PgConnection, Row};
+use sqlx::{postgres::PgDatabaseError, PgConnection, Row};
 use std::{convert::Infallible, net::SocketAddr, sync::Arc};
+
+// The Source serializer has no writable EPG relation, but the model requires
+// one. Preserve the failed INSERT and its sequence effect without ever
+// supplying an inferred EPG or committing an orphan on a changed schema.
+const INSERT_WITHOUT_EPG: &str = "
+INSERT INTO epg_programdata(
+    epg_id,start_time,end_time,title,sub_title,description,tvg_id,custom_properties
+) VALUES (
+    NULL,($1::jsonb->>'start_time')::timestamptz,($1::jsonb->>'end_time')::timestamptz,
+    $1::jsonb->>'title',$1::jsonb->>'sub_title',$1::jsonb->>'description',$1::jsonb->>'tvg_id',
+    '{}'::jsonb
+)";
 
 const UPDATE: &str = "
 WITH changed AS (
@@ -185,7 +197,6 @@ async fn change(
     request: Request,
     partial: Option<bool>,
 ) -> Result<Response, StoreError> {
-    json_negotiation(request.headers(), request.uri())?;
     state
         .auth
         .account_user(peer, request.headers().clone(), true)
@@ -253,6 +264,7 @@ pub(super) async fn patch(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Result<Response, StoreError> {
+    json_negotiation(request.headers(), request.uri())?;
     change(state, peer, id, request, Some(true)).await
 }
 
@@ -262,6 +274,7 @@ pub(super) async fn replace(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Result<Response, StoreError> {
+    json_negotiation(request.headers(), request.uri())?;
     change(state, peer, id, request, Some(false)).await
 }
 
@@ -271,12 +284,141 @@ pub(super) async fn delete(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Result<Response, StoreError> {
+    json_negotiation(request.headers(), request.uri())?;
     change(state, peer, id, request, None).await
+}
+
+pub(super) async fn change_json(
+    State(state): State<EpgProgramReads>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    let id = programme_json_id(request.uri().path())
+        .ok_or(StoreError::NotFound)?
+        .to_owned();
+    negotiate_literal_json_alias(request.headers())?;
+    let partial = match *request.method() {
+        Method::PUT => Some(false),
+        Method::PATCH => Some(true),
+        Method::DELETE => None,
+        _ => return Err(StoreError::NotFound),
+    };
+    change(state, peer, id, request, partial).await
+}
+
+pub(super) async fn create(
+    State(state): State<EpgProgramReads>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    json_negotiation(request.headers(), request.uri())?;
+    create_with_json(state, peer, request).await
+}
+
+pub(super) async fn create_json(
+    State(state): State<EpgProgramReads>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    negotiate_literal_json_alias(request.headers())?;
+    create_with_json(state, peer, request).await
+}
+
+async fn create_with_json(
+    state: EpgProgramReads,
+    peer: SocketAddr,
+    request: Request,
+) -> Result<Response, StoreError> {
+    state
+        .auth
+        .account_user(peer, request.headers().clone(), true)
+        .await?;
+    let lease = state
+        .workers
+        .clone()
+        .try_acquire_owned()
+        .map_err(|_| unavailable())?;
+    let input = tokio::time::timeout(
+        state.limits.deadline,
+        read_body(
+            request,
+            state
+                .limits
+                .row_bytes
+                .saturating_add(65536)
+                .min(2 * 1024 * 1024),
+        ),
+    )
+    .await
+    .map_err(|_| unavailable())??;
+    let values = validate(&input, false)?;
+    let writer = state.auth.task_sql_writer()?;
+    tokio::spawn(async move {
+        let (_writer, _lease) = (writer, lease);
+        let mut tx = state.auth.store.pool().begin().await?;
+        sqlx::query("SELECT set_config('statement_timeout',$1,true)")
+            .bind(format!("{}ms", state.limits.deadline.as_millis()))
+            .execute(&mut *tx)
+            .await?;
+        let attempted = sqlx::query(INSERT_WITHOUT_EPG)
+            .bind(values)
+            .execute(&mut *tx)
+            .await;
+        tx.rollback().await?;
+        match attempted {
+            Err(sqlx::Error::Database(error))
+                if error
+                    .try_downcast_ref::<PgDatabaseError>()
+                    .is_some_and(|postgres| {
+                        postgres.code() == "23502"
+                            && postgres.table() == Some("epg_programdata")
+                            && postgres.column() == Some("epg_id")
+                    }) =>
+            {
+                Err(StoreError::UnhandledRestFault)
+            }
+            Err(error) => Err(error.into()),
+            Ok(_) => Err(StoreError::UnhandledRestFault),
+        }
+    })
+    .await
+    .map_err(|_| unavailable())?
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn programme_creation_preserves_required_fields_and_stock_fault_envelope() {
+        use sha2::{Digest, Sha256};
+
+        let err = validate(&Map::new(), false).unwrap_err().into_response();
+        assert_eq!(err.status(), StatusCode::BAD_REQUEST);
+        let entity = to_bytes(err.into_body(), 512).await.unwrap();
+        assert_eq!(entity.len(), 117);
+        assert_eq!(
+            format!("{:x}", Sha256::digest(&entity)),
+            "76773c94fb0f31bfa7343907c7e33493aac729b476f036d5cc7a59e7e0858fd8"
+        );
+        let request = json!({"epg":17,"epg_id":17,"title":"Owned Programme",
+                             "start_time":"2026-01-01T00:00:00Z","end_time":"2026-01-01T01:00:00Z"});
+        let values = validate(request.as_object().unwrap(), false).unwrap();
+        assert!(values.get("epg").is_none());
+        assert!(values.get("epg_id").is_none());
+        let fault = StoreError::UnhandledRestFault.into_response();
+        assert_eq!(fault.status(), StatusCode::INTERNAL_SERVER_ERROR);
+        assert_eq!(
+            fault.headers()[header::CONTENT_TYPE],
+            "text/html; charset=utf-8"
+        );
+        let entity = to_bytes(fault.into_body(), 512).await.unwrap();
+        assert_eq!(entity.len(), 145);
+        assert_eq!(
+            format!("{:x}", Sha256::digest(&entity)),
+            "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+        );
+    }
 
     #[test]
     fn patch_only_writes_supplied_serializer_fields() {
