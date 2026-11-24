@@ -24,6 +24,7 @@ pub struct Publisher {
 pub(crate) enum CoreSettingsPublication {
     Acknowledged,
     GlobalRehashRefused,
+    GlobalRehashDefaultAclRefused,
 }
 
 impl Publisher {
@@ -38,6 +39,7 @@ impl CoreTaskBroker for Publisher {
         owner: Arc<dyn Send + Sync>,
     ) -> BoxFuture<'_, Result<(), StoreError>> {
         Box::pin(async move {
+            let manual_rehash = publication.wants_manual_rehash_response();
             match self
                 .jobs
                 .publish_core_settings(publication, owner)
@@ -48,7 +50,19 @@ impl CoreTaskBroker for Publisher {
                     )
                 })? {
                 CoreSettingsPublication::Acknowledged => Ok(()),
-                CoreSettingsPublication::GlobalRehashRefused => Err(StoreError::UnhandledRestFault),
+                CoreSettingsPublication::GlobalRehashDefaultAclRefused if manual_rehash => {
+                    Err(StoreError::StatusBody(
+                        400,
+                        serde_json::json!({
+                            "success":false,
+                            "message":"Error triggering rehash: User default has no permissions to run the 'lpush' command"
+                        }),
+                    ))
+                }
+                CoreSettingsPublication::GlobalRehashRefused
+                | CoreSettingsPublication::GlobalRehashDefaultAclRefused => {
+                    Err(StoreError::UnhandledRestFault)
+                }
             }
         })
     }
@@ -83,11 +97,13 @@ impl CoreTaskBroker for Publisher {
                 // Jobs and broker admission return Capacity before dispatch.
                 // The Lua queue-bound branch returns it before SADD or LPUSH.
                 Err(Error::Capacity) => Ok(CoreProfilePublication::CapacityRefused),
-                Ok(CoreSettingsPublication::GlobalRehashRefused) | Err(_) => {
-                    Err(StoreError::Unsupported(
-                        "Actual shared Core broker publication did not acknowledge",
-                    ))
-                }
+                Ok(
+                    CoreSettingsPublication::GlobalRehashRefused
+                    | CoreSettingsPublication::GlobalRehashDefaultAclRefused,
+                )
+                | Err(_) => Err(StoreError::Unsupported(
+                    "Actual shared Core broker publication did not acknowledge",
+                )),
             }
         })
     }

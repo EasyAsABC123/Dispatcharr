@@ -9,6 +9,7 @@ use uuid::Uuid;
 pub struct CoreTaskPublication {
     raw: Vec<u8>,
     id: Uuid,
+    manual_rehash: bool,
 }
 impl CoreTaskPublication {
     pub(crate) fn new(raw: Vec<u8>, id: &str) -> Result<Self, StoreError> {
@@ -17,10 +18,20 @@ impl CoreTaskPublication {
         }
         Ok(Self {
             raw,
+            manual_rehash: false,
             id: Uuid::parse_str(id)
                 .map_err(|_| StoreError::Unsupported("Core publication identity"))?,
         })
     }
+    pub(crate) fn with_manual_rehash_response(mut self) -> Self {
+        self.manual_rehash = true;
+        self
+    }
+
+    pub fn wants_manual_rehash_response(&self) -> bool {
+        self.manual_rehash
+    }
+
     pub fn bytes(&self) -> &[u8] {
         &self.raw
     }

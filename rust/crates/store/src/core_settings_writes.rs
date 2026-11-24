@@ -1178,6 +1178,7 @@ async fn act(
                     &lease.scratch,
                     fields,
                     locks,
+                    crate::core_settings_special_broker::RehashResponse::Automatic,
                 )
                 .await?;
                 pending.take(); // only actual successful LPUSH hands off owned locks
@@ -1239,7 +1240,7 @@ fn manual_rehash_conflict(error: StoreError) -> StoreError {
 }
 
 async fn trigger_rehash(auth: &AuthService, lease: Arc<Lease>) -> Result<Response, StoreError> {
-    use crate::core_settings_special_broker::{publish_global_rehash, RehashLocks};
+    use crate::core_settings_special_broker::{publish_global_rehash, RehashLocks, RehashResponse};
     if lease.state.special.is_none() {
         return Err(StoreError::Unsupported("Special context not configured"));
     }
@@ -1250,7 +1251,8 @@ async fn trigger_rehash(auth: &AuthService, lease: Arc<Lease>) -> Result<Respons
     let locks = RehashLocks::acquire(auth, &lease.scratch)
         .await
         .map_err(manual_rehash_conflict)?;
-    let result = publish_global_rehash(auth, &lease.scratch, fields, &locks).await;
+    let result =
+        publish_global_rehash(auth, &lease.scratch, fields, &locks, RehashResponse::Manual).await;
     let task_id = match result {
         Ok(id) => id,
         Err(error) => {

@@ -1702,7 +1702,10 @@ const PUBLISH: &str = publish_script!("return redis.call('LPUSH',KEYS[1],ARGV[1]
 const PUBLISH_PROVIDER_REHASH: &str = publish_script!(
     r#"
 local pushed=redis.pcall('LPUSH',KEYS[1],ARGV[1])
-if type(pushed)=='table' and pushed.err then return -4 end
+if type(pushed)=='table' and pushed.err then
+ if pushed.err=="ERR ACL failure in script: User default has no permissions to run the 'lpush' command" then return -5 end
+ return -4
+end
 return pushed
 "#
 );

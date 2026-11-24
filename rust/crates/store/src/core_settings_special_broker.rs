@@ -142,9 +142,28 @@ pub(crate) async fn publish(
     args: Value,
     kwargs: Value,
 ) -> Result<String, StoreError> {
+    publish_with_response(auth, scratch, task, args, kwargs, RehashResponse::Automatic).await
+}
+#[derive(Clone, Copy)]
+pub(crate) enum RehashResponse {
+    Automatic,
+    Manual,
+}
+async fn publish_with_response(
+    auth: &AuthService,
+    scratch: &Scratch,
+    task: &str,
+    args: Value,
+    kwargs: Value,
+    response: RehashResponse,
+) -> Result<String, StoreError> {
     let (raw, id, charge) = build_frame(auth, scratch, task, args, kwargs)?;
     if let Some(broker) = auth.core_task_broker.get() {
         let publication = CoreTaskPublication::new(raw, &id)?;
+        let publication = match response {
+            RehashResponse::Automatic => publication,
+            RehashResponse::Manual => publication.with_manual_rehash_response(),
+        };
         broker
             .publish(publication, auth.core_publication_owner(charge))
             .await?;
@@ -177,8 +196,9 @@ pub(crate) async fn publish_global_rehash(
     scratch: &Scratch,
     fields: Vec<String>,
     locks: &RehashLocks,
+    response: RehashResponse,
 ) -> Result<String, StoreError> {
-    publish(
+    publish_with_response(
         auth,
         scratch,
         "core.tasks.rehash_streams",
@@ -188,6 +208,7 @@ pub(crate) async fn publish_global_rehash(
             "preacquired_lock_ids": locks.ids,
             "preacquired_lock_token": locks.token,
         }),
+        response,
     )
     .await
 }

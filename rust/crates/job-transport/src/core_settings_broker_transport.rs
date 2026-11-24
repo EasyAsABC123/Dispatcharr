@@ -91,7 +91,7 @@ where
 {
     match publication {
         Ok(n) if n > 0 => Ok(ProviderRehashResult::Acknowledged),
-        Ok(-4) => Ok(ProviderRehashResult::Refused),
+        Ok(-4 | -5) => Ok(ProviderRehashResult::Refused),
         Ok(-2) => Err(Error::Capacity),
         Ok(_) => Err(Error::Corrupt),
         Err(error @ Error::AmbiguousPublication(id)) if id == task_id => {
@@ -138,6 +138,7 @@ fn core_settings_outcome(
     match result? {
         n if n > 0 => Ok(CoreSettingsPublication::Acknowledged),
         -4 if global_rehash => Ok(CoreSettingsPublication::GlobalRehashRefused),
+        -5 if global_rehash => Ok(CoreSettingsPublication::GlobalRehashDefaultAclRefused),
         -2 => Err(Error::Capacity),
         _ => Err(Error::Corrupt),
     }
@@ -309,6 +310,11 @@ mod tests {
             Ok(CoreSettingsPublication::GlobalRehashRefused)
         );
         assert_eq!(core_settings_outcome(Ok(-4), false), Err(Error::Corrupt));
+        assert_eq!(
+            core_settings_outcome(Ok(-5), true),
+            Ok(CoreSettingsPublication::GlobalRehashDefaultAclRefused)
+        );
+        assert_eq!(core_settings_outcome(Ok(-5), false), Err(Error::Corrupt));
         assert_eq!(core_settings_outcome(Ok(-2), true), Err(Error::Capacity));
         assert_eq!(core_settings_outcome(Err(ambiguous), true), Err(ambiguous));
         assert_eq!(

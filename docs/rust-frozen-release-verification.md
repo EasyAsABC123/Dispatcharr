@@ -291,9 +291,13 @@ The unchanged React manual rehash action now reaches the ordinary
 Rust application. The administrator POST uses the saved global fields,
 holds the same eligible account locks and returns Source's queued task
 response or the manual conflict body. The pinned Original component
-checked both responses. The focused Rust suite passed 21 tests. Broker
-exception details on the manual action and signed packaged worker
-effects remain open.
+checked both responses. The focused Rust suite passed 21 tests. An
+isolated signed replay then confirmed the manual route's exact JSON 400
+for a real Redis permission refusal, with no queued task or result and
+the request's locks released. The 409 retained the existing foreign
+lock. The 200 queued one task with the returned UUID and the two
+eligible account locks. Nine focused broker tests passed. The signed
+packaged worker still needs verification.
 
 The ordinary scanner skips Programme Index admission after its first
 successful scan in the same process. Its grouped fixture runs the first
@@ -454,8 +458,9 @@ Eleven pinned Original view cases and twelve parser cases ran against
 owned fixtures. The focused Rust suite and a real private PostgreSQL
 test checked projection, paging, role visibility and text matching.
 Channel name, channel ID, stream name and group filters each select
-effective guides independently within the requesting role's channel
-scope. The response still includes every visible channel and stream
+effective guides independently. The resulting set is intersected with
+the guides visible to the requesting role. The response includes every
+visible channel and stream
 linked to a matching guide. The pinned Original passed 28 relation
 requests. A private PostgreSQL run checked the new Rust filters across
 both roles, including override precedence and intersections across
