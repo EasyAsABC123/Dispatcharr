@@ -1530,6 +1530,10 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 - **M2** The current ordinary Main package passed five health and Redis reply scenarios, including PostgreSQL fallback and graceful shutdown. [Current Main health evidence](rust-m2-2d3ffe53-ordinary-main-health.md)
 - **M4** The current AMD64 VOD comparison passed one functional and four measured pairs. Median paired CPU and peak working set fell by 5.91% and 34.29%, with matching strict decodes. [Current VOD performance](rust-m4-2d3ffe53-amd64-vod-performance.md)
 
+- **M3** A single current quiet ARM64 HLS pair matched decoded media and reduced total scoped CPU by 23.2% and peak working memory by 75.0%. [Signed HLS performance](rust-m3-2d3ffe53-arm64-signed-hls-performance.md)
+- **M2 and M6** The current Core and Engine component checks passed. A natural 61-second recording passed the declared decode to EOF, while the separate strict diagnostic reproduced the retained Original exit 183. [Component and recording checks](rust-2d3ffe53-core-engine-and-recording-jobs.md)
+- **M7 and M8** Six current output and realtime scopes passed on Beepboop. A current Lappy backup failed cleanly after losing its SQL backend, then a distinct retry succeeded on the same Main generation. [Output and realtime](rust-m7-2d3ffe53-amd64-output-realtime-wave.md) · [Backup retry](rust-m8-2d3ffe53-arm64-backup-backend-loss.md)
+
 ## Latest scoped runtime evidence for 2ee64c43
 
 - **M6** Eleven signed invalid string IDs now match the Original 500 response, with no broker publication. Both ordinary packages passed signed startup and the exact source passed 1,775 workspace tests. [Invalid guide input evidence](rust-m6-2ee64c43-invalid-guide-ids.md)
