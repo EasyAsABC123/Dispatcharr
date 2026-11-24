@@ -221,6 +221,121 @@ async fn physical_cancelled_setup_retains_request_and_session_until_actual_reply
     assert!(pool.cleanup_succeeded());
 }
 
+#[tokio::test]
+#[ignore = "owned Redis normal idle re-entry with current provider limit"]
+async fn physical_idle_reentry_obeys_current_provider_limit_without_releasing_other_movie() {
+    use dispatcharr_coordination::{AcquireRequest, Coordinator, LeaseConfig};
+    use dispatcharr_store::StoreError;
+    use redis::AsyncCommands;
+    use std::sync::Arc;
+
+    let (_, mut control, mut source, mut request, id) = physical_fixture("idle-current-cap").await;
+    let (url, _) = config();
+    let coordinator = Coordinator::connect(
+        &url,
+        LeaseConfig {
+            namespace: id.clone(),
+            heartbeat_interval: None,
+            reap_interval: None,
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let pool =
+        super::SessionPool::connect(&url, coordinator.clone(), 1, 3, Duration::from_secs(10))
+            .await
+            .unwrap();
+    request.session_id = Some(id.clone());
+    source.candidates[0].max_streams = 2;
+    let profile = source.candidates[0].profile_id;
+    let first = pool.enter(&id, source.clone(), &request).await.unwrap();
+    let original = first.session.clone();
+    let other = coordinator
+        .acquire_vod(AcquireRequest {
+            channel_id: format!("{id}-other"),
+            provider_profile_id: Some(profile),
+            provider_max_streams: 2,
+            credential_pool: None,
+        })
+        .await
+        .unwrap();
+    let counter = format!("profile_connections:{profile}");
+    assert_eq!(control.get::<_, i64>(&counter).await.unwrap(), 2);
+
+    drop(first);
+    tokio::time::timeout(Duration::from_secs(2), async {
+        loop {
+            {
+                let state = original.state.lock().await;
+                if state.active == 0 && !state.reserved {
+                    break;
+                }
+            }
+            tokio::task::yield_now().await;
+        }
+    })
+    .await
+    .unwrap();
+    assert!(Arc::ptr_eq(
+        pool.inner.sessions.lock().await.get(&id).unwrap(),
+        &original
+    ));
+    assert_eq!(control.get::<_, i64>(&counter).await.unwrap(), 1);
+
+    source.candidates[0].max_streams = 1;
+    assert!(matches!(
+        pool.enter(&id, source.clone(), &request).await,
+        Err(StoreError::StatusBody(429, serde_json::Value::String(body)))
+            if body == "Connection limit exceeded for profile"
+    ));
+    let key = super::key(&id);
+    assert_eq!(
+        control
+            .hget::<_, _, i64>(&key, "active_streams")
+            .await
+            .unwrap(),
+        0
+    );
+    assert_eq!(
+        control
+            .hget::<_, _, i64>(&key, "request_count")
+            .await
+            .unwrap(),
+        1
+    );
+    assert_eq!(control.get::<_, i64>(&counter).await.unwrap(), 1);
+
+    source.candidates[0].max_streams = 2;
+    let reopened = pool.enter(&id, source, &request).await.unwrap();
+    assert!(Arc::ptr_eq(&reopened.session, &original));
+    assert_eq!(control.get::<_, i64>(&counter).await.unwrap(), 2);
+    assert_eq!(
+        control
+            .hget::<_, _, i64>(&key, "request_count")
+            .await
+            .unwrap(),
+        2
+    );
+    drop(reopened);
+    assert!(other.release().await.unwrap());
+    other.settlement().wait().await;
+    pool.stop_admission();
+    tokio::time::timeout(Duration::from_secs(3), pool.drain())
+        .await
+        .unwrap();
+    assert!(pool.cleanup_succeeded());
+    assert!(!control.exists::<_, bool>(&key).await.unwrap());
+    assert_eq!(
+        control
+            .get::<_, Option<i64>>(&counter)
+            .await
+            .unwrap()
+            .unwrap_or(0),
+        0
+    );
+}
+
 #[path = "session_admit_reply.rs"]
 mod admit_reply;
 

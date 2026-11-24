@@ -39,6 +39,9 @@ fn now() -> String {
 fn unavailable() -> dispatcharr_store::StoreError {
     dispatcharr_store::StoreError::StatusBody(503, json!("No available stream"))
 }
+fn provider_full() -> dispatcharr_store::StoreError {
+    dispatcharr_store::StoreError::StatusBody(429, json!("Connection limit exceeded for profile"))
+}
 fn invalid_worker_identity() -> dispatcharr_store::StoreError {
     dispatcharr_store::StoreError::StatusBody(
         500,
@@ -1127,15 +1130,32 @@ impl SessionPool {
             }
             let reserved_here = !state.reserved;
             if reserved_here {
+                // In ordinary mode the stored profile can still be selected
+                // before its late 0→1 capacity check. Use current limits when
+                // the SQL selection confirms the retained provider identity.
+                let current = if session.scope.get().is_none() {
+                    current_retained_provider(&session.candidate, &source.candidates)
+                } else {
+                    None
+                };
+                let candidate = current.unwrap_or(&session.candidate);
                 session
                     .lease
                     .reserve_provider(ProviderReservation {
-                        profile_id: Some(session.candidate.profile_id),
-                        max_streams: session.candidate.max_streams,
-                        credential_pool: session.candidate.credential_pool.clone(),
+                        profile_id: Some(candidate.profile_id),
+                        max_streams: candidate.max_streams,
+                        credential_pool: candidate.credential_pool.clone(),
                     })
                     .await
-                    .map_err(|_| unavailable())?;
+                    .map_err(|error| match error {
+                        dispatcharr_coordination::Error::ProfileFull
+                        | dispatcharr_coordination::Error::CredentialFull
+                            if current.is_some() =>
+                        {
+                            provider_full()
+                        }
+                        _ => unavailable(),
+                    })?;
                 state.reserved = true;
             }
             session.last_request.store(millis(), Ordering::Relaxed);
@@ -1438,20 +1458,29 @@ fn same_provider(left: &VodCandidate, right: &VodCandidate) -> bool {
     left.profile_id == right.profile_id && same_provider_fingerprint(left, right)
 }
 
-fn same_provider_fingerprint(left: &VodCandidate, right: &VodCandidate) -> bool {
+fn current_retained_provider<'a>(
+    retained: &VodCandidate,
+    candidates: &'a [VodCandidate],
+) -> Option<&'a VodCandidate> {
+    candidates.iter().find(|current| {
+        current.profile_id == retained.profile_id && same_provider_identity(current, retained)
+    })
+}
+
+fn same_provider_identity(left: &VodCandidate, right: &VodCandidate) -> bool {
     left.relation_id == right.relation_id
         && left.account_id == right.account_id
-        && left.max_streams == right.max_streams
         && left.url == right.url
         && left.user_agent == right.user_agent
-        && left
-            .credential_pool
-            .as_ref()
-            .map(|p| (&p.counter_key, p.max_streams))
-            == right
-                .credential_pool
-                .as_ref()
-                .map(|p| (&p.counter_key, p.max_streams))
+        && left.credential_pool.as_ref().map(|pool| &pool.counter_key)
+            == right.credential_pool.as_ref().map(|pool| &pool.counter_key)
+}
+
+fn same_provider_fingerprint(left: &VodCandidate, right: &VodCandidate) -> bool {
+    same_provider_identity(left, right)
+        && left.max_streams == right.max_streams
+        && left.credential_pool.as_ref().map(|pool| pool.max_streams)
+            == right.credential_pool.as_ref().map(|pool| pool.max_streams)
 }
 
 fn metadata_fields(
@@ -1660,10 +1689,7 @@ fn monitor_scope(id: String, scope: LocalScope, pool: Weak<Inner>, authenticated
 }
 fn scope_error(error: recovery::Error) -> dispatcharr_store::StoreError {
     match error {
-        recovery::Error::ProfileFull => dispatcharr_store::StoreError::StatusBody(
-            429,
-            json!("Connection limit exceeded for profile"),
-        ),
+        recovery::Error::ProfileFull => provider_full(),
         recovery::Error::StillOwned | recovery::Error::PartialState => {
             dispatcharr_store::StoreError::Unsupported(
                 "VOD recovery state requires a separately verified transition",
@@ -2062,7 +2088,7 @@ mod session_stop_owned;
 
 #[cfg(test)]
 mod authenticated_restart_tests {
-    use super::ordinary_restart_matches;
+    use super::{current_retained_provider, ordinary_restart_matches, same_provider};
     use crate::{ContentKind, VodCandidate, VodRequest, VodSource};
     use dispatcharr_contracts::PlaybackRequest;
     use dispatcharr_store::User;
@@ -2108,6 +2134,48 @@ mod authenticated_restart_tests {
                 profile_id: None,
             },
         )
+    }
+
+    #[test]
+    fn ordinary_idle_reservation_uses_fresh_limits_only_for_the_retained_provider() {
+        let (mut source, _) = fixture();
+        let mut previous = source.candidates[0].clone();
+        previous.credential_pool = Some(dispatcharr_coordination::CredentialPool {
+            counter_key: "owned-test-pool".into(),
+            max_streams: 2,
+        });
+        let current = &mut source.candidates[0];
+        current.credential_pool = previous.credential_pool.clone();
+        current.credential_pool.as_mut().unwrap().max_streams = 1;
+        current.max_streams = 1;
+        previous.max_streams = 2;
+        assert_eq!(
+            current_retained_provider(&previous, &source.candidates)
+                .unwrap()
+                .max_streams,
+            1
+        );
+        assert!(!same_provider(&previous, &source.candidates[0]));
+        let different: [fn(&mut VodCandidate); 6] = [
+            |candidate: &mut VodCandidate| candidate.profile_id += 1,
+            |candidate: &mut VodCandidate| candidate.relation_id += 1,
+            |candidate: &mut VodCandidate| candidate.account_id += 1,
+            |candidate: &mut VodCandidate| candidate.url.push_str("/different"),
+            |candidate: &mut VodCandidate| candidate.user_agent.push_str("-different"),
+            |candidate: &mut VodCandidate| {
+                candidate
+                    .credential_pool
+                    .as_mut()
+                    .unwrap()
+                    .counter_key
+                    .push_str("-different")
+            },
+        ];
+        for change in different {
+            let mut candidate = source.candidates[0].clone();
+            change(&mut candidate);
+            assert!(current_retained_provider(&previous, &[candidate]).is_none());
+        }
     }
 
     #[test]

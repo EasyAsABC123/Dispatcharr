@@ -65,6 +65,8 @@ The hourly scheduler tick uses the same owned startup as the saved-default insta
 
 When all providers definitely refuse a new VOD session at capacity, the 503 response now waits within its bound for token-fenced cleanup of the provisional session. The retained cleanup owner handles unresolved Redis replies. Four authenticated-restart tests passed and the held-Redis-reply regression compiled for the final fixture.
 
+A retained VOD session that re-enters during its ordinary idle grace now uses the current connection limit for the same provider. A confirmed late capacity refusal returns 429 and preserves the unrelated reservation. The focused provider-identity test passed, and the Redis regression compiled. The final paired fixture also needs to capture the retained generation and useful progress on the other movie.
+
 ## Output index and Original method declarations
 
 The ordinary backend now returns Original’s permanent redirect from `/output` to `/output/`, with an empty body and no forwarded query string. Its route-level tests passed, including safe methods and CSRF enforcement. The paired Compose output fixture will verify the real response.
