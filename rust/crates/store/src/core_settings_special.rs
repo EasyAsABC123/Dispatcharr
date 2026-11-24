@@ -184,8 +184,14 @@ pub(crate) fn dvr_publish(dispatch: Dispatch, old: Option<&Value>, incoming: &Va
     let Some(old) = old.and_then(Value::as_object) else {
         return false;
     };
-    old.get("pre_offset_minutes") != new.get("pre_offset_minutes")
-        || old.get("post_offset_minutes") != new.get("post_offset_minutes")
+    ["pre_offset_minutes", "post_offset_minutes"]
+        .into_iter()
+        .any(|key| {
+            !crate::json_compat::python_equal(
+                old.get(key).unwrap_or(&Value::Null),
+                new.get(key).unwrap_or(&Value::Null),
+            )
+        })
 }
 
 /// Same allowed fields/order-preserving de-duplication as pinned M3U parser.
@@ -252,6 +258,39 @@ mod tests {
             Dispatch::new(Some("owned.renamed"), Some("dvr_settings")),
             Some(&json!({})),
             &json!({"pre_offset_minutes":2})
+        ));
+    }
+    #[test]
+    fn dvr_update_compares_raw_offsets_with_source_python_equality() {
+        let dvr = Dispatch::new(Some("dvr_settings"), Some("dvr_settings"));
+        for (old, incoming) in [
+            (json!({}), json!({"pre_offset_minutes": null})),
+            (json!({"post_offset_minutes": null}), json!({})),
+            (
+                json!({"pre_offset_minutes": false, "post_offset_minutes": 3}),
+                json!({"pre_offset_minutes": 0, "post_offset_minutes": 3.0}),
+            ),
+            (
+                json!({"post_offset_minutes": {"value": [true]}}),
+                json!({"post_offset_minutes": {"value": [1.0]}}),
+            ),
+        ] {
+            assert!(!dvr_publish(dvr, Some(&old), &incoming));
+        }
+        assert!(dvr_publish(
+            dvr,
+            Some(&json!({"pre_offset_minutes": 0})),
+            &json!({"pre_offset_minutes": "0"}),
+        ));
+        assert!(dvr_publish(
+            dvr,
+            Some(&json!({"post_offset_minutes": 4})),
+            &json!({"post_offset_minutes": 5}),
+        ));
+        assert!(dvr_publish(
+            Dispatch::new(None, Some("dvr_settings")),
+            None,
+            &json!({"pre_offset_minutes": null}),
         ));
     }
 }

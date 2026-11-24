@@ -154,6 +154,41 @@ fn account_number(value: &str) -> Result<Result<i64, &'static str>, ReadError> {
         ReadError::Unsupported("Category Decimal integer exceeds bounded PG identifier domain")
     })
 }
+fn quoted_search_terms(search: &str) -> Vec<String> {
+    // Pinned Django's smart_split groups closed quotes before DRF separates
+    // commas. Keep the source regex semantics with Rust's bounded regex engine.
+    static TOKEN: std::sync::LazyLock<regex::Regex> = std::sync::LazyLock::new(|| {
+        regex::Regex::new(
+            r#"(?:[^\s\x1c-\x1f'"]*(?:"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')[^\s\x1c-\x1f'"]*)+|[^\s\x1c-\x1f]+"#,
+        )
+        .expect("fixed Django smart_split pattern")
+    });
+    let mut terms = Vec::new();
+    for value in TOKEN.find_iter(search) {
+        let value = value.as_str().trim_matches(',');
+        if let Some(quote) = value
+            .chars()
+            .next()
+            .filter(|quote| matches!(quote, '\'' | '"') && value.ends_with(*quote))
+        {
+            let inner = value.get(1..value.len().saturating_sub(1)).unwrap_or("");
+            terms.push(
+                inner
+                    .replace(&format!("\\{quote}"), &quote.to_string())
+                    .replace("\\\\", "\\"),
+            );
+        } else {
+            terms.extend(
+                value
+                    .split(',')
+                    .filter(|term| !term.is_empty())
+                    .map(|term| term.trim_matches(space).to_owned()),
+            );
+        }
+    }
+    terms
+}
+
 fn parse(pairs: &[(String, String)]) -> Result<CategoryQuery, ReadError> {
     if pairs.len() > 128 {
         return Err(ReadError::Capacity);
@@ -187,24 +222,20 @@ fn parse(pairs: &[(String, String)]) -> Result<CategoryQuery, ReadError> {
         return Err(StoreError::StatusBody(400, errors.into()).into());
     }
     if let Some(search) = last(pairs, "search") {
-        if let Some(quoted) = search
-            .strip_prefix('"')
-            .and_then(|value| value.strip_suffix('"'))
-            .filter(|value| !value.chars().any(|c| matches!(c, '"' | '\\' | '\0')))
-        {
-            result.terms = vec![quoted.to_owned()];
+        if search.contains('\0') {
+            return Err(ReadError::Unsupported(
+                "Category control search grammar not captured",
+            ));
+        }
+        result.terms = if search.contains(['\'', '"']) {
+            quoted_search_terms(search)
         } else {
-            if search.chars().any(|c| matches!(c, '\'' | '"' | '\0')) {
-                return Err(ReadError::Unsupported(
-                    "Category general quoted/control search grammar not captured",
-                ));
-            }
-            result.terms = search
+            search
                 .split(|c| c == ',' || space(c))
                 .filter(|v| !v.is_empty())
                 .map(str::to_owned)
-                .collect();
-        }
+                .collect()
+        };
         if result.terms.len() > 32 {
             return Err(ReadError::Capacity);
         }
@@ -513,6 +544,31 @@ mod tests {
         response::IntoResponse,
     };
     use sha2::{Digest, Sha256};
+    #[test]
+    fn category_search_accepts_pinned_drf_quoted_terms() {
+        for (search, terms) in [
+            ("'Drama News'", vec!["Drama News"]),
+            (r#"Drama "News""#, vec!["Drama", "News"]),
+            (r#"Drama\" News"#, vec![r#"Drama\""#, "News"]),
+            (r#"Drama\ News"#, vec![r"Drama\", "News"]),
+            (r#""Children's Drama""#, vec!["Children's Drama"]),
+            ("Children's Drama", vec!["Children's", "Drama"]),
+            (r#"'Children\'s Drama'"#, vec!["Children's Drama"]),
+            (", 'Drama News',", vec!["Drama News"]),
+            ("Drama,News", vec!["Drama", "News"]),
+            (r#""Drama News""#, vec!["Drama News"]),
+            (r#""Drama""#, vec!["Drama"]),
+        ] {
+            let parsed = parse(&[("search".into(), search.into())]).unwrap();
+            assert_eq!(parsed.terms, terms, "{search:?}");
+        }
+        let overflow = vec!["'Drama'"; 33].join(" ");
+        assert!(matches!(
+            parse(&[("search".into(), overflow)]),
+            Err(ReadError::Capacity)
+        ));
+    }
+
     #[tokio::test]
     #[ignore = "actual original category FK schedule and sameDB SQL plan witness"]
     async fn account_fk_schedule_matches_source() {

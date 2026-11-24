@@ -115,6 +115,12 @@ The network-reset utility now rejects measured option-like tokens in the separat
 
 The Version200 scheduler owner evaluates four pinned Original outcomes in an independent ordinary Native clone in the same wave. It joins HTTP calls, broker task IDs, Redis results, saved counts, notification SQL and Channels events. The current focused suite passed 27 M6 tests and 34 coordinator tests offline. The final frozen run must supply the fresh worker and cleanup receipts.
 
+## DVR callback and Category search
+
+Saving DVR settings now uses pinned Original’s equality rules for offset values. An absent key and a null value compare equal, as do numeric-equivalent values. Equivalent saves avoid scheduling a rescan. Eighteen Core settings tests and the direct offset comparison tests passed. The paired fixture checks no-publication saves and a real change with its parent task, artwork tasks and future and shifted-past recording state.
+
+Category searches accept the pinned Original single- and double-quoted search terms, including mixed words, and keep the existing term cap and bound SQL. The focused parser check passed. The existing browser cohort can verify the quoted queries under its signed movie-only and series-only roles.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.
