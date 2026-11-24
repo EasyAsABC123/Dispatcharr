@@ -416,8 +416,11 @@ ordered matcher for supported filter expressions. The first matching
 name, URL or group rule decides eligibility before the hash lookup and
 import. Pinned Source and isolated PostgreSQL checks agreed on twelve
 assertions. The same signed fixture adds a case with one retained stream
-and two exclusions. Broader regex grammar and the packaged comparison
-remain open.
+and two exclusions. The shared matcher also accepts a leading Python
+`(?i)` flag through the existing bounded case-insensitive set. Thirteen
+pinned Original assertions and four focused Rust tests checked matching
+and rule order. Other regex forms and the packaged comparison remain
+open.
 
 The local M3U worker honors a saved URL hash override and can use the
 global setting for an absent, null or unrecognized override. Ordinary Beat
@@ -523,7 +526,9 @@ path of its URL on the same origin in one save. Rust updates both fields
 in one transaction and retains the existing refresh schedule. The pinned
 Original Django component kept the scheduled task and existing guide
 index and queued no immediate refresh. A duplicate name returned 400.
-Eleven focused Rust tests passed. The signed package and browser replay
+Eleven focused Rust tests passed. Six signed calls against private
+PostgreSQL confirmed the successful edit, role denial, unchanged index
+and duplicate-name rollback. The packaged ingress and React replay
 still need verification.
 
 ## Programme search

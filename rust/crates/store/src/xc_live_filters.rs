@@ -74,7 +74,15 @@ impl Filters {
             .collect::<Result<Vec<_>, StoreError>>()?;
         Self::compile(rules)
     }
-    fn compile(rules: Vec<Rule>) -> Result<Self, StoreError> {
+    fn compile(mut rules: Vec<Rule>) -> Result<Self, StoreError> {
+        for rule in &mut rules {
+            // A leading global Python ignore-case flag has the same scope
+            // as the stored case option. Use the existing bounded set.
+            if rule.pattern.starts_with("(?i)") {
+                rule.pattern.replace_range(..4, "");
+                rule.insensitive = true;
+            }
+        }
         let mut sets = Vec::new();
         for target in [Target::Name, Target::Url, Target::Group] {
             for insensitive in [false, true] {
@@ -161,8 +169,8 @@ impl Filters {
 }
 // Boolean search equivalence for this regular-language subset. Python's final
 // `$` can match immediately before ONE final newline; Rust's `$` cannot, so
-// explicitly translate the final anchor. Interior `$`, lookaround/backrefs,
-// inline flags and Python-only grammar stay unsupported rather than changed.
+// explicitly translate the final anchor. Interior `$`, lookaround, backreferences
+// and other inline flag forms remain outside the translated grammar.
 fn source_pattern(pattern: &str) -> Result<(String, bool), StoreError> {
     let mut out = String::new();
     let mut escaped = false;
@@ -272,6 +280,38 @@ mod controls {
         let shorthand = Filters::compile(vec![rule(Target::Name, r"\w+", true, false)]).unwrap();
         assert!(shorthand.allows("界", "", "").is_err());
     }
+    #[test]
+    fn leading_python_ignore_case_uses_the_same_ordered_regex_sets() {
+        let inline = Filters::compile(vec![rule(Target::Name, "(?i)^kis$", true, false)]).unwrap();
+        assert_eq!(inline.sets.len(), 1);
+        for (name, expected) in [
+            ("KIS", false),
+            ("Kİſ", false),
+            ("kıs", false),
+            ("kiŞ", true),
+            ("KIS\n", false),
+            ("KIS\n\n", true),
+        ] {
+            assert_eq!(inline.allows(name, "", "").unwrap(), expected);
+        }
+
+        let ordered = Filters::compile(vec![
+            rule(Target::Group, "^Sports$", false, false),
+            rule(Target::Name, "(?i)^kis$", true, false),
+        ])
+        .unwrap();
+        for (group, expected) in [("Sports", true), ("sports", false), ("News", false)] {
+            assert_eq!(ordered.allows("KIS", "", group).unwrap(), expected);
+        }
+
+        let repeated = Filters::compile(vec![rule(Target::Url, "(?i)/LIVE$", true, true)]).unwrap();
+        assert!(!repeated.allows("", "/lIvE", "").unwrap());
+        assert!(repeated.allows("", "/lIvE-more", "").unwrap());
+        let sensitive = Filters::compile(vec![rule(Target::Name, "^kis$", true, false)]).unwrap();
+        assert!(sensitive.allows("KIS", "", "").unwrap());
+        assert!(!sensitive.allows("kis", "", "").unwrap());
+    }
+
     #[test]
     fn source_case_flag_final_newline_anchor_and_unsupported_grammar_are_visible() {
         let filters = Filters::compile(vec![rule(Target::Name, "^US$", true, true)]).unwrap();
