@@ -810,6 +810,18 @@ pub(crate) fn router_without_settings_detail(auth: AuthService) -> Router {
     router_with_settings_detail(auth, false)
 }
 fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
+    let useragents_json = get(useragents)
+        .post(crate::user_agent_writes::create)
+        .head(omitted_json_method)
+        .fallback(omitted_json_method);
+    let streamprofiles_json = get(streamprofiles)
+        .layer(from_fn_with_state(
+            catalogue_options::COLLECTION_ALLOW,
+            catalogue_options::typed_read_headers,
+        ))
+        .post(crate::core_stream_writes::create)
+        .head(omitted_json_method)
+        .fallback(omitted_json_method);
     let mut router = Router::new()
         .route("/api/core/settings/", get(settings))
         .route(
@@ -862,13 +874,8 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
                 ))
                 .options(catalogue_options::output_profile),
         )
-        .route(
-            "/api/core/useragents.json",
-            get(useragents)
-                .post(crate::user_agent_writes::create)
-                .head(omitted_json_method)
-                .fallback(omitted_json_method),
-        )
+        .route("/api/core/useragents.json", useragents_json.clone())
+        .route("/api/core/useragents.json/", useragents_json)
         .route(
             "/api/core/useragents/{json_id}",
             get(useragent_json)
@@ -882,17 +889,8 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
                 .head(omitted_json_method)
                 .fallback(omitted_json_method),
         )
-        .route(
-            "/api/core/streamprofiles.json",
-            get(streamprofiles)
-                .layer(from_fn_with_state(
-                    catalogue_options::COLLECTION_ALLOW,
-                    catalogue_options::typed_read_headers,
-                ))
-                .post(crate::core_stream_writes::create)
-                .head(omitted_json_method)
-                .fallback(omitted_json_method),
-        )
+        .route("/api/core/streamprofiles.json", streamprofiles_json.clone())
+        .route("/api/core/streamprofiles.json/", streamprofiles_json)
         .route(
             "/api/core/streamprofiles/{json_id}",
             get(streamprofile_json)
@@ -1176,6 +1174,42 @@ mod direct_profile_options_tests {
             let response = router(auth.clone()).oneshot(request).await.unwrap();
             assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
             assert!(!response.headers().contains_key(header::SET_COOKIE));
+        }
+    }
+
+    #[tokio::test]
+    async fn core_profile_json_collections_accept_the_registers_optional_slash() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://localhost/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-core-profile-suffix-fixture".into()).unwrap(),
+        );
+
+        for resource in ["useragents", "streamprofiles"] {
+            for method in [Method::GET, Method::POST] {
+                let mut first = None;
+                for suffix in [".json", ".json/"] {
+                    let request = Request::builder()
+                        .method(method.clone())
+                        .uri(format!("/api/core/{resource}{suffix}"))
+                        .header(header::ACCEPT, "application/json")
+                        .header(header::CONTENT_TYPE, "application/json")
+                        .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                        .body(Body::from("{}"))
+                        .unwrap();
+                    let response = router(auth.clone()).oneshot(request).await.unwrap();
+                    assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+                    let (parts, body) = response.into_parts();
+                    let observed = (parts.headers, to_bytes(body, 4096).await.unwrap());
+                    if let Some(expected) = &first {
+                        assert_eq!(&observed, expected);
+                    } else {
+                        first = Some(observed);
+                    }
+                }
+            }
         }
     }
 

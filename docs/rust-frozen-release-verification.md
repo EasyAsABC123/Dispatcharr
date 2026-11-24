@@ -79,6 +79,8 @@ The ordinary Accounts User detail route accepts the numeric JSON suffix for GET 
 
 The Xtream gateway also accepts one trailing slash for `/player_api.php` and `/panel_api.php`. The gateway suite passed 65 tests. The ARM64 fixture signs in as a Standard user and checks that the same live-stream request returns the expected list in the player and full account document in the panel, with the same behavior through the slash aliases.
 
+The Core UserAgent and StreamProfile JSON collections also accept their registered trailing slash. GET and POST use the same authentication, representation and method handlers as the existing spelling. A focused test checked the exact authentication responses for both methods and both spellings. Signed collection responses and mutation effects remain part of the final packaged Core fixture.
+
 ## EPG Programme JSON and HDHomeRun renderer selection
 
 Both numeric EPG Programme JSON routes accept a trailing slash for GET through their existing permission checks and bounded renderer. The focused Store check covers both routes and checks the retained JSON representation behavior. The paired fixture will also check the signed Programme responses and scoped datastore state.
