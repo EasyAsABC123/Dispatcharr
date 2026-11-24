@@ -491,6 +491,29 @@ Seventeen Rust library tests passed and three external-fixture cases
 remain reserved. The existing ARM64 paired owner adds twelve signed
 or public wire checks and compares exact status, headers and body.
 
+## Historical measured performance
+
+The earlier quiet comparisons use pinned Original `1241b3f7` and the
+specific Rust revisions named in their receipts. The latest migration
+branch needs its own frozen measurements.
+
+- At `2d3ffe53`, the AMD64 live MPEG-TS tests covered 1, 10 and 100 signed
+  viewers with at most one simultaneous origin connection. Median paired
+  CPU fell 38.5%, 57.7% and 87.4%. Peak working memory fell 49.9%, 44.6%
+  and 47.6%. [M1 live comparison](rust-m1-2d3ffe53-amd64-signed-live-performance.md)
+- At `2d3ffe53`, the two-viewer ARM64 HLS comparison recorded 23.2% lower
+  CPU and 75.0% lower peak working memory. Both arms decoded identical
+  media and shared one upstream. [M3 HLS comparison](rust-m3-2d3ffe53-arm64-signed-hls-performance.md)
+- At `2d3ffe53`, the AMD64 VOD prefix comparison recorded 5.91% lower
+  paired CPU and 34.29% lower peak working memory. First-byte p95 moved
+  from 266.46 ms to 258.62 ms. [M4 VOD comparison](rust-m4-2d3ffe53-amd64-vod-performance.md)
+- The earlier quiet Auto Sync full-scan repeat saved 24.68% paired CPU
+  and 54.95% peak working memory. One pair missed its latency gate.
+  Rust p95 was 65.27 ms versus 56.46 ms for Original, a 15.6% increase.
+  The first-byte comparison also missed its gate in that pair. The cause
+  remains unconfirmed. The full-scan rerun remains a separate final gate.
+  [Full-scan repeat receipt](../scripts/rust-perf/candidate102-regex-preview/README.md)
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.
