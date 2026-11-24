@@ -12,6 +12,8 @@ Pinned Original served twelve signed requests through its packaged nginx and uWS
 
 The Native ARM64 120-second M9 predecessor completed with ten signed viewers, 25 active samples, 20 strict audio/video decodes and two signed XMLTV refresh lineages. The run measured 9.28 CPU core-seconds and a 265.7 MB peak group working set. Both idle descriptor censuses completed, and exact teardown and independent verification passed. The six-minute successor, full soak, and paired release-performance gates remain open. [ARM64 120-second soak evidence](rust-m9-arm64-s120-soak-3d8f9672.json)
 
+The frozen AMD64 Rust Main passed 102 signed catalogue comparisons across 34 routes, including 68 GETs and 34 HEAD and OPTIONS observations. The checked GETs matched owned SQL, and the fixture state remained unchanged. Independent teardown confirmed all four role generations and owned resources retired. The comparisons used retained Original route authority. [Signed Main catalogue evidence](rust-m1-amd64-signed-main-catalogue-3d8f9672.json)
+
 ## Parallel implementation
 
 | Canonical owner | Open rows | Work before the freeze |
