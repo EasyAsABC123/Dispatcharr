@@ -1978,6 +1978,23 @@ async fn source_owner_waiting_for_a_healthy_input_does_not_insert_keepalive_pack
     origin.abort();
 }
 
+async fn observe_pid(body: &mut Body, expected: u8) {
+    time::timeout(Duration::from_secs(2), async {
+        loop {
+            let data = body.frame().await.unwrap().unwrap().into_data().unwrap();
+            assert_eq!(data.len() % 188, 0);
+            if data
+                .chunks_exact(188)
+                .any(|ts| ts[0] == 0x47 && ts[2] == expected)
+            {
+                return;
+            }
+        }
+    })
+    .await
+    .unwrap();
+}
+
 #[tokio::test]
 async fn local_explicit_source_switch_keeps_two_existing_http_bodies() {
     for source_initialization in [false, true] {
@@ -2021,22 +2038,6 @@ async fn local_source_switch(source_initialization: bool) {
     let mut first = engine.play(playback.clone()).await.unwrap().into_body();
     let mut second = engine.play(playback).await.unwrap().into_body();
 
-    async fn observe_pid(body: &mut Body, expected: u8) {
-        time::timeout(Duration::from_secs(2), async {
-            loop {
-                let data = body.frame().await.unwrap().unwrap().into_data().unwrap();
-                assert_eq!(data.len() % 188, 0);
-                if data
-                    .chunks_exact(188)
-                    .any(|ts| ts[0] == 0x47 && ts[2] == expected)
-                {
-                    return;
-                }
-            }
-        })
-        .await
-        .unwrap();
-    }
     observe_pid(&mut first, 100).await;
     observe_pid(&mut second, 100).await;
     assert_eq!(
@@ -2076,6 +2077,118 @@ async fn local_source_switch(source_initialization: bool) {
     drop((first, second));
     assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
     wait_for(|| engine.status().is_empty()).await;
+    server.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn real_redis_assigned_source_switch_reuses_one_live_provider_slot() {
+    use dispatcharr_clients::{ClientConfig, ClientStore};
+    use dispatcharr_input_store::InputStore;
+    use redis::AsyncCommands;
+
+    let (coordinator, mut redis) = redis_coordinator().await;
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let clients = ClientStore::connect(&redis_url, ClientConfig::default())
+        .await
+        .unwrap();
+    let inputs = InputStore::connect(&redis_url, Default::default())
+        .await
+        .unwrap();
+    let engine = StreamEngine::new_with_shared_inputs(
+        EngineConfig {
+            source_initialization: true,
+            ..config()
+        },
+        Some(coordinator),
+        Some(clients),
+        Some(inputs),
+    )
+    .unwrap()
+    .with_local_source_switches()
+    .unwrap();
+    let old = Arc::new(Counts::default());
+    let new = Arc::new(Counts::default());
+    let old_requests = old.clone();
+    let new_requests = new.clone();
+    let (base, server) = serve(
+        Router::new()
+            .route(
+                "/original",
+                get(move || {
+                    let c = old_requests.clone();
+                    async move { packet_origin(c, 100) }
+                }),
+            )
+            .route(
+                "/alternate",
+                get(move || {
+                    let c = new_requests.clone();
+                    async move { packet_origin(c, 200) }
+                }),
+            ),
+    )
+    .await;
+    let mut playback = limited_source(format!("{base}/original"));
+    let channel = uuid::Uuid::new_v4().to_string();
+    let primary_stream = playback.provider_profile_id.unwrap() + 1;
+    let alternate_stream = primary_stream + 1;
+    let numeric_channel = primary_stream + 2;
+    playback.channel_id = channel.clone();
+    playback.stream_id = primary_stream;
+    playback.metadata = vec![("channel_id".into(), numeric_channel.to_string())];
+    let mut alternate = candidate(format!("{base}/alternate"), alternate_stream);
+    alternate.provider_profile_id = playback.provider_profile_id;
+    alternate.provider_max_streams = 1;
+    playback.alternates.push(alternate);
+    let profile = playback.provider_profile_id.unwrap();
+    let counter = format!("profile_connections:{profile}");
+    let lease = format!("live:channel:{channel}:owner");
+    let metadata = format!("live:channel:{channel}:metadata");
+    let channel_alias = format!("channel_stream:{numeric_channel}");
+    let primary_alias = format!("stream_profile:{primary_stream}");
+    let alternate_alias = format!("stream_profile:{alternate_stream}");
+    let mut first = engine.play(playback.clone()).await.unwrap().into_body();
+    let mut second = engine.play(playback).await.unwrap().into_body();
+    observe_pid(&mut first, 100).await;
+    observe_pid(&mut second, 100).await;
+    let owner: String = redis.get(&lease).await.unwrap();
+    assert!(!owner.is_empty());
+    assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+    for (stream, pid, active, inactive) in [
+        (alternate_stream, 200, &new, &old),
+        (primary_stream, 100, &old, &new),
+    ] {
+        engine.switch_local_source(&channel, stream).await.unwrap();
+        observe_pid(&mut first, pid).await;
+        observe_pid(&mut second, pid).await;
+        wait_for(|| inactive.active.load(Ordering::SeqCst) == 0).await;
+        assert_eq!(active.active.load(Ordering::SeqCst), 1);
+        assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+        assert_eq!(redis.get::<_, String>(&lease).await.unwrap(), owner);
+        assert_eq!(
+            redis
+                .hget::<_, _, i64>(&metadata, "stream_id")
+                .await
+                .unwrap(),
+            stream
+        );
+        assert_eq!(
+            redis.get::<_, i64>(&channel_alias).await.unwrap(),
+            primary_stream
+        );
+        assert_eq!(redis.get::<_, i64>(&primary_alias).await.unwrap(), profile);
+        assert!(!redis.exists::<_, bool>(&alternate_alias).await.unwrap());
+        assert_eq!(engine.status()[0].viewer_count, 2);
+    }
+    assert_eq!(old.connections.load(Ordering::SeqCst), 2);
+    assert_eq!(new.connections.load(Ordering::SeqCst), 1);
+    drop((first, second));
+    assert!(engine.shutdown_wait(Duration::from_secs(3)).await);
+    wait_profile_zero(&mut redis, &counter).await;
+    assert!(!redis.exists::<_, bool>(&lease).await.unwrap());
+    assert!(!redis.exists::<_, bool>(&channel_alias).await.unwrap());
+    assert!(!redis.exists::<_, bool>(&primary_alias).await.unwrap());
     server.abort();
 }
 

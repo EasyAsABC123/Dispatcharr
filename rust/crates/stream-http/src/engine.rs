@@ -442,8 +442,9 @@ impl StreamEngine {
         Ok(self)
     }
 
-    /// Select an unambiguous, already-resolved raw HTTP target on the current
-    /// unlimited profile. The caller must have checked control authorization.
+    /// Select an already-resolved direct HTTP target on the current profile.
+    /// Finite switching requires one actually retained, unshared provider slot.
+    /// The caller must have checked control authorization.
     pub async fn switch_local_source(
         &self,
         channel: &str,
@@ -499,6 +500,12 @@ impl StreamEngine {
         {
             return Err(PlaybackError::new(409, "Local source owner changed"));
         }
+        if session.current.lock().unwrap().provider_max_streams != 0 {
+            return Err(PlaybackError::new(
+                501,
+                "Next Stream requires a current direct unlimited profile",
+            ));
+        }
         let (previous, next, url) = self
             .switch_in_local_session(&session, |current| {
                 if current != previous {
@@ -548,6 +555,11 @@ impl StreamEngine {
                     "Active source is outside the local switch scope",
                 ));
             }
+            if active.provider_max_streams == 1
+                && !matches!(*session.startup.borrow(), Startup::Ready)
+            {
+                return Err(PlaybackError::new(409, "Local provider slot is not ready"));
+            }
             let target = (stream_id, current.1);
             if target == current {
                 return Err(PlaybackError::new(
@@ -568,6 +580,12 @@ impl StreamEngine {
                     "Requested stream is outside the local switch scope",
                 ));
             };
+            if active.provider_max_streams != candidate.provider_max_streams {
+                return Err(PlaybackError::new(
+                    409,
+                    "Requested stream has a different provider limit",
+                ));
+            }
             if saved_url.is_some_and(|url| url != candidate.url) {
                 return Err(PlaybackError::new(
                     409,
@@ -775,13 +793,14 @@ impl StreamEngine {
                 let source_switch = (register_client
                     && self.inner.local_source_switches
                     && source.output_format == dispatcharr_contracts::OutputFormat::MpegTs
-                    && source_switch::supported(&primary)
-                    && source.alternates.iter().any(|candidate| {
-                        source_switch::supported(candidate)
-                            && candidate.provider_profile_id == primary.provider_profile_id
-                            && candidate.stream_id != primary.stream_id
-                            && candidate.url != primary.url
-                    }))
+                    && (primary.provider_max_streams == 0
+                        || (self.inner.config.source_initialization
+                            && self.inner.clients.is_some()
+                            && self.inner.coordinator.is_some()))
+                    && source
+                        .alternates
+                        .iter()
+                        .any(|candidate| source_switch::compatible(&primary, candidate)))
                 .then(|| Box::new(source_switch::Control::new()));
                 let current = Mutex::new(primary);
                 let session = Arc::new(Session {
@@ -1774,6 +1793,19 @@ fn same_live_reservation(current: &PlaybackCandidate, next: &PlaybackCandidate) 
         && supported_input_url(next)
 }
 
+// Manual changes are narrower than automatic failover. Use the existing
+// fenced retained-reservation transition only for an already owned one-slot
+// direct provider; no credential, preview or borrowed slot is transferred.
+fn retain_explicit_one_slot(
+    ready_owned_slot: bool,
+    current: &PlaybackCandidate,
+    target: Option<&PlaybackCandidate>,
+) -> bool {
+    ready_owned_slot
+        && current.provider_max_streams == 1
+        && target.is_some_and(|target| source_switch::compatible(current, target))
+}
+
 #[cfg(test)]
 mod retained_source_tests {
     use super::*;
@@ -1793,6 +1825,46 @@ mod retained_source_tests {
             user_agent: String::new(),
             headers: Vec::new(),
             metadata: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn explicit_source_switch_retains_only_the_owned_same_profile_one_slot() {
+        let start = PlaybackCandidate {
+            credential_pool: None,
+            ..candidate(11)
+        };
+        let target = PlaybackCandidate {
+            credential_pool: None,
+            ..candidate(12)
+        };
+        assert!(retain_explicit_one_slot(true, &start, Some(&target)));
+        assert!(!retain_explicit_one_slot(false, &start, Some(&target)));
+        assert!(!retain_explicit_one_slot(true, &start, None));
+        for refused in [
+            PlaybackCandidate {
+                provider_profile_id: Some(4),
+                ..target.clone()
+            },
+            PlaybackCandidate {
+                provider_profile_id: None,
+                ..target.clone()
+            },
+            PlaybackCandidate {
+                provider_max_streams: 2,
+                ..target.clone()
+            },
+            PlaybackCandidate {
+                provider_max_streams: 0,
+                ..target.clone()
+            },
+            PlaybackCandidate {
+                url: start.url.clone(),
+                ..target.clone()
+            },
+            candidate(12),
+        ] {
+            assert!(!retain_explicit_one_slot(true, &start, Some(&refused)));
         }
     }
 
@@ -2157,6 +2229,7 @@ async fn run_upstream(
             capacity_wait = None;
         }
         let mut requested_switch = None;
+        let mut requested_target = None;
         match reservation {
             Err(error) => last_error = error,
             Ok(()) => {
@@ -2242,6 +2315,11 @@ async fn run_upstream(
                 session.provider_epoch.fetch_add(1, Ordering::AcqRel);
                 session.upstream_admitted.store(true, Ordering::Release);
                 session.metadata_wake.notify_one();
+                let published_local_slot = inner.config.source_initialization
+                    && !source_borrowed
+                    && preview_assignment.is_none()
+                    && lease.is_some()
+                    && session.source_slot_published.load(Ordering::Acquire);
                 loop {
                     if *stop.borrow() || *lost.borrow() {
                         break 'session;
@@ -2277,6 +2355,7 @@ async fn run_upstream(
                         &worker,
                         lease.as_ref(),
                         candidate,
+                        published_local_slot && numeric_channel.is_some(),
                         current,
                         discontinuity,
                         &mut input,
@@ -2313,17 +2392,37 @@ async fn run_upstream(
                 let final_initializing_source = session.native_initializing.load(Ordering::Acquire)
                     && matches!(*session.startup.borrow(), Startup::Pending)
                     && (0..candidates.len()).all(|index| retry.tried.contains(&index));
-                retained_source_slot = requested_switch.is_none()
-                    && inner.config.source_initialization
-                    && !source_borrowed
-                    && preview_assignment.is_none()
-                    && lease.is_some()
-                    && session.source_slot_published.load(Ordering::Acquire)
+                let ready_owned_slot = published_local_slot
                     && matches!(*session.startup.borrow(), Startup::Ready)
-                    && session.received_bytes.load(Ordering::Relaxed) > bytes_at_admission
-                    && retry
-                        .next_candidate(&candidates, Some(&candidate.url))
-                        .is_some_and(|next| same_live_reservation(candidate, &candidates[next]));
+                    && session.received_bytes.load(Ordering::Relaxed) > bytes_at_admission;
+                retained_source_slot = if let Some(request) = requested_switch.as_ref() {
+                    requested_target = candidates.iter().position(|target| {
+                        source_switch::source(target) == request.target
+                            && source_switch::compatible(candidate, target)
+                    });
+                    let retain = retain_explicit_one_slot(
+                        ready_owned_slot,
+                        candidate,
+                        requested_target.map(|target| &candidates[target]),
+                    );
+                    if candidate.provider_max_streams > 0 && !retain {
+                        let control = session
+                            .source_switch
+                            .as_ref()
+                            .expect("owned switch control");
+                        let request = requested_switch.take().expect("pending switch");
+                        last_error =
+                            PlaybackError::new(409, "Local provider slot could not be retained");
+                        control.fail(request, last_error.clone());
+                        break 'session;
+                    }
+                    retain
+                } else {
+                    ready_owned_slot
+                        && retry
+                            .next_candidate(&candidates, Some(&candidate.url))
+                            .is_some_and(|next| same_live_reservation(candidate, &candidates[next]))
+                };
                 if let Some(lease) = &lease {
                     if !final_initializing_source && !retained_source_slot {
                         if let Err(error) = lease.release_provider().await {
@@ -2335,11 +2434,7 @@ async fn run_upstream(
             }
         }
         if let (Some(control), Some(request)) = (&session.source_switch, requested_switch.take()) {
-            let target = candidates.iter().position(|candidate| {
-                source_switch::source(candidate) == request.target
-                    && source_switch::supported(candidate)
-            });
-            if let Some(target) = target {
+            if let Some(target) = requested_target {
                 current = target;
                 retry.tried.clear();
                 retry.rotations = 0;
@@ -2832,6 +2927,7 @@ async fn drive_candidate(
     worker: &Arc<WorkerCount>,
     provider: Option<&Arc<dispatcharr_coordination::Lease>>,
     candidate: &PlaybackCandidate,
+    published_local_slot: bool,
     current: usize,
     discontinuity: bool,
     input: &mut InputAccumulator,
@@ -2954,10 +3050,10 @@ async fn drive_candidate(
         mark_chunk,
         chunk,
     } = input;
-    let control = session
-        .source_switch
-        .as_ref()
-        .filter(|_| source_switch::supported(candidate));
+    let control = session.source_switch.as_ref().filter(|_| {
+        source_switch::supported(candidate)
+            && (candidate.provider_max_streams == 0 || published_local_slot)
+    });
     let mut requested_switch = None;
     let mut first_media = None;
     let mut stable_noted = false;

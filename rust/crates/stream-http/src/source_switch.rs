@@ -14,9 +14,19 @@ pub(super) fn source(candidate: &PlaybackCandidate) -> Source {
 pub(super) fn supported(candidate: &PlaybackCandidate) -> bool {
     candidate.input_command.is_none()
         && candidate.credential_pool.is_none()
-        && candidate.provider_max_streams == 0
+        && (candidate.provider_max_streams == 0
+            || (candidate.provider_max_streams == 1 && candidate.provider_profile_id.is_some()))
         && reqwest::Url::parse(&candidate.url)
             .is_ok_and(|url| matches!(url.scheme(), "http" | "https"))
+}
+
+pub(super) fn compatible(current: &PlaybackCandidate, target: &PlaybackCandidate) -> bool {
+    supported(current)
+        && supported(target)
+        && target.provider_profile_id == current.provider_profile_id
+        && target.provider_max_streams == current.provider_max_streams
+        && target.stream_id != current.stream_id
+        && target.url != current.url
 }
 
 pub(super) struct Request {
