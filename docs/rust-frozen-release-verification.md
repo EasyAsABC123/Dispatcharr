@@ -320,6 +320,13 @@ the initial forced local refresh when its saved TVG parse counter contains
 plain malformed text. The worker records the observed error and returns
 null after cleanup without acquiring the file lock or starting a child.
 
+Ordinary manual Channel creation accepts an explicit profile selection
+with a supported guide when the request omits the stream list. Two focused
+checks exercised the pinned Original serializer and signal order with and
+without stream links. The paired owner includes the omitted-list request
+with an existing dummy guide and verifies the saved membership, empty
+stream list, cache generation and broker queue.
+
 An immediate XML TVG cancellation keeps its broker reservation until Redis
 confirms the REVOKED result. The visibility sweep can recover the exact
 request after an ambiguous reply. In a private Redis test, the result

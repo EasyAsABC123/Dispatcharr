@@ -810,13 +810,12 @@ async fn create_owned(
             .overrides
             .as_ref()
             .is_some_and(|v| v.get("epg_data_id").is_some_and(|v| !v.is_null()));
-    // The React new-channel form always sends its stream list and may include
-    // the current profile. Guide save effects precede the ordinary stream
-    // and membership inserts.
+    // The new-channel form sends its stream list, while API clients may omit
+    // it and still select profiles. Guide effects precede stream and membership inserts.
     let stock_manual_guide = data["auto_created"] == false
         && data["auto_created_by_id"].is_null()
         && data["epg_data_id"].is_i64()
-        && validated.streams.is_some()
+        && (validated.streams.is_some() || body.contains_key("channel_profile_ids"))
         && validated.overrides.is_none();
     if guide_coupled
         && !stock_manual_guide
