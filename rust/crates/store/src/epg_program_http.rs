@@ -390,7 +390,9 @@ impl EpgProgramReads {
                 list_json.clone().post(mutations::create_json),
             )
             .route("/api/epg/programs.json/", list_json)
-            .route(search::PATH, get(search::handle))
+            .route(search::PATH, search::routes())
+            .route("/api/epg/programs/search.json", search::routes())
+            .route("/api/epg/programs/search.json/", search::routes())
             .route(
                 "/api/epg/programs/{json_id}",
                 get(detail_json_alias)

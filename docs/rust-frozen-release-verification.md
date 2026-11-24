@@ -464,7 +464,17 @@ visible channel and stream
 linked to a matching guide. The pinned Original passed 28 relation
 requests. A private PostgreSQL run checked the new Rust filters across
 both roles, including override precedence and intersections across
-visible channels. Signed package cases remain open.
+visible channels.
+
+The ordinary and literal JSON search routes give administrator users
+the pinned Original's OPTIONS metadata. The same role check applies
+before the method error for an unsupported request. Standard users
+can use canonical GET and HEAD. With the literal JSON suffix, a read
+that passes authentication reproduces Original's HTML 500. The
+Django and DRF component confirmed 48 method, spelling and role
+combinations. The Rust checks covered routing, unauthenticated
+negotiation, HEAD body handling and exact metadata. The current signed
+Guide package owner is ready for grouped verification.
 
 ## Channel logo pagination and Xtream information
 

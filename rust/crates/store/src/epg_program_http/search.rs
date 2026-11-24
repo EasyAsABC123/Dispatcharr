@@ -5,15 +5,20 @@ use super::{
     BoundedJson, EpgProgramReads, OwnedJson,
 };
 use crate::{
-    channels::scope,
+    channels::{
+        channel_options_headers, channel_options_indentation, options_json_response, scope,
+        serialize_options_json,
+    },
+    core_reads::negotiate_literal_json_alias,
     vod_api_draft::vod_api_pagination::{last_query, ordinary_with_limits, page_url},
     StoreError, User,
 };
 use axum::{
     body::Body,
     extract::{ConnectInfo, OriginalUri, State},
-    http::{header, HeaderMap},
+    http::{header, HeaderMap, HeaderValue, Method, Uri},
     response::{IntoResponse, Response},
+    routing::{get, MethodRouter},
 };
 use bytes::Bytes;
 use chrono::{DateTime, SecondsFormat, TimeDelta, Utc};
@@ -373,19 +378,63 @@ async fn read(
     result
 }
 
-pub(super) async fn handle(
+pub(super) fn routes() -> MethodRouter<EpgProgramReads> {
+    get(handle).fallback(handle)
+}
+
+fn search_options(indentation: usize) -> Result<Response, StoreError> {
+    let metadata = json!({
+        "name": "Search",
+        "description": "",
+        "renders": ["application/json", "text/html"],
+        "parses": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"],
+    });
+    let body = serialize_options_json(metadata.as_object().unwrap(), indentation)
+        .ok_or(StoreError::UnhandledRestFault)?;
+    options_json_response(body)
+}
+
+async fn handle(
     State(state): State<EpgProgramReads>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     OriginalUri(uri): OriginalUri,
+    method: Method,
 ) -> Response {
     let result = async {
-        json_negotiation(&headers, &uri)?;
-        let base = origin(&state.auth, peer, &headers);
-        let user = state.auth.account_user(peer, headers, false).await?;
+        let json_alias = uri.path() != PATH;
+        if json_alias {
+            negotiate_literal_json_alias(&headers)?;
+        } else {
+            json_negotiation(&headers, &uri)?;
+        }
+
+        let reads = matches!(method, Method::GET | Method::HEAD);
+        let base = reads.then(|| origin(&state.auth, peer, &headers));
+        let options_indentation = (method == Method::OPTIONS)
+            .then(|| channel_options_indentation(&Uri::from_static("/"), &headers).unwrap_or(0));
+        // DRF uses the declared Standard permission for search, and its
+        // fail-closed administrator permission for metadata and other methods.
+        let user = state.auth.account_user(peer, headers, !reads).await?;
+        let Some(base) = base else {
+            return if let Some(indentation) = options_indentation {
+                search_options(indentation)
+            } else {
+                Err(StoreError::StatusBody(
+                    405,
+                    json!({"detail": format!("Method \"{method}\" not allowed.")}),
+                ))
+            };
+        };
         if user.user_level < 1 {
             return Err(StoreError::PermissionDenied);
         }
+        if json_alias {
+            // Original's formatted action calls search with a format
+            // argument that its handler signature does not accept.
+            return Err(StoreError::UnhandledRestFault);
+        }
+
         let raw = uri.query().unwrap_or_default();
         if raw.len() > 16384 {
             return Err(unavailable());
@@ -408,33 +457,89 @@ pub(super) async fn handle(
             let result = read(&state, &user, &search, &base, lease).await;
             let _ = sender.send(result);
         });
-        tokio::time::timeout(deadline, receiver)
+        let data = tokio::time::timeout(deadline, receiver)
             .await
             .map_err(|_| unavailable())?
-            .map_err(|_| unavailable())?
-    }
-    .await;
-    let mut response = match result {
-        Ok(data) => (
+            .map_err(|_| unavailable())??;
+        Ok((
             [(header::CONTENT_TYPE, "application/json")],
             Body::from(data),
         )
-            .into_response(),
-        Err(error) => error.into_response(),
-    };
-    response
-        .headers_mut()
-        .insert(header::ALLOW, header::HeaderValue::from_static(ALLOW));
-    response.headers_mut().insert(
-        header::VARY,
-        header::HeaderValue::from_static("Accept, origin"),
-    );
-    response
+            .into_response())
+    }
+    .await;
+    channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        HeaderValue::from_static(ALLOW),
+    )
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn programme_search_routing_checks_negotiation_before_permissions() {
+        use axum::{body::to_bytes, extract::Request, Extension};
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = crate::AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("programme-method-test-only".into()).unwrap(),
+        );
+        let state =
+            EpgProgramReads::new(auth, super::super::EpgProgramReadLimits::default()).unwrap();
+        let router = state
+            .router()
+            .layer(Extension(ConnectInfo(SocketAddr::from((
+                [127, 0, 0, 1],
+                1234,
+            )))));
+        for path in [
+            PATH,
+            "/api/epg/programs/search.json",
+            "/api/epg/programs/search.json/",
+        ] {
+            for method in [Method::GET, Method::HEAD, Method::OPTIONS, Method::POST] {
+                for (accept, status) in [("application/json", 401), ("text/plain", 406)] {
+                    let response = router
+                        .clone()
+                        .oneshot(
+                            Request::builder()
+                                .uri(path)
+                                .method(method.clone())
+                                .header(header::ACCEPT, accept)
+                                .body(Body::empty())
+                                .unwrap(),
+                        )
+                        .await
+                        .unwrap();
+                    assert_eq!(response.status().as_u16(), status, "{method} {path}");
+                    assert_eq!(response.headers()[header::ALLOW], ALLOW);
+                    assert_eq!(response.headers()[header::VARY], "Accept");
+                    if method == Method::HEAD {
+                        assert!(to_bytes(response.into_body(), 1024)
+                            .await
+                            .unwrap()
+                            .is_empty());
+                    }
+                }
+            }
+        }
+        let body = to_bytes(search_options(0).unwrap().into_body(), 1024)
+            .await
+            .unwrap();
+        assert_eq!(
+            body.as_ref(),
+            br#"{"name":"Search","description":"","renders":["application/json","text/html"],"parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]}"#
+        );
+        let pretty = to_bytes(search_options(4).unwrap().into_body(), 1024)
+            .await
+            .unwrap();
+        assert!(pretty.starts_with(b"{\n    \"name\": \"Search\",\n    \"description\":"));
+    }
+
     #[tokio::test]
     #[ignore = "requires a freshly owned Unix-socket PostgreSQL fixture"]
     async fn programme_search_postgres_role_override_pagination() {
