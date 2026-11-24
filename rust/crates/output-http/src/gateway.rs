@@ -262,8 +262,7 @@ impl OutputGateway {
         let xc = XC_EXPORT_PATHS.contains(&path.as_str());
         let profile = path
             .strip_prefix("/output/m3u/")
-            .map(|value| percent_path(value.trim_end_matches('/')))
-            .filter(|value| !value.is_empty());
+            .and_then(crate::source_export_profile);
         let ip = self.inner.auth.client_ip_text(&identity);
         let agent = identity.header("user-agent").unwrap_or("unknown");
         let user = if xc {
@@ -570,26 +569,6 @@ fn grouped_query(query: &[(String, String)]) -> String {
     }
     render::urlencode(&groups.into_iter().flatten().collect::<Vec<_>>())
 }
-fn percent_path(value: &str) -> String {
-    // Decode URI path bytes once; query-form separators and '+' are literal.
-    let input = value.as_bytes();
-    let mut output = Vec::with_capacity(input.len());
-    let mut offset = 0;
-    while offset < input.len() {
-        if input[offset] == b'%' && offset + 2 < input.len() {
-            let hex = |byte: u8| (byte as char).to_digit(16);
-            if let Some((high, low)) = hex(input[offset + 1]).zip(hex(input[offset + 2])) {
-                output.push((high * 16 + low) as u8);
-                offset += 3;
-                continue;
-            }
-        }
-        output.push(input[offset]);
-        offset += 1;
-    }
-    String::from_utf8_lossy(&output).into_owned()
-}
-
 async fn read_body(
     stop: watch::Sender<bool>,
     body: Body,
@@ -765,11 +744,26 @@ mod tests {
     }
     #[test]
     fn path_decoding_retains_raw_separators_plus_unicode_and_single_decode() {
-        assert_eq!(percent_path("Kids%20&%20News"), "Kids & News");
-        assert_eq!(percent_path("Plus+News"), "Plus+News");
-        assert_eq!(percent_path("Caf%C3%A9%20%E6%9D%B1%E4%BA%AC"), "Café 東京");
-        assert_eq!(percent_path("Café&Plus+"), "Café&Plus+");
-        assert_eq!(percent_path("Percent%2526News"), "Percent%26News");
+        assert_eq!(
+            crate::source_export_profile("Kids%20&%20News").as_deref(),
+            Some("Kids & News")
+        );
+        assert_eq!(
+            crate::source_export_profile("Plus+News").as_deref(),
+            Some("Plus+News")
+        );
+        assert_eq!(
+            crate::source_export_profile("Caf%C3%A9%20%E6%9D%B1%E4%BA%AC").as_deref(),
+            Some("Café 東京")
+        );
+        assert_eq!(
+            crate::source_export_profile("Café&Plus+").as_deref(),
+            Some("Café&Plus+")
+        );
+        assert_eq!(
+            crate::source_export_profile("Percent%2526News").as_deref(),
+            Some("Percent%26News")
+        );
     }
     async fn fixture() -> OutputGateway {
         fixture_config(OutputConfig {

@@ -234,8 +234,7 @@ impl Gateway {
         }
         let profile = path
             .strip_prefix("/output/epg/")
-            .map(|s| decode_path(s.trim_end_matches('/')))
-            .filter(|s| !s.is_empty());
+            .and_then(dispatcharr_output_http::source_export_profile);
         let xc = XC_EXPORT_PATHS.contains(&path.as_str());
         let user = if xc {
             match self
@@ -490,27 +489,6 @@ impl Gateway {
             Ok::<_,sqlx::Error>(())
         }.await;
     }
-}
-fn decode_path(raw: &str) -> String {
-    let mut bytes = Vec::with_capacity(raw.len());
-    let input = raw.as_bytes();
-    let mut at = 0;
-    while at < input.len() {
-        if input[at] == b'%' && at + 2 < input.len() {
-            if let (Some(a), Some(b)) = (
-                (input[at + 1] as char).to_digit(16),
-                (input[at + 2] as char).to_digit(16),
-            ) {
-                let value = (a * 16 + b) as u8;
-                bytes.push(value);
-                at += 3;
-                continue;
-            }
-        }
-        bytes.push(input[at]);
-        at += 1;
-    }
-    String::from_utf8_lossy(&bytes).into_owned()
 }
 fn event_limit(value: Option<&serde_json::Value>) -> i64 {
     use serde_json::Value;

@@ -418,6 +418,15 @@ and produced the same response. The Rust library passed 67 focused
 tests, with 25 external-fixture tests reserved for owned runtime checks.
 The existing paired owner adds eight signed overflow cases.
 
+## Named M3U and XMLTV profile URLs
+
+The output gateways accept one percent-encoded trailing slash as the
+optional delimiter for a named profile. Pinned nginx and Django checks
+confirmed the same profile selection and six M3U query results. The
+two Rust libraries passed 35 focused tests. Twenty-four external
+fixture tests were reserved. The combined ARM64 owner adds two paired
+wire comparisons to its existing output and HDHomeRun checks.
+
 ## HDHomeRun metadata
 
 Public HDHomeRun OPTIONS metadata uses the selected JSON indentation
