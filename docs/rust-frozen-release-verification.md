@@ -754,3 +754,24 @@ same-package restart remain in the final acceptance fixtures.
 
 The original Dispatcharr authors, Django, Django REST framework, SQLite and
 dependency contributors retain full credit and their existing licenses.
+
+### Bulk stream lookup
+
+The preserved React API helper can send more than 50 stream IDs to the bulk
+`POST` action. Rust exposes the canonical route and both JSON suffix
+spellings. The shared direct selector retains model update order and includes
+inactive-provider rows, with source URLs visible only to administrators.
+Bulk queries with no matches return an empty array, and the small-list GET
+retains its 404 behavior.
+
+Pinned Original Django and Django REST framework covered 13 actual POST
+requests and 17 OPTIONS requests. Administrator OPTIONS includes metadata for
+23 fields, with the same compact JSON bytes across all three paths, plus
+tested indented output. Standard and Streamer receive 403 for OPTIONS, and
+anonymous receives 401. The isolated Unix-only PostgreSQL fixture matched
+both full 51-row administrator and Standard POST response fingerprints.
+Signed requests on the final package, browser execution and non-JSON
+representations remain pending.
+
+The original Dispatcharr authors, Django, Django REST framework and
+dependency contributors retain full credit and their existing licenses.

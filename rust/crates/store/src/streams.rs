@@ -2,20 +2,26 @@
 //! Original authors and contributors retain full credit; see ATTRIBUTION.md.
 use crate::{
     catalogue_options,
-    channels::{base_url, like, page_url, search_terms, stream},
+    channels::{
+        base_url, channel_options_headers, channel_options_indentation, like,
+        options_json_response, page_url, search_terms, serialize_options_json, stream,
+    },
     core_reads::JsonReadId,
     AuthService, StoreError, User,
 };
 use axum::{
-    extract::{ConnectInfo, OriginalUri, Path, Query, State},
-    http::HeaderMap,
+    body::Bytes,
+    extract::{ConnectInfo, OriginalUri, Path, Query, Request, State},
+    http::{HeaderMap, HeaderValue},
     middleware::from_fn_with_state,
-    routing::{delete, get},
+    response::{IntoResponse, Response},
+    routing::{delete, get, post},
     Json, Router,
 };
-use serde_json::{json, Value};
+use futures_util::TryStreamExt;
+use serde_json::{json, Map, Value};
 use sqlx::{Postgres, QueryBuilder};
-use std::{collections::HashMap, net::SocketAddr};
+use std::{collections::HashMap, net::SocketAddr, sync::OnceLock};
 use url::Url;
 pub(crate) const FROM:&str=" FROM dispatcharr_channels_stream s LEFT JOIN m3u_m3uaccount a ON a.id=s.m3u_account_id LEFT JOIN dispatcharr_channels_channelgroup g ON g.id=s.channel_group_id WHERE (a.is_active IS DISTINCT FROM false)";
 fn missing() -> StoreError {
@@ -201,15 +207,12 @@ async fn read(
             // Original list override bypasses active-account, filter and pagination
             // predicates and uses Stream.Meta.updated_at ordering.
             let ids = ids.split(',').map(number).collect::<Result<Vec<_>, _>>()?;
-            let rows=sqlx::query_scalar::<_,Value>("SELECT to_jsonb(s) FROM dispatcharr_channels_stream s WHERE s.id=ANY($1) ORDER BY s.updated_at DESC").bind(ids).fetch_all(auth.store.pool()).await?;
+            let rows =
+                selected_streams(auth.store.pool(), &ids, user.user_level >= 10, &base).await?;
             if rows.is_empty() {
                 return Err(missing());
             }
-            return Ok(Json(Value::Array(
-                rows.into_iter()
-                    .map(|raw| stream(&json!({"raw":raw}), user.user_level >= 10, &base))
-                    .collect(),
-            )));
+            return Ok(Json(Value::Array(rows)));
         }
     }
     let count = if detail.is_none() && !only_ids {
@@ -270,6 +273,116 @@ async fn read(
         json!({"count":count,"next":if page<pages{Some(page_url(&base,page+1))}else{None},"previous":previous(&base,page),"results":values}),
     ))
 }
+async fn selected_streams(
+    pool: &sqlx::PgPool,
+    ids: &[i64],
+    admin: bool,
+    base: &Url,
+) -> Result<Vec<Value>, StoreError> {
+    if ids.is_empty() {
+        return Ok(Vec::new());
+    }
+    // The two bulk lookups use Stream.objects directly and retain its model
+    // ordering. The active-account and list ordering predicates do not apply.
+    let mut rows = sqlx::query_scalar::<_, Value>(
+        "SELECT to_jsonb(s) FROM dispatcharr_channels_stream s
+         WHERE s.id = ANY($1) ORDER BY s.updated_at DESC",
+    )
+    .bind(ids)
+    .fetch(pool);
+    let mut values = Vec::new();
+    while let Some(raw) = rows.try_next().await? {
+        values.push(stream(&json!({"raw":raw}), admin, base));
+    }
+    Ok(values)
+}
+
+fn post_stream_ids(body: &Map<String, Value>) -> Result<Vec<i64>, StoreError> {
+    let Some(ids) = body.get("ids") else {
+        return Ok(Vec::new());
+    };
+    let ids = ids.as_array().ok_or_else(|| {
+        StoreError::InvalidInput(json!({"error":"ids must be a list of integers"}))
+    })?;
+    ids.iter()
+        .filter(|id| !id.is_null())
+        .map(|id| {
+            crate::json_compat::python_json_int(id)
+                .map(|value| value.as_i64())
+                .map_err(|_| StoreError::UnhandledRestFault)
+        })
+        .filter_map(Result::transpose)
+        .collect()
+}
+
+async fn by_ids(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    OriginalUri(uri): OriginalUri,
+    headers: HeaderMap,
+    request: Request,
+) -> Response {
+    let result = async {
+        let suffix = uri.path().trim_end_matches('/').ends_with(".json");
+        let indent = crate::channel_profiles::negotiate_read_json(&uri, &headers, suffix)?;
+        let user = auth.account_user(peer, headers.clone(), false).await?;
+        if user.user_level < 1 {
+            return Err(StoreError::PermissionDenied);
+        }
+        let ids = post_stream_ids(&crate::channels::channel_mutation_json(request).await?)?;
+        let base = base_url(&headers, &uri)?;
+        let rows = selected_streams(auth.store.pool(), &ids, user.user_level >= 10, &base).await?;
+        crate::channel_profiles::json_response(Value::Array(rows), indent)
+    }
+    .await;
+    channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        HeaderValue::from_static("POST, OPTIONS"),
+    )
+}
+
+const BY_IDS_OPTIONS: &[u8; 3303] = include_bytes!("../datasets/source-stream-by-ids-options.json");
+
+fn by_ids_options_entity(indent: usize) -> Result<Response, StoreError> {
+    static RENDERED: [OnceLock<Option<Bytes>>; 9] = [const { OnceLock::new() }; 9];
+    let bytes = if indent == 0 {
+        Bytes::from_static(BY_IDS_OPTIONS)
+    } else {
+        RENDERED[indent]
+            .get_or_init(|| {
+                let schema: Map<String, Value> = serde_json::from_slice(BY_IDS_OPTIONS).ok()?;
+                serialize_options_json(&schema, indent)
+            })
+            .clone()
+            .ok_or(StoreError::UnhandledRestFault)?
+    };
+    options_json_response(bytes)
+}
+
+async fn by_ids_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    OriginalUri(uri): OriginalUri,
+    headers: HeaderMap,
+) -> Response {
+    let result = async {
+        let indent = if uri.path().trim_end_matches('/').ends_with(".json") {
+            crate::channel_profiles::negotiate_read_json(&uri, &headers, true)?.unwrap_or(0)
+        } else {
+            channel_options_indentation(&uri, &headers)?
+        };
+        // DRF names this action 'metadata', which uses the administrator
+        // default rather than the POST action's Standard-user permission.
+        auth.account_user(peer, headers, true).await?;
+        by_ids_options_entity(indent)
+    }
+    .await;
+    channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        HeaderValue::from_static("POST, OPTIONS"),
+    )
+}
+
 async fn list(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -432,6 +545,18 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/channels/streams/{json_id}",
             catalogue_options::json_alias(retrieve_json_alias, catalogue_options::DETAIL_ALLOW),
         )
+        .route(
+            "/api/channels/streams/by-ids/",
+            post(by_ids).options(by_ids_options),
+        )
+        .route(
+            "/api/channels/streams/by-ids.json",
+            post(by_ids).options(by_ids_options),
+        )
+        .route(
+            "/api/channels/streams/by-ids.json/",
+            post(by_ids).options(by_ids_options),
+        )
         .route("/api/channels/streams/ids/", get(ids))
         .route(
             "/api/channels/streams/groups/",
@@ -457,4 +582,237 @@ pub(crate) fn router(auth: AuthService) -> Router {
                 .delete(crate::stream_writes::delete),
         )
         .with_state(auth)
+}
+
+#[cfg(test)]
+mod by_ids_tests {
+    use super::*;
+
+    #[test]
+    fn post_stream_ids_retains_django_values_and_error_shapes() {
+        fn decode(input: Value) -> Result<Vec<i64>, StoreError> {
+            post_stream_ids(input.as_object().unwrap())
+        }
+        assert_eq!(decode(json!({})).unwrap(), Vec::<i64>::new());
+        assert_eq!(decode(json!({"ids":[]})).unwrap(), Vec::<i64>::new());
+        assert_eq!(
+            decode(json!({"ids":[1,2,"٢",2.9,true,null,9999]})).unwrap(),
+            [1, 2, 2, 2, 1, 9999]
+        );
+        assert!(matches!(
+            decode(json!({"ids":"1,2"})),
+            Err(StoreError::InvalidInput(value)) if value == json!({"error":"ids must be a list of integers"})
+        ));
+        assert!(matches!(
+            decode(json!({"ids":[1,"missing"]})),
+            Err(StoreError::UnhandledRestFault)
+        ));
+    }
+
+    #[tokio::test]
+    async fn post_stream_ids_authenticates_before_reading_json_on_all_bound_routes() {
+        use axum::{
+            body::{to_bytes, Body},
+            http::{header, Method, StatusCode},
+        };
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-stream-lookup-test".into()).unwrap(),
+        );
+        let app = router(auth);
+        for uri in [
+            "/api/channels/streams/by-ids/",
+            "/api/channels/streams/by-ids.json",
+            "/api/channels/streams/by-ids.json/",
+        ] {
+            let req = Request::builder()
+                .method(Method::POST)
+                .uri(uri)
+                .header(header::CONTENT_TYPE, "application/json")
+                .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                .body(Body::from("[1,2]"))
+                .unwrap();
+            let reply = app.clone().oneshot(req).await.unwrap();
+            assert_eq!(reply.status(), StatusCode::UNAUTHORIZED);
+            assert_eq!(reply.headers()[header::ALLOW], "POST, OPTIONS");
+            assert_eq!(reply.headers()[header::VARY], "Accept");
+            let body = to_bytes(reply.into_body(), 128).await.unwrap();
+            assert_eq!(
+                body,
+                r#"{"detail":"Authentication credentials were not provided."}"#
+            );
+        }
+    }
+
+    #[tokio::test]
+    async fn options_stream_ids_matches_observed_metadata_bytes() {
+        use axum::{body::to_bytes, http::header};
+        use sha2::{Digest, Sha256};
+
+        for (indent, length, digest) in [
+            (
+                0,
+                3303,
+                "d285ffe5952d25852b72d72db60e1eb06c90b47bcd65dab79faf73bbd3a73bd3",
+            ),
+            (
+                2,
+                4844,
+                "f5665d52470e42e962a3c0ca837abc0b4b733b4a696367bcfce07bc057e9b6b3",
+            ),
+        ] {
+            let reply = by_ids_options_entity(indent).unwrap();
+            assert_eq!(reply.headers()[header::CONTENT_TYPE], "application/json");
+            assert_eq!(reply.headers()[header::CONTENT_LENGTH], length.to_string());
+            let body = to_bytes(reply.into_body(), length).await.unwrap();
+            assert_eq!(format!("{:x}", Sha256::digest(body)), digest);
+        }
+    }
+
+    #[tokio::test]
+    async fn options_stream_ids_routes_enforce_authentication_and_suffix_negotiation() {
+        use axum::{
+            body::{to_bytes, Body},
+            http::{header, Method, StatusCode},
+        };
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-stream-metadata-test".into()).unwrap(),
+        );
+        let app = router(auth);
+        for (uri, accept, expected, detail) in [
+            (
+                "/api/channels/streams/by-ids/",
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+                "Authentication credentials were not provided.",
+            ),
+            (
+                "/api/channels/streams/by-ids.json",
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+                "Authentication credentials were not provided.",
+            ),
+            (
+                "/api/channels/streams/by-ids.json/",
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+                "Authentication credentials were not provided.",
+            ),
+            (
+                "/api/channels/streams/by-ids.json",
+                "text/html",
+                StatusCode::NOT_ACCEPTABLE,
+                "Could not satisfy the request Accept header.",
+            ),
+            (
+                "/api/channels/streams/by-ids.json/",
+                "text/html",
+                StatusCode::NOT_ACCEPTABLE,
+                "Could not satisfy the request Accept header.",
+            ),
+        ] {
+            let request = Request::builder()
+                .method(Method::OPTIONS)
+                .uri(uri)
+                .header(header::ACCEPT, accept)
+                .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                .body(Body::empty())
+                .unwrap();
+            let reply = app.clone().oneshot(request).await.unwrap();
+            assert_eq!(reply.status(), expected);
+            assert_eq!(reply.headers()[header::ALLOW], "POST, OPTIONS");
+            assert_eq!(reply.headers()[header::VARY], "Accept");
+            let body = to_bytes(reply.into_body(), 128).await.unwrap();
+            assert_eq!(
+                serde_json::from_slice::<Value>(&body).unwrap(),
+                json!({ "detail": detail })
+            );
+        }
+    }
+
+    #[tokio::test]
+    #[ignore = "requires an owned disposable Unix-only PostgreSQL database"]
+    async fn selected_streams_preserves_bulk_order_and_projection() {
+        use sha2::{Digest, Sha256};
+        use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
+
+        let socket = std::env::var("DISPATCHARR_OWNED_BULK_STREAM_SOCKET").unwrap();
+        assert!(socket.starts_with("/tmp/dispatcharr-stream-bulk-") && socket.ends_with("/socket"));
+        let pool = PgPoolOptions::new()
+            .max_connections(1)
+            .connect_with(
+                PgConnectOptions::new()
+                    .socket(&socket)
+                    .port(54941)
+                    .username("fixture_owner")
+                    .database("postgres"),
+            )
+            .await
+            .unwrap();
+        assert!(sqlx::query_scalar::<_, bool>(
+            "SELECT inet_server_addr() IS NULL AND current_setting('listen_addresses') = ''",
+        )
+        .fetch_one(&pool)
+        .await
+        .unwrap());
+        sqlx::raw_sql(r#"
+            SET TIME ZONE 'UTC';
+            CREATE TEMP TABLE dispatcharr_channels_stream(
+                id bigint PRIMARY KEY, name text, url text, m3u_account_id bigint, logo_url text,
+                tvg_id text, local_file text, current_viewers integer DEFAULT 0,
+                updated_at timestamptz, last_seen timestamptz, is_stale boolean DEFAULT false,
+                is_adult boolean DEFAULT false, stream_profile_id bigint, is_custom boolean DEFAULT false,
+                channel_group_id bigint, stream_hash text, stream_stats jsonb, stream_stats_updated_at timestamptz,
+                stream_id integer, stream_chno double precision, is_catchup boolean DEFAULT false,
+                catchup_days integer DEFAULT 0, is_radio boolean DEFAULT false
+            );
+            INSERT INTO dispatcharr_channels_stream
+                (id, name, url, m3u_account_id, updated_at, last_seen, stream_stats)
+            SELECT i, 'Owned ' || lpad(i::text, 2, '0'),
+                'http://owned.invalid/media-' || i || '.ts', CASE WHEN i=2 THEN 2 ELSE 1 END,
+                '2026-02-01T12:00:00Z'::timestamptz + i * interval '1 second',
+                '2026-02-01T12:00:00Z'::timestamptz, CASE WHEN i=2 THEN '{"width":640}'::jsonb END
+            FROM generate_series(1,52) i;
+        "#).execute(&pool).await.unwrap();
+        let base = Url::parse("http://testserver/api/channels/streams/by-ids/").unwrap();
+        let ids = (1..=51).collect::<Vec<_>>();
+        for (admin, expected) in [
+            (
+                true,
+                "f0589707896b1c3e2f853e05c4a14276d2b218af7d0a9bd578a27b39805a5019",
+            ),
+            (
+                false,
+                "18955316795b44e109f0aa18c557c37e53b43b14e36535dfc1d08504db459423",
+            ),
+        ] {
+            let rows = selected_streams(&pool, &ids, admin, &base).await.unwrap();
+            let bytes = serde_json::to_vec(&rows).unwrap();
+            assert_eq!(format!("{:x}", Sha256::digest(bytes)), expected);
+        }
+        assert!(selected_streams(&pool, &[], false, &base)
+            .await
+            .unwrap()
+            .is_empty());
+        assert!(selected_streams(&pool, &[9999], false, &base)
+            .await
+            .unwrap()
+            .is_empty());
+        assert_eq!(
+            sqlx::query_scalar::<_, i64>("SELECT count(*) FROM dispatcharr_channels_stream")
+                .fetch_one(&pool)
+                .await
+                .unwrap(),
+            52
+        );
+    }
 }
