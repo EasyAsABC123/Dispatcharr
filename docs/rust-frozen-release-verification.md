@@ -342,6 +342,12 @@ without stream links. The paired owner includes the omitted-list request
 with an existing dummy guide and verifies the saved membership, empty
 stream list, cache generation and broker queue.
 
+The Version worker decodes bounded stacked gzip and deflate in the
+same order as Original. A paired component check used identical HTTP
+response bytes. Rust cleared the obsolete notification and dismissal
+rows and retained its Redis result through the held reply and shutdown.
+The packaged worker still needs its signed comparison.
+
 Recording recovery now treats falsey saved JSON properties as an empty
 map for the active recording branch, matching Original. Eight Source
 values and two focused Rust tests exercised the decision. The retained
@@ -423,6 +429,11 @@ Twenty-four pinned Original view calls used an isolated PostgreSQL server
 and produced the same response. The Rust library passed 67 focused
 tests, with 25 external-fixture tests reserved for owned runtime checks.
 The existing paired owner adds eight signed overflow cases.
+
+The Xtream panel sends Original's HTML 500 page for a malformed category
+integer. Twelve pinned Original panel calls checked malformed and valid
+requests on both route spellings. The Rust library passed 67 tests, and
+the same ARM64 output owner adds six signed malformed-category checks.
 
 ## Named M3U and XMLTV profile URLs
 

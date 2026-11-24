@@ -15,6 +15,8 @@ use std::{
 use tokio::sync::oneshot;
 
 const BODY: usize = 65536;
+// urllib3 MultiDecoder, used by Original Requests, bounds the chain to five.
+const MAX_CONTENT_ENCODINGS: usize = 5;
 #[derive(Clone)]
 pub struct Options {
     pub version: String,
@@ -403,22 +405,38 @@ fn decode_response(
         return Err(Error::Capacity);
     }
     drop(response);
+    let output = decode_body(input, encoding)?;
+    Ok(serde_json::from_slice(&output).ok())
+}
+
+fn decode_body(mut input: Vec<u8>, encoding: &str) -> Result<Vec<u8>, Error> {
+    let layers = encoding.rsplit(',').map(str::trim);
+    if layers.clone().count() > MAX_CONTENT_ENCODINGS {
+        return Err(Error::Capacity);
+    }
+    for layer in layers {
+        input = decode_layer(&input, layer)?;
+    }
+    Ok(input)
+}
+
+fn decode_layer(input: &[u8], encoding: &str) -> Result<Vec<u8>, Error> {
     let mut output = Vec::new();
     match encoding {
         "gzip" => {
-            flate2::read::MultiGzDecoder::new(input.as_slice())
+            flate2::read::MultiGzDecoder::new(input)
                 .take(BODY as u64 + 1)
                 .read_to_end(&mut output)
                 .map_err(|e| Error::Http(e.to_string()))?;
         }
         "deflate" => {
-            if flate2::read::ZlibDecoder::new(input.as_slice())
+            if flate2::read::ZlibDecoder::new(input)
                 .take(BODY as u64 + 1)
                 .read_to_end(&mut output)
                 .is_err()
             {
                 output.clear();
-                flate2::read::DeflateDecoder::new(input.as_slice())
+                flate2::read::DeflateDecoder::new(input)
                     .take(BODY as u64 + 1)
                     .read_to_end(&mut output)
                     .map_err(|e| Error::Http(e.to_string()))?;
@@ -429,7 +447,7 @@ fn decode_response(
     if output.len() > BODY {
         return Err(Error::Capacity);
     }
-    Ok(serde_json::from_slice(&output).ok())
+    Ok(output)
 }
 
 enum Delete {
@@ -546,4 +564,61 @@ async fn upsert(
             sqlx::query("COMMIT").execute(&mut *connection).await.map_err(sql)?;open=false;Ok((created,notice))
         }.await;finish(connection,result,open).await
     }).await.map_err(|_|Error::Supervisor)?
+}
+
+#[cfg(test)]
+mod response_encoding_tests {
+    use super::*;
+    use flate2::{
+        write::{DeflateEncoder, GzEncoder, ZlibEncoder},
+        Compression,
+    };
+    use std::io::Write;
+
+    fn gzip(input: &[u8]) -> Vec<u8> {
+        let mut encoder = GzEncoder::new(Vec::new(), Compression::fast());
+        encoder.write_all(input).unwrap();
+        encoder.finish().unwrap()
+    }
+
+    fn deflate(input: &[u8], raw: bool) -> Vec<u8> {
+        if raw {
+            let mut encoder = DeflateEncoder::new(Vec::new(), Compression::fast());
+            encoder.write_all(input).unwrap();
+            return encoder.finish().unwrap();
+        }
+        let mut encoder = ZlibEncoder::new(Vec::new(), Compression::fast());
+        encoder.write_all(input).unwrap();
+        encoder.finish().unwrap()
+    }
+
+    #[test]
+    fn version_response_decodes_source_stacked_gzip_and_deflate_in_reverse() {
+        let body = br#"{"tag_name":"v0.33.0"}"#;
+        for (encoded, encoding) in [
+            (gzip(body), "gzip"),
+            (deflate(body, false), "deflate"),
+            (deflate(body, true), "deflate"),
+            (deflate(&gzip(body), false), "gzip, deflate"),
+            (gzip(&deflate(body, true)), "deflate, gzip"),
+        ] {
+            assert_eq!(decode_body(encoded, encoding).unwrap(), body);
+        }
+    }
+
+    #[test]
+    fn version_response_content_encoding_limits_are_fail_closed() {
+        assert!(matches!(
+            decode_body(Vec::new(), "gzip,gzip,gzip,gzip,gzip,gzip"),
+            Err(Error::Capacity)
+        ));
+        assert!(matches!(
+            decode_body(gzip(b"input"), "unsupported, gzip"),
+            Err(Error::Unsupported("HTTP content encoding"))
+        ));
+        assert!(matches!(
+            decode_body(gzip(&vec![b'a'; BODY + 1]), "deflate, gzip"),
+            Err(Error::Capacity)
+        ));
+    }
 }

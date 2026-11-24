@@ -70,20 +70,18 @@ async fn tuners(store: &Store) -> Result<i64, sqlx::Error> {
 }
 
 #[derive(Debug, PartialEq, Eq)]
-enum LiveCategory {
+pub(crate) enum LiveCategory {
     All,
     Exact(i64),
     OutsideDatabase,
 }
 
-fn live_category(value: Option<&str>) -> Result<LiveCategory, StoreError> {
+pub(crate) fn live_category(value: Option<&str>) -> Option<LiveCategory> {
     let Some(value) = value else {
-        return Ok(LiveCategory::All);
+        return Some(LiveCategory::All);
     };
-    let decimal = dispatcharr_ingest_core::source_integer_literal(value).ok_or_else(|| {
-        StoreError::StatusBody(500, json!({"error":"XC category lookup failed."}))
-    })?;
-    Ok(match decimal.parse() {
+    let decimal = dispatcharr_ingest_core::source_integer_literal(value)?;
+    Some(match decimal.parse() {
         Ok(id) => LiveCategory::Exact(id),
         Err(_) => LiveCategory::OutsideDatabase,
     })
@@ -99,11 +97,11 @@ pub(crate) struct LiveRows {
 impl LiveRows {
     pub(crate) async fn read(
         store: &Store,
-        request: &PlaybackRequest,
+        category: LiveCategory,
         user: &User,
         limits: &ReadLimit,
     ) -> Result<Vec<Channel>, StoreError> {
-        let category = match live_category(request.parameter("category_id"))? {
+        let category = match category {
             LiveCategory::All => None,
             LiveCategory::Exact(id) => Some(id),
             // Django's BigAutoField equality compiles out-of-range integers to
@@ -310,10 +308,7 @@ mod tests {
             );
         }
         for value in ["", "7.0", "bad", &"9".repeat(4301)] {
-            assert!(matches!(
-                live_category(Some(value)),
-                Err(StoreError::StatusBody(500, body)) if body == json!({"error":"XC category lookup failed."})
-            ));
+            assert_eq!(live_category(Some(value)), None);
         }
     }
 }

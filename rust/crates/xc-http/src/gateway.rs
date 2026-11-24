@@ -31,6 +31,17 @@ use tokio::sync::{Notify, OwnedSemaphorePermit, Semaphore};
 const PLAYER_PATHS: [&str; 2] = ["/player_api.php", "/player_api.php/"];
 const PANEL_PATHS: [&str; 2] = ["/panel_api.php", "/panel_api.php/"];
 
+enum LiveWriteError {
+    InvalidCategory,
+    Store(StoreError),
+}
+
+impl From<StoreError> for LiveWriteError {
+    fn from(error: StoreError) -> Self {
+        Self::Store(error)
+    }
+}
+
 #[derive(Clone)]
 pub struct XcConfig {
     pub max_requests: usize,
@@ -436,15 +447,29 @@ impl XcGateway {
             let categories = reader::categories(&self.inner.store, &user, &limits).await?;
             out.value(&serde_json::Value::Array(categories))?;
             out.raw(b"}, \"available_channels\": ")?;
-            self.write_live(&identity, &user, &auth, &limits, &mut out, true)
-                .await?;
+            // Panel inventory is evaluated before Django returns its JSON
+            // response, so conversion errors use the ordinary server error page.
+            match self
+                .write_live(&identity, &user, &auth, &limits, &mut out, true)
+                .await
+            {
+                Ok(()) => {}
+                Err(LiveWriteError::InvalidCategory) => return Ok(django_page(500)),
+                Err(LiveWriteError::Store(error)) => return Err(error),
+            }
             out.raw(b"}")?;
         } else if action == "get_live_categories" {
             let categories = reader::categories(&self.inner.store, &user, &limits).await?;
             out.value(&serde_json::Value::Array(categories))?;
         } else if stream {
             self.write_live(&identity, &user, &auth, &limits, &mut out, false)
-                .await?;
+                .await
+                .map_err(|error| match error {
+                    LiveWriteError::InvalidCategory => {
+                        StoreError::StatusBody(500, json!({"error":"XC category lookup failed."}))
+                    }
+                    LiveWriteError::Store(error) => error,
+                })?;
         } else if matches!(action, "get_short_epg" | "get_simple_data_table")
             && self.inner.epg_enabled.load(Ordering::Acquire)
         {
@@ -639,11 +664,13 @@ impl XcGateway {
         limits: &ReadLimit,
         out: &mut JsonBytes,
         as_object: bool,
-    ) -> Result<(), StoreError> {
-        let rows = LiveRows::read(&self.inner.store, request, user, limits).await?;
+    ) -> Result<(), LiveWriteError> {
+        let category = project::live_category(request.parameter("category_id"))
+            .ok_or(LiveWriteError::InvalidCategory)?;
+        let rows = LiveRows::read(&self.inner.store, category, user, limits).await?;
         let budget = numbers::reservation(rows.len()).map_err(|_| reader::capacity())?;
         if budget > self.inner.config.max_number_bytes {
-            return Err(reader::capacity());
+            return Err(reader::capacity().into());
         }
         // Never await a second build reservation while holding the first: a
         // burst of large requests must reject capacity, not deadlock each other.
@@ -654,7 +681,8 @@ impl XcGateway {
             .try_acquire_many_owned(budget as u32)
             .map_err(|_| reader::capacity())?;
         let mut live = LiveRows::project(auth, request, user, rows, budget).await?;
-        live.write(&self.inner.store, out, as_object).await
+        live.write(&self.inner.store, out, as_object).await?;
+        Ok(())
     }
 }
 // This observer never aborts its physical task. Its handle is deliberately
