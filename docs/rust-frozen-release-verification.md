@@ -61,6 +61,8 @@ The one-off Beat row starts one signed recording fixture and verifies HTTP creat
 
 The hourly scheduler tick uses the same owned startup as the saved-default installer. It records both deliberate SQL due arms, ties them to two broker UUIDs and the intervening artwork child, and verifies the bounded publication time and terminal cleanup. The old Native journal remains useful for replay. Canonical credit requires the new due-arm receipts. The 21 M6 owner tests and 34 coordinator tests passed offline.
 
+The ordinary scheduler normal-stop row reuses this fixture. Its evaluator requires the actual Main stop command, exit zero without OOM, unchanged run count, empty ready and reserved queues, and exact cleanup. The combined M6 owner suite passed 23 offline tests.
+
 ## VOD admission cleanup
 
 When all providers definitely refuse a new VOD session at capacity, the 503 response now waits within its bound for token-fenced cleanup of the provisional session. The retained cleanup owner handles unresolved Redis replies. Four authenticated-restart tests passed and the held-Redis-reply regression compiled for the final fixture.
@@ -80,6 +82,8 @@ The ordinary Accounts User detail route accepts the numeric JSON suffix for GET 
 The Xtream gateway also accepts one trailing slash for `/player_api.php` and `/panel_api.php`. The gateway suite passed 65 tests. The ARM64 fixture signs in as a Standard user and checks that the same live-stream request returns the expected list in the player and full account document in the panel, with the same behavior through the slash aliases.
 
 The Core UserAgent and StreamProfile JSON collections also accept their registered trailing slash. GET and POST use the same authentication, representation and method handlers as the existing spelling. A focused test checked the exact authentication responses for both methods and both spellings. Signed collection responses and mutation effects remain part of the final packaged Core fixture.
+
+The Channels summary and number-range JSON collection actions also accept their registered trailing slash. Both spellings use the existing query and permission handlers. The focused router test exercised 12 requests, and the same-copy Channels fixture will check signed responses on the final package.
 
 ## EPG Programme JSON and HDHomeRun renderer selection
 

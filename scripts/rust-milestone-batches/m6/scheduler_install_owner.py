@@ -15,6 +15,7 @@ try:
     import recording61_owner as common
     from prepare_recording61 import rebind_package
     import scheduler_tick as tick
+    import scheduler_normal_stop as normal_stop
 finally:
     sys.path.pop(0)
 
@@ -121,7 +122,7 @@ def stage_binding(stage, seal, candidate, source, *, coordinator_mode):
 
 
 def dispatch_spec(stage, seal, candidate, repository, entrypoint, output, *, node=NODE):
-    require(node in (NODE, tick.NODE), "unsupported scheduler row")
+    require(node in (NODE, tick.NODE, normal_stop.NODE), "unsupported scheduler row")
     source = repository / "artifacts/rust" / ORIGINAL_REL
     coordinator = repository / "scripts/rust-milestone-batches/coordinator.py"
     coordinator_sha = digest(coordinator)
@@ -142,6 +143,14 @@ def dispatch_spec(stage, seal, candidate, repository, entrypoint, output, *, nod
         inputs[str(TICK_SCRIPT)] = digest(TICK_SCRIPT)
         launch = [*prefix, "tick-reuse", entrypoint, str(output), str(original)]
         evaluate = [*prefix, "tick-evaluate", entrypoint, str(output), "@EXECUTION@", str(original)]
+    if node == normal_stop.NODE:
+        original = repository / "artifacts/rust" / tick.ORIGINAL_LANE
+        inputs.update(original_tick_inputs(original))
+        reference = normal_stop.original_stop(read(original), read, digest)
+        stop_script = Path(normal_stop.__file__).resolve()
+        inputs.update({str(reference): normal_stop.ORIGINAL_STOP_SHA, str(stop_script): digest(stop_script)})
+        launch = [*prefix, "stop-reuse", entrypoint, str(output), str(original)]
+        evaluate = [*prefix, "stop-evaluate", entrypoint, str(output), "@EXECUTION@", str(original)]
     return {
         "argv": launch,
         "cleanup_argv": [*prefix, "cleanup", str(repository)],
@@ -282,6 +291,43 @@ def evaluate_tick(stage, seal, candidate, source, original_path, *, require_arms
             "due_arm_sha256": [digest(path) for path in arm_paths] if require_arms else []}
 
 
+def evaluate_stop(stage, seal, candidate, source, original):
+    installation = evaluate_install(stage, seal, candidate, source)
+    original_tick_inputs(original)
+    original_lane = read(original)
+    require(original_lane["image"] == ORIGINAL_IMAGE and original_lane["exact_cleanup"] is True
+            and common.settled(read(original.parents[1] / "Original-execution.json")),
+            "retained pinned Original Beat owner did not settle")
+    require(original_lane["result"]["run_count"] == 2
+            and original_lane["result"]["final_ready_or_reserved"] == 0,
+            "retained Original count or queue scope differs")
+    original_stop = normal_stop.original_stop(original_lane, read, digest)
+    root, cleanup_sha = exact_cleanup(stage)
+    scope = read(root / "scheduler-scope-terminal.json")
+    observer = common.load_module(stage / "scheduler_scope.py", "ordinary_stop_sql_observer")
+    observer.validate_terminal(scope["native_ready"], scope["before_main_stop"], scope["after_main_stop"])
+    require(read(root / "scheduler-scope-install.json") ==
+            {key: scope[key] for key in ("before", "prepared", "native_ready")},
+            "normal stop must use the same copied datastore and startup receipt")
+    # The fixture's tooling paths are pinned below the actual Original artifact root.
+    artifact_root = Path(original_lane["fixture_path"]).parents[3]
+    observed = normal_stop.stop_commands(root, scope, artifact_root, read, digest, common.settled)
+    observers = sorted(root.glob("role-*-observer*-stop-*.json"))
+    require(len(observers) == 2, "exact owned scheduler observer teardown required")
+    for path in observers:
+        receipt = read(path)
+        require(type(receipt["actual_exit"]) is int and receipt["actual_exit"] == 0
+                and receipt["forced"] is False
+                and all(receipt[key] is True for key in ("actual_wait_completed", "stdout_EOF", "stderr_EOF",
+                                                        "all_original_process_generations_absent")),
+                "scheduler shutdown observer did not retire normally")
+    return {"scope": normal_stop.NODE, "candidate": candidate, "stage_seal": seal,
+            "cleanup_sha256": cleanup_sha, "install_sql_sha256": installation["ordered_sql_sha256"],
+            "ordinary_main": observed, "retained_count_before_after": [2, 2],
+            "observer_exit_receipt_sha256": [digest(path) for path in observers],
+            "original_revision": common.ORIGINAL, "original_beat_stop_sha256": digest(original_stop)}
+
+
 def same_installer(output, stage, proof):
     directory = common.attempt_directory(output, NODE)
     attempt = read(directory / "attempt.json")
@@ -358,7 +404,7 @@ def main():
     parser.add_argument("seal")
     parser.add_argument("candidate", type=json.loads)
     parser.add_argument("source", type=Path)
-    parser.add_argument("mode", choices=("run", "cleanup", "check", "evaluate", "tick-check", "tick-reuse", "tick-evaluate"))
+    parser.add_argument("mode", choices=("run", "cleanup", "check", "evaluate", "tick-check", "tick-reuse", "tick-evaluate", "stop-check", "stop-reuse", "stop-evaluate"))
     parser.add_argument("entrypoint", nargs="?")
     parser.add_argument("output", type=Path, nargs="?")
     parser.add_argument("authority", nargs="?")
@@ -394,10 +440,16 @@ def main():
         result = evaluate_tick(stage, seal, candidate, source, original, require_arms=current)
         if current:
             result["installer_predecessor_sha256"] = same_installer(args.output, stage, result)
+    elif args.mode.startswith("stop-"):
+        original = Path(args.coordinator_sha if args.mode == "stop-evaluate" else args.authority)
+        result = evaluate_stop(stage, seal, candidate, source, original)
+        if args.mode != "stop-check":
+            result["installer_receipt_sha256"] = same_installer(args.output, stage, result)
     else:
         result = evaluate_install(stage, seal, candidate, source)
-    if args.mode in ("evaluate", "tick-evaluate"):
-        node = tick.NODE if args.mode == "tick-evaluate" else NODE
+    evaluation_nodes = {"evaluate": NODE, "tick-evaluate": tick.NODE, "stop-evaluate": normal_stop.NODE}
+    if args.mode in evaluation_nodes:
+        node = evaluation_nodes[args.mode]
         directory = common.attempt_directory(args.output, node)
         require(Path(args.authority) == directory / "execution.json", "scheduler execution receipt path differs")
         receipt = read(directory / "execution.json")

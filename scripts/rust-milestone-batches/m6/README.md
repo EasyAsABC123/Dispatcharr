@@ -155,3 +155,20 @@ receipts must place both Native publications within the Original fixture's
 replay; it lacks the new arm witnesses and is refused for canonical credit.
 This row covers the two deliberate due arms of one stock hourly interval.
 Broader simultaneous schedules and the normal-stop row retain their own scopes.
+
+### Ordinary scheduler normal stop
+
+Bind `m6/scheduler-normal-stop` with `scheduler_install_owner.dispatch_spec(...,
+node="m6/scheduler-normal-stop")` using the same frozen stage and candidate as the
+installer. The coordinator retains the existing version200 predecessor. Once
+that dependency passes, this row rechecks the earlier same-owned installation
+receipt and the literal graceful stop from that cohort.
+
+The evaluator joins the exact Main stop command to its settled inspection
+(exit 0, no OOM), the owned container generation, the SQL count of two on both
+sides, and actual zero ready/reserved queue checks before and after stop. Both
+observers and all scoped fixture resources must retire. The pinned Original
+comparator is the retained successful Beat SIGTERM/exit receipt. This row covers
+ordinary stop after the two due ticks. Held SQL replies, cancellation, and a
+publication-free interval beyond the recorded ready/reserved observations
+remain outside its scope.

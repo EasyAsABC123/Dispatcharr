@@ -1275,7 +1275,15 @@ pub(crate) fn router(auth: AuthService) -> Router {
             catalogue_options::json_alias(summary, catalogue_options::READ_ONLY_ALLOW),
         )
         .route(
+            "/api/channels/channels/summary.json/",
+            catalogue_options::json_alias(summary, catalogue_options::READ_ONLY_ALLOW),
+        )
+        .route(
             "/api/channels/channels/numbers-in-range.json",
+            catalogue_options::json_alias(numbers_in_range, catalogue_options::READ_ONLY_ALLOW),
+        )
+        .route(
+            "/api/channels/channels/numbers-in-range.json/",
             catalogue_options::json_alias(numbers_in_range, catalogue_options::READ_ONLY_ALLOW),
         )
         .route("/api/channels/channels/by-uuids/", post(by_uuids))
@@ -1430,6 +1438,58 @@ mod tests {
                 .unwrap();
             let response = router.clone().oneshot(request).await.unwrap();
             assert_eq!(response.status(), StatusCode::UNAUTHORIZED, "{path}");
+        }
+    }
+
+    #[tokio::test]
+    async fn guide_channel_action_json_aliases_accept_the_optional_slash() {
+        use axum::{body::Body, http::Request, Extension};
+        use sha2::{Digest, Sha256};
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("guide-action-alias-fixture".into()).unwrap(),
+        );
+        let peer: SocketAddr = "127.0.0.1:12345".parse().unwrap();
+        let router = router(auth).layer(Extension(ConnectInfo(peer)));
+        for (action, query) in [
+            ("summary", ""),
+            ("numbers-in-range", "?start=7666&end=7667"),
+        ] {
+            for slash in ["", "/"] {
+                let uri = format!("/api/channels/channels/{action}.json{slash}{query}");
+                for (method, accept, expected) in [
+                    (Method::GET, "application/json", StatusCode::UNAUTHORIZED),
+                    (Method::GET, "text/html", StatusCode::NOT_ACCEPTABLE),
+                    (Method::POST, "application/json", StatusCode::NOT_FOUND),
+                ] {
+                    let request = Request::builder()
+                        .method(method)
+                        .uri(&uri)
+                        .header(header::ACCEPT, accept)
+                        .body(Body::empty())
+                        .unwrap();
+                    let response = router.clone().oneshot(request).await.unwrap();
+                    assert_eq!(response.status(), expected, "{uri} {accept}");
+                    assert!(!response.headers().contains_key(header::SET_COOKIE));
+                    if expected == StatusCode::UNAUTHORIZED {
+                        assert_eq!(
+                            response.headers()[header::WWW_AUTHENTICATE],
+                            "Bearer realm=\"api\""
+                        );
+                        let body = axum::body::to_bytes(response.into_body(), 512)
+                            .await
+                            .unwrap();
+                        assert_eq!(
+                            format!("{:x}", Sha256::digest(body)),
+                            "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+                        );
+                    }
+                }
+            }
         }
     }
 

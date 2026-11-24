@@ -123,6 +123,36 @@ class SchedulerInstall(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "same owned passed installer"):
                     owner.same_installer(output, self.stage, wrong)
 
+    def test_normal_stop_replays_real_exit_and_same_datastore_boundary(self):
+        proof = owner.evaluate_stop(self.stage, self.seal, self.candidate, self.source, self.original_tick)
+        self.assertEqual(proof["scope"], owner.normal_stop.NODE)
+        self.assertEqual(proof["ordinary_main"]["literal_main_exit"], 0)
+        self.assertEqual(proof["retained_count_before_after"], [2, 2])
+        self.assertEqual(proof["ordinary_main"]["ready_reserved_before_after"], [0, 0])
+        self.assertEqual(len(proof["observer_exit_receipt_sha256"]), 2)
+        self.assertNotIn("full_required_workflow", proof)
+
+    def test_normal_stop_refuses_false_exit_and_missing_after_stop_receipt(self):
+        original = owner.read
+        proof = owner.evaluate_stop(self.stage, self.seal, self.candidate, self.source, self.original_tick)
+        after_queue = proof["ordinary_main"]["queue_command_receipts"][1]
+
+        def changed(queue_failure):
+            def read(path):
+                value = original(path)
+                if queue_failure and path.name == after_queue:
+                    value["failure"] = "offline omitted settled queue witness control"
+                if not queue_failure and "-native-" in path.name and path.name.endswith("-exit.json"):
+                    value["actual_exit"] = False
+                return value
+            return read
+
+        for queue_failure, error in ((False, "literal ordinary Main stop exit"),
+                                     (True, "queue receipts must straddle")):
+            with self.subTest(queue_failure=queue_failure), patch.object(owner, "read", changed(queue_failure)):
+                with self.assertRaisesRegex(ValueError, error):
+                    owner.evaluate_stop(self.stage, self.seal, self.candidate, self.source, self.original_tick)
+
     def test_fresh_stage_binds_without_receipts_and_preflight_uses_zero_engine_calls(self):
         with TemporaryDirectory() as folder:
             repository = Path(folder)
@@ -147,6 +177,11 @@ class SchedulerInstall(unittest.TestCase):
                                             "ordinary", output, node=owner.tick.NODE)
             self.assertIn("tick-reuse", tick_spec["argv"])
             self.assertIn("tick-evaluate", tick_spec["evaluator_argv"])
+            stop_spec = owner.dispatch_spec(stage, context["seal"], self.candidate, repository,
+                                             "ordinary", output, node=owner.normal_stop.NODE)
+            self.assertIn("stop-reuse", stop_spec["argv"])
+            self.assertIn("stop-evaluate", stop_spec["evaluator_argv"])
+            self.assertNotIn("run", stop_spec["argv"])
             self.assertNotIn("run", tick_spec["argv"])
             self.assertFalse(output.exists())
             for args in (["--preflight"], ["--run"]):
