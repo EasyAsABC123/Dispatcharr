@@ -528,7 +528,13 @@ impl Jobs {
         match self
             .inner
             .broker
-            .command_classified::<i64, _>(PUBLISH, &keys, &[&bytes, limit.as_bytes()], lease)
+            .command_publication_classified_with_diagnostic::<i64, _>(
+                PUBLISH,
+                &keys,
+                &[&bytes, limit.as_bytes()],
+                lease,
+                None,
+            )
             .await
         {
             Ok((n, _held)) if n > 0 => Ok(Published {
