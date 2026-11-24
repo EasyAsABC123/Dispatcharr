@@ -340,6 +340,27 @@ pub(crate) fn like(value: &str) -> String {
             .replace('_', "\\_")
     )
 }
+fn channel_text_filters(params: &HashMap<String, String>) -> Result<[Option<&str>; 2], StoreError> {
+    let mut errors = Map::new();
+    let values = ["name", "channel_group"].map(|field| {
+        let value = params.get(field)?;
+        if value.contains('\0') {
+            errors.insert(field.into(), json!(["Null characters are not allowed."]));
+            return None;
+        }
+        // Django CharField trims the entire input before the exact
+        // channel_group callback splits it by comma.
+        let value =
+            value.trim_matches(|c: char| c.is_whitespace() || matches!(c, '\u{1c}'..='\u{1f}'));
+        (!value.is_empty()).then_some(value)
+    });
+    if errors.is_empty() {
+        Ok(values)
+    } else {
+        Err(StoreError::InvalidInput(Value::Object(errors)))
+    }
+}
+
 pub(crate) async fn filters<'a>(
     query: &mut QueryBuilder<'a, Postgres>,
     params: &HashMap<String, String>,
@@ -379,16 +400,14 @@ pub(crate) async fn filters<'a>(
         }
     }
     for(name,condition)in[("only_streamless"," AND NOT EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs WHERE cs.channel_id=c.id)"),("only_stale"," AND EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE cs.channel_id=c.id AND s.is_stale)"),("only_has_overrides"," AND o.id IS NOT NULL"),("only_catchup"," AND c.is_catchup"),("only_radio"," AND COALESCE(o.is_radio,c.is_radio)")]{if params.get(name).is_some_and(|value|!value.is_empty()){query.push(condition);}}
-    if let Some(name) = params.get("name").filter(|value| !value.is_empty()) {
+    let [name, groups] = channel_text_filters(params)?;
+    if let Some(name) = name {
         query
             .push(" AND UPPER(COALESCE(o.name,c.name)) LIKE UPPER(")
             .push_bind(like(name))
             .push(")");
     }
-    if let Some(groups) = params
-        .get("channel_group")
-        .filter(|value| !value.is_empty())
-    {
+    if let Some(groups) = groups {
         query.push(" AND (");
         for (index, group) in groups.split(',').enumerate() {
             if index > 0 {
@@ -1795,5 +1814,49 @@ mod tests {
         ] {
             assert_eq!(search_terms(input), expected);
         }
+    }
+}
+
+#[cfg(test)]
+mod channel_text_filter_tests {
+    use super::*;
+
+    #[test]
+    fn guide_and_channel_text_filters_trim_only_the_field_boundaries() {
+        let params = HashMap::from([
+            ("name".into(), "\u{1e}Alpha  News\u{1f}".into()),
+            (
+                "channel_group".into(),
+                "\u{a0}Owned News, Owned Sports\t".into(),
+            ),
+        ]);
+        let [name, group] = channel_text_filters(&params).unwrap();
+        assert_eq!(name, Some("Alpha  News"));
+        assert_eq!(
+            group.unwrap().split(',').collect::<Vec<_>>(),
+            ["Owned News", " Owned Sports"]
+        );
+
+        let empty = HashMap::from([
+            ("name".into(), "\u{2003}\t".into()),
+            ("channel_group".into(), "\u{1f}".into()),
+            ("epg".into(), "scope left to the EPG filter".into()),
+        ]);
+        assert_eq!(channel_text_filters(&empty).unwrap(), [None, None]);
+    }
+
+    #[test]
+    fn guide_and_channel_text_filters_report_all_invalid_fields_in_source_order() {
+        let params = HashMap::from([
+            ("channel_group".into(), "Owned News\0".into()),
+            ("name".into(), "Al\0pha".into()),
+        ]);
+        let Err(StoreError::InvalidInput(value)) = channel_text_filters(&params) else {
+            panic!("the form must reject invalid text before adding query predicates");
+        };
+        assert_eq!(
+            value.to_string(),
+            r#"{"name":["Null characters are not allowed."],"channel_group":["Null characters are not allowed."]}"#
+        );
     }
 }

@@ -814,3 +814,18 @@ attempt can satisfy these predicates. The 34 coordinator tests and four
 API202 tests passed. An offline first-fence check also exercised a separate
 checkout and rejected wrong evidence paths, dispatcher bytes and lock
 identity. The signed final package and physical workflow remain open.
+
+### Guide Summary and Channel text filters
+
+The Guide Summary, Channels list and ID queries now match Original
+name and channel-group text filtering. Outer whitespace is removed
+before filtering. Interior spaces and spaces after a group separator
+remain significant. NUL-containing inputs produce ordered field errors
+before any fixture SQL.
+
+Pinned Original passed 36 requests with synthetic roles and a disposable
+SQLite fixture. The coverage includes the preserved Guide's combined
+group and search request, display-name overrides, default hidden-channel
+exclusion, and nine invalid-field requests. All 15 fixture tables remained
+unchanged. Two focused Rust tests passed. Signed packaged and browser
+execution remain open.
