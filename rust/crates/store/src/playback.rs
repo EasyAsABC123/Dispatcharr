@@ -159,6 +159,21 @@ fn std_sample_credential_pool(
     // ordinary CDN media paths and provide no credentials at all.
     let url = url::Url::parse(sample).map_err(|_| unsupported_std_sample())?;
     let plain = |byte: u8| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.');
+    let supported_query = |query: &str| {
+        let mut bytes = query.bytes();
+        while let Some(byte) = bytes.next() {
+            if byte == b'%' {
+                if !bytes.next().is_some_and(|value| value.is_ascii_hexdigit())
+                    || !bytes.next().is_some_and(|value| value.is_ascii_hexdigit())
+                {
+                    return false;
+                }
+            } else if !plain(byte) && !matches!(byte, b'=' | b'&' | b'+' | b'~') {
+                return false;
+            }
+        }
+        true
+    };
     if !matches!(url.scheme(), "http" | "https")
         || url.host().is_none()
         || url.as_str() != sample
@@ -168,11 +183,10 @@ fn std_sample_credential_pool(
             .path()
             .bytes()
             .all(|byte| plain(byte) || matches!(byte, b'/' | b'%' | b'+'))
-        || url.query().is_some_and(|query| {
-            !query
-                .bytes()
-                .all(|byte| plain(byte) || matches!(byte, b'=' | b'&'))
-        })
+        // Original matches typed credentials on the raw URL and parses
+        // short-form credentials from the path. Encoded provider query
+        // parameters remain opaque to both and do not select a login.
+        || url.query().is_some_and(|query| !supported_query(query))
         || url.fragment().is_some()
     {
         return Err(unsupported_std_sample());
@@ -1406,7 +1420,12 @@ mod output_tests {
         let endpoint = "http://origin.invalid";
         let saved = Some(xc_credential_pool(7, 1, "saved", "account").unwrap());
         let media = Some(xc_credential_pool(7, 1, "media", "pair").unwrap());
-        for query in ["?key=abc123", "?key=abc-_.123&mode=auto"] {
+        for query in [
+            "?key=abc123",
+            "?key=abc-_.123&mode=auto",
+            "?Policy=opaque%2Fsample~&Signature=abc+def%2Bgh%3D",
+            "?key=%2Flive%2Fother%2Fpair%2Fid.ts",
+        ] {
             for path in [
                 "/live/media/pair/1.ts",
                 "/vod/MOVIE/media/pair/1.ts",
@@ -1517,7 +1536,8 @@ mod output_tests {
     fn ordinary_std_account_sample_rejects_unqualified_path_shapes() {
         for suffix in [
             "/a/b/1.ts?key=/live/other/pair/id.ts",
-            "/a/b/1.ts?key=%2Flive%2Fother%2Fpair%2Fid.ts",
+            "/a/b/1.ts?key=%2",
+            "/a/b/1.ts?key=%xy",
             "/a/b/1.ts?key=abc#fragment",
             "/a%00b/c/1.ts",
         ] {
