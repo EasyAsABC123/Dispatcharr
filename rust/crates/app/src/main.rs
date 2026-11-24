@@ -14,6 +14,7 @@ mod drf_api_roots;
 mod m3u_refresh_all_config;
 mod managed_logs;
 mod manual_backup_config;
+mod output_index;
 mod playback;
 mod plugin_gpg_trace;
 mod plugin_jobs_bridge;
@@ -1360,6 +1361,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         .merge(combined_statistics.router())
         .route("/proxy/stats", any(combined_stats_legacy_alias))
         .merge(output_profiles.clone().router())
+        .merge(output_index::router())
         .merge(backup_files.clone().router())
         .merge(plugin_repositories.router())
         .merge(plugin_actions.clone().router())
@@ -1434,7 +1436,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         );
     // Backend paths must keep an HTTP error response rather than receiving
     // the React navigation fallback when a route has not been migrated yet.
-    for prefix in ["api", "proxy", "output"] {
+    app = app.route("/output/{*path}", any(api_not_found));
+    for prefix in ["api", "proxy"] {
         app = app
             .route(&format!("/{prefix}"), any(api_not_found))
             .route(&format!("/{prefix}/{{*path}}"), any(api_not_found));
