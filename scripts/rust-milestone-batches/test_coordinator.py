@@ -1,5 +1,6 @@
 """Exercise global scheduling failures and resource boundaries without apps."""
 import importlib.util
+import json
 from pathlib import Path
 import tempfile
 import threading
@@ -11,6 +12,71 @@ from types import SimpleNamespace
 SPEC = importlib.util.spec_from_file_location("coordinator", Path(__file__).with_name("coordinator.py"))
 c = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(c)
+
+
+class BindingFragments(unittest.TestCase):
+    def setUp(self):
+        directory = tempfile.TemporaryDirectory()
+        self.addCleanup(directory.cleanup)
+        self.root = Path(directory.name)
+        self.output = self.root / "results"
+        self.candidate = {"git": "fixed", "image_id": "current"}
+        self.nodes = [{"id": name} for name in ("first", "second", "source/retained")]
+        self.owner = SimpleNamespace(candidate_ready=mock.Mock(return_value=True))
+        self.load_owner = mock.patch.object(c, "module", return_value=self.owner)
+        self.validate = mock.patch.object(c, "validate")
+        self.readiness = mock.patch.object(
+            c, "owner_readiness", side_effect=lambda nodes, document, output: document.get("authorities", {}))
+        for patcher in (self.load_owner, self.validate, self.readiness):
+            patcher.start()
+            self.addCleanup(patcher.stop)
+
+    def write(self, name, nodes, **fields):
+        path = self.root / name
+        path.write_text(json.dumps({"candidate": self.candidate, "nodes": nodes, **fields}))
+        return path
+
+    def test_handoff_contexts_keep_each_owner_and_shared_execution(self):
+        first = self.write("first.json", {"first": {"argv": ["one"]}}, owner_bindings={"m235": {"output_root": "one"}})
+        second = self.write("second.json", {"first": {"argv": ["one"]}, "second": {"argv": ["two"]}},
+                            owner_bindings={"m235": {"output_root": "two"}},
+                            authorities={"source/retained": {"status": "retained_source_authority"}})
+        candidate, merged, authorities = c.load_binding_fragments([first, second], self.nodes, self.output)
+        self.assertEqual(candidate, self.candidate)
+        self.assertEqual(merged, {"first": {"argv": ["one"]}, "second": {"argv": ["two"]}})
+        self.assertEqual(list(authorities), ["source/retained"])
+        self.assertEqual([call.args[1]["owner_bindings"]["m235"]["output_root"]
+                          for call in c.owner_readiness.call_args_list], ["one", "two"])
+        self.assertFalse(self.output.exists())
+
+    def test_reject_stale_candidate_before_validating_any_owner(self):
+        first = self.write("first.json", {"first": {}})
+        second = self.write("second.json", {"second": {}}, candidate={"git": "previous"})
+        with self.assertRaisesRegex(ValueError, "differs from the common candidate"):
+            c.load_binding_fragments([first, second], self.nodes, self.output)
+        c.owner_readiness.assert_not_called()
+
+    def test_reject_conflicting_duplicate_execution(self):
+        first = self.write("first.json", {"first": {"argv": ["one"]}})
+        second = self.write("second.json", {"first": {"argv": ["elsewhere"]}})
+        with self.assertRaisesRegex(ValueError, "conflicting execution bindings: first"):
+            c.load_binding_fragments([first, second], self.nodes, self.output)
+
+    def test_reject_source_dispatched_by_one_owner_and_retained_by_another(self):
+        first = self.write("first.json", {"source/retained": {}})
+        second = self.write("second.json", {}, authorities={"source/retained": {}})
+        with self.assertRaisesRegex(ValueError, "retained Source cannot also be dispatched"):
+            c.load_binding_fragments([first, second], self.nodes, self.output)
+
+    def test_readiness_keeps_partial_probes_out_of_full_workflows(self):
+        nodes = [*self.nodes, {"id": "m6/default-job-graph"}]
+        self.assertEqual(c.binding_coverage(nodes, {"first": {}, "m6/default-job-graph": {}}, {"source/retained": {}}), {
+            "required_rows": 4,
+            "execution_bindings": ["first"],
+            "retained_source_authority": ["source/retained"],
+            "partial_probes": ["m6/default-job-graph"],
+            "unbound_rows": ["second"],
+        })
 
 
 class Scheduling(unittest.TestCase):

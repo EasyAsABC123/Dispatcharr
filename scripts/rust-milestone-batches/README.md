@@ -58,6 +58,27 @@ python3 -B scripts/rust-milestone-batches/coordinator.py \
   --output /absolute/path/to/fresh-results
 ```
 
+For a single release run on one host, pass `--bindings` once per reviewed owner
+document. Use the same complete candidate object in every document, including
+the build manifest, source map and archive paths. Each owner keeps its own
+fixture, Source audit and output root. Identical shared rows execute once.
+Conflicting row bindings, mixed packages, and dispatches of retained Original
+rows are rejected before fixture launch.
+
+```sh
+python3 -B scripts/rust-milestone-batches/coordinator.py --check-bindings \
+  --bindings /absolute/path/to/package-bindings.json \
+  --bindings /absolute/path/to/workflow-bindings.json \
+  --output /absolute/path/to/fresh-results
+```
+
+The check validates the existing owner requirements and lists every unbound row
+and partial probe. It returns 2 while either list has entries. A zero from the
+check establishes binding completeness. The scheduled run still supplies the
+actual execution, cleanup and semantic results. Beepboop and Lappy use separate
+host-specific binding sets for their AMD64 and ARM64 images and keep the same
+Rust application revision across both sets.
+
 Qualified Original17 authority is imported through M235's retained-source
 binding and recorded as `retained_source_authority`; it satisfies its reference
 dependency without starting Source or claiming current Main acceptance. A

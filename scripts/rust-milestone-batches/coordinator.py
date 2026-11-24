@@ -17,6 +17,7 @@ import time
 
 HERE = Path(__file__).resolve().parent
 STATES = {"passed", "failed", "blocked", "not_run"}
+PARTIAL_PROBES = {"m6/api202-publication", "m6/default-job-graph"}
 
 
 def save(path, value):
@@ -264,7 +265,7 @@ def owner_readiness(nodes, document, output=None):
                 continue
             # This export currently offers bounded partial probes, not complete
             # functional or performance workflows. Do not invent a green binding.
-            if key not in {"m6/api202-publication", "m6/default-job-graph"}:
+            if key not in PARTIAL_PROBES:
                 raise ValueError("M6 full workflow adapter not implemented: " + key)
             exported = next(n for n in module(HERE / "m6/entrypoint.py", "readiness_m6").export()["nodes"] if n["global_id"] == key)
             context, receipt = bindings[key].get("m6_context"), bindings[key].get("m6_receipt")
@@ -283,6 +284,45 @@ def owner_readiness(nodes, document, output=None):
                     or set(definition) & set(previous)):
                 raise ValueError("only explicitly unmeasured Source cases can execute: " + key)
     return authorities
+
+
+def load_binding_fragments(paths, nodes, output):
+    """Validate each owner's context before scheduling a common candidate."""
+    documents = [json.loads(path.read_text()) for path in paths]
+    candidate = documents[0]["candidate"]
+    owner = module(HERE / "m478/batch.py", "candidate_validation")
+    if not owner.candidate_ready(candidate):
+        raise ValueError("current committed candidate/archive/source-map/build binding required")
+
+    bindings = {}
+    for path, document in zip(paths, documents, strict=True):
+        if document["candidate"] != candidate:
+            raise ValueError("binding fragment differs from the common candidate: " + str(path))
+        for key, binding in document["nodes"].items():
+            if bindings.setdefault(key, binding) != binding:
+                raise ValueError("conflicting execution bindings: " + key)
+    validate(nodes, bindings)
+
+    authorities = {}
+    for document in documents:
+        for key, authority in owner_readiness(nodes, document, output).items():
+            if key in bindings:
+                raise ValueError("retained Source cannot also be dispatched: " + key)
+            if authorities.setdefault(key, authority) != authority:
+                raise ValueError("conflicting retained Source authorities: " + key)
+    return candidate, bindings, authorities
+
+
+def binding_coverage(nodes, bindings, authorities):
+    """Report missing release inputs without executing any fixture or crediting a pass."""
+    required = {node["id"] for node in nodes}
+    return {
+        "required_rows": len(required),
+        "execution_bindings": sorted(bindings.keys() - PARTIAL_PROBES),
+        "retained_source_authority": sorted(authorities),
+        "partial_probes": sorted(bindings.keys() & PARTIAL_PROBES),
+        "unbound_rows": sorted(required - bindings.keys() - authorities.keys()),
+    }
 
 
 def _group_members(pgid):
@@ -487,7 +527,7 @@ def execute(node, bound, directory, candidate):
                 and proof.get("candidate") == candidate
                 and proof.get("entrypoint") == node["entrypoint"]
                 and proof.get("full_required_workflow") is True
-                and node["id"] not in {"m6/api202-publication", "m6/default-job-graph"}):
+                and node["id"] not in PARTIAL_PROBES):
             result["status"] = "passed"
     except Exception as error:
         result["evaluation_error"] = str(error)
@@ -654,8 +694,12 @@ def schedule(nodes, bindings, output, candidate, worker=execute, authorities=Non
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--export", action="store_true")
-    parser.add_argument("--bindings", type=Path)
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--export", action="store_true")
+    modes.add_argument("--check-bindings", action="store_true",
+                       help="validate owner inputs and report unbound rows without running fixtures")
+    parser.add_argument("--bindings", action="append", type=Path,
+                        help="reviewed binding document for the common candidate; may be repeated")
     parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     nodes = inventory()
@@ -663,16 +707,15 @@ def main():
         print(json.dumps({"nodes": nodes, "global_fixture_limit": 3, "heavy_exclusive": True}, indent=2))
         return 0
     if not args.bindings or not args.output:
-        parser.error("execution requires --bindings and a fresh --output")
-    bound = json.loads(args.bindings.read_text())
-    owner = module(HERE / "m478/batch.py", "candidate_validation")
-    if not owner.candidate_ready(bound["candidate"]):
-        raise ValueError("current committed candidate/archive/source-map/build binding required")
-    validate(nodes, bound["nodes"])
-    authorities = owner_readiness(nodes, bound, args.output)
+        parser.error("binding validation and execution require --bindings and a fresh --output")
+    candidate, bindings, authorities = load_binding_fragments(args.bindings, nodes, args.output)
+    if args.check_bindings:
+        coverage = binding_coverage(nodes, bindings, authorities)
+        print(json.dumps(coverage, indent=2))
+        return 2 if coverage["unbound_rows"] or coverage["partial_probes"] else 0
     # Lock across scheduler invocations; owner adapters never create their own pool.
     with fixture_lease(HERE / ".dispatcher.lock"):
-        report = schedule(nodes, bound["nodes"], args.output, bound["candidate"], authorities=authorities)
+        report = schedule(nodes, bindings, args.output, candidate, authorities=authorities)
     return 0 if report["full_batch_passed"] else 2
 
 
