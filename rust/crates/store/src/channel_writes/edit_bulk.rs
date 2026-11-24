@@ -169,6 +169,65 @@ fn invalid_epg_pk_message(display: &str) -> String {
 }
 
 #[derive(Debug, Default, PartialEq, Eq)]
+struct OverrideEpg {
+    reference: Reference,
+    display: Option<String>,
+    field_error: Option<Value>,
+}
+
+impl OverrideEpg {
+    fn parse(value: Option<&Value>) -> Result<Self, StoreError> {
+        let Some(value) = value else {
+            return Ok(Self::default());
+        };
+        if value.is_null() {
+            return Ok(Self {
+                reference: Reference::Clear,
+                ..Self::default()
+            });
+        }
+        // The nested serializer treats a blank FK as null, but the bulk
+        // handler writes the original intent through Django's integer FK.
+        if value.as_str() == Some("") {
+            return Err(unsupported());
+        }
+        let display = value
+            .as_str()
+            .map(str::to_owned)
+            .unwrap_or_else(|| value.to_string());
+        match primary_key(value).map_err(|error| rename(error, "channel", "epg_data_id")) {
+            Ok(Some(id)) => Ok(Self {
+                reference: Reference::Set(id),
+                display: Some(display),
+                field_error: None,
+            }),
+            Ok(None) => Ok(Self {
+                field_error: Some(json!([invalid_epg_pk_message(&display)])),
+                ..Self::default()
+            }),
+            Err(StoreError::InvalidInput(Value::Object(mut fields))) => Ok(Self {
+                field_error: fields.remove("epg_data_id"),
+                ..Self::default()
+            }),
+            Err(error) => Err(error),
+        }
+    }
+
+    fn validation_error(&self, existing: &BTreeSet<i64>) -> Option<Value> {
+        if let Some(error) = &self.field_error {
+            return Some(error.clone());
+        }
+        self.reference
+            .id()
+            .filter(|id| !existing.contains(id))
+            .map(|id| {
+                let display = self.display.clone().unwrap_or_else(|| id.to_string());
+                json!([invalid_epg_pk_message(&display)])
+            })
+    }
+}
+
+#[derive(Debug, Default, PartialEq, Eq)]
 struct Edit {
     id: i64,
     name: Option<String>,
@@ -182,6 +241,7 @@ struct Edit {
     level: Option<i32>,
     references: References,
     override_references: References,
+    override_epg: OverrideEpg,
     clear_override: bool,
     hidden: Option<bool>,
     stream_replacement: Option<StreamReplacement>,
@@ -192,6 +252,7 @@ impl Edit {
         self.override_group.is_some()
             || self.override_radio.is_some()
             || self.override_references.present()
+            || self.override_epg.reference != Reference::Absent
     }
 
     fn changes_compact_number(&self, before: &LockedChannel, hidden: bool) -> bool {
@@ -379,27 +440,35 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                 Err(error) => return Err(error),
             };
             let override_intent = overrides.get(&id);
-            let (override_group, override_radio, override_references) = match override_intent {
-                None | Some(Value::Null) => (None, None, References::default()),
-                Some(Value::Object(values))
-                    if values.keys().all(|key| {
-                        matches!(
-                            key.as_str(),
-                            "channel_group_id" | "is_radio" | "stream_profile_id" | "logo_id"
+            let (override_group, override_radio, override_references, override_epg) =
+                match override_intent {
+                    None | Some(Value::Null) => {
+                        (None, None, References::default(), OverrideEpg::default())
+                    }
+                    Some(Value::Object(values))
+                        if values.keys().all(|key| {
+                            matches!(
+                                key.as_str(),
+                                "channel_group_id"
+                                    | "is_radio"
+                                    | "stream_profile_id"
+                                    | "logo_id"
+                                    | "epg_data_id"
+                            )
+                        }) =>
+                    {
+                        (
+                            values.get("channel_group_id").map(group).transpose()?,
+                            values
+                                .get("is_radio")
+                                .map(|value| boolean("is_radio", value))
+                                .transpose()?,
+                            References::parse(values)?,
+                            OverrideEpg::parse(values.get("epg_data_id"))?,
                         )
-                    }) =>
-                {
-                    (
-                        values.get("channel_group_id").map(group).transpose()?,
-                        values
-                            .get("is_radio")
-                            .map(|value| boolean("is_radio", value))
-                            .transpose()?,
-                        References::parse(values)?,
-                    )
-                }
-                _ => return Err(unsupported()),
-            };
+                    }
+                    _ => return Err(unsupported()),
+                };
             Ok(Edit {
                 id,
                 name,
@@ -409,6 +478,7 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                 override_group,
                 override_radio,
                 override_references,
+                override_epg,
                 clear_override: override_intent == Some(&Value::Null),
                 hidden: row
                     .get("hidden_from_output")
@@ -506,9 +576,14 @@ async fn validate_and_lock(
     let epgs = lock_references(
         tx,
         "SELECT id FROM epg_epgdata WHERE id = ANY($1) ORDER BY id FOR KEY SHARE",
-        edits
-            .iter()
-            .filter_map(|edit| edit.raw_metadata.epg.as_ref().map(|(id, _)| *id)),
+        edits.iter().flat_map(|edit| {
+            [
+                edit.raw_metadata.epg.as_ref().map(|(id, _)| *id),
+                edit.override_epg.reference.id(),
+            ]
+            .into_iter()
+            .flatten()
+        }),
     )
     .await?;
     let profiles = lock_references(
@@ -607,13 +682,16 @@ async fn validate_and_lock(
         }
         let mut fields = reference_errors(edit.group, edit.references, &groups, &profiles, &logos);
         fields.extend(edit.raw_metadata.errors(&epgs));
-        let nested = reference_errors(
+        let mut nested = reference_errors(
             edit.override_group,
             edit.override_references,
             &groups,
             &profiles,
             &logos,
         );
+        if let Some(error) = edit.override_epg.validation_error(&epgs) {
+            nested.insert("epg_data_id".into(), error);
+        }
         if !nested.is_empty() {
             fields.insert("override".into(), Value::Object(nested));
         }
@@ -644,6 +722,82 @@ fn batch_validation_error(errors: Vec<Value>, edits: usize) -> StoreError {
     StoreError::InvalidInput(json!({"errors": errors, "updated_count": updated_count}))
 }
 
+fn changed_guides(
+    requested: &[(i64, Reference)],
+    previous: &HashMap<i64, Option<i64>>,
+) -> Option<BTreeSet<i64>> {
+    let mut changed = None::<BTreeSet<i64>>;
+    for &(channel, reference) in requested {
+        if reference == Reference::Absent {
+            continue;
+        }
+        let next = reference.id();
+        if previous.get(&channel).copied().flatten() != next {
+            changed.get_or_insert_with(BTreeSet::new).extend(next);
+        }
+    }
+    changed
+}
+
+async fn override_guide_plan(
+    auth: &AuthService,
+    tx: &mut Transaction<'_, Postgres>,
+    edits: &[Edit],
+) -> Result<Option<Vec<i64>>, StoreError> {
+    let requested: Vec<_> = edits
+        .iter()
+        .filter(|edit| edit.override_epg.reference != Reference::Absent && !edit.clear_override)
+        .map(|edit| (edit.id, edit.override_epg.reference))
+        .collect();
+    if requested.is_empty() {
+        return Ok(None);
+    }
+    let channels: Vec<_> = requested.iter().map(|(id, _)| *id).collect();
+    let previous = sqlx::query_as::<_, (i64, Option<i64>)>(
+        "SELECT channel_id, epg_data_id FROM dispatcharr_channels_channeloverride
+         WHERE channel_id = ANY($1) ORDER BY channel_id FOR UPDATE",
+    )
+    .bind(channels)
+    .fetch_all(&mut **tx)
+    .await?
+    .into_iter()
+    .collect();
+    let Some(changed) = changed_guides(&requested, &previous) else {
+        return Ok(None);
+    };
+    // Reuse the normal Main guide cache and database admission once per
+    // request, including clear-only and dummy changes.
+    super::guide_target(auth, tx, None, true).await?;
+    if changed.is_empty() {
+        return Ok(Some(Vec::new()));
+    }
+    let changed: Vec<_> = changed.into_iter().collect();
+    let rows = sqlx::query_as::<_, (i64, Option<String>)>(
+        "SELECT e.id, s.source_type FROM epg_epgdata e
+         LEFT JOIN epg_epgsource s ON s.id = e.epg_source_id
+         WHERE e.id = ANY($1)",
+    )
+    .bind(&changed)
+    .fetch_all(&mut **tx)
+    .await?;
+    if rows.len() != changed.len() {
+        return Err(StoreError::UnhandledRestFault);
+    }
+    let mut programmes = Vec::new();
+    for (id, kind) in rows {
+        match kind.as_deref() {
+            Some("dummy") => (),
+            source @ (None | Some("xmltv"))
+                if super::channel_guide_publisher_ready(auth, source) =>
+            {
+                programmes.push(id)
+            }
+            _ => return Err(super::guide_unsupported()),
+        }
+    }
+    Ok(Some(programmes))
+}
+
 const CHANNEL_BATCH_SIZE: usize = 100;
 const OVERRIDE_BATCH_SIZE: usize = 200;
 
@@ -653,7 +807,9 @@ async fn apply(
     edits: &[Edit],
     selected: &HashMap<i64, LockedChannel>,
     owner: crate::compact_numbering::Owner,
+    guide_effects_started: &mut bool,
 ) -> Result<(), StoreError> {
+    let guide_programmes = override_guide_plan(auth, tx, edits).await?;
     let mut manual_groups = BTreeSet::new();
     let mut scalar_edits = Vec::new();
     let mut override_edits = Vec::new();
@@ -757,7 +913,7 @@ async fn apply(
     }
     // The stock bulk action assigns unhide numbers while all old hide
     // numbers are still reserved. Overrides follow both number phases.
-    crate::compact_unhide::bulk_visibility(auth, tx, &unhide, &hide, owner).await?;
+    crate::compact_unhide::bulk_visibility(auth, tx, &unhide, &hide, owner.clone()).await?;
     // Source applies whole-row clear to every selected ID, including
     // manual channels. A missing overlay is an ordinary no-op.
     for chunk in clear_ids.chunks(OVERRIDE_BATCH_SIZE) {
@@ -771,25 +927,34 @@ async fn apply(
         let groups: Vec<_> = chunk.iter().map(|edit| edit.override_group).collect();
         let radio: Vec<_> = chunk.iter().map(|edit| edit.override_radio).collect();
         let refs: ReferenceColumns = chunk.iter().map(|edit| edit.override_references).collect();
+        let epgs: Vec<_> = chunk
+            .iter()
+            .map(|edit| edit.override_epg.reference.id())
+            .collect();
+        let has_epgs: Vec<_> = chunk
+            .iter()
+            .map(|edit| edit.override_epg.reference != Reference::Absent)
+            .collect();
         // A data-modifying CTE separates existing rows from newly inserted
         // overlays without spending an identity or updating clocks on a hit.
         sqlx::query(
             "WITH incoming AS (
                  SELECT * FROM unnest($1::bigint[], $2::bigint[], $3::boolean[], $4::boolean[],
-                                      $5::bigint[], $6::boolean[], $7::bigint[])
-                     AS change(id, group_id, radio, has_profile, profile, has_logo, logo)
+                                      $5::bigint[], $6::boolean[], $7::bigint[], $8::boolean[], $9::bigint[])
+                     AS change(id, group_id, radio, has_profile, profile, has_logo, logo, has_epg, epg)
              ), existing AS (
                  UPDATE dispatcharr_channels_channeloverride AS overlay
                  SET channel_group_id = COALESCE(incoming.group_id, overlay.channel_group_id),
                      is_radio = COALESCE(incoming.radio, overlay.is_radio),
                      stream_profile_id = CASE WHEN incoming.has_profile THEN incoming.profile ELSE overlay.stream_profile_id END,
-                     logo_id = CASE WHEN incoming.has_logo THEN incoming.logo ELSE overlay.logo_id END
+                     logo_id = CASE WHEN incoming.has_logo THEN incoming.logo ELSE overlay.logo_id END,
+                     epg_data_id = CASE WHEN incoming.has_epg THEN incoming.epg ELSE overlay.epg_data_id END
                  FROM incoming WHERE overlay.channel_id = incoming.id
                  RETURNING overlay.channel_id
              )
              INSERT INTO dispatcharr_channels_channeloverride
-                 (channel_id, channel_group_id, is_radio, stream_profile_id, logo_id, created_at, updated_at)
-             SELECT incoming.id, incoming.group_id, incoming.radio, incoming.profile, incoming.logo,
+                 (channel_id, channel_group_id, is_radio, stream_profile_id, logo_id, epg_data_id, created_at, updated_at)
+             SELECT incoming.id, incoming.group_id, incoming.radio, incoming.profile, incoming.logo, incoming.epg,
                     clock_timestamp(), clock_timestamp()
              FROM incoming
              WHERE NOT EXISTS (SELECT 1 FROM existing WHERE existing.channel_id = incoming.id)",
@@ -801,11 +966,25 @@ async fn apply(
         .bind(refs.profiles)
         .bind(refs.logos_present)
         .bind(refs.logos)
+        .bind(has_epgs)
+        .bind(epgs)
         .execute(&mut **tx)
         .await?;
+    }
+    // Original dispatches after all upserts, then prunes empty overlays.
+    if let Some(programmes) = guide_programmes {
+        *guide_effects_started = true;
+        super::guide_after_save(auth, super::GuideTarget::CacheOnly, owner).await?;
+        for epg in programmes {
+            crate::core_settings_special_broker::publish_tvg_programmes(auth, epg).await?;
+        }
+    }
+    for chunk in override_edits.chunks(OVERRIDE_BATCH_SIZE) {
         let may_clear: Vec<_> = chunk
             .iter()
-            .filter(|edit| edit.override_references.clears())
+            .filter(|edit| {
+                edit.override_references.clears() || edit.override_epg.reference == Reference::Clear
+            })
             .map(|edit| edit.id)
             .collect();
         if !may_clear.is_empty() {
@@ -846,14 +1025,28 @@ async fn write(
 ) -> Result<Vec<Value>, StoreError> {
     for attempt in 0..3 {
         let mut tx = auth.store.pool().begin().await?;
-        let result = update_and_read(auth, &mut tx, edits, ids, include, base, owner.clone()).await;
+        let mut guide_effects_started = false;
+        let result = update_and_read(
+            auth,
+            &mut tx,
+            edits,
+            ids,
+            (include, base),
+            owner.clone(),
+            &mut guide_effects_started,
+        )
+        .await;
         match result {
             Ok(rows) => {
                 // A commit error can have an uncertain outcome. Never retry it.
                 tx.commit().await?;
                 return Ok(rows);
             }
-            Err(error) if attempt < 2 && deadlock(&error) => tx.rollback().await?,
+            // The cache generation and task publications cannot be rolled
+            // back or safely repeated on a later SQL failure.
+            Err(error) if attempt < 2 && !guide_effects_started && deadlock(&error) => {
+                tx.rollback().await?;
+            }
             Err(error) => return Err(error),
         }
     }
@@ -865,12 +1058,12 @@ async fn update_and_read(
     tx: &mut Transaction<'_, Postgres>,
     edits: &[Edit],
     ids: &[i64],
-    include: bool,
-    base: &url::Url,
+    (include, base): (bool, &url::Url),
     owner: crate::compact_numbering::Owner,
+    guide_effects_started: &mut bool,
 ) -> Result<Vec<Value>, StoreError> {
     let selected = validate_and_lock(tx, edits, ids).await?;
-    apply(auth, tx, edits, &selected, owner).await?;
+    apply(auth, tx, edits, &selected, owner, guide_effects_started).await?;
     let fetched = QueryBuilder::new(channels::SELECT)
         .push(" AND c.id = ANY(")
         .push_bind(ids)
@@ -1461,9 +1654,61 @@ mod tests {
     }
 
     #[test]
+    fn nested_epg_tracks_id_clear_omission_and_deferred_field_errors() {
+        let rows = edits(json!([
+            {"id":1,"override":{"channel_group_id":3,"epg_data_id":"07"}},
+            {"id":2,"override":{"epg_data_id":null}},
+            {"id":3,"override":null},
+            {"id":4,"override":{"epg_data_id":false}}
+        ]))
+        .unwrap();
+        assert_eq!(rows[0].override_epg.reference, Reference::Set(7));
+        assert_eq!(
+            rows[0].override_epg.validation_error(&BTreeSet::new()),
+            Some(json!(["Invalid pk \"07\" - object does not exist."]))
+        );
+        assert_eq!(
+            rows[0].override_epg.validation_error(&BTreeSet::from([7])),
+            None
+        );
+        assert_eq!(rows[1].override_epg.reference, Reference::Clear);
+        assert_eq!(rows[2].override_epg.reference, Reference::Absent);
+        assert_eq!(
+            rows[3].override_epg.validation_error(&BTreeSet::new()),
+            Some(json!(["Incorrect type. Expected pk value, received bool."]))
+        );
+        assert!(!rows[2].has_override_values());
+    }
+
+    #[test]
+    fn changed_nested_guides_deduplicate_and_distinguish_a_clear_only_generation() {
+        let before = HashMap::from([(1, Some(12)), (2, None), (3, Some(99))]);
+        assert_eq!(
+            changed_guides(&[(1, Reference::Set(12)), (2, Reference::Clear)], &before),
+            None
+        );
+        assert_eq!(
+            changed_guides(&[(1, Reference::Clear), (3, Reference::Absent)], &before),
+            Some(BTreeSet::new())
+        );
+        assert_eq!(
+            changed_guides(
+                &[
+                    (1, Reference::Set(10)),
+                    (2, Reference::Set(10)),
+                    (3, Reference::Clear),
+                    (4, Reference::Set(11))
+                ],
+                &before
+            ),
+            Some(BTreeSet::from([10, 11]))
+        );
+    }
+
+    #[test]
     fn unrelated_mutations_cannot_be_silently_accepted() {
         assert!(matches!(
-            edits(json!([{"id":1,"override":{"channel_group_id":3,"epg_data_id":7}}])),
+            edits(json!([{"id":1,"override":{"channel_group_id":3,"hidden_from_output":true}}])),
             Err(StoreError::Unsupported(_))
         ));
     }

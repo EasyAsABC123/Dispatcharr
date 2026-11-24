@@ -25,6 +25,8 @@ Administrator Channel Batch now accepts ordered stream replacement and explicit 
 
 Channel Batch also accepts raw channel numbers, TVG IDs, guide station IDs, and EPG assignments. It distinguishes explicit clears from omitted fields and preserves the existing compact-number behavior when a request also changes visibility. Raw EPG writes preserve Original's bulk-update behavior and skip guide publication.
 
+Nested Channel Batch EPG edits support XMLTV, dummy, and source-less guides, including explicit clears. A changed request invalidates the guide cache once and publishes one programme job for each eligible newly assigned guide. Schedules Direct still requires its HTTP-originated task dispatch. Twenty focused Channel Batch Store tests passed.
+
 Numeric Movie, Series, Episode and Category detail GETs and Movie, Series, Episode and Unified collection GETs accept Original's literal JSON suffix. The aliases reuse authorization, bounded SQL reads, and JSON negotiation. Focused Store tests passed. The final Compose fixtures still need to verify persisted ordering, catch-up response timing, and signed role behavior on the ordinary packaged handlers.
 
 ## One frozen verification campaign
