@@ -585,6 +585,18 @@ Seventeen Rust library tests passed and three external-fixture cases
 remain reserved. The existing ARM64 paired owner adds twelve signed
 or public wire checks and compares exact status, headers and body.
 
+## Saved Stats and ghost cleanup
+
+The M6 coordinator can dispatch the ordinary saved Stats viewer and ghost
+cleanup check after its backend-cleanup prerequisite. It uses the existing
+private lease and one Native project, including a same-data restart. The
+pinned Original ran both saved schedules, kept signed media playing during
+ghost removal, and delivered the Stats WebSocket frames. The fresh Native
+check requires typed before-and-after snapshots, real media and socket
+work, and exact termination and teardown. An older Native receipt lacked
+the required snapshots and was rejected. All 34 coordinator controls passed.
+Packaged execution and the rest of the M6 job graph remain open.
+
 ## Historical measured performance
 
 The earlier quiet comparisons use pinned Original `1241b3f7` and the

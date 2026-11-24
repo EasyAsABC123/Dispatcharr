@@ -295,6 +295,17 @@ def owner_readiness(nodes, document, output=None):
                 if bindings[key] != expected:
                     raise ValueError("M6 scanner-first exact ordinary owner binding required")
                 continue
+            if key == "m6/stats-live-ghost":
+                owner = module(HERE / "m6/stats_live_ghost_owner.py", "readiness_m6_stats_live_ghost")
+                context = owners.get("m6", {}).get("stats_live_ghost")
+                if not context or owner.PREDECESSOR not in node["depends_on"]:
+                    raise ValueError("M6 Stats requires a sealed ordinary owner and saved predecessor")
+                expected = owner.dispatch_spec(Path(context["stage"]), context["seal"], Path(context["receiving"]),
+                                               Path(context["common"]), Path(context["custody"]), context["package_seal"],
+                                               document["candidate"], HERE.parents[1], node["entrypoint"], Path(output))
+                if bindings[key] != expected:
+                    raise ValueError("M6 Stats exact sealed campaign binding required")
+                continue
             if key == "m6/version200-update-no-update-malformed":
                 owner = module(HERE / "m6/version200_owner.py", "readiness_m6_version200")
                 context = owners.get("m6", {}).get("version200")
