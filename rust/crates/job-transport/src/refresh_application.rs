@@ -374,11 +374,8 @@ impl RefreshApplication {
         let observed_unforced = object
             .get("force")
             .is_none_or(|value| value == &Value::Bool(false));
-        let decimal = id
-            .as_str()
-            .and_then(canonical_decimal_source_id)
-            .filter(|_| observed_unforced);
-        let scalar = positive_source_scalar(id).filter(|_| observed_unforced);
+        let decimal = id.as_str().and_then(canonical_decimal_source_id);
+        let scalar = positive_source_scalar(id);
         let missing = missing_source_argument(id).filter(|_| observed_unforced);
         let Some(source_id) = id
             .as_i64()
@@ -407,30 +404,20 @@ impl RefreshApplication {
                     Err(_) => return source_500(),
                 }
             }
-        } else if decimal.is_some() || scalar.is_some() {
-            // Only the existing active XMLTV case has signed, end-to-end Source evidence.
-            let eligible = sqlx::query_scalar::<_, bool>(
-                "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE id=$1 AND is_active AND source_type='xmltv')",
-            )
-            .bind(source_id)
-            .fetch_one(self.inner.store.pool())
-            .await;
-            match eligible {
-                Ok(true) => {}
-                Ok(false) => return unqualified_import_id(),
-                Err(_) => return source_500(),
-            }
         } else {
-            let dummy = sqlx::query_scalar::<_, bool>(
-                "SELECT EXISTS(SELECT 1 FROM epg_epgsource WHERE id=$1 AND source_type='dummy')",
+            let typed_id = decimal.is_some() || scalar.is_some();
+            let source = sqlx::query_as::<_, (bool, bool)>(
+                "SELECT source_type='dummy', is_active AND source_type='xmltv' FROM epg_epgsource WHERE id=$1",
             )
             .bind(source_id)
-            .fetch_one(self.inner.store.pool())
+            .fetch_optional(self.inner.store.pool())
             .await;
-            match dummy {
-                Ok(true) => return (StatusCode::BAD_REQUEST, Json(json!({"success":false,"message":"Dummy EPG sources do not require refreshing."}))).into_response(),
-                Ok(false) => {}
+            let source = match source {
+                Ok(row) => row,
                 Err(_) => return source_500(),
+            };
+            if let Some(response) = refresh_source_rejection(source, typed_id, observed_unforced) {
+                return response;
             }
         }
         let force = object.get("force").is_some_and(python_truth);
@@ -495,6 +482,27 @@ impl dispatcharr_store::sd_source_http::InitialXmltvRefresh for RefreshApplicati
 fn invalid_integer_source_string(id: &Value) -> bool {
     id.as_str()
         .is_some_and(|text| dispatcharr_ingest_core::source_integer_literal(text).is_none())
+}
+
+fn refresh_source_rejection(
+    source: Option<(bool, bool)>,
+    typed_id: bool,
+    observed_unforced: bool,
+) -> Option<Response> {
+    match source {
+        Some((true, _)) => Some(
+            (
+                StatusCode::BAD_REQUEST,
+                Json(json!({"success":false,"message":"Dummy EPG sources do not require refreshing."})),
+            )
+                .into_response(),
+        ),
+        // Non-dummy typed IDs retain the existing active XMLTV and force bounds.
+        row if typed_id && (!observed_unforced || row != Some((false, true))) => {
+            Some(unqualified_import_id())
+        }
+        _ => None,
+    }
 }
 
 fn unqualified_import_id() -> Response {
@@ -570,6 +578,29 @@ fn finalize_import_response(mut response: Response) -> Response {
 #[cfg(test)]
 mod import_response_tests {
     use super::*;
+
+    #[test]
+    fn typed_dummy_source_rejection_precedes_the_existing_publish_bounds() {
+        for unforced in [true, false] {
+            for typed in [true, false] {
+                let response = refresh_source_rejection(Some((true, false)), typed, unforced)
+                    .expect("dummy source always refuses publication");
+                assert_eq!(response.status(), StatusCode::BAD_REQUEST);
+            }
+            for row in [None, Some((false, false)), Some((false, true))] {
+                let maybe_response = refresh_source_rejection(row, true, unforced);
+                if unforced && row == Some((false, true)) {
+                    assert!(maybe_response.is_none());
+                } else {
+                    assert_eq!(
+                        maybe_response.unwrap().status(),
+                        StatusCode::NOT_IMPLEMENTED
+                    );
+                }
+                assert!(refresh_source_rejection(row, false, unforced).is_none());
+            }
+        }
+    }
 
     #[test]
     fn epg_import_declares_source_methods_and_renderer_variation() {
