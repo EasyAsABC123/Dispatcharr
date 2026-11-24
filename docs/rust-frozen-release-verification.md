@@ -59,6 +59,12 @@ HDHomeRun discovery, lineup, and status paths now accept percent-encoded decimal
 
 Registered public HDHomeRun data routes also accept the Original browser format on GET and HEAD, including named output profiles and the bare API aliases. Focused tests exercise content negotiation and preserve the existing authorization and device-data paths. The paired ARM64 owner will verify these requests on the final package.
 
+Signed HDHomeRun device details also accept the numeric path spellings
+that Django resolves, including percent encoding and Unicode decimals.
+The datastore lookup uses the numeric key. Forty-eight pinned Django
+component comparisons and sixteen focused Rust tests passed. Signed
+packaged reads of the device aliases still need verification.
+
 M3U, XMLTV, and HDHomeRun also share Origin URL formatting for trusted proxy headers. Empty optional forwarding headers fall back to the normal host or port. The existing per-request proxy trust check supplies that decision. Both output crates compiled and the shared formatter matched Original across 2,520 header combinations.
 
 M3U, named XMLTV, and HDHomeRun now share the Original channel-number formatter. It preserves the fractional digits for binary64 ties in both displayed channel numbers and generated guide IDs. Focused Store, output, and all 15 HDHomeRun tests passed, and a separate comparison matched the pinned Python formatter across 49,990 finite inputs.
@@ -218,8 +224,15 @@ changes passed focused tests and still need the signed packaged comparison.
 The copied SQLite backend now returns an ordered stream array for the signed
 selection request that React makes when a selected row has moved off-page.
 Six focused runtime tests passed. The existing projection keeps role-based URL
-redaction and read budgets. Signed packaged replay and the downstream channel
-writes remain pending.
+redaction and read budgets.
+
+For one selected stream, the copied SQLite backend accepts the ordinary
+signed administrator Channel creation request from React. It saves the
+channel, assigned stream and supported profile memberships in one
+transaction. The existing update bus publishes after commit. The focused
+suite exercises omitted or null selection, one existing profile and an
+explicit empty selection. Final packaged replay must verify the signed
+route and real Redis and WebSocket delivery.
 
 Ordinary Main now recognizes a saved, operator-named daily account-expiry
 schedule under the existing interval, routing and argument guards. Twenty-six
@@ -251,7 +264,10 @@ For an HTTP rejection before download progress, the Groups worker retains
 its initial message and the account stores the provider's error separately.
 The same paired owner includes a signed 403 case. Three loopback transfer
 tests passed, and the pinned Original helper confirmed the outcome across
-700 final HTTP error statuses in a private synthetic fixture.
+700 final HTTP error statuses in a private synthetic fixture. A complete
+empty or HTML response follows the same separate account and Groups
+reporting, with the prior raw and parsed caches preserved. The two
+cases are part of the same signed fixture.
 
 ## Channel logo pagination and Xtream information
 

@@ -21,6 +21,24 @@ fn missing() -> StoreError {
         json!({"detail":"No HDHRDevice matches the given query."}),
     )
 }
+fn device_pk(path_segment: &str) -> Result<i64, StoreError> {
+    // A URL path segment is decoded once, without converting literal plus to
+    // a space. Keep the device key typed for Django's BigAutoField lookup.
+    let decoded;
+    let value = if path_segment.contains('%') {
+        let escaped = path_segment.replace('+', "%2B").replace('&', "%26");
+        decoded = url::form_urlencoded::parse(format!("pk={escaped}").as_bytes())
+            .next()
+            .map(|(_, value)| value.into_owned())
+            .ok_or_else(missing)?;
+        decoded.as_str()
+    } else {
+        path_segment
+    };
+    dispatcharr_ingest_core::source_integer_literal(value)
+        .and_then(|value| value.parse::<i64>().ok())
+        .ok_or_else(missing)
+}
 fn invalid(value: Value) -> StoreError {
     StoreError::InvalidInput(value)
 }
@@ -55,9 +73,10 @@ pub(crate) async fn handle(
             json!({"detail":format!("Method \"{method}\" not allowed.")}),
         ));
     }
-    let current = if let Some(id) = &lookup {
+    let lookup = lookup.as_deref().map(device_pk).transpose()?;
+    let current = if let Some(id) = lookup {
         let value = sqlx::query(&format!(
-            "SELECT {COLUMNS} FROM hdhr_hdhrdevice WHERE id::text=$1"
+            "SELECT {COLUMNS} FROM hdhr_hdhrdevice WHERE id=$1"
         ))
         .bind(id)
         .fetch_optional(inner.store.pool())
@@ -98,7 +117,7 @@ pub(crate) async fn handle(
         return Ok((StatusCode::OK, Some(data)));
     }
     if *method == Method::DELETE {
-        sqlx::query("DELETE FROM hdhr_hdhrdevice WHERE id::text=$1")
+        sqlx::query("DELETE FROM hdhr_hdhrdevice WHERE id=$1")
             .bind(lookup)
             .execute(inner.store.pool())
             .await?;
@@ -170,7 +189,7 @@ pub(crate) async fn handle(
         }
     }
     if let Some(Value::String(value)) = changes.get("device_id") {
-        let exists:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM hdhr_hdhrdevice WHERE device_id=$1 AND ($2::text IS NULL OR id::text<>$2))").bind(value).bind(&lookup).fetch_one(inner.store.pool()).await?;
+        let exists:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM hdhr_hdhrdevice WHERE device_id=$1 AND ($2::bigint IS NULL OR id<>$2))").bind(value).bind(lookup).fetch_one(inner.store.pool()).await?;
         if exists {
             errors.insert(
                 "device_id".into(),
@@ -188,7 +207,7 @@ pub(crate) async fn handle(
         merged.as_object_mut().unwrap().insert(key, value);
     }
     let result = if detail {
-        sqlx::query(&format!("UPDATE hdhr_hdhrdevice SET friendly_name=$1,device_id=$2,tuner_count=$3 WHERE id::text=$4 RETURNING {COLUMNS}")).bind(merged["friendly_name"].as_str().unwrap()).bind(merged["device_id"].as_str().unwrap()).bind(merged["tuner_count"].as_i64().unwrap() as i32).bind(&lookup).fetch_optional(inner.store.pool()).await
+        sqlx::query(&format!("UPDATE hdhr_hdhrdevice SET friendly_name=$1,device_id=$2,tuner_count=$3 WHERE id=$4 RETURNING {COLUMNS}")).bind(merged["friendly_name"].as_str().unwrap()).bind(merged["device_id"].as_str().unwrap()).bind(merged["tuner_count"].as_i64().unwrap() as i32).bind(lookup).fetch_optional(inner.store.pool()).await
     } else {
         sqlx::query(&format!("INSERT INTO hdhr_hdhrdevice (friendly_name,device_id,tuner_count) VALUES ($1,$2,$3) RETURNING {COLUMNS}")).bind(merged["friendly_name"].as_str().unwrap()).bind(merged["device_id"].as_str().unwrap()).bind(merged["tuner_count"].as_i64().unwrap() as i32).fetch_optional(inner.store.pool()).await
     };
@@ -267,4 +286,39 @@ fn options(detail: bool) -> Value {
     let mut value = json!({"name":if detail{"Hdhr Device Instance"}else{"Hdhr Device List"},"description":"Handles CRUD operations for HDHomeRun devices","renders":["application/json","text/html"],"parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"],"actions":{}});
     value["actions"][if detail { "PUT" } else { "POST" }] = fields;
     value
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn device_keys_match_django_integer_path_spelling_and_decode_once() {
+        for value in [
+            "37",
+            "0037",
+            "+37",
+            "%2B0037",
+            "%33%37",
+            "%D9%A3%D9%A7",
+            "3%5F7",
+            "%2037%20",
+        ] {
+            assert_eq!(device_pk(value).unwrap(), 37, "{value}");
+        }
+        for value in [
+            "",
+            "37/1",
+            "3%2F7",
+            "3+7",
+            "37&x=1%20",
+            "%252B37",
+            "9223372036854775808",
+        ] {
+            assert!(
+                matches!(device_pk(value), Err(StoreError::StatusBody(404, _))),
+                "{value}"
+            );
+        }
+    }
 }

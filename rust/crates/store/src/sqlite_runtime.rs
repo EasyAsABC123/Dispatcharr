@@ -28,6 +28,8 @@ pub(crate) mod m3u_accounts;
 pub(crate) mod playback;
 #[path = "sqlite_profile.rs"]
 pub(crate) mod profile;
+#[path = "sqlite_single_from_stream.rs"]
+pub(crate) mod single_from_stream;
 #[path = "sqlite_stream_filter_options.rs"]
 pub(crate) mod stream_filter_options;
 #[path = "sqlite_streams.rs"]
@@ -90,6 +92,7 @@ impl CopiedSqliteRuntime {
     pub fn router(&self) -> Router {
         Router::new()
             .merge(application_data::router())
+            .merge(single_from_stream::router())
             .route(
                 "/api/accounts/token/",
                 post(token).layer(axum::middleware::map_response(direct_token_allow)),

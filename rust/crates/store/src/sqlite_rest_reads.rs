@@ -146,6 +146,74 @@ async fn copied_setup_writes_a_real_django_sqlite_administrator() {
 
 impl RetainedSqliteRestReads {
     #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn single_from_stream(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        uri: axum::http::Uri,
+        body: crate::auth::sqlite_runtime::single_from_stream::Body,
+        sink: Option<crate::auth::sqlite_runtime::single_from_stream::Sink>,
+    ) -> Result<axum::response::Response, StoreError> {
+        use axum::response::IntoResponse;
+        let subject = self
+            .bearer_account_user(peer, headers.clone(), true)
+            .await?;
+        let sink = sink.ok_or(StoreError::StatusBody(
+            503,
+            json!({"detail":"Copied SQLite channel publication unavailable."}),
+        ))?;
+        if uri.query().is_some_and(|q| !q.is_empty()) {
+            return Err(StoreError::Unsupported(
+                "Copied SQLite single-create JSON query options unqualified",
+            ));
+        }
+        if headers
+            .get("accept")
+            .is_some_and(|v| !matches!(v.to_str(), Ok("application/json" | "*/*")))
+        {
+            return Err(StoreError::Unsupported(
+                "Copied SQLite single-create renderer unqualified",
+            ));
+        }
+        let base = crate::channels::base_url(&headers, &uri)?;
+        let pool = self.pool.clone();
+        let limit = self.limits.work_bytes;
+        let scope = self.permit.clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let created = crate::auth::sqlite_runtime::single_from_stream::command(
+                &mut connection,
+                subject.user(),
+                body,
+                &base,
+                limit,
+            )
+            .await;
+            settle(connection).await?;
+            let created = created?;
+            // Source plain Channels send failures are logged after durable commit.
+            if sink
+                .send_retained("updates", created.event, scope)
+                .await
+                .is_err()
+            {
+                tracing::warn!("Copied SQLite channel creation publication failed after commit");
+            }
+            Ok((
+                axum::http::StatusCode::CREATED,
+                [
+                    (axum::http::header::ALLOW, "POST, OPTIONS"),
+                    (axum::http::header::CONTENT_TYPE, "application/json"),
+                    (axum::http::header::VARY, "Accept, origin"),
+                ],
+                created.response,
+            )
+                .into_response())
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
     pub(crate) async fn bootstrap_admin_exists(&self) -> Result<bool, StoreError> {
         let pool = self.pool.clone();
         supervised_sql_read(self.permit.clone(), async move {
@@ -1055,3 +1123,7 @@ mod channel_profile_collection_tests {
         ));
     }
 }
+
+#[cfg(all(test, feature = "sqlite-copied-data-runtime"))]
+#[path = "sqlite_single_from_stream_tests.rs"]
+mod single_from_stream_tests;

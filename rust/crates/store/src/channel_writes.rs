@@ -21,6 +21,9 @@ mod assign_numbers;
 mod edit_bulk;
 mod from_stream;
 mod reorder;
+#[cfg(feature = "sqlite-copied-data-runtime")]
+#[path = "sqlite_channel_relation_effects.rs"]
+pub(crate) mod sqlite_relation_effects;
 pub(crate) use assign_numbers::handle as assign_numbers;
 pub(crate) use edit_bulk::handle as edit_bulk;
 pub(crate) use from_stream::handle as create_from_stream;

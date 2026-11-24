@@ -51,7 +51,16 @@ pub struct Downloaded {
 }
 enum WriterEnd {
     Finished(DownloadStats),
+    Rejected(String),
     Aborted,
+}
+fn download_failed(message: String, progress: Option<&str>) -> Error {
+    // Source persists the failure via another account query, then the Groups
+    // result reads the original account's last successfully stored progress.
+    Error::DownloadFailed {
+        message,
+        groups_result: progress.unwrap_or("Starting download...").to_owned(),
+    }
 }
 enum Write {
     Chunk(Vec<u8>),
@@ -156,21 +165,22 @@ pub async fn transfer(
             match receive.blocking_recv() {
                 Some(Write::Chunk(chunk)) => cache.write_chunk(&chunk).map_err(classify_cache)?,
                 Some(Write::Finish) => {
-                    return cache
-                        .finish(status, &url)
-                        .map(WriterEnd::Finished)
-                        .map_err(classify_cache)
+                    return match cache.finish(status, &url) {
+                        Ok(statistics) => Ok(WriterEnd::Finished(statistics)),
+                        Err(CacheError::Invalid(message)) => Ok(WriterEnd::Rejected(message)),
+                        Err(error) => Err(classify_cache(error)),
+                    };
                 }
                 None => return Ok(WriterEnd::Aborted),
             }
         }
     });
+    let mut last_progress_message: Option<String> = None;
     let flow = async {
         observer.began(owner.clone()).await?;
         let start = Instant::now();
         let mut notified = Instant::now();
         let mut downloaded = 0u64;
-        let mut last_progress_message: Option<String> = None;
         while let Some(chunk) = body.next().await {
             let chunk = chunk.map_err(|error| {
                 // Reqwest wraps incoming body framing errors as decoding errors.
@@ -182,18 +192,13 @@ pub async fn transfer(
                         .and_then(|cause| cause.downcast_ref::<reqwest::Error>())
                         .is_some_and(|cause| cause.is_decode() && !cause.is_timeout())
                 {
-                    Error::DownloadFailed {
-                        message: format!(
+                    download_failed(
+                        format!(
                             "Connection error while fetching M3U file from URL: {}",
                             input.url
                         ),
-                        // Original persists the connection failure via a fresh query.
-                        // Groups returns the in-memory account's last download message.
-                        groups_result: last_progress_message
-                            .as_deref()
-                            .unwrap_or("Starting download...")
-                            .to_owned(),
-                    }
+                        last_progress_message.as_deref(),
+                    )
                 } else {
                     Error::Unsupported
                 }
@@ -241,6 +246,9 @@ pub async fn transfer(
     flow?;
     let statistics = match end {
         WriterEnd::Finished(statistics) => statistics,
+        WriterEnd::Rejected(message) => {
+            return Err(download_failed(message, last_progress_message.as_deref()))
+        }
         WriterEnd::Aborted => return Err(Error::Unsettled),
     };
     prepare(raw, parsed, Some(statistics), owner).await
@@ -310,12 +318,7 @@ async fn error_response(
     };
     let preview = text.chars().take(1000).collect::<String>();
     let message=match status{884=>format!("Server returned HTTP 884 (authentication/authorization failure) from URL: {url}. Server message: {preview}"),800..=u16::MAX=>format!("Server returned non-standard HTTP status {status} from URL: {url}. Server message: {preview}"),404=>format!("M3U file not found (404) at URL: {url}. Server message: {preview}"),403=>format!("Access forbidden (403) to M3U file at URL: {url}. Server message: {preview}"),401=>format!("Authentication required (401) for M3U file at URL: {url}. Server message: {preview}"),500=>format!("Server error (500) while fetching M3U file from URL: {url}. Server message: {preview}"),_=>format!("HTTP error ({status}) while fetching M3U file from URL: {url}. Server message: {preview}")};
-    // Source persists the HTTP error separately. Its Groups task returns the
-    // account instance's initial download message because no progress ran.
-    Ok(Error::DownloadFailed {
-        message,
-        groups_result: "Starting download...".to_owned(),
-    })
+    Ok(download_failed(message, None))
 }
 
 #[cfg(test)]
@@ -445,6 +448,26 @@ mod tests {
                 error, Error::DownloadFailed { message, groups_result }
                     if message == format!("Access forbidden (403) to M3U file at URL: {url}. Server message: {preview}")
                        && groups_result == "Starting download..."
+            ));
+        }
+    }
+
+    #[tokio::test]
+    async fn rejected_success_response_preserves_both_prior_caches_and_groups_message() {
+        for body in [b"".as_slice(), b"<html>unauthorized"] {
+            let response = format!(
+                "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            );
+            let (error, url) = rejected_transfer(response, body.to_vec()).await;
+            let expected = if body.is_empty() {
+                format!("Server responded successfully (HTTP 200) but provided empty M3U file from URL: {url}")
+            } else {
+                format!("Server returned HTML page instead of M3U file from URL: {url}. This usually indicates an error or authentication issue.")
+            };
+            assert!(matches!(
+                error, Error::DownloadFailed { message, groups_result }
+                    if message == expected && groups_result == "Starting download..."
             ));
         }
     }
