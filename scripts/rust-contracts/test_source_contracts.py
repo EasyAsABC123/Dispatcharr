@@ -1043,6 +1043,8 @@ class SourceContracts(unittest.TestCase):
         operation['role_matrix']['required_roles'] = ['sentinel-required-role']
         after = copy.deepcopy(before)
         source_contracts.apply(self.root, after, self.bindings)
+        import retained_original_catalogue_contracts as catalogue
+        catalogue.apply(self.root, after)
         self.assertEqual(before, after)
 
     def test_missing_manifest_fails(self):

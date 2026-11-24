@@ -238,9 +238,16 @@ class NotificationMutationControls(unittest.TestCase):
   bindings=json.loads((ROOT/'scripts/rust-contracts/case-bindings.json').read_text())
   mapping=source_contracts.apply(ROOT,historical,bindings)
   final_wave.profile_group.apply(ROOT,historical,mapping)
+  structure=[{k:v for k,v in r.items()if k!='operations'}for r in historical]
+  self.assertEqual(subject.digest(structure),old['routes_structural_projection_sha256'])
+  for module in final_wave.PACKAGED:
+   module.apply(ROOT,historical)
+  final_wave.catalogue.apply(ROOT,historical)
+  later_report=dict(baseline_ref=new['baseline_ref'],input_sha256=dict(new['input_sha256']),runtime_routes=historical)
+  final_wave.dispatch.attach(ROOT,later_report)
+  final_wave.stock_bootstrap.attach(ROOT,later_report)
   self.assertEqual(historical,new['runtime_routes'])
   self.assertEqual(mapping,new['executable_Source_mapping'])
-  self.assertEqual(subject.digest([{k:v for k,v in r.items()if k!='operations'}for r in new['runtime_routes']]),old['routes_structural_projection_sha256'])
   self.assertEqual(subject.digest(new['openapi_operations']),old['openapi_operations_sha256']);self.assertEqual(subject.digest(new['observations_for_methods_not_declared_in_discovery']),old['observations_for_methods_not_declared_sha256'])
   # Only seven exact validator-pinned Source assignments supersede this old
   # non-HTTP digest. Reverse their known assignment fields, preserve every
@@ -271,6 +278,8 @@ class NotificationMutationControls(unittest.TestCase):
   non_HTTP_mapping=source_contracts.apply_non_HTTP(ROOT,historical_non_HTTP)
   import retained_channel_task_effects
   retained_channel_task_effects.apply(ROOT,historical_non_HTTP)
+  final_wave.model_command.attach(ROOT,dict(baseline_ref=new['baseline_ref'],input_sha256={},
+                                           non_HTTP_candidates=historical_non_HTTP))
   self.assertEqual(historical_non_HTTP,new['non_HTTP_candidates'])
   self.assertEqual(non_HTTP_mapping,new['executable_Source_non_HTTP_mapping'])
   import retained_migration_recorder_contracts as migrations

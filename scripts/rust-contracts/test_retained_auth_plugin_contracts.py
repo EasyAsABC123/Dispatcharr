@@ -157,6 +157,7 @@ class RetainedAuthPluginControls(unittest.TestCase):
             self.assertEqual(subject.digest(register[key]), proof[field])
         rows = copy.deepcopy(current_rows)
         mapping = source_contracts.apply(ROOT, rows, json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_bytes()))
+        test_final_residual_wave.catalogue.apply(ROOT, rows)
         self.assertEqual(rows, current_rows)
         self.assertEqual([row for row in mapping['unmapped_method_Source_observations'] if row['route_id'] != 'route-7e6941c073eccaa2b6dd' and row.get('fixture_id') != retained_epg_reads_contracts.FIXTURE], self.value['unmapped_method_Source_observations'])
         self.assertEqual(mapping['operations'], 619 + test_final_residual_wave.HTTP_COUNT + 2)  # Root-7 and plain recording HLS GET.

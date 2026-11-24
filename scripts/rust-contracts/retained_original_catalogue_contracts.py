@@ -1,4 +1,5 @@
 """Bind scoped passing signed stock Original GET evidence to existing operation IDs."""
+from copy import deepcopy
 from hashlib import sha256
 import json
 import re
@@ -77,3 +78,24 @@ def apply(root, rows):
         }
         result = {**op["result"], "state": STATE, "additional_signed_catalogue_GET_observations": 2}
         existing["result"] = op["result"] = result
+
+
+def restore(root, routes):
+    """Verify and undo only the retained signed catalogue observations."""
+    operations = {op['contract_id']: op for route in routes for op in route['operations']}
+    signed = {
+        key: deepcopy(op) for key, op in operations.items()
+        if 'signed_stock_catalogue_GET' in op.get('executable_Source_contract', {})
+    }
+    if signed:
+        for key in signed:
+            op = operations[key]
+            source = op['executable_Source_contract']
+            source.pop('signed_stock_catalogue_GET')
+            for result in (op['result'], source['result']):
+                assert result.pop('state') == STATE
+                assert result.pop('additional_signed_catalogue_GET_observations') == 2
+        expected_rows = deepcopy(routes)
+        apply(root, expected_rows)
+        assert signed == {op['contract_id']: op for route in expected_rows for op in route['operations']
+                          if 'signed_stock_catalogue_GET' in op.get('executable_Source_contract', {})}

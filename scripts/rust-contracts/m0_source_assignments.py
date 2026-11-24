@@ -3,6 +3,7 @@ Original Dispatcharr authors retain all application/algorithm credit and license
 """
 import argparse,collections,hashlib,json,re
 from pathlib import Path
+import retained_original_catalogue_contracts as catalogue
 HTTP={'GET','HEAD','POST','PUT','PATCH','DELETE','OPTIONS','TRACE'}
 def sha(path):return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 def method_sites(value):
@@ -18,6 +19,7 @@ def method_sites(value):
 
 def generate(root,register_path=None,historical_log=None):
  root=Path(root);path=Path(register_path)if register_path else root/'docs/rust-contract-register.json';register=json.loads(path.read_bytes());manifest=json.loads((root/'scripts/rust-contracts/executable-source-inputs.json').read_bytes());types={};source_inputs=[]
+ catalogue.restore(root,register['runtime_routes'])
  supplements={(op['contract_id'],capture['input']['path']):capture
               for route in register['runtime_routes']for op in route['operations']
               for capture in op.get('supplemental_executable_Source_captures',[])}

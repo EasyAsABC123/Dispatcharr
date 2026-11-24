@@ -6,11 +6,19 @@ from pathlib import Path
 import json
 import unittest
 
+import observed_appdata_packaged_contracts as appdata
+import observed_connect_log_json_packaged_contracts as connect_log
+import observed_epg_library_packaged_contracts as epg_library
+import observed_programme_packaged_contracts as programme
 import retained_autosync28_task
 import retained_backup_create_task
 import retained_backup_lifecycle_tasks
 import retained_matching51_tasks
 import retained_migration_recorder_contracts as migrations
+import retained_model_command_observations as model_command
+import retained_stock_bootstrap as stock_bootstrap
+import retained_original_catalogue_contracts as catalogue
+import runtime_dispatch_metadata as dispatch
 import retained_model_registry_contracts as model_registry
 import retained_task_registry_contracts as task_registry
 import retained_management_registration_contracts as command_registry
@@ -30,6 +38,7 @@ TYPED = (
     retained_autosync28_task,
     retained_worker_wire_contracts,
 )
+PACKAGED = (programme, epg_library, connect_log, appdata)
 HTTP_COUNT = 177
 TYPED_COUNT = 11
 
@@ -37,7 +46,11 @@ TYPED_COUNT = 11
 def dependencies(root):
     return portable.dependencies(root).union(retained_root7_contract.dependencies(), migrations.dependencies(),
                                              model_registry.dependencies(), task_registry.dependencies(), command_registry.dependencies(),
-                                             plain_hls.dependencies(), profile_group.INPUT_SHA256, *(module.dependencies() for module in TYPED))
+                                             plain_hls.dependencies(), profile_group.INPUT_SHA256,
+                                             {model_command.INPUT, stock_bootstrap.INPUT, catalogue.PACKET, dispatch.INPUT,
+                                              'docs/rust-runtime-contracts.json'},
+                                             *(module.INPUT_SHA256 for module in PACKAGED),
+                                             *(module.dependencies() for module in TYPED))
 
 
 def restore_profile_group_projection(root, routes, summary):
@@ -63,8 +76,91 @@ def restore_profile_group_projection(root, routes, summary):
         del observed[-len(later):]
 
 
+def restore_recent_source_observations(root, register):
+    operations = [
+        operation for route in register['runtime_routes'] for operation in route['operations']
+    ]
+    operation_attachments = {
+        op['contract_id']: op.pop(stock_bootstrap.ATTACHMENTS) for op in operations
+        if any(entry.get('authority_packet_relative_path') == stock_bootstrap.INPUT
+               for entry in op.get(stock_bootstrap.ATTACHMENTS, []))
+    }
+    models = {
+        item['candidate_id']: item.pop(model_command.ATTACHMENTS)
+        for item in register['non_HTTP_candidates']
+        if item['candidate_id'] in model_command.MODELS.keys() | model_command.COMMANDS.keys()
+        and model_command.ATTACHMENTS in item
+    }
+    if not operation_attachments and not models:
+        return
+    projected = {
+        'baseline_ref': register.get('baseline_ref', dispatch.ORIGINAL),
+        'input_sha256': {},
+        'runtime_routes': copy.deepcopy(register['runtime_routes']),
+        'non_HTTP_candidates': copy.deepcopy(register['non_HTTP_candidates']),
+    }
+    if operation_attachments:
+        stock_bootstrap.attach(root, projected)
+        regenerated = {
+            op['contract_id']: op[stock_bootstrap.ATTACHMENTS]
+            for route in projected['runtime_routes'] for op in route['operations']
+            if op['contract_id'] in operation_attachments
+        }
+        assert operation_attachments == regenerated
+    if models:
+        model_command.attach(root, projected)
+        regenerated = {
+            item['candidate_id']: item[model_command.ATTACHMENTS]
+            for item in projected['non_HTTP_candidates'] if item['candidate_id'] in models
+        }
+        assert models == regenerated
+
+
+LATER_CASE_BINDINGS = {
+    'route-2bb81f30c5e580e289f8:GET',
+    'route-4a50fcc0d000739bc60c:METHOD_UNRESOLVED',
+    'route-55aadc5558ca3b8248b1:GET',
+    'route-82723694fa5ab6ee5f1e:GET',
+    'route-d52d5a62d4e324405b85:GET',
+    'route-d64394eade0a18a43d8b:GET',
+    'route-dfd94c84789ce0429d99:GET',
+    'route-e8763dfe777286fc6b57:GET',
+    'route-f7f70739debd2202db5e:METHOD_UNRESOLVED',
+}
+
+
+def restore_later_runtime_metadata(root, routes):
+    dispatch_field = 'Original_runtime_class_dispatch'
+    metadata = {r['route_id']: r.pop(dispatch_field) for r in routes if dispatch_field in r}
+    if metadata:
+        runtime_path = 'docs/rust-runtime-contracts.json'
+        expected = {
+            'baseline_ref': dispatch.ORIGINAL,
+            'input_sha256': {runtime_path: sha256((root / runtime_path).read_bytes()).hexdigest()},
+            'runtime_routes': copy.deepcopy(routes),
+        }
+        dispatch.attach(root, expected)
+        assert metadata == {r['route_id']: r[dispatch_field] for r in expected['runtime_routes']
+                            if dispatch_field in r}
+
+    operations = {op['contract_id']: op for route in routes for op in route['operations']}
+    catalogue.restore(root, routes)
+
+    late = {key: op.pop('case_bindings') for key, op in operations.items()
+            if key in LATER_CASE_BINDINGS and 'case_bindings' in op}
+    if late:
+        projected = copy.deepcopy(routes)
+        for module in PACKAGED:
+            module.apply(root, projected)
+        expected = {op['contract_id']: op['case_bindings'] for route in projected for op in route['operations']
+                    if op['contract_id'] in LATER_CASE_BINDINGS and 'case_bindings' in op}
+        assert late == expected
+
+
 def restore_pre_final_wave(root, register):
     """Reverse the exact scoped additions before checking historical row digests."""
+    restore_recent_source_observations(root, register)
+    restore_later_runtime_metadata(root, register['runtime_routes'])
     plain_hls.restore_before(root, register['runtime_routes'], register['executable_Source_mapping'])
     restore_profile_group_projection(root, register['runtime_routes'], register['executable_Source_mapping'])
     inputs = register['executable_Source_mapping']['inputs']
