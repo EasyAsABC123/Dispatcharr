@@ -671,34 +671,46 @@ fn setup_document(
 async fn setup_status(
     State(runtime): State<CopiedSqliteRuntime>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
-    method: Method,
-    headers: HeaderMap,
+    request_value: axum::extract::Request,
 ) -> Result<Response, StoreError> {
-    let exists = runtime
-        .allocate_read()
-        .await?
-        .bootstrap_admin_exists()
-        .await?;
-    let ip = source_client_ip_for_config(&runtime.config, &request(peer, headers));
+    let scope = runtime.allocate_read().await?;
+    let exists = scope.bootstrap_admin_exists().await?;
+    let identity = request(peer, request_value.headers().clone());
+    let ip = source_client_ip_for_config(&runtime.config, &identity);
     let override_ip = std::env::var("DISPATCHARR_SETUP_ALLOWED_IP").unwrap_or_default();
-    Ok(setup_status_response(method, exists, &ip, &override_ip))
+    if exists || request_value.method() != Method::POST {
+        return Ok(setup_status_response(exists, &ip, &override_ip));
+    }
+    if !crate::startup::setup_allowed(ip.address(), &override_ip) {
+        return Ok(crate::startup_bootstrap::denied(ip.to_string()));
+    }
+    let crate::startup_bootstrap::BootstrapCredentials {
+        username,
+        password,
+        email,
+    } = match crate::startup_bootstrap::parse_credentials(request_value).await {
+        Ok(credentials) => credentials,
+        Err(response) => return Ok(response),
+    };
+    let encoded = match crate::auth::hash_for_workers(&runtime.password_workers, password).await {
+        Ok(encoded) => encoded,
+        Err(_) => {
+            return Ok(crate::startup_bootstrap::error(
+                "Password exceeds bounded implementation limit or worker capacity.",
+            ))
+        }
+    };
+    match scope.bootstrap_create_admin(username, email, encoded).await {
+        Ok(()) => Ok(setup_status_response(true, &ip, &override_ip)),
+        Err(error) => Ok(crate::startup_bootstrap::sqlite_insert_error(error)),
+    }
 }
 
 fn setup_status_response(
-    method: Method,
     exists: bool,
     ip: &dispatcharr_contracts::SourceIpAddr,
     override_ip: &str,
 ) -> Response {
-    // Match the pinned Original's already-configured response without reading
-    // the POST body or enabling first-user creation on the copied runtime.
-    if method == Method::POST && !exists {
-        return (
-            StatusCode::METHOD_NOT_ALLOWED,
-            [(axum::http::header::ALLOW, "GET,HEAD")],
-        )
-            .into_response();
-    }
     (
         [
             (axum::http::header::CONTENT_TYPE, "application/json"),
@@ -729,11 +741,11 @@ fn copied_setup_keeps_source_json_spacing_and_local_gate() {
 
 #[cfg(test)]
 #[tokio::test]
-async fn copied_setup_post_only_reports_an_existing_administrator() {
+async fn copied_setup_status_supports_existing_administrator_without_body() {
     use axum::{body::to_bytes, http::header};
 
     let ip = "192.0.2.1".parse().unwrap();
-    let configured = setup_status_response(Method::POST, true, &ip, "127.0.0.1");
+    let configured = setup_status_response(true, &ip, "127.0.0.1");
     assert_eq!(configured.status(), StatusCode::OK);
     assert_eq!(
         configured.headers()[header::CONTENT_TYPE],
@@ -745,13 +757,12 @@ async fn copied_setup_post_only_reports_an_existing_administrator() {
         br#"{"superuser_exists": true}"#
     );
 
-    let unconfigured = setup_status_response(Method::POST, false, &ip, "192.0.2.1");
-    assert_eq!(unconfigured.status(), StatusCode::METHOD_NOT_ALLOWED);
-    assert_eq!(unconfigured.headers()[header::ALLOW], "GET,HEAD");
-    assert!(to_bytes(unconfigured.into_body(), 64)
-        .await
-        .unwrap()
-        .is_empty());
+    let forbidden = crate::startup_bootstrap::denied(ip.to_string());
+    assert_eq!(forbidden.status(), StatusCode::FORBIDDEN);
+    let document: Value =
+        serde_json::from_slice(&to_bytes(forbidden.into_body(), 1024).await.unwrap()).unwrap();
+    assert_eq!(document["setup_allowed"], false);
+    assert_eq!(document["client_ip"], ip.to_string());
 }
 
 async fn version(

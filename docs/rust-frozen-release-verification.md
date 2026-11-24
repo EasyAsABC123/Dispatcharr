@@ -51,13 +51,17 @@ The backup library now selects its snapshot from the admitted runtime datastore 
 
 The optional restore path checks archive type and reads the staged SQLite catalogue before touching the target. With a quiesced datastore owner, it rejects open journal companions, retains the previous database as a rollback copy, and installs and verifies the recovered file. Linux passed 28 feature-enabled and 17 default backup tests.
 
-The backup component uses the locked bundled SQLite library already used by the copied runtime's SQL driver. The copied runtime now answers a repeated setup POST when an administrator exists and exposes `/health/ready` with SQLite and Redis checks. The copied-runtime Store tests passed, and the application and backup test targets linked with both optional features enabled.
+The backup component uses the locked bundled SQLite library already used by the copied runtime's SQL driver. The copied runtime now answers a repeated setup POST when an administrator exists and exposes `/health/ready` with SQLite and Redis checks. On a migrated copy with no administrator, the same setup route can create the first account under the existing client IP policy. It uses the shared bootstrap parser and password worker, then writes an administrator row to the owned SQLite database. The copied-runtime Store tests passed, and the application and backup test targets linked with both optional features enabled.
 
 The ordinary package still needs SQLite startup, ownership wiring, migration compatibility, and image linkage. The SQLite component tests alone do not close M8 or M9.
 
 ## Recording and profile delivery owners
 
-The one-off Beat row starts one signed recording fixture and verifies HTTP creation, the clocked SQL entry, one due-time broker publication, and its durable result. The scheduled 61-second recording row consumes that same owned fixture and evaluates media, recorder retirement, and cleanup independently. The coordinator admits both bindings before physical results exist and keeps their execution order. The Native profile-delivery owner reuses the two retained Original profile authorities, and the isolated controller validates the repository holding those receipts before admitting the binding. The coordinator and recording regressions passed offline, including recording admission before any physical receipt exists.
+The one-off Beat row starts one signed recording fixture and verifies HTTP creation, the clocked SQL entry, one due-time broker publication, and its durable result. The scheduled 61-second recording row consumes that same owned fixture and evaluates media, recorder retirement, and cleanup independently. The coordinator admits both bindings before physical results exist and keeps their execution order. The known-default installation owner checks three ordered SQL receipts, reinstalls the removed status schedule with zero runs, and validates the other five rows and teardown against the retained Original roster. The Native profile-delivery owner reuses the two retained Original profile authorities, and the isolated controller validates the repository holding those receipts before admitting the binding. The coordinator and recording regressions passed offline, including recording admission before any physical receipt exists.
+
+## VOD admission cleanup
+
+When all providers definitely refuse a new VOD session at capacity, the 503 response now waits within its bound for token-fenced cleanup of the provisional session. The retained cleanup owner handles unresolved Redis replies. Four authenticated-restart tests passed and the held-Redis-reply regression compiled for the final fixture.
 
 ## Output index and Original method declarations
 

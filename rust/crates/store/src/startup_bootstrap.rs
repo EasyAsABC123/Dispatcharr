@@ -10,7 +10,7 @@ use axum::{
 };
 use serde_json::{json, Value};
 use std::net::SocketAddr;
-fn error(message: impl Into<String>) -> Response {
+pub(crate) fn error(message: impl Into<String>) -> Response {
     (
         axum::http::StatusCode::INTERNAL_SERVER_ERROR,
         Json(json!({"error":message.into()})),
@@ -113,6 +113,81 @@ fn database_error(error: sqlx::Error) -> String {
     }
     "Database unavailable".into()
 }
+pub(crate) struct BootstrapCredentials {
+    pub(crate) username: String,
+    pub(crate) password: String,
+    pub(crate) email: String,
+}
+
+pub(crate) async fn parse_credentials(request: Request) -> Result<BootstrapCredentials, Response> {
+    // Preserve configured/IP-denied body bypass. This is the original Django
+    // default DATA_UPLOAD_MAX_MEMORY_SIZE, independent of DRF parsers.
+    let raw = match to_bytes(request.into_body(), 2_621_440).await {
+        Ok(raw) => raw,
+        Err(_) => {
+            return Err(error(
+                "Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE.",
+            ))
+        }
+    };
+    let body: Value = match serde_json::from_slice(&raw) {
+        Ok(body) => body,
+        Err(value) => return Err(error(json_error(&raw, value))),
+    };
+    let Some(fields) = body.as_object() else {
+        return Err(error(attribute_error(&body, "get")));
+    };
+    let username = fields.get("username");
+    let password = fields.get("password");
+    if !crate::channels::truthy(username) || !crate::channels::truthy(password) {
+        return Err((
+            axum::http::StatusCode::BAD_REQUEST,
+            Json(json!({"error":"Username and password are required."})),
+        )
+            .into_response());
+    }
+    let username = username.unwrap();
+    let username = match username {
+        Value::String(value) => crate::username::normalize_username(value),
+        value => match crate::python_action::collection_text(value, 16384) {
+            Some(value) => value,
+            None => return Err(error("Username exceeds bounded implementation limit.")),
+        },
+    };
+    let email = match email(fields.get("email")) {
+        Ok(value) => value,
+        Err(value) => return Err(error(value)),
+    };
+    let password = password.unwrap();
+    let Some(password) = password.as_str() else {
+        return Err(error(format!(
+            "Password must be a string or bytes, got {}.",
+            crate::channel_memberships::datatype(password)
+        )));
+    };
+    Ok(BootstrapCredentials {
+        username,
+        password: password.to_owned(),
+        email,
+    })
+}
+
+pub(crate) fn denied(client_ip: String) -> Response {
+    StoreError::StatusBody(403,json!({"error":"Web setup is limited to local networks by default. Set DISPATCHARR_SETUP_ALLOWED_IP to your IP to allow setup from this network, or create the account with: python manage.py createsuperuser","client_ip":client_ip,"setup_allowed":false})).into_response()
+}
+
+#[cfg(feature = "sqlite-copied-data-runtime")]
+pub(crate) fn sqlite_insert_error(value: StoreError) -> Response {
+    match value {
+        StoreError::Database(error_value) => error(
+            error_value
+                .as_database_error()
+                .map_or("Database unavailable", |value| value.message()),
+        ),
+        other => other.into_response(),
+    }
+}
+
 pub(crate) async fn response(auth: AuthService, peer: SocketAddr, request: Request) -> Response {
     let exists = sqlx::query_scalar::<_, bool>(
         "SELECT EXISTS(SELECT 1 FROM accounts_user WHERE user_level>=10)",
@@ -137,50 +212,17 @@ pub(crate) async fn response(auth: AuthService, peer: SocketAddr, request: Reque
         .into_response();
     }
     if !allowed {
-        return StoreError::StatusBody(403,json!({"error":"Web setup is limited to local networks by default. Set DISPATCHARR_SETUP_ALLOWED_IP to your IP to allow setup from this network, or create the account with: python manage.py createsuperuser","client_ip":ip.to_string(),"setup_allowed":false})).into_response();
+        return denied(ip.to_string());
     }
-    // Preserve configured/IP-denied body bypass. This is the original Django
-    // default DATA_UPLOAD_MAX_MEMORY_SIZE, independent of DRF parsers.
-    let raw = match to_bytes(request.into_body(), 2_621_440).await {
-        Ok(raw) => raw,
-        Err(_) => return error("Request body exceeded settings.DATA_UPLOAD_MAX_MEMORY_SIZE."),
+    let BootstrapCredentials {
+        username,
+        password,
+        email,
+    } = match parse_credentials(request).await {
+        Ok(credentials) => credentials,
+        Err(response) => return response,
     };
-    let body: Value = match serde_json::from_slice(&raw) {
-        Ok(body) => body,
-        Err(value) => return error(json_error(&raw, value)),
-    };
-    let Some(fields) = body.as_object() else {
-        return error(attribute_error(&body, "get"));
-    };
-    let username = fields.get("username");
-    let password = fields.get("password");
-    if !crate::channels::truthy(username) || !crate::channels::truthy(password) {
-        return (
-            axum::http::StatusCode::BAD_REQUEST,
-            Json(json!({"error":"Username and password are required."})),
-        )
-            .into_response();
-    }
-    let username = username.unwrap();
-    let username = match username {
-        Value::String(value) => crate::username::normalize_username(value),
-        value => match crate::python_action::collection_text(value, 16384) {
-            Some(value) => value,
-            None => return error("Username exceeds bounded implementation limit."),
-        },
-    };
-    let email = match email(fields.get("email")) {
-        Ok(value) => value,
-        Err(value) => return error(value),
-    };
-    let password = password.unwrap();
-    let Some(password) = password.as_str() else {
-        return error(format!(
-            "Password must be a string or bytes, got {}.",
-            crate::channel_memberships::datatype(password)
-        ));
-    };
-    let encoded = match auth.hash_password(password.to_owned()).await {
+    let encoded = match auth.hash_password(password).await {
         Ok(value) => value,
         Err(_) => {
             return error("Password exceeds bounded implementation limit or worker capacity.")

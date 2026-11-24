@@ -1313,7 +1313,14 @@ impl SessionPool {
                 Err(_) => return Err(redis_error()),
             }
         }
-        let (candidate, lease) = selected.ok_or_else(unavailable)?;
+        let Some((candidate, lease)) = selected else {
+            // Source rejects a new contending session before creating public
+            // metadata. Retire our provisional entry before returning that
+            // same ordinary capacity response.
+            drop(registry);
+            pending.discard().await?;
+            return Err(unavailable());
+        };
         let saved: i64 = Script::new(UPDATE)
             .key(key(id))
             .arg(&metadata_token)
@@ -1942,6 +1949,35 @@ struct PendingCreate {
     retained_request: Option<Arc<OwnedSemaphorePermit>>,
     retained_slot: Option<Arc<OwnedSemaphorePermit>>,
 }
+const DISCARD_PENDING: &str = "if redis.call('HGET',KEYS[1],'rust_owner_token')==ARGV[1] then return redis.call('DEL',KEYS[1]) end return 0";
+
+async fn discard_pending(
+    connection: &mut ConnectionManager,
+    id: &str,
+    token: &str,
+) -> redis::RedisResult<i64> {
+    Script::new(DISCARD_PENDING)
+        .key(key(id))
+        .arg(token)
+        .invoke_async(connection)
+        .await
+}
+
+impl PendingCreate {
+    async fn discard(&mut self) -> Result<(), dispatcharr_store::StoreError> {
+        // If the reply is unknown, keep the token fence armed. Drop retains
+        // physical admission while it settles that same idempotent deletion.
+        tokio::time::timeout(
+            Duration::from_secs(2),
+            discard_pending(&mut self.connection, &self.id, &self.token),
+        )
+        .await
+        .map_err(|_| redis_error())?
+        .map_err(|_| redis_error())?;
+        self.armed = false;
+        Ok(())
+    }
+}
 impl Drop for PendingCreate {
     fn drop(&mut self) {
         if !self.armed {
@@ -1959,9 +1995,13 @@ impl Drop for PendingCreate {
             }
             runtime.spawn(async move {
                 let _retained = (retained_request, retained_slot);
-                let cleaned: Result<i64,_> = Script::new("if redis.call('HGET',KEYS[1],'rust_owner_token')==ARGV[1] then return redis.call('DEL',KEYS[1]) end return 0")
-                    .key(key(&id)).arg(token).invoke_async(&mut connection).await;
-                if let Some(pool)=pool{if cleaned.is_err(){pool.cleanup_failed.store(true,Ordering::Release);}pool.pending_cleanups.fetch_sub(1,Ordering::AcqRel);}
+                let cleaned = discard_pending(&mut connection, &id, &token).await;
+                if let Some(pool) = pool {
+                    if cleaned.is_err() {
+                        pool.cleanup_failed.store(true, Ordering::Release);
+                    }
+                    pool.pending_cleanups.fetch_sub(1, Ordering::AcqRel);
+                }
             });
         }
     }

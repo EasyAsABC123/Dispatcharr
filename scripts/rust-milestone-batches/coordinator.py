@@ -265,6 +265,16 @@ def owner_readiness(nodes, document, output=None):
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
         elif key in bindings and node["owner"] == "m6":
+            if key == "m6/scheduler-install-known-defaults":
+                owner = module(HERE / "m6/scheduler_install_owner.py", "readiness_m6_scheduler_install")
+                context = owners.get("m6", {}).get("scheduler_install")
+                if not context:
+                    raise ValueError("M6 saved-default scheduler sealed stage required")
+                expected = owner.dispatch_spec(Path(context["stage"]), context["seal"], document["candidate"],
+                                               HERE.parents[1], node["entrypoint"], output)
+                if bindings[key] != expected:
+                    raise ValueError("M6 saved-default scheduler exact owner binding required")
+                continue
             if key in {"m6/oneoff-beat-publication", "m6/recording61-video-audio"}:
                 owner = module(HERE / "m6/recording61_owner.py", "readiness_m6_recording61")
                 context = owners.get("m6", {}).get("recording61")

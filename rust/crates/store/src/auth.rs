@@ -577,7 +577,7 @@ where
     Ok(json!({"access": mint_token(config, json!(user.id.to_string()), "access")?}))
 }
 
-async fn hash_for_workers(
+pub(crate) async fn hash_for_workers(
     workers: &Arc<tokio::sync::Semaphore>,
     password: String,
 ) -> Result<String, StoreError> {

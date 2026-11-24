@@ -281,6 +281,85 @@ async fn delayed_admit_reply_retains_pending_cleanup_after_logical_timeout() {
     run(false).await;
 }
 
+#[tokio::test]
+#[ignore = "owned real Redis provider capacity and held cleanup acknowledgement"]
+async fn new_vod_capacity_refusal_waits_for_provisional_metadata_cleanup() {
+    use dispatcharr_coordination::{AcquireRequest, Coordinator, LeaseConfig};
+    use dispatcharr_store::StoreError;
+    use redis::AsyncCommands;
+
+    let (_, mut control, source, mut request, rejected) =
+        super::physical_fixture("capacity-settlement").await;
+    request.session_id = Some(rejected.clone());
+    let profile_id = source.candidates[0].profile_id;
+    let cap = source.candidates[0].max_streams;
+    let (url, _) = super::config();
+    let coordinator = Coordinator::connect(
+        &url,
+        LeaseConfig {
+            namespace: rejected.clone(),
+            heartbeat_interval: None,
+            reap_interval: None,
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let holder = coordinator
+        .acquire_vod(AcquireRequest {
+            channel_id: format!("{rejected}-holder"),
+            provider_profile_id: Some(profile_id),
+            provider_max_streams: cap,
+            credential_pool: None,
+        })
+        .await
+        .unwrap();
+    let key = super::super::key(&rejected);
+    let proxy = proxy(key.clone(), false).await;
+    proxy.release_admit.send_replace(true);
+    proxy.release_cleanup.send_replace(false);
+    let pool = super::super::SessionPool::connect(
+        &proxy.url,
+        coordinator,
+        1,
+        1,
+        Duration::from_millis(10),
+    )
+    .await
+    .unwrap();
+    let owner = pool.clone();
+    let mut pending = tokio::spawn(async move { owner.enter(&rejected, source, &request).await });
+
+    wait(|| proxy.counts.cleanup_done.load(Ordering::SeqCst) == 1).await;
+    let response_held = tokio::time::timeout(Duration::from_millis(50), &mut pending).await;
+    proxy.release_cleanup.send_replace(true);
+    assert!(
+        response_held.is_err(),
+        "ordinary 503 must wait for the token-fenced provisional deletion reply"
+    );
+    assert!(matches!(
+        tokio::time::timeout(Duration::from_secs(1), pending)
+            .await
+            .unwrap()
+            .unwrap(),
+        Err(StoreError::StatusBody(503, serde_json::Value::String(body)))
+            if body == "No available stream"
+    ));
+    assert!(!control.exists::<_, bool>(&key).await.unwrap());
+    assert_eq!(
+        control
+            .get::<_, i64>(format!("profile_connections:{profile_id}"))
+            .await
+            .unwrap(),
+        1
+    );
+    assert_eq!(pool.inner.requests.available_permits(), 1);
+    assert_eq!(pool.inner.slots.available_permits(), 1);
+    assert!(holder.release().await.unwrap());
+    holder.settlement().wait().await;
+    assert!(pool.cleanup_succeeded());
+}
+
 #[path = "session_lookup_reply.rs"]
 mod lookup_reply;
 

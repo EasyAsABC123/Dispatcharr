@@ -79,6 +79,71 @@ async fn core_settings_rows(
     }
 }
 
+#[cfg(all(test, feature = "sqlite-copied-data-runtime"))]
+#[tokio::test]
+async fn copied_setup_writes_a_real_django_sqlite_administrator() {
+    let pool = sqlx::sqlite::SqlitePoolOptions::new()
+        .max_connections(1)
+        .connect("sqlite::memory:")
+        .await
+        .unwrap();
+    sqlx::query(include_str!("../datasets/sqlite-accounts_user.sql"))
+        .execute(&pool)
+        .await
+        .unwrap();
+    let budget = Arc::new(Semaphore::new(1));
+    let permit = Arc::new(budget.try_acquire_owned().unwrap());
+    let reads = RetainedSqliteRestReads {
+        config: AuthConfig::new("copied-bootstrap-source-fixture".to_owned()).unwrap(),
+        cache: None,
+        pool: pool.clone(),
+        permit,
+        limits: RestReadLimits::default(),
+    };
+    assert!(!reads.bootstrap_admin_exists().await.unwrap());
+    let body = axum::extract::Request::builder()
+        .body(axum::body::Body::from(
+            r#"{"username":"setup-user","password":"owned-input","email":"User@EXAMPLE.INVALID"}"#,
+        ))
+        .unwrap();
+    let credentials = crate::startup_bootstrap::parse_credentials(body)
+        .await
+        .unwrap();
+    let hash = crate::auth::hash_for_workers(&Arc::new(Semaphore::new(1)), credentials.password)
+        .await
+        .unwrap();
+    assert!(hash.starts_with("pbkdf2_sha256$"));
+    reads
+        .bootstrap_create_admin(credentials.username, credentials.email, hash.clone())
+        .await
+        .unwrap();
+    assert!(reads.bootstrap_admin_exists().await.unwrap());
+
+    let (stored, name, mail, level, staff, superuser, active) =
+        sqlx::query_as::<_, (String, String, String, i64, bool, bool, bool)>(
+            "SELECT password,username,email,user_level,is_staff,is_superuser,is_active FROM accounts_user",
+        )
+        .fetch_one(&pool).await.unwrap();
+    assert_eq!(stored, hash);
+    assert_eq!(
+        (name.as_str(), mail.as_str(), level),
+        ("setup-user", "User@example.invalid", 10)
+    );
+    assert!(staff && superuser && active);
+    assert!(matches!(
+        reads.bootstrap_create_admin(name, mail, hash).await,
+        Err(StoreError::Database(_))
+    ));
+    assert_eq!(
+        sqlx::query_scalar::<_, i64>("SELECT count(*) FROM accounts_user")
+            .fetch_one(&pool)
+            .await
+            .unwrap(),
+        1
+    );
+    pool.close().await;
+}
+
 impl RetainedSqliteRestReads {
     #[cfg(feature = "sqlite-copied-data-runtime")]
     pub(crate) async fn bootstrap_admin_exists(&self) -> Result<bool, StoreError> {
@@ -92,6 +157,31 @@ impl RetainedSqliteRestReads {
             .await;
             settle(connection).await?;
             Ok(result?)
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn bootstrap_create_admin(
+        &self,
+        username: String,
+        email: String,
+        encoded: String,
+    ) -> Result<(), StoreError> {
+        let pool = self.pool.clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = sqlx::query(
+                "INSERT INTO accounts_user(password,last_login,is_superuser,username,first_name,last_name,email,is_staff,is_active,date_joined,user_level,custom_properties,avatar_config,stream_limit,api_key) VALUES(?1,NULL,1,?2,'','',?3,1,1,?4,10,'{}','{}',0,NULL)",
+            )
+            .bind(encoded)
+            .bind(username)
+            .bind(email)
+            .bind(chrono::Utc::now().format("%Y-%m-%d %H:%M:%S%.6f").to_string())
+            .execute(&mut *connection)
+            .await;
+            settle(connection).await?;
+            Ok(result.map(|_| ())?)
         })
         .await
     }

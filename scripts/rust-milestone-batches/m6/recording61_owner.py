@@ -48,7 +48,7 @@ def read(path):
     return json.loads(path.read_bytes())
 
 
-def stage_inputs(stage, seal, candidate):
+def sealed_inputs(stage, seal):
     manifest = stage / "SHA256SUMS"
     require(digest(manifest) == seal, "recording61 stage seal differs")
     inputs = {str(manifest): seal, str(SCRIPT): digest(SCRIPT)}
@@ -62,6 +62,11 @@ def stage_inputs(stage, seal, candidate):
         require(digest(path) == expected, "recording61 stage input changed")
         names.add(name)
         inputs[str(path)] = expected
+    return inputs, names
+
+
+def stage_inputs(stage, seal, candidate):
+    inputs, names = sealed_inputs(stage, seal)
     require({"run.py", "scenario.py", "package-binding.json",
              "fixture_adapter.py", "candidate.py", "external-pins.json", "reduce.py", "retained.py"} <= names,
             "missing sealed recording61 input")
@@ -310,7 +315,7 @@ def parent_holds_lock(parent, path):
     return False
 
 
-def coordinator_parent(coordinator, coordinator_sha, output, binding, candidate):
+def coordinator_parent(coordinator, coordinator_sha, output, binding, candidate, *, node=ONEOFF):
     parent = Path("/proc") / str(os.getppid())
     supplied = [os.fsdecode(arg) for arg in (parent / "cmdline").read_bytes().split(b"\0") if arg]
     cwd = (parent / "cwd").resolve(strict=True)
@@ -321,9 +326,9 @@ def coordinator_parent(coordinator, coordinator_sha, output, binding, candidate)
             and any((cwd / arg).resolve() == coordinator for arg in supplied[1:min(index, supplied.index("--bindings"))])
             and (cwd / supplied[index + 1]).resolve() == output
             and digest(coordinator) == coordinator_sha, "actual reviewed coordinator parent required")
-    directory = attempt_directory(output, ONEOFF)
+    directory = attempt_directory(output, node)
     attempt = read(directory / "attempt.json")
-    require(attempt["node"]["id"] == ONEOFF and type(attempt["attempt"]) is int and attempt["attempt"] == 1
+    require(attempt["node"]["id"] == node and type(attempt["attempt"]) is int and attempt["attempt"] == 1
             and attempt["candidate"] == candidate
             and attempt["binding"] == binding and not os.path.lexists(directory / "execution.json")
             and (directory / "execution.stdout").is_file()

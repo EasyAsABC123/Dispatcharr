@@ -108,3 +108,32 @@ the controlled clock from fall-fold, Lord Howe and quarter-hour calculation
 vectors. Current Native package version consumer/default Beat lineage and broader
 real calendar scenarios still need physical evidence. None of these retained
 scheduler observations promote a current Native release row.
+
+### Saved-default scheduler installation
+
+`m6/scheduler-install-known-defaults` uses the sealed ordinary AIO scheduler
+fixture. The pinned Original report establishes the six-row name, task, interval
+and one-off projection. In the fresh Native copied database, the fixture
+removes the disabled `fetch-channel-statuses` row before Main starts. The
+evaluator checks three ordered actual SQL receipts for the six original rows,
+the five untouched rows, and the six rows after Main becomes ready. The
+reinstalled row must have the original two-second interval and zero runs.
+The canonical row also requires clean retirement of all three owned container
+and process generations. The grouped fixture includes its recurring workload,
+while this evaluator grants credit only for startup installation.
+
+For the final wave, call `scheduler_install_owner.prepare(template, candidate,
+fresh_stage)` with the reviewed `/tmp/dispatcharr-2d3f-m6-ordinary-scheduler`
+template and the exact frozen ordinary AMD64 candidate. Supply the returned
+`stage` and `seal` as `owner_bindings.m6.scheduler_install`. Use
+`scheduler_install_owner.dispatch_spec(stage, seal, candidate, repository,
+entrypoint, output)` for the canonical binding. The stage borrows the live
+coordinator lock. Binding preflight needs neither execution receipts nor an
+existing coordinator output. The evaluator rejects historical Native receipts
+for any other candidate.
+
+```sh
+M6_REPLAY_ARTIFACTS=/home/justin/github/Dispatcharr/artifacts/rust \
+M6_REPLAY_SCHEDULER=/tmp/dispatcharr-2d3f-m6-ordinary-scheduler \
+  python3 -B -m unittest discover -s scripts/rust-milestone-batches/m6 -p test_scheduler_install_owner.py
+```

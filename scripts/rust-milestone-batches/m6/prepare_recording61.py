@@ -11,15 +11,8 @@ FILES = ("run.py", "scenario.py", "fixture_adapter.py", "candidate.py",
          "external-pins.json", "inert-input-allowlist.json", "origin61.py", "reduce.py", "retained.py")
 
 
-def prepare(template, output, candidate):
-    old = read(template / "package-binding.json")
+def rebind_package(old, candidate):
     anchor = next(path for path in old["pins"] if path.endswith("/package/build.json"))
-    original_candidate = {"git": old["candidate"], "image_id": old["image"],
-                          "build_manifest_sha256": old["manifest"], "build_manifest_file": anchor,
-                          "source_archive_sha256": old["archive"]}
-    verified = stage_inputs(template, TEMPLATE_SEAL, original_candidate)
-    require(all(str(template / name) in verified for name in FILES), "unsealed recording fixture input")
-    require(output.resolve() == output and not output.exists(), "fresh absolute owner directory required")
     manifest = Path(candidate["build_manifest_file"])
     build = read(manifest)
     package = manifest.parents[2]
@@ -43,6 +36,19 @@ def prepare(template, output, candidate):
         item = package / Path(path).relative_to(former_package)
         binding["pins"][str(item)] = digest(item)
     require(str(manifest) in binding["pins"], "recording61 package uses the ordinary manifest layout")
+    return manifest, binding
+
+
+def prepare(template, output, candidate):
+    old = read(template / "package-binding.json")
+    anchor = next(path for path in old["pins"] if path.endswith("/package/build.json"))
+    original_candidate = {"git": old["candidate"], "image_id": old["image"],
+                          "build_manifest_sha256": old["manifest"], "build_manifest_file": anchor,
+                          "source_archive_sha256": old["archive"]}
+    verified = stage_inputs(template, TEMPLATE_SEAL, original_candidate)
+    require(all(str(template / name) in verified for name in FILES), "unsealed recording fixture input")
+    require(output.resolve() == output and not output.exists(), "fresh absolute owner directory required")
+    manifest, binding = rebind_package(old, candidate)
     files = {name: (template / name).read_bytes() for name in FILES}
     for name in ("candidate.py", "run.py"):
         source = files[name].decode()
