@@ -283,14 +283,19 @@ impl PluginActions {
         let observer = live.clone();
         let fallback = permit.clone();
         let work = tokio::spawn(async move {
-            let result = self
-                .owned(auth, peer, request, key, action, live.clone())
-                .await;
-            response(result, live, permit, action).await
+            let (result, indent) = match list_json_indent(action, &request) {
+                Ok(indent) => (
+                    self.owned(auth, peer, request, key, action, live.clone())
+                        .await,
+                    indent,
+                ),
+                Err(error) => (Err(error), None),
+            };
+            response(result, live, permit, action, indent).await
         });
         match work.await {
             Ok(response) => Ok(response),
-            Err(_) => Ok(response(Err(guard()), observer, fallback, action).await),
+            Err(_) => Ok(response(Err(guard()), observer, fallback, action, None).await),
         }
     }
     async fn owned(
@@ -1114,11 +1119,34 @@ fn varies_on_accept(action: Action, status: StatusCode) -> bool {
         || (matches!(action, Action::Enabled | Action::Delete) && status == StatusCode::OK)
 }
 
+fn list_json_indent(action: Action, request: &Request) -> Result<Option<usize>, StoreError> {
+    if !matches!(action, Action::List) {
+        return Ok(None);
+    }
+    // DRF selects the renderer before authenticating or checking permissions.
+    match crate::vod_api_draft::negotiate_json_or_browsable(request.headers(), request.uri()) {
+        Ok(()) => {}
+        // Preserve the current representation until the browsable renderer is available.
+        Err(StoreError::Unsupported(_)) => return Ok(None),
+        Err(error) => return Err(error),
+    }
+    Ok(request
+        .headers()
+        .get(axum::http::header::ACCEPT)
+        .and_then(|value| {
+            let accept = dispatcharr_contracts::source_header_value(value.as_bytes());
+            crate::channel_profiles::explicit_json_indent(&accept)
+        }))
+}
+
+const PLUGIN_RESPONSE_BYTES: usize = 1024 * 1024;
+
 async fn response(
     result: Result<Response, StoreError>,
     live: Arc<Live>,
     permit: Arc<tokio::sync::OwnedSemaphorePermit>,
     action: Action,
+    indent: Option<usize>,
 ) -> Response {
     let mut response = match result {
         Ok(response) => response,
@@ -1152,9 +1180,27 @@ async fn response(
         return response;
     }
     let (mut parts, body) = response.into_parts();
-    let bytes = match to_bytes(body, 1048576).await {
-        Ok(bytes) => bytes.to_vec(),
-        Err(_) => {
+    let indent = indent.filter(|_| {
+        parts
+            .headers
+            .get(axum::http::header::CONTENT_TYPE)
+            .is_some_and(|value| value == "application/json")
+    });
+    let bytes = match to_bytes(body, PLUGIN_RESPONSE_BYTES).await {
+        Ok(bytes) => match indent {
+            Some(indent) => crate::vod_api_draft::pretty_document(
+                &bytes,
+                indent,
+                crate::vod_api_draft::BoundedJsonDocument::bounded(PLUGIN_RESPONSE_BYTES),
+            )
+            .ok(),
+            None => Some(bytes.to_vec()),
+        },
+        Err(_) => None,
+    };
+    let bytes = match bytes {
+        Some(bytes) => bytes,
+        None => {
             parts.status = StatusCode::SERVICE_UNAVAILABLE;
             b"{\"detail\":\"Plugin response capacity unavailable.\"}".to_vec()
         }
@@ -1271,6 +1317,38 @@ mod tests {
 #[cfg(test)]
 mod request_compat_tests {
     use super::*;
+
+    #[test]
+    fn plugin_list_negotiates_json_and_leaves_other_routes_alone() {
+        let default = Request::new(Body::empty());
+        assert_eq!(list_json_indent(Action::List, &default).unwrap(), None);
+        for media in ["text/plain", "application/xml"] {
+            let request = Request::builder()
+                .uri("/api/plugins/plugins/")
+                .header("accept", media)
+                .body(Body::empty())
+                .unwrap();
+            assert!(matches!(
+                list_json_indent(Action::List, &request),
+                Err(StoreError::StatusBody(406, body))
+                    if body == json!({"detail":"Could not satisfy the request Accept header."})
+            ));
+            assert_eq!(list_json_indent(Action::Delete, &request).unwrap(), None);
+        }
+        let request = Request::builder()
+            .uri("/api/plugins/plugins/")
+            .header("accept", "application/json; indent=2")
+            .body(Body::empty())
+            .unwrap();
+        let indent = list_json_indent(Action::List, &request).unwrap().unwrap();
+        let pretty = crate::vod_api_draft::pretty_document(
+            br#"{"plugins":[]}"#,
+            indent,
+            crate::vod_api_draft::BoundedJsonDocument::bounded(PLUGIN_RESPONSE_BYTES),
+        )
+        .unwrap();
+        assert_eq!(pretty, b"{\n  \"plugins\": []\n}");
+    }
     fn request(mime: Option<&str>, raw: &'static str) -> Request {
         let mut builder = Request::builder();
         if let Some(mime) = mime {

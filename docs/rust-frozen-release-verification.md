@@ -53,6 +53,11 @@ Numeric Movie, Series, Episode, Category, and Unified detail GETs and Movie, Ser
 
 The unsigned plugin repository owner can schedule the full 25-call comparison against the frozen candidate using the retained 24 Original observations and one retained 404. It independently checks application and fixture retirement, and 11 offline fixture controls passed. Full plugin lifecycle and performance retain their own release checks.
 
+The signed plugin list negotiates JSON indentation and returns the measured
+JSON 406 for unsupported media types. The current browser representation
+continues through the same handler. The paired lifecycle owner will verify
+the signed responses and their unchanged datastore and plugin state.
+
 ## HDHomeRun HTTP output profiles
 
 HDHomeRun discovery, lineup, and status paths now accept percent-encoded decimal output-profile IDs. The router still requires ASCII digits after decoding and canonicalizes leading zeros, including on named ChannelProfile paths. Fifteen HDHomeRun library tests passed. The configured-client Compose fixture will check the ordinary signed package response and encoded aliases.
@@ -74,6 +79,12 @@ Xtream playlist and XMLTV requests with the single trailing slash now reach the 
 ## First-admin setup on a clean install
 
 The ordinary PostgreSQL service now emits the same ordered JSON setup documents as pinned Original. It shares the formatter with the copied SQLite runtime. The existing clean-install controller checks the exact status, media type and response bytes before the first administrator is created and after restart. It records a digest and length for each response. The focused PostgreSQL formatter, three copied SQLite setup tests and two controller checks passed.
+
+The clean-install controller owns the browser from startup through
+teardown. The Node launcher and its Chromium child share the fixture
+process group. Seven isolated lifecycle controls verified exit, escalation,
+profile cleanup and isolation from another process group. The final
+immutable package still needs the real Chromium setup and restart run.
 
 ## SQLite backup creation and restore
 
@@ -160,6 +171,12 @@ Category searches accept the pinned Original single- and double-quoted search te
 Movie, Series, Episode, and VODLogo artwork now accept Original’s numeric URLs without a trailing slash. Twelve requests passed the focused router check. The provider-modal browser fixture adds paired signed SVG reads with both spellings and checks bytes, cache behavior, decoding and restoration of the owned provider state.
 
 Signed Xtream Movie and Series information requests accept valid positive IDs written with leading zeros, an encoded plus sign, Unicode digits, or underscores. The focused gateway test and fourteen pinned Django query compiler controls passed. The paired fixture will check fresh provider lookups and byte-identical canonical warm responses.
+
+For ordinary VOD refresh, a provider's JSON null list now reaches the
+existing caught-error result path. The four Movie and Series actions each
+report their Original error message. All four pinned Original component
+cases and the matching local Rust HTTP cases passed. The final packaged
+worker still needs its result, event and catalogue state checks.
 
 ## Scheduler calendar and operator verbosity
 

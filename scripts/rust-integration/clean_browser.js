@@ -3,7 +3,8 @@
 // enter through stdin and are never printed, persisted or placed in argv.
 const {spawn}=require('node:child_process');
 const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),readline=require('node:readline');
-const directory=fs.mkdtempSync(path.join(os.tmpdir(),'dispatcharr-clean-browser-'));
+const ownedProfile=process.env.RUST_BROWSER_PROFILE;
+const directory=ownedProfile||fs.mkdtempSync(path.join(os.tmpdir(),'dispatcharr-clean-browser-'));
 let child,cdp,next=1,stage='startup',checkpoint=null;const pending=new Map(),responses=[],socketTypes=new Set();let exceptions=0;
 const required=['/api/accounts/users/me/','/api/core/settings/','/api/core/settings/env/','/api/channels/groups/','/api/channels/profiles/','/api/m3u/accounts/','/api/epg/sources/','/api/epg/epgdata/','/api/core/streamprofiles/','/api/core/outputprofiles/','/api/core/useragents/','/api/m3u/server-groups/','/api/channels/channels/ids/','/api/accounts/users/','/api/channels/logos/','/api/channels/streams/filter-options/'];
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -12,7 +13,7 @@ async function evaluate(expression){const result=await call('Runtime.evaluate',{
 async function until(expression,seconds=30){const end=Date.now()+seconds*1000;while(Date.now()<end){if(await evaluate(expression))return true;await delay(50)}throw new Error('Browser condition deadline');}
 async function input(name,value){await evaluate(`document.querySelector('input[name="${name}"]').focus();true`);await call('Input.insertText',{text:value});}
 async function start(){
- child=spawn(process.env.RUST_BROWSER_CHROMIUM||'chromium',['--headless','--no-sandbox','--disable-gpu','--disable-background-networking','--disable-component-update','--disable-default-apps','--disable-sync','--metrics-recording-only','--no-first-run','--no-default-browser-check','--disable-breakpad','--remote-debugging-address=127.0.0.1','--remote-debugging-port=0','--user-data-dir='+directory,'about:blank'],{detached:true,stdio:['ignore','ignore','pipe']});
+ child=spawn(process.env.RUST_BROWSER_CHROMIUM||'chromium',['--headless','--no-sandbox','--disable-gpu','--disable-background-networking','--disable-component-update','--disable-default-apps','--disable-sync','--metrics-recording-only','--no-first-run','--no-default-browser-check','--disable-breakpad','--remote-debugging-address=127.0.0.1','--remote-debugging-port=0','--user-data-dir='+directory,'about:blank'],{stdio:['ignore','ignore','pipe']});
  const endpoint=await new Promise((resolve,reject)=>{let text='';const timer=setTimeout(()=>reject(new Error('Chromium startup deadline')),10000);child.stderr.on('data',chunk=>{text=(text+chunk.toString()).slice(-16384);const match=text.match(/DevTools listening on (ws:\/\/[^\s]+)/);if(match){clearTimeout(timer);resolve(match[1])}});child.on('error',reject)});
  const origin=new URL(endpoint.replace('ws:','http:')).origin;const target=await(await fetch(origin+'/json/new?about:blank',{method:'PUT'})).json();cdp=new WebSocket(target.webSocketDebuggerUrl);await new Promise((resolve,reject)=>{cdp.onopen=resolve;cdp.onerror=reject});
  cdp.onmessage=event=>{const message=JSON.parse(event.data);const request=pending.get(message.id);if(request){pending.delete(message.id);if(message.error)request.reject(new Error('CDP request failed'));else request.resolve(message.result)}
@@ -20,7 +21,7 @@ async function start(){
   if(message.method==='Network.responseReceived'){const r=message.params.response;try{const p=new URL(r.url).pathname;if(p.startsWith('/api/'))responses.push({path:p,status:r.status,stage})}catch{}}
   if(message.method==='Network.webSocketFrameReceived'){try{const value=JSON.parse(message.params.response.payloadData);if(typeof value.type==='string')socketTypes.add(value.type)}catch{}}
  };
- await call('Runtime.enable');await call('Page.enable');await call('Network.enable');const version=await call('Browser.getVersion');return {ready:true,browser:version.product,protocol:version.protocolVersion,browser_pid:child.pid};
+ await call('Runtime.enable');await call('Page.enable');await call('Network.enable');const version=await call('Browser.getVersion');return {ready:true,browser:version.product,protocol:version.protocolVersion};
 }
 async function authenticated(config){
  await until(`!!localStorage.getItem('accessToken')&&!document.querySelector('input[name="username"]')&&document.body.innerText.includes('Channels')`);
@@ -67,5 +68,5 @@ async function command(config){
 }
 (async()=>{try{process.stdout.write(JSON.stringify(await start())+'\n');for await(const line of readline.createInterface({input:process.stdin})){const config=JSON.parse(line);let response;try{response=await command(config)}catch(error){let diagnostics=null;if(config.op.startsWith('logo')){try{diagnostics=await evaluate(`({rows:Array.from(document.querySelectorAll('.tr')).map(row=>({text:row.innerText.slice(0,120),images:Array.from(row.querySelectorAll('img')).map(image=>({path:(()=>{try{return new URL(image.src).pathname}catch{return null}})(),complete:image.complete,width:image.naturalWidth,height:image.naturalHeight}))})),inputs:Array.from(document.querySelectorAll('input')).map(input=>({name:input.name,type:input.type})),dialogs:document.querySelectorAll('[role=dialog]').length})`)}catch{}}response={failed:true,stage,checkpoint,error_type:error.name,failure_message:error.message,observed_api_paths:responses,diagnostics,missing_required_api_paths:required.filter(path=>!responses.some(r=>r.path===path&&r.status===200)),exceptions};process.exitCode=1}process.stdout.write(JSON.stringify(response)+'\n');if(config.op==='close'||response.failed)break}}
  catch(error){process.stdout.write(JSON.stringify({failed:true,stage,error_type:error.name})+'\n');process.exitCode=1}
- finally{if(cdp)cdp.close();if(child){try{process.kill(-child.pid,'SIGTERM')}catch{}await delay(200);try{process.kill(-child.pid,'SIGKILL')}catch{}}fs.rmSync(directory,{recursive:true,force:true})}
+ finally{if(cdp)cdp.close();if(child){child.kill('SIGTERM');await delay(200);child.kill('SIGKILL')}if(!ownedProfile)fs.rmSync(directory,{recursive:true,force:true})}
 })();

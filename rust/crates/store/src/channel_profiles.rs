@@ -50,7 +50,7 @@ fn detail_read_id(mut raw: String, path: &str) -> Result<(String, bool), StoreEr
     }
 }
 
-fn explicit_json_indent(accept: &str) -> Option<usize> {
+pub(crate) fn explicit_json_indent(accept: &str) -> Option<usize> {
     let mut selected = None::<(u8, Option<&str>)>;
     for range in accept.split(',') {
         let (media, parameters) = range.split_once(';').unwrap_or((range, ""));

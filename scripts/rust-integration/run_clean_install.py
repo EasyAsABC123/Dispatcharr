@@ -5,7 +5,7 @@ Official PostgreSQL/Redis and the immutable Rust candidate are the only services
 No Django/original app or source mounts populate the database. All original
 application credit remains with Dispatcharr authors and contributors.
 """
-import argparse,hashlib,ipaddress,json,os,select,shutil,signal,subprocess,time,urllib.request,uuid
+import argparse,hashlib,ipaddress,json,os,select,shutil,signal,subprocess,tempfile,time,urllib.request,uuid
 from pathlib import Path
 from fixture_ports import write_port_overlay
 from tool_snapshot import snapshot_sources
@@ -23,31 +23,123 @@ def browser_tools():
         raise RuntimeError('Browser checks require Node.js22+ for the built-in WebSocket client')
     return node, chromium, version
 class Browser:
-    def __init__(self,script,log):
+    startup_seconds = 20
+    close_seconds = 2
+    signal_seconds = 3
+    max_reply_bytes = 1024 * 1024
+
+    def __init__(self):
+        self.process = self.log = self.profile = self.ready = None
+        self.reply = bytearray()
+        self.closed = False
+
+    def start(self, script, log):
         node, chromium, version = browser_tools()
-        self.log=log.open('w');self.process=subprocess.Popen([node,str(script)],env=dict(os.environ,RUST_BROWSER_CHROMIUM=chromium),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=self.log,text=True,start_new_session=True);self.browser_pid=None
-        self.ready=self.read(20);self.browser_pid=self.ready.pop('browser_pid',None)
-        self.ready.update(node_version=version, browser_launcher_sha256=hashlib.sha256(Path(chromium).read_bytes()).hexdigest())
-        if self.ready.get('ready')is not True:raise RuntimeError('Browser startup failed')
-    def read(self,seconds=90):
-        if not select.select([self.process.stdout],[],[],seconds)[0]:raise TimeoutError('Browser response deadline')
-        line=self.process.stdout.readline()
-        if not line:raise RuntimeError('Browser peer exited')
-        return json.loads(line)
-    def send(self,value):
-        self.process.stdin.write(json.dumps(value)+'\n');self.process.stdin.flush();return self.read()
-    def close(self):
+        chromium_sha = hashlib.sha256(Path(chromium).read_bytes()).hexdigest()
+        self.profile = Path(tempfile.mkdtemp(prefix='dispatcharr-clean-browser-'))
+        self.log = log.open('w')
+        self.process = subprocess.Popen(
+            [node, str(script)],
+            env=dict(os.environ, RUST_BROWSER_CHROMIUM=chromium, RUST_BROWSER_PROFILE=str(self.profile)),
+            stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=self.log, start_new_session=True,
+        )
+        ready = self.read(self.startup_seconds)
+        if not isinstance(ready, dict) or ready.get('ready') is not True:
+            raise RuntimeError('Browser startup failed')
+        self.ready = ready | {'node_version': version, 'browser_launcher_sha256': chromium_sha}
+
+    def read(self, seconds=90):
+        deadline = time.monotonic() + seconds
+        stdout = self.process.stdout.fileno()
+        while True:
+            end = self.reply.find(b'\n')
+            if end >= 0:
+                frame = bytes(self.reply[:end])
+                del self.reply[:end + 1]
+                return json.loads(frame)
+            remaining = deadline - time.monotonic()
+            capacity = self.max_reply_bytes - len(self.reply)
+            if capacity <= 0:
+                raise ValueError('Browser response exceeds byte limit')
+            if remaining <= 0 or not select.select([stdout], [], [], remaining)[0]:
+                raise TimeoutError('Browser response deadline')
+            chunk = os.read(stdout, min(65536, capacity))
+            if not chunk:
+                raise RuntimeError('Browser peer exited')
+            self.reply.extend(chunk)
+
+    def send(self, value, seconds=90):
+        self.process.stdin.write((json.dumps(value) + '\n').encode())
+        self.process.stdin.flush()
+        return self.read(seconds)
+
+    def group_active(self):
+        group = str(self.process.pid)
+        snapshot = subprocess.check_output(
+            ['ps', '-A', '-o', 'pgid=', '-o', 'stat='], text=True, timeout=self.signal_seconds,
+        )
+        return any(pgid == group and state[0] not in 'ZX'
+                   for pgid, state in (line.split() for line in snapshot.splitlines() if line.strip()))
+
+    def wait_group(self, seconds):
+        deadline = time.monotonic() + seconds
+        while self.group_active():
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                return False
+            time.sleep(min(.05, remaining))
+        return True
+
+    def signal_group(self, sig):
+        # Popen established this session and its leader has not been reaped,
+        # so the group ID cannot be recycled while cleanup still signals it.
         try:
-            if self.process.poll()is None:self.send({'op':'close'})
-            self.process.wait(timeout=10)
-        except (OSError,ValueError,RuntimeError,TimeoutError,subprocess.SubprocessError):
-            try:os.killpg(self.process.pid,signal.SIGTERM)
-            except ProcessLookupError:pass
+            os.killpg(self.process.pid, sig)
+            return True
+        except ProcessLookupError:
+            return False
+
+    def close(self):
+        if self.closed:
+            raise RuntimeError('Browser ownership already settled')
+        self.closed = True
+        settled = self.process is None
+        acknowledged = sent_term = sent_kill = False
+        try:
+            if self.process is not None:
+                if self.ready is not None:
+                    try:
+                        acknowledged = self.send({'op': 'close'}, self.close_seconds) == {'closed': True}
+                    except (OSError, ValueError, RuntimeError):
+                        pass
+                if not acknowledged or not self.wait_group(self.close_seconds):
+                    sent_term = self.signal_group(signal.SIGTERM)
+                    if not self.wait_group(self.signal_seconds):
+                        sent_kill = self.signal_group(signal.SIGKILL)
+                        if not self.wait_group(self.signal_seconds):
+                            raise TimeoutError('Browser process group did not settle')
+                self.process.wait(timeout=self.signal_seconds)
+                settled = True
+        except BaseException:
+            if self.process is not None and self.process.returncode is None:
+                self.signal_group(signal.SIGKILL)
+                self.process.wait(timeout=self.signal_seconds)
+            raise
         finally:
-            if self.browser_pid:
-                try:os.killpg(self.browser_pid,signal.SIGKILL)
-                except ProcessLookupError:pass
-            self.log.close()
+            if self.process is not None:
+                try:
+                    self.process.stdin.close()
+                except BrokenPipeError:
+                    pass
+                self.process.stdout.close()
+            if self.log is not None:
+                self.log.close()
+            if settled and self.profile is not None:
+                shutil.rmtree(self.profile)
+        return {'launcher_exit': None if self.process is None else self.process.returncode,
+                'group_inactive': settled, 'close_acknowledged': acknowledged,
+                'sent_term': sent_term, 'sent_kill': sent_kill}
+
 def http(url):
     with urllib.request.urlopen(url,timeout=3)as response:return response.status,json.load(response)
 def setup_wire(url, exists):
@@ -119,7 +211,10 @@ def main():
         command(base+['exec','-T','cache','redis-cli','-a','playback-fixture-only','EXPIRE',':1:dispatcharr:ip_lookup_lock','600'])
         initial, initial_wire = setup_wire(url, exists=False)
         record('first-admin-form-status', initial, initial_wire)
-        stage='browser-first-admin';browser=Browser(tools/'scripts/rust-integration/clean_browser.js',output/'browser.log');report['browser']=browser.ready
+        stage='browser-first-admin'
+        browser=Browser()
+        browser.start(tools/'scripts/rust-integration/clean_browser.js',output/'browser.log')
+        report['browser']=browser.ready
         credentials={'username':'rust-probe-clean-admin','password':'native-clean-fixture-'+uuid.uuid4().hex,'email':'Native@EXAMPLE.INVALID','secret':'playback-fixture-only','url':url}
         result=browser.send({'op':'setup',**credentials});record('actual-react-first-admin-login-init',result.get('authenticated')is True and result.get('required_api_paths_passed')==result.get('required_api_paths') and not result.get('failed_api_responses') and result.get('exceptions')==0,result)
         if result.get('failed'):raise RuntimeError('Browser setup failed')
@@ -157,7 +252,17 @@ def main():
             (output/'failed-services.log').write_text(command(base+['logs','--no-color','--tail','40'],timeout=10)[-65536:])
         except (OSError,subprocess.SubprocessError):pass
     finally:
-        if browser:browser.close()
+        if browser is not None:
+            try:
+                cleanup = browser.close()
+                report['browser_cleanup'] = cleanup
+                if status == 0 and (not cleanup['close_acknowledged'] or cleanup['launcher_exit'] != 0):
+                    report['passed'] = False
+                    status = 1
+            except (OSError, ValueError, RuntimeError, subprocess.SubprocessError) as error:
+                report['browser_cleanup_error'] = type(error).__name__
+                report['passed'] = False
+                status = 1
         try:command(base+['down','--volumes','--remove-orphans']);report['cleanup']='project removed'
         except subprocess.SubprocessError:report['cleanup_error']=True;report['passed']=False;status=1
         (output/'integration.json').write_text(json.dumps(report,indent=2)+'\n')

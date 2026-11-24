@@ -170,13 +170,19 @@ impl Client {
         &mut self,
         action: &str,
     ) -> Result<Result<Value, String>, StoreError> {
-        if !matches!(
-            action,
-            "get_vod_categories" | "get_series_categories" | "get_vod_streams" | "get_series"
-        ) {
-            return Err(unsupported());
+        let missing_list = match action {
+            "get_vod_categories" => "Invalid VOD categories response: None",
+            "get_series_categories" => "Invalid series categories response: None",
+            "get_vod_streams" => "Invalid VOD streams response for category None: None",
+            "get_series" => "Invalid series response for category None: None",
+            _ => return Err(unsupported()),
+        };
+        match self.authenticated_action(action).await? {
+            // The Original provider methods reject a delivered JSON null before
+            // their caller mutates the catalogue. The task catches that error.
+            Ok(Value::Null) => Ok(Err(missing_list.to_owned())),
+            outcome => Ok(outcome),
         }
-        self.authenticated_action(action).await
     }
     async fn authenticated_action(
         &mut self,
@@ -261,5 +267,90 @@ mod number_controls {
         let text = format!("{{\"value\":{}}}", "1".repeat(4301));
         let value: Value = serde_json::from_str(&text).unwrap();
         assert!(normalize_numbers(value).is_err());
+    }
+}
+
+#[cfg(test)]
+mod vod_response_controls {
+    use super::*;
+    use std::{
+        io::{Read, Write},
+        net::TcpListener,
+    };
+
+    async fn delivered(list_action: &str, body: &'static str) -> Result<Value, String> {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let base = format!("http://{}", listener.local_addr().unwrap());
+        let required = format!("action={list_action}");
+        let server = std::thread::spawn(move || {
+            for (index, reply) in [r#"{"user_info":{"auth":1}}"#, body]
+                .into_iter()
+                .enumerate()
+            {
+                let (mut socket, _) = listener.accept().unwrap();
+                socket
+                    .set_read_timeout(Some(Duration::from_secs(5)))
+                    .unwrap();
+                let mut request = Vec::new();
+                while !request.ends_with(b"\r\n\r\n") {
+                    assert!(request.len() < 8192);
+                    let mut byte = [0u8];
+                    socket.read_exact(&mut byte).unwrap();
+                    request.push(byte[0]);
+                }
+                let request = std::str::from_utf8(&request).unwrap();
+                let first = request.lines().next().unwrap();
+                assert!(first.starts_with("GET /player_api.php?"));
+                assert_eq!(first.contains(&required), index == 1);
+                assert_eq!(first.contains("action="), index == 1);
+                write!(
+                    socket,
+                    "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\nContent-Length: {}\r\nConnection: close\r\n\r\n{reply}",
+                    reply.len()
+                )
+                .unwrap();
+                socket.flush().unwrap();
+            }
+        });
+        let result = Client::new(&base, "owned-user", "owned-value", "Owned fixture".into())
+            .unwrap()
+            .unwrap()
+            .vod_action(list_action)
+            .await
+            .unwrap();
+        server.join().unwrap();
+        result
+    }
+
+    #[tokio::test]
+    async fn authoritative_vod_json_null_is_caught_with_the_exact_list_action_message() {
+        for (action, expected) in [
+            (
+                "get_vod_categories",
+                "Invalid VOD categories response: None",
+            ),
+            (
+                "get_series_categories",
+                "Invalid series categories response: None",
+            ),
+            (
+                "get_vod_streams",
+                "Invalid VOD streams response for category None: None",
+            ),
+            (
+                "get_series",
+                "Invalid series response for category None: None",
+            ),
+        ] {
+            assert_eq!(delivered(action, "null").await, Err(expected.into()));
+        }
+        assert_eq!(
+            delivered("get_vod_categories", "[]").await,
+            Ok(Value::Array(Vec::new()))
+        );
+        assert_eq!(
+            delivered("get_series", r#"{"error":"Owned provider response"}"#).await,
+            Err("XC API Error: Owned provider response".into())
+        );
     }
 }

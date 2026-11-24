@@ -27,7 +27,11 @@ mod vod_api_sql;
 
 #[path = "vod_api_http.rs"]
 mod vod_api_http;
-pub(crate) use vod_api_http::{json_indent_for_range, json_indent_value};
+pub(crate) use vod_api_http::{
+    json_indent_for_range, json_indent_value, negotiate as negotiate_json_or_browsable,
+    pretty_document,
+};
+pub(crate) use vod_api_owned_read::Document as BoundedJsonDocument;
 
 #[path = "vod_api_logo_metadata.rs"]
 mod vod_api_logo_metadata;
