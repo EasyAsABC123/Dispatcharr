@@ -1,12 +1,14 @@
 """Original operator CLI oracle. Original Dispatcharr authors retain full credit.
-Only safe network-reset commands run, exclusively against an owned copied DB.
+Network resets and the pinned help-only roster use an owned copied DB.
 """
 import hashlib
 import json
 import os
+import selectors
 from pathlib import Path
 import subprocess
 import sys
+import time
 
 if (os.environ.get('OPERATOR_DISPOSABLE_FIXTURE') != 'playback-fixture-only'
         or not os.environ.get('POSTGRES_DB', '').startswith('rust_probe_backup_operator_')):
@@ -40,7 +42,7 @@ unrelated='operator_owned_unrelated'
 
 
 case_set = os.environ.get('OPERATOR_CASE_SET', 'legacy')
-if case_set not in ('legacy', 'repeated-user'):
+if case_set not in ('legacy', 'repeated-user', 'arguments-help'):
     raise ValueError('Unsupported operator case set')
 
 out = Path('/evidence/operator-cli-raw')
@@ -64,6 +66,66 @@ def state():
             'cache_ttls':{key:cache.client.get_client().ttl(cache.make_key(key)) for key in [CoreSettings.group_cache_key(NETWORK_ACCESS_KEY),CoreSettings.group_cache_ver_key(NETWORK_ACCESS_KEY),condition,unrelated]}}
 
 
+def help_arguments(path):
+    raw = path.read_bytes()
+    if hashlib.sha256(raw).hexdigest() != "4f86ffebdee37c448083e4bfd96de0c2d362e5c874a677c258bbc9a5abbc5bed":
+        raise ValueError("Exact Original help roster required")
+    plan = json.loads(raw)
+    commands = ("", "createsuperuser", "reset_network_access", "reset_user_network",
+                "proxy", "dropdb", "kill_processes")
+    if plan["Source_commands"] != len(commands) or len(plan["commands"]) != len(commands):
+        raise ValueError("Expected all seven Original help invocations")
+    for index, (entry, command) in enumerate(zip(plan["commands"], commands), 1):
+        arguments = ([command] if command else []) + ["--help"]
+        if (entry["index"] != index or entry["stdin"] != "DEVNULL"
+                or entry["destructive_handle_must_not_run"] is not True
+                or entry["argv"] != ["/dispatcharrpy/bin/python", "manage.py", *arguments]):
+            raise ValueError("Only the exact read-only help invocations are allowed")
+        yield (command or "global") + "-help", arguments
+
+
+def capture_help(argv, environment):
+    child = subprocess.Popen(argv, env=environment, stdin=subprocess.DEVNULL,
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output = {"stdout": bytearray(), "stderr": bytearray()}
+    deadline = time.monotonic() + 20
+    try:
+        process = Path("/proc") / str(child.pid)
+        generation = int((process / "stat").read_text().rpartition(")")[2].split()[19])
+        namespace = os.readlink(process / "ns/pid")
+        with selectors.DefaultSelector() as selector:
+            selector.register(child.stdout, selectors.EVENT_READ, "stdout")
+            selector.register(child.stderr, selectors.EVENT_READ, "stderr")
+            while selector.get_map():
+                ready = selector.select(max(0, deadline - time.monotonic()))
+                if not ready:
+                    raise subprocess.TimeoutExpired(argv, 20)
+                for key, _ in ready:
+                    chunk = os.read(key.fd, 65536)
+                    if not chunk:
+                        selector.unregister(key.fileobj)
+                        key.fileobj.close()
+                        continue
+                    buffer = output[key.data]
+                    if len(buffer) + len(chunk) > 1024 * 1024:
+                        raise ValueError("help capture capacity")
+                    buffer.extend(chunk)
+                if time.monotonic() >= deadline:
+                    raise subprocess.TimeoutExpired(argv, 20)
+        exit_code = child.wait(timeout=max(0, deadline - time.monotonic()))
+        stdout, stderr = bytes(output["stdout"]), bytes(output["stderr"])
+        result = subprocess.CompletedProcess(argv, exit_code, stdout, stderr)
+        return result, {"pid": child.pid, "start_ticks": generation, "pid_namespace": namespace,
+                        "stdout_bytes": len(stdout), "stderr_bytes": len(stderr),
+                        "pipes_closed": child.stdout.closed and child.stderr.closed}
+    finally:
+        if child.poll() is None:
+            child.kill()
+            child.wait(timeout=5)
+        for stream in (child.stdout, child.stderr):
+            stream.close()
+
+
 def run(name, arguments, code=0):
     # QuerySet writes bypass the reset signal, so every command starts with
     # independently observable stale cache and notification rows.
@@ -76,8 +138,16 @@ def run(name, arguments, code=0):
         SystemNotification.objects.get_or_create(notification_key='owned_operator_system', defaults={'source':'system','title':'Owned system','message':'preserve copied row'})
     loop.run_until_complete(receive_events())
     before = state()
-    result = subprocess.run([sys.executable, '/app/manage.py', *arguments], capture_output=True,
-                            timeout=20, env=dict(os.environ, PYTHONUNBUFFERED='1'))
+    argv = [sys.executable, '/app/manage.py', *arguments]
+    environment = dict(os.environ, PYTHONUNBUFFERED='1')
+    if case_set == 'arguments-help':
+        result, process = capture_help(argv, environment)
+        used = sum(row["process"]["stdout_bytes"] + row["process"]["stderr_bytes"] for row in cases)
+        if used + process["stdout_bytes"] + process["stderr_bytes"] > 8 * 1024 * 1024:
+            raise ValueError("aggregate help capture capacity")
+    else:
+        result = subprocess.run(argv, capture_output=True, timeout=20, env=environment)
+
     after = state()
     events = loop.run_until_complete(receive_events())
     for stream in ('stdout','stderr'):
@@ -87,6 +157,8 @@ def run(name, arguments, code=0):
            'stdout_sha256':hashlib.sha256(result.stdout).hexdigest(),
            'stderr_sha256':hashlib.sha256(result.stderr).hexdigest(),
            'before':before,'after':after,'events':events}
+    if case_set == 'arguments-help':
+        row.update(actual_argv=argv, process=process)
     cases.append(row)
     Path('/evidence/operator-cli-partial.json').write_text(json.dumps({'cases':cases},indent=2,ensure_ascii=False,default=str)+'\n')
     assert result.returncode == code, (name, result.returncode, result.stderr[-2000:])
@@ -104,6 +176,8 @@ def finish():
     }
     if case_set != 'legacy':
         report['case_set'] = case_set
+    if case_set == 'arguments-help':
+        report['commands'] = [case['arguments'] for case in cases]
     Path('/evidence/operator-cli-source.json').write_text(
         json.dumps(report, indent=2, ensure_ascii=False, default=str)+'\n')
     print(json.dumps({'passed': True, 'cases': len(cases)}))
@@ -164,6 +238,15 @@ def run_repeated_user_cases():
     check('repeat-user-empty-last', ['--user', prefix+'a', '--user='], {prefix+'a', prefix+'b'})
     check('repeat-user-malformed-last', ['--user='+prefix+'a', '--user'], set(), 2)
 
+
+if case_set == 'arguments-help':
+    for name, arguments in help_arguments(Path(__file__).with_name("operator-help-cases.json")):
+        row = run(name, arguments)
+        assert row["stdout"], name
+        assert all(row["before"][field] == row["after"][field]
+                   for field in ("network", "users", "user_timestamps")), name
+    finish()
+    raise SystemExit(0)
 
 if case_set == 'repeated-user':
     run_repeated_user_cases()

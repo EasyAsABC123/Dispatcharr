@@ -200,6 +200,14 @@ The scheduler calendar owner now prepares a pinned Original fall-fold workflow. 
 
 The shipped `createsuperuser` parser also accepts attached short verbosity values from `-v0` through `-v3`. Three focused Rust parser tests passed and the standalone Original comparison matched all ten measured invocations. The signed operator fixture will check quiet output and durable admin creation.
 
+The Original operator collector also accepts the seven pinned help-only
+requests in the existing copied-database fixture. It records each command's
+literal output, exit and process identity with bounded capture, alongside
+the existing database, cache and Channels observations. Four tests passed,
+including the pinned Django help path for the destructive command names.
+Packaged Source capture and broader operator arguments remain scheduled
+for release verification.
+
 ## Paired controls and worker coverage
 
 The owner-local TS controls support switching to an assigned stream and

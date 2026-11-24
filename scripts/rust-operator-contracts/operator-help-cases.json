@@ -1,0 +1,103 @@
+{
+  "scope": "NEW readonly global/custom help grammar, Source program functions unchanged; no passed reset17/create22 replay",
+  "Source_commands": 7,
+  "commands": [
+    {
+      "index": 1,
+      "argv": [
+        "/dispatcharrpy/bin/python",
+        "manage.py",
+        "--help"
+      ],
+      "stdin": "DEVNULL",
+      "literal_stdout_stderr_exit_unmeasured": true,
+      "destructive_handle_must_not_run": true
+    },
+    {
+      "index": 2,
+      "argv": [
+        "/dispatcharrpy/bin/python",
+        "manage.py",
+        "createsuperuser",
+        "--help"
+      ],
+      "stdin": "DEVNULL",
+      "literal_stdout_stderr_exit_unmeasured": true,
+      "destructive_handle_must_not_run": true
+    },
+    {
+      "index": 3,
+      "argv": [
+        "/dispatcharrpy/bin/python",
+        "manage.py",
+        "reset_network_access",
+        "--help"
+      ],
+      "stdin": "DEVNULL",
+      "literal_stdout_stderr_exit_unmeasured": true,
+      "destructive_handle_must_not_run": true
+    },
+    {
+      "index": 4,
+      "argv": [
+        "/dispatcharrpy/bin/python",
+        "manage.py",
+        "reset_user_network",
+        "--help"
+      ],
+      "stdin": "DEVNULL",
+      "literal_stdout_stderr_exit_unmeasured": true,
+      "destructive_handle_must_not_run": true
+    },
+    {
+      "index": 5,
+      "argv": [
+        "/dispatcharrpy/bin/python",
+        "manage.py",
+        "proxy",
+        "--help"
+      ],
+      "stdin": "DEVNULL",
+      "literal_stdout_stderr_exit_unmeasured": true,
+      "destructive_handle_must_not_run": true
+    },
+    {
+      "index": 6,
+      "argv": [
+        "/dispatcharrpy/bin/python",
+        "manage.py",
+        "dropdb",
+        "--help"
+      ],
+      "stdin": "DEVNULL",
+      "literal_stdout_stderr_exit_unmeasured": true,
+      "destructive_handle_must_not_run": true
+    },
+    {
+      "index": 7,
+      "argv": [
+        "/dispatcharrpy/bin/python",
+        "manage.py",
+        "kill_processes",
+        "--help"
+      ],
+      "stdin": "DEVNULL",
+      "literal_stdout_stderr_exit_unmeasured": true,
+      "destructive_handle_must_not_run": true
+    }
+  ],
+  "context": "Owned copied DB and private container only, no external network. Exact Django startup/receivers/lock/frame effects retained; help may import/initialize real modules, never infer no SQL from help flag. No dropdb/kill_processes invocation without --help.",
+  "retain": [
+    "literal stdout/stderr/actual exits/full counts+SHA ifcapacitylimited",
+    "raw actual argv, PID/start/wait/pipe and namespace",
+    "owned/default6259+Redis/broker/Channels/files before/after"
+  ],
+  "budgets": {
+    "per_command_seconds": 30,
+    "normal_seconds": 300,
+    "cleanup_seconds": 90,
+    "per_output_bytes": 1048576,
+    "aggregate_output_bytes": 8388608
+  },
+  "remaining_required": "Broader Unicode/interactive/global-arg/real destructive command domains remain explicit missing unless already covered by historical Source; these7 readonly commands alone cannot close whole M8."
+}

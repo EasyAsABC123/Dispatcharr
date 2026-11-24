@@ -23,13 +23,16 @@ from tool_snapshot import snapshot_sources
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--output', type=Path, required=True)
-    parser.add_argument('--case-set', choices=('legacy', 'repeated-user'), default='legacy')
+    parser.add_argument('--case-set', choices=('legacy', 'repeated-user', 'arguments-help'), default='legacy')
     args = parser.parse_args()
     output = args.output.resolve()
     output.mkdir(parents=True, exist_ok=False)
     tools = output/'tool-source'
     hashes = snapshot_sources(ROOT, tools)
-    for name in ['run_source.py', 'source.py']:
+    files = ['run_source.py', 'source.py']
+    if args.case_set == 'arguments-help':
+        files.append('operator-help-cases.json')
+    for name in files:
         relative = 'scripts/rust-operator-contracts/'+name
         data = (OWN/name).read_bytes()
         target = tools/relative
