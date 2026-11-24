@@ -335,6 +335,16 @@ def owner_readiness(nodes, document, output=None):
                 if bindings[key] != expected:
                     raise ValueError("M6 saved-default scheduler exact owner binding required")
                 continue
+            if key == "m6/SQL-ErrorResponse-heldReady":
+                owner = module(HERE / "m6/sql_ready_owner.py", "readiness_m6_sql_ready")
+                context = owners.get("m6", {}).get("sql_ready")
+                if not context or node["depends_on"] or node["resources"] != ["m6/physical-restart"]:
+                    raise ValueError("M6 physical restart requires the exact sealed held-Ready fixture")
+                expected = owner.dispatch_spec(Path(context["stage"]), Path(context["receiving"]), context["seal"],
+                                               document["candidate"], HERE.parents[1], node["entrypoint"], Path(output))
+                if bindings[key] != expected:
+                    raise ValueError("M6 held-Ready exact run, cleanup, and evaluator required")
+                continue
             if key in {"m6/oneoff-beat-publication", "m6/recording61-video-audio"}:
                 owner = module(HERE / "m6/recording61_owner.py", "readiness_m6_recording61")
                 context = owners.get("m6", {}).get("recording61")

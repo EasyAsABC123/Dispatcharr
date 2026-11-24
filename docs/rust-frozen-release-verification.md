@@ -591,6 +591,18 @@ Seventeen Rust library tests passed and three external-fixture cases
 remain reserved. The existing ARM64 paired owner adds twelve signed
 or public wire checks and compares exact status, headers and body.
 
+## Recording with a held PostgreSQL ReadyForQuery
+
+The M6 coordinator can dispatch the recording check that holds
+ReadyForQuery on the same PostgreSQL connection after a real error.
+It is bound to the reviewed null-safe recording update. The later
+physical run must prove the error and both held samples, exact
+connection settlement, the matching task result, decoded audio and
+video, and both project teardowns. Original runs the same ordinary
+recording workload. The fault is applied in Native. Ten offline
+controls and the 34 coordinator tests passed. The final package
+and physical execution remain pending.
+
 ## Saved Stats and ghost cleanup
 
 The M6 coordinator can dispatch the ordinary saved Stats viewer and ghost
