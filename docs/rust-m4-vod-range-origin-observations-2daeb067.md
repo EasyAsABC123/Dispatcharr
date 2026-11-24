@@ -1,0 +1,7 @@
+# VOD Range origin observations
+
+A pinned Original and Rust Compose replay captured the upstream Range header and body for each request. Original's first fresh signed session forwarded `bytes=-256` unchanged and returned the last 256 bytes, while declaring 257 bytes. The incomplete read was observed at the client. The next request under the same session observed a saved media length and forwarded `bytes=0-256` for a complete 257-byte response. Five more requests with distinct minted session IDs also forwarded `bytes=0-256`. A new session ID alone is insufficient to prove that the provider connection is cold. Source inspection found that Original can adopt an idle matching connection for the same content when it handles the follow request.
+
+The ordinary Rust `2daeb067563627338ff767a9d63df105aea8c734` package forwarded the prefix on all six trials. The established full-file and explicit out-of-bounds client responses matched, both captures passed strict audio and video decoding, and independent Compose cleanup passed. In the invalid-range case Original rejected the request before a provider call, while Rust used one provider request before returning the matching 416. Exact cold trials require a separate content identity or an independently reset fixture. Same-content idle adoption and the provider-side invalid-range behavior remain open.
+
+Original Dispatcharr and all upstream contributors retain full credit for their work.
