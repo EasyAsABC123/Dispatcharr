@@ -24,6 +24,7 @@ impl Jobs {
         expected: Option<&[u8]>,
         caller: Arc<dyn Send + Sync>,
         limits: crate::eta::Limits,
+        immediate: bool,
     ) -> Result<Option<crate::xml_tvg_eta::Candidate>, Error> {
         if !self.allows_defaults() {
             return Err(Error::UnsupportedTask);
@@ -44,7 +45,7 @@ impl Jobs {
         }
         match reply.0 {
             0 => Ok(None),
-            1 => crate::xml_tvg_eta::Receipt::prepare(&reply.1)
+            1 => crate::xml_tvg_eta::Receipt::prepare(&reply.1, immediate)
                 .map(|receipt| {
                     Some(crate::xml_tvg_eta::Candidate {
                         receipt: Arc::new(receipt),

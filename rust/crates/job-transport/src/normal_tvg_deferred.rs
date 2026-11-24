@@ -124,7 +124,7 @@ impl HandlerImpl {
             if !due && message.eta.is_some() {
                 let Some(candidate) = inner
                     .jobs
-                    .peek_xml_tvg_candidate(Some(&raw), owner.clone(), Default::default())
+                    .peek_xml_tvg_candidate(Some(&raw), owner.clone(), Default::default(), false)
                     .await
                     .map_err(wire)?
                 else {
@@ -195,46 +195,56 @@ impl HandlerImpl {
                 .contains(&message.common.id.to_string())
                 .map_err(|_| fault("revoked read"))?
             {
-                accepted.armed = true;
-                if let Some(reserved) = reserved.as_ref() {
-                    inner
-                        .jobs
-                        .write_xc_live_revoked(&message.common, owner.clone())
-                        .await
-                        .map_err(wire)?;
-                    inner
-                        .jobs
-                        .ack_xml_tvg_eta(reserved, owner)
-                        .await
-                        .map_err(wire)?;
-                    inner
-                        .pending
-                        .lock()
-                        .unwrap_or_else(|e| e.into_inner())
-                        .retain(|v| v.delivery_tag() != reserved.delivery_tag());
+                let reserved = if let Some(reserved) = reserved {
+                    accepted.armed = true;
+                    reserved
                 } else {
-                    let candidate = inner
-                        .app
-                        .inner
+                    // A revoked immediate Source request still has an
+                    // unacknowledged broker reservation until its request
+                    // result is written. Keep the exact recoverable tuple.
+                    let candidate = match inner
                         .jobs
-                        .peek_selected(Some(&raw), owner.clone())
+                        .peek_xml_tvg_candidate(Some(&raw), owner.clone(), Default::default(), true)
                         .await
-                        .map_err(wire)?
-                        .ok_or(D::HeadChanged)?;
-                    // Authenticated exact raw-head CAS, then the actual Source revoked result.
-                    inner
-                        .app
-                        .inner
+                    {
+                        Ok(Some(candidate)) => candidate,
+                        Ok(None) | Err(Wire::ClaimRace) => return Ok(D::HeadChanged),
+                        Err(Wire::Capacity) => return Ok(D::Capacity),
+                        Err(error) => return Err(wire(error)),
+                    };
+                    accepted.armed = true;
+                    match inner
                         .jobs
-                        .claim(candidate, owner.clone())
+                        .reserve_xml_tvg_candidate_settled(
+                            candidate,
+                            owner.clone(),
+                            Default::default(),
+                        )
                         .await
-                        .map_err(wire)?;
-                    inner
-                        .jobs
-                        .write_xc_live_revoked(&message.common, owner)
-                        .await
-                        .map_err(wire)?;
-                }
+                    {
+                        Ok(reserved) => reserved,
+                        Err(error @ (Wire::Capacity | Wire::ClaimRace)) => {
+                            accepted.armed = false;
+                            return Ok(wire(error));
+                        }
+                        Err(error) => return Err(wire(error)),
+                    }
+                };
+                inner
+                    .jobs
+                    .write_xc_live_revoked(&message.common, owner.clone())
+                    .await
+                    .map_err(wire)?;
+                inner
+                    .jobs
+                    .ack_xml_tvg_eta(&reserved, owner)
+                    .await
+                    .map_err(wire)?;
+                inner
+                    .pending
+                    .lock()
+                    .unwrap_or_else(|e| e.into_inner())
+                    .retain(|v| v.delivery_tag() != reserved.delivery_tag());
                 inner.heads.notify_one();
                 accepted.armed = false;
                 return Ok(D::Revoked(message.common.id));

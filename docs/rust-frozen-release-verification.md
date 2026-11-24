@@ -320,6 +320,14 @@ the initial forced local refresh when its saved TVG parse counter contains
 plain malformed text. The worker records the observed error and returns
 null after cleanup without acquiring the file lock or starting a child.
 
+An immediate XML TVG cancellation keeps its broker reservation until Redis
+confirms the REVOKED result. The visibility sweep can recover the exact
+request after an ambiguous reply. In a private Redis test, the result
+committed while its reply was held. A fresh Rust Jobs connection later
+recovered the same task without duplication and drained the reservation
+after cancellation was reapplied. Whole-process recovery and the signed
+operator path remain part of the frozen verification.
+
 An interrupted plain HTTP M3U download with a bounded declared length
 preserves both old cache files and publishes the same saved connection
 error as Original. Focused loopback tests passed. The grouped remote-owner

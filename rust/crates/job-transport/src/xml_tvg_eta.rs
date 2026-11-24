@@ -94,13 +94,23 @@ fn remove_redelivery(envelope: &mut Value) -> Result<bool, ProtocolError> {
     }
 }
 impl Receipt {
-    pub fn prepare(bytes: &[u8]) -> Result<Self, ProtocolError> {
+    pub fn prepare(bytes: &[u8], immediate: bool) -> Result<Self, ProtocolError> {
         let original = bounded_json(bytes, crate::protocol::MAX_ENVELOPE)?;
         let mut normalized = original.clone();
         remove_redelivery(&mut normalized)?;
-        let message =
-            xml_tvg_protocol::parse_eta(&serde_json::to_vec(&normalized).map_err(|_| invalid())?)
-                .map_err(|_| invalid())?;
+        let normalized = serde_json::to_vec(&normalized).map_err(|_| invalid())?;
+        let message = if immediate {
+            xml_tvg_protocol::parse(&normalized).and_then(|message| {
+                if message.eta.is_none() {
+                    Ok(message)
+                } else {
+                    Err(())
+                }
+            })
+        } else {
+            xml_tvg_protocol::parse_eta(&normalized)
+        }
+        .map_err(|_| invalid())?;
         let delivery_tag = Uuid::parse_str(
             original["properties"]["delivery_tag"]
                 .as_str()
@@ -134,7 +144,11 @@ impl Receipt {
             .filter(|v| v.len() == 3 && v[1] == "" && v[2] == "celery")
             .ok_or_else(invalid)?;
         let raw = serde_json::to_vec(&parts[0]).map_err(|_| invalid())?;
-        let mut receipt = Self::prepare(&raw)?;
+        // Visibility recovery may find a revoked immediate XML request left
+        // unacked by an interrupted result write. Both paths use the same
+        // canonical XML family parser and the exact stored tag/tuple fence.
+        let immediate = parts[0]["headers"]["eta"].is_null();
+        let mut receipt = Self::prepare(&raw, immediate)?;
         if receipt.delivery_tag != tag {
             return Err(invalid());
         }

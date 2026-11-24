@@ -252,7 +252,8 @@ mod source_controls {
         assert_eq!(deferral(479), Deferral::Publish);
         assert_eq!(deferral(retry.defer), Deferral::Exhausted);
         assert!(crate::tvg_programme_protocol::parse_initial(&raw).is_err());
-        let receipt = crate::xml_tvg_eta::Receipt::prepare(&raw).unwrap();
+        let receipt = crate::xml_tvg_eta::Receipt::prepare(&raw, false).unwrap();
+        assert!(crate::xml_tvg_eta::Receipt::prepare(&raw, true).is_err());
         let decoded =
             crate::xml_tvg_eta::Receipt::from_stored(&receipt.tuple_bytes, receipt.delivery_tag)
                 .unwrap();
@@ -263,6 +264,24 @@ mod source_controls {
         invalid["headers"]["redelivered"] = json!(false);
         assert!(parse(&serde_json::to_vec(&invalid).unwrap()).is_err());
     }
+    #[test]
+    fn immediate_source_cancel_tuple_is_recoverable_without_eta() {
+        use crate::xml_tvg_eta::Receipt;
+        let raw = initial();
+        let original = parse(&raw).unwrap();
+        assert!(Receipt::prepare(&raw, false).is_err());
+        let receipt = Receipt::prepare(&raw, true).unwrap();
+        let restart = Receipt::from_stored(&receipt.tuple_bytes, receipt.delivery_tag).unwrap();
+        assert_eq!(restart.tuple_bytes, receipt.tuple_bytes);
+        assert!(restart.message.eta.is_none());
+        assert_eq!(restart.message.common.id, original.common.id);
+        assert_eq!(
+            parse(&restart.restored_bytes).unwrap().common.id,
+            original.common.id
+        );
+        assert!(Receipt::from_stored(&receipt.tuple_bytes, uuid::Uuid::new_v4()).is_err());
+    }
+
     #[test]
     fn normal_force_kwargs_are_validated_without_rewriting_actual_claim_bytes() {
         let original = parse(&initial()).unwrap();
