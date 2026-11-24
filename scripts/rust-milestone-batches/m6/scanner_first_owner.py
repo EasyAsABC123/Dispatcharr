@@ -1,5 +1,6 @@
 """Cold-bind and independently evaluate the ordinary first-scanner scope."""
 import argparse
+from hashlib import sha256
 import json
 import os
 import re
@@ -13,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 try:
     import recording61_owner as common
     import scanner_first_scenario as scenario
+    import scanner_first_lease as lease
     from prepare_recording61 import rebind_package
 finally:
     sys.path.pop(0)
@@ -72,7 +74,7 @@ def replace(text, old, new):
     return text.replace(old, new)
 
 
-def prepare(repository, package_template, candidate, stage):
+def prepare(repository, package_template, candidate, stage, *, portable=False, materialize=True):
     template = repository / "artifacts/rust" / TEMPLATE
     _, files = common.sealed_inputs(template, TEMPLATE_SHA)
     require(set(SUPPORT) | {"missing_scenario.py"} <= files, "exact stock scanner fixture template required")
@@ -166,9 +168,17 @@ def prepare(repository, package_template, candidate, stage):
     text = text[:start] + """        proof = {"engine_calls": 0, "candidate": REVISION, "image_id": IMAGE,
                  "mounted_tools": donor.verify_tool_modes(), "first_scanner_fixture_prepared": True}
 """ + text[end:]
+    if portable:
+        text = portable_driver(text)
+        data["scanner_first_lease.py"] = Path(lease.__file__).read_bytes()
+        data["portable-custody.json"] = (json.dumps({
+            "reference": str(repository), "package_template": str(package_template),
+        }, sort_keys=True) + "\n").encode()
     data["run.py"] = text.encode()
     data["missing_scenario.py"] = Path(scenario.__file__).read_bytes()
     data["package-binding.json"] = (json.dumps(package, sort_keys=True) + "\n").encode()
+    if not materialize:
+        return data
     require(stage.resolve() == stage and not stage.exists(), "fresh absolute scanner stage required")
     stage.mkdir(mode=0o700)
     for name, body in data.items():
@@ -185,11 +195,80 @@ def prepare(repository, package_template, candidate, stage):
     return {"stage": str(stage), "seal": digest(sums), "cold_preflight": proof}
 
 
-def stage_binding(repository, stage, seal, candidate):
+def portable_driver(text):
+    text = replace(text, "import candidate", "import candidate\nimport scanner_first_lease as relocation")
+    text = replace(text, 'MARKER = ROOT / ".dispatcharr-recording-cohort-cleanup-required.json"',
+                   'MARKER = ART / relocation.PENDING\nDISPATCHER_ARGS = ()')
+    text = replace(text, "def parent_guard():", """def configure(coordinator, checksum):
+    global SHARED, DISPATCHER_ARGS
+    lock = relocation.verify(coordinator, checksum)
+    SHARED = lock.parent
+    DISPATCHER_ARGS = ("--dispatcher", str(coordinator), "--dispatcher-sha256", checksum)
+
+
+def parent_guard():""")
+    original = '"lease": str(SHARED / ".dispatcher.lock")}'
+    require(text.count(original) == 2, "exact scanner lease lineage sites required")
+    text = text.replace(original, '"lease": str(SHARED / ".dispatcher.lock"), "lease_inode": relocation.identity(SHARED / ".dispatcher.lock")}')
+    text = replace(text, '    with (SHARED / ".dispatcher.lock").open("r") as probe:',
+                   '''    control = load(SHARED / "m6/recording61_owner.py", "scanner_live_dispatcher")
+    dispatcher = Path("/proc", str(parent), "stat").read_text().rsplit(")", 1)[1].split()[1]
+    need(control.parent_holds_lock(Path("/proc") / dispatcher, SHARED / ".dispatcher.lock"),
+         "actual coordinator must still hold the scanner lease")
+    with (SHARED / ".dispatcher.lock").open("r") as probe:''')
+    text = replace(text, '    with coordinator_lease(SHARED / ".dispatcher.lock"):',
+                   '''    lock = SHARED / ".dispatcher.lock"
+    with coordinator_lease(lock), relocation.physical_fence(ART, lock):
+        relocation.first_fence(ART, lock)''')
+    text = replace(text, 'str(HERE / "run.py"), "lane", side]',
+                   'str(HERE / "run.py"), "lane", side, *DISPATCHER_ARGS]')
+    text = replace(text, '{"cwd": str(ROOT), "environment": dict(os.environ)',
+                   '{"cwd": str(SHARED.parents[1]), "environment": dict(os.environ)')
+    return replace(text, '    args = parser.parse_args(argv)', '''    parser.add_argument("--dispatcher", type=Path)
+    parser.add_argument("--dispatcher-sha256")
+    args = parser.parse_args(argv)
+    if args.dispatcher is not None:
+        configure(args.dispatcher, args.dispatcher_sha256)
+    if args.mode in ("run", "lane"):
+        need(DISPATCHER_ARGS, "exact configured scanner dispatcher required")''')
+
+
+def offline_layout(stage, coordinator, coordinator_sha, artifacts):
+    code = """
+import sys
+from pathlib import Path
+def no_engine(event, args):
+    if event.startswith(('subprocess.', 'socket.', 'os.spawn', 'os.exec', 'os.system', 'os.posix_spawn')):
+        raise RuntimeError("offline scanner layout cannot start work")
+sys.addaudithook(no_engine)
+sys.path.insert(0, sys.argv[1])
+import run
+run.configure(Path(sys.argv[2]), sys.argv[3])
+assert run.ART == Path(sys.argv[4]) and run.SHARED == Path(sys.argv[2]).parent
+legacy = run.relocation.first_fence(run.ART, run.SHARED / ".dispatcher.lock")
+assert legacy.resolve() == legacy and legacy.is_file()
+"""
+    subprocess.run(["/usr/bin/python3", "-I", "-B", "-c", code, str(stage), str(coordinator),
+                    coordinator_sha, str(artifacts)], check=True, capture_output=True, timeout=30)
+
+
+def stage_binding(repository, stage, seal, candidate, *, portable=False):
     inputs, files = common.sealed_inputs(stage, seal)
     require(set(SUPPORT) | {"missing_scenario.py", "scanner_wire_support.py", "owned_update_receiver.py", "package-binding.json"} <= files
             and digest(stage / "missing_scenario.py") == digest(Path(scenario.__file__).resolve()),
             "exact fresh scanner evaluator and runtime inputs required")
+    if portable:
+        require("portable-custody.json" in files, "exact portable scanner custody manifest required")
+        context = read(stage / "portable-custody.json")
+        template = Path(context["package_template"])
+        require(Path(context["reference"]) == repository and template.resolve() == template,
+                "same exact scanner reference and package-template custody required")
+        expected = prepare(repository, template, candidate, stage, portable=True, materialize=False)
+        require(set(expected) == files and all(digest(stage / name) == sha256(body).hexdigest()
+                                              for name, body in expected.items()),
+                "exact reproducible scanner fixture derivative required")
+        template_inputs, _ = common.sealed_inputs(template, "3a8e6bde76d862406ca7f8ccd30e86cdeb987f48d077248a888e9b7350e49919")
+        inputs.update(template_inputs)
     value = read(stage / "package-binding.json")
     manifest = Path(candidate["build_manifest_file"])
     require((value["candidate"], value["image"], value["manifest"], value["archive"])
@@ -199,15 +278,24 @@ def stage_binding(repository, stage, seal, candidate):
     return inputs | original(repository) | {str(manifest): value["manifest"]}
 
 
-def dispatch_spec(repository, stage, seal, candidate, entrypoint, output):
-    inputs = stage_binding(repository, stage, seal, candidate)
+def dispatch_spec(repository, stage, seal, candidate, entrypoint, output, *, reference=None):
+    custody = repository if reference is None else reference
+    inputs = stage_binding(custody, stage, seal, candidate, portable=reference is not None)
     require(output.resolve() == output and not stage.is_relative_to(output) and not output.is_relative_to(stage),
             "separate coordinator output and scanner stage required")
     coordinator = repository / "scripts/rust-milestone-batches/coordinator.py"
     coordinator_sha = digest(coordinator)
+    if reference is not None:
+        require(reference.is_absolute() and reference.resolve() == reference
+                and repository.resolve() == repository, "explicit scanner authority repository required")
+        require(inputs.get(str(stage / "scanner_first_lease.py")) == digest(Path(lease.__file__).resolve()),
+                "exact sealed portable scanner lease module required")
+        offline_layout(stage, coordinator, coordinator_sha, reference / "artifacts/rust")
     prefix = ["/usr/bin/python3", "-I", "-B", str(SCRIPT), str(repository), str(stage), seal,
               json.dumps(candidate, sort_keys=True)]
-    tooling = repository / "artifacts/rust/tooling"
+    if reference is not None:
+        prefix += ["--reference", str(reference)]
+    tooling = custody / "artifacts/rust/tooling"
     return {"argv": [*prefix, "run", entrypoint, str(output), coordinator_sha],
             "cleanup_argv": [*prefix, "cleanup"],
             "evaluator_argv": [*prefix, "evaluate", entrypoint, str(output), "@EXECUTION@"],
@@ -317,34 +405,44 @@ def main():
         cold = argparse.ArgumentParser(description="Prepare the first-scanner stage without an engine.")
         for name in ("repository", "package_template", "candidate", "stage"):
             cold.add_argument(name, type=Path)
+        cold.add_argument("--portable", action="store_true")
         args = cold.parse_args(sys.argv[2:])
-        print(json.dumps(prepare(args.repository, args.package_template, read(args.candidate), args.stage), sort_keys=True))
+        print(json.dumps(prepare(args.repository, args.package_template, read(args.candidate), args.stage, portable=args.portable), sort_keys=True))
         return 0
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("repository", type=Path)
     parser.add_argument("stage", type=Path)
     parser.add_argument("seal")
     parser.add_argument("candidate", type=json.loads)
+    parser.add_argument("--reference", type=Path)
     parser.add_argument("mode", choices=("run", "cleanup", "evaluate"))
     parser.add_argument("entrypoint", nargs="?")
     parser.add_argument("output", type=Path, nargs="?")
     parser.add_argument("witness", nargs="?")
-    args = parser.parse_args()
+    args = parser.parse_intermixed_args()
     repository, stage, seal, candidate = args.repository, args.stage, args.seal, args.candidate
-    stage_binding(repository, stage, seal, candidate)
+    reference = args.reference or repository
+    stage_binding(reference, stage, seal, candidate, portable=args.reference is not None)
+    coordinator = repository / "scripts/rust-milestone-batches/coordinator.py"
+    if args.reference is not None:
+        _, files = common.sealed_inputs(stage, seal)
+        require("scanner_first_lease.py" in files and digest(stage / "scanner_first_lease.py")
+                == digest(Path(lease.__file__).resolve()), "exact portable scanner lease required")
     if args.mode == "run":
-        binding = dispatch_spec(repository, stage, seal, candidate, args.entrypoint, args.output)
+        binding = dispatch_spec(repository, stage, seal, candidate, args.entrypoint, args.output, reference=args.reference)
         coordinator = repository / "scripts/rust-milestone-batches/coordinator.py"
         require(binding["argv"] == sys.orig_argv and Path.cwd() == repository, "actual exact scanner coordinator argv required")
         lock = common.coordinator_parent(coordinator, args.witness, args.output, binding, candidate, node=NODE)
         require(not any(os.path.lexists(stage / name) for name in ("owner-1", "actual-1"))
                 and all(os.environ.get(key) == value for key, value in binding["environment"].items())
                 and not any(key.startswith(("DOCKER_CONTEXT", "RUST_", "USE_NGINX_ACCEL")) for key in os.environ)
-                and Path(shutil.which("docker") or "").resolve() == repository / "artifacts/rust/tooling/docker/docker",
+                and Path(shutil.which("docker") or "").resolve() == reference / "artifacts/rust/tooling/docker/docker",
                 "fresh owned scanner fixture and explicit isolated engine required")
         os.umask(0o077)
     sys.path.insert(0, str(stage))
     driver = common.load_driver(stage)
+    if args.reference is not None:
+        driver.configure(coordinator, digest(coordinator))
     driver.load_binding()
     if args.mode == "run":
         require(driver.SHARED / ".dispatcher.lock" == lock, "scanner fixture requires same coordinator lock")

@@ -165,3 +165,58 @@ class ScannerFirst(unittest.TestCase):
             self.assertFalse((stage / "actual-1").exists())
             with self.assertRaisesRegex(ValueError, "frozen ordinary package"):
                 owner.dispatch_spec(repo, stage, prepared["seal"], dict(candidate, git="0" * 40), "scanner", root / "out")
+
+    @unittest.skipUnless(ROOT and TEMPLATE and CANDIDATE, "set exact retained scanner and package inputs")
+    def test_relocated_scanner_import_and_custody(self):
+        repo = Path(ROOT)
+        candidate = owner.read(Path(CANDIDATE))
+        with TemporaryDirectory() as folder:
+            root = Path(folder)
+            stage = root / "stage"
+            coordinator = root / "scripts/rust-milestone-batches/coordinator.py"
+            coordinator.parent.mkdir(parents=True)
+            coordinator.write_bytes((Path(owner.__file__).parents[1] / "coordinator.py").read_bytes())
+            prepared = owner.prepare(repo, Path(TEMPLATE), candidate, stage, portable=True)
+            binding = owner.dispatch_spec(root, stage, prepared["seal"], candidate, "scanner",
+                                          root / "out", reference=repo)
+            self.assertIn("--reference", binding["argv"])
+            self.assertFalse((stage / "actual-1").exists())
+            with self.assertRaises(ValueError):
+                owner.dispatch_spec(root, stage, prepared["seal"], dict(candidate, git="0" * 40),
+                                    "scanner", root / "out", reference=repo)
+            wrong = coordinator.with_name(".dispatcher.lock")
+            wrong.symlink_to(root / "unused")
+            with self.assertRaises(owner.subprocess.CalledProcessError):
+                owner.offline_layout(stage, coordinator, owner.digest(coordinator), repo / "artifacts/rust")
+            wrong.unlink()
+            script = stage / "run.py"
+            script.write_text(script.read_text() + "\n# changed\n")
+            sums = stage / "SHA256SUMS"
+            sums.write_text("".join(f"{owner.digest(path)}  {path.name}\n" for path in
+                                    sorted(stage.iterdir()) if path.name != "SHA256SUMS"))
+            with self.assertRaisesRegex(ValueError, "exact reproducible"):
+                owner.dispatch_spec(root, stage, owner.digest(sums), candidate, "scanner",
+                                    root / "out", reference=repo)
+
+    def test_portable_physical_fence_contends_on_legacy_inode(self):
+        import fcntl
+
+        with TemporaryDirectory() as folder:
+            root = Path(folder)
+            artifacts = root / "artifacts/rust"
+            legacy = root / "scripts/rust-milestone-batches/.dispatcher.lock"
+            private = root / "clean/scripts/rust-milestone-batches/.dispatcher.lock"
+            artifacts.mkdir(parents=True)
+            legacy.parent.mkdir(parents=True)
+            private.parent.mkdir(parents=True)
+            private.touch()
+            with legacy.open("xb") as held:
+                fcntl.flock(held, fcntl.LOCK_EX)
+                with self.assertRaisesRegex(ValueError, "already leased"):
+                    with owner.lease.physical_fence(artifacts, private):
+                        self.fail("running legacy context must exclude scanner")
+            with owner.lease.physical_fence(artifacts, private):
+                self.assertTrue(legacy.is_file())
+            (artifacts / ".api202-positive-fifo-cleanup-required.json").touch()
+            with self.assertRaisesRegex(ValueError, "retirement unresolved"):
+                owner.lease.first_fence(artifacts, private)

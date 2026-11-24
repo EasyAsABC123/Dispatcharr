@@ -302,7 +302,8 @@ def owner_readiness(nodes, document, output=None):
                 if not context:
                     raise ValueError("M6 scanner-first sealed owned stage required")
                 expected = owner.dispatch_spec(HERE.parents[1], Path(context["stage"]), context["seal"],
-                                               document["candidate"], node["entrypoint"], Path(output))
+                                               document["candidate"], node["entrypoint"], Path(output),
+                                               reference=Path(context["reference"]) if "reference" in context else None)
                 if bindings[key] != expected:
                     raise ValueError("M6 scanner-first exact ordinary owner binding required")
                 continue

@@ -829,3 +829,18 @@ group and search request, display-name overrides, default hidden-channel
 exclusion, and nine invalid-field requests. All 15 fixture tables remained
 unchanged. Two focused Rust tests passed. Signed packaged and browser
 execution remain open.
+
+### M6 scanner-first coordinator route
+
+The first-scanner owner can run from a separate clean coordinator
+checkout with the same sealed Original and package inputs. The owner
+uses the existing physical fixture lease. The saved first, repeat and
+cold-restart passes run within one copied fixture. The evaluator requires
+retained SQL and DB2 state, renewed Index publication, and independent
+teardown after the ordinary Main restart.
+
+The existing API202 dependency still applies. Seven engine-free scanner
+checks passed, including actual retained-template preparation and
+rejection of changed fixture bytes, stale package identity, a redirected
+lock and a competing lease. The final package and fresh scanner run
+remain open.
