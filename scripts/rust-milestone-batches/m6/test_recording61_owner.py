@@ -86,24 +86,34 @@ class PhysicalReplay(unittest.TestCase):
         spec = spec_from_file_location("recording61_test_coordinator", script)
         coordinator = module_from_spec(spec)
         spec.loader.exec_module(coordinator)
-        node = next(row for row in coordinator.inventory() if row["id"] == owner.NODE)
+        nodes = [row for row in coordinator.inventory() if row["id"] in (owner.ONEOFF, owner.NODE)]
+        node = next(row for row in nodes if row["id"] == owner.NODE)
+        predecessor = next(row for row in nodes if row["id"] == owner.ONEOFF)
         with TemporaryDirectory() as folder:
             root = Path(folder) / "coordinator"
             stage = Path(folder) / "stage"
             context = prepare.prepare(self.stage, stage, self.candidate)
             binding = owner.dispatch_spec(stage, context["seal"], self.candidate, script.parents[2],
                                           node["entrypoint"], root)
-            document = {"candidate": self.candidate, "nodes": {owner.NODE: binding},
+            prior = owner.dispatch_spec(stage, context["seal"], self.candidate, script.parents[2],
+                                        predecessor["entrypoint"], root, node=owner.ONEOFF)
+            self.assertIn("reuse", binding["argv"])
+            self.assertIn("run", prior["argv"])
+            document = {"candidate": self.candidate, "nodes": {owner.NODE: binding, owner.ONEOFF: prior},
                         "owner_bindings": {"m6": {"recording61": context}}}
-            self.assertEqual(coordinator.owner_readiness([node], document, root), {})
+            self.assertEqual(coordinator.owner_readiness(nodes, document, root), {})
             self.assertFalse(root.exists())
+            unpaired = deepcopy(document)
+            del unpaired["nodes"][owner.ONEOFF]
+            with self.assertRaisesRegex(ValueError, "same owned one-off predecessor"):
+                coordinator.owner_readiness(nodes, unpaired, root)
             self.assertFalse((stage / "owner-1").exists())
             root.mkdir()
-            self.assertEqual(coordinator.owner_readiness([node], document, root), {})
+            self.assertEqual(coordinator.owner_readiness(nodes, document, root), {})
             bad = deepcopy(document)
             bad["nodes"][owner.NODE]["argv"] = ["/usr/bin/true"]
             with self.assertRaisesRegex(ValueError, "exact checker"):
-                coordinator.owner_readiness([node], bad, root)
+                coordinator.owner_readiness(nodes, bad, root)
 
     def test_direct_launch_fences_before_any_fixture_or_engine_call(self):
         with TemporaryDirectory() as folder:
@@ -121,12 +131,12 @@ class PhysicalReplay(unittest.TestCase):
             context = prepare.prepare(self.stage, stage, self.candidate)
             output = repository / "output"
             binding = owner.dispatch_spec(stage, context["seal"], self.candidate, repository,
-                                          "fixture", output)
+                                          "fixture", output, node=owner.ONEOFF)
             binding_file = repository / "binding.json"
             binding_file.write_text(json.dumps(binding))
-            directory = owner.attempt_directory(output)
+            directory = owner.attempt_directory(output, owner.ONEOFF)
             directory.mkdir(parents=True)
-            attempt = {"node": {"id": owner.NODE}, "candidate": self.candidate, "binding": binding, "attempt": 1}
+            attempt = {"node": {"id": owner.ONEOFF}, "candidate": self.candidate, "binding": binding, "attempt": 1}
             (directory / "attempt.json").write_text(json.dumps(attempt))
             for name in ("execution.stdout", "execution.stderr"):
                 (directory / name).touch()
@@ -174,6 +184,56 @@ class PhysicalReplay(unittest.TestCase):
             self.assertEqual((ledger / "run.actual-exit").read_bytes(), b"17\n")
             self.assertEqual((ledger / "cleanup.actual-exit").read_bytes(), b"0\n")
             self.assertFalse((ledger / "proof.actual-exit").exists())
+
+    def test_beat_publication_replays_real_wire_sql_broker_and_db2(self):
+        proof = owner.verify_publication(self.stage, self.seal, self.candidate)
+        self.assertEqual(proof["signed_create_status"], 201)
+        self.assertNotEqual(proof["schedule_name"], proof["single_clocked_root"]["task_id"])
+        self.assertEqual(proof["authoritative_result"]["terminal"], "SUCCESS")
+        self.assertNotIn("declared_decode", proof)
+
+    def test_media_reuse_requires_passed_same_stage_and_redis_result(self):
+        publication = owner.verify_publication(self.stage, self.seal, self.candidate)
+        recording = self.replay()["scope_results"]
+        with TemporaryDirectory() as folder:
+            output = Path(folder)
+            with self.assertRaisesRegex(ValueError, "expected exact bounded receipt"):
+                owner.prior_publication(output, self.stage, self.seal, self.candidate, recording)
+            directory = owner.attempt_directory(output, owner.ONEOFF)
+            directory.mkdir()
+            attempt = {"node": {"id": owner.ONEOFF}, "candidate": self.candidate,
+                       "binding": {"argv": ["python", "-I", "-B", "owner", str(self.stage)]}}
+            (directory / "attempt.json").write_text(json.dumps(attempt))
+            publication.update(full_required_workflow=True, semantic_assertions_passed=True)
+            phase = {"actual_exit": 0, "failure": None, "remaining_group_members": [],
+                     "output_bytes_discarded": 0, "process_group_settled": True,
+                     "stdout_EOF": True, "stderr_EOF": True}
+            result = dict.fromkeys(("execution", "cleanup", "evaluation"), phase)
+            result.update(id=owner.ONEOFF, status="passed", cleanup_verified=True, qualification=publication)
+            (directory / "evaluation.stdout").write_text(json.dumps(publication))
+            (directory / "result.json").write_text(json.dumps(result))
+            self.assertEqual(owner.prior_publication(output, self.stage, self.seal, self.candidate, recording),
+                             owner.digest(directory / "result.json"))
+            recording["result"]["private_result_sha256"] = "0" * 64
+            with self.assertRaisesRegex(ValueError, "same owned passed one-off predecessor"):
+                owner.prior_publication(output, self.stage, self.seal, self.candidate, recording)
+
+    def test_publication_rejects_bad_create_and_mismatched_broker(self):
+        original_read = owner.read
+        raw = self.stage / "actual-1/Native/business/scenario.json"
+        for name, mutation, error in (
+            ("booking", lambda data: data["requests"][0].update(sha256="0" * 64), "actual signed create"),
+            ("clock", lambda data: data["clocked_task"].update(one_off=False), "saved schedule"),
+            ("broker", lambda data: data.update(task_id=data["route_task_name"]), "broker UUID"),
+        ):
+            def changed_read(path):
+                result = original_read(path)
+                if path == raw:
+                    mutation(result)
+                return result
+            with self.subTest(name=name), patch.object(owner, "read", changed_read):
+                with self.assertRaisesRegex(ValueError, error):
+                    owner.verify_publication(self.stage, self.seal, self.candidate)
 
     def test_historical_receipt_refused_for_different_package(self):
         candidate = dict(self.candidate, git="a2ec7dbb943ff1b93eb235a028517fc2dd623d23")

@@ -71,14 +71,24 @@ EOF, task identity and scoped teardown.
 During the coordinated final verification, prepare the frozen ordinary AMD64
 package and run `prepare_recording61.py TEMPLATE CANDIDATE.json FRESH-STAGE`.
 Supply `owner_bindings.m6.recording61` with the returned absolute `stage` and
-`seal`. Use `recording61_owner.dispatch_spec(stage, seal, candidate, repository,
-entrypoint, output)` to build the binding. The coordinator checks the binding
-offline before the stage has any execution receipts. It dispatches the physical
-owner itself after the one-off Beat predecessor, under the same exclusive lock.
-At launch the owner checks the live coordinator parent, its active attempt receipt
-and its exclusive lock descriptor on the same inode. The execution uses the
-explicit private daemon and scoped normal package environment. Cleanup and
-evaluation run through the coordinator's regular receipt flow.
+`seal`. Build both bindings with
+`recording61_owner.dispatch_spec(stage, seal, candidate, repository, entrypoint,
+output, node=NODE)`, using the respective canonical ID and entrypoint.
+`m6/oneoff-beat-publication` launches the shared fixture once under the
+coordinator's exclusive lock and after its existing prerequisites. Its
+evaluator joins the private signed HTTP 201 response to the saved clocked SQL
+row, then replays the single due-time Beat frame and exact durable DB2 result.
+It compares this publication scope with the pinned Original. The evaluator
+reports no media result.
+
+`m6/recording61-video-audio` waits for the passed one-off row and checks its
+same-candidate, same-stage broker and backend receipts before qualifying the
+separate media and recorder-lifecycle predicates. It reuses the receipt set
+without launching a second fixture. Both bindings can be checked before any
+execution output exists. At launch the owner checks the live coordinator parent,
+its active attempt receipt and its exclusive lock descriptor on the same inode.
+The execution uses the explicit private daemon and scoped normal package
+environment. Cleanup and evaluation use the coordinator's regular receipt flow.
 
 The retained 2d3ffe53 Native campaign is an offline regression input. Its receipts
 are refused for any other candidate. Use `check` to replay a completed historical

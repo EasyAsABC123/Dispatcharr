@@ -265,13 +265,23 @@ def owner_readiness(nodes, document, output=None):
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
         elif key in bindings and node["owner"] == "m6":
-            if key == "m6/recording61-video-audio":
+            if key in {"m6/oneoff-beat-publication", "m6/recording61-video-audio"}:
                 owner = module(HERE / "m6/recording61_owner.py", "readiness_m6_recording61")
                 context = owners.get("m6", {}).get("recording61")
                 if not context:
                     raise ValueError("M6 recording61 sealed campaign context required")
                 expected = owner.dispatch_spec(Path(context["stage"]), context["seal"],
-                                               document["candidate"], HERE.parents[1], node["entrypoint"], output)
+                                               document["candidate"], HERE.parents[1], node["entrypoint"], output,
+                                               node=key)
+                if key == owner.NODE:
+                    if owner.ONEOFF not in bindings or owner.ONEOFF not in node["depends_on"]:
+                        raise ValueError("M6 recording61 requires the same owned one-off predecessor")
+                    predecessor = next(row for row in nodes if row["id"] == owner.ONEOFF)
+                    paired = owner.dispatch_spec(Path(context["stage"]), context["seal"],
+                                                 document["candidate"], HERE.parents[1], predecessor["entrypoint"],
+                                                 output, node=owner.ONEOFF)
+                    if bindings[owner.ONEOFF] != paired:
+                        raise ValueError("M6 recording61 and one-off must share the exact campaign")
                 if bindings[key] != expected:
                     raise ValueError("M6 recording61 exact checker, cleanup, and evaluator binding required")
                 continue

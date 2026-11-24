@@ -1,5 +1,7 @@
 """Qualify the sealed ordinary Native recording61 against retained Original."""
 import argparse
+from base64 import b64decode
+from datetime import datetime
 from contextlib import contextmanager, redirect_stdout, redirect_stderr
 import fcntl
 from importlib.util import module_from_spec, spec_from_file_location
@@ -13,6 +15,7 @@ import subprocess
 import sys
 
 NODE = "m6/recording61-video-audio"
+ONEOFF = "m6/oneoff-beat-publication"
 ORIGINAL = "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
 ORIGINAL_REDUCTION = "91b16d451a44a01bed2b86ea8180224a64fafa84ebde15853b9f47eca9814e9c"
 PHASES = ("preflight", "run", "cleanup", "proof", "campaign")
@@ -141,11 +144,125 @@ def verify(stage, seal, candidate):
             "stage_seal": seal}
 
 
-def attempt_directory(output):
-    return output / f"m6__recording61-video-audio-{sha256(NODE.encode()).hexdigest()[:12]}"
+def verify_publication(stage, seal, candidate):
+    """Read the signed booking, stored clock and actual broker/DB2 observations."""
+    stage_inputs(stage, seal, candidate)
+    lane = stage / "actual-1/Native"
+    require(read(stage / "actual-1/admission.json")["native"] == candidate["image_id"],
+            "one-off Native package admission differs")
+    meta = read(lane / "fixture.json")
+    root = Path(meta["output"])
+    require(meta["backend"] == "Native" and root.parent == lane / "fixtures"
+            and root.resolve() == root, "one-off receipt ownership differs")
+    raw = read(lane / "business/scenario.json")
+    schedule = raw["clocked_task"]
+    booking, *reads = raw["requests"]
+    args = json.loads(schedule["args"])
+    start, end = (datetime.fromisoformat(raw[key]) for key in ("scheduled_start", "scheduled_end"))
+    require(booking["method"] == "POST" and booking["path"] == "/api/channels/recordings/"
+            and booking["status"] == 201 and len(booking["sha256"]) == 64,
+            "one-off signed booking receipt differs")
+    require(len(args) == 4 and all(type(value) is int and value > 0 for value in args[:2])
+            and [datetime.fromisoformat(value) for value in args[2:]] == [start, end]
+            and start.utcoffset() is not None and end.utcoffset() is not None
+            and (end - start).total_seconds() == 61
+            and raw["manual_task_frame"] is raw["early_operator_stop"] is False,
+            "one-off clocked task arguments differ")
+    name = f"dvr-recording-{args[0]}"
+    require(raw["route_task_name"] == schedule["name"] == name
+            and schedule["task"] == "apps.channels.tasks.run_recording"
+            and schedule["enabled"] is schedule["one_off"] is True
+            and datetime.fromisoformat(schedule["clocked__clocked_time"]) == start
+            and reads and all(row["status"] == 200 and row["method"] == "GET"
+                              and row["path"] == f"/api/channels/recordings/{args[0]}/" for row in reads),
+            "one-off signed recording and saved schedule differ")
+    matches, creates = [], []
+    for path in sorted(root.glob("command-*.json")):
+        command = read(path)
+        stdout = Path(command["stdout"])
+        if (not stdout.is_relative_to(root) or not stdout.is_file() or stdout.stat().st_size > 16384
+                or command["actual_exit"] != 0):
+            continue
+        try:
+            value = read(stdout)
+        except (ValueError, UnicodeError):
+            continue
+        if value == [schedule]:
+            require(settled(command) and digest(stdout) == command["stdout_sha256"],
+                    "one-off saved schedule SQL receipt did not settle")
+            matches.append(command["stdout_sha256"])
+        if isinstance(value, dict) and value.get("status") == 201 and isinstance(value.get("body"), str):
+            body = b64decode(value["body"], validate=True)
+            if sha256(body).hexdigest() != booking["sha256"]:
+                continue
+            created = json.loads(body)
+            require(settled(command) and digest(stdout) == command["stdout_sha256"]
+                    and created["id"] == args[0] and created["channel"] == args[1]
+                    and created["task_id"] == name
+                    and [datetime.fromisoformat(created[key]) for key in ("start_time", "end_time")] == [start, end],
+                    "one-off actual signed create response differs from saved scheduler row")
+            creates.append(command["stdout_sha256"])
+    require(len(creates) == 1, "one-off requires exactly one actual signed create response")
+    require(len(matches) == 1, "one-off requires exactly one actual saved schedule SQL receipt")
+    journal = root / raw["clock_broker_journal_path"]
+    require(journal.is_relative_to(root) and journal.resolve() == journal
+            and digest(journal) == raw["clock_broker_journal_sha256"]
+            and raw["clock_broker_observer_retired"] is True,
+            "one-off exact broker journal differs")
+    sys.path.insert(0, str(stage))
+    try:
+        scenario = load_module(stage / "scenario.py", "oneoff_recording_scenario")
+        reducer = load_module(stage / "reduce.py", "oneoff_recording_result")
+        frames = scenario.recording_frames_from_journal(journal)
+        lineage = scenario.published_recording(frames, name, args[:2] + [start, end],
+                                               datetime.fromisoformat(raw["first_recorder"]["upper_bound_utc"]))
+        require(lineage is not None and lineage["task_id"] == raw["task_id"] != name,
+                "one-off broker UUID differs from the owned execution")
+        backend = reducer.results_command(root, meta["project"], lineage["task_id"])
+        reference = reducer.original_reference()
+        require(reference["actual_recording_broker_publications"] == 1
+                and reference["broker_root_correlation_arguments_due_match"] is True
+                and reference["result"]["terminal"] == backend["terminal"],
+                "one-off differs from retained Original publication authority")
+    finally:
+        sys.path.remove(str(stage))
+    require(backend["publication_uuid_matches"] is True and backend["terminal"] == "SUCCESS"
+            and backend["result"] is None, "one-off authoritative DB2 terminal differs")
+    return {"scope": ONEOFF, "candidate": candidate, "stage_seal": seal,
+            "signed_create_status": booking["status"], "signed_create_sha256": booking["sha256"],
+            "signed_transport_sha256": creates[0], "retained_original_reduction_sha256": ORIGINAL_REDUCTION,
+            "saved_schedule_sha256": matches[0], "schedule_name": name,
+            "broker_sha256": digest(journal), "single_clocked_root": lineage,
+            "authoritative_result": backend}
 
 
-def dispatch_spec(stage, seal, candidate, repository, entrypoint, output):
+def prior_publication(output, stage, seal, candidate, recording):
+    directory = attempt_directory(output, ONEOFF)
+    attempt = read(directory / "attempt.json")
+    result_path = directory / "result.json"
+    receipt = read(result_path)
+    proof = receipt["qualification"]
+    require(attempt["node"]["id"] == receipt["id"] == ONEOFF and attempt["candidate"] == candidate
+            and receipt["status"] == "passed" and receipt["cleanup_verified"] is True
+            and all(settled(receipt[key]) for key in ("execution", "cleanup", "evaluation"))
+            and proof["full_required_workflow"] is True and proof["semantic_assertions_passed"] is True
+            and proof["candidate"] == candidate and proof["stage_seal"] == seal
+            and proof["scope"] == ONEOFF
+            and proof["broker_sha256"] == recording["private_broker_sha256"]
+            and proof["authoritative_result"]["private_result_sha256"] == recording["result"]["private_result_sha256"]
+            and Path(attempt["binding"]["argv"][4]) == stage
+            and read(directory / "evaluation.stdout") == proof,
+            "recording61 requires the same owned passed one-off predecessor")
+    return digest(result_path)
+
+
+def attempt_directory(output, node=NODE):
+    stem = node.replace("/", "__")
+    return output / f"{stem}-{sha256(node.encode()).hexdigest()[:12]}"
+
+
+def dispatch_spec(stage, seal, candidate, repository, entrypoint, output, *, node=NODE):
+    require(node in (ONEOFF, NODE), "invalid recording family row")
     output = Path(output)
     require(output.resolve() == output
             and not stage.is_relative_to(output) and not output.is_relative_to(stage),
@@ -161,14 +278,15 @@ def dispatch_spec(stage, seal, candidate, repository, entrypoint, output):
     prefix = ["/usr/bin/python3", "-I", "-B", str(SCRIPT), str(stage), seal,
               json.dumps(candidate, sort_keys=True)]
     return {
-        "argv": [*prefix, "run", entrypoint, str(output), str(coordinator), coordinator_sha],
+        "argv": ([*prefix, "run", entrypoint, str(output), str(coordinator), coordinator_sha]
+                 if node == ONEOFF else [*prefix, "reuse", entrypoint, str(output)]),
         "cleanup_argv": [*prefix, "cleanup"],
-        "evaluator_argv": [*prefix, "evaluate", entrypoint, str(output), "@EXECUTION@"],
+        "evaluator_argv": [*prefix, "evaluate", entrypoint, str(output), "@EXECUTION@", node],
         "cwd": str(repository),
         "environment": {"DOCKER_HOST": DAEMON, "DOCKER_CONFIG": str(tooling / "docker-config"),
                         "PATH": f"{tooling / 'docker'}:/usr/bin:/bin"},
         "strip_inherited_prefixes": STRIP_ENV,
-        "input_sha256": inputs, "seconds": 660, "cleanup_seconds": 60,
+        "input_sha256": inputs, "seconds": 660 if node == ONEOFF else 60, "cleanup_seconds": 60,
         "output_bytes": 65536, "exclusive_heavy": True,
     }
 
@@ -203,9 +321,9 @@ def coordinator_parent(coordinator, coordinator_sha, output, binding, candidate)
             and any((cwd / arg).resolve() == coordinator for arg in supplied[1:min(index, supplied.index("--bindings"))])
             and (cwd / supplied[index + 1]).resolve() == output
             and digest(coordinator) == coordinator_sha, "actual reviewed coordinator parent required")
-    directory = attempt_directory(output)
+    directory = attempt_directory(output, ONEOFF)
     attempt = read(directory / "attempt.json")
-    require(attempt["node"]["id"] == NODE and type(attempt["attempt"]) is int and attempt["attempt"] == 1
+    require(attempt["node"]["id"] == ONEOFF and type(attempt["attempt"]) is int and attempt["attempt"] == 1
             and attempt["candidate"] == candidate
             and attempt["binding"] == binding and not os.path.lexists(directory / "execution.json")
             and (directory / "execution.stdout").is_file()
@@ -224,11 +342,15 @@ def coordinator_parent(coordinator, coordinator_sha, output, binding, candidate)
     return lock
 
 
-def load_driver(stage):
-    spec = spec_from_file_location("recording61_coordinator_driver", stage / "run.py")
+def load_module(path, name):
+    spec = spec_from_file_location(name, path)
     driver = module_from_spec(spec)
     spec.loader.exec_module(driver)
     return driver
+
+
+def load_driver(stage):
+    return load_module(stage / "run.py", "recording61_coordinator_driver")
 
 
 def cleanup_receipt(stage, driver):
@@ -285,7 +407,7 @@ def main():
     parser.add_argument("stage", type=Path)
     parser.add_argument("seal")
     parser.add_argument("candidate", type=json.loads)
-    parser.add_argument("mode", choices=("run", "cleanup", "check", "evaluate"))
+    parser.add_argument("mode", choices=("run", "reuse", "cleanup", "check", "publication-check", "evaluate"))
     parser.add_argument("entrypoint", nargs="?")
     parser.add_argument("output", type=Path, nargs="?")
     parser.add_argument("authority", nargs="?")
@@ -295,7 +417,7 @@ def main():
     if args.mode == "run":
         coordinator = Path(args.authority)
         repository = coordinator.parents[2]
-        binding = dispatch_spec(stage, seal, candidate, repository, args.entrypoint, args.output)
+        binding = dispatch_spec(stage, seal, candidate, repository, args.entrypoint, args.output, node=ONEOFF)
         require(binding["argv"] == sys.orig_argv and Path.cwd() == repository,
                 "exact reviewed recording61 controller invocation required")
         lock = coordinator_parent(coordinator, args.coordinator_sha, args.output, binding, candidate)
@@ -321,14 +443,20 @@ def main():
         stage_inputs(stage, seal, candidate)
         sys.path.insert(0, str(stage))
         result = cleanup_receipt(stage, load_driver(stage))
+    elif args.mode in ("run", "publication-check") or (args.mode == "evaluate" and args.coordinator_sha == ONEOFF):
+        result = verify_publication(stage, seal, candidate)
     else:
         result = verify(stage, seal, candidate)
+        if args.mode in ("reuse", "evaluate"):
+            result["oneoff_predecessor_sha256"] = prior_publication(args.output, stage, seal, candidate, result["scope_results"])
     if args.mode == "evaluate":
         execution = Path(args.authority)
-        directory = attempt_directory(args.output)
+        node = args.coordinator_sha
+        require(node in (ONEOFF, NODE), "invalid recording family evaluator row")
+        directory = attempt_directory(args.output, node)
         require(execution == directory / "execution.json", "recording61 execution receipt path differs")
         receipt = read(execution)
-        require(receipt["id"] == NODE and settled(receipt["execution"])
+        require(receipt["id"] == node and settled(receipt["execution"])
                 and settled(receipt["cleanup"]) and receipt["cleanup_verified"] is True
                 and Path(receipt["execution"]["stdout"]) == directory / "execution.stdout"
                 and read(directory / "execution.stdout") == result,

@@ -12,8 +12,8 @@ use crate::{
 use axum::{
     body::{to_bytes, Bytes},
     extract::{ConnectInfo, Path, Request, State},
-    http::{header, Method},
-    response::Response,
+    http::{header, HeaderValue, Method},
+    response::{IntoResponse, Response},
     Json,
 };
 use chrono::{
@@ -32,6 +32,11 @@ const HTTP_REBUILD_HORIZON_DAYS: i64 = 14;
 
 pub(crate) const PATH: &str = "/api/channels/recurring-rules/{id}/";
 pub(crate) const COLLECTION: &str = "/api/channels/recurring-rules/";
+pub(crate) const JSON_PATH: &str = "/api/channels/recurring-rules/{id}";
+pub(crate) const JSON_LIST: &str = "/api/channels/recurring-rules.json";
+pub(crate) const JSON_LIST_SLASH: &str = "/api/channels/recurring-rules.json/";
+const LIST_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
+pub(crate) const DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
 const SELECT: &str = "SELECT r.id::bigint AS id,r.channel_id::bigint AS channel_id,r.name,
     CASE WHEN octet_length(r.days_of_week::text)<=65536 THEN r.days_of_week END AS days,
     r.start_time,r.end_time,r.start_date,r.end_date,r.created_at,r.updated_at,r.enabled
@@ -188,8 +193,10 @@ pub(crate) async fn read_collection(
     peer: SocketAddr,
     request: Request,
 ) -> Result<Response, StoreError> {
-    tokio::spawn(async move {
-        crate::epg_program_http::json_negotiation(request.headers(), request.uri())?;
+    let json_alias = request.method() == Method::GET
+        && matches!(request.uri().path(), JSON_LIST | JSON_LIST_SLASH);
+    let result = tokio::spawn(async move {
+        negotiate(&request, json_alias)?;
         let auth = auth.with_retained_scope(owner.clone());
         let user = auth
             .account_user(peer, request.headers().clone(), false)
@@ -199,7 +206,8 @@ pub(crate) async fn read_collection(
         reply_bytes(200, body, owner)
     })
     .await
-    .map_err(|_| StoreError::UnhandledRestFault)?
+    .map_err(|_| StoreError::UnhandledRestFault)?;
+    finish_read(result, json_alias, LIST_ALLOW)
 }
 
 pub(super) async fn collection(
@@ -981,8 +989,9 @@ async fn execute(
     peer: SocketAddr,
     raw_id: String,
     request: Request,
+    json_alias: bool,
 ) -> Result<Response, StoreError> {
-    crate::epg_program_http::json_negotiation(request.headers(), request.uri())?;
+    negotiate(&request, json_alias)?;
     let auth = owner.state.auth.clone().with_retained_scope(owner.clone());
     let user = auth
         .account_user(peer, request.headers().clone(), false)
@@ -1048,16 +1057,59 @@ async fn execute(
     reply(result.status, result.payload, owner.clone())
 }
 
+pub(crate) fn detail_alias_id(request: &Request) -> Option<&str> {
+    if request.method() != Method::GET {
+        return None;
+    }
+    let path = request.uri().path();
+    let id = path
+        .strip_suffix('/')
+        .unwrap_or(path)
+        .strip_prefix(COLLECTION)?
+        .strip_suffix(".json")?;
+    (!id.is_empty() && id.bytes().all(|byte| byte.is_ascii_digit())).then_some(id)
+}
+
+pub(crate) fn negotiate(request: &Request, json_alias: bool) -> Result<(), StoreError> {
+    if json_alias {
+        crate::core_reads::negotiate_literal_json_alias(request.headers())
+    } else {
+        crate::epg_program_http::json_negotiation(request.headers(), request.uri())
+    }
+}
+
+pub(crate) fn finish_read(
+    result: Result<Response, StoreError>,
+    json_alias: bool,
+    allow: &'static str,
+) -> Result<Response, StoreError> {
+    if json_alias {
+        Ok(channels::channel_options_headers(
+            result.unwrap_or_else(IntoResponse::into_response),
+            HeaderValue::from_static(allow),
+        ))
+    } else {
+        result
+    }
+}
+
 pub(super) async fn handle(
     State(api): State<RecordingHttp>,
     Path(id): Path<String>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Result<Response, StoreError> {
+    let alias_id = detail_alias_id(&request);
+    let json_alias = alias_id.is_some();
+    if !json_alias && !request.uri().path().ends_with('/') {
+        return Err(StoreError::NotFound);
+    }
+    let id = alias_id.map(str::to_owned).unwrap_or(id);
     let owner = admit(&api)?;
-    tokio::spawn(execute(owner, peer, id, request))
+    let result = tokio::spawn(execute(owner, peer, id, request, json_alias))
         .await
-        .map_err(|_| StoreError::UnhandledRestFault)?
+        .map_err(|_| StoreError::UnhandledRestFault)?;
+    finish_read(result, json_alias, DETAIL_ALLOW)
 }
 
 pub(super) async fn with_playback(
@@ -1072,6 +1124,31 @@ pub(super) async fn with_playback(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn recurring_detail_alias_only_matches_numeric_get_and_fixes_the_renderer() {
+        let suffix = Request::builder()
+            .uri("/api/channels/recurring-rules/17.json/?format=api")
+            .header(header::ACCEPT, "application/json")
+            .body(axum::body::Body::empty())
+            .unwrap();
+        assert_eq!(detail_alias_id(&suffix), Some("17"));
+        assert!(negotiate(&suffix, true).is_ok());
+        for (method, path) in [
+            (Method::GET, "/api/channels/recurring-rules/17"),
+            (Method::GET, "/api/channels/recurring-rules/17.api"),
+            (Method::GET, "/api/channels/recurring-rules/17/1.json"),
+            (Method::HEAD, "/api/channels/recurring-rules/17.json"),
+            (Method::POST, "/api/channels/recurring-rules/17.json"),
+        ] {
+            let request = Request::builder()
+                .method(method)
+                .uri(path)
+                .body(axum::body::Body::empty())
+                .unwrap();
+            assert_eq!(detail_alias_id(&request), None);
+        }
+    }
 
     fn calendar_rule() -> Rule {
         let created = Utc.with_ymd_and_hms(2026, 11, 19, 12, 0, 0).unwrap();

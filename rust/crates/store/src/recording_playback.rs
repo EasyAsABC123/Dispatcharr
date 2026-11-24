@@ -74,6 +74,18 @@ impl RecordingPlayback {
             .route("/api/channels/recordings.json", any(library_get))
             .route("/api/channels/recordings.json/", any(library_get))
             .route("/api/channels/series-rules/", any(library_get))
+            .route(
+                recording_http::recurring::JSON_LIST,
+                recurring_get_only(recurring_rules),
+            )
+            .route(
+                recording_http::recurring::JSON_LIST_SLASH,
+                recurring_get_only(recurring_rules),
+            )
+            .route(
+                recording_http::recurring::JSON_PATH,
+                recurring_get_only(recurring_rule),
+            )
             .with_state(self)
     }
 
@@ -142,9 +154,15 @@ async fn recurring_rule(
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     request: Request,
 ) -> Result<Response, StoreError> {
+    let alias_id = recording_http::recurring::detail_alias_id(&request);
+    let json_alias = alias_id.is_some();
+    if !json_alias && !request.uri().path().ends_with('/') {
+        return Err(StoreError::NotFound);
+    }
+    let id = alias_id.map(str::to_owned).unwrap_or(id);
     let owner = api.admit()?;
-    tokio::spawn(async move {
-        crate::epg_program_http::json_negotiation(request.headers(), request.uri())?;
+    let result = tokio::spawn(async move {
+        recording_http::recurring::negotiate(&request, json_alias)?;
         let auth = api.inner.auth.clone().with_retained_scope(owner.clone());
         let user = auth
             .account_user(peer, request.headers().clone(), false)
@@ -154,7 +172,22 @@ async fn recurring_rule(
         recording_http::reply(200, value, owner)
     })
     .await
-    .map_err(|_| StoreError::UnhandledRestFault)?
+    .map_err(|_| StoreError::UnhandledRestFault)?;
+    recording_http::recurring::finish_read(
+        result,
+        json_alias,
+        recording_http::recurring::DETAIL_ALLOW,
+    )
+}
+
+fn recurring_get_only<H, T>(handler: H) -> axum::routing::MethodRouter<RecordingPlayback>
+where
+    H: axum::handler::Handler<T, RecordingPlayback>,
+    T: 'static,
+{
+    get(handler)
+        .head(crate::core_reads::omitted_json_method)
+        .fallback(crate::core_reads::omitted_json_method)
 }
 
 async fn library_get(
@@ -498,6 +531,86 @@ fn percent_decode(raw: &str) -> Result<String, StoreError> {
 #[cfg(test)]
 mod writer_admission_tests {
     use super::*;
+
+    #[tokio::test]
+    async fn ordinary_recurring_json_reads_use_existing_policy_and_fixed_json() {
+        use axum::{body::Body, http::StatusCode};
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://fixture:fixture@127.0.0.1:1/fixture")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-recurring-json-fixture".into()).unwrap(),
+        );
+        let api = RecordingPlayback::prepare(auth, |_, _| {
+            panic!("recurring rule reads do not build a media origin")
+        });
+        let router = api.clone().router();
+        for (method, path, expected, allow) in [
+            (
+                Method::GET,
+                "/api/channels/recurring-rules.json",
+                StatusCode::NOT_ACCEPTABLE,
+                Some("GET, POST, HEAD, OPTIONS"),
+            ),
+            (
+                Method::GET,
+                "/api/channels/recurring-rules.json/?format=api",
+                StatusCode::NOT_ACCEPTABLE,
+                Some("GET, POST, HEAD, OPTIONS"),
+            ),
+            (
+                Method::GET,
+                "/api/channels/recurring-rules/19.json",
+                StatusCode::NOT_ACCEPTABLE,
+                Some("GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
+            ),
+            (
+                Method::GET,
+                "/api/channels/recurring-rules/19.json/",
+                StatusCode::NOT_ACCEPTABLE,
+                Some("GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
+            ),
+            (
+                Method::POST,
+                "/api/channels/recurring-rules.json",
+                StatusCode::NOT_FOUND,
+                None,
+            ),
+            (
+                Method::HEAD,
+                "/api/channels/recurring-rules/19.json",
+                StatusCode::NOT_FOUND,
+                None,
+            ),
+            (
+                Method::GET,
+                "/api/channels/recurring-rules/19",
+                StatusCode::NOT_FOUND,
+                None,
+            ),
+        ] {
+            let mut request = Request::builder()
+                .method(method)
+                .uri(path)
+                .header(header::ACCEPT, "text/html")
+                .body(Body::empty())
+                .unwrap();
+            request
+                .extensions_mut()
+                .insert(ConnectInfo("127.0.0.1:1234".parse::<SocketAddr>().unwrap()));
+            let reply = router.clone().oneshot(request).await.unwrap();
+            assert_eq!(reply.status(), expected);
+            if let Some(allow) = allow {
+                assert_eq!(reply.headers()[header::ALLOW], allow);
+                assert_eq!(reply.headers()[header::VARY], "Accept");
+            }
+        }
+        drop(router);
+        api.close_admission();
+    }
 
     #[test]
     fn source_playlist_lookup_miss_keeps_scoped_wire_and_excludes_other_requests() {

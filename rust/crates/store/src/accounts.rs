@@ -1,8 +1,10 @@
 //! Account API shapes and permissions mirror apps/accounts serializers and views.
 use crate::{auth::request, AuthService, Store, StoreError, User};
 use axum::{
-    extract::{ConnectInfo, Path, State},
-    http::HeaderMap,
+    extract::{ConnectInfo, FromRequestParts, Path, Request, State},
+    http::{HeaderMap, HeaderValue, Method, StatusCode},
+    middleware::{from_fn_with_state, Next},
+    response::{IntoResponse, Response},
     routing::get,
     Json, Router,
 };
@@ -13,6 +15,7 @@ use std::net::SocketAddr;
 
 pub(crate) fn router(auth: AuthService) -> Router {
     let app_data = crate::app_data::router(auth.clone());
+    let group_read = get(group).layer(from_fn_with_state(auth.clone(), group_json_alias));
     Router::new()
         .route(
             "/api/accounts/users/",
@@ -35,10 +38,17 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/accounts/groups/{id}/",
-            get(group)
+            group_read
+                .clone()
                 .patch(crate::admin_writes::patch_group)
                 .put(crate::admin_writes::put_group)
                 .delete(crate::admin_writes::delete_group),
+        )
+        .route(
+            "/api/accounts/groups/{id}",
+            group_read
+                .head(crate::core_reads::omitted_json_method)
+                .fallback(crate::core_reads::omitted_json_method),
         )
         .route("/api/accounts/permissions/", get(permissions))
         .route("/api/accounts/api-keys/", get(api_key))
@@ -212,6 +222,44 @@ async fn group(
     auth.account_user(peer, headers, true).await?;
     Ok(Json(auth.store.serialized_groups(Some(id)).await?))
 }
+
+async fn group_json_alias(
+    State(auth): State<AuthService>,
+    request: Request,
+    next: Next,
+) -> Response {
+    let path = request.uri().path();
+    let numeric = path
+        .strip_suffix('/')
+        .unwrap_or(path)
+        .strip_prefix("/api/accounts/groups/")
+        .and_then(|tail| tail.strip_suffix(".json"))
+        .filter(|id| !id.is_empty() && id.bytes().all(|byte| byte.is_ascii_digit()));
+    if let Some(id) = numeric.filter(|_| request.method() == Method::GET) {
+        let id = id.parse::<i64>();
+        let (mut parts, _) = request.into_parts();
+        let Ok(peer) = ConnectInfo::<SocketAddr>::from_request_parts(&mut parts, &auth).await
+        else {
+            return StatusCode::INTERNAL_SERVER_ERROR.into_response();
+        };
+        let result = async {
+            crate::core_reads::negotiate_literal_json_alias(&parts.headers)?;
+            let id = id.map_err(|_| StoreError::NotFound)?;
+            group(State(auth), Path(id), peer, parts.headers).await
+        }
+        .await;
+        return crate::channels::channel_options_headers(
+            result.into_response(),
+            HeaderValue::from_static("GET, PUT, PATCH, DELETE, HEAD, OPTIONS"),
+        );
+    }
+    if path.ends_with('/') {
+        next.run(request).await
+    } else {
+        StatusCode::NOT_FOUND.into_response()
+    }
+}
+
 async fn permissions(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -233,6 +281,89 @@ async fn api_key(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn ordinary_account_group_detail_json_uses_the_admin_read_handler() {
+        use axum::{
+            body::{to_bytes, Body},
+            http::header,
+        };
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://fixture:fixture@127.0.0.1:1/fixture")
+            .unwrap();
+        let auth = AuthService::new(
+            Store::from_pool(pool),
+            crate::AuthConfig::new("owned-group-alias-fixture".into()).unwrap(),
+        );
+        let app = router(auth);
+        for (method, path, accept, expected) in [
+            (
+                Method::GET,
+                "/api/accounts/groups/6.json",
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                Method::GET,
+                "/api/accounts/groups/6.json/?format=api",
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                Method::GET,
+                "/api/accounts/groups/6.json/",
+                "text/html",
+                StatusCode::NOT_ACCEPTABLE,
+            ),
+            (
+                Method::GET,
+                "/api/accounts/groups/unqualified/",
+                "application/json",
+                StatusCode::BAD_REQUEST,
+            ),
+            (
+                Method::GET,
+                "/api/accounts/groups/6",
+                "application/json",
+                StatusCode::NOT_FOUND,
+            ),
+            (
+                Method::POST,
+                "/api/accounts/groups/6.json",
+                "application/json",
+                StatusCode::NOT_FOUND,
+            ),
+        ] {
+            let mut request = Request::builder()
+                .method(method)
+                .uri(path)
+                .header(header::ACCEPT, accept)
+                .body(Body::empty())
+                .unwrap();
+            request
+                .extensions_mut()
+                .insert(ConnectInfo("127.0.0.1:1234".parse::<SocketAddr>().unwrap()));
+            let reply = app.clone().oneshot(request).await.unwrap();
+            assert_eq!(reply.status(), expected);
+            if expected == StatusCode::UNAUTHORIZED {
+                assert_eq!(
+                    reply.headers()[header::WWW_AUTHENTICATE],
+                    "Bearer realm=\"api\""
+                );
+                assert_eq!(
+                    reply.headers()[header::ALLOW],
+                    "GET, PUT, PATCH, DELETE, HEAD, OPTIONS"
+                );
+                assert_eq!(
+                    to_bytes(reply.into_body(), 128).await.unwrap().as_ref(),
+                    br#"{"detail":"Authentication credentials were not provided."}"#
+                );
+            }
+        }
+    }
+
     #[test]
     fn datetime_matches_django_utc_microseconds_and_null() {
         assert_eq!(datetime(None), Value::Null);
