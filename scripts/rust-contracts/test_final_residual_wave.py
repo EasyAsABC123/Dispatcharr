@@ -16,6 +16,7 @@ import retained_backup_lifecycle_tasks
 import retained_matching51_tasks
 import retained_migration_recorder_contracts as migrations
 import retained_model_command_observations as model_command
+import retained_method_component_observations as method_components
 import retained_stock_bootstrap as stock_bootstrap
 import retained_original_catalogue_contracts as catalogue
 import runtime_dispatch_metadata as dispatch
@@ -48,7 +49,7 @@ def dependencies(root):
                                              model_registry.dependencies(), task_registry.dependencies(), command_registry.dependencies(),
                                              plain_hls.dependencies(), profile_group.INPUT_SHA256,
                                              {model_command.INPUT, stock_bootstrap.INPUT, catalogue.PACKET, dispatch.INPUT,
-                                              'docs/rust-runtime-contracts.json'},
+                                              'docs/rust-runtime-contracts.json', method_components.INPUT},
                                              *(module.INPUT_SHA256 for module in PACKAGED),
                                              *(module.dependencies() for module in TYPED))
 
@@ -129,7 +130,31 @@ LATER_CASE_BINDINGS = {
 }
 
 
+def restore_method_components(root, routes):
+    # Regenerate every pinned attachment and check the complete identity map
+    # before changing a historical projection. Some inputs predate this layer.
+    field = method_components.ROUTE_KEY
+    actual = {r['route_id']: r[field] for r in routes if field in r}
+    if not actual:
+        return
+    projected = copy.deepcopy(routes)
+    for route in projected:
+        route.pop(field, None)
+    method_components.attach(root, {
+        'baseline_ref': dispatch.ORIGINAL,
+        'input_sha256': {'docs/rust-runtime-contracts.json': sha256(
+            (root / 'docs/rust-runtime-contracts.json').read_bytes()).hexdigest()},
+        'runtime_routes': projected,
+    })
+    expected = {r['route_id']: r[field] for r in projected if field in r}
+    assert actual == expected
+    for route in routes:
+        if route['route_id'] in expected:
+            del route[field]
+
+
 def restore_later_runtime_metadata(root, routes):
+    restore_method_components(root, routes)
     dispatch_field = 'Original_runtime_class_dispatch'
     metadata = {r['route_id']: r.pop(dispatch_field) for r in routes if dispatch_field in r}
     if metadata:

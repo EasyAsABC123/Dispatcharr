@@ -2,7 +2,7 @@
 from collections import Counter
 import copy
 import recording_hls_source_contracts as plain_hls
-from test_final_residual_wave import restore_profile_group_projection
+from test_final_residual_wave import restore_later_runtime_metadata, restore_profile_group_projection, restore_recent_source_observations
 import hashlib
 import json
 from pathlib import Path
@@ -27,6 +27,8 @@ class ModelRegistration(unittest.TestCase):
         subject.validate(ROOT, binding)
         register = json.loads((ROOT / "docs/rust-contract-register.json").read_bytes())
         plain_hls.restore_before(ROOT, register["runtime_routes"], register["executable_Source_mapping"])
+        restore_recent_source_observations(ROOT, register)
+        restore_later_runtime_metadata(ROOT, register["runtime_routes"])
         restore_profile_group_projection(ROOT, register["runtime_routes"], register["executable_Source_mapping"])
         typed = register["non_HTTP_candidates"]
         import retained_task_registry_contracts as task_registry

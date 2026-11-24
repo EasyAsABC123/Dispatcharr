@@ -101,3 +101,13 @@ fail-closed input validates these five task/two command identities, declared tas
 name overrides, exact Source frames/results/fixture actors and expected failures.
 Do not infer full roles, method aliases, received signals, raw backend wire or
 Native parity from these assignments. M0/M1 remain formally open.
+
+Run the portable public controls once per unique test:
+
+```sh
+python3 -I -B scripts/rust-contracts/run_public_tests.py "$PWD"
+```
+
+The runner deduplicates classes imported by the SDK aggregate. The pinned
+Django passive control needs its own container and mounts.
+[Passive control instructions](PASSIVE-SOURCE.md)

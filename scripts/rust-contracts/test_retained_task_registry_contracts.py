@@ -1,7 +1,7 @@
 """Test the 20-cell metadata assignment and reject execution or Source drift."""
 import copy
 import recording_hls_source_contracts as plain_hls
-from test_final_residual_wave import restore_profile_group_projection
+from test_final_residual_wave import restore_later_runtime_metadata, restore_profile_group_projection, restore_recent_source_observations
 import hashlib
 import json
 from pathlib import Path
@@ -26,6 +26,8 @@ class TaskRegistration(unittest.TestCase):
         subject.validate(ROOT,stored)
         doc = json.loads((ROOT/"docs/rust-contract-register.json").read_bytes())
         plain_hls.restore_before(ROOT, doc["runtime_routes"], doc["executable_Source_mapping"])
+        restore_recent_source_observations(ROOT, doc)
+        restore_later_runtime_metadata(ROOT, doc["runtime_routes"])
         restore_profile_group_projection(ROOT, doc["runtime_routes"], doc["executable_Source_mapping"])
         typed = doc["non_HTTP_candidates"]
         import retained_management_registration_contracts as command_registry

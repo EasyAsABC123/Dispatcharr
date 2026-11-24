@@ -144,6 +144,22 @@ class CoreSettingsSourceControls(unittest.TestCase):
             operation['role_matrix']['state'] = 'unmapped'
         rebuilt = copy.deepcopy(prior_rows)
         source_contracts.apply(ROOT, rebuilt, json.loads((ROOT / 'scripts/rust-contracts/case-bindings.json').read_text()))
+        # Replay the same post-Source route enrichment as the current generator.
+        profile_group = test_final_residual_wave.profile_group
+        current_summary = {}
+        profile_group.apply(ROOT, rebuilt, current_summary)
+        for module in test_final_residual_wave.PACKAGED:
+            module.apply(ROOT, rebuilt)
+        test_final_residual_wave.catalogue.apply(ROOT, rebuilt)
+        runtime = 'docs/rust-runtime-contracts.json'
+        current = {
+            'baseline_ref': register['baseline_ref'],
+            'runtime_routes': rebuilt,
+            'input_sha256': {runtime: register['input_sha256'][runtime]},
+        }
+        test_final_residual_wave.dispatch.attach(ROOT, current)
+        test_final_residual_wave.stock_bootstrap.attach(ROOT, current)
+        test_final_residual_wave.method_components.attach(ROOT, current)
         self.assertEqual(rebuilt, original_rows)
         selected = set(proof['new_selected_contract_ids'])
         operations = {o['contract_id']: o for r in register['runtime_routes'] for o in r['operations']}

@@ -1121,3 +1121,23 @@ passed 14 checks with two decoders. The 45-second retention workload
 verified 100 historical readers across ten channels, ten late A/V decodes,
 and no additional upstream connections. All three exact resource scopes
 retired. [Shared MPEG-TS and retention proof](rust-m3-amd64-shared-ts-retention-3d8f9672.json)
+
+### Current AMD64 proxy health
+
+Six scoped cases passed on the frozen package through signed application
+paths. They cover default and dynamic settings, delayed and dropped
+replies, shutdown, and the cache clock. Both owners and the independent
+proof passed, with empty owned engine state after each scope. The
+request-to-watch identity and wider M2 acceptance remain open.
+[Proxy health proof](rust-m2-amd64-proxy-health-3d8f9672.json)
+
+### Current portable contract controls
+
+The expanded public contract suite exposed stale reconstruction logic
+in the historical tests. The test code now replays or removes the four
+published method attachments through their pinned validator before
+comparing historical hashes. The published register and its evidence
+stay byte-for-byte identical. The full deduplicated portable run selected
+481 controls, passed 480 and skipped the optional private capture. The
+standalone pinned-image Django passive control has its own runner.
+[Public contract test instructions](../scripts/rust-contracts/README.md)

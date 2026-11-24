@@ -246,6 +246,9 @@ class NotificationMutationControls(unittest.TestCase):
   later_report=dict(baseline_ref=new['baseline_ref'],input_sha256=dict(new['input_sha256']),runtime_routes=historical)
   final_wave.dispatch.attach(ROOT,later_report)
   final_wave.stock_bootstrap.attach(ROOT,later_report)
+  # Revalidate the latest route layer against a fresh input ledger entry.
+  later_report['input_sha256'].pop(final_wave.method_components.INPUT)
+  final_wave.method_components.attach(ROOT,later_report)
   self.assertEqual(historical,new['runtime_routes'])
   self.assertEqual(mapping,new['executable_Source_mapping'])
   self.assertEqual(subject.digest(new['openapi_operations']),old['openapi_operations_sha256']);self.assertEqual(subject.digest(new['observations_for_methods_not_declared_in_discovery']),old['observations_for_methods_not_declared_sha256'])
