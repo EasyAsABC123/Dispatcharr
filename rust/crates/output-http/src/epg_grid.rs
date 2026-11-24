@@ -64,6 +64,33 @@ fn legacy_dummy_window(
     ))
 }
 
+// No-time custom generation uses absolute instants for timezone-derived
+// programme metadata. Only its grid IDs and ISO fields use the request wall
+// offset. The shared legacy helper represents those same times on a wall axis.
+fn custom_future_window(
+    wall: Window,
+    now: DateTime<Utc>,
+    offset: i64,
+) -> Result<Window, StoreError> {
+    let instant = |stamp: DateTime<Utc>| {
+        stamp
+            .checked_sub_signed(Duration::microseconds(offset))
+            .ok_or_else(capacity)
+    };
+    Ok(Window {
+        start: instant(wall.start)?,
+        clock: now,
+        days: wall.days,
+        lookback: wall.lookback.map(instant).transpose()?,
+        cutoff: wall.cutoff.map(instant).transpose()?,
+    })
+}
+
+fn custom_wire_time(time: DateTime<Utc>, offset: i64) -> Result<DateTime<Utc>, StoreError> {
+    time.checked_add_signed(Duration::microseconds(offset))
+        .ok_or_else(capacity)
+}
+
 fn dummy_timestamp(time: DateTime<Utc>, wall_offset_micros: i64) -> String {
     GridTimestamp {
         local: time.naive_utc(),
@@ -147,6 +174,9 @@ pub async fn stored_scoped_entity(
     let window = dummy_window(now, start, end)?;
     let (legacy_window, legacy_offset) =
         legacy_dummy_window(now, start, end, requested_offset, window)?;
+    let custom_future = (legacy_offset != 0)
+        .then(|| custom_future_window(legacy_window, now, legacy_offset))
+        .transpose()?;
     let mut batch = Vec::new();
     let mut batch_bytes = 0usize;
     for custom in [true, false] {
@@ -159,7 +189,7 @@ pub async fn stored_scoped_entity(
         }) {
             let properties = custom.then_some(&channel.source_properties);
             let simple = epg_dummy::simple_config(properties).is_ok();
-            let (window, offset) = if simple {
+            let (window, mut offset) = if simple {
                 (legacy_window, legacy_offset)
             } else {
                 (window, 0)
@@ -173,9 +203,27 @@ pub async fn stored_scoped_entity(
                 1024 * 1024,
             )
             .await?;
-            let programs = plan.programmes;
+            let mut programs = plan.programmes;
+            let display_custom_wall =
+                if let (crate::epg_custom::Programmes::Custom(programs), Some(window)) =
+                    (&mut programs, custom_future)
+                {
+                    programs.align_future_grid_window(window)?;
+                    offset = legacy_offset;
+                    true
+                } else {
+                    false
+                };
             for p in programs {
                 let p = p?;
+                let (began, ended) = if display_custom_wall {
+                    (
+                        custom_wire_time(p.start_time, offset)?,
+                        custom_wire_time(p.end_time, offset)?,
+                    )
+                } else {
+                    (p.start_time, p.end_time)
+                };
                 let prefix = if custom {
                     "dummy-custom"
                 } else {
@@ -188,7 +236,7 @@ pub async fn stored_scoped_entity(
                 } else {
                     p.properties
                 };
-                let row = json!({"id":format!("{prefix}-{}-{}",channel.id,p.start_time.format("%Y%m%dT%H%M%S")),"start_time":dummy_timestamp(p.start_time,offset),"end_time":dummy_timestamp(p.end_time,offset),"title":p.title,"description":p.description,"tvg_id":channel.uuid.to_string(),"sub_title":p.sub_title,"custom_properties":properties,"season":null,"episode":null,"is_new":is_new,"is_live":is_live,"is_premiere":false,"is_finale":false});
+                let row = json!({"id":format!("{prefix}-{}-{}",channel.id,began.format("%Y%m%dT%H%M%S")),"start_time":dummy_timestamp(began,offset),"end_time":dummy_timestamp(ended,offset),"title":p.title,"description":p.description,"tvg_id":channel.uuid.to_string(),"sub_title":p.sub_title,"custom_properties":properties,"season":null,"episode":null,"is_new":is_new,"is_live":is_live,"is_premiere":false,"is_finale":false});
                 let charge = crate::epg_custom::metadata_bytes(&row)?;
                 if charge > 1024 * 1024 {
                     return Err(capacity());
@@ -242,6 +290,44 @@ pub async fn stored_scoped_entity(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn custom_future_grid_aligns_true_instants_and_prints_request_wall_time() {
+        let now = "2026-04-06T10:05:00Z".parse::<DateTime<Utc>>().unwrap();
+        for (offset, start, end, first_base, first_wall) in [
+            (
+                19_800_000_000,
+                "2026-04-07T07:07:19.123456Z",
+                "2026-04-08T10:30:00Z",
+                "2026-04-07T06:30:00Z",
+                "2026-04-07T12:37:19.123456+05:30",
+            ),
+            (
+                -12_600_000_000,
+                "2026-04-07T16:07:19.123456Z",
+                "2026-04-08T19:30:00Z",
+                "2026-04-07T15:30:00Z",
+                "2026-04-07T12:37:19.123456-03:30",
+            ),
+        ] {
+            let start = start.parse::<DateTime<Utc>>().unwrap();
+            let end = end.parse::<DateTime<Utc>>().unwrap();
+            let normal = dummy_window(now, start, end).unwrap();
+            let (wall, offset) = legacy_dummy_window(now, start, end, offset, normal).unwrap();
+            let custom = custom_future_window(wall, now, offset).unwrap();
+            assert_eq!(custom.start, first_base.parse::<DateTime<Utc>>().unwrap());
+            assert_eq!(custom.lookback, Some(start));
+            assert_eq!(custom.cutoff, Some(end));
+            assert_eq!(custom.clock, now);
+            assert_eq!(custom.days, 2);
+            let display = custom_wire_time(start, offset).unwrap();
+            assert_eq!(dummy_timestamp(display, offset), first_wall);
+            assert_eq!(
+                display.format("%Y%m%dT%H%M%S").to_string(),
+                "20260407T123719"
+            );
+        }
+    }
 
     #[test]
     fn future_dummy_grid_preserves_its_requested_offset_and_local_template_hour() {

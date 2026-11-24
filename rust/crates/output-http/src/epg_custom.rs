@@ -609,6 +609,11 @@ pub struct NoTime {
     index: u32,
 }
 impl NoTime {
+    pub(super) fn align_future_grid_window(&mut self, window: Window) -> Result<(), StoreError> {
+        self.window = window.source_precision()?;
+        Ok(())
+    }
+
     fn programme(
         &self,
         start: DateTime<Utc>,
@@ -789,6 +794,49 @@ mod tests {
         assert_eq!(rows[0].sub_title.as_deref(), Some(""));
         assert_eq!(rows[0].properties["date"], json!("2026-01-02"));
     }
+    #[test]
+    fn aligned_custom_future_keeps_its_source_date_and_second_day_anchor() {
+        let clock = "2026-04-06T10:05:00Z".parse::<DateTime<Utc>>().unwrap();
+        let load = |stamp: &str| stamp.parse::<DateTime<Utc>>().unwrap();
+        let mut source = NoTime {
+            channel: "owned".into(),
+            title: "Owned".into(),
+            description: "Source actual date".into(),
+            subtitle: None,
+            props: serde_json::Map::new(),
+            poster: None,
+            include_date: true,
+            source_timezone: chrono_tz::Pacific::Honolulu,
+            window: Window {
+                start: clock,
+                clock,
+                days: 1,
+                lookback: None,
+                cutoff: None,
+            },
+            duration: ProgrammeDuration::Whole(181),
+            per_day: 7,
+            day: 0,
+            index: 0,
+        };
+        source
+            .align_future_grid_window(Window {
+                start: load("2026-04-07T06:30:00Z"),
+                clock,
+                days: 2,
+                lookback: Some(load("2026-04-07T07:07:19.123456Z")),
+                cutoff: Some(load("2026-04-08T10:30:00Z")),
+            })
+            .unwrap();
+        let rows = source.collect::<Result<Vec<_>, _>>().unwrap();
+        assert_eq!(rows.len(), 9);
+        assert_eq!(rows[0].start_time, load("2026-04-07T07:07:19.123456Z"));
+        assert_eq!(rows[0].end_time, load("2026-04-07T10:08:19.123456Z"));
+        assert_eq!(rows[0].properties["date"], "2026-04-06");
+        assert_eq!(rows[7].start_time, load("2026-04-08T06:30:00Z"));
+        assert_eq!(rows[7].properties["date"], "2026-04-07");
+    }
+
     #[test]
     fn source_no_time_dates_use_source_timezone_without_shifting_grid() {
         for (timezone, start, expected) in [
