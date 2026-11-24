@@ -178,6 +178,13 @@ report their Original error message. All four pinned Original component
 cases and the matching local Rust HTTP cases passed. The final packaged
 worker still needs its result, event and catalogue state checks.
 
+Ordinary Xtream live import uses the existing empty-fetch behavior for
+bounded provider responses that decode to a non-list. It keeps the
+previous lineup and follows the same worker result path as an empty list.
+Eight pinned Original and matching Rust loopback cases exercise these
+responses. The final worker fixture must check the signed import result
+and saved lineup in the same application context.
+
 ## Scheduler calendar and operator verbosity
 
 The scheduler calendar owner now prepares a pinned Original fall-fold workflow. It records the first and repeated local 01:30, ties them to one publication and one durable SQL run, and checks the process and fixture retirement. The ordinary Native binder has checked Chicago and Newfoundland saved schedules offline. Fresh controlled daylight-saving transitions remain required to close the calendar row. The M6 owner suite passed all 34 offline tests.

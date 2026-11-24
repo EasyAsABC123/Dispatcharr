@@ -708,11 +708,7 @@ impl Prepared {
         else {
             return Err(unsupported());
         };
-        let value = match client.action("get_live_streams").await? {
-            Ok(v) => v,
-            Err(_) => json!([]),
-        };
-        let streams = value.as_array().ok_or_else(unsupported)?;
+        let streams = client.live_streams_or_empty().await?;
         let groups: BTreeMap<String, i64> = enabled
             .values()
             .map(|(name, id)| (name.clone(), *id))
@@ -734,7 +730,7 @@ impl Prepared {
         let mut total = crate::ImportCounts::default();
         let mut eligible = 0usize;
         let mut failed = 0usize;
-        for value in streams {
+        for value in &streams {
             let category = scalar(
                 value
                     .as_object()

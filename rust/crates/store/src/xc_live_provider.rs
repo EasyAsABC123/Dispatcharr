@@ -164,6 +164,16 @@ impl Client {
         }
         self.authenticated_action(action).await
     }
+    /// Original collect_xc_streams treats the provider's caught error or
+    /// a decoded non-list as an empty fetch. The worker then keeps the
+    /// existing lineup instead of running stale cleanup on an empty snapshot.
+    pub(crate) async fn live_streams_or_empty(&mut self) -> Result<Vec<Value>, StoreError> {
+        Ok(match self.action("get_live_streams").await? {
+            Ok(Value::Array(rows)) => rows,
+            Ok(_) | Err(_) => Vec::new(),
+        })
+    }
+
     /// Natural VOD list ingestion reuses this SAME authenticated Requests
     /// session/limits; it does not grant arbitrary provider action execution.
     pub(crate) async fn vod_action(
@@ -278,10 +288,10 @@ mod vod_response_controls {
         net::TcpListener,
     };
 
-    async fn delivered(list_action: &str, body: &'static str) -> Result<Value, String> {
+    fn provider(action: &str, body: &'static str) -> (Client, std::thread::JoinHandle<()>) {
         let listener = TcpListener::bind("127.0.0.1:0").unwrap();
         let base = format!("http://{}", listener.local_addr().unwrap());
-        let required = format!("action={list_action}");
+        let required = format!("action={action}");
         let server = std::thread::spawn(move || {
             for (index, reply) in [r#"{"user_info":{"auth":1}}"#, body]
                 .into_iter()
@@ -312,14 +322,41 @@ mod vod_response_controls {
                 socket.flush().unwrap();
             }
         });
-        let result = Client::new(&base, "owned-user", "owned-value", "Owned fixture".into())
+        let client = Client::new(&base, "owned-user", "owned-value", "Owned fixture".into())
             .unwrap()
-            .unwrap()
-            .vod_action(list_action)
-            .await
             .unwrap();
+        (client, server)
+    }
+
+    async fn delivered(action: &str, body: &'static str) -> Result<Value, String> {
+        let (mut client, server) = provider(action, body);
+        let result = client.vod_action(action).await.unwrap();
         server.join().unwrap();
         result
+    }
+
+    #[tokio::test]
+    async fn delivered_non_list_live_streams_use_the_empty_fetch_guard() {
+        for body in [
+            r#"{"streams":[]}"#,
+            r#""Provider unavailable""#,
+            "null",
+            "false",
+            "42",
+            "[]",
+            r#"{"error":"Owned provider reply"}"#,
+        ] {
+            let (mut client, server) = provider("get_live_streams", body);
+            assert!(client.live_streams_or_empty().await.unwrap().is_empty());
+            server.join().unwrap();
+        }
+        let row = serde_json::json!({"stream_id":17, "category_id":"54", "name":"Fixture"});
+        let (mut client, server) = provider(
+            "get_live_streams",
+            r#"[{"stream_id":17,"category_id":"54","name":"Fixture"}]"#,
+        );
+        assert_eq!(client.live_streams_or_empty().await.unwrap(), vec![row]);
+        server.join().unwrap();
     }
 
     #[tokio::test]
