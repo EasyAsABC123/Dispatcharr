@@ -1,12 +1,6 @@
 {
-  "build_manifest_sha256": "4127965d9e780ceb2b459f3b2feff0e80035f0d4768dc7f4ea966315207ee164",
-  "candidate_git": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
-  "canonical_required_nodes": 127,
-  "combined_index": true,
-  "credit": "Original Dispatcharr and upstream dependency authors retain full credit.",
-  "current_package_passes": 23,
-  "failed_current": {
-    "m6/api202-publication": {
+  "api202_attempt_history": {
+    "previous_ledger_failure": {
       "case_11": {
         "actual_index_and_native_series_cas_and_db2_verified": true,
         "receipt_sha256": "dd27de4997da65a959a84dc961729cfaa6f83340cdcfd475a11fb56a4541497d",
@@ -21,8 +15,118 @@
       "report_sha256": "75cd83bc429b183669f6930d3c23bb600d01a883735d4dbe6be15d951b8bd68f",
       "result_sha256": "c88baea1df51368a8f716b9dc4e35d349003f112a8ba19069b2ed8dc4d1354f7",
       "status": "failed"
+    },
+    "prior_failed_producers": {
+      "r10": {
+        "exact_owned_absence": true,
+        "phase_actual_exits": {
+          "cleanup": 0,
+          "evaluation": 1,
+          "execution": 1
+        },
+        "report_sha256": "a3e4ca36dd2be97779e5a2b6fdf13e7b80f8e877a50ceb8f894c096d30f9fc90",
+        "result_sha256": "8f63253d7e781bc2e1bb6961c79708ecc2cdeaa1c1360f07ee92450adecee9f2",
+        "status": "failed"
+      },
+      "r11": {
+        "exact_owned_absence": true,
+        "phase_actual_exits": {
+          "cleanup": 0,
+          "evaluation": 1,
+          "execution": 1
+        },
+        "report_sha256": "4d0df07a9b82bbfe3074c951cd691f16497d4e6a3d68d930efe63b5f77b44ca5",
+        "result_sha256": "192174099fe92cb5e5e9447cbd9655ae5a738c56aba68b15ad2cd240604017e2",
+        "status": "failed"
+      },
+      "r12": {
+        "exact_owned_absence": true,
+        "phase_actual_exits": {
+          "cleanup": 0,
+          "evaluation": 1,
+          "execution": 1
+        },
+        "report_sha256": "a811c58cd9447807b65599e9e421944e1d4081990491a074bbc72f4dbc202165",
+        "result_sha256": "44cb15b2873aab5fc9907fdae094cb6a0ced03eacd2b155660debfa850b9e694",
+        "status": "failed"
+      },
+      "r13": {
+        "exact_owned_absence": true,
+        "phase_actual_exits": {
+          "cleanup": 0,
+          "evaluation": 1,
+          "execution": 1
+        },
+        "report_sha256": "085373d97a4244264593ee04465526e935a6eaaef82078679f977a00be7a0a40",
+        "result_sha256": "457f8106282ad9103a6e7e5b32592e2d5fcc45a908d1d39f539b819c8445635a",
+        "status": "failed"
+      },
+      "r8": {
+        "exact_owned_absence": true,
+        "phase_actual_exits": {
+          "cleanup": 0,
+          "evaluation": 1,
+          "execution": 1
+        },
+        "report_sha256": "75cd83bc429b183669f6930d3c23bb600d01a883735d4dbe6be15d951b8bd68f",
+        "result_sha256": "c88baea1df51368a8f716b9dc4e35d349003f112a8ba19069b2ed8dc4d1354f7",
+        "status": "failed"
+      },
+      "r9": {
+        "exact_owned_absence": true,
+        "phase_actual_exits": {
+          "cleanup": 0,
+          "evaluation": 1,
+          "execution": 1
+        },
+        "report_sha256": "5c0f30ffce5ed4b51f9f4b414e3613e80d67a9d33a04b48e0a576e6102f95269",
+        "result_sha256": "5502b0d0ff1a34ec3a91faf191da6012fbbababea68e67ea070a36324f7502ba",
+        "status": "failed"
+      }
+    },
+    "r14": {
+      "actual_lpush_denials": 1,
+      "actual_main_stop_exit": 0,
+      "binding_sha256": "fef8bdc987b2004272e724c2098f92febe4081084ce3857ba61826896f4610f0",
+      "exact_owned_absence": true,
+      "final_fault_http_status": 500,
+      "missing_file_follow_ons": 4,
+      "one_fifo_rpop": true,
+      "phase_actual_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "phase_sha256": {
+        "cleanup": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "913e13e6605a4773dc17dcfa1479a2dc413843b74ec2da2c30c31f149c6e7b12"
+        },
+        "evaluation": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "d4a06523bc606445c8aedae0582a25e41d0ca5252a1dc00b5c6c8812f2af023f"
+        },
+        "execution": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "report_sha256": "78dca52cc7d6c27acc303417f943bdb3075eac3c1820a0a6f79b79a217f6ead2",
+      "result_sha256": "94d7c9258e7770b11fc5c5a600b0f597435899840fbe8d2cd1d74fc8128c806c",
+      "scoped_owner_actual_exit": 2,
+      "settled_worker_roots": 16,
+      "signed_cases": 37,
+      "status": "passed",
+      "younger_fifo_siblings_preserved": 2
     }
   },
+  "build_manifest_sha256": "4127965d9e780ceb2b459f3b2feff0e80035f0d4768dc7f4ea966315207ee164",
+  "candidate_git": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+  "canonical_required_nodes": 127,
+  "combined_index": true,
+  "credit": "Original Dispatcharr and upstream dependency authors retain full credit.",
+  "current_package_passes": 24,
+  "failed_current": {},
   "fresh_original_passes": 1,
   "image_id": "sha256:3cb8dff78119b1d0a40740a9f31f5ab8814a063a509f1891be9fef93ee2d39a6",
   "m5_r3": {
@@ -186,7 +290,6 @@
     "m6/Source-missing-domains",
     "m6/account-CSV-hash-overrides",
     "m6/account-warning-expiration",
-    "m6/api202-publication",
     "m6/backend-cleanup-expiry",
     "m6/cache-reply-held",
     "m6/calendar-timezone-boundaries",
@@ -276,6 +379,32 @@
     "tools/M8-transport-materials"
   ],
   "passed_verified": {
+    "m6/api202-publication": {
+      "binding_sha256": "fef8bdc987b2004272e724c2098f92febe4081084ce3857ba61826896f4610f0",
+      "phase_actual_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "phase_sha256": {
+        "cleanup": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "913e13e6605a4773dc17dcfa1479a2dc413843b74ec2da2c30c31f149c6e7b12"
+        },
+        "evaluation": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "d4a06523bc606445c8aedae0582a25e41d0ca5252a1dc00b5c6c8812f2af023f"
+        },
+        "execution": {
+          "stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      },
+      "prerequisites": {},
+      "report_sha256": "78dca52cc7d6c27acc303417f943bdb3075eac3c1820a0a6f79b79a217f6ead2",
+      "result_sha256": "94d7c9258e7770b11fc5c5a600b0f597435899840fbe8d2cd1d74fc8128c806c",
+      "type": "current_package_pass"
+    },
     "package/auth-hash": {
       "binding_sha256": "880602429261e017337b5f4d8203c5c2ad602ca6d88b8a451bf06825abbdcf05",
       "phase_actual_exits": {
@@ -717,5 +846,5 @@
     }
   },
   "single_run_full_acceptance": false,
-  "unique_passes": 24
+  "unique_passes": 25
 }
