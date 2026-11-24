@@ -1,0 +1,98 @@
+{
+  "status": "passed",
+  "candidate": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+  "independent_proof_sha256": "4b2447116baf9b76a3dbf0df5bd590966fcec6518791ff3e44d6b7402b08db11",
+  "exact_engine_empty_after_cleanup": true,
+  "formal_M5": false,
+  "signed": {
+    "cases": 138,
+    "differences": [],
+    "fresh_original_http": false,
+    "cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "pathwise_expected_generations": [
+        "baseline",
+        "candidate",
+        "data-init",
+        "origin"
+      ],
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    }
+  },
+  "browser": {
+    "dom": {
+      "browser": {
+        "product": "Chrome/156.0.8078.79",
+        "protocol": "1.3"
+      },
+      "checks": [
+        "signed-login",
+        "stream-filter-list-ids-options",
+        "guide-effective-filter",
+        "vod-cancel-retains",
+        "vod-confirm-post-and-dom",
+        "vod-empty-disabled"
+      ],
+      "credentials_exported": false,
+      "login_successes": 1,
+      "passed": true,
+      "uncaught_browser_exceptions": 0,
+      "vod_cleanup_posts": 1
+    },
+    "exact_browser_group_absent": true,
+    "private_profile_absent": true,
+    "process_actual_exit": 0,
+    "cancel_sql": {
+      "artwork_preserved": true,
+      "effects_sha256": "3ab41dc7d401d93845319d6f318b326581feabb04c43848dc445c5317adc75e5",
+      "full_snapshot_sha256": "82d342a80af2288f3b08a812df2eb1196f26bc9ffd02022cb35f54d90c4e36f3",
+      "identified_logo_count": 5,
+      "mode": "cancel",
+      "scope": "owned-react-stream-guide-vod"
+    },
+    "cleanup": {
+      "compose_down_passed": true,
+      "exact_container_and_process_generations_absent": {
+        "baseline": true,
+        "candidate": true,
+        "data-init": true,
+        "origin": true
+      },
+      "pathwise_expected_generations": [
+        "baseline",
+        "candidate",
+        "data-init",
+        "origin"
+      ],
+      "remaining_owned": {
+        "containers": 0,
+        "networks": 0,
+        "volumes": 0
+      }
+    },
+    "browser_relay": {
+      "guest_final": {
+        "all_streams_retired": true,
+        "connection_errors": 0,
+        "guest_socket_absent": true,
+        "opened_connections": 13
+      },
+      "guest_process_exit": 0,
+      "guest_stderr_bytes": 0,
+      "host_loopback_admitted": true,
+      "host_opened_connections": 13,
+      "host_streams_retired": true,
+      "independently_absent_guest_socket": true
+    }
+  }
+}

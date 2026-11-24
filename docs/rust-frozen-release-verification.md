@@ -1071,3 +1071,31 @@ packaged M4 functional workload, output-profile and user-agent settings,
 and profile process restart. Each row has its own qualification and
 cleanup receipt. The batch and audit both exited zero.
 [AMD64 boot and package proof](rust-m0-amd64-boot-acceptance-3d8f9672.json)
+
+### Current AMD64 local XMLTV refresh
+
+Original and Rust each passed 40 checks, two signed HTTP 202 imports and six
+successful Refresh, programme Index and Series tasks. The independent reducer
+verified matching signed Guide reads, second-import title replacement and
+exact cleanup. Both package rows passed. The separate M6 overlap rows still
+require their scanner, ingestion and recording predecessors.
+[Paired XMLTV refresh proof](rust-m6-amd64-xmltv-complete-refresh-3d8f9672.json)
+
+### Current AMD64 strict operator comparison
+
+The packaged strict operator comparator passed all 154 typed checks across
+22 createsuperuser cases and verified ten creation-clock slots per backend.
+The current prerequisite and typed decision both passed under the same
+coordinator lease and each passed cleanup.
+[Strict operator proof](rust-m0-amd64-strict-typed154-3d8f9672.json)
+
+### Current AMD64 signed React workflows
+
+The frozen package matched the retained Original observations across
+138 signed cases covering Streams, Guide and VOD. Chromium then exercised
+the existing React workflows against the same frozen package. Its checks
+covered signed login, Streams filters, Guide filtering and VOD logo cleanup.
+Cancel issued zero cleanup requests and retained five rows, verified by
+SQL. Confirm issued one request and retained the three in-use rows and
+their artwork. The browser, relay and Compose scopes all retired.
+[Signed API and browser proof](rust-m5-amd64-signed-react-3d8f9672.json)
