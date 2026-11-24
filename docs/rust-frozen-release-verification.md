@@ -1,6 +1,8 @@
 # Dispatcharr Rust release implementation and verification
 
-The last reconciled package, `2d3ffe53`, has 14 verified executions, four retained Original authorities, and 109 open rows in the 127-row release matrix. Each open row requires a concrete implementation result, a complete executable owner and evaluator, a prerequisite result, or a release decision. The matrix identifies every row and its outstanding predecessors. [Current release matrix](../scripts/rust-integration/2d3ffe53-amd64-release-matrix-with-baseline.json)
+The frozen application candidate `3d8f9672` has **16 independently verified canonical row passes** across scoped physical runs. Fifteen are passes against the current Rust package and one is a fresh Original workflow. One other row has retained Original authority and 110 rows remain open in the 127-row release graph. This combined evidence index preserves each run and its predecessors. Full single-run release acceptance remains open. [Current exact-candidate evidence index](rust-current-amd64-acceptance-3d8f9672.json)
+
+The historical `2d3ffe53` package ledger recorded 14 verified executions, four retained Original authorities and 109 open rows. The implementation table below records the work allocated from that historical baseline. [Historical release matrix](../scripts/rust-integration/2d3ffe53-amd64-release-matrix-with-baseline.json)
 
 ## Parallel implementation
 
