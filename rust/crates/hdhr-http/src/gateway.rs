@@ -282,7 +282,10 @@ impl HdhrGateway {
             };
             return Ok(error(status, detail));
         }
-        let origin = origin(&self.inner.auth, &identity, headers);
+        let origin = dispatcharr_contracts::source_output_origin(
+            &identity,
+            self.inner.auth.is_trusted_proxy(identity.peer_ip),
+        );
         if let Endpoint::Devices { lookup } = endpoint {
             let headers = headers.clone();
             let (status, value) = crate::devices::handle(
@@ -759,52 +762,6 @@ fn normalize_id(value: &str) -> Result<String, StoreError> {
     let value = value.trim_start_matches('0');
     Ok(if value.is_empty() { "0" } else { value }.to_string())
 }
-// Port of core.utils._resolve_host_port_scheme; preserves its first-colon split.
-fn origin(auth: &AuthService, identity: &PlaybackRequest, _headers: &HeaderMap) -> String {
-    let header = |key| identity.header(key);
-    let trusted = auth.is_trusted_proxy(identity.peer_ip);
-    let scheme = if trusted {
-        header("x-forwarded-proto")
-            .and_then(|value| value.split(',').next())
-            .map(str::trim)
-            .filter(|value| !value.is_empty())
-            .unwrap_or("http")
-    } else {
-        "http"
-    };
-    let standard = if scheme == "https" { "443" } else { "80" };
-    let combine = |host: &str, port: &str| {
-        if port == standard {
-            format!("{scheme}://{host}")
-        } else {
-            format!("{scheme}://{host}:{port}")
-        }
-    };
-    if trusted {
-        if let Some(host) = header("x-forwarded-host") {
-            if let Some((host, port)) = host.split_once(':') {
-                return combine(host, port);
-            }
-            if let Some(port) = header("x-forwarded-port") {
-                return combine(host, port);
-            }
-            if header("x-forwarded-proto").is_some() {
-                return format!("{scheme}://{host}");
-            }
-        }
-    }
-    let host = header("host").unwrap_or("localhost");
-    if let Some((host, port)) = host.split_once(':') {
-        return combine(host, port);
-    }
-    if trusted {
-        if let Some(port) = header("x-forwarded-port") {
-            return combine(host, port);
-        }
-    }
-    format!("{scheme}://{host}")
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;

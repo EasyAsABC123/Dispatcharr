@@ -320,7 +320,7 @@ impl OutputGateway {
                 "POST requests with body are not allowed.",
             ));
         }
-        let origin = origin(&self.inner.auth, &identity, &headers);
+        let origin = crate::source_output_origin(&self.inner.auth, &identity);
         let username = user
             .as_ref()
             .map_or("anonymous", |user| user.username.as_str());
@@ -569,63 +569,6 @@ fn percent_path(value: &str) -> String {
     String::from_utf8_lossy(&output).into_owned()
 }
 
-pub(crate) fn origin(
-    auth: &AuthService,
-    identity: &PlaybackRequest,
-    _headers: &HeaderMap,
-) -> String {
-    let header = |key| identity.header(key);
-    let trusted = auth.is_trusted_proxy(identity.peer_ip);
-    let scheme = if trusted {
-        header("x-forwarded-proto")
-            .and_then(|value| value.split(',').next())
-            .map(str::trim)
-            .filter(|value| !value.is_empty())
-            .unwrap_or("http")
-    } else {
-        "http"
-    };
-    let standard = if scheme == "https" { "443" } else { "80" };
-    if trusted {
-        if let Some(host) = header("x-forwarded-host") {
-            if let Some((host, port)) = host.split_once(':') {
-                return if port == standard {
-                    format!("{scheme}://{host}")
-                } else {
-                    format!("{scheme}://{host}:{port}")
-                };
-            }
-            if let Some(port) = header("x-forwarded-port") {
-                return if port == standard {
-                    format!("{scheme}://{host}")
-                } else {
-                    format!("{scheme}://{host}:{port}")
-                };
-            }
-            if header("x-forwarded-proto").is_some() {
-                return format!("{scheme}://{host}");
-            }
-        }
-    }
-    let host = header("host").unwrap_or("localhost");
-    if let Some((host, port)) = host.split_once(':') {
-        return if port == standard {
-            format!("{scheme}://{host}")
-        } else {
-            format!("{scheme}://{host}:{port}")
-        };
-    }
-    if trusted {
-        if let Some(port) = header("x-forwarded-port") {
-            return if port == standard {
-                format!("{scheme}://{host}")
-            } else {
-                format!("{scheme}://{host}:{port}")
-            };
-        }
-    }
-    format!("{scheme}://{host}")
-}
 async fn read_body(
     stop: watch::Sender<bool>,
     body: Body,

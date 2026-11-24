@@ -39,6 +39,8 @@ HDHomeRun discovery, lineup, and status paths now accept percent-encoded decimal
 
 Registered public HDHomeRun data routes also accept the Original browser format on GET and HEAD, including named output profiles and the bare API aliases. Focused tests exercise content negotiation and preserve the existing authorization and device-data paths. The paired ARM64 owner will verify these requests on the final package.
 
+M3U, XMLTV, and HDHomeRun also share Origin URL formatting for trusted proxy headers. Empty optional forwarding headers fall back to the normal host or port. The existing per-request proxy trust check supplies that decision. Both output crates compiled and the shared formatter matched Original across 2,520 header combinations.
+
 M3U, named XMLTV, and HDHomeRun now share the Original channel-number formatter. It preserves the fractional digits for binary64 ties in both displayed channel numbers and generated guide IDs. Focused Store, output, and all 15 HDHomeRun tests passed, and a separate comparison matched the pinned Python formatter across 49,990 finite inputs.
 
 ## SQLite backup creation and restore

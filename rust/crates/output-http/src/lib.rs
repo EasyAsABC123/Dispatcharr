@@ -23,7 +23,7 @@ pub fn source_output_origin(
     auth: &dispatcharr_store::AuthService,
     request: &dispatcharr_contracts::PlaybackRequest,
 ) -> String {
-    gateway::origin(auth, request, &axum::http::HeaderMap::new())
+    dispatcharr_contracts::source_output_origin(request, auth.is_trusted_proxy(request.peer_ip))
 }
 
 /// Original output CSRF failure page, if the shared check rejects a request.
