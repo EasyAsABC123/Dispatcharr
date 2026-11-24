@@ -53,17 +53,27 @@ fn remote_target_url(
     rows: &[OrderedChannelStream],
     current: i64,
     target: i64,
+    kind: RemoteSwitchKind,
 ) -> Result<&str, PlaybackError> {
-    unique_direct_url(rows, current)
-        .zip(unique_direct_url(rows, target))
-        .filter(|(current, next)| current != next)
-        .map(|(_, next)| next)
-        .ok_or_else(|| {
-            PlaybackError::new(
-                501,
-                "Remote switch requires assigned direct streams on the same unlimited profile",
-            )
-        })
+    let url = if current == target {
+        // A remote assigned reselect may refresh the already active input.
+        // The ready owner independently verifies this saved URL against its
+        // actual current direct candidate before acknowledging without a dial.
+        (kind == RemoteSwitchKind::Assigned)
+            .then(|| unique_direct_url(rows, current))
+            .flatten()
+    } else {
+        unique_direct_url(rows, current)
+            .zip(unique_direct_url(rows, target))
+            .filter(|(current, next)| current != next)
+            .map(|(_, next)| next)
+    };
+    url.ok_or_else(|| {
+        PlaybackError::new(
+            501,
+            "Remote switch requires assigned direct streams on the same unlimited profile",
+        )
+    })
 }
 
 fn owner_target_url(
@@ -75,7 +85,7 @@ fn owner_target_url(
     if kind == RemoteSwitchKind::Next {
         verify_transfer_order(rows, current, target)?;
     }
-    remote_target_url(rows, current, target)
+    remote_target_url(rows, current, target, kind)
 }
 
 struct RemoteContext<'a> {
@@ -153,14 +163,14 @@ impl StreamEngine {
             .observe_remote_switch(channel)
             .await?
             .ok_or_else(|| PlaybackError::new(404, "Channel not found"))?;
-        if context.source.stream == target {
-            return Err(PlaybackError::new(
-                501,
-                "Remote switch requires a different assigned stream",
-            ));
-        }
         let rows = request_order(&context, resolver, channel).await?;
-        let url = remote_target_url(&rows, context.source.stream, target)?.to_owned();
+        let url = remote_target_url(
+            &rows,
+            context.source.stream,
+            target,
+            RemoteSwitchKind::Assigned,
+        )?
+        .to_owned();
         let verdict =
             request_remote_switch(context, target, &url, RemoteSwitchKind::Assigned).await?;
         Ok(AssignedSwitch::Remote { url, verdict })
@@ -187,7 +197,7 @@ impl StreamEngine {
         if successor.missing_active_default_profile {
             return Ok(NextStreamOutcome::MissingActiveDefault { previous, next });
         }
-        let url = remote_target_url(&rows, previous, next)?.to_owned();
+        let url = remote_target_url(&rows, previous, next, RemoteSwitchKind::Next)?.to_owned();
         let verdict = request_remote_switch(context, next, &url, RemoteSwitchKind::Next).await?;
         Ok(NextStreamOutcome::Remote {
             selected: NextStreamSwitch {
@@ -544,6 +554,30 @@ mod tests {
         assert_eq!(immediate.id, 13);
         assert_eq!(
             owner_target_url(&changed, 11, 13, RemoteSwitchKind::Next)
+                .unwrap_err()
+                .status,
+            501
+        );
+    }
+
+    #[test]
+    fn remote_assigned_reselect_keeps_only_the_exact_fresh_current_direct_url() {
+        let mut rows = [11, 12].map(|id| OrderedChannelStream {
+            id,
+            direct_url: Some(format!("http://owned-origin/{id}.ts")),
+            missing_active_default_profile: false,
+        });
+        let confirmed = owner_target_url(&rows, 11, 11, RemoteSwitchKind::Assigned).unwrap();
+        assert_eq!(confirmed, "http://owned-origin/11.ts");
+        let original_fingerprint = url_digest(confirmed);
+        assert!(owner_target_url(&rows, 11, 11, RemoteSwitchKind::Next).is_err());
+
+        rows[0].direct_url = Some("http://owned-origin/edited.ts".into());
+        let changed = owner_target_url(&rows, 11, 11, RemoteSwitchKind::Assigned).unwrap();
+        assert_ne!(url_digest(changed), original_fingerprint);
+        rows[0].direct_url = None;
+        assert_eq!(
+            owner_target_url(&rows, 11, 11, RemoteSwitchKind::Assigned)
                 .unwrap_err()
                 .status,
             501

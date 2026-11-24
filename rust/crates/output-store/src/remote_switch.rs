@@ -177,7 +177,7 @@ impl OutputStore {
     ) -> Result<bool, Error> {
         if wake.request.is_nil()
             || intent.target <= 0
-            || intent.target == intent.source.stream
+            || (wake.kind == RemoteSwitchKind::Next && intent.target == intent.source.stream)
             || !is_digest(&intent.url_sha256)
         {
             return Err(Error::InvalidKey);
@@ -355,6 +355,7 @@ local state=redis.call('HMGET',KEYS[4],'fence','request','phase','stream','profi
 if operation=='begin' then
     local kind=ARGV[10] or 'assigned'
     if kind~='assigned' and kind~='next' then return {} end
+    if kind=='next' and ARGV[4]==ARGV[7] then return {} end
     local fields=active()
     if not fields or fields[4]~=ARGV[4] or fields[5]~=ARGV[5] or state[1]==fence then return {} end
     local remaining=tonumber(ARGV[6])-millis()

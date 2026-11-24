@@ -216,7 +216,10 @@ verify media continuity and retirement across both processes. It uses the same t
 responses and one upstream to exercise remote Next after the assigned
 switch. Both workers recheck the immediate saved successor before the
 producer opens it. A request-specific operation keeps older assigned-only
-listeners from processing Next as an assigned switch.
+listeners from processing Next as an assigned switch. A signed remote
+reselect can refresh the current stream when the stored URL still matches
+the owned producer. The paired fixture checks that both viewers continue
+and no new upstream connection opens.
 
 The ordinary Series DVR API can save a signed rule through the existing
 DVR permission and settings writer. The worker evaluates a saved exact-title
