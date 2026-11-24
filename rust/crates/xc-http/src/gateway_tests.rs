@@ -5,42 +5,10 @@ use dispatcharr_store::{AuthConfig, NotificationCache};
 use http_body_util::BodyExt;
 use std::future::IntoFuture;
 #[test]
-fn cached_info_live_scope_uses_wall_clock_and_admits_measured_get_ids() {
-    for value in [
-        "1",
-        "20",
-        "0001",
-        "+001",
-        " 1\t",
-        "١",
-        "３_４",
-        "9223372036854775807",
-        "0",
-        "+00",
-        "-1",
-        "-١_٢",
-        "-9223372036854775808",
-        "1.2",
-        "1__2",
-        " \t",
-        "false",
-    ] {
-        assert!(ordinary_cached_info_request(&Method::GET, Some(value)));
-        assert!(!ordinary_cached_info_request(&Method::HEAD, Some(value)));
-        assert!(!ordinary_cached_info_request(&Method::POST, Some(value)));
-    }
-    for missing in [None, Some("")] {
-        assert!(ordinary_cached_info_request(&Method::GET, missing));
-        for method in [Method::HEAD, Method::POST, Method::OPTIONS] {
-            assert!(!ordinary_cached_info_request(&method, missing));
-        }
-    }
-    for value in [
-        Some("-9223372036854775809"),
-        Some("9223372036854775808"),
-        Some("９２２３３７２０３６８５４７７５８０８"),
-    ] {
-        assert!(!ordinary_cached_info_request(&Method::GET, value));
+fn cached_info_live_scope_accepts_get_and_uses_wall_clock() {
+    assert!(ordinary_cached_info_request(&Method::GET));
+    for method in [Method::HEAD, Method::POST, Method::OPTIONS] {
+        assert!(!ordinary_cached_info_request(&method));
     }
     let before = chrono::Utc::now().timestamp_micros();
     let current = CachedInfoClock::Wall.micros();

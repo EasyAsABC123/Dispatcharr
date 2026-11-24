@@ -99,14 +99,8 @@ fn unsupported_action() -> StoreError {
         json!({"detail":"This XC action has not yet completed its Source migration gates."}),
     )
 }
-fn ordinary_cached_info_request(method: &Method, id: Option<&str>) -> bool {
-    // Let the existing lookup apply family-specific missing and malformed
-    // behavior. Widen the bounded SQL lookup to all representable signed IDs.
-    // The PostgreSQL behavior of out-of-range foreign-key binds is unqualified.
+fn ordinary_cached_info_request(method: &Method) -> bool {
     method == Method::GET
-        && id
-            .and_then(dispatcharr_ingest_core::source_integer_literal)
-            .is_none_or(|raw| raw.parse::<i64>().is_ok())
 }
 struct Worker(Arc<Inner>);
 impl Drop for Worker {
@@ -246,12 +240,7 @@ impl XcGateway {
             .expect("single fixture clock");
         self
     }
-    fn cached_vod_info_clock(
-        &self,
-        method: &Method,
-        action: &str,
-        id: Option<&str>,
-    ) -> Option<CachedInfoClock> {
+    fn cached_vod_info_clock(&self, method: &Method, action: &str) -> Option<CachedInfoClock> {
         if !matches!(action, "get_vod_info" | "get_series_info") {
             return None;
         }
@@ -260,7 +249,7 @@ impl XcGateway {
             return Some(CachedInfoClock::Fixture(*clock));
         }
         (self.inner.cached_vod_info_enabled.load(Ordering::Acquire)
-            && ordinary_cached_info_request(method, id))
+            && ordinary_cached_info_request(method))
         .then_some(CachedInfoClock::Wall)
     }
     fn accepts_vod_list(&self, action: &str) -> bool {
@@ -504,7 +493,7 @@ impl XcGateway {
                 &mut out,
             )
             .await?;
-        } else if let Some(clock) = self.cached_vod_info_clock(&method, action, info_id) {
+        } else if let Some(clock) = self.cached_vod_info_clock(&method, action) {
             use crate::vod_info_stage::{Context, Error, Prepared};
             let origin = dispatcharr_output_http::source_output_origin(&auth, &identity);
             let family = if action == "get_series_info" {

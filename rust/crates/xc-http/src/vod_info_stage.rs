@@ -98,7 +98,8 @@ fn lookup_id(props: &Value, family: Family, input: Option<&str>) -> Result<i64, 
         }
     };
     let integer = dispatcharr_ingest_core::source_integer_literal(raw).ok_or_else(invalid)?;
-    integer.parse().map_err(|_| Error::UnsupportedIdRange)
+    // A valid integer outside PostgreSQL bigint cannot match a relation ID.
+    integer.parse().map_err(|_| Error::NotFound)
 }
 pub(crate) async fn prepare<N: FnMut() -> i64>(
     ctx: &Context<'_>,
@@ -253,7 +254,7 @@ mod tests {
         }
     }
     #[test]
-    fn movie_series_invalid_id_branches_remain_distinct_and_range_is_unqualified() {
+    fn movie_series_invalid_id_branches_remain_distinct() {
         assert!(matches!(
             lookup_id(&json!({}), Family::Movie, Some("bad")),
             Err(Error::MovieInvalidId)
@@ -264,13 +265,32 @@ mod tests {
         ));
         for family in [Family::Movie, Family::Series] {
             assert_eq!(lookup_id(&json!({}), family, Some("  +1_2  ")).unwrap(), 12);
-            assert!(matches!(
-                lookup_id(&json!({}), family, Some("9223372036854775808")),
-                Err(Error::UnsupportedIdRange)
-            ));
         }
         let _ = prepare::<fn() -> i64>;
         let _ = write_cached;
+    }
+    #[test]
+    fn movie_series_valid_ids_outside_postgres_bigint_are_not_found() {
+        let props = json!({});
+        for family in [Family::Movie, Family::Series] {
+            for boundary in [i64::MIN, i64::MAX] {
+                assert_eq!(
+                    lookup_id(&props, family, Some(&boundary.to_string())).unwrap(),
+                    boundary
+                );
+            }
+            for value in [
+                "9223372036854775808",
+                "-9223372036854775809",
+                "+000123456789012345678901234567890",
+                "-١_٢٣٤٥٦٧٨٩٠١٢٣٤٥٦٧٨٩٠١٢٣٤٥٦٧٨٩٠",
+            ] {
+                assert!(matches!(
+                    lookup_id(&props, family, Some(value)),
+                    Err(Error::NotFound)
+                ));
+            }
+        }
     }
     #[test]
     fn capacity_and_backend_errors_are_not_reclassified_as_authentication() {

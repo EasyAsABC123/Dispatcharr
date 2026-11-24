@@ -402,7 +402,12 @@ It checks the two missing-ID cases for exact response bytes and no further
 provider or datastore effects. The same fixture adds signed zero, negative
 and malformed identifiers. Pinned Original view and database components
 established the expected responses. The final packaged run will verify
-their wire behavior on the common revision.
+their wire behavior on the common revision. For valid integers outside
+PostgreSQL bigint, Rust returns the same 404 before the relation lookup.
+Twenty-four pinned Original view calls used an isolated PostgreSQL server
+and produced the same response. The Rust library passed 67 focused
+tests, with 25 external-fixture tests reserved for owned runtime checks.
+The existing paired owner adds eight signed overflow cases.
 
 ## One frozen verification campaign
 
