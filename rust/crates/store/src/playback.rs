@@ -53,6 +53,25 @@ struct ProviderUrl<'a> {
     search: &'a str,
     replace: &'a str,
 }
+fn std_transform<'a>(
+    input: &'a str,
+    search: &str,
+    replace: &str,
+) -> Result<Option<std::borrow::Cow<'a, str>>, StoreError> {
+    if search.is_empty() || replace.is_empty() || (search == "^(.*)$" && replace == "$1") {
+        return Ok(Some(std::borrow::Cow::Borrowed(input)));
+    }
+    if !(search.starts_with('^') && search.ends_with('$')) && regex::escape(search) != search {
+        return Err(StoreError::Unsupported(
+            "STD provider URL needs a qualified literal or anchored transform",
+        ));
+    }
+    Ok(
+        crate::xc_account_provider::rewrite_provider_url(input, search, replace)?
+            .map(std::borrow::Cow::Owned),
+    )
+}
+
 impl ProviderUrl<'_> {
     fn resolve(&self) -> Result<Option<String>, StoreError> {
         // Original _resolve_live_stream_url regenerates XC URLs from CURRENT
@@ -73,12 +92,11 @@ impl ProviderUrl<'_> {
                     "{}/live/{}/{}/{}.ts",
                     credentials.url, credentials.username, credentials.password, self.stream_id
                 )
-            } else if matches!(self.account_type, "STD" | "XC")
-                && (self.search.is_empty()
-                    || self.replace.is_empty()
-                    || (self.search == "^(.*)$" && self.replace == "$1"))
-            {
-                self.stored.to_owned()
+            } else if matches!(self.account_type, "STD" | "XC") {
+                let Some(url) = std_transform(self.stored, self.search, self.replace)? else {
+                    return Ok(None);
+                };
+                url.into_owned()
             } else {
                 return Err(StoreError::Unsupported(
                     "Provider URL transform is unsupported",
@@ -125,51 +143,54 @@ fn unsupported_std_sample() -> StoreError {
 fn std_sample_credential_pool(
     group: i64,
     maximum: u32,
-    sample: &str,
+    sample: Option<&str>,
     username: &str,
     password: &str,
-) -> Result<dispatcharr_contracts::PlaybackCredentialPool, StoreError> {
-    // The verified slice is a plain HTTP(S) account sample. It is read only
-    // for pool identity. The actual assigned media URL is resolved separately.
+) -> Result<Option<dispatcharr_contracts::PlaybackCredentialPool>, StoreError> {
+    let saved = (!username.is_empty() && !password.is_empty()).then_some((username, password));
+    let Some(sample) = sample else {
+        return saved
+            .map(|(user, pass)| xc_credential_pool(group, maximum, user, pass))
+            .transpose();
+    };
+
+    // Original tries a typed URL match before saved credentials, then tries
+    // short-form path credentials. Preserve that order even when paths are
+    // ordinary CDN media paths and provide no credentials at all.
     let url = url::Url::parse(sample).map_err(|_| unsupported_std_sample())?;
+    let plain = |byte: u8| byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.');
     if !matches!(url.scheme(), "http" | "https")
         || url.host().is_none()
         || url.as_str() != sample
         || !url.username().is_empty()
         || url.password().is_some()
+        || !url.path().bytes().all(|byte| byte == b'/' || plain(byte))
         || url.query().is_some_and(|query| {
-            // Original's typed lookup scans the entire sample URL. Restrict
-            // this query slice to bytes that cannot introduce a second path.
-            !query.bytes().all(|byte| {
-                byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.' | b'=' | b'&')
-            })
+            !query
+                .bytes()
+                .all(|byte| plain(byte) || matches!(byte, b'=' | b'&'))
         })
         || url.fragment().is_some()
     {
         return Err(unsupported_std_sample());
     }
-    let mut segments = url.path_segments().ok_or_else(unsupported_std_sample)?;
-    let plain = |part: &str| {
-        !part.is_empty()
-            && part
-                .bytes()
-                .all(|c| c.is_ascii_alphanumeric() || matches!(c, b'-' | b'_' | b'.'))
-    };
-    let (first, second, third) = (
-        segments.next().filter(|part| plain(part)),
-        segments.next().filter(|part| plain(part)),
-        segments.next().filter(|part| plain(part)),
-    );
-    let (Some(first), Some(second), Some(third)) = (first, second, third) else {
-        return Err(unsupported_std_sample());
-    };
-    let pair = match segments.next() {
-        Some(id)
-            if first.eq_ignore_ascii_case("live") && plain(id) && segments.next().is_none() =>
-        {
-            (second, third)
-        }
-        None if ![
+
+    static TYPED: std::sync::OnceLock<regex::Regex> = std::sync::OnceLock::new();
+    let typed = TYPED
+        .get_or_init(|| regex::Regex::new(r"(?i)/(?:live|movie|series)/([^/]+)/([^/]+)/").unwrap())
+        .captures(sample)
+        .map(|capture| {
+            (
+                capture.get(1).unwrap().as_str(),
+                capture.get(2).unwrap().as_str(),
+            )
+        });
+    let pair = typed.or(saved).or_else(|| {
+        let mut segments = url.path_segments()?;
+        let user = segments.next().filter(|value| !value.is_empty())?;
+        let pass = segments.next().filter(|value| !value.is_empty())?;
+        let _stream = segments.next().filter(|value| !value.is_empty())?;
+        let reserved = [
             "live",
             "movie",
             "series",
@@ -179,17 +200,11 @@ fn std_sample_credential_pool(
             "xmltv.php",
         ]
         .iter()
-        .any(|reserved| first.eq_ignore_ascii_case(reserved)) =>
-        {
-            if username.is_empty() || password.is_empty() {
-                (first, second)
-            } else {
-                (username, password)
-            }
-        }
-        _ => return Err(unsupported_std_sample()),
-    };
-    xc_credential_pool(group, maximum, pair.0, pair.1)
+        .any(|root| user.eq_ignore_ascii_case(root));
+        (segments.next().is_none() && !reserved).then_some((user, pass))
+    });
+    pair.map(|(user, pass)| xc_credential_pool(group, maximum, user, pass))
+        .transpose()
 }
 
 struct StdSample {
@@ -657,18 +672,27 @@ impl Store {
                     if sample.oversized || row.try_get::<bool, _>("account_login_oversized")? {
                         return Err(playback_capacity());
                     }
-                    let sample = sample
+                    if sample.ambiguous {
+                        return Err(unsupported_std_sample());
+                    }
+                    let transformed = sample
                         .url
                         .as_deref()
-                        .filter(|_| !sample.ambiguous)
-                        .ok_or_else(unsupported_std_sample)?;
-                    Some(std_sample_credential_pool(
+                        .map(|sample| std_transform(sample, &search, &replace))
+                        .transpose()?
+                        .flatten();
+                    let Some(pool) = std_sample_credential_pool(
                         group,
                         maximum as u32,
-                        sample,
+                        transformed.as_deref(),
                         username.as_deref().unwrap_or_default(),
                         password.as_deref().unwrap_or_default(),
-                    )?)
+                    )?
+                    else {
+                        credential_unavailable = true;
+                        continue;
+                    };
+                    Some(pool)
                 }
                 (Some(_), true) => {
                     return Err(StoreError::Unsupported(
@@ -1344,54 +1368,113 @@ mod output_tests {
         let unselected = format!("{selected}-other");
         let typed = format!("http://origin.invalid/live/{selected}/{secret}/1.ts");
         let short = format!("http://origin.invalid/{unselected}/{secret}/1.ts");
-        let typed_pool = std_sample_credential_pool(7, 1, &typed, &unselected, &secret).unwrap();
-        let saved_pool = std_sample_credential_pool(7, 1, &short, selected, &secret).unwrap();
-        let distinct_pool = std_sample_credential_pool(7, 1, &short, "", "").unwrap();
+        let typed_pool =
+            std_sample_credential_pool(7, 1, Some(&typed), &unselected, &secret).unwrap();
+        let saved_pool = std_sample_credential_pool(7, 1, Some(&short), selected, &secret).unwrap();
+        let distinct_pool = std_sample_credential_pool(7, 1, Some(&short), "", "").unwrap();
         assert_eq!(typed_pool, saved_pool);
         assert_ne!(typed_pool, distinct_pool);
         assert_eq!(
             typed_pool,
-            xc_credential_pool(7, 1, selected, &secret).unwrap()
+            Some(xc_credential_pool(7, 1, selected, &secret).unwrap())
         );
     }
 
     #[test]
     fn ordinary_std_account_sample_query_preserves_path_and_saved_identity() {
         let endpoint = "http://origin.invalid";
-        let saved = xc_credential_pool(7, 1, "saved", "account").unwrap();
-        let media = xc_credential_pool(7, 1, "media", "pair").unwrap();
+        let saved = Some(xc_credential_pool(7, 1, "saved", "account").unwrap());
+        let media = Some(xc_credential_pool(7, 1, "media", "pair").unwrap());
         for query in ["?key=abc123", "?key=abc-_.123&mode=auto"] {
-            let typed = format!("{endpoint}/live/media/pair/1.ts{query}");
+            for path in [
+                "/live/media/pair/1.ts",
+                "/vod/MOVIE/media/pair/1.ts",
+                "/series/media/pair/1.ts",
+            ] {
+                let typed = format!("{endpoint}{path}{query}");
+                assert_eq!(
+                    std_sample_credential_pool(7, 1, Some(&typed), "saved", "account").unwrap(),
+                    media
+                );
+            }
             let short = format!("{endpoint}/media/pair/1.ts{query}");
             assert_eq!(
-                std_sample_credential_pool(7, 1, &typed, "saved", "account").unwrap(),
-                media
-            );
-            assert_eq!(
-                std_sample_credential_pool(7, 1, &short, "saved", "account").unwrap(),
+                std_sample_credential_pool(7, 1, Some(&short), "saved", "account").unwrap(),
                 saved
             );
             assert_eq!(
-                std_sample_credential_pool(7, 1, &short, "", "").unwrap(),
+                std_sample_credential_pool(7, 1, Some(&short), "", "").unwrap(),
                 media
             );
         }
     }
 
     #[test]
+    fn ordinary_std_account_sample_falls_back_to_saved_credentials_or_no_capacity() {
+        let saved = Some(xc_credential_pool(7, 1, "saved", "account").unwrap());
+        for sample in [
+            None,
+            Some("http://origin.invalid/"),
+            Some("http://origin.invalid/index.m3u8"),
+            Some("http://origin.invalid/live/only-two.ts"),
+            Some("http://origin.invalid/a/b/1.ts/"),
+        ] {
+            assert_eq!(
+                std_sample_credential_pool(7, 1, sample, "saved", "account").unwrap(),
+                saved
+            );
+            assert_eq!(
+                std_sample_credential_pool(7, 1, sample, "", "").unwrap(),
+                None
+            );
+        }
+    }
+
+    #[test]
+    fn ordinary_std_account_sample_uses_the_same_profile_transform_as_playback() {
+        let sample = "http://old.invalid/live/stale/pair/1.ts";
+        let media = "http://old.invalid/live/stale/pair/2.ts";
+        let search = r"^http://old[.]invalid/live/stale/pair/(?<asset>[0-9]+)[.]ts$";
+        let replace = "http://new.invalid/live/active/shared/$<asset>.ts";
+        let selection = ProviderUrl {
+            account_type: "STD",
+            stored: media,
+            server: "",
+            username: "",
+            password: "",
+            stream_id: "",
+            search,
+            replace,
+        };
+        assert_eq!(
+            selection.resolve().unwrap().as_deref(),
+            Some("http://new.invalid/live/active/shared/2.ts")
+        );
+        let sample = std_transform(sample, search, replace).unwrap();
+        assert_eq!(
+            std_sample_credential_pool(7, 1, sample.as_deref(), "", "").unwrap(),
+            Some(xc_credential_pool(7, 1, "active", "shared").unwrap())
+        );
+        assert_eq!(std_transform("plain", search, replace).unwrap(), None);
+        assert_eq!(
+            std_transform("http://old.invalid/default.ts", "old", "new")
+                .unwrap()
+                .as_deref(),
+            Some("http://new.invalid/default.ts")
+        );
+        assert!(std_transform(media, r"(?<=old)", "changed").is_err());
+    }
+
+    #[test]
     fn ordinary_std_account_sample_rejects_unqualified_path_shapes() {
         for suffix in [
-            "/",
-            "/live/only-two.ts",
-            "/movie/a/b/1.ts",
             "/a/b/1.ts?key=/live/other/pair/id.ts",
             "/a/b/1.ts?key=%2Flive%2Fother%2Fpair%2Fid.ts",
             "/a/b/1.ts?key=abc#fragment",
-            "/a/b/1.ts/",
             "/a%20b/c/1.ts",
         ] {
             let sample = format!("http://origin.invalid{suffix}");
-            assert!(std_sample_credential_pool(7, 1, &sample, "", "").is_err());
+            assert!(std_sample_credential_pool(7, 1, Some(&sample), "", "").is_err());
         }
     }
     #[test]

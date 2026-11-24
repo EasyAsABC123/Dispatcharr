@@ -52,6 +52,41 @@ pub(crate) fn credentials(
             password: password.into(),
         }));
     }
+    let input = format!("{original}/live/{user}/{password}/1234.ts");
+    let Some(transformed) = rewrite_provider_url(&input, search, replace)? else {
+        return Ok(None);
+    };
+    let mut url = Url::parse(&transformed).map_err(|_| unsupported())?;
+    let parts = url
+        .path()
+        .split('/')
+        .filter(|v| !v.is_empty())
+        .collect::<Vec<_>>();
+    if parts.len() < 4 || parts.last() != Some(&"1234.ts") {
+        return Ok(None);
+    }
+    let username = parts[parts.len() - 3].to_owned();
+    let password = parts[parts.len() - 2].to_owned();
+    let base = if parts.len() == 4 {
+        String::new()
+    } else {
+        format!("/{}", parts[..parts.len() - 4].join("/"))
+    };
+    url.set_path(&base);
+    url.set_query(None);
+    url.set_fragment(None);
+    Ok(Some(Credentials {
+        url: url.as_str().trim_end_matches('/').into(),
+        username,
+        password,
+    }))
+}
+/// Apply the supported Source capture replacement with a bounded output buffer.
+pub(crate) fn rewrite_provider_url(
+    input: &str,
+    search: &str,
+    replace: &str,
+) -> Result<Option<String>, StoreError> {
     // Rust's linear-time engine supports the ordinary capture replacement
     // subset. Python lookaround/backreferences/regex flags remain explicit.
     if replace.contains('\\')
@@ -67,8 +102,7 @@ pub(crate) fn credentials(
         Err(_) if search.contains("(?") => return Err(unsupported()),
         Err(_) => return Ok(None),
     };
-    let input = format!("{original}/live/{user}/{password}/1234.ts");
-    if !regex.is_match(&input) {
+    if !regex.is_match(input) {
         return Ok(None);
     }
     let mut replacement = String::new();
@@ -102,7 +136,7 @@ pub(crate) fn credentials(
     // checking len after Regex::replace_all would allocate an oversized result.
     let mut transformed = String::new();
     let mut previous = 0;
-    for captures in regex.captures_iter(&input) {
+    for captures in regex.captures_iter(input) {
         let whole = captures.get(0).ok_or_else(unsupported)?;
         if whole.start() == whole.end() {
             return Err(unsupported());
@@ -146,31 +180,9 @@ pub(crate) fn credentials(
         previous = whole.end();
     }
     append(&mut transformed, &input[previous..])?;
-    let mut url = Url::parse(&transformed).map_err(|_| unsupported())?;
-    let parts = url
-        .path()
-        .split('/')
-        .filter(|v| !v.is_empty())
-        .collect::<Vec<_>>();
-    if parts.len() < 4 || parts.last() != Some(&"1234.ts") {
-        return Ok(None);
-    }
-    let username = parts[parts.len() - 3].to_owned();
-    let password = parts[parts.len() - 2].to_owned();
-    let base = if parts.len() == 4 {
-        String::new()
-    } else {
-        format!("/{}", parts[..parts.len() - 4].join("/"))
-    };
-    url.set_path(&base);
-    url.set_query(None);
-    url.set_fragment(None);
-    Ok(Some(Credentials {
-        url: url.as_str().trim_end_matches('/').into(),
-        username,
-        password,
-    }))
+    Ok(Some(transformed))
 }
+
 fn append(output: &mut String, value: &str) -> Result<(), StoreError> {
     if value.len() > 65536 - output.len() {
         return Err(unsupported());

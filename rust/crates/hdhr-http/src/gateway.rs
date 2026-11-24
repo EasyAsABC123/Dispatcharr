@@ -269,7 +269,6 @@ impl HdhrGateway {
         } else {
             negotiation_status(
                 &method,
-                request.uri().path(),
                 &endpoint,
                 identity.parameter("format"),
                 headers.get("accept").and_then(|value| value.to_str().ok()),
@@ -413,19 +412,6 @@ const LINEUP_STATUS_OPTIONS: &str = concat!(
     r#""parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]}"#,
 );
 
-fn forced_browser_format(method: &Method, path: &str, format: Option<&str>) -> bool {
-    format == Some("api")
-        && ((method == Method::HEAD && path == LINEUP_STATUS_PATH)
-            || (method == Method::GET
-                && matches!(
-                    path,
-                    "/hdhr/discover.json"
-                        | "/hdhr/lineup.json"
-                        | LINEUP_STATUS_PATH
-                        | "/hdhr/device.xml"
-                )))
-}
-
 const BROWSABLE_AUTH_VARY: HeaderValue = HeaderValue::from_static("Accept, origin, Cookie");
 const LINEUP_STATUS_AUTH_SHELL: &str = include!("../datasets/lineup-status-auth.rs");
 const LINEUP_STATUS_ORDINARY_BROWSER_AUTH_SHELL: &str =
@@ -483,7 +469,7 @@ fn lineup_status_auth_shell(
     if *method != Method::GET || uri.path() != LINEUP_STATUS_PATH {
         return None;
     }
-    if forced_browser_format(method, uri.path(), format) {
+    if format == Some("api") {
         return Some(LINEUP_STATUS_AUTH_SHELL);
     }
     let mut accepts = headers.get_all(header::ACCEPT).iter();
@@ -590,20 +576,21 @@ fn lineup_status_auth_html(
 // it does not change those concrete HttpResponse bodies or network checks.
 fn negotiation_status(
     method: &Method,
-    path: &str,
     endpoint: &Endpoint,
     format: Option<&str>,
     accept: Option<&str>,
 ) -> Option<StatusCode> {
-    let browser_format = forced_browser_format(method, path, format);
-    if !browser_format && format.is_some_and(|value| !value.is_empty() && value != "json") {
-        return Some(StatusCode::NOT_FOUND);
-    }
     let django_response = matches!(*method, Method::GET | Method::HEAD)
         && matches!(
             endpoint,
             Endpoint::Discover { .. } | Endpoint::Lineup { .. } | Endpoint::Status | Endpoint::Xml
         );
+    // The router registers these Source data views in both namespaces. Every
+    // GET and inherited HEAD negotiates first, then returns its own entity.
+    let browser_format = format == Some("api") && django_response;
+    if !browser_format && format.is_some_and(|value| !value.is_empty() && value != "json") {
+        return Some(StatusCode::NOT_FOUND);
+    }
     let rejected = accept.is_some_and(|value| {
         !value.split(',').any(|part| {
             let value = part.split(';').next().unwrap_or("").trim();
@@ -1093,66 +1080,41 @@ mod tests {
 
     #[test]
     fn browser_format_keeps_the_public_django_response() {
-        let browser = Some("text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8");
+        let browser = Some(ORDINARY_BROWSER_ACCEPT);
         for path in [
             "/hdhr/discover.json",
             "/hdhr/lineup.json",
             "/hdhr/lineup_status.json",
             "/hdhr/device.xml",
+            "/api/hdhr/discover.json",
+            "/api/hdhr/lineup.json",
+            "/api/hdhr/lineup_status.json",
+            "/api/hdhr/device.xml",
+            "/hdhr/House/lineup.json",
+            "/hdhr/output_profile/2/discover.json",
+            "/hdhr/House/output_profile/2/lineup_status.json",
         ] {
             let route = endpoint(path).unwrap();
-            for format in [None, Some("api")] {
+            for method in [Method::GET, Method::HEAD] {
+                for format in [None, Some("api")] {
+                    assert_eq!(
+                        negotiation_status(&method, &route, format, browser),
+                        None,
+                        "{method} {path}"
+                    );
+                }
                 assert_eq!(
-                    negotiation_status(&Method::GET, path, &route, format, browser),
-                    None
+                    negotiation_status(&method, &route, Some("api"), Some("application/json")),
+                    Some(StatusCode::NOT_ACCEPTABLE),
+                    "{method} {path}"
+                );
+                assert_eq!(
+                    negotiation_status(&method, &route, Some("json"), Some("application/json")),
+                    None,
+                    "{method} {path}"
                 );
             }
-            assert_eq!(
-                negotiation_status(
-                    &Method::GET,
-                    path,
-                    &route,
-                    Some("api"),
-                    Some("application/json")
-                ),
-                Some(StatusCode::NOT_ACCEPTABLE)
-            );
-            assert_eq!(
-                negotiation_status(
-                    &Method::GET,
-                    path,
-                    &route,
-                    Some("json"),
-                    Some("application/json")
-                ),
-                None
-            );
         }
-    }
-
-    #[test]
-    fn lineup_status_head_accepts_the_forced_browser_format() {
-        let route = endpoint(LINEUP_STATUS_PATH).unwrap();
-        assert_eq!(
-            negotiation_status(
-                &Method::HEAD,
-                LINEUP_STATUS_PATH,
-                &route,
-                Some("api"),
-                Some(ORDINARY_BROWSER_ACCEPT),
-            ),
-            None
-        );
-        assert_eq!(
-            negotiation_status(
-                &Method::HEAD,
-                LINEUP_STATUS_PATH,
-                &route,
-                Some("api"),
-                Some("application/json"),
-            ),
-            Some(StatusCode::NOT_ACCEPTABLE)
-        );
     }
 
     #[test]
@@ -1181,14 +1143,14 @@ mod tests {
     fn browser_format_preserves_other_route_and_method_admission() {
         for (method, path) in [
             (Method::GET, "/api/hdhr/devices/"),
-            (Method::GET, "/api/hdhr/discover.json"),
-            (Method::GET, "/hdhr/House/lineup.json"),
-            (Method::HEAD, "/hdhr/device.xml"),
+            (Method::HEAD, "/hdhr/devices/"),
+            (Method::GET, "/hdhr/"),
             (Method::OPTIONS, "/hdhr/lineup_status.json"),
+            (Method::POST, "/hdhr/House/lineup.json"),
         ] {
             let route = endpoint(path).unwrap();
             assert_eq!(
-                negotiation_status(&method, path, &route, Some("api"), Some("text/html")),
+                negotiation_status(&method, &route, Some("api"), Some("text/html")),
                 Some(StatusCode::NOT_FOUND)
             );
         }
