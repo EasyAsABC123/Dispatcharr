@@ -14,6 +14,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 try:
     import recording61_owner as common
     from prepare_recording61 import rebind_package
+    import scheduler_tick as tick
 finally:
     sys.path.pop(0)
 
@@ -25,6 +26,7 @@ ORIGINAL_REL = "m6-source-native-scheduler-final-physical-1/source-scheduler-dat
 SUPPORT = ("run.py", "candidate.py", "scheduler_scope.py", "external-pins.json")
 SCOPE_SHA = "4dcb3abcc1e43d084f74b4bba7efdf32cd87e5ea1991bd992ad74a532d4c00a8"
 SCRIPT = Path(__file__).resolve()
+TICK_SCRIPT = Path(tick.__file__).resolve()
 require, read, digest = common.require, common.read, common.digest
 
 # Intercept the sealed donor's existing textual adaptation, replacing only
@@ -58,6 +60,9 @@ def borrow_adapter(source):
     mark = "  candidate()\n  m.inspect_engine_image"
     require(source.count(mark) == 1, "scheduler fixture engine fence differs")
     source = source.replace(mark, "  assert coordinator_lease is not None, 'reviewed coordinator lease required'\n" + mark)
+    mark = "  return driver,donor,Class,cases,native"
+    require(source.count(mark) == 1, "scheduler observer insertion point differs")
+    source = source.replace(mark, "  from scheduler_tick import instrument\n  Class=instrument(Class)\n" + mark)
     return (source.replace(" raise SystemExit(configured().main())", " return configured(coordinator_lease).main()")
             + "\nif __name__=='__main__':\n raise SystemExit(main())\n")
 
@@ -83,6 +88,7 @@ def prepare(template, candidate, stage):
         compile(source, name, "exec")
         files[name] = source.encode()
     files["package-binding.json"] = (json.dumps(package, sort_keys=True) + "\n").encode()
+    files["scheduler_tick.py"] = TICK_SCRIPT.read_bytes()
     files["scheduler-coordinator.json"] = b'"saved-default-install-v1"\n'
     require(stage.resolve() == stage and not stage.exists(), "fresh absolute scheduler stage required")
     stage.mkdir(mode=0o700)
@@ -114,7 +120,8 @@ def stage_binding(stage, seal, candidate, source, *, coordinator_mode):
                      str(SCRIPT): digest(SCRIPT), str(common.SCRIPT): digest(common.SCRIPT)}
 
 
-def dispatch_spec(stage, seal, candidate, repository, entrypoint, output):
+def dispatch_spec(stage, seal, candidate, repository, entrypoint, output, *, node=NODE):
+    require(node in (NODE, tick.NODE), "unsupported scheduler row")
     source = repository / "artifacts/rust" / ORIGINAL_REL
     coordinator = repository / "scripts/rust-milestone-batches/coordinator.py"
     coordinator_sha = digest(coordinator)
@@ -125,15 +132,25 @@ def dispatch_spec(stage, seal, candidate, repository, entrypoint, output):
     prefix = ["/usr/bin/python3", "-I", "-B", str(SCRIPT), str(stage), seal,
               json.dumps(candidate, sort_keys=True), str(source)]
     tooling = repository / "artifacts/rust/tooling"
+    launch = [*prefix, "run", entrypoint, str(output), str(coordinator), coordinator_sha]
+    evaluate = [*prefix, "evaluate", entrypoint, str(output), "@EXECUTION@"]
+    if node == tick.NODE:
+        require(inputs.get(str(stage / "scheduler_tick.py")) == digest(TICK_SCRIPT),
+                "scheduler tick requires a freshly prepared due-arm observer")
+        original = repository / "artifacts/rust" / tick.ORIGINAL_LANE
+        inputs.update(original_tick_inputs(original))
+        inputs[str(TICK_SCRIPT)] = digest(TICK_SCRIPT)
+        launch = [*prefix, "tick-reuse", entrypoint, str(output), str(original)]
+        evaluate = [*prefix, "tick-evaluate", entrypoint, str(output), "@EXECUTION@", str(original)]
     return {
-        "argv": [*prefix, "run", entrypoint, str(output), str(coordinator), coordinator_sha],
+        "argv": launch,
         "cleanup_argv": [*prefix, "cleanup", str(repository)],
-        "evaluator_argv": [*prefix, "evaluate", entrypoint, str(output), "@EXECUTION@"],
+        "evaluator_argv": evaluate,
         "input_sha256": inputs | {str(coordinator): coordinator_sha},
         "cwd": str(repository), "environment": {"DOCKER_HOST": common.DAEMON,
                      "DOCKER_CONFIG": str(tooling / "docker-config"), "PATH": f"{tooling / 'docker'}:/usr/bin:/bin"},
         "strip_inherited_prefixes": common.STRIP_ENV,
-        "seconds": 1540, "cleanup_seconds": 60, "output_bytes": 65536, "exclusive_heavy": True,
+        "seconds": 1540 if node == NODE else 60, "cleanup_seconds": 60, "output_bytes": 65536, "exclusive_heavy": True,
     }
 
 
@@ -220,6 +237,71 @@ def evaluate_install(stage, seal, candidate, source):
             "retained_original_sha256": ORIGINAL_SHA, "cleanup_sha256": cleanup_sha}
 
 
+def original_tick_inputs(path):
+    execution = path.parents[1] / "Original-execution.json"
+    require(digest(path) == tick.ORIGINAL_LANE_SHA and digest(execution) == tick.ORIGINAL_EXEC_SHA,
+            "exact settled Original timing comparator required")
+    return {str(path): tick.ORIGINAL_LANE_SHA, str(execution): tick.ORIGINAL_EXEC_SHA}
+
+
+def evaluate_tick(stage, seal, candidate, source, original_path, *, require_arms):
+    installation = evaluate_install(stage, seal, candidate, source)
+    original_tick_inputs(original_path)
+    original = read(original_path)
+    reference_root = Path(original["fixture_path"])
+    require(reference_root.parent == original_path.parent and original["image"] == ORIGINAL_IMAGE
+            and original["exact_cleanup"] is True
+            and common.settled(read(original_path.parents[1] / "Original-execution.json")),
+            "exact retained pinned Original tick fixture required")
+    _, original_times, original_journal = tick.publications(reference_root, original, read, digest)
+    root, cleanup_sha = exact_cleanup(stage)
+    lane = read(stage / "actual-native-1/Native/lane.json")
+    result = lane["result"]
+    require(result["run_count"] == original["result"]["run_count"] == 2
+            and result["same_hourly_row_both_roots"] is original["result"]["same_hourly_row_both_roots"] is True
+            and result["final_ready_or_reserved"] == original["result"]["final_ready_or_reserved"] == 0
+            and result["future_media_dispatched"] is False, "saved hourly tick cadence or queue scope differs")
+    scope = read(root / "scheduler-scope-terminal.json")
+    observation = common.load_module(stage / "scheduler_scope.py", "scoped_tick_sql_observer")
+    observation.validate_terminal(scope["native_ready"], scope["before_main_stop"], scope["after_main_stop"])
+    interval = scope["native_ready"][tick.NAME]
+    require(interval == {"task": tick.ROOT, "enabled": False, "count": 0, "one_off": False,
+                         "every": 3600, "period": "seconds"}, "exact owned saved hourly row required")
+    ids, times, journal = tick.publications(root, lane, read, digest)
+    terminal_sha = tick.terminals(root, ids, read, digest, common.settled)
+    arm_paths = [root / f"scheduler-tick-arm-{count}.json" for count in (0, 1)]
+    if require_arms:
+        arms = [read(path) for path in arm_paths]
+        tick.armed_windows(arms, times)
+        tick.verify_arm_receipts(root, arms, read, digest, common.settled)
+    return {"scope": tick.NODE, "candidate": candidate, "stage_seal": seal,
+            "cleanup_sha256": cleanup_sha, "install_sql_sha256": installation["ordered_sql_sha256"],
+            "cadence_seconds": 3600, "native_broker_sha256": journal, "native_terminal_sha256": terminal_sha,
+            "native_broker_times": times, "original_broker_sha256": original_journal,
+            "original_broker_times": original_times, "original_revision": common.ORIGINAL,
+            "due_arm_sha256": [digest(path) for path in arm_paths] if require_arms else []}
+
+
+def same_installer(output, stage, proof):
+    directory = common.attempt_directory(output, NODE)
+    attempt = read(directory / "attempt.json")
+    path = directory / "result.json"
+    result = read(path)
+    qualification = result["qualification"]
+    require(attempt["node"]["id"] == result["id"] == NODE
+            and attempt["candidate"] == qualification["candidate"] == proof["candidate"]
+            and result["status"] == "passed" and result["cleanup_verified"] is True
+            and all(common.settled(result[key]) for key in ("execution", "cleanup", "evaluation"))
+            and qualification["scope"] == NODE and qualification["semantic_assertions_passed"] is True
+            and qualification["full_required_workflow"] is True and qualification["stage_seal"] == proof["stage_seal"]
+            and qualification["cleanup_sha256"] == proof["cleanup_sha256"]
+            and qualification["ordered_sql_sha256"] == proof["install_sql_sha256"]
+            and Path(attempt["binding"]["argv"][4]) == stage
+            and read(directory / "evaluation.stdout") == qualification,
+            "scheduler tick requires the same owned passed installer")
+    return digest(path)
+
+
 def execute_campaign(stage, lock):
     @contextmanager
     def borrow(expected):
@@ -276,7 +358,7 @@ def main():
     parser.add_argument("seal")
     parser.add_argument("candidate", type=json.loads)
     parser.add_argument("source", type=Path)
-    parser.add_argument("mode", choices=("run", "cleanup", "check", "evaluate"))
+    parser.add_argument("mode", choices=("run", "cleanup", "check", "evaluate", "tick-check", "tick-reuse", "tick-evaluate"))
     parser.add_argument("entrypoint", nargs="?")
     parser.add_argument("output", type=Path, nargs="?")
     parser.add_argument("authority", nargs="?")
@@ -306,13 +388,20 @@ def main():
         require_clear_quarantine(Path(args.entrypoint))
         _, cleanup_sha = exact_cleanup(stage)
         result = {"exact_owned_absence": True, "cleanup_sha256": cleanup_sha}
+    elif args.mode.startswith("tick-"):
+        original = Path(args.coordinator_sha if args.mode == "tick-evaluate" else args.authority)
+        current = args.mode != "tick-check"
+        result = evaluate_tick(stage, seal, candidate, source, original, require_arms=current)
+        if current:
+            result["installer_predecessor_sha256"] = same_installer(args.output, stage, result)
     else:
         result = evaluate_install(stage, seal, candidate, source)
-    if args.mode == "evaluate":
-        directory = common.attempt_directory(args.output, NODE)
+    if args.mode in ("evaluate", "tick-evaluate"):
+        node = tick.NODE if args.mode == "tick-evaluate" else NODE
+        directory = common.attempt_directory(args.output, node)
         require(Path(args.authority) == directory / "execution.json", "scheduler execution receipt path differs")
         receipt = read(directory / "execution.json")
-        require(receipt["id"] == NODE and common.settled(receipt["execution"])
+        require(receipt["id"] == node and common.settled(receipt["execution"])
                 and common.settled(receipt["cleanup"]) and receipt["cleanup_verified"] is True
                 and read(directory / "execution.stdout") == result,
                 "scheduler exact coordinator attempt did not settle")

@@ -137,3 +137,21 @@ M6_REPLAY_ARTIFACTS=/home/justin/github/Dispatcharr/artifacts/rust \
 M6_REPLAY_SCHEDULER=/tmp/dispatcharr-2d3f-m6-ordinary-scheduler \
   python3 -B -m unittest discover -s scripts/rust-milestone-batches/m6 -p test_scheduler_install_owner.py
 ```
+
+### Saved scheduler tick publication
+
+Supply the tick row with `scheduler_install_owner.dispatch_spec(...,
+node="m6/scheduler-tick-publication")` using the same stage and candidate as
+the installation row. A fresh stage from `prepare` includes the due-arm
+observer. The installer owns the single physical fixture; the tick row
+runs only after the same-owned installation result passes.
+
+The evaluator replays the pinned Original broker journal and each new Native
+root and child envelope. It requires two distinct UUID roots from the saved
+hourly row, the intervening artwork child with its ETA and ancestry, matching
+durable terminals, and the saved SQL count of two. The two new SQL arm
+receipts must place both Native publications within the Original fixture's
+65-second per-arm wait. The prior Native recording is useful for offline
+replay; it lacks the new arm witnesses and is refused for canonical credit.
+This row covers the two deliberate due arms of one stock hourly interval.
+Broader simultaneous schedules and the normal-stop row retain their own scopes.

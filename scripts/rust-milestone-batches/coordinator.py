@@ -265,13 +265,21 @@ def owner_readiness(nodes, document, output=None):
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
         elif key in bindings and node["owner"] == "m6":
-            if key == "m6/scheduler-install-known-defaults":
+            if key in {"m6/scheduler-install-known-defaults", "m6/scheduler-tick-publication"}:
                 owner = module(HERE / "m6/scheduler_install_owner.py", "readiness_m6_scheduler_install")
                 context = owners.get("m6", {}).get("scheduler_install")
                 if not context:
                     raise ValueError("M6 saved-default scheduler sealed stage required")
                 expected = owner.dispatch_spec(Path(context["stage"]), context["seal"], document["candidate"],
-                                               HERE.parents[1], node["entrypoint"], output)
+                                               HERE.parents[1], node["entrypoint"], output, node=key)
+                if key == owner.tick.NODE:
+                    if owner.NODE not in bindings or owner.NODE not in node["depends_on"]:
+                        raise ValueError("M6 scheduler tick requires the same owned installer")
+                    installer = next(row for row in nodes if row["id"] == owner.NODE)
+                    paired = owner.dispatch_spec(Path(context["stage"]), context["seal"], document["candidate"],
+                                                 HERE.parents[1], installer["entrypoint"], output)
+                    if bindings[owner.NODE] != paired:
+                        raise ValueError("M6 scheduler tick and installer must share the exact campaign")
                 if bindings[key] != expected:
                     raise ValueError("M6 saved-default scheduler exact owner binding required")
                 continue
