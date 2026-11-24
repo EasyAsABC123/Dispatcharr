@@ -19,8 +19,7 @@ use dispatcharr_coordination::{
     MissingRefreshSource, PositiveRefreshScalar, TaskLease, TaskLockError, TaskLocks,
 };
 use dispatcharr_ingest_core::{
-    check_xmltv_file_handle_complete, extract_xmltv_owned, source_integer_literal,
-    xmltv_file_handle_is_complete, UploadLimits,
+    check_xmltv_file_handle_complete, extract_xmltv_owned, source_integer_literal, UploadLimits,
 };
 use dispatcharr_output_store::transport::{RedisTransport, TransportConfig};
 use dispatcharr_store::Store;
@@ -28,7 +27,7 @@ use sqlx::Row;
 use std::{
     collections::HashMap,
     fs::File,
-    path::PathBuf,
+    path::{Path, PathBuf},
     sync::{
         atomic::{AtomicBool, AtomicU64, Ordering},
         Arc, Mutex, Weak,
@@ -916,15 +915,7 @@ impl Execution<'_> {
             let inspection = checks
                 .as_ref()
                 .filter(|p| p.as_os_str().to_string_lossy().ends_with(".xml") && p.exists())
-                .map(|path| -> std::io::Result<(bool, bool)> {
-                    let mut file = File::open(path)?;
-                    let metadata = file.metadata()?;
-                    let nonempty_regular_file = metadata.is_file() && metadata.len() > 0;
-                    Ok((
-                        check_xmltv_file_handle_complete(&mut file)?,
-                        nonempty_regular_file,
-                    ))
-                });
+                .map(|path| inspect_local_xml(path));
             Ok((exists, inspection))
         })
         .await
@@ -959,58 +950,38 @@ impl Execution<'_> {
             let target = destination.clone();
             let retained = context.retained.clone();
             let cancel = context.cancelled.clone();
-            let promoted = tokio::task::spawn_blocking(move || {
+            let promotion = tokio::task::spawn_blocking(move || {
                 let _retained = retained;
-                if cancel.load(Ordering::Acquire) {
-                    return Err(ImportError::Cancelled);
-                }
-                std::fs::create_dir_all(target.parent().unwrap())?;
-                // Unique incoming output belongs to this job. Never pass the
-                // previous good guide to the destructive low-level extractor.
-                let owned = std::fs::OpenOptions::new()
-                    .write(true)
-                    .create_new(true)
-                    .open(&incoming)?;
-                drop(owned);
-                let extracted =
-                    extract_xmltv_owned(&input, &incoming, false, UploadLimits::default(), &cancel);
-                let complete = extracted.is_ok()
-                    && File::open(&incoming)
-                        .ok()
-                        .is_some_and(|mut file| xmltv_file_handle_is_complete(&mut file));
-                if cancel.load(Ordering::Acquire) {
-                    let _ = std::fs::remove_file(&incoming);
-                    return Err(ImportError::Cancelled);
-                }
-                if !complete {
-                    let _ = std::fs::remove_file(&incoming);
-                    return Ok(false);
-                }
-                if let Err(error) = std::fs::rename(&incoming, &target) {
-                    let _ = std::fs::remove_file(&incoming);
-                    return Err(error.into());
-                }
-                Ok(true)
+                promote_local_archive(&input, &incoming, &target, &cancel)
             })
             .await
             .map_err(|_| ImportError::Worker)??;
-            if !promoted {
-                return Ok(FileJobOutcome::Unsupported(
-                    "invalid/oversized compressed guide promotion",
-                ));
+            match promotion {
+                LocalArchivePromotion::Promoted => {
+                    context.ensure_active()?;
+                    sqlx::query("UPDATE epg_epgsource SET extracted_file_path=$2 WHERE id=$1")
+                        .bind(source.id)
+                        .bind(
+                            destination
+                                .to_str()
+                                .ok_or(ImportError::Capacity("cache path"))?,
+                        )
+                        .execute(self.services.store.pool())
+                        .await?;
+                    check_path = Some(destination);
+                    inspection = None;
+                }
+                LocalArchivePromotion::Incomplete if !remote_download => {
+                    // A fully decoded local archive with a nonempty guide uses
+                    // the same failure/report path as its plain XML equivalent.
+                    inspection = Some(Ok((false, true)));
+                }
+                _ => {
+                    return Ok(FileJobOutcome::Unsupported(
+                        "invalid/oversized compressed guide promotion",
+                    ));
+                }
             }
-            context.ensure_active()?;
-            sqlx::query("UPDATE epg_epgsource SET extracted_file_path=$2 WHERE id=$1")
-                .bind(source.id)
-                .bind(
-                    destination
-                        .to_str()
-                        .ok_or(ImportError::Capacity("cache path"))?,
-                )
-                .execute(self.services.store.pool())
-                .await?;
-            check_path = Some(destination);
-            inspection = None;
         }
         if matches!(&inspection, Some(Ok((false, _)) | Err(_))) {
             let message = "EPG file appears incomplete (missing closing </tv>). Keeping previous data when available; will retry on next refresh.".to_string();
@@ -1248,6 +1219,61 @@ impl Execution<'_> {
     }
 }
 
+fn inspect_local_xml(path: &Path) -> std::io::Result<(bool, bool)> {
+    let mut file = File::open(path)?;
+    let metadata = file.metadata()?;
+    let nonempty_regular_file = metadata.is_file() && metadata.len() > 0;
+    Ok((
+        check_xmltv_file_handle_complete(&mut file)?,
+        nonempty_regular_file,
+    ))
+}
+
+#[derive(Debug, PartialEq, Eq)]
+enum LocalArchivePromotion {
+    Promoted,
+    Incomplete,
+    Rejected,
+}
+
+fn promote_local_archive(
+    input: &Path,
+    incoming: &Path,
+    target: &Path,
+    cancel: &AtomicBool,
+) -> Result<LocalArchivePromotion, ImportError> {
+    if cancel.load(Ordering::Acquire) {
+        return Err(ImportError::Cancelled);
+    }
+    std::fs::create_dir_all(target.parent().unwrap())?;
+    // The incoming path belongs to this job. Never pass a previous good guide
+    // to the low-level extractor, which may create partial output on error.
+    std::fs::OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(incoming)?;
+    let inspection = extract_xmltv_owned(input, incoming, false, UploadLimits::default(), cancel)
+        .ok()
+        .and_then(|_| inspect_local_xml(incoming).ok());
+    if cancel.load(Ordering::Acquire) {
+        let _ = std::fs::remove_file(incoming);
+        return Err(ImportError::Cancelled);
+    }
+    if let Some((true, _)) = inspection {
+        if let Err(error) = std::fs::rename(incoming, target) {
+            let _ = std::fs::remove_file(incoming);
+            return Err(error.into());
+        }
+        return Ok(LocalArchivePromotion::Promoted);
+    }
+    let _ = std::fs::remove_file(incoming);
+    Ok(if inspection == Some((false, true)) {
+        LocalArchivePromotion::Incomplete
+    } else {
+        LocalArchivePromotion::Rejected
+    })
+}
+
 enum TerminalObservation {
     Verified,
     StatusFailure(ReportObservation),
@@ -1282,5 +1308,67 @@ mod counter_error_tests {
         for value in ["1", "", "bad'\n", "bad\\value", "é"] {
             assert!(!is_admitted(value), "{value:?}");
         }
+    }
+}
+
+#[cfg(test)]
+mod mapped_archive_tests {
+    use super::*;
+    use base64::{engine::general_purpose::STANDARD, Engine};
+
+    struct Directory(PathBuf);
+
+    impl Drop for Directory {
+        fn drop(&mut self) {
+            let _ = std::fs::remove_dir_all(&self.0);
+        }
+    }
+
+    #[test]
+    fn mapped_local_archive_reports_decoded_truncation_without_discarding_the_last_guide() {
+        let root = Directory(std::env::temp_dir().join(format!(
+            "dispatcharr-mapped-epg-{}-{:?}",
+            std::process::id(),
+            std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_nanos()
+        )));
+        std::fs::create_dir(&root.0).unwrap();
+        let input = root.0.join(".gz");
+        let incoming = root.0.join(".incoming-owned.xml");
+        let cache = root.0.join("17.xml");
+        let previous = b"<tv>previous owned guide</tv>";
+        std::fs::write(&cache, previous).unwrap();
+        let cancel = AtomicBool::new(false);
+        let complete = STANDARD.decode("H4sIAAAAAAAC/7MpKbOzSc5IzMtLzVHITLFVyi/PS03RK0ktLlGys0nJLC7ISazUzUvMTbXzB8nY6KOI2ehD9QJZQJO4ALVlT6lPAAAA").unwrap();
+        let incomplete = STANDARD.decode("H4sIAAAAAAAC/7MpKbOzSc5IzMtLzVHITLFVyi/PS03RK0ktLlGys0nJLC7ISazUzUvMTbXzB8nY6KOI2ehD9dpxAQDFeF6sSgAAAA==").unwrap();
+        for (archive, outcome) in [
+            (incomplete.as_slice(), LocalArchivePromotion::Incomplete),
+            (
+                &complete[..complete.len() - 1],
+                LocalArchivePromotion::Rejected,
+            ),
+        ] {
+            std::fs::write(&input, archive).unwrap();
+            assert_eq!(
+                promote_local_archive(&input, &incoming, &cache, &cancel).unwrap(),
+                outcome
+            );
+            assert!(!incoming.exists());
+            assert_eq!(std::fs::read(&cache).unwrap(), previous);
+            assert_eq!(std::fs::read(&input).unwrap(), archive);
+        }
+        std::fs::write(&input, &complete).unwrap();
+        assert_eq!(
+            promote_local_archive(&input, &incoming, &cache, &cancel).unwrap(),
+            LocalArchivePromotion::Promoted
+        );
+        assert_eq!(
+            std::fs::read(&cache).unwrap(),
+            b"<tv><channel id=\"owned.test\"><display-name>Owned</display-name></channel></tv>\n"
+        );
+        assert_eq!(std::fs::read(&input).unwrap(), complete);
+        assert!(!incoming.exists());
     }
 }

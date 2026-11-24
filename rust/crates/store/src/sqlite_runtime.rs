@@ -16,6 +16,8 @@ use chrono::Utc;
 pub(crate) mod application_data;
 #[path = "sqlite_channel_logos.rs"]
 pub(crate) mod channel_logos;
+#[path = "sqlite_channel_profile_aliases.rs"]
+pub(crate) mod channel_profile_aliases;
 #[path = "sqlite_core_catalog.rs"]
 pub(crate) mod core_catalog;
 #[path = "sqlite_environment.rs"]
@@ -92,6 +94,7 @@ impl CopiedSqliteRuntime {
     pub fn router(&self) -> Router {
         Router::new()
             .merge(application_data::router())
+            .merge(channel_profile_aliases::router())
             .merge(single_from_stream::router())
             .route(
                 "/api/accounts/token/",

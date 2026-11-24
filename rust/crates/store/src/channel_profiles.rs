@@ -18,13 +18,13 @@ use sqlx::{Postgres, Row, Transaction};
 use std::net::SocketAddr;
 type Body = Result<Json<Value>, JsonRejection>;
 const SELECT: &str = "SELECT p.id::bigint AS id,p.name,COALESCE((SELECT jsonb_agg(m.channel_id ORDER BY m.id) FROM dispatcharr_channels_channelprofilemembership m WHERE m.channel_profile_id=p.id AND m.enabled),'[]'::jsonb) AS channels FROM dispatcharr_channels_channelprofile p WHERE ($1::bigint IS NULL OR p.id=$1) AND ($2 OR EXISTS(SELECT 1 FROM accounts_user_channel_profiles up WHERE up.channelprofile_id=p.id AND up.user_id=$3)) ORDER BY p.id";
-fn missing() -> StoreError {
+pub(crate) fn missing() -> StoreError {
     StoreError::StatusBody(
         404,
         json!({"detail":"No ChannelProfile matches the given query."}),
     )
 }
-fn id(value: String) -> Result<i64, StoreError> {
+pub(crate) fn id(value: String) -> Result<i64, StoreError> {
     value
         .parse()
         .map_err(|_| StoreError::StatusBody(404, json!({"detail":"Not found."})))
@@ -35,7 +35,7 @@ fn serialize(row: sqlx::postgres::PgRow) -> Result<Value, sqlx::Error> {
     )
 }
 
-fn detail_read_id(mut raw: String, path: &str) -> Result<(String, bool), StoreError> {
+pub(crate) fn detail_read_id(mut raw: String, path: &str) -> Result<(String, bool), StoreError> {
     if let Some(id) = raw
         .strip_suffix(".json")
         .filter(|id| !id.is_empty() && !id.contains(['.', '/']))
@@ -85,7 +85,7 @@ pub(crate) fn explicit_json_indent(accept: &str) -> Option<usize> {
         .and_then(crate::vod_api_draft::json_indent_value)
 }
 
-fn negotiate_read_json(
+pub(crate) fn negotiate_read_json(
     uri: &Uri,
     headers: &HeaderMap,
     suffix: bool,
@@ -126,7 +126,7 @@ fn negotiate_read_json(
     Ok(indent)
 }
 
-fn json_response(value: Value, indent: Option<usize>) -> Result<Response, StoreError> {
+pub(crate) fn json_response(value: Value, indent: Option<usize>) -> Result<Response, StoreError> {
     let Some(indent) = indent else {
         return Ok(Json(value).into_response());
     };

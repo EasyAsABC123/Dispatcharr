@@ -33,6 +33,18 @@ pub(crate) const CHANNEL_PROFILE_COLLECTION_SQL: &str = "
     )
     ORDER BY p.id,m.id";
 
+#[cfg(feature = "sqlite-copied-data-runtime")]
+const CHANNEL_PROFILE_DETAIL_SQL: &str = "
+    SELECT p.id, p.name, m.channel_id
+    FROM dispatcharr_channels_channelprofile p
+    LEFT JOIN dispatcharr_channels_channelprofilemembership m
+        ON m.channel_profile_id=p.id AND m.enabled
+    WHERE p.id=?3 AND (?1 OR EXISTS(
+        SELECT 1 FROM accounts_user_channel_profiles up
+        WHERE up.channelprofile_id=p.id AND up.user_id=?2
+    ))
+    ORDER BY p.id,m.id";
+
 pub(crate) const READ_SCHEMA_QUERIES: [&str; 2] = [SUBJECT_SQL, SQLITE_GROUP_SQL];
 
 /// An actual request permit is required and remains held through SQL and
@@ -443,6 +455,36 @@ impl RetainedSqliteRestReads {
                 collect_channel_profiles(&mut connection, subject.user(), work_bytes).await;
             settle(connection).await?;
             result
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn channel_profile_detail(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        raw_id: String,
+    ) -> Result<Value, StoreError> {
+        let subject = self.bearer_account_user(peer, headers, false).await?;
+        crate::channel_groups::collection_permission(subject.user())?;
+        let id = crate::channel_profiles::id(raw_id)?;
+        let pool = self.pool.clone();
+        let work_bytes = self.limits.work_bytes;
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = collect_channel_profiles_for_id(
+                &mut connection,
+                subject.user(),
+                work_bytes,
+                Some(id),
+            )
+            .await;
+            settle(connection).await?;
+            let Value::Array(mut profiles) = result? else {
+                return Err(StoreError::UnhandledRestFault);
+            };
+            profiles.pop().ok_or_else(crate::channel_profiles::missing)
         })
         .await
     }
@@ -993,12 +1035,32 @@ impl RetainedSqliteRestReads {
 async fn collect_channel_profiles(
     connection: &mut sqlx::SqliteConnection,
     user: &User,
-    mut remaining: usize,
+    remaining: usize,
 ) -> Result<Value, StoreError> {
-    let mut rows = sqlx::query_as::<_, (i64, String, Option<i64>)>(CHANNEL_PROFILE_COLLECTION_SQL)
+    collect_channel_profiles_for_id(connection, user, remaining, None).await
+}
+
+#[cfg(feature = "sqlite-copied-data-runtime")]
+async fn collect_channel_profiles_for_id(
+    connection: &mut sqlx::SqliteConnection,
+    user: &User,
+    mut remaining: usize,
+    id: Option<i64>,
+) -> Result<Value, StoreError> {
+    let statement = if id.is_some() {
+        CHANNEL_PROFILE_DETAIL_SQL
+    } else {
+        CHANNEL_PROFILE_COLLECTION_SQL
+    };
+    let query = sqlx::query_as::<_, (i64, String, Option<i64>)>(statement)
         .bind(user.user_level == 10)
-        .bind(user.id)
-        .fetch(connection);
+        .bind(user.id);
+    let query = if let Some(id) = id {
+        query.bind(id)
+    } else {
+        query
+    };
+    let mut rows = query.fetch(connection);
     let mut profiles = Vec::new();
     let mut current: Option<(i64, String, Vec<i64>)> = None;
     while let Some((id, name, channel)) = rows.try_next().await? {
@@ -1127,3 +1189,7 @@ mod channel_profile_collection_tests {
 #[cfg(all(test, feature = "sqlite-copied-data-runtime"))]
 #[path = "sqlite_single_from_stream_tests.rs"]
 mod single_from_stream_tests;
+
+#[cfg(all(test, feature = "sqlite-copied-data-runtime"))]
+#[path = "sqlite_channel_profile_aliases_tests.rs"]
+mod channel_profile_aliases_tests;

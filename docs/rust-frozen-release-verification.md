@@ -310,6 +310,13 @@ changes passed focused tests and still need the signed packaged comparison.
 
 ## Copied SQLite stream selections and saved schedules
 
+Copied SQLite accepts signed Channel Profile collection and detail JSON
+aliases using the existing administrator and assigned-user scopes. The
+suffix takes precedence over the format query. Twenty-five focused
+tests passed, including the existing single-stream creation suite and
+file-backed reads that preserved the database bytes. The signed
+packaged route remains to be checked.
+
 The copied SQLite backend now returns an ordered stream array for the signed
 selection request that React makes when a selected row has moved off-page.
 Six focused runtime tests passed. The existing projection keeps role-based URL
@@ -360,6 +367,11 @@ publication, worker, Redis, SQL and event checks. The same owner can check
 the initial forced local refresh when its saved TVG parse counter contains
 plain malformed text. The worker records the observed error and returns
 null after cleanup without acquiring the file lock or starting a child.
+A local archive whose decoded XML is nonempty but has no closing guide
+tag follows the same incomplete-file status path. Rust retains the last
+validated cache and its pointer when this happens. Pinned Original
+observations covered seven local archive and plain-file cases. Rust
+passed 36 ingest-EPG tests, with one external-fixture check reserved.
 
 Ordinary manual Channel creation accepts an explicit profile selection
 with a supported guide when the request omits the stream list. Two focused
