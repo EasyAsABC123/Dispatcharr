@@ -60,6 +60,18 @@ class RouteTests(unittest.TestCase):
         self.assertEqual(self.check(historical, context=False), {})
         self.assertIn(owner.NODE, coordinator.PARTIAL_PROBES)
 
+    def test_coverage_distinguishes_admitted_route_and_partial_diagnostic(self):
+        for bound, full in (
+            (self.bound, True),
+            ({"argv": ["historical"]}, False),
+            ({"api202_binding": "another-route"}, False),
+        ):
+            with self.subTest(bound=bound):
+                coverage = coordinator.binding_coverage([self.node], {owner.NODE: bound}, {})
+                self.assertEqual(coverage["execution_bindings"], [owner.NODE] if full else [])
+                self.assertEqual(coverage["partial_probes"], [] if full else [owner.NODE])
+                self.assertEqual(coverage["unbound_rows"], [])
+
     def test_reject_changed_route_and_missing_owner_context(self):
         with self.assertRaises(ValueError):
             self.check(self.bound | {"argv": ["other"]})

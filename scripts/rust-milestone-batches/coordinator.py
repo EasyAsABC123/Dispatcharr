@@ -471,14 +471,22 @@ def load_binding_fragments(paths, nodes, output):
     return candidate, bindings, authorities
 
 
+def is_partial_binding(node_id, binding):
+    return node_id in PARTIAL_PROBES and not (
+        node_id == "m6/api202-publication"
+        and binding.get("api202_binding") == "api202-exact-ordinary-owner-v1"
+    )
+
+
 def binding_coverage(nodes, bindings, authorities):
     """Report missing release inputs without executing any fixture or crediting a pass."""
     required = {node["id"] for node in nodes}
+    partial = {key for key, binding in bindings.items() if is_partial_binding(key, binding)}
     return {
         "required_rows": len(required),
-        "execution_bindings": sorted(bindings.keys() - PARTIAL_PROBES),
+        "execution_bindings": sorted(bindings.keys() - partial),
         "retained_source_authority": sorted(authorities),
-        "partial_probes": sorted(bindings.keys() & PARTIAL_PROBES),
+        "partial_probes": sorted(partial),
         "unbound_rows": sorted(required - bindings.keys() - authorities.keys()),
     }
 
