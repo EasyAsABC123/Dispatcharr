@@ -47,6 +47,13 @@ Administrator Channel Batch now accepts ordered stream replacement and explicit 
 
 Channel Batch also accepts raw channel numbers, TVG IDs, guide station IDs, and EPG assignments. It distinguishes explicit clears from omitted fields and preserves the existing compact-number behavior when a request also changes visibility. Raw EPG writes preserve Original's bulk-update behavior and skip guide publication.
 
+For a top-level Channel Batch group edit, Rust now applies Original's
+integer conversion before validating the group. This covers numeric strings,
+Unicode decimal digits, and null and invalid inputs. Missing channels keep
+their original error priority. Fourteen pinned conversion and DRF field
+cases and the 24 focused Rust batch tests passed. The signed mixed-channel
+replay still needs the final package.
+
 Nested Channel Batch overrides support name, TVG ID, guide station ID, channel number, and EPG assignments. Guide changes invalidate the cache once and publish distinct programme jobs. For Schedules Direct, the plan skips guides with existing programmes, publishes individual jobs below three unfilled mappings per source, and publishes one mapped-guide job at the threshold.
 
 The signed batch EPG assignment action uses that same Schedules Direct

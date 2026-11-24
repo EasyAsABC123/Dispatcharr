@@ -124,7 +124,7 @@ impl RawMetadata {
                                 result.epg = Some((id, display));
                                 Ok(json!(id))
                             }
-                            Ok(None) => Err(err(field, &invalid_epg_pk_message(&display))),
+                            Ok(None) => Err(err(field, &invalid_pk_message(&display))),
                             Err(error) => Err(error),
                         }
                     }
@@ -149,10 +149,7 @@ impl RawMetadata {
     fn errors(&self, epgs: &BTreeSet<i64>) -> Map<String, Value> {
         let mut errors = self.validation_errors.clone();
         if let Some((_, display)) = self.epg.as_ref().filter(|(id, _)| !epgs.contains(id)) {
-            errors.insert(
-                "epg_data_id".into(),
-                json!([invalid_epg_pk_message(display)]),
-            );
+            errors.insert("epg_data_id".into(), json!([invalid_pk_message(display)]));
         }
         errors
     }
@@ -164,7 +161,7 @@ impl RawMetadata {
     }
 }
 
-fn invalid_epg_pk_message(display: &str) -> String {
+fn invalid_pk_message(display: &str) -> String {
     format!("Invalid pk \"{display}\" - object does not exist.")
 }
 
@@ -202,7 +199,7 @@ impl OverrideEpg {
                 field_error: None,
             }),
             Ok(None) => Ok(Self {
-                field_error: Some(json!([invalid_epg_pk_message(&display)])),
+                field_error: Some(json!([invalid_pk_message(&display)])),
                 ..Self::default()
             }),
             Err(StoreError::InvalidInput(Value::Object(mut fields))) => Ok(Self {
@@ -222,7 +219,7 @@ impl OverrideEpg {
             .filter(|id| !existing.contains(id))
             .map(|id| {
                 let display = self.display.clone().unwrap_or_else(|| id.to_string());
-                json!([invalid_epg_pk_message(&display)])
+                json!([invalid_pk_message(&display)])
             })
     }
 }
@@ -317,8 +314,30 @@ fn unsupported() -> StoreError {
     StoreError::Unsupported("This Channel Batch field is not implemented in Native.")
 }
 
-fn group(value: &Value) -> Result<i64, StoreError> {
+fn override_group_id(value: &Value) -> Result<i64, StoreError> {
     value.as_i64().filter(|id| *id > 0).ok_or_else(unsupported)
+}
+
+// The batch view coerces the top-level group with Python int() before
+// the serializer validates the relation. Preserve the normalized ID in
+// messages and defer validation errors until the channel lookup succeeds.
+fn raw_group_id(value: &Value) -> Result<i64, Value> {
+    let literal = match value {
+        Value::String(text) => dispatcharr_ingest_core::source_integer_literal(text),
+        Value::Bool(value) => Some(i64::from(*value).to_string()),
+        Value::Number(number) if !number.is_f64() => Some(number.to_string()),
+        Value::Number(number) => number
+            .as_f64()
+            .filter(|value| value.is_finite())
+            .map(|value| format!("{:.0}", value.trunc())),
+        _ => None,
+    };
+    let Some(literal) = literal else {
+        return Err(json!(["This field may not be null."]));
+    };
+    literal
+        .parse()
+        .map_err(|_| json!([invalid_pk_message(&literal)]))
 }
 
 fn user_level(value: &Value) -> Result<i32, StoreError> {
@@ -516,7 +535,10 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                     }) =>
                 {
                     (
-                        values.get("channel_group_id").map(group).transpose()?,
+                        values
+                            .get("channel_group_id")
+                            .map(override_group_id)
+                            .transpose()?,
                         values
                             .get("is_radio")
                             .map(|value| boolean("is_radio", value))
@@ -528,12 +550,23 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                 }
                 _ => return Err(unsupported()),
             };
+            let mut raw_metadata = RawMetadata::parse(row)?;
+            let group = match row.get("channel_group_id").map(raw_group_id) {
+                Some(Ok(id)) => Some(id),
+                Some(Err(error)) => {
+                    raw_metadata
+                        .validation_errors
+                        .insert("channel_group_id".into(), error);
+                    None
+                }
+                None => None,
+            };
             Ok(Edit {
                 id,
                 name,
                 name_error,
-                group: row.get("channel_group_id").map(group).transpose()?,
-                raw_metadata: RawMetadata::parse(row)?,
+                group,
+                raw_metadata,
                 override_group,
                 override_radio,
                 override_references,
@@ -598,7 +631,7 @@ fn reference_errors(
         id.filter(|id| !existing.contains(id)).map(|missing| {
             (
                 field.to_owned(),
-                json!([format!("Invalid pk \"{missing}\" - object does not exist.")]),
+                json!([invalid_pk_message(&missing.to_string())]),
             )
         })
     })
@@ -1519,6 +1552,59 @@ mod tests {
         assert!(!rows[1].has_override_values());
         assert!(!rows[2].changes_override());
         assert_eq!(rows[3].override_references.logo, Reference::Set(7));
+    }
+
+    #[test]
+    fn bulk_raw_group_validates_source_coercions_after_channel_lookup() {
+        let existing = BTreeSet::from([1, 12]);
+        let empty = BTreeSet::new();
+        for (tested, group, expected_error) in [
+            (json!(12), Some(12), None),
+            (json!("12"), Some(12), None),
+            (json!("  +٠١٢  "), Some(12), None),
+            (json!("1_2"), Some(12), None),
+            (json!(12.9), Some(12), None),
+            (json!(true), Some(1), None),
+            (
+                json!(false),
+                Some(0),
+                Some("Invalid pk \"0\" - object does not exist."),
+            ),
+            (
+                json!(-2),
+                Some(-2),
+                Some("Invalid pk \"-2\" - object does not exist."),
+            ),
+            (
+                json!("+00007"),
+                Some(7),
+                Some("Invalid pk \"7\" - object does not exist."),
+            ),
+            (
+                json!("9223372036854775808"),
+                None,
+                Some("Invalid pk \"9223372036854775808\" - object does not exist."),
+            ),
+            (json!("bad"), None, Some("This field may not be null.")),
+            (json!(""), None, Some("This field may not be null.")),
+            (Value::Null, None, Some("This field may not be null.")),
+            (json!([]), None, Some("This field may not be null.")),
+        ] {
+            let rows = edits(json!([{"id":1,"channel_group_id":tested}])).unwrap();
+            let edit = &rows[0];
+            assert_eq!(edit.group, group);
+            let mut errors =
+                reference_errors(edit.group, edit.references, &existing, &empty, &empty);
+            errors.extend(edit.raw_metadata.errors(&empty));
+            assert_eq!(
+                errors.remove("channel_group_id"),
+                expected_error.map(|error| json!([error]))
+            );
+            assert!(errors.is_empty());
+        }
+        let rows = edits(json!([{"id":1}])).unwrap();
+        assert!(rows[0].group.is_none());
+        assert!(rows[0].raw_metadata.validation_errors.is_empty());
     }
 
     #[test]
