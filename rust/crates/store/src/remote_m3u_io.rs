@@ -17,7 +17,7 @@ type Owner = Arc<dyn Send + Sync>;
 #[derive(Debug)]
 pub enum Error {
     Caught(String),
-    InterruptedBody {
+    DownloadFailed {
         message: String,
         groups_result: String,
     },
@@ -182,7 +182,7 @@ pub async fn transfer(
                         .and_then(|cause| cause.downcast_ref::<reqwest::Error>())
                         .is_some_and(|cause| cause.is_decode() && !cause.is_timeout())
                 {
-                    Error::InterruptedBody {
+                    Error::DownloadFailed {
                         message: format!(
                             "Connection error while fetching M3U file from URL: {}",
                             input.url
@@ -310,7 +310,12 @@ async fn error_response(
     };
     let preview = text.chars().take(1000).collect::<String>();
     let message=match status{884=>format!("Server returned HTTP 884 (authentication/authorization failure) from URL: {url}. Server message: {preview}"),800..=u16::MAX=>format!("Server returned non-standard HTTP status {status} from URL: {url}. Server message: {preview}"),404=>format!("M3U file not found (404) at URL: {url}. Server message: {preview}"),403=>format!("Access forbidden (403) to M3U file at URL: {url}. Server message: {preview}"),401=>format!("Authentication required (401) for M3U file at URL: {url}. Server message: {preview}"),500=>format!("Server error (500) while fetching M3U file from URL: {url}. Server message: {preview}"),_=>format!("HTTP error ({status}) while fetching M3U file from URL: {url}. Server message: {preview}")};
-    Ok(Error::Caught(message))
+    // Source persists the HTTP error separately. Its Groups task returns the
+    // account instance's initial download message because no progress ran.
+    Ok(Error::DownloadFailed {
+        message,
+        groups_result: "Starting download...".to_owned(),
+    })
 }
 
 #[cfg(test)]
@@ -353,10 +358,21 @@ mod tests {
     }
 
     async fn short_transfer(content_encoding: &str, content_length: u64) -> (Error, String) {
-        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
-        let url = format!("http://{}/broken-body", listener.local_addr().unwrap());
         let response = format!(
             "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {content_length}\r\n{content_encoding}Connection: close\r\n\r\n"
+        );
+        rejected_transfer(
+            response,
+            b"#EXTM3U\n#EXTINF:-1,Fixture\nhttp://fixture/live\n".to_vec(),
+        )
+        .await
+    }
+
+    async fn rejected_transfer(response: String, body: Vec<u8>) -> (Error, String) {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let url = format!(
+            "http://{}/owned-playlist.m3u",
+            listener.local_addr().unwrap()
         );
         let server = std::thread::spawn(move || {
             let (mut socket, _) = listener.accept().unwrap();
@@ -371,9 +387,7 @@ mod tests {
                 request.push(byte[0]);
             }
             socket.write_all(response.as_bytes()).unwrap();
-            socket
-                .write_all(b"#EXTM3U\n#EXTINF:-1,Fixture\nhttp://fixture/live\n")
-                .unwrap();
+            socket.write_all(&body).unwrap();
             socket.flush().unwrap();
         });
 
@@ -412,10 +426,27 @@ mod tests {
     async fn interrupted_plain_playlist_uses_original_caught_message_after_writer_retirement() {
         let (error, url) = short_transfer("", 144).await;
         assert!(matches!(
-            error, Error::InterruptedBody { message, groups_result }
+            error, Error::DownloadFailed { message, groups_result }
                 if message == format!("Connection error while fetching M3U file from URL: {url}")
                    && groups_result == "Starting download..."
         ));
+    }
+
+    #[tokio::test]
+    async fn http_error_preserves_the_groups_message_and_bounds_the_account_preview() {
+        for body in ["denied".to_owned(), "é".repeat(1001)] {
+            let response = format!(
+                "HTTP/1.1 403 Forbidden\r\nContent-Type: text/plain; charset=utf-8\r\nContent-Length: {}\r\nConnection: close\r\n\r\n",
+                body.len()
+            );
+            let preview: String = body.chars().take(1000).collect();
+            let (error, url) = rejected_transfer(response, body.into_bytes()).await;
+            assert!(matches!(
+                error, Error::DownloadFailed { message, groups_result }
+                    if message == format!("Access forbidden (403) to M3U file at URL: {url}. Server message: {preview}")
+                       && groups_result == "Starting download..."
+            ));
+        }
     }
 
     #[tokio::test]

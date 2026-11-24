@@ -176,8 +176,13 @@ unlimited direct profiles. It keeps the initial alias and releases the
 previous reservation. When the immediate saved Next target has no active
 default profile, the existing route reports the Original 404. The grouped
 fixture checks owner, viewer and counter continuity through both positive
-paths and the denial. Multi-worker remote switching and other profile shapes
-still require coverage.
+paths and the denial. The signed API can also request an assigned direct TS switch on another
+eligible Rust worker. The producer checks the saved URL and its current
+generation before switching. It confirms the new producer through the
+existing media ticket and reports a receipt bound to the requesting worker.
+A disposable Redis test checked generation fencing, pending cancellation,
+receipt replay and cleanup. The final two-worker fixture still needs to
+verify media continuity and retirement across both processes.
 
 The ordinary Series DVR API can save a signed rule through the existing
 DVR permission and settings writer. The worker evaluates a saved exact-title
@@ -242,6 +247,11 @@ error as Original. Focused loopback tests passed. The grouped remote-owner
 fixture waits for observed download progress before closing the Origin
 connection. It compares that progress with the worker's terminal result
 and verifies the independently persisted account error and cache digests.
+For an HTTP rejection before download progress, the Groups worker retains
+its initial message and the account stores the provider's error separately.
+The same paired owner includes a signed 403 case. Three loopback transfer
+tests passed, and the pinned Original helper confirmed the outcome across
+700 final HTTP error statuses in a private synthetic fixture.
 
 ## Channel logo pagination and Xtream information
 

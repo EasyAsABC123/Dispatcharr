@@ -102,6 +102,15 @@ impl Control {
         current: Source,
         target: Source,
     ) -> Result<oneshot::Receiver<Receipt>, PlaybackError> {
+        self.submit_with_owner(current, target, false)
+    }
+
+    pub fn submit_with_owner(
+        &self,
+        current: Source,
+        target: Source,
+        require_owned: bool,
+    ) -> Result<oneshot::Receiver<Receipt>, PlaybackError> {
         let mut state = self.state.lock().unwrap();
         let State::Ready(ready) = *state else {
             return Err(PlaybackError::new(
@@ -109,7 +118,9 @@ impl Control {
                 "Local source switch is unavailable",
             ));
         };
-        if ready.source != current || (current.1 != target.1 && !ready.owns_published_slot) {
+        if ready.source != current
+            || ((require_owned || current.1 != target.1) && !ready.owns_published_slot)
+        {
             return Err(PlaybackError::new(
                 409,
                 "Local source switch is unavailable",
@@ -217,6 +228,24 @@ mod tests {
                 .is_err()
         );
         assert!(control.submit(primary, alternate).is_ok());
+    }
+
+    #[tokio::test]
+    async fn remote_same_profile_ticket_requires_an_owned_published_slot() {
+        let control = Control::new();
+        let primary = (5, Some(3));
+        let alternate = (8, Some(3));
+        control.arm(primary, false);
+        assert!(control.submit_with_owner(primary, alternate, true).is_err());
+        assert!(control.submit(primary, alternate).is_ok());
+        control.disarm();
+        control.arm(primary, true);
+        let receipt = control.submit_with_owner(primary, alternate, true).unwrap();
+        assert!(control.submit(primary, alternate).is_err());
+        let request = control.receive().await;
+        assert_eq!(request.target, alternate);
+        control.confirm(request, alternate, true, 100.25);
+        assert!(receipt.await.unwrap().is_ok());
     }
 
     #[tokio::test]

@@ -4,6 +4,8 @@ mod output_profiles;
 mod profile_process;
 #[path = "redirect.rs"]
 mod redirect;
+#[path = "remote_source_switch.rs"]
+pub(crate) mod remote_source_switch;
 #[path = "source_keepalive.rs"]
 mod source_keepalive;
 #[path = "source_switch.rs"]
@@ -195,6 +197,7 @@ pub(crate) struct Inner {
     live_client_connect: Option<Arc<dyn dispatcharr_contracts::LiveClientConnectObserver>>,
     profiles: Option<Arc<output_profiles::Profiles>>,
     local_source_switches: bool,
+    remote_switch_resolver: Option<Arc<dyn PlaybackResolver>>,
     sessions: Mutex<HashMap<String, Arc<Session>>>,
     slots: Arc<Semaphore>,
     coordinator: Option<Coordinator>,
@@ -243,6 +246,7 @@ struct Session {
     publisher: Mutex<Option<input_writer::InputWriter>>,
     input_owner: Mutex<Option<String>>,
     source_switch: Option<Box<source_switch::Control>>,
+    remote_switch_inbox: Mutex<remote_source_switch::RemoteInbox>,
     _permit: Arc<OwnedSemaphorePermit>,
 }
 
@@ -270,6 +274,13 @@ pub(crate) struct NextStreamSwitch<'a> {
     pub next: i64,
     pub url: String,
     pub worker: &'a str,
+}
+
+struct PendingSourceSwitch {
+    reply: tokio::sync::oneshot::Receiver<Result<(), PlaybackError>>,
+    previous: i64,
+    target: i64,
+    url: String,
 }
 
 pub(crate) enum NextStreamOutcome<'a> {
@@ -478,6 +489,7 @@ impl StreamEngine {
                 live_client_connect: None,
                 profiles: None,
                 local_source_switches: false,
+                remote_switch_resolver: None,
                 sessions: Mutex::new(HashMap::new()),
                 slots,
                 coordinator,
@@ -716,79 +728,12 @@ impl StreamEngine {
         transfer_profile: Option<i64>,
         select: impl FnOnce(&PlaybackCandidate) -> Result<(i64, Option<&'a str>), PlaybackError>,
     ) -> Result<(i64, i64, String), PlaybackError> {
-        let (reply, previous, stream_id, url) = {
-            let active = session.current.lock().unwrap();
-            let current = source_switch::source(&active);
-            let (stream_id, saved_url) = select(&active)?;
-            let control = session
-                .source_switch
-                .as_ref()
-                .ok_or_else(|| PlaybackError::new(409, "Local source switch is unavailable"))?;
-            if !source_switch::supported(&active) {
-                return Err(PlaybackError::new(
-                    409,
-                    "Active source is outside the local switch scope",
-                ));
-            }
-            let requires_ready_slot = active.provider_max_streams == 1
-                || transfer_profile.is_some()
-                || (stream_id != current.0
-                    && session.source_slot_published.load(Ordering::Acquire));
-            if requires_ready_slot && !matches!(*session.startup.borrow(), Startup::Ready) {
-                return Err(PlaybackError::new(409, "Local provider slot is not ready"));
-            }
-            let target = (stream_id, transfer_profile.or(current.1));
-            let primary;
-            let candidate = if target == current {
-                &*active
-            } else {
-                primary = session.source.primary();
-                let mut matches = std::iter::once(&primary)
-                    .chain(&session.source.alternates)
-                    .filter(|candidate| {
-                        source_switch::source(candidate) == target
-                            && source_switch::supported(candidate)
-                    });
-                matches
-                    .next()
-                    .filter(|_| matches.next().is_none())
-                    .ok_or_else(|| {
-                        PlaybackError::new(
-                            404,
-                            "Requested stream is outside the local switch scope",
-                        )
-                    })?
-            };
-            if active.provider_max_streams != candidate.provider_max_streams {
-                return Err(PlaybackError::new(
-                    409,
-                    "Requested stream has a different provider limit",
-                ));
-            }
-            if transfer_profile.is_some()
-                && !source_switch::compatible_unlimited_transfer(&active, candidate)
-            {
-                return Err(PlaybackError::new(
-                    409,
-                    "Requested stream cannot transfer the local provider slot",
-                ));
-            }
-            if saved_url.is_some_and(|url| url != candidate.url) {
-                return Err(PlaybackError::new(
-                    409,
-                    "Requested stream URL differs from the active configuration",
-                ));
-            }
-            if target != current && candidate.url == active.url {
-                return Err(PlaybackError::new(409, "Requested URL is already active"));
-            }
-            (
-                control.submit(current, target)?,
-                current.0,
-                stream_id,
-                candidate.url.clone(),
-            )
-        };
+        let PendingSourceSwitch {
+            reply,
+            previous,
+            target: stream_id,
+            url,
+        } = self.submit_in_local_session(session, transfer_profile, false, select)?;
         // Once a producer begins a handoff it owns the bounded transition even
         // if this waiter times out. A timeout never queues another handoff.
         match time::timeout(self.inner.config.startup_timeout, reply).await {
@@ -802,6 +747,87 @@ impl StreamEngine {
                 "Local source switch was not confirmed",
             )),
         }
+    }
+
+    fn submit_in_local_session<'a>(
+        &self,
+        session: &Session,
+        transfer_profile: Option<i64>,
+        require_owned: bool,
+        select: impl FnOnce(&PlaybackCandidate) -> Result<(i64, Option<&'a str>), PlaybackError>,
+    ) -> Result<PendingSourceSwitch, PlaybackError> {
+        let active = session.current.lock().unwrap();
+        let current = source_switch::source(&active);
+        let (stream_id, saved_url) = select(&active)?;
+        let control = session
+            .source_switch
+            .as_ref()
+            .ok_or_else(|| PlaybackError::new(409, "Local source switch is unavailable"))?;
+        if !source_switch::supported(&active) {
+            return Err(PlaybackError::new(
+                409,
+                "Active source is outside the local switch scope",
+            ));
+        }
+        let requires_ready_slot = active.provider_max_streams == 1
+            || transfer_profile.is_some()
+            || (stream_id != current.0 && session.source_slot_published.load(Ordering::Acquire));
+        if requires_ready_slot && !matches!(*session.startup.borrow(), Startup::Ready) {
+            return Err(PlaybackError::new(409, "Local provider slot is not ready"));
+        }
+        let target = (stream_id, transfer_profile.or(current.1));
+        let primary;
+        let candidate = if target == current {
+            &*active
+        } else {
+            primary = session.source.primary();
+            let mut matches = std::iter::once(&primary)
+                .chain(&session.source.alternates)
+                .filter(|candidate| {
+                    source_switch::source(candidate) == target
+                        && source_switch::supported(candidate)
+                });
+            matches
+                .next()
+                .filter(|_| matches.next().is_none())
+                .ok_or_else(|| {
+                    PlaybackError::new(404, "Requested stream is outside the local switch scope")
+                })?
+        };
+        if active.provider_max_streams != candidate.provider_max_streams {
+            return Err(PlaybackError::new(
+                409,
+                "Requested stream has a different provider limit",
+            ));
+        }
+        if transfer_profile.is_some()
+            && !source_switch::compatible_unlimited_transfer(&active, candidate)
+        {
+            return Err(PlaybackError::new(
+                409,
+                "Requested stream cannot transfer the local provider slot",
+            ));
+        }
+        if saved_url.is_some_and(|url| url != candidate.url) {
+            return Err(PlaybackError::new(
+                409,
+                "Requested stream URL differs from the active configuration",
+            ));
+        }
+        if target != current && candidate.url == active.url {
+            return Err(PlaybackError::new(409, "Requested URL is already active"));
+        }
+        let reply = if require_owned {
+            control.submit_with_owner(current, target, true)?
+        } else {
+            control.submit(current, target)?
+        };
+        Ok(PendingSourceSwitch {
+            reply,
+            previous: current.0,
+            target: stream_id,
+            url: candidate.url.clone(),
+        })
     }
 
     pub(crate) fn local_source_switch_body_deadline(&self) -> Duration {
@@ -1023,6 +1049,7 @@ impl StreamEngine {
                     publisher: Mutex::new(None),
                     input_owner: Mutex::new(None),
                     source_switch,
+                    remote_switch_inbox: Mutex::new(remote_source_switch::RemoteInbox::default()),
                     _permit: Arc::new(permit),
                 });
                 sessions.insert(key.clone(), session.clone());

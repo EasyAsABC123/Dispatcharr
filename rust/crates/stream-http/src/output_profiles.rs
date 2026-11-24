@@ -4,6 +4,7 @@ use super::*;
 use dispatcharr_contracts::StreamCommand;
 use dispatcharr_output_store::{
     Error as StoreError, OutputProfileOwner, OutputProfileRequest, OutputStore, ProfileEvents,
+    RemoteSwitchWake,
 };
 use tokio::sync::watch;
 
@@ -150,6 +151,26 @@ impl OutputProfileOwner for Dispatcher {
                 },
             ));
             Ok(())
+        })
+    }
+
+    fn switch_source_owned(
+        &self,
+        wake: RemoteSwitchWake,
+        owner: Arc<dyn Send + Sync>,
+    ) -> Pin<Box<dyn std::future::Future<Output = Result<(), StoreError>> + Send + '_>> {
+        Box::pin(async move {
+            let Some(inner) = self.inner.upgrade() else {
+                return Ok(());
+            };
+            let Some(store) = inner
+                .profiles
+                .as_ref()
+                .map(|profiles| profiles.outputs.clone())
+            else {
+                return Ok(());
+            };
+            remote_source_switch::dispatch(inner, store, wake, owner)
         })
     }
 }
@@ -598,6 +619,10 @@ fn store_error(_: StoreError) -> PlaybackError {
     PlaybackError::new(503, "Shared output profile unavailable")
 }
 impl Profiles {
+    pub(super) fn switch_store(&self) -> &OutputStore {
+        &self.outputs
+    }
+
     pub(super) fn request_stop(&self) {
         self.readers.close();
         self.events.request_shutdown();

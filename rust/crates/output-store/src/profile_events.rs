@@ -1,6 +1,6 @@
 //! Source live:events output-profile owner requests. Original authors retain credit.
 //! One application-scoped reader; all writes share OutputStore's admitted transport.
-use super::{Error, OutputStore};
+use super::{Error, OutputStore, RemoteSwitchWake};
 use serde_json::{json, Value};
 use std::{
     future::Future,
@@ -55,11 +55,12 @@ impl OutputProfileRequest {
         }
         Ok(())
     }
+    #[cfg(test)]
     fn decode(topic: &[u8], raw: &[u8]) -> Result<Option<Self>, Error> {
-        if raw.len() > MAX_PAYLOAD {
-            return Err(Error::Capacity);
-        }
-        let value: Value = serde_json::from_slice(raw).map_err(|_| Error::Corrupt)?;
+        let value = event_value(raw)?;
+        Self::from_value(topic, &value)
+    }
+    fn from_value(topic: &[u8], value: &Value) -> Result<Option<Self>, Error> {
         if value["event"] != "ensure_output_profile" {
             return Ok(None);
         }
@@ -88,6 +89,13 @@ impl OutputProfileRequest {
         Ok(Some(request))
     }
 }
+fn event_value(raw: &[u8]) -> Result<Value, Error> {
+    if raw.len() > MAX_PAYLOAD {
+        return Err(Error::Capacity);
+    }
+    serde_json::from_slice(raw).map_err(|_| Error::Corrupt)
+}
+
 /// The consumer must independently inspect its real local raw-input session and
 /// current Redis owner. This envelope grants no TS-owner or process authority.
 pub trait OutputProfileOwner: Send + Sync + 'static {
@@ -96,6 +104,16 @@ pub trait OutputProfileOwner: Send + Sync + 'static {
         request: OutputProfileRequest,
         owner: Arc<dyn Send + Sync>,
     ) -> Pin<Box<dyn Future<Output = Result<(), Error>> + Send + '_>>;
+
+    /// The wake frame is only a hint. Receivers must independently claim
+    /// the exact pending request on the current raw owner before applying it.
+    fn switch_source_owned(
+        &self,
+        _wake: RemoteSwitchWake,
+        _owner: Arc<dyn Send + Sync>,
+    ) -> Pin<Box<dyn Future<Output = Result<(), Error>> + Send + '_>> {
+        Box::pin(async { Ok(()) })
+    }
 }
 struct StopOnLastHandle(watch::Sender<bool>);
 impl Drop for StopOnLastHandle {
@@ -416,7 +434,28 @@ async fn run(
             Err(error) => break Err(error),
         };
         inner.observed.fetch_add(1, Ordering::AcqRel);
-        match OutputProfileRequest::decode(&topic, &data) {
+        let value = match event_value(&data) {
+            Ok(value) => value,
+            Err(_) => {
+                inner.rejected.fetch_add(1, Ordering::AcqRel);
+                continue;
+            }
+        };
+        match RemoteSwitchWake::decode(&topic, &value) {
+            Ok(Some(wake)) => {
+                // Switch receipts belong to the separate Redis mailbox.
+                // Keep output profile application counters scoped to profiles.
+                let _ = consumer.switch_source_owned(wake, owner.clone()).await;
+                inner.ignored.fetch_add(1, Ordering::AcqRel);
+                continue;
+            }
+            Ok(None) => {}
+            Err(_) => {
+                inner.rejected.fetch_add(1, Ordering::AcqRel);
+                continue;
+            }
+        }
+        match OutputProfileRequest::from_value(&topic, &value) {
             Ok(Some(request)) => {
                 // Never race an accepted owner callback against shutdown and
                 // drop its work. Shutdown reports false until it actually settles.

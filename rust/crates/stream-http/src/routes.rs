@@ -316,7 +316,9 @@ async fn change_stream(
         })
     } else {
         match change_assigned_stream(&app.engine, app.resolver.as_ref(), &id, incoming).await {
-            Ok(body) => ([(header::CONTENT_TYPE, "application/json")], body).into_response(),
+            Ok((status, body)) => {
+                (status, [(header::CONTENT_TYPE, "application/json")], body).into_response()
+            }
             Err(reason) => error(reason),
         }
     };
@@ -424,7 +426,7 @@ async fn change_assigned_stream(
     resolver: &dyn PlaybackResolver,
     channel: &str,
     request: Request,
-) -> Result<String, PlaybackError> {
+) -> Result<(StatusCode, String), PlaybackError> {
     let body = tokio::time::timeout(
         engine.local_source_switch_body_deadline(),
         axum::body::to_bytes(request.into_body(), 16 * 1024),
@@ -452,19 +454,98 @@ async fn change_assigned_stream(
     let worker = engine
         .local_source_switch_worker()
         .ok_or_else(|| PlaybackError::new(501, "Local source switch requires worker identity"))?;
-    let url = engine
-        .switch_assigned_local_source(channel, stream_id, resolver)
-        .await?;
-    Ok(changed_stream_response(channel, &url, worker, stream_id))
+    use crate::engine::remote_source_switch::AssignedSwitch;
+    use dispatcharr_output_store::RemoteSwitchVerdict;
+    let result = match engine
+        .switch_assigned_source(channel, stream_id, resolver)
+        .await?
+    {
+        AssignedSwitch::Local(url) => (
+            StatusCode::OK,
+            changed_stream_response(channel, &url, worker, stream_id, true),
+        ),
+        AssignedSwitch::Remote {
+            url,
+            verdict: Some(RemoteSwitchVerdict::Switched),
+        } => (
+            StatusCode::OK,
+            changed_stream_response(channel, &url, worker, stream_id, false),
+        ),
+        AssignedSwitch::Remote { url, verdict } => {
+            let (status, message) = if verdict == Some(RemoteSwitchVerdict::Failed) {
+                (
+                    StatusCode::BAD_GATEWAY,
+                    "Owner worker failed to switch stream",
+                )
+            } else {
+                (
+                    StatusCode::GATEWAY_TIMEOUT,
+                    "Stream switch was not confirmed by the channel owner within 15s",
+                )
+            };
+            let body = remote_stream_error_response(message, channel, &url, worker, stream_id);
+            (status, body)
+        }
+    };
+    Ok(result)
 }
 
-fn changed_stream_response(channel: &str, url: &str, worker: &str, stream_id: i64) -> String {
+fn remote_stream_error_response(
+    message: &str,
+    channel: &str,
+    url: &str,
+    worker: &str,
+    stream_id: i64,
+) -> String {
+    let message = serde_json::Value::from(message);
     let channel = serde_json::Value::from(channel);
     let url = serde_json::Value::from(url);
     let worker = serde_json::Value::from(worker);
     format!(
-        r#"{{"message": "Stream changed successfully", "channel": {channel}, "url": {url}, "owner": true, "worker_id": {worker}, "stream_id": {stream_id}}}"#
+        r#"{{"error": {message}, "channel": {channel}, "url": {url}, "owner": false, "worker_id": {worker}, "stream_id": {stream_id}}}"#
     )
+}
+
+fn changed_stream_response(
+    channel: &str,
+    url: &str,
+    worker: &str,
+    stream_id: i64,
+    owner: bool,
+) -> String {
+    let channel = serde_json::Value::from(channel);
+    let url = serde_json::Value::from(url);
+    let worker = serde_json::Value::from(worker);
+    format!(
+        r#"{{"message": "Stream changed successfully", "channel": {channel}, "url": {url}, "owner": {owner}, "worker_id": {worker}, "stream_id": {stream_id}}}"#
+    )
+}
+
+#[cfg(test)]
+#[test]
+fn remote_assigned_switch_wire_retains_requester_and_original_field_order() {
+    let original = changed_stream_response(
+        "owned-channel",
+        "http://owned-origin/two.ts",
+        "owned-requester",
+        2,
+        false,
+    );
+    assert_eq!(
+        original,
+        r#"{"message": "Stream changed successfully", "channel": "owned-channel", "url": "http://owned-origin/two.ts", "owner": false, "worker_id": "owned-requester", "stream_id": 2}"#
+    );
+    let timeout = remote_stream_error_response(
+        "Stream switch was not confirmed by the channel owner within 15s",
+        "owned-channel",
+        "http://owned-origin/two.ts",
+        "owned-requester",
+        2,
+    );
+    assert_eq!(
+        timeout,
+        r#"{"error": "Stream switch was not confirmed by the channel owner within 15s", "channel": "owned-channel", "url": "http://owned-origin/two.ts", "owner": false, "worker_id": "owned-requester", "stream_id": 2}"#
+    );
 }
 
 async fn stop(

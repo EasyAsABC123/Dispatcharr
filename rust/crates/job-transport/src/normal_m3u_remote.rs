@@ -497,7 +497,7 @@ async fn execute_body(
                 use dispatcharr_store::remote_m3u_io::Error as TransferError;
                 let (message_text, groups_result) = match error {
                     TransferError::Caught(message) => (message, None),
-                    TransferError::InterruptedBody {
+                    TransferError::DownloadFailed {
                         message,
                         groups_result,
                     } => (message, Some(groups_result)),

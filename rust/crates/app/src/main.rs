@@ -570,7 +570,8 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         .map_err(|_| "Live Connect observer unavailable")?;
     let engine = match outputs.as_ref() {
         Some(outputs) => engine
-            .with_output_profiles(outputs.clone(), Arc::new(()))
+            .with_remote_source_switches(Arc::new(auth.clone()))
+            .and_then(|engine| engine.with_output_profiles(outputs.clone(), Arc::new(())))
             .map_err(|_| "Shared output profile owner dispatch unavailable")?,
         None => engine,
     };

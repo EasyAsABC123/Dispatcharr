@@ -1,6 +1,10 @@
 //! Bounded Redis output buffer ported from Dispatcharr's OutputStreamBuffer.
 //! All original application credit belongs to upstream Dispatcharr authors.
 mod profile_events;
+mod remote_switch;
+pub use remote_switch::{
+    RemoteSwitchIntent, RemoteSwitchSource, RemoteSwitchVerdict, RemoteSwitchWake,
+};
 pub mod transport;
 pub use profile_events::{
     OutputProfileOwner, OutputProfileRequest, ProfileEventObservation, ProfileEventState,
