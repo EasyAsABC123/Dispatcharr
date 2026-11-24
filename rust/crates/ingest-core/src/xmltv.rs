@@ -108,6 +108,11 @@ pub fn xmltv_file_is_complete(path: &Path) -> bool {
 /// be parsed. Restore its previous cursor; replacing the pathname cannot
 /// change which file is validated. I/O failures return false as in Source.
 pub fn xmltv_file_handle_is_complete(file: &mut File) -> bool {
+    check_xmltv_file_handle_complete(file).unwrap_or(false)
+}
+
+/// Read Original's closing-tag heuristic and retain a descriptor I/O error.
+pub fn check_xmltv_file_handle_complete(file: &mut File) -> io::Result<bool> {
     let check = |file: &mut File| -> io::Result<bool> {
         let original = file.stream_position()?;
         let result = (|| -> io::Result<bool> {
@@ -126,7 +131,7 @@ pub fn xmltv_file_handle_is_complete(file: &mut File) -> bool {
         file.seek(SeekFrom::Start(original))?;
         result
     };
-    check(file).unwrap_or(false)
+    check(file)
 }
 
 pub struct XmltvReader {

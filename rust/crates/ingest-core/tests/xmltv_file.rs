@@ -1,5 +1,8 @@
 //! Same-descriptor preparation and footer checks preserve original Source rules.
-use dispatcharr_ingest_core::{xmltv_file_handle_is_complete, xmltv_file_is_complete, XmltvReader};
+use dispatcharr_ingest_core::{
+    check_xmltv_file_handle_complete, xmltv_file_handle_is_complete, xmltv_file_is_complete,
+    XmltvReader,
+};
 use std::{
     fs::{self, File},
     io::{Read, Seek, SeekFrom},
@@ -77,5 +80,22 @@ fn suffix_is_literal_and_io_failure_remains_false() {
         "/tmp/no-such-dispatcharr-xmltv-fixture"
     )));
     let mut directory = File::open(std::env::temp_dir()).unwrap();
+    assert!(!xmltv_file_handle_is_complete(&mut directory));
+}
+
+#[test]
+fn checked_footer_distinguishes_retained_truncation_from_an_io_error() {
+    let original = b"<tv><channel id=\"mapped\"><display-name>Refreshed guide</display-name></channel><programme channel=\"mapped\" start=\"20261110110000 +0000\" stop=\"20261110120000 +0000\"><title>Refreshed programme</title></programme>";
+    let incomplete = Fixture::new(original);
+    let mut file = File::open(&incomplete.0).unwrap();
+    assert!(!check_xmltv_file_handle_complete(&mut file).unwrap());
+    assert!(!xmltv_file_handle_is_complete(&mut file));
+
+    let complete = Fixture::new(&[original.as_slice(), b"</tv>"].concat());
+    let mut file = File::open(&complete.0).unwrap();
+    assert!(check_xmltv_file_handle_complete(&mut file).unwrap());
+
+    let mut directory = File::open(std::env::temp_dir()).unwrap();
+    assert!(check_xmltv_file_handle_complete(&mut directory).is_err());
     assert!(!xmltv_file_handle_is_complete(&mut directory));
 }

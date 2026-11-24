@@ -34,8 +34,8 @@ mod cached;
 pub use cached::{CacheReadError, CacheReadLimits, ValidatedCache};
 mod xmltv;
 pub use xmltv::{
-    parse_xmltv_time, xmltv_file_handle_is_complete, xmltv_file_is_complete, XmltvReader,
-    XmltvTimeError, HTML_ENTITY_DOCTYPE,
+    check_xmltv_file_handle_complete, parse_xmltv_time, xmltv_file_handle_is_complete,
+    xmltv_file_is_complete, XmltvReader, XmltvTimeError, HTML_ENTITY_DOCTYPE,
 };
 mod xmltv_metadata;
 pub use xmltv_metadata::{extract_xmltv_properties, XmltvElement, XmltvMetadataError};

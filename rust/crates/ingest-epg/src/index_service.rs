@@ -48,6 +48,8 @@ pub enum IndexStage {
     RowLock,
     Write,
     Commit,
+    Rollback,
+    ConnectionReady,
     ConnectionClose,
     UnsupportedFileKind,
 }
@@ -617,26 +619,57 @@ impl Inner {
         // pool until the index transaction and connection both settle.
         stage(&trace, IndexStage::WriterAdmission);
         let mut connection = self.services.store.pool().acquire().await?;
-        let result=async{
-            let mut tx=connection.begin().await?;if let Err(error)=context.ensure_active(){tx.rollback().await?;return Err(error);}
-            // Original update_or_create obtains its row lock before save's
-            // auto_now clock sample. Do not sample while waiting for that lock.
-            stage(&trace,IndexStage::RowLock);
-            let locked=sqlx::query("SELECT source_id FROM epg_epgsourceindex WHERE source_id=$1 FOR UPDATE").bind(id).fetch_optional(&mut *tx).await;
-            if let Err(error)=locked{let _=tx.rollback().await;return Err(ImportError::from(error));}
-            if let Err(error)=context.ensure_active(){tx.rollback().await?;return Err(error);}
-            let now=(self.services.clock)();
-            stage(&trace,IndexStage::Write);
-            let saved=sqlx::query("INSERT INTO epg_epgsourceindex(source_id,data,updated_at) VALUES($1,$2,$3) ON CONFLICT(source_id) DO UPDATE SET data=EXCLUDED.data,updated_at=EXCLUDED.updated_at").bind(id).bind(sqlx::types::Json(data)).bind(now).execute(&mut *tx).await;
-            if let Err(error)=saved{let _=tx.rollback().await;return Err(ImportError::from(error));}
-            if let Err(error)=context.ensure_active(){tx.rollback().await?;return Err(error);}
-            stage(&trace,IndexStage::Commit);
-            if let Some(trace)=&trace { trace.commit.store(1,Ordering::Release); }
+        let result = async {
+            let mut tx = connection.begin().await?;
+            let write = async {
+                context.ensure_active()?;
+                // Sample the clock after the row lock, as Original update_or_create does.
+                stage(&trace, IndexStage::RowLock);
+                sqlx::query("SELECT source_id FROM epg_epgsourceindex WHERE source_id=$1 FOR UPDATE")
+                    .bind(id)
+                    .fetch_optional(&mut *tx)
+                    .await?;
+                context.ensure_active()?;
+                let now = (self.services.clock)();
+                stage(&trace, IndexStage::Write);
+                sqlx::query("INSERT INTO epg_epgsourceindex(source_id,data,updated_at) VALUES($1,$2,$3) ON CONFLICT(source_id) DO UPDATE SET data=EXCLUDED.data,updated_at=EXCLUDED.updated_at")
+                    .bind(id)
+                    .bind(sqlx::types::Json(data))
+                    .bind(now)
+                    .execute(&mut *tx)
+                    .await?;
+                context.ensure_active()
+            }.await;
+            if let Err(error) = write {
+                if let Err(rollback) = tx.rollback().await {
+                    stage(&trace, IndexStage::Rollback);
+                    return Err(rollback.into());
+                }
+                return Err(error);
+            }
+            stage(&trace, IndexStage::Commit);
+            if let Some(trace) = &trace {
+                trace.commit.store(1, Ordering::Release);
+            }
             tx.commit().await?;
-            if let Some(trace)=&trace { trace.commit.store(2,Ordering::Release); }
+            if let Some(trace) = &trace {
+                trace.commit.store(2, Ordering::Release);
+            }
             Ok(IndexOutcome::Written)
         }.await;
+        // An ErrorResponse can arrive before ReadyForQuery, including on COMMIT
+        // or ROLLBACK. A graceful SQLx close only sends Terminate. Keep the writer
+        // and its owning Index job until the pending reply and close both settle.
+        let ready = if result.is_err() {
+            connection.ping().await
+        } else {
+            Ok(())
+        };
         let closed = connection.close().await;
+        if let Err(error) = ready {
+            stage(&trace, IndexStage::ConnectionReady);
+            return Err(error.into());
+        }
         if let Err(error) = closed {
             stage(&trace, IndexStage::ConnectionClose);
             return Err(error.into());

@@ -305,6 +305,30 @@ mod tests {
         }
     }
     #[test]
+    fn failed_writer_settlement_remains_operational_after_file_lease_release() {
+        for stage in [
+            IndexStage::Rollback,
+            IndexStage::ConnectionReady,
+            IndexStage::ConnectionClose,
+        ] {
+            for commit in [Commit::NotWritten, Commit::Ambiguous] {
+                assert_eq!(
+                    classify(IndexExecutionReport {
+                        operation: Err(IndexStageFailure {
+                            stage,
+                            cause: IndexFailureCause::Operation(ImportError::from(
+                                sqlx::Error::PoolClosed
+                            )),
+                        }),
+                        commit,
+                        release: Release::Released,
+                    }),
+                    Err(Error::Execution)
+                );
+            }
+        }
+    }
+    #[test]
     fn only_observed_set_or_key_server_denials_classify_after_settled_cleanup() {
         use dispatcharr_coordination::{
             TaskLockCleanupOutcome, TaskLockDetailedError, TaskLockRedisCause,

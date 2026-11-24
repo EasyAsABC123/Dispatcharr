@@ -19,7 +19,8 @@ use dispatcharr_coordination::{
     MissingRefreshSource, PositiveRefreshScalar, TaskLease, TaskLockError, TaskLocks,
 };
 use dispatcharr_ingest_core::{
-    extract_xmltv_owned, source_integer_literal, xmltv_file_handle_is_complete, UploadLimits,
+    check_xmltv_file_handle_complete, extract_xmltv_owned, source_integer_literal,
+    xmltv_file_handle_is_complete, UploadLimits,
 };
 use dispatcharr_output_store::transport::{RedisTransport, TransportConfig};
 use dispatcharr_store::Store;
@@ -94,6 +95,7 @@ pub enum FileJobOutcome {
     AlreadyRunning,
     MissingSource(String),
     MissingLocalFileReported,
+    LocalTruncationReported,
     Failed,
     DownloadRejected(dispatcharr_store::xmltv_download::Rejected),
     PendingDownloadRejected(dispatcharr_store::epg_task_hooks::PendingXmlRejection),
@@ -611,7 +613,11 @@ impl Execution<'_> {
                 return Err(ImportError::Worker)
             }
             Ok(TerminalObservation::StatusFailure(_))
-                if matches!(&result, Ok(FileJobOutcome::MissingLocalFileReported)) =>
+                if matches!(
+                    &result,
+                    Ok(FileJobOutcome::MissingLocalFileReported
+                        | FileJobOutcome::LocalTruncationReported)
+                ) =>
             {
                 return Err(ImportError::Worker);
             }
@@ -880,20 +886,25 @@ impl Execution<'_> {
         let checks = check_path.clone();
         let retained = context.retained.clone();
         let cancelled = context.cancelled.clone();
-        let (exists, mut incomplete) = tokio::task::spawn_blocking(move || {
+        let (exists, mut inspection) = tokio::task::spawn_blocking(move || {
             let _retained = retained;
             if cancelled.load(Ordering::Acquire) {
                 return Err(ImportError::Cancelled);
             }
             let exists = paths.as_ref().is_some_and(|v| v.exists());
-            let incomplete = checks.as_ref().is_some_and(|p| {
-                p.as_os_str().to_string_lossy().ends_with(".xml")
-                    && p.exists()
-                    && File::open(p)
-                        .ok()
-                        .is_none_or(|mut f| !xmltv_file_handle_is_complete(&mut f))
-            });
-            Ok((exists, incomplete))
+            let inspection = checks
+                .as_ref()
+                .filter(|p| p.as_os_str().to_string_lossy().ends_with(".xml") && p.exists())
+                .map(|path| -> std::io::Result<(bool, bool)> {
+                    let mut file = File::open(path)?;
+                    let metadata = file.metadata()?;
+                    let nonempty_regular_file = metadata.is_file() && metadata.len() > 0;
+                    Ok((
+                        check_xmltv_file_handle_complete(&mut file)?,
+                        nonempty_regular_file,
+                    ))
+                });
+            Ok((exists, inspection))
         })
         .await
         .map_err(|_| ImportError::Worker)??;
@@ -901,17 +912,7 @@ impl Execution<'_> {
         if !exists {
             let message = "No URL provided and no valid local file exists".to_string();
             let report = self
-                .services
-                .reporter
-                .execute_observed(
-                    ReportAction::DownloadFailed(FailedImport {
-                        source_id: source.id,
-                        source_name: source.name.clone(),
-                        last_message: message.clone(),
-                        publication_error: message,
-                    }),
-                    context,
-                )
+                .failure(source, message.clone(), message, true, context)
                 .await?;
             return Ok(
                 if !remote_download && matches!(report, ReportObservation::FailureStatusSaved) {
@@ -988,13 +989,23 @@ impl Execution<'_> {
                 .execute(self.services.store.pool())
                 .await?;
             check_path = Some(destination);
-            incomplete = false;
+            inspection = None;
         }
-        if incomplete {
-            let message="EPG file appears incomplete (missing closing </tv>). Keeping previous data when available; will retry on next refresh.".to_string();
-            self.failure(source, message.clone(), message, true, context)
+        if matches!(&inspection, Some(Ok((false, _)) | Err(_))) {
+            let message = "EPG file appears incomplete (missing closing </tv>). Keeping previous data when available; will retry on next refresh.".to_string();
+            let report = self
+                .failure(source, message.clone(), message, true, context)
                 .await?;
-            return Ok(FileJobOutcome::Failed);
+            return Ok(
+                if !remote_download
+                    && matches!(inspection, Some(Ok((false, true))))
+                    && matches!(report, ReportObservation::FailureStatusSaved)
+                {
+                    FileJobOutcome::LocalTruncationReported
+                } else {
+                    FileJobOutcome::Failed
+                },
+            );
         }
         if !remote_download {
             self.services
@@ -1079,7 +1090,7 @@ impl Execution<'_> {
         error: String,
         download: bool,
         context: SwapPolicyContext,
-    ) -> Result<(), ImportError> {
+    ) -> Result<ReportObservation, ImportError> {
         let value = FailedImport {
             source_id: source.id,
             source_name: source.name.clone(),
@@ -1088,7 +1099,7 @@ impl Execution<'_> {
         };
         self.services
             .reporter
-            .execute(
+            .execute_observed(
                 if download {
                     ReportAction::DownloadFailed(value)
                 } else {
