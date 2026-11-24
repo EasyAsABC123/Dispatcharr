@@ -13,8 +13,9 @@ use dispatcharr_ingest_core::{
 };
 use dispatcharr_store::{
     AuthService, BoundedM3uBatchError, GroupCleanupAccount, GroupCleanupCounts, GroupImportCounts,
-    ImportCounts, ImportedGroup, ImportedStream, M3uGroupImportFailure, M3uGroupImportStage,
-    ScannerM3uLookupCap, Store, StoreError, StreamCleanupCounts, TaskSqlExecutor, TaskSqlSession,
+    ImportCounts, ImportedGroup, ImportedStream, M3uFilters, M3uGroupImportFailure,
+    M3uGroupImportStage, ScannerM3uLookupCap, Store, StoreError, StreamCleanupCounts,
+    TaskSqlExecutor, TaskSqlSession,
 };
 use serde_json::{json, Value};
 use sqlx::{Connection, Row};
@@ -255,6 +256,7 @@ fn local_candidate_hash(entry: &Entry, id: i64, keys: &[&str]) -> Result<String,
 
 pub(crate) struct Prepared {
     hash_keys: Vec<&'static str>,
+    filters: Option<M3uFilters>,
     account: Account,
     input: Option<Catalog>,
     missing_input: bool,
@@ -263,6 +265,20 @@ pub(crate) struct Prepared {
     done: Option<tokio::sync::oneshot::Receiver<()>>,
 }
 impl Prepared {
+    fn allows_entry(&self, entry: &Entry) -> Result<bool, Error> {
+        let Some(filters) = &self.filters else {
+            return Ok(true);
+        };
+        let url = entry.url.as_deref().ok_or(Error::Unsupported)?;
+        let group = entry
+            .attributes
+            .get("group-title")
+            .map_or("Default Group", String::as_str);
+        filters
+            .allows(&entry.name, url, group)
+            .map_err(|_| Error::Unsupported)
+    }
+
     pub(crate) fn output_cache_needed(&self, kind: Kind) -> bool {
         kind == Kind::Single
             && self.account.active
@@ -772,7 +788,7 @@ impl Service {
             None => self.hash_setting(owner.clone()).await?,
         };
         *stage = "forbidden_effects_sql";
-        let forbidden:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM m3u_m3ufilter WHERE m3u_account_id=$1) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(self.executor()).await.map_err(|_|Error::Operational)?;
+        let forbidden:bool=sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM dispatcharr_channels_channelgroupm3uaccount WHERE m3u_account_id=$1 AND auto_channel_sync) OR EXISTS(SELECT 1 FROM dispatcharr_connect_eventsubscription s JOIN dispatcharr_connect_integration i ON i.id=s.integration_id WHERE s.enabled AND i.enabled AND s.event IN('m3u_refresh','m3u_error')) OR EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE enabled) OR EXISTS(SELECT 1 FROM dispatcharr_channels_channelstream cs JOIN dispatcharr_channels_stream s ON s.id=cs.stream_id WHERE s.m3u_account_id=$1) OR EXISTS(SELECT 1 FROM pg_trigger WHERE NOT tgisinternal AND tgrelid IN('m3u_m3uaccount'::regclass,'dispatcharr_channels_channelgroup'::regclass,'dispatcharr_channels_channelgroupm3uaccount'::regclass,'core_systemevent'::regclass))").bind(id).fetch_one(self.executor()).await.map_err(|_|Error::Operational)?;
         *stage = "forbidden_effects_domain";
         if forbidden {
             return Err(Error::Unsupported);
@@ -783,8 +799,21 @@ impl Service {
         if domain > 64 {
             return Err(Error::Capacity);
         }
+        let filters = if kind == Kind::Single {
+            Some(
+                M3uFilters::load(self.executor(), id)
+                    .await
+                    .map_err(|error| match error {
+                        StoreError::Unsupported(_) => Error::Unsupported,
+                        _ => Error::Operational,
+                    })?,
+            )
+        } else {
+            None
+        };
         let mut prepared = Prepared {
             hash_keys,
+            filters,
             account,
             input: None,
             missing_input: false,
@@ -831,13 +860,15 @@ impl Service {
         // admission only: never change input order or first-row deduplication.
         *stage = "input_hash_projection";
         let mut hashes = Vec::new();
-        if prepared.hash_keys.is_empty() {
+        let empty_hash = prepared.hash_keys.is_empty();
+        if empty_hash {
             hashes.push(
                 "44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a".to_owned(),
             );
-        } else {
-            for catalog in prepared.input.iter().chain(prepared.cached.iter()) {
-                for entry in &catalog.entries {
+        }
+        for catalog in prepared.input.iter().chain(prepared.cached.iter()) {
+            for entry in &catalog.entries {
+                if prepared.allows_entry(entry)? && !empty_hash {
                     hashes.push(local_candidate_hash(entry, id, &prepared.hash_keys)?);
                 }
             }
@@ -1391,16 +1422,16 @@ impl Service {
             hash_keys: &p.hash_keys,
             max_name_characters: 512,
         };
-        let projected = catalog
-            .entries
-            .iter()
-            .map(|e| project_entry(e, &context))
-            .collect::<Result<Vec<_>, _>>()
-            .map_err(|_| Error::Unsupported)?
-            .into_iter()
-            .flatten()
-            .map(ImportedStream::from)
-            .collect::<Vec<_>>();
+        let mut projected = Vec::new();
+        for entry in &catalog.entries {
+            if p.allows_entry(entry)? {
+                if let Some(stream) =
+                    project_entry(entry, &context).map_err(|_| Error::Unsupported)?
+                {
+                    projected.push(ImportedStream::from(stream));
+                }
+            }
+        }
         let body = self
             .process(account, projected, start, elapsed_start, owner.clone())
             .await;

@@ -309,8 +309,13 @@ existing ordering, duplicates and fallback behavior exercised. The local
 Standard worker now supports all five saved hash fields. Its admission
 lookup and exact import projection produced the same pinned Python hash
 for a composite input. The signed fixture adds a composite override to
-its existing two-phase run. The broader filter cases and current packaged
-comparison remain open.
+its existing two-phase run. The local worker also uses the existing
+ordered matcher for supported filter expressions. The first matching
+name, URL or group rule decides eligibility before the hash lookup and
+import. Pinned Source and isolated PostgreSQL checks agreed on twelve
+assertions. The same signed fixture adds a case with one retained stream
+and two exclusions. Broader regex grammar and the packaged comparison
+remain open.
 
 The local M3U worker honors a saved URL hash override and can use the
 global setting for an absent, null or unrecognized override. Ordinary Beat

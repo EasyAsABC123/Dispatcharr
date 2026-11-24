@@ -550,6 +550,7 @@ mod provider_json_admission;
 
 mod plugin_actions;
 mod xc_live_filters;
+pub use xc_live_filters::Filters as M3uFilters;
 mod xc_live_rollup;
 pub use plugin_actions::{
     PluginActions, PluginRepositorySchedule, TasklessRegistryObservation,

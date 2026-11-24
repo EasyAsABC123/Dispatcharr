@@ -1,10 +1,10 @@
 //! Ordered Source _stream_passes_m3u_filters, using the existing regex crate.
 //! Original Dispatcharr/Python regex authors retain all application credit.
-use crate::{task_sql_session::TaskSqlSession, StoreError};
+use crate::{StoreError, TaskSqlExecutor, TaskSqlSession};
 use regex::{RegexSet, RegexSetBuilder};
 use sqlx::Row;
 fn unsupported() -> StoreError {
-    StoreError::Unsupported("XC filter grammar/value/compiled capacity is unsupported")
+    StoreError::Unsupported("M3U filter grammar/value/compiled capacity is unsupported")
 }
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum Target {
@@ -19,7 +19,7 @@ struct Set {
     target: Target,
     insensitive: bool,
 }
-pub(crate) struct Filters {
+pub struct Filters {
     sets: Vec<Set>,
 }
 struct Rule {
@@ -33,7 +33,45 @@ impl Filters {
         Self { sets: Vec::new() }
     }
     pub(crate) async fn read(session: &TaskSqlSession, id: i64) -> Result<Self, StoreError> {
-        let rules=session.run(move|c|Box::pin(async move{let rows=sqlx::query("SELECT filter_type,CASE WHEN octet_length(regex_pattern)<=8192 THEN regex_pattern END AS pattern,(octet_length(regex_pattern)<=8192 AND (custom_properties IS NULL OR jsonb_typeof(custom_properties)='object' OR custom_properties IN('null'::jsonb,'false'::jsonb,'0'::jsonb,'\"\"'::jsonb,'[]'::jsonb))) AS fits,exclude,COALESCE(custom_properties->'case_sensitive'='false'::jsonb,false) AS insensitive FROM m3u_m3ufilter WHERE m3u_account_id=$1 ORDER BY \"order\" LIMIT 257").bind(id).fetch_all(&mut*c).await?;if rows.len()>256{return Err(unsupported())}rows.into_iter().map(|row|{if !row.try_get::<bool,_>("fits")?{return Err(unsupported())}let kind=match row.try_get::<String,_>("filter_type")?.as_str(){"url"=>Target::Url,"group"=>Target::Group,_=>Target::Name};Ok(Rule{kind,pattern:row.try_get("pattern")?,exclude:row.try_get("exclude")?,insensitive:row.try_get("insensitive")?})}).collect::<Result<Vec<_>,StoreError>>()})).await??;
+        Self::load(TaskSqlExecutor::Session(session.clone()), id).await
+    }
+
+    pub async fn load(executor: TaskSqlExecutor<'_>, id: i64) -> Result<Self, StoreError> {
+        let rows = sqlx::query(r#"
+            SELECT filter_type,
+                   CASE WHEN octet_length(regex_pattern)<=8192 THEN regex_pattern END AS pattern,
+                   (octet_length(regex_pattern)<=8192 AND
+                    (custom_properties IS NULL OR jsonb_typeof(custom_properties)='object' OR
+                     custom_properties IN('null'::jsonb,'false'::jsonb,'0'::jsonb,'""'::jsonb,'[]'::jsonb))) AS fits,
+                   exclude,
+                   COALESCE(custom_properties->'case_sensitive'='false'::jsonb,false) AS insensitive
+            FROM m3u_m3ufilter WHERE m3u_account_id=$1 ORDER BY "order" LIMIT 257
+        "#)
+        .bind(id)
+        .fetch_all(executor)
+        .await?;
+        if rows.len() > 256 {
+            return Err(unsupported());
+        }
+        let rules = rows
+            .into_iter()
+            .map(|row| {
+                if !row.try_get::<bool, _>("fits")? {
+                    return Err(unsupported());
+                }
+                let kind = match row.try_get::<String, _>("filter_type")?.as_str() {
+                    "url" => Target::Url,
+                    "group" => Target::Group,
+                    _ => Target::Name,
+                };
+                Ok(Rule {
+                    kind,
+                    pattern: row.try_get("pattern")?,
+                    exclude: row.try_get("exclude")?,
+                    insensitive: row.try_get("insensitive")?,
+                })
+            })
+            .collect::<Result<Vec<_>, StoreError>>()?;
         Self::compile(rules)
     }
     fn compile(rules: Vec<Rule>) -> Result<Self, StoreError> {
@@ -77,7 +115,7 @@ impl Filters {
         }
         Ok(Self { sets })
     }
-    pub(crate) fn allows(&self, name: &str, url: &str, group: &str) -> Result<bool, StoreError> {
+    pub fn allows(&self, name: &str, url: &str, group: &str) -> Result<bool, StoreError> {
         let mut first = None;
         for set in &self.sets {
             let text = match set.target {
