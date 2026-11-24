@@ -32,6 +32,32 @@ pub(super) fn compatible(current: &PlaybackCandidate, target: &PlaybackCandidate
         && target.url != current.url
 }
 
+/// Only the signed assigned-stream path may transfer an owned unlimited slot.
+pub(super) fn compatible_unlimited_transfer(
+    current: &PlaybackCandidate,
+    target: &PlaybackCandidate,
+) -> bool {
+    supported(current)
+        && supported(target)
+        && current.provider_max_streams == 0
+        && target.provider_max_streams == 0
+        && current
+            .provider_profile_id
+            .is_some_and(|profile| profile > 0)
+        && target
+            .provider_profile_id
+            .is_some_and(|profile| profile > 0)
+        && current.provider_profile_id != target.provider_profile_id
+        && current.stream_id != target.stream_id
+        && current.url != target.url
+}
+
+#[derive(Clone, Copy)]
+struct ReadySource {
+    source: Source,
+    owns_published_slot: bool,
+}
+
 pub(super) struct Request {
     pub target: Source,
     reply: oneshot::Sender<Receipt>,
@@ -39,8 +65,8 @@ pub(super) struct Request {
 
 enum State {
     Unavailable,
-    Ready(Source),
-    Queued(Source, Request),
+    Ready(ReadySource),
+    Queued(ReadySource, Request),
     Switching,
 }
 
@@ -61,10 +87,13 @@ impl Control {
 
     /// Only the producer can open admission, after publishing media from its
     /// owned, supported source.
-    pub fn arm(&self, current: Source) {
+    pub fn arm(&self, current: Source, owns_published_slot: bool) {
         let mut state = self.state.lock().unwrap();
         if matches!(*state, State::Unavailable) {
-            *state = State::Ready(current);
+            *state = State::Ready(ReadySource {
+                source: current,
+                owns_published_slot,
+            });
         }
     }
 
@@ -74,14 +103,20 @@ impl Control {
         target: Source,
     ) -> Result<oneshot::Receiver<Receipt>, PlaybackError> {
         let mut state = self.state.lock().unwrap();
-        if !matches!(*state, State::Ready(ready) if ready == current) {
+        let State::Ready(ready) = *state else {
+            return Err(PlaybackError::new(
+                409,
+                "Local source switch is unavailable",
+            ));
+        };
+        if ready.source != current || (current.1 != target.1 && !ready.owns_published_slot) {
             return Err(PlaybackError::new(
                 409,
                 "Local source switch is unavailable",
             ));
         }
         let (reply, result) = oneshot::channel();
-        *state = State::Queued(current, Request { target, reply });
+        *state = State::Queued(ready, Request { target, reply });
         self.queued.notify_one();
         Ok(result)
     }
@@ -121,11 +156,14 @@ impl Control {
         (at != 0).then(|| f64::from_bits(at))
     }
 
-    pub fn confirm(&self, request: Request, current: Source, at: f64) {
+    pub fn confirm(&self, request: Request, current: Source, owns_published_slot: bool, at: f64) {
         let mut state = self.state.lock().unwrap();
         self.last_confirmed_at
             .store(at.to_bits(), Ordering::Release);
-        *state = State::Ready(current);
+        *state = State::Ready(ReadySource {
+            source: current,
+            owns_published_slot,
+        });
         let _ = request.reply.send(Ok(()));
     }
 
@@ -147,17 +185,17 @@ mod tests {
         let primary = (5, Some(3));
         let alternate = (8, Some(3));
         assert!(control.submit(primary, alternate).is_err());
-        control.arm(primary);
+        control.arm(primary, false);
         assert!(control.submit(alternate, primary).is_err());
         let result = control.submit(primary, alternate).unwrap();
         assert!(control.submit(primary, alternate).is_err());
         let request = control.receive().await;
         assert_eq!(request.target, alternate);
         control.disarm();
-        control.arm(alternate);
+        control.arm(alternate, false);
         assert!(control.submit(alternate, primary).is_err());
         assert_eq!(control.last_confirmed_at(), None);
-        control.confirm(request, alternate, 100.25);
+        control.confirm(request, alternate, false, 100.25);
         assert!(result.await.unwrap().is_ok());
         assert_eq!(control.last_confirmed_at(), Some(100.25));
         let result = control.submit(alternate, primary).unwrap();
@@ -170,7 +208,7 @@ mod tests {
         let control = Control::new();
         let primary = (5, None);
         let alternate = (8, None);
-        control.arm(primary);
+        control.arm(primary, false);
         let reply = control.submit(primary, alternate).unwrap();
         drop(reply);
         assert!(
@@ -179,5 +217,29 @@ mod tests {
                 .is_err()
         );
         assert!(control.submit(primary, alternate).is_ok());
+    }
+
+    #[tokio::test]
+    async fn cross_profile_ticket_requires_published_ownership_on_each_source() {
+        let control = Control::new();
+        let primary = (5, Some(3));
+        let alternate = (8, Some(4));
+        control.arm(primary, false);
+        assert!(control.submit(primary, alternate).is_err());
+        control.disarm();
+        control.arm(primary, true);
+        let cancelled = control.submit(primary, alternate).unwrap();
+        drop(cancelled);
+        assert!(
+            tokio::time::timeout(Duration::from_millis(10), control.receive())
+                .await
+                .is_err()
+        );
+        let reply = control.submit(primary, alternate).unwrap();
+        let request = control.receive().await;
+        assert_eq!(request.target, alternate);
+        control.confirm(request, alternate, false, 100.25);
+        assert!(reply.await.unwrap().is_ok());
+        assert!(control.submit(alternate, primary).is_err());
     }
 }

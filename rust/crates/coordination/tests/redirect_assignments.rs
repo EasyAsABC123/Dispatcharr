@@ -611,3 +611,107 @@ async fn parent_release_before_raw_metadata_publication_cannot_resurrect_public_
         .unwrap();
     assert_eq!(actual, (None, 0));
 }
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn raw_unlimited_source_switch_moves_one_count_and_keeps_initial_alias() {
+    use dispatcharr_coordination::{AcquireRequest, LiveChannelAssignment};
+
+    let (coordinator, mut conn, _, numeric, old_profile) = setup().await;
+    let channel = uuid::Uuid::new_v4().to_string();
+    let new_profile = old_profile + 1;
+    let first_stream = old_profile + 2;
+    let second_stream = old_profile + 3;
+    let metadata = format!("live:channel:{channel}:metadata");
+    let alias = format!("channel_stream:{numeric}");
+    let first_profile_alias = format!("stream_profile:{first_stream}");
+    let second_profile_alias = format!("stream_profile:{second_stream}");
+    let old_count = format!("profile_connections:{old_profile}");
+    let new_count = format!("profile_connections:{new_profile}");
+    let lease = coordinator
+        .acquire(AcquireRequest {
+            channel_id: channel,
+            provider_profile_id: None,
+            provider_max_streams: 0,
+            credential_pool: None,
+        })
+        .await
+        .unwrap();
+    lease
+        .reserve_provider(ProviderReservation {
+            profile_id: Some(old_profile),
+            max_streams: 0,
+            credential_pool: None,
+        })
+        .await
+        .unwrap();
+    lease
+        .publish_source_assignment_with_metadata(
+            LiveChannelAssignment::new(numeric, first_stream).unwrap(),
+            Duration::from_secs(60),
+        )
+        .await
+        .unwrap();
+    redis::cmd("HSET")
+        .arg(&metadata)
+        .arg("state")
+        .arg("active")
+        .query_async::<()>(&mut conn)
+        .await
+        .unwrap();
+    let token = lease.token();
+    let fence = lease.fence();
+    lease
+        .switch_active_source_to_unlimited_profile(second_stream, old_profile, new_profile)
+        .await
+        .unwrap();
+    let crossed: (i64, i64, Option<i64>, Option<i64>, i64, i64, i64) = redis::pipe()
+        .get(&alias)
+        .get(&first_profile_alias)
+        .get(&second_profile_alias)
+        .get(&old_count)
+        .get(&new_count)
+        .hget(&metadata, "stream_id")
+        .hget(&metadata, "m3u_profile")
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(
+        crossed,
+        (
+            first_stream,
+            new_profile,
+            None,
+            None,
+            1,
+            second_stream,
+            new_profile
+        )
+    );
+    lease
+        .switch_active_source_to_unlimited_profile(first_stream, new_profile, old_profile)
+        .await
+        .unwrap();
+    let same_owner: (i64, i64, i64, i64, String) = redis::pipe()
+        .get(&alias)
+        .get(&first_profile_alias)
+        .get(&old_count)
+        .get(&new_count)
+        .hget(&metadata, "owner")
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(same_owner, (first_stream, old_profile, 1, 0, token.into()));
+    assert_eq!(lease.fence(), fence);
+    lease.release().await.unwrap();
+    let retired: (Option<i64>, Option<i64>, Option<i64>, i64, i64) = redis::pipe()
+        .get(&alias)
+        .get(&first_profile_alias)
+        .get(&second_profile_alias)
+        .get(&old_count)
+        .get(&new_count)
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(retired, (None, None, None, 0, 0));
+}

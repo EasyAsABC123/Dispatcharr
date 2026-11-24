@@ -210,12 +210,15 @@ redis.call('HSET',KEYS[2],'alias_channel',KEYS[4],'alias_stream',KEYS[5],
 return 1
 "#;
 
-/// Preserve the already-owned alias and capacity for a same-profile switch.
+/// Switch under the existing fenced alias. A cross-profile command on two
+/// verified unlimited direct profiles atomically moves count and ownership.
 pub const SWITCH_ACTIVE_SOURCE: &str = r#"
 local owner,ledger=KEYS[1],KEYS[2]
-local token,stream,pid=ARGV[1],ARGV[2],ARGV[3]
+local token,stream,pid,nextpid=ARGV[1],ARGV[2],ARGV[3],ARGV[4]
 if redis.call('GET',owner)~=token or redis.call('HGET',ledger,'token')~=token then return 0 end
-if redis.call('HGET',ledger,'reserved')~='1' or redis.call('HGET',ledger,'source_slot_shared')~='1'
+local reserved=redis.call('HGET',ledger,'reserved')
+if (reserved~='1' and (nextpid==pid or reserved~='0'))
+    or redis.call('HGET',ledger,'source_slot_shared')~='1'
     or redis.call('HGET',ledger,'source_borrowed')=='1'
     or redis.call('HGET',ledger,'profile')~='profile_connections:'..pid then return 0 end
 local metadata=redis.call('HGET',ledger,'source_metadata')
@@ -233,7 +236,29 @@ if not channel_alias or not stream_alias or not channel_receipt or not stream_re
     or redis.call('HGET',channel_receipt,'scope')~='live' or redis.call('HGET',stream_receipt,'scope')~='live'
     or redis.call('HGET',channel_receipt,'ledger')~=ledger or redis.call('HGET',stream_receipt,'ledger')~=ledger
     or redis.call('HGET',channel_receipt,'stream')~=alias_sid or redis.call('HGET',channel_receipt,'profile')~=pid then return 0 end
-if counter_value('profile_connections:'..pid)<1 then return 0 end
+local previous_key='profile_connections:'..pid
+local previous_count=counter_value(previous_key)
+if reserved=='1' and previous_count<1 then return 0 end
+if nextpid~=pid then
+    -- A fresh unlimited Native reservation carries no counter. Refuse to
+    -- debit another owner's count if this ledger has never owned one.
+    if reserved=='0' and previous_count~=0 then return 0 end
+    if redis.call('HGET',ledger,'credential')~='' then return 0 end
+    local previous_release='profile_credential_release:'..pid
+    local next_release='profile_credential_release:'..nextpid
+    if redis.call('HGET',ledger,'release_key')~=previous_release
+        or redis.call('EXISTS',previous_release,next_release)~=0 then return 0 end
+    local next_key='profile_connections:'..nextpid
+    -- Validate the destination before any writes. Redis scripts do not undo
+    -- an already applied write if a later command fails.
+    if counter_value(next_key)>=9007199254740991 then return 0 end
+    if reserved=='1' then redis.call('DECR',previous_key) end
+    redis.call('INCR',next_key)
+    redis.call('SET',stream_alias,nextpid)
+    redis.call('HSET',channel_receipt,'profile',nextpid,'reserved','1')
+    redis.call('HSET',ledger,'profile',next_key,'alias_pid',nextpid,'release_key',next_release,'reserved','1')
+    redis.call('HSET',metadata,'m3u_profile',nextpid)
+end
 redis.call('HSET',metadata,'stream_id',stream)
 return 1
 "#;

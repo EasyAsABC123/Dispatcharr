@@ -78,12 +78,43 @@ impl Lease {
         stream: i64,
         profile: i64,
     ) -> Result<(), Error> {
-        if stream <= 0 || profile <= 0 || self.inner.release_started.load(Ordering::Acquire) {
+        self.switch_active_source(stream, profile, profile).await
+    }
+    /// Move an owned raw source between two independently resolved unlimited
+    /// profiles. This preserves the initial alias and charges precisely one
+    /// destination slot, as Original does even for unlimited profiles.
+    pub async fn switch_active_source_to_unlimited_profile(
+        &self,
+        stream: i64,
+        previous_profile: i64,
+        next_profile: i64,
+    ) -> Result<(), Error> {
+        if previous_profile == next_profile {
+            return Err(Error::InvalidRequest);
+        }
+        self.switch_active_source(stream, previous_profile, next_profile)
+            .await
+    }
+    async fn switch_active_source(
+        &self,
+        stream: i64,
+        profile: i64,
+        next_profile: i64,
+    ) -> Result<(), Error> {
+        if stream <= 0
+            || profile <= 0
+            || next_profile <= 0
+            || self.inner.release_started.load(Ordering::Acquire)
+        {
             return Err(Error::InvalidRequest);
         }
         match lease_mutation_observed(
             &self.inner,
-            LeaseMutation::SwitchActiveSource { stream, profile },
+            LeaseMutation::SwitchActiveSource {
+                stream,
+                profile,
+                next_profile,
+            },
             true,
         )
         .await?

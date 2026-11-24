@@ -475,7 +475,7 @@ impl StreamEngine {
             .local_switch_session(channel)
             .ok_or_else(|| PlaybackError::new(404, "Channel not found"))?;
         let (_, _, url) = self
-            .switch_in_local_session(&session, |_| Ok((stream_id, None)))
+            .switch_in_local_session(&session, None, |_| Ok((stream_id, None)))
             .await?;
         Ok(url)
     }
@@ -489,22 +489,39 @@ impl StreamEngine {
         let session = self
             .local_switch_session(channel)
             .ok_or_else(|| PlaybackError::new(404, "Channel not found"))?;
-        let (previous, capacity) = {
+        let (previous, capacity, transfer_profile) = {
             let active = session.current.lock().unwrap();
-            (source_switch::source(&active), active.provider_max_streams)
+            let transfer = if active.stream_id != stream_id && active.provider_max_streams == 0 {
+                assigned_transfer_profile(
+                    &active,
+                    stream_id,
+                    std::iter::once(&session.source.primary()).chain(&session.source.alternates),
+                )
+            } else {
+                None
+            };
+            (
+                source_switch::source(&active),
+                active.provider_max_streams,
+                transfer,
+            )
         };
-        let saved = if previous.0 == stream_id {
-            let profile = previous.1.map(|profile| (profile, capacity));
+        let saved = if previous.0 == stream_id || transfer_profile.is_some() {
+            let profile = transfer_profile
+                .or(previous.1)
+                .map(|profile| (profile, capacity));
             let ordered = resolver.ordered_channel_streams(channel, profile).await?;
             let url = ordered
                 .into_iter()
                 .find(|assignment| assignment.id == stream_id)
                 .and_then(|assignment| assignment.direct_url)
                 .ok_or_else(|| {
-                    PlaybackError::new(
-                    501,
-                    "Active assigned stream requires a current direct profile with the same limit",
-                )
+                    let message = if transfer_profile.is_some() {
+                        "Assigned stream requires a current direct unlimited profile"
+                    } else {
+                        "Active assigned stream requires a current direct profile with the same limit"
+                    };
+                    PlaybackError::new(501, message)
                 })?;
             if !self
                 .local_switch_session(channel)
@@ -517,7 +534,7 @@ impl StreamEngine {
             None
         };
         let (_, _, url) = self
-            .switch_in_local_session(&session, |active| {
+            .switch_in_local_session(&session, transfer_profile, |active| {
                 if let Some(saved) = saved.as_deref() {
                     if (source_switch::source(active), active.provider_max_streams)
                         != (previous, capacity)
@@ -584,7 +601,7 @@ impl StreamEngine {
             return Err(PlaybackError::new(409, "Local source owner changed"));
         }
         let (previous, next, url) = self
-            .switch_in_local_session(&session, |active| {
+            .switch_in_local_session(&session, None, |active| {
                 next_direct_switch(&ordered, previous, active)
             })
             .await?;
@@ -603,6 +620,7 @@ impl StreamEngine {
     async fn switch_in_local_session<'a>(
         &self,
         session: &Session,
+        transfer_profile: Option<i64>,
         select: impl FnOnce(&PlaybackCandidate) -> Result<(i64, Option<&'a str>), PlaybackError>,
     ) -> Result<(i64, i64, String), PlaybackError> {
         let (reply, previous, stream_id, url) = {
@@ -619,12 +637,12 @@ impl StreamEngine {
                     "Active source is outside the local switch scope",
                 ));
             }
-            if active.provider_max_streams == 1
+            if (active.provider_max_streams == 1 || transfer_profile.is_some())
                 && !matches!(*session.startup.borrow(), Startup::Ready)
             {
                 return Err(PlaybackError::new(409, "Local provider slot is not ready"));
             }
-            let target = (stream_id, current.1);
+            let target = (stream_id, transfer_profile.or(current.1));
             let primary;
             let candidate = if target == current {
                 &*active
@@ -650,6 +668,14 @@ impl StreamEngine {
                 return Err(PlaybackError::new(
                     409,
                     "Requested stream has a different provider limit",
+                ));
+            }
+            if transfer_profile.is_some()
+                && !source_switch::compatible_unlimited_transfer(&active, candidate)
+            {
+                return Err(PlaybackError::new(
+                    409,
+                    "Requested stream cannot transfer the local provider slot",
                 ));
             }
             if saved_url.is_some_and(|url| url != candidate.url) {
@@ -856,17 +882,20 @@ impl StreamEngine {
                 let (stop, _) = watch::channel(false);
                 let (startup, _) = watch::channel(Startup::Pending);
                 let primary = source.primary();
+                let can_own_source_slot = self.inner.config.source_initialization
+                    && self.inner.clients.is_some()
+                    && self.inner.coordinator.is_some();
                 let source_switch = (register_client
                     && self.inner.local_source_switches
                     && source.output_format == dispatcharr_contracts::OutputFormat::MpegTs
-                    && (primary.provider_max_streams == 0
-                        || (self.inner.config.source_initialization
-                            && self.inner.clients.is_some()
-                            && self.inner.coordinator.is_some()))
-                    && source
-                        .alternates
-                        .iter()
-                        .any(|candidate| source_switch::compatible(&primary, candidate)))
+                    && (primary.provider_max_streams == 0 || can_own_source_slot)
+                    && source.alternates.iter().any(|candidate| {
+                        source_switch::compatible(&primary, candidate)
+                            || (can_own_source_slot
+                                && source_switch::compatible_unlimited_transfer(
+                                    &primary, candidate,
+                                ))
+                    }))
                 .then(|| Box::new(source_switch::Control::new()));
                 let current = Mutex::new(primary);
                 let session = Arc::new(Session {
@@ -1839,6 +1868,21 @@ fn supported_input_url(candidate: &PlaybackCandidate) -> bool {
     })
 }
 
+fn assigned_transfer_profile<'a>(
+    active: &PlaybackCandidate,
+    stream_id: i64,
+    candidates: impl Iterator<Item = &'a PlaybackCandidate>,
+) -> Option<i64> {
+    let mut matched = candidates.filter(|candidate| {
+        candidate.stream_id == stream_id && source_switch::supported(candidate)
+    });
+    let target = matched.next()?;
+    if matched.next().is_some() || !source_switch::compatible_unlimited_transfer(active, target) {
+        return None;
+    }
+    target.provider_profile_id
+}
+
 fn same_live_reservation(current: &PlaybackCandidate, next: &PlaybackCandidate) -> bool {
     current.input_command.is_none()
         && next.input_command.is_none()
@@ -1936,6 +1980,72 @@ mod retained_source_tests {
                 .status,
             409
         );
+    }
+
+    #[test]
+    fn assigned_cross_profile_selects_only_a_unique_distinct_unlimited_target() {
+        let active = PlaybackCandidate {
+            provider_max_streams: 0,
+            credential_pool: None,
+            ..candidate(11)
+        };
+        let destination = PlaybackCandidate {
+            provider_profile_id: Some(4),
+            provider_max_streams: 0,
+            credential_pool: None,
+            ..candidate(12)
+        };
+        assert_eq!(
+            assigned_transfer_profile(&active, 12, [&active, &destination].into_iter()),
+            Some(4)
+        );
+        let same_profile = PlaybackCandidate {
+            provider_profile_id: active.provider_profile_id,
+            ..destination.clone()
+        };
+        assert_eq!(
+            assigned_transfer_profile(&active, 12, [&same_profile, &destination].into_iter()),
+            None
+        );
+        let different_profile = PlaybackCandidate {
+            provider_profile_id: Some(5),
+            ..destination.clone()
+        };
+        assert_eq!(
+            assigned_transfer_profile(&active, 12, [&destination, &different_profile].into_iter()),
+            None
+        );
+        for refused in [
+            same_profile,
+            PlaybackCandidate {
+                provider_max_streams: 1,
+                ..destination.clone()
+            },
+            PlaybackCandidate {
+                url: active.url.clone(),
+                ..destination.clone()
+            },
+            PlaybackCandidate {
+                provider_profile_id: None,
+                ..destination.clone()
+            },
+            PlaybackCandidate {
+                provider_profile_id: Some(0),
+                ..destination.clone()
+            },
+            PlaybackCandidate {
+                stream_id: active.stream_id,
+                ..destination.clone()
+            },
+            PlaybackCandidate {
+                credential_pool: candidate(12).credential_pool,
+                ..destination.clone()
+            },
+        ] {
+            assert!(!source_switch::compatible_unlimited_transfer(
+                &active, &refused
+            ));
+        }
     }
 
     #[test]
@@ -2256,6 +2366,7 @@ async fn run_upstream(
     };
     let mut attempts = 0u64;
     let mut retained_source_slot = false;
+    let mut transfer_previous_profile = None;
     let mut last_candidate = None;
     let mut capacity_wait = (numeric_channel.is_some()
         && session.native_initializing.load(Ordering::Acquire)
@@ -2393,25 +2504,36 @@ async fn run_upstream(
                                 break 'session;
                             }
                         };
-                        let published = if keep_source_slot {
-                            lease
-                                .switch_active_source_with_reservation(
-                                    candidate.stream_id,
-                                    candidate
-                                        .provider_profile_id
-                                        .expect("retained provider profile"),
-                                )
-                                .await
-                        } else if let Some(clients) = inner.clients.as_ref() {
-                            lease
-                                .publish_source_assignment_with_metadata(
-                                    assignment,
-                                    clients.channel_metadata_ttl(),
-                                )
-                                .await
-                        } else {
-                            lease.publish_source_assignment(assignment).await
-                        };
+                        let published =
+                            if let Some(previous_profile) = transfer_previous_profile.take() {
+                                lease
+                                    .switch_active_source_to_unlimited_profile(
+                                        candidate.stream_id,
+                                        previous_profile,
+                                        candidate
+                                            .provider_profile_id
+                                            .expect("transfer destination profile"),
+                                    )
+                                    .await
+                            } else if keep_source_slot {
+                                lease
+                                    .switch_active_source_with_reservation(
+                                        candidate.stream_id,
+                                        candidate
+                                            .provider_profile_id
+                                            .expect("retained provider profile"),
+                                    )
+                                    .await
+                            } else if let Some(clients) = inner.clients.as_ref() {
+                                lease
+                                    .publish_source_assignment_with_metadata(
+                                        assignment,
+                                        clients.channel_metadata_ttl(),
+                                    )
+                                    .await
+                            } else {
+                                lease.publish_source_assignment(assignment).await
+                            };
                         if let Err(error) = published {
                             last_error = coordination_error(error);
                             break 'session;
@@ -2506,16 +2628,28 @@ async fn run_upstream(
                     && matches!(*session.startup.borrow(), Startup::Ready)
                     && session.received_bytes.load(Ordering::Relaxed) > bytes_at_admission;
                 retained_source_slot = if let Some(request) = requested_switch.as_ref() {
+                    let transferring = request.target.1 != candidate.provider_profile_id;
                     requested_target = candidates.iter().position(|target| {
                         source_switch::source(target) == request.target
-                            && source_switch::compatible(candidate, target)
+                            && if transferring {
+                                source_switch::compatible_unlimited_transfer(candidate, target)
+                            } else {
+                                source_switch::compatible(candidate, target)
+                            }
                     });
-                    let retain = retain_explicit_one_slot(
-                        ready_owned_slot,
-                        candidate,
-                        requested_target.map(|target| &candidates[target]),
-                    );
-                    if candidate.provider_max_streams > 0 && !retain {
+                    let retain = if transferring {
+                        ready_owned_slot && numeric_channel.is_some() && requested_target.is_some()
+                    } else {
+                        retain_explicit_one_slot(
+                            ready_owned_slot,
+                            candidate,
+                            requested_target.map(|target| &candidates[target]),
+                        )
+                    };
+                    if transferring && retain {
+                        transfer_previous_profile = candidate.provider_profile_id;
+                    }
+                    if (transferring || candidate.provider_max_streams > 0) && !retain {
                         let control = session
                             .source_switch
                             .as_ref()
@@ -3191,7 +3325,9 @@ async fn drive_candidate(
                     // Original acknowledges the already-active stream, clears
                     // rotation history and refreshes metadata without redialing.
                     retry.stable(current);
-                    control.unwrap().confirm(request, current_source, epoch_seconds());
+                    control.unwrap().confirm(
+                        request, current_source, published_local_slot, epoch_seconds(),
+                    );
                     session.metadata_wake.notify_one();
                     continue;
                 }
@@ -3257,10 +3393,15 @@ async fn drive_candidate(
             {
                 let current_source = source_switch::source(candidate);
                 if let Some(request) = pending_switch.take() {
-                    control.confirm(request, current_source, epoch_seconds());
+                    control.confirm(
+                        request,
+                        current_source,
+                        published_local_slot,
+                        epoch_seconds(),
+                    );
                     session.metadata_wake.notify_one();
                 } else {
-                    control.arm(current_source);
+                    control.arm(current_source, published_local_slot);
                 }
             }
             retry.had_media = true;

@@ -700,6 +700,7 @@ enum LeaseMutation {
     SwitchActiveSource {
         stream: i64,
         profile: i64,
+        next_profile: i64,
     },
     AdoptSourceAssignment {
         assignment: LiveChannelAssignment,
@@ -805,8 +806,12 @@ async fn lease_mutation_observed(
             } => {
                 invocation.arg(assignment.stream).arg(profile);
             }
-            LeaseMutation::SwitchActiveSource { stream, profile } => {
-                invocation.arg(stream).arg(profile);
+            LeaseMutation::SwitchActiveSource {
+                stream,
+                profile,
+                next_profile,
+            } => {
+                invocation.arg(stream).arg(profile).arg(next_profile);
             }
             LeaseMutation::Release | LeaseMutation::ClearProvider => {}
         }
