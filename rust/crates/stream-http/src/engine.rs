@@ -297,12 +297,7 @@ fn next_direct_switch<'a>(
     previous: (source_switch::Source, u32),
     active: &PlaybackCandidate,
 ) -> Result<(i64, Option<&'a str>), PlaybackError> {
-    if (source_switch::source(active), active.provider_max_streams) != previous {
-        return Err(PlaybackError::new(
-            409,
-            "Active source changed while selecting next",
-        ));
-    }
+    verify_next_active(previous, active)?;
     let selected = next_assigned_stream(ordered, active.stream_id)?;
     let url = selected.direct_url.as_deref().ok_or_else(|| {
         PlaybackError::new(
@@ -311,6 +306,49 @@ fn next_direct_switch<'a>(
         )
     })?;
     Ok((selected.id, Some(url)))
+}
+
+fn verify_next_active(
+    previous: (source_switch::Source, u32),
+    active: &PlaybackCandidate,
+) -> Result<(), PlaybackError> {
+    if (source_switch::source(active), active.provider_max_streams) != previous {
+        return Err(PlaybackError::new(
+            409,
+            "Active source changed while selecting next",
+        ));
+    }
+    Ok(())
+}
+
+fn next_transfer_profile<'a>(
+    ordered: &[OrderedChannelStream],
+    previous: (source_switch::Source, u32),
+    active: &PlaybackCandidate,
+    candidates: impl Iterator<Item = &'a PlaybackCandidate>,
+) -> Result<Option<(i64, i64)>, PlaybackError> {
+    verify_next_active(previous, active)?;
+    let next = next_assigned_stream(ordered, active.stream_id)?;
+    // Original selects the immediate saved assignment before resolving it.
+    // Only that assignment may become a transfer candidate.
+    if active.provider_max_streams != 0 || next.direct_url.is_some() {
+        return Ok(None);
+    }
+    Ok(assigned_transfer_profile(active, next.id, candidates).map(|profile| (next.id, profile)))
+}
+
+fn verify_transfer_order(
+    ordered: &[OrderedChannelStream],
+    current: i64,
+    target: i64,
+) -> Result<(), PlaybackError> {
+    if !next_assigned_stream(ordered, current).is_ok_and(|next| next.id == target) {
+        return Err(PlaybackError::new(
+            409,
+            "Next stream changed while selecting direct profile",
+        ));
+    }
+    Ok(())
 }
 
 #[cfg(test)]
@@ -570,7 +608,7 @@ impl StreamEngine {
         });
         let profile = previous
             .and_then(|((_, profile), capacity)| profile.map(|profile| (profile, capacity)));
-        let ordered = resolver.ordered_channel_streams(channel, profile).await?;
+        let mut ordered = resolver.ordered_channel_streams(channel, profile).await?;
         let Some((session, previous)) = session.zip(previous) else {
             if let Some(store) = &self.inner.clients {
                 let metadata = store
@@ -594,6 +632,22 @@ impl StreamEngine {
         let worker = self.local_source_switch_worker().ok_or_else(|| {
             PlaybackError::new(501, "Local source switch requires worker identity")
         })?;
+        let transfer = {
+            let active = session.current.lock().unwrap();
+            next_transfer_profile(
+                &ordered,
+                previous,
+                &active,
+                std::iter::once(&session.source.primary()).chain(&session.source.alternates),
+            )?
+        };
+        if let Some((target, profile)) = transfer {
+            ordered = resolver
+                .ordered_channel_streams(channel, Some((profile, 0)))
+                .await?;
+            let ((current, _), _) = previous;
+            verify_transfer_order(&ordered, current, target)?;
+        }
         if !self
             .local_switch_session(channel)
             .is_some_and(|active| Arc::ptr_eq(&active, &session))
@@ -601,7 +655,7 @@ impl StreamEngine {
             return Err(PlaybackError::new(409, "Local source owner changed"));
         }
         let (previous, next, url) = self
-            .switch_in_local_session(&session, None, |active| {
+            .switch_in_local_session(&session, transfer.map(|(_, profile)| profile), |active| {
                 next_direct_switch(&ordered, previous, active)
             })
             .await?;
@@ -1980,6 +2034,86 @@ mod retained_source_tests {
         };
         assert_eq!(
             next_direct_switch(&ordered, previous, &new_limit)
+                .unwrap_err()
+                .status,
+            409
+        );
+    }
+
+    #[test]
+    fn cross_profile_next_preserves_the_saved_successor_and_rejects_a_changed_order() {
+        let active = PlaybackCandidate {
+            credential_pool: None,
+            provider_max_streams: 0,
+            ..candidate(11)
+        };
+        let target = PlaybackCandidate {
+            credential_pool: None,
+            provider_max_streams: 0,
+            provider_profile_id: Some(4),
+            ..candidate(12)
+        };
+        let previous = (source_switch::source(&active), 0);
+        let candidates = [&active, &target];
+        let mut ordered = [
+            OrderedChannelStream {
+                id: 11,
+                direct_url: Some(active.url.clone()),
+            },
+            OrderedChannelStream {
+                id: 12,
+                direct_url: None,
+            },
+            OrderedChannelStream {
+                id: 13,
+                direct_url: None,
+            },
+        ];
+        assert_eq!(
+            next_transfer_profile(&ordered, previous, &active, candidates.into_iter()).unwrap(),
+            Some((12, 4))
+        );
+        ordered[1].direct_url = Some(target.url.clone());
+        assert!(verify_transfer_order(&ordered, 11, 12).is_ok());
+        assert_eq!(
+            next_direct_switch(&ordered, previous, &active).unwrap(),
+            (12, Some(target.url.as_str()))
+        );
+        ordered[1].direct_url = None;
+        assert_eq!(
+            next_direct_switch(&ordered, previous, &active)
+                .unwrap_err()
+                .status,
+            501
+        );
+
+        ordered.swap(1, 2);
+        assert_eq!(
+            verify_transfer_order(&ordered, 11, 12).unwrap_err().status,
+            409
+        );
+        assert_eq!(
+            next_transfer_profile(&ordered, previous, &active, candidates.into_iter()).unwrap(),
+            None
+        );
+
+        let wrap = [
+            OrderedChannelStream {
+                id: 11,
+                direct_url: None,
+            },
+            OrderedChannelStream {
+                id: 12,
+                direct_url: Some(target.url.clone()),
+            },
+        ];
+        let target_state = (source_switch::source(&target), 0);
+        assert_eq!(
+            next_transfer_profile(&wrap, target_state, &target, candidates.into_iter()).unwrap(),
+            Some((11, 3))
+        );
+        assert_eq!(
+            next_transfer_profile(&wrap, previous, &target, candidates.into_iter())
                 .unwrap_err()
                 .status,
             409
