@@ -1,0 +1,104 @@
+{
+  "all_exact_owned_retired": true,
+  "arms": {
+    "Native": {
+      "both_viewers_polls": 32,
+      "bytes_per_second": 187127.82817945714,
+      "exact_cleanup": true,
+      "image": "sha256:39d72f53387dd4403696c37d68298378dbe497f33f21981d695e0b37015d87ff",
+      "metrics": {
+        "backend_and_infra_core_seconds": 1.591525,
+        "core_seconds": 1.932748,
+        "peak_non_origin_charged_bytes": 382808064,
+        "peak_working_bytes": 400789504,
+        "per_role": {
+          "baseline": {
+            "core_seconds": 0.618305,
+            "peak_charged_bytes": 189825024,
+            "peak_working_bytes": 189726720
+          },
+          "candidate": {
+            "core_seconds": 0.97322,
+            "peak_charged_bytes": 197337088,
+            "peak_working_bytes": 195457024
+          },
+          "origin": {
+            "core_seconds": 0.341223,
+            "peak_charged_bytes": 29528064,
+            "peak_working_bytes": 20660224
+          }
+        }
+      },
+      "normal_stops": [
+        204,
+        204
+      ],
+      "raw_first_byte_p95_seconds": 0.008128916844725609,
+      "retired_playlists": [
+        410,
+        410
+      ],
+      "samples": 33,
+      "segments_per_viewer": 6
+    },
+    "Original": {
+      "both_viewers_polls": 32,
+      "bytes_per_second": 187172.15472189386,
+      "exact_cleanup": true,
+      "image": "sha256:6cbebd8fcd7dfeb32349ae75cad7022af15eef06d46f227cfb9373ea14c12ace",
+      "metrics": {
+        "backend_and_infra_core_seconds": 2.35807,
+        "core_seconds": 2.67833,
+        "peak_non_origin_charged_bytes": 1211842560,
+        "peak_working_bytes": 1181925376,
+        "per_role": {
+          "baseline": {
+            "core_seconds": 2.35807,
+            "peak_charged_bytes": 1211842560,
+            "peak_working_bytes": 1153527808
+          },
+          "origin": {
+            "core_seconds": 0.32026,
+            "peak_charged_bytes": 40267776,
+            "peak_working_bytes": 28659712
+          }
+        }
+      },
+      "normal_stops": [
+        204,
+        204
+      ],
+      "raw_first_byte_p95_seconds": 0.01583545794710517,
+      "retired_playlists": [
+        410,
+        410
+      ],
+      "samples": 33,
+      "segments_per_viewer": 6
+    }
+  },
+  "candidate": "52cdd3871937a0693a0f7ba9f4f5a26cc2bec053",
+  "command_receipts_hashed": 229,
+  "credit": "Original Dispatcharr/React, FFmpeg, VLC and all upstream contributors retain full credit.",
+  "equal_actual_media_and_decodes": true,
+  "full_M3_passed": false,
+  "full_milestone_performance_verified": false,
+  "one_pair_only": true,
+  "ratios": {
+    "cpu": 0.7216242957365224,
+    "goodput": 0.9997631776879281,
+    "memory": 0.33909882310539374,
+    "segment_first_byte_p95": 1.0
+  },
+  "raw_credentials_or_media_published": false,
+  "raw_first_byte_p95_ratio": 0.5133363917784033,
+  "schema": "52cdd_ARM64_signed_two_viewer_HLS_scoped_proof/1",
+  "status": "passed",
+  "thresholds": {
+    "cpu_max": 0.9,
+    "floored_latency_max": 1.1,
+    "goodput_min": 0.95,
+    "latency_floor_seconds": 0.05,
+    "memory_max": 0.95
+  }
+}

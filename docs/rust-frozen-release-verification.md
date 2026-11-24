@@ -929,6 +929,7 @@ confirmed exact teardown and has SHA-256
 `e8a0a3f4e6776bce9e9778974aac41ab10966a47539fa34ea41447ed5fce90bd`.
 This comparison covers one signed HLS workload on ARM64. Full M3,
 including internal receiver identity, remains open.
+[Measured HLS evidence](rust-m3-arm64-signed-hls-performance-52cdd387.json)
 
 The M6 coordinator now validates an exclusive parent lock by the
 exact opened descriptor, process identity and locked inode. Btrfs can
@@ -966,5 +967,50 @@ The ordinary Rust status handler now maps this bounded stored-data error to
 the observed response. Transport failures continue to return HTTP 503.
 The restore worker keeps its existing result decoder and task-identity
 checks. Focused Rust tests check the response, malformed UTF-8 and the size
-limit, valid result projection and worker identity. The packaged signed
-HTTP replay with real result Redis is still required.
+limit, valid result projection and worker identity.
+
+The frozen AMD64 package passed 12 real HTTP checks in a private Compose
+project with PostgreSQL and Redis. A normal signed backup supplied the
+issued task token and stored result. The replay checked the Original's
+malformed-result diagnostic, authentication precedence, missing and typed
+results, and the Native 503 controls. It restored the worker's original
+result bytes and expiry, verified the preserved SQL state and drained
+queues, and retired the project exactly. Full M8 remains open.
+[Verified status replay](rust-m8-backup-status-3d8f9672.json)
+
+### Ordinary package qualification at 3d8f9672
+
+The tracked release-package verifier accepted the ordinary AMD64 and ARM64
+packages for `3d8f96725ed90f5d37e406492e264e7c4d37f89a`. Both bind to the
+same 2,260-file application source map with 497 protected React, license
+and attribution files. Rust 1.90 formatting, the focused checks, strict
+Clippy and the full workspace run passed against the exact application
+source. The workspace ran 194 test targets with 1,982 passing, zero failing
+and 838 ignored tests. ARM64 passed the signed boot and authentication
+smoke, and AMD64 passed independent installed ELF, entrypoint and source
+checks. The audit probes and package smoke projects retired exactly.
+[Verified package pair](rust-ordinary-package-pair-3d8f9672.json)
+
+The first AMD64 image built, but its qualification compared the runtime
+binding to the previous workspace correction's file list. The retained
+receipt records that verifier failure. The corrected verifier passed against
+the first image offline. A fresh ordinary build and the independent audit
+were then qualified using the current file list. The package-pair gate
+covers the two images and their shared source. Full release acceptance
+still requires the workflow and performance matrix.
+
+On Lappy, both Original and the current ARM64 package also completed
+the active and inactive HDHomeRun profiles across a graceful application
+restart. The scopes verified 12 metadata requests and four
+advertised deliveries per arm, one upstream per delivery and exact
+retirement. The earlier inactive-profile failure on `52cdd387` remains
+unclassified. This pair covers the two named profiles and restart. Full
+M7 remains open.
+[M7 ARM64 HDHomeRun evidence](rust-m7-arm64-hdhr-two-profile-restart-3d8f9672.md)
+
+The current AMD64 package also passed the complete 18-suite baseline
+against fresh pinned Original. The paired run verified 1,024 checks and
+decoded 75 video frames. Execution, independent evaluation and exact
+cleanup exited zero. This qualifies `package/baseline-all` for this
+package. The full executable inventory and release workflow matrix remain
+open. [Verified paired baseline](rust-m0-amd64-baseline-3d8f9672.json)

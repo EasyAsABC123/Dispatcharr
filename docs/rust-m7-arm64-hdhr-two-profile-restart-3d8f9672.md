@@ -1,0 +1,9 @@
+# M7 ARM64 configured HDHomeRun profiles across restart
+
+Docker Compose on Lappy compared pinned Original `1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430` with the ordinary ARM64 Rust package from `3d8f96725ed90f5d37e406492e264e7c4d37f89a`. Each arm made 12 matching discovery, lineup and lineup-status requests and played the four advertised streams before and after a graceful app-only restart. Each stream delivered 7,000 aligned MPEG-TS packets and decoded both tracks strictly. The active profile delivered MPEG-2 video and MP2 in 192 × 108. The inactive profile passed through H.264 and AAC at 320 × 180. Each delivery opened and closed one primary upstream connection, leaving fallback untouched. The app reused the same container with a new process generation. The origin and PostgreSQL generations and eight owned SQL table projections remained stable.
+
+Every runtime and evidence phase exited 0. An engine-free audit independently checked 14 container IDs, two networks by ID and name, and four volumes. A separate engine listing confirmed both fixture scopes empty and the lease released.
+
+The preceding 52cdd387 run had a real inactive-profile header-gate failure with the actual header values unobserved. This run completed both profiles before and after the restart and observed no such failure. Its diagnostic added bounded status and media-class reporting on a failure without changing playback criteria. The transfer initially stopped at a guest directory mode check before engine admission. The sealed bytes stayed unchanged and the test ran after correcting that directory to 0755 and verifying 0644 guest files. Coverage is limited to the configured HTTP path and this restart sequence. Hardware, multicast, performance and complete M7 qualification remain separate.
+
+The original Dispatcharr and upstream dependency authors retain full credit.
