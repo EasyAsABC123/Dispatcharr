@@ -856,5 +856,11 @@ Pinned Original passed five requests covering role rejection, a normal
 cleanup and an empty repeat. A disposable PostgreSQL check verified
 that a concurrent movie reference causes cleanup to roll back the
 entire transaction. A subsequent cleanup preserved the attached logo
-and removed only the remaining unused row. Signed packaged execution
-and action metadata remain open.
+and removed only the remaining unused row.
+
+The cleanup action serves the same JSON OPTIONS entity on the canonical
+route and both format suffix spellings. Pinned Original passed 30 scoped
+requests across canonical POST, OPTIONS and suffix POST. Both suffix POST
+spellings reproduce the authenticated Original's HTML 500 response
+before any fixture SQL or deletion. Four focused Rust tests passed.
+Signed packaged and browser verification remain open.

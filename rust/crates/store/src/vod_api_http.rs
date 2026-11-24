@@ -8,7 +8,7 @@ use super::{
 };
 use crate::{AuthService, StoreError};
 use axum::{
-    body::{to_bytes, Body},
+    body::{to_bytes, Body, Bytes},
     extract::{ConnectInfo, OriginalUri, State},
     http::{HeaderMap, HeaderValue, Method, StatusCode, Uri},
     response::{IntoResponse, Response},
@@ -16,7 +16,11 @@ use axum::{
     Router,
 };
 use serde_json::{json, Value};
-use std::{net::SocketAddr, sync::Arc, time::Duration};
+use std::{
+    net::SocketAddr,
+    sync::{Arc, OnceLock},
+    time::Duration,
+};
 use tokio::sync::Semaphore;
 const DELETE_UNUSED_VOD_LOGOS: &str = "
 DELETE FROM vod_vodlogo AS l
@@ -71,6 +75,67 @@ async fn cleanup_vod_logos(
         .await
         .map_err(|_| StoreError::UnhandledRestFault)??;
         crate::channel_profiles::json_response(removed, indent)
+    }
+    .await;
+    crate::channels::channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        HeaderValue::from_static("POST, OPTIONS"),
+    )
+}
+
+const CLEANUP_VOD_LOGO_OPTIONS: &[u8; 1118] =
+    include_bytes!("../datasets/source-vod-logo-cleanup-options.json");
+
+fn cleanup_vod_logos_metadata(indent: Option<usize>) -> Result<Response, StoreError> {
+    static RENDERED: [OnceLock<Option<Bytes>>; 9] = [const { OnceLock::new() }; 9];
+    let bytes = match indent {
+        None | Some(0) => Bytes::from_static(CLEANUP_VOD_LOGO_OPTIONS),
+        Some(indent) => RENDERED[indent]
+            .get_or_init(|| {
+                let metadata = serde_json::from_slice(CLEANUP_VOD_LOGO_OPTIONS).ok()?;
+                crate::channels::serialize_options_json(&metadata, indent)
+            })
+            .clone()
+            .ok_or(StoreError::UnhandledRestFault)?,
+    };
+    crate::channels::options_json_response(bytes)
+}
+
+async fn cleanup_vod_logos_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    OriginalUri(uri): OriginalUri,
+    headers: HeaderMap,
+) -> Response {
+    let result = async {
+        let indent = if uri.path().trim_end_matches('/').ends_with(".json") {
+            crate::channel_profiles::negotiate_read_json(&uri, &headers, true)?
+        } else {
+            negotiate(&headers, &uri)?;
+            json_indent(&headers)
+        };
+        auth.account_user(peer, headers, true).await?;
+        cleanup_vod_logos_metadata(indent)
+    }
+    .await;
+    crate::channels::channel_options_headers(
+        result.unwrap_or_else(IntoResponse::into_response),
+        HeaderValue::from_static("POST, OPTIONS"),
+    )
+}
+
+async fn cleanup_vod_logos_json_suffix(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    OriginalUri(uri): OriginalUri,
+    headers: HeaderMap,
+) -> Response {
+    let result = async {
+        crate::channel_profiles::negotiate_read_json(&uri, &headers, true)?;
+        auth.account_user(peer, headers, true).await?;
+        // The fixed-format route supplies format= to the original action,
+        // whose signature cannot accept it. No deletion starts on this path.
+        Err::<Response, _>(StoreError::UnhandledRestFault)
     }
     .await;
     crate::channels::channel_options_headers(
@@ -218,7 +283,18 @@ impl VodReads {
         }
         router.merge(
             Router::new()
-                .route("/api/vod/vodlogos/cleanup/", post(cleanup_vod_logos))
+                .route(
+                    "/api/vod/vodlogos/cleanup/",
+                    post(cleanup_vod_logos).options(cleanup_vod_logos_options),
+                )
+                .route(
+                    "/api/vod/vodlogos/cleanup.json",
+                    post(cleanup_vod_logos_json_suffix).options(cleanup_vod_logos_options),
+                )
+                .route(
+                    "/api/vod/vodlogos/cleanup.json/",
+                    post(cleanup_vod_logos_json_suffix).options(cleanup_vod_logos_options),
+                )
                 .with_state(self.auth.clone()),
         )
     }
@@ -942,6 +1018,120 @@ mod logo_cleanup_tests {
             let bytes = serde_json::to_vec(&cleanup_vod_logos_entity(removed)).unwrap();
             assert_eq!(bytes.len(), length);
             assert_eq!(format!("{:x}", Sha256::digest(bytes)), digest);
+        }
+    }
+
+    #[tokio::test]
+    async fn vod_logo_cleanup_metadata_matches_original_json_bytes() {
+        for (indent, length, hash) in [
+            (
+                None,
+                1118,
+                "18670929f63df32e9300d5a8b522e544a1922e08fd135afcbbef92eb50804bcc",
+            ),
+            (
+                Some(2),
+                1664,
+                "7f24931a7b7aaed83c765143760689fd5ab7938e34c59b882f9ce0049f0842af",
+            ),
+        ] {
+            let response = cleanup_vod_logos_metadata(indent).unwrap();
+            assert_eq!(response.headers()["content-type"], "application/json");
+            assert_eq!(response.headers()["content-length"], length.to_string());
+            let bytes = to_bytes(response.into_body(), length).await.unwrap();
+            assert_eq!(format!("{:x}", Sha256::digest(bytes)), hash);
+        }
+
+        let response = StoreError::UnhandledRestFault.into_response();
+        assert_eq!(response.status(), StatusCode::INTERNAL_SERVER_ERROR);
+        assert_eq!(
+            response.headers()["content-type"],
+            "text/html; charset=utf-8"
+        );
+        assert!(!response.headers().contains_key("allow"));
+        let bytes = to_bytes(response.into_body(), 145).await.unwrap();
+        assert_eq!(
+            format!("{:x}", Sha256::digest(bytes)),
+            "fd62a53afdd49595ccd111b6ac06466a1690e7c8da4aeb0e884b5e0f4e937624"
+        );
+    }
+
+    #[tokio::test]
+    async fn vod_logo_cleanup_json_routes_use_method_authentication_and_negotiation() {
+        use axum::http::{header, Request};
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-vod-logo-metadata-test".into()).unwrap(),
+        );
+        let app = VodReads::new(
+            auth,
+            super::super::vod_api_owned_read::ReadLimits::default(),
+        )
+        .unwrap()
+        .router();
+        for (uri, method, accept, expected) in [
+            (
+                "/api/vod/vodlogos/cleanup/",
+                Method::OPTIONS,
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                "/api/vod/vodlogos/cleanup.json",
+                Method::OPTIONS,
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                "/api/vod/vodlogos/cleanup.json/",
+                Method::OPTIONS,
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                "/api/vod/vodlogos/cleanup.json",
+                Method::POST,
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                "/api/vod/vodlogos/cleanup.json/",
+                Method::POST,
+                "application/json",
+                StatusCode::UNAUTHORIZED,
+            ),
+            (
+                "/api/vod/vodlogos/cleanup.json",
+                Method::OPTIONS,
+                "text/html",
+                StatusCode::NOT_ACCEPTABLE,
+            ),
+            (
+                "/api/vod/vodlogos/cleanup.json/",
+                Method::OPTIONS,
+                "text/html",
+                StatusCode::NOT_ACCEPTABLE,
+            ),
+        ] {
+            let response = app
+                .clone()
+                .oneshot(
+                    Request::builder()
+                        .uri(uri)
+                        .method(method)
+                        .header(header::ACCEPT, accept)
+                        .extension(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 9192))))
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), expected);
+            assert_eq!(response.headers()[header::ALLOW], "POST, OPTIONS");
+            assert_eq!(response.headers()[header::VARY], "Accept");
         }
     }
 
