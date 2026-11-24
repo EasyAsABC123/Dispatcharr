@@ -37,3 +37,20 @@ unchanged. The SQLite-to-PostgreSQL rehearsal above remains the verified
 bridge for this historical fixture.
 
 [Scoped filename and Original upgrade evidence](../scripts/rust-integration/milestone-batch111/backup-filenames-and-original-sqlite.json)
+
+## SQLite backup archive interoperability
+
+The pinned Original backup service and the Rust crate exchanged v2
+SQLite archives in both directions using disposable files. Each
+created a ZIP with `database.sqlite3` and `metadata.json` while the
+source was open in WAL mode. Restores on closed copies preserved rows,
+foreign keys, sequence values, and the existing media reference. Both
+retained the replaced database as a separate file. A malformed SQLite
+payload triggered Original's rollback and Rust's staging rejection.
+
+Twelve focused Rust backup tests passed. The paired component check
+used synthetic data and a fixture restore owner. The normal packaged
+worker, signed login after restore, and historical schema upgrade still
+need separate evidence.
+
+[SQLite component receipt](../scripts/rust-integration/milestone-batch111/backup-sqlite-roundtrip-component.json)
