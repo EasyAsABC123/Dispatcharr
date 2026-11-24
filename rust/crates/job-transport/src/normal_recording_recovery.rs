@@ -197,12 +197,24 @@ async fn rows(
   match result{Err(Error::Database{primary,..})=>Err(Error::Database{primary,ready,close}),other=>if ready.is_some()||close.is_some(){Err(Error::Database{primary:None,ready,close})}else{other}}
  }).await.map_err(|_|Error::Supervisor)?
 }
+// Original uses `rec.custom_properties or {}` for active recovery.
+fn active_recovery_properties(value: &Value) -> Option<serde_json::Map<String, Value>> {
+    match value {
+        Value::Object(properties) => Some(properties.clone()),
+        Value::Null | Value::Bool(false) => Some(serde_json::Map::new()),
+        Value::Number(number) if number.as_f64() == Some(0.0) => Some(serde_json::Map::new()),
+        Value::String(text) if text.is_empty() => Some(serde_json::Map::new()),
+        Value::Array(items) if items.is_empty() => Some(serde_json::Map::new()),
+        _ => None,
+    }
+}
+
 async fn interrupt(
     pool: PgPool,
     row: Arc<RecordingRow>,
     owner: Arc<dyn Send + Sync>,
 ) -> Result<Option<InterruptedRecording>, Error> {
-    let Some(mut properties) = row.properties.as_object().cloned() else {
+    let Some(mut properties) = active_recovery_properties(&row.properties) else {
         return Ok(None);
     };
     if properties
@@ -891,5 +903,38 @@ impl crate::milestone_dispatch::Lifecycle for Worker {
                 .await
                 .map_err(|e| Disposition::Operational(format!("recovery port drain: {e:?}")))
         })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::active_recovery_properties;
+    use serde_json::json;
+
+    #[test]
+    fn original_active_recovery_coerces_falsey_properties() {
+        for value in [
+            json!(null),
+            json!(false),
+            json!(0),
+            json!(-0.0),
+            json!(""),
+            json!([]),
+            json!({}),
+        ] {
+            assert!(active_recovery_properties(&value).unwrap().is_empty());
+        }
+    }
+
+    #[test]
+    fn original_active_recovery_preserves_objects_and_skips_truthy_nonobjects() {
+        let value = json!({"status": "recording", "_hls_dir": "/data/owned"});
+        assert_eq!(
+            active_recovery_properties(&value).as_ref(),
+            value.as_object()
+        );
+        for value in [json!(true), json!(1), json!("x"), json!([null])] {
+            assert!(active_recovery_properties(&value).is_none());
+        }
     }
 }

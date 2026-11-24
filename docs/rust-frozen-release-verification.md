@@ -342,6 +342,12 @@ without stream links. The paired owner includes the omitted-list request
 with an existing dummy guide and verifies the saved membership, empty
 stream list, cache generation and broker queue.
 
+Recording recovery now treats falsey saved JSON properties as an empty
+map for the active recording branch, matching Original. Eight Source
+values and two focused Rust tests exercised the decision. The retained
+Original crash scope is separate. The final paired owner still needs to
+recover a saved falsey row through a real worker restart.
+
 An immediate XML TVG cancellation keeps its broker reservation until Redis
 confirms the REVOKED result. The visibility sweep can recover the exact
 request after an ambiguous reply. In a private Redis test, the result
