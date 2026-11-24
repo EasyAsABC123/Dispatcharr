@@ -4,12 +4,12 @@ use crate::{AuthService, StoreError};
 use axum::{
     body::to_bytes,
     extract::Request,
-    http::Method,
+    http::{header, Method},
     response::{IntoResponse, Response},
     Json,
 };
 use serde_json::{json, Value};
-use std::net::SocketAddr;
+use std::{fmt::Display, net::SocketAddr};
 pub(crate) fn error(message: impl Into<String>) -> Response {
     (
         axum::http::StatusCode::INTERNAL_SERVER_ERROR,
@@ -188,6 +188,18 @@ pub(crate) fn sqlite_insert_error(value: StoreError) -> Response {
     }
 }
 
+// The source is a Django function view returning JsonResponse, whose normal
+// bootstrap documents include spaces after separators.
+pub(crate) const CONFIGURED_SETUP_DOCUMENT: &str = r#"{"superuser_exists": true}"#;
+
+pub(crate) fn open_setup_document(ip: impl Display, allowed: bool) -> String {
+    format!(r#"{{"superuser_exists": false, "client_ip": "{ip}", "setup_allowed": {allowed}}}"#)
+}
+
+fn setup_json(body: impl IntoResponse) -> Response {
+    ([(header::CONTENT_TYPE, "application/json")], body).into_response()
+}
+
 pub(crate) async fn response(auth: AuthService, peer: SocketAddr, request: Request) -> Response {
     let exists = sqlx::query_scalar::<_, bool>(
         "SELECT EXISTS(SELECT 1 FROM accounts_user WHERE user_level>=10)",
@@ -195,7 +207,7 @@ pub(crate) async fn response(auth: AuthService, peer: SocketAddr, request: Reque
     .fetch_one(auth.store.pool())
     .await;
     match exists {
-        Ok(true) => return Json(json!({"superuser_exists":true})).into_response(),
+        Ok(true) => return setup_json(CONFIGURED_SETUP_DOCUMENT),
         Err(error_value) => return StoreError::Database(error_value).into_response(),
         _ => {}
     }
@@ -206,10 +218,7 @@ pub(crate) async fn response(auth: AuthService, peer: SocketAddr, request: Reque
         &std::env::var("DISPATCHARR_SETUP_ALLOWED_IP").unwrap_or_default(),
     );
     if method != Method::POST {
-        return Json(
-            json!({"superuser_exists":false,"client_ip":ip.to_string(),"setup_allowed":allowed}),
-        )
-        .into_response();
+        return setup_json(open_setup_document(ip, allowed));
     }
     if !allowed {
         return denied(ip.to_string());
@@ -233,7 +242,39 @@ pub(crate) async fn response(auth: AuthService, peer: SocketAddr, request: Reque
     // insertion remain separate, with ordinary database uniqueness enforced.
     let result=sqlx::query("INSERT INTO accounts_user(password,last_login,is_superuser,username,first_name,last_name,email,is_staff,is_active,date_joined,user_level,custom_properties,avatar_config,stream_limit,api_key) VALUES($1,NULL,TRUE,$2,'','',$3,TRUE,TRUE,NOW(),10,'{}'::jsonb,'{}'::jsonb,0,NULL)").bind(encoded).bind(username).bind(email).execute(auth.store.pool()).await;
     match result {
-        Ok(_) => Json(json!({"superuser_exists":true})).into_response(),
+        Ok(_) => setup_json(CONFIGURED_SETUP_DOCUMENT),
         Err(value) => error(database_error(value)),
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use axum::http::StatusCode;
+    use std::net::IpAddr;
+
+    #[tokio::test]
+    async fn bootstrap_status_uses_stock_json_response_bytes() {
+        let ip: IpAddr = "::1".parse().unwrap();
+        for (body, expected) in [
+            (
+                open_setup_document(ip, true),
+                r#"{"superuser_exists": false, "client_ip": "::1", "setup_allowed": true}"#,
+            ),
+            (
+                open_setup_document(ip, false),
+                r#"{"superuser_exists": false, "client_ip": "::1", "setup_allowed": false}"#,
+            ),
+            (
+                CONFIGURED_SETUP_DOCUMENT.into(),
+                r#"{"superuser_exists": true}"#,
+            ),
+        ] {
+            let response = setup_json(body);
+            assert_eq!(response.status(), StatusCode::OK);
+            assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+            let bytes = to_bytes(response.into_body(), 128).await.unwrap();
+            assert_eq!(bytes.as_ref(), expected.as_bytes());
+        }
     }
 }

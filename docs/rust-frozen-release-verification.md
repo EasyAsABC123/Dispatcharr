@@ -45,6 +45,10 @@ M3U, named XMLTV, and HDHomeRun now share the Original channel-number formatter.
 
 Xtream playlist and XMLTV requests with the single trailing slash now reach the same authenticated routes as `/get.php` and `/xmltv.php`. Both output crates compiled. The final signed fixture will compare the slash forms and their response bodies.
 
+## First-admin setup on a clean install
+
+The ordinary PostgreSQL service now emits the same ordered JSON setup documents as pinned Original. It shares the formatter with the copied SQLite runtime. The existing clean-install controller checks the exact status, media type and response bytes before the first administrator is created and after restart. It records a digest and length for each response. The focused PostgreSQL formatter, three copied SQLite setup tests and two controller checks passed.
+
 ## SQLite backup creation and restore
 
 The backup library now selects its snapshot from the admitted runtime datastore and writes both formats with the same bounded archive writer. PostgreSQL keeps the existing dump path. The optional SQLite path uses SQLite’s online backup API so the archive includes committed WAL data. Its version 2 archive contains `database.sqlite3` and `metadata.json`.

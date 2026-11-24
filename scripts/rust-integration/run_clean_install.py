@@ -5,7 +5,7 @@ Official PostgreSQL/Redis and the immutable Rust candidate are the only services
 No Django/original app or source mounts populate the database. All original
 application credit remains with Dispatcharr authors and contributors.
 """
-import argparse,hashlib,json,os,select,shutil,signal,subprocess,time,urllib.request,uuid
+import argparse,hashlib,ipaddress,json,os,select,shutil,signal,subprocess,time,urllib.request,uuid
 from pathlib import Path
 from fixture_ports import write_port_overlay
 from tool_snapshot import snapshot_sources
@@ -50,6 +50,35 @@ class Browser:
             self.log.close()
 def http(url):
     with urllib.request.urlopen(url,timeout=3)as response:return response.status,json.load(response)
+def setup_wire(url, exists):
+    endpoint = url + '/api/accounts/initialize-superuser/'
+    with urllib.request.urlopen(endpoint, timeout=3) as response:
+        status = response.status
+        content_type = response.headers.get('Content-Type')
+        body = response.read(1025)
+    detail = {
+        'status': status,
+        'content_type': content_type,
+        'body_bytes': len(body),
+        'body_sha256': hashlib.sha256(body).hexdigest(),
+    }
+    if status != 200 or content_type != 'application/json' or len(body) > 1024:
+        return False, detail
+
+    expected = {'superuser_exists': exists}
+    if not exists:
+        try:
+            parsed = json.loads(body)
+            ip = parsed['client_ip']
+            if not isinstance(ip, str) or '%' in ip:
+                return False, detail
+            ipaddress.ip_address(ip)
+        except (ValueError, KeyError, TypeError):
+            return False, detail
+        expected.update(client_ip=ip, setup_allowed=True)
+    return body == json.dumps(expected).encode('ascii'), detail
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--output',required=True,type=Path);parser.add_argument('--candidate-build-manifest',required=True,type=Path);parser.add_argument('--logo-workflow',action='store_true');args=parser.parse_args();output=args.output.resolve();output.mkdir(parents=True,exist_ok=True)
     if any(output.iterdir()):parser.error('Output must be empty')
@@ -88,7 +117,8 @@ def main():
         # original source worker/cache behavior has its own verified gate.
         subprocess.run(base+['exec','-T','cache','redis-cli','-a','playback-fixture-only','-x','SET',':1:dispatcharr:ip_lookup_lock'],env=environment,input=bytes([0x80,4,0x88,ord('.')]),stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,check=True,timeout=10)
         command(base+['exec','-T','cache','redis-cli','-a','playback-fixture-only','EXPIRE',':1:dispatcharr:ip_lookup_lock','600'])
-        initial=http(url+'/api/accounts/initialize-superuser/');record('first-admin-form-status',initial[0]==200 and initial[1].get('superuser_exists')is False and initial[1].get('setup_allowed')is True)
+        initial, initial_wire = setup_wire(url, exists=False)
+        record('first-admin-form-status', initial, initial_wire)
         stage='browser-first-admin';browser=Browser(tools/'scripts/rust-integration/clean_browser.js',output/'browser.log');report['browser']=browser.ready
         credentials={'username':'rust-probe-clean-admin','password':'native-clean-fixture-'+uuid.uuid4().hex,'email':'Native@EXAMPLE.INVALID','secret':'playback-fixture-only','url':url}
         result=browser.send({'op':'setup',**credentials});record('actual-react-first-admin-login-init',result.get('authenticated')is True and result.get('required_api_paths_passed')==result.get('required_api_paths') and not result.get('failed_api_responses') and result.get('exceptions')==0,result)
@@ -113,7 +143,8 @@ def main():
             result=browser.send({'op':'logo_delete',**logo_config});record('actual-react-logo-delete-file',result.get('deleted')and result.get('delete204')and not result.get('failed_api_responses')and result.get('exceptions')==0,result)
             removed=command(base+['exec','-T','candidate','sh','-c','if test -e /data/logos/rust-probe-browser-logo.svg; then echo present; else echo absent; fi']).strip()=='absent';record('browser-delete-removes-file-and-db-row',removed and sql('SELECT count(*)FROM dispatcharr_channels_logo')=='0')
         record('restart-preserves-existing-schema-and-admin',before==sql(fingerprint_query)and sql('SELECT count(*) FROM accounts_user')=='1'and json.loads(sql(query))==row)
-        record('setup-closed-after-browser-create',http(url+'/api/accounts/initialize-superuser/')[1]=={'superuser_exists':True})
+        closed, closed_wire = setup_wire(url, exists=True)
+        record('setup-closed-after-browser-create', closed, closed_wire)
         status=0 if all(check['passed']for check in report['checks'])else 1;report['passed']=status==0
     except (OSError,ValueError,RuntimeError,TimeoutError,subprocess.SubprocessError)as error:
         report.update(error_type=type(error).__name__,error_stage=stage);status=1

@@ -662,10 +662,10 @@ fn setup_document(
     allowed_ip: &str,
 ) -> String {
     if exists {
-        return r#"{"superuser_exists": true}"#.into();
+        return crate::startup_bootstrap::CONFIGURED_SETUP_DOCUMENT.into();
     }
     let allowed = crate::startup::setup_allowed(ip.address(), allowed_ip);
-    format!(r#"{{"superuser_exists": false, "client_ip": "{ip}", "setup_allowed": {allowed}}}"#)
+    crate::startup_bootstrap::open_setup_document(ip, allowed)
 }
 
 async fn setup_status(
