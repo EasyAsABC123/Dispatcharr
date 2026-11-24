@@ -1534,6 +1534,10 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 - **M2 and M6** The current Core and Engine component checks passed. A natural 61-second recording passed the declared decode to EOF, while the separate strict diagnostic reproduced the retained Original exit 183. [Component and recording checks](rust-2d3ffe53-core-engine-and-recording-jobs.md)
 - **M7 and M8** Six current output and realtime scopes passed on Beepboop. A current Lappy backup failed cleanly after losing its SQL backend, then a distinct retry succeeded on the same Main generation. [Output and realtime](rust-m7-2d3ffe53-amd64-output-realtime-wave.md) · [Backup retry](rust-m8-2d3ffe53-arm64-backup-backend-loss.md)
 
+- **M3** Both current profiled fMP4 arms retained one upstream and the same pipeline after the lead signed viewer disconnected. The survivor received at least 750,000 fresh bytes and each arm passed strict decodes. [ARM64 fMP4 detachment](rust-m3-2d3ffe53-arm64-fmp4-detachment.md)
+- **M2 and M5** Ordinary Main verified its expiry clock from load dispatch. The current Chromium pair saved and reloaded the setting, with signed Standard writes denied. The separate AMD64 signed pair verified the live callback and restart. [Cache clock and browser Settings](rust-2d3ffe53-cache-clock-and-react-settings.md) · [Signed settings restart](rust-m5-2d3ffe53-amd64-signed-settings-pair.md)
+- **M8** Four real Store callback cases and two Job Transport lifecycle checks passed on the compiled current peers, with exact cleanup. [Backup lifecycle tests](rust-m8-2d3ffe53-amd64-backup-lifecycle-components.md)
+
 ## Latest scoped runtime evidence for 2ee64c43
 
 - **M6** Eleven signed invalid string IDs now match the Original 500 response, with no broker publication. Both ordinary packages passed signed startup and the exact source passed 1,775 workspace tests. [Invalid guide input evidence](rust-m6-2ee64c43-invalid-guide-ids.md)

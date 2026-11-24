@@ -1,0 +1,173 @@
+{
+  "candidate": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1",
+  "original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "image_index": "sha256:9c6376f386e18489cf018e10b62efe2d1b50ce106aed5cf51715625b45935f99",
+  "platform": "linux/arm64",
+  "package_build_sha256": "a15e1dbf9dd05655ab90598917a8b54f702c9b77e0ee7968d09bc8a3b8cebb71",
+  "actual_audit_exit": 0,
+  "physical_owner_actual_exit": 0,
+  "physical_full_pair_passed": true,
+  "exact_cleanup": true,
+  "qualifying_positive_contract_cells_when_passed": {
+    "route-2560f46761708905bcfa:PUT": [
+      "admin-success-200",
+      "standard-denied-403"
+    ],
+    "route-4e613bb9583a369dde8a:GET": [
+      "admin",
+      "standard"
+    ]
+  },
+  "stage_seal_sha256": "93d9dd1f8e31bf929cf5a9a545ab2f7cb930d653eb580b616f13c82e1c568fdd",
+  "arms": {
+    "native": {
+      "literal_arm_exit": 0,
+      "browser_exit": 0,
+      "browser_temp_retired": true,
+      "browser_workflow_steps": [
+        "normal-setup-render",
+        "setup.submit",
+        "signin.submit",
+        "authenticated-render",
+        "account-dialog-read",
+        "administrator-system-settings",
+        "normal-sign-out",
+        "standard-owned-ui"
+      ],
+      "administrator_synthetic_settings_save": {
+        "exact_single_setting_payload": true,
+        "final": 110,
+        "initial": 100,
+        "materialized_form_default_fields": [
+          "catchup_enabled",
+          "enable_ip_lookup",
+          "log_keep",
+          "log_max_mb",
+          "log_persist"
+        ],
+        "same_login_refresh_bound_to_put": true,
+        "settings_navigation_refresh_status": 200,
+        "signed_collection_status": 200,
+        "signed_put_status": 200,
+        "ui_save_and_reload": true,
+        "unrelated_collection_rows_equal": true
+      },
+      "exact_scoped_SQL_change": {
+        "materialized_form_default_fields": [
+          "catchup_enabled",
+          "enable_ip_lookup",
+          "log_keep",
+          "log_max_mb",
+          "log_persist"
+        ],
+        "new": 110,
+        "prior": 100,
+        "target_rows": 1,
+        "unchanged_other_rows": true
+      },
+      "exact_standard_workload": true,
+      "frontend_assets": 112,
+      "react_asset_manifest_sha256": "4ced0b74d143c633d2e72a077591ac9487d32ea2164dcf19b29b2f46a9915f67",
+      "unrelated_settings_unchanged": true,
+      "unchanged_migrations": true,
+      "cleanup": {
+        "owned_compose_down_actual_exit": 0,
+        "post_down_owned_inventory_codes": [
+          0,
+          0,
+          0
+        ],
+        "retired_containers": 6,
+        "retired_networks": 2,
+        "retired_volume": 1,
+        "typed_absence_codes": {
+          "containers_1": 6,
+          "networks_1": 2,
+          "volumes_1": 1
+        }
+      },
+      "receipt_sha256": {
+        "browser-result.json": "7655c94ce5768c782fb3e267e03562f774f83ba5b9c4838a7db8fb51935ccdee",
+        "cleanup.json": "730c7a59b25312b61d1224c3bb1daeaa9ff283f6947021c5b8192a6298229366",
+        "command-failures.jsonl": "47402e42477af224869ccc7a63ee8d645a1a774b9b3476a9ef70710627a0cc4e",
+        "exits.jsonl": "13ab3c6568eb557f278cceb1aadf8b8e534377b08df474bdb7b473387a40dd9b",
+        "receipt.json": "c6872f577b2f4f73e26f39e61f7a63a3851b8fe08863c09503ea07bdcbd62571"
+      }
+    },
+    "original": {
+      "literal_arm_exit": 0,
+      "browser_exit": 0,
+      "browser_temp_retired": true,
+      "browser_workflow_steps": [
+        "normal-setup-render",
+        "setup.submit",
+        "signin.submit",
+        "authenticated-render",
+        "account-dialog-read",
+        "administrator-system-settings",
+        "normal-sign-out",
+        "standard-owned-ui"
+      ],
+      "administrator_synthetic_settings_save": {
+        "exact_single_setting_payload": true,
+        "final": 110,
+        "initial": 100,
+        "materialized_form_default_fields": [
+          "catchup_enabled",
+          "enable_ip_lookup",
+          "log_keep",
+          "log_max_mb",
+          "log_persist"
+        ],
+        "same_login_refresh_bound_to_put": true,
+        "settings_navigation_refresh_status": 200,
+        "signed_collection_status": 200,
+        "signed_put_status": 200,
+        "ui_save_and_reload": true,
+        "unrelated_collection_rows_equal": true
+      },
+      "exact_scoped_SQL_change": {
+        "materialized_form_default_fields": [
+          "catchup_enabled",
+          "enable_ip_lookup",
+          "log_keep",
+          "log_max_mb",
+          "log_persist"
+        ],
+        "new": 110,
+        "prior": 100,
+        "target_rows": 1,
+        "unchanged_other_rows": true
+      },
+      "exact_standard_workload": true,
+      "frontend_assets": 112,
+      "react_asset_manifest_sha256": "4ced0b74d143c633d2e72a077591ac9487d32ea2164dcf19b29b2f46a9915f67",
+      "unrelated_settings_unchanged": true,
+      "unchanged_migrations": true,
+      "cleanup": {
+        "owned_compose_down_actual_exit": 0,
+        "post_down_owned_inventory_codes": [
+          0,
+          0,
+          0
+        ],
+        "retired_containers": 7,
+        "retired_networks": 2,
+        "retired_volume": 1,
+        "typed_absence_codes": {
+          "containers_1": 7,
+          "networks_1": 2,
+          "volumes_1": 1
+        }
+      },
+      "receipt_sha256": {
+        "browser-result.json": "a96d43e456ffc238af34703af486075c06ae0caacb1ee4e226290097d058eb79",
+        "cleanup.json": "3f2fe4a1454440e1ac4965c746f7f335f2c2819612fb6f8a5f6b44f91b0002ee",
+        "command-failures.jsonl": "ca3abfa670516306d8be424116d5c1a7af871c374b359e16a9986caec7c01954",
+        "exits.jsonl": "ad32be13c0a03fefba2fbf8d8cc8802f922eaa15fbb6b8d188332c0a6caac141",
+        "original-candidate-role-witness.json": "b5ee66929779475f5ce5235619af963f56f755b56f2a45f8053e585ec0ea1ccc",
+        "receipt.json": "aa2c86366738105f22bff4e3722b30320bc133626b2835f88a6b73f316f5f30c"
+      }
+    }
+  }
+}
