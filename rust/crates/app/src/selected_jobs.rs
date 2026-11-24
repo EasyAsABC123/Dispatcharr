@@ -8,8 +8,11 @@ use dispatcharr_stream_http::StreamEngine;
 use jobs::milestone_dispatch::{Family, Handler, Lifecycle};
 use std::{
     env,
+    fs::OpenOptions,
+    io,
     net::{IpAddr, Ipv4Addr, Ipv6Addr, SocketAddr},
-    path::PathBuf,
+    os::{fd::AsRawFd, unix::fs::OpenOptionsExt},
+    path::{Path, PathBuf},
     sync::{
         atomic::{AtomicBool, Ordering},
         Arc,
@@ -230,6 +233,25 @@ async fn start_beat(
         start().map_err(|_| "Selected normal Beat start failed")
     })
     .await
+}
+
+fn initialize_scanner_watch_roots(path: &Path) -> io::Result<()> {
+    let data = OpenOptions::new()
+        .read(true)
+        .custom_flags(libc::O_DIRECTORY | libc::O_NOFOLLOW)
+        .open(path)?;
+    let mut first_error = None;
+    for name in [c"m3us", c"epgs", c"logos"] {
+        // SAFETY: use an owned directory descriptor and fixed terminated
+        // single-component names. mkdirat cannot follow an existing leaf.
+        if unsafe { libc::mkdirat(data.as_raw_fd(), name.as_ptr(), 0o777) } != 0 {
+            let error = io::Error::last_os_error();
+            if error.kind() != io::ErrorKind::AlreadyExists && first_error.is_none() {
+                first_error = Some(error);
+            }
+        }
+    }
+    first_error.map_or(Ok(()), Err)
 }
 
 fn loopback(actual: SocketAddr) -> Result<SocketAddr, String> {
@@ -548,6 +570,15 @@ impl SelectedJobs {
             .bind_hook_runtime(plugin_runtime.clone())
             .map_err(|_| "Selected SD hook runtime binding failed")?;
         let sd_source_http = sd_guide.source_http(existing.refresh.clone());
+        // Match stock's missing-directory bootstrap on the ordinary data
+        // mount. Existing entries retain their ownership and mode, and the
+        // scanner still validates its directories when it receives work.
+        if let Err(error) = initialize_scanner_watch_roots(Path::new("/data")) {
+            eprintln!(
+                "Selected scanner watch directory initialization: {:?}",
+                error.kind()
+            );
+        }
         let scanner = jobs::normal_scanner::Prepared::connect_with_auto(
             shared_jobs.clone(),
             store.clone(),
@@ -1262,6 +1293,58 @@ fn probe(local: SocketAddr, closed: &AtomicBool) -> bool {
 #[cfg(test)]
 mod readiness_tests {
     use super::*;
+
+    #[test]
+    fn scanner_watch_root_bootstrap_creates_only_missing_directories() {
+        use std::fs;
+        use std::os::unix::fs::{symlink, MetadataExt, PermissionsExt};
+
+        let root = env::temp_dir().join(format!(
+            "dispatcharr-scanner-roots-{:016x}",
+            rand::random::<u64>()
+        ));
+        fs::create_dir(&root).unwrap();
+        struct RemoveOnDrop(PathBuf);
+        impl Drop for RemoveOnDrop {
+            fn drop(&mut self) {
+                let _ = fs::remove_dir_all(&self.0);
+            }
+        }
+        let _cleanup = RemoveOnDrop(root.clone());
+
+        let configured = root.join("epgs");
+        fs::create_dir(&configured).unwrap();
+        fs::set_permissions(&configured, fs::Permissions::from_mode(0o750)).unwrap();
+        let configured_before = fs::metadata(&configured).unwrap();
+
+        let other = root.join("other");
+        fs::create_dir(&other).unwrap();
+        let linked = root.join("logos");
+        symlink(&other, &linked).unwrap();
+
+        initialize_scanner_watch_roots(&root).unwrap();
+        let m3u = root.join("m3us");
+        let first = fs::metadata(&m3u).unwrap();
+        assert!(first.is_dir());
+        assert_eq!(first.uid(), configured_before.uid());
+
+        initialize_scanner_watch_roots(&root).unwrap();
+        assert_eq!(first.ino(), fs::metadata(&m3u).unwrap().ino());
+        let configured_after = fs::metadata(&configured).unwrap();
+        assert_eq!(configured_before.uid(), configured_after.uid());
+        assert_eq!(configured_before.gid(), configured_after.gid());
+        assert_eq!(configured_before.mode(), configured_after.mode());
+        assert_eq!(fs::read_link(&linked).unwrap(), other);
+
+        let alternate_mount = root.join("configured-link");
+        symlink(&other, &alternate_mount).unwrap();
+        assert!(initialize_scanner_watch_roots(&alternate_mount).is_err());
+        assert_eq!(fs::read_dir(&other).unwrap().count(), 0);
+        let regular = root.join("regular");
+        fs::write(&regular, b"unchanged").unwrap();
+        assert!(initialize_scanner_watch_roots(&regular).is_err());
+        assert_eq!(fs::read(regular).unwrap(), b"unchanged");
+    }
 
     #[test]
     fn selected_core_beat_requires_exclusive_explicit_configuration() {

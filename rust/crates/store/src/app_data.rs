@@ -1,20 +1,21 @@
 //! Owner/admin per-app JSON storage with the original source's quota contracts.
 use crate::{
+    channels::{channel_options_indentation, options_json_response, serialize_options_json},
     json_compat::{compact_json_bytes, normalize_input_numbers, python_equal},
     AuthService, StoreError, User,
 };
 use axum::{
     body::to_bytes,
-    extract::{ConnectInfo, Path, Request, State},
+    extract::{ConnectInfo, OriginalUri, Path, Request, State},
     http::{header, HeaderMap, HeaderValue, Method, StatusCode},
     middleware::{self, Next},
-    response::Response,
+    response::{IntoResponse, Response},
     routing::get,
     Json, Router,
 };
-use serde_json::{json, Value};
+use serde_json::{json, Map, Value};
 use sqlx::Row;
-use std::net::SocketAddr;
+use std::{collections::HashMap, net::SocketAddr};
 
 const MAX_VALUE: usize = 128 * 1024;
 const MAX_TOTAL: i64 = 1024 * 1024;
@@ -31,13 +32,107 @@ enum NumericAppDataRoute {
     Key,
 }
 
+impl NumericAppDataRoute {
+    fn metadata(self) -> Map<String, Value> {
+        let (name, description) = match self {
+            Self::Collection => (
+                "User App Data Collection",
+                "List keys/sizes or clear all app data for a user (no values, no PUT).",
+            ),
+            Self::Key => (
+                "User App Data Key",
+                "Get, replace, or clear one app's JSON object under a key.",
+            ),
+        };
+        // DRF's static metadata is ordered. These APIViews have no serializer actions.
+        [
+            ("name".into(), json!(name)),
+            ("description".into(), json!(description)),
+            ("renders".into(), json!(["application/json", "text/html"])),
+            ("parses".into(), json!(["application/json"])),
+        ]
+        .into_iter()
+        .collect()
+    }
+
+    fn previous_unhandled(self) -> Response {
+        let allow = match self {
+            Self::Collection => "GET,HEAD,DELETE",
+            Self::Key => "GET,HEAD,PUT,DELETE",
+        };
+        (StatusCode::METHOD_NOT_ALLOWED, [(header::ALLOW, allow)]).into_response()
+    }
+}
+
+async fn numeric_options(
+    route: NumericAppDataRoute,
+    auth: AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    uri: OriginalUri,
+    parameters: HashMap<String, String>,
+) -> Result<Response, StoreError> {
+    if !parameters
+        .get("id")
+        .is_some_and(|id| !id.is_empty() && id.bytes().all(|digit| digit.is_ascii_digit()))
+    {
+        return Ok(route.previous_unhandled());
+    }
+    let Ok(indentation) = channel_options_indentation(&uri.0, &headers) else {
+        return Ok(route.previous_unhandled());
+    };
+    // Original authenticates OPTIONS before returning static metadata.
+    // Owner/admin target resolution belongs to the AppData operations.
+    auth.account_user(peer, headers, false).await?;
+    let body = serialize_options_json(&route.metadata(), indentation)
+        .ok_or(StoreError::UnhandledRestFault)?;
+    options_json_response(body)
+}
+
+async fn numeric_collection_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: OriginalUri,
+    Path(parameters): Path<HashMap<String, String>>,
+) -> Result<Response, StoreError> {
+    numeric_options(
+        NumericAppDataRoute::Collection,
+        auth,
+        peer,
+        headers,
+        uri,
+        parameters,
+    )
+    .await
+}
+
+async fn numeric_key_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: OriginalUri,
+    Path(parameters): Path<HashMap<String, String>>,
+) -> Result<Response, StoreError> {
+    numeric_options(
+        NumericAppDataRoute::Key,
+        auth,
+        peer,
+        headers,
+        uri,
+        parameters,
+    )
+    .await
+}
+
 async fn numeric_app_data_headers(
     State(route): State<NumericAppDataRoute>,
     request: Request,
     next: Next,
 ) -> Response {
     let is_key = matches!(route, NumericAppDataRoute::Key);
-    let read = request.method() == Method::GET;
+    let read = matches!(*request.method(), Method::GET | Method::HEAD);
+    let options = request.method() == Method::OPTIONS;
     let replace_key = is_key && request.method() == Method::PUT;
     let delete_key = is_key && request.method() == Method::DELETE;
     let mut response = next.run(request).await;
@@ -46,7 +141,7 @@ async fn numeric_app_data_headers(
         .get(header::CONTENT_TYPE)
         .is_some_and(|value| value == "application/json");
     let observed = match response.status() {
-        StatusCode::OK => json && (read || replace_key),
+        StatusCode::OK => json && (read || replace_key || options),
         StatusCode::FORBIDDEN => json && (read || replace_key || delete_key),
         StatusCode::NO_CONTENT => delete_key,
         _ => false,
@@ -78,6 +173,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/accounts/users/{id}/app-data/",
             get(list_user)
                 .delete(clear_user)
+                .options(numeric_collection_options)
                 .layer(middleware::from_fn_with_state(
                     NumericAppDataRoute::Collection,
                     numeric_app_data_headers,
@@ -88,6 +184,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             get(get_user)
                 .put(put_user)
                 .delete(delete_user)
+                .options(numeric_key_options)
                 .layer(middleware::from_fn_with_state(
                     NumericAppDataRoute::Key,
                     numeric_app_data_headers,
@@ -523,6 +620,9 @@ mod tests {
         let collection = [
             (Method::GET, Status::OK, json, true),
             (Method::GET, Status::FORBIDDEN, json, true),
+            (Method::HEAD, Status::OK, json, true),
+            (Method::HEAD, Status::FORBIDDEN, json, true),
+            (Method::OPTIONS, Status::OK, json, true),
             (Method::DELETE, Status::NO_CONTENT, None, false),
             (Method::GET, Status::OK, Some("text/html"), false),
         ];
@@ -533,7 +633,9 @@ mod tests {
             (Method::PUT, Status::FORBIDDEN, json, true),
             (Method::DELETE, Status::FORBIDDEN, json, true),
             (Method::DELETE, Status::NO_CONTENT, None, true),
-            (Method::HEAD, Status::OK, json, false),
+            (Method::HEAD, Status::OK, json, true),
+            (Method::HEAD, Status::FORBIDDEN, json, true),
+            (Method::OPTIONS, Status::OK, json, true),
             (Method::OPTIONS, Status::METHOD_NOT_ALLOWED, None, false),
             (Method::GET, Status::UNAUTHORIZED, json, false),
             (Method::GET, Status::NOT_FOUND, json, false),
@@ -598,6 +700,64 @@ mod tests {
                         .is_empty());
                 }
             }
+        }
+    }
+
+    #[tokio::test]
+    async fn numeric_app_data_implicit_head_keeps_headers_and_no_body() {
+        use axum::body::Body;
+        use tower::ServiceExt;
+
+        let app = Router::new().route(
+            "/",
+            get(|| async { Json(json!({"owned": true})) }).layer(middleware::from_fn_with_state(
+                NumericAppDataRoute::Collection,
+                numeric_app_data_headers,
+            )),
+        );
+        let response = app
+            .oneshot(
+                Request::builder()
+                    .uri("/")
+                    .method(Method::HEAD)
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::OK);
+        assert_eq!(response.headers()[header::ALLOW], NUMERIC_COLLECTION_ALLOW);
+        assert_eq!(response.headers()[header::VARY], "Accept");
+        assert!(to_bytes(response.into_body(), 1).await.unwrap().is_empty());
+    }
+
+    #[tokio::test]
+    async fn numeric_app_data_options_matches_original_metadata_bytes() {
+        let cases = [
+            (
+                NumericAppDataRoute::Collection,
+                br#"{"name":"User App Data Collection","description":"List keys/sizes or clear all app data for a user (no values, no PUT).","renders":["application/json","text/html"],"parses":["application/json"]}"#
+                    .as_slice(),
+            ),
+            (
+                NumericAppDataRoute::Key,
+                br#"{"name":"User App Data Key","description":"Get, replace, or clear one app's JSON object under a key.","renders":["application/json","text/html"],"parses":["application/json"]}"#
+                    .as_slice(),
+            ),
+        ];
+        for (route, expected) in cases {
+            let body = serialize_options_json(&route.metadata(), 0).unwrap();
+            let response = options_json_response(body).unwrap();
+            assert_eq!(response.status(), StatusCode::OK);
+            assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+            assert_eq!(
+                response.headers()[header::CONTENT_LENGTH].to_str().unwrap(),
+                expected.len().to_string()
+            );
+            assert_eq!(
+                to_bytes(response.into_body(), 256).await.unwrap().as_ref(),
+                expected
+            );
         }
     }
 
