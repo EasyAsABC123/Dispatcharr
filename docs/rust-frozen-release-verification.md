@@ -1188,3 +1188,14 @@ methods on 166 of 592 resolver identities. The isolated probe recorded
 zero prohibited attempts, and its separate observer verified that the
 default database stayed unchanged and the exact engine scope retired.
 The capture adds Original metadata evidence without dispatching the views.
+
+### Current AMD64 output and realtime functional acceptance
+
+The exact Rust package passed the grouped WebSocket status, enabled
+disconnect webhook and disabled audit-only disconnect checks. The group
+also matched 24 XC output projections, verified cold and warm XMLTV
+responses, exercised 15 administrator regex previews per backend and
+verified subscriber retirement and isolation. All physical scopes and
+the aggregate proof settled with exact cleanup. The full M7 release
+rows and separate performance cases remain open.
+[Output and realtime proof](rust-m7-amd64-output-realtime-functional-3d8f9672.json)
