@@ -797,3 +797,20 @@ Filter options continued to perform two read-only queries, with no NUL
 sent to SQL. Four focused Rust tests cover normalization, ordered errors
 and the SQL predicates. These checks precede signed packaged and browser
 verification.
+
+### M6 API202 release coordinator route
+
+The coordinator can bind the first ingestion row to the reviewed signed
+API202 fixture. Its external fixture bundle and Original evidence are
+supplied with verified hashes. The final source archive, clean receiving
+checkout, captured remote ref and independent installed-image audit must
+identify the same candidate. The route preserves the historical partial
+probe.
+
+The fixture requires the 37 signed requests and 16 root jobs from the
+existing roster, the FIFO hold and younger-frame checks, the two typed
+positive worker graphs, and exact independent cleanup. Only the current
+attempt can satisfy these predicates. The 34 coordinator tests and four
+API202 tests passed. An offline first-fence check also exercised a separate
+checkout and rejected wrong evidence paths, dispatcher bytes and lock
+identity. The signed final package and physical workflow remain open.

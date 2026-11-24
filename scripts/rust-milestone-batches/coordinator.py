@@ -414,6 +414,13 @@ def owner_readiness(nodes, document, output=None):
                 if bindings[key] != expected:
                     raise ValueError("M6 playback overlap exact partial checker and lease required")
                 continue
+            if key == "m6/api202-publication" and bindings[key].get("api202_binding") is not None:
+                owner = module(HERE / "m6/api202_owner.py", "readiness_m6_api202")
+                context = owners.get("m6", {}).get("api202_publication")
+                if not context or bindings[key] != owner.dispatch_spec(
+                        context, document["candidate"], HERE.parents[1], node, output):
+                    raise ValueError("M6 API202 exact run, cleanup, and evaluator required")
+                continue
             # This export currently offers bounded partial probes, not complete
             # functional or performance workflows. Do not invent a green binding.
             if key not in PARTIAL_PROBES:
@@ -678,7 +685,12 @@ def execute(node, bound, directory, candidate):
                 and proof.get("candidate") == candidate
                 and proof.get("entrypoint") == node["entrypoint"]
                 and proof.get("full_required_workflow") is True
-                and node["id"] not in PARTIAL_PROBES):
+                and (node["id"] not in PARTIAL_PROBES or (
+                    node["id"] == "m6/api202-publication"
+                    and bound.get("api202_binding") == "api202-exact-ordinary-owner-v1"
+                    and proof.get("api202_binding") == bound["api202_binding"]
+                    and proof.get("attempt_sha256") == hashlib.sha256(
+                        (directory / "attempt.json").read_bytes()).hexdigest()))):
             result["status"] = "passed"
     except Exception as error:
         result["evaluation_error"] = str(error)
