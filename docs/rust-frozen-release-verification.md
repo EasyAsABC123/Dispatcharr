@@ -1099,3 +1099,25 @@ Cancel issued zero cleanup requests and retained five rows, verified by
 SQL. Confirm issued one request and retained the three in-use rows and
 their artwork. The browser, relay and Compose scopes all retired.
 [Signed API and browser proof](rust-m5-amd64-signed-react-3d8f9672.json)
+
+### Current AMD64 clean install and first administrator
+
+The frozen Rust-only Compose package initialized an empty PostgreSQL
+database. The unchanged React application created the first administrator,
+signed in and completed 16 required initialization routes. A real backend
+restart preserved the administrator, browser authentication and all 16
+route results. The independent evaluator accepted all 11 workflow checks.
+Chromium acknowledged graceful shutdown and exited zero without fallback
+signals. Exact browser and Compose resources retired.
+[Clean-install proof](rust-m0-amd64-clean-install-3d8f9672.json)
+
+### Current AMD64 shared MPEG-TS and retention
+
+Three package rows passed the shared MPEG-TS, all-down restart and
+retention sequence. The signed shared workload passed 24 checks and six
+real decoders. The all-down workload killed both workers, verified the empty client
+and metadata state, and started a new replica of the same image. It
+passed 14 checks with two decoders. The 45-second retention workload
+verified 100 historical readers across ten channels, ten late A/V decodes,
+and no additional upstream connections. All three exact resource scopes
+retired. [Shared MPEG-TS and retention proof](rust-m3-amd64-shared-ts-retention-3d8f9672.json)

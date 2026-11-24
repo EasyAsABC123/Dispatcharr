@@ -1,0 +1,75 @@
+{
+  "status": "passed",
+  "literal_coordinator_exit": 2,
+  "independent_audit_actual_exit": 0,
+  "independent_audit_sha256": "566ec6e2c425f1dc57d2aba4d2169acd893c96c4570023a4f1091a241be1033b",
+  "exact_engine_empty_after_cleanup": true,
+  "actual": {
+    "package/retention100": {
+      "exact_cleanup": true,
+      "node_result_sha256": "9b181773d98ee646df275d410e403cb68304e9eda7c47d4edf8be3499d8589e1",
+      "proof": {
+        "authoritative_per_channel_max": 16777216,
+        "bytes_per_reader": 1500000,
+        "channels": 10,
+        "historical_readers": 100,
+        "lag_seconds": 45,
+        "late_av_decodes": 10,
+        "local_per_channel_max": 4194304,
+        "no_additional_upstream": true,
+        "performance_measured": false,
+        "reference_prefix_bytes": 65536,
+        "retained_captures_hash_verified": 10
+      }
+    },
+    "package/sharedTS18": {
+      "exact_cleanup": true,
+      "node_result_sha256": "f38f58586d5f8d8f88d0f5b4cc20ae7dcb2110a6edd3c2b6c27b371798f339ee",
+      "proof": {
+        "all_down_before_restart": null,
+        "cases": 3,
+        "checks": 24,
+        "performance_measured": false,
+        "real_decoders": 6,
+        "restart_cleanup_seconds": null,
+        "signed_readers": 6,
+        "timeline": null
+      }
+    },
+    "package/sharedTS6-all-down": {
+      "exact_cleanup": true,
+      "node_result_sha256": "3a0e48ac566359277102ee6a1cd3ab8d20ab5f9aeced8491f4d5802c7d1f88d7",
+      "proof": {
+        "all_down_before_restart": {
+          "clients": 0,
+          "input_index": 4,
+          "metadata_fields": 0,
+          "owner": null,
+          "provider_slots": 1,
+          "state": null,
+          "timestamps": 0
+        },
+        "cases": 1,
+        "checks": 14,
+        "performance_measured": false,
+        "real_decoders": 2,
+        "restart_cleanup_seconds": 6.2207720260485075,
+        "signed_readers": 2,
+        "timeline": {
+          "exact_two_workers_killed": true,
+          "new_same_image_replica": true,
+          "seconds_between_real_kill_and_replica_removal": 65.09957535,
+          "stock_controller_requires_fixed_idle_seconds": 65
+        }
+      }
+    }
+  },
+  "candidate": {
+    "git": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+    "image_id": "sha256:3cb8dff78119b1d0a40740a9f31f5ab8814a063a509f1891be9fef93ee2d39a6",
+    "build_manifest_sha256": "4127965d9e780ceb2b459f3b2feff0e80035f0d4768dc7f4ea966315207ee164",
+    "source_archive_sha256": "be82700e942b1df0fffe00bcf58f03d8b25a3ce29ea56b2cd5a0e6ac4b374f4a"
+  },
+  "full_release_matrix": false,
+  "performance_measured": false
+}

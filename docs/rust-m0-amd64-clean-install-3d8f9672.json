@@ -1,0 +1,74 @@
+{
+  "status": "passed",
+  "row": {
+    "id": "package/clean-install",
+    "status": "passed",
+    "cleanup_verified": true,
+    "actual_execution": 0,
+    "actual_evaluation": 0,
+    "actual_cleanup": 0
+  },
+  "exact_engine_empty_after_cleanup": true,
+  "independent_proof_sha256": "acbac8ca45d1725f9055ab91f35103d4cc457f06b451fd1d6304195d676260ea",
+  "candidate": {
+    "git": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+    "image_id": "sha256:3cb8dff78119b1d0a40740a9f31f5ab8814a063a509f1891be9fef93ee2d39a6",
+    "build_manifest_sha256": "4127965d9e780ceb2b459f3b2feff0e80035f0d4768dc7f4ea966315207ee164",
+    "source_archive_sha256": "be82700e942b1df0fffe00bcf58f03d8b25a3ce29ea56b2cd5a0e6ac4b374f4a"
+  },
+  "semantic_assertions_passed": true,
+  "entrypoint": "production-Main",
+  "full_required_workflow": true,
+  "checks": 11,
+  "first_admin_wire": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_bytes": 77,
+    "body_sha256": "31fd7829519175b6a7176fe67c3af774d8949919568c4204a453ab2d9ba767d9"
+  },
+  "post_restart_wire": {
+    "status": 200,
+    "content_type": "application/json",
+    "body_bytes": 26,
+    "body_sha256": "061a71658524cbcef06f508fdf69643d4596afbc42dbed4eadffcbbba68d99ca"
+  },
+  "integration_sha256": "d945b761ccd378e1d01b7f69c90d04a2555011e0a4055fd91870f5d4aa922ddb",
+  "browser_cleanup": {
+    "launcher_exit": 0,
+    "group_inactive": true,
+    "close_acknowledged": true,
+    "sent_term": false,
+    "sent_kill": false
+  },
+  "first_admin": {
+    "authenticated": true,
+    "required_api_paths": 16,
+    "required_api_paths_passed": 16,
+    "api_responses": 29,
+    "failed_api_responses": [],
+    "exceptions": 0,
+    "stored_tokens_verified": {
+      "access": true,
+      "refresh": true
+    },
+    "socket_types": [
+      "connection_established"
+    ]
+  },
+  "restart": {
+    "authenticated": true,
+    "required_api_paths": 16,
+    "required_api_paths_passed": 16,
+    "api_responses": 26,
+    "failed_api_responses": [],
+    "exceptions": 0,
+    "stored_tokens_verified": {
+      "access": true,
+      "refresh": true
+    },
+    "socket_types": [
+      "connection_established"
+    ]
+  },
+  "literal_coordinator_exit": 2
+}
