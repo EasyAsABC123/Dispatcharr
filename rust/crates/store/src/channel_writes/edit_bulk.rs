@@ -259,6 +259,13 @@ impl OverrideScalars {
                 Err(error) => return Err(error),
             }
         }
+        // These two values have typed columns for non-null edits. Keep a
+        // separate explicit-null marker in the same payload as other clears.
+        for field in ["channel_group_id", "is_radio"] {
+            if raw.get(field).is_some_and(Value::is_null) {
+                result.columns.insert(field.into(), Value::Null);
+            }
+        }
         Ok(result)
     }
 
@@ -537,10 +544,12 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                     (
                         values
                             .get("channel_group_id")
+                            .filter(|value| !value.is_null())
                             .map(override_group_id)
                             .transpose()?,
                         values
                             .get("is_radio")
+                            .filter(|value| !value.is_null())
                             .map(|value| boolean("is_radio", value))
                             .transpose()?,
                         References::parse(values)?,
@@ -1113,8 +1122,8 @@ async fn apply(
                      AS change(id, group_id, radio, has_profile, profile, has_logo, logo, has_epg, epg, override_fields, channel_number)
              ), existing AS (
                  UPDATE dispatcharr_channels_channeloverride AS overlay
-                 SET channel_group_id = COALESCE(incoming.group_id, overlay.channel_group_id),
-                     is_radio = COALESCE(incoming.radio, overlay.is_radio),
+                 SET channel_group_id = CASE WHEN incoming.override_fields ? 'channel_group_id' THEN NULL ELSE COALESCE(incoming.group_id, overlay.channel_group_id) END,
+                     is_radio = CASE WHEN incoming.override_fields ? 'is_radio' THEN NULL ELSE COALESCE(incoming.radio, overlay.is_radio) END,
                      stream_profile_id = CASE WHEN incoming.has_profile THEN incoming.profile ELSE overlay.stream_profile_id END,
                      logo_id = CASE WHEN incoming.has_logo THEN incoming.logo ELSE overlay.logo_id END,
                      epg_data_id = CASE WHEN incoming.has_epg THEN incoming.epg ELSE overlay.epg_data_id END,
@@ -1552,6 +1561,38 @@ mod tests {
         assert!(!rows[1].has_override_values());
         assert!(!rows[2].changes_override());
         assert_eq!(rows[3].override_references.logo, Reference::Set(7));
+    }
+
+    #[test]
+    fn bulk_nested_group_and_radio_keep_explicit_clears_distinct_from_omissions() {
+        let edits = edits(json!([
+            {"id":1,"override":{"channel_group_id":null,"is_radio":false}},
+            {"id":2,"override":{"channel_group_id":4,"is_radio":null}},
+            {"id":3,"override":{"channel_group_id":null,"is_radio":null}},
+            {"id":4,"override":{"name":"Pinned"}},
+            {"id":5,"override":{}},
+        ]))
+        .unwrap();
+        assert_eq!(edits[0].override_group, None);
+        assert_eq!(edits[0].override_radio, Some(false));
+        assert_eq!(
+            edits[0].override_scalars.columns,
+            json!({"channel_group_id":null})
+                .as_object()
+                .unwrap()
+                .clone()
+        );
+        assert_eq!(edits[1].override_group, Some(4));
+        assert_eq!(edits[1].override_radio, None);
+        assert_eq!(
+            edits[1].override_scalars.columns,
+            json!({"is_radio":null}).as_object().unwrap().clone()
+        );
+        assert!(edits[..3]
+            .iter()
+            .all(|edit| edit.has_override_values() && edit.override_scalars.clears()));
+        assert!(!edits[3].override_scalars.clears());
+        assert!(!edits[4].has_override_values());
     }
 
     #[test]

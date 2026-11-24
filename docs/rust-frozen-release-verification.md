@@ -54,7 +54,12 @@ their original error priority. Fourteen pinned conversion and DRF field
 cases and the 24 focused Rust batch tests passed. The signed mixed-channel
 replay still needs the final package.
 
-Nested Channel Batch overrides support name, TVG ID, guide station ID, channel number, and EPG assignments. Guide changes invalidate the cache once and publish distinct programme jobs. For Schedules Direct, the plan skips guides with existing programmes, publishes individual jobs below three unfilled mappings per source, and publishes one mapped-guide job at the threshold.
+Nested Channel Batch overrides support name, TVG ID, guide station ID,
+channel number, and EPG assignments. An explicit null now clears a group
+or radio override while an omitted field preserves its value. The existing
+pruning step removes an override after its last value clears. Six pinned
+Django component cases and the exact Rust update and prune SQL on private
+PostgreSQL agreed on the retained rows. Guide changes invalidate the cache once and publish distinct programme jobs. For Schedules Direct, the plan skips guides with existing programmes, publishes individual jobs below three unfilled mappings per source, and publishes one mapped-guide job at the threshold.
 
 The signed batch EPG assignment action uses that same Schedules Direct
 dispatch rule. It checks publisher availability before changing assignments
