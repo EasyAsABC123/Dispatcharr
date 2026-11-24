@@ -258,3 +258,30 @@ Main currently samples its clock directly, and those fixtures exercise no
 controlled DST transition. The canonical calendar row therefore remains open,
 with normal stop still its predecessor. Both fresh Native boundary evidence
 and the separate real Original fall acquisition remain pending.
+
+### First saved scanner occurrence
+
+The `m6/scanner-first` owner matches the pinned Original first-pass selector
+in an isolated copy. The saved ordinary `scan-files` row starts disabled. A
+real due arm produces the root after both Native worker lanes are accepting.
+The broker journal must contain exactly two later Index publications for the
+absent and SQL-null rows. The JSON-null, empty map, dummy, Schedules Direct,
+and inactive cases stay excluded. The evaluator links the scanner's recorded
+child order to the actual DB2 terminals, checks the empty file-summary
+observation, verifies the affected SQL snapshots through application exit,
+and requires exact fixture retirement.
+
+Prepare the frozen ordinary AMD64 owner without contacting the engine:
+
+```sh
+/usr/bin/python3 -B scripts/rust-milestone-batches/m6/scanner_first_owner.py \
+  prepare "$PWD" /tmp/dispatcharr-2d3f-recording61-native COMMON-CANDIDATE.json FRESH-STAGE
+```
+
+Supply its `stage` and `seal` under `owner_bindings.m6.scanner_first`; call
+`scanner_first_owner.dispatch_spec(repository, stage, seal, candidate,
+entrypoint, output)` for the coordinator binding. The live owner borrows the
+coordinator's exclusive lock. The signed API202 row remains its formal
+predecessor. The existing scanner-logo Original capture is reused and
+programme-index acceptance, repeated and restarted scanners, and file-failure
+semantics stay outside this first-occurrence row.

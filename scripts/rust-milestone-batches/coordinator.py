@@ -265,6 +265,16 @@ def owner_readiness(nodes, document, output=None):
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
         elif key in bindings and node["owner"] == "m6":
+            if key == "m6/scanner-first":
+                owner = module(HERE / "m6/scanner_first_owner.py", "readiness_m6_scanner_first")
+                context = owners.get("m6", {}).get("scanner_first")
+                if not context:
+                    raise ValueError("M6 scanner-first sealed owned stage required")
+                expected = owner.dispatch_spec(HERE.parents[1], Path(context["stage"]), context["seal"],
+                                               document["candidate"], node["entrypoint"], Path(output))
+                if bindings[key] != expected:
+                    raise ValueError("M6 scanner-first exact ordinary owner binding required")
+                continue
             if key == "m6/version200-update-no-update-malformed":
                 owner = module(HERE / "m6/version200_owner.py", "readiness_m6_version200")
                 context = owners.get("m6", {}).get("version200")
