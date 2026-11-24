@@ -18,6 +18,10 @@ The separate AMD64 SQLite operator passed its five copied-data cases. The ordina
 
 Packaged Guide Grid and live React Stats added two AMD64 canonical passes. Both ran against the frozen package and pinned Original, with independently replayed evaluators and exact teardown. The category browser row remains open after its cleanup evaluator could not establish the expected frontend donor. Five other browser and asset rows remained queued when that cohort stopped.
 
+A private ARM64 instrumentation build confirmed that two signed Ready/empty GETs waited on the same Tokio watch generation. The first viewer disconnected, and the second settled after the single held Redis response was forwarded. The Linux build, four focused Rust tests, physical fixture and independent verifier passed. The fixture used an ordinary AIO Producer and an instrumented modular Main Consumer. Default two-AIO and Starting/empty remain open. [ARM64 watch identity evidence](rust-m3-arm64-hls-watch-identity-3d8f9672.json)
+
+The AMD64 6,000-channel M3U comparison matched three cold, warm and expired-cache results per arm. Rust used 50.0% less CPU, 32.5% less peak cgroup-charged memory and 28.8% less peak process RSS. First-byte p95 moved from 218.19 ms to 47.88 ms. Both arms returned identical playlist content and passed exact teardown. The active VOD WebSocket comparison remains open. [AMD64 M3U cache performance evidence](rust-m7-amd64-m3u-cache-performance-3d8f9672.json)
+
 ## Parallel implementation
 
 | Canonical owner | Open rows | Work before the freeze |
