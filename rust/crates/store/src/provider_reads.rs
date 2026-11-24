@@ -10,7 +10,7 @@ use axum::{
     extract::{ConnectInfo, Path, Request, State},
     http::{header, HeaderMap, HeaderValue, Method, StatusCode},
     middleware::{from_fn_with_state, Next},
-    response::Response,
+    response::{IntoResponse, Response},
     routing::get,
     Json, Router,
 };
@@ -666,6 +666,37 @@ async fn auto_created_channels_count(
     .await?;
     provider_reply(&json!({"count":count,"sample_names":sample_names}))
 }
+async fn auto_created_channels_count_options(
+    State(auth): State<AuthService>,
+    Path(id): Path<String>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: axum::http::Uri,
+) -> Result<axum::response::Response, StoreError> {
+    use crate::channels::{
+        channel_options_indentation, options_json_response, serialize_options_json,
+    };
+
+    if id.contains(['.', '/']) {
+        return Err(StoreError::NotFound);
+    }
+    let Ok(indentation) = channel_options_indentation(&uri, &headers) else {
+        return Ok(StatusCode::METHOD_NOT_ALLOWED.into_response());
+    };
+    auth.account_user(peer, headers, true).await?;
+    // Metadata is independent of whether the account exists.
+    let metadata = json!({
+        "name": "Auto created channels count",
+        "description": "Preview how many auto-created channels would be removed if the account\nwere deleted with cleanup_channels=true. The frontend calls this when\nthe user clicks Delete, to render a truthful confirmation dialog\n(\"Also delete N channels auto-created by this provider?\").",
+        "renders": ["application/json", "text/html"],
+        "parses": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"]
+    });
+    options_json_response(
+        serialize_options_json(metadata.as_object().expect("preview metadata"), indentation)
+            .ok_or(StoreError::UnhandledRestFault)?,
+    )
+}
+
 macro_rules! nested {
     ($list:ident,$detail:ident,$resource:ident) => {
         async fn $list(
@@ -866,6 +897,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
         .route(
             "/api/m3u/accounts/{parent}/auto-created-channels-count/",
             get(auto_created_channels_count)
+                .options(auto_created_channels_count_options)
                 .layer(axum::middleware::map_response(preview_response_headers)),
         )
         .route(

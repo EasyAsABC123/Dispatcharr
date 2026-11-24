@@ -133,6 +133,15 @@ The EPG import route now attaches the declared POST and OPTIONS methods and the 
 
 The first positive local XMLTV import now has its own evaluator using the existing paired two-import fixture. It checks the signed response, owned file, Original worker arguments, exact typed results, expiry and realtime updates. This uses the same paired package reservation as Guide and the second import. Thirty M6 and 34 coordinator tests passed offline.
 
+## Provider deletion preview
+
+The existing React provider deletion preview now has Source's
+administrator JSON OPTIONS response for existing and missing accounts.
+The focused run compared 34 signed and anonymous GET, HEAD and OPTIONS
+calls with pinned Original renderer evidence. The nine fixture channel
+rows stayed unchanged, and the private PostgreSQL instance retired.
+Packaged ingress and HTML remain open.
+
 ## Account permission catalogue
 
 The administrator permission picker now receives Original's JSON OPTIONS
