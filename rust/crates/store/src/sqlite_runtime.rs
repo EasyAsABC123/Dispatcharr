@@ -139,6 +139,10 @@ impl CopiedSqliteRuntime {
                 axum::routing::get(channel_projection).layer(Extension(ChannelProjection::Summary)),
             )
             .route(
+                "/api/channels/channels/numbers-in-range/",
+                axum::routing::get(channel_number_range),
+            )
+            .route(
                 "/api/channels/channels/{id}/",
                 axum::routing::get(channel_detail),
             )
@@ -586,6 +590,25 @@ async fn channel_detail(
     )
     .await;
     channel_read_response(read, crate::channels::DETAIL_ALLOW)
+}
+
+async fn channel_number_range(
+    State(runtime): State<CopiedSqliteRuntime>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    let result = async {
+        let owner = runtime.allocate_read().await?;
+        let value = owner.channel_number_range(peer, headers, &uri).await?;
+        crate::channels::range_reply(&value)
+    }
+    .await;
+    let response = result.unwrap_or_else(StoreError::into_response);
+    copied_read_headers(
+        response,
+        axum::http::HeaderValue::from_static("GET, HEAD, OPTIONS"),
+    )
 }
 
 async fn channel_projection(

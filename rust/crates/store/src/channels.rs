@@ -821,7 +821,7 @@ impl serde_json::ser::Formatter for RangeJsonFormatter {
         }
     }
 }
-fn range_reply(value: &Value) -> Result<Response, StoreError> {
+pub(crate) fn range_reply(value: &Value) -> Result<Response, StoreError> {
     const OUTPUT: usize = 16 * 1024 * 1024;
     let capacity = || StoreError::Unsupported("Channel range rendered response capacity");
     struct Count(usize);
@@ -876,16 +876,7 @@ async fn range_response_headers(mut response: Response) -> Response {
     response
 }
 
-async fn numbers_in_range(
-    State(auth): State<AuthService>,
-    ConnectInfo(peer): ConnectInfo<SocketAddr>,
-    headers: HeaderMap,
-    OriginalUri(uri): OriginalUri,
-) -> Result<Response, StoreError> {
-    let user = auth.account_user(peer, headers, false).await?;
-    if user.user_level < 1 {
-        return Err(StoreError::PermissionDenied);
-    }
+pub(crate) fn parse_number_range(uri: &axum::http::Uri) -> Result<Option<(f64, f64)>, StoreError> {
     let raw = uri.query().unwrap_or_default();
     if raw.len() > 16384 {
         return Err(StoreError::Unsupported("Channel range query capacity"));
@@ -901,7 +892,7 @@ async fn numbers_in_range(
             .map(|(_, v)| v.as_ref())
     };
     let Some(raw_start) = last("start").filter(|s| !s.is_empty()) else {
-        return range_reply(&json!({"occupants":[]}));
+        return Ok(None);
     };
     let mut start = range_boundary(raw_start, "start")?;
     let mut end = match last("end").filter(|s| !s.is_empty()) {
@@ -911,6 +902,22 @@ async fn numbers_in_range(
     if end < start {
         std::mem::swap(&mut start, &mut end);
     }
+    Ok(Some((start, end)))
+}
+
+async fn numbers_in_range(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Result<Response, StoreError> {
+    let user = auth.account_user(peer, headers, false).await?;
+    if user.user_level < 1 {
+        return Err(StoreError::PermissionDenied);
+    }
+    let Some((start, end)) = parse_number_range(&uri)? else {
+        return range_reply(&json!({"occupants":[]}));
+    };
     // ChannelGroup.name is a TextField. Bound it in SQL before transfer, without
     // dropping an oversized occupant or changing the Source's top-50 selection.
     // Channel and override names are schema-bounded to 512 characters.

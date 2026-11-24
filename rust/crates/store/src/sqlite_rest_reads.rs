@@ -408,6 +408,34 @@ impl RetainedSqliteRestReads {
     }
 
     #[cfg(feature = "sqlite-copied-data-runtime")]
+    pub(crate) async fn channel_number_range(
+        &self,
+        peer: SocketAddr,
+        headers: HeaderMap,
+        uri: &axum::http::Uri,
+    ) -> Result<Value, StoreError> {
+        let subject = self.bearer_account_user(peer, headers, false).await?;
+        crate::channel_groups::collection_permission(subject.user())?;
+        let Some((start, end)) = crate::channels::parse_number_range(uri)? else {
+            return Ok(json!({"occupants": []}));
+        };
+        let pool = self.pool.clone();
+        supervised_sql_read(self.permit.clone(), async move {
+            let mut connection = pool.acquire().await?;
+            let result = crate::channels::sqlite_list::read_number_range(
+                &mut connection,
+                subject.user(),
+                start,
+                end,
+            )
+            .await;
+            settle(connection).await?;
+            result
+        })
+        .await
+    }
+
+    #[cfg(feature = "sqlite-copied-data-runtime")]
     pub(crate) async fn channel_read(
         &self,
         peer: SocketAddr,

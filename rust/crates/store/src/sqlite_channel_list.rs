@@ -65,12 +65,7 @@ fn contains(query: &mut QueryBuilder<'_, Sqlite>, expression: &str, value: &str)
         .push(r") ESCAPE '\'");
 }
 
-fn filters(
-    query: &mut QueryBuilder<'_, Sqlite>,
-    params: &HashMap<String, String>,
-    user: &User,
-    detail: bool,
-) -> Result<(), StoreError> {
+fn scope(query: &mut QueryBuilder<'_, Sqlite>, user: &User) {
     if user.user_level < 10 {
         query.push(" AND c.user_level<=").push_bind(user.user_level);
         if channels::truthy(user.custom_properties.get("hide_adult_content")) {
@@ -81,6 +76,15 @@ fn filters(
             .push(") OR EXISTS(SELECT 1 FROM accounts_user_channel_profiles up JOIN dispatcharr_channels_channelprofilemembership m ON m.channel_profile_id=up.channelprofile_id WHERE up.user_id=")
             .push_bind(user.id).push(" AND m.channel_id=c.id AND m.enabled))");
     }
+}
+
+fn filters(
+    query: &mut QueryBuilder<'_, Sqlite>,
+    params: &HashMap<String, String>,
+    user: &User,
+    detail: bool,
+) -> Result<(), StoreError> {
+    scope(query, user);
     if !detail {
         match params.get("visibility_filter").map(String::as_str) {
             Some("hidden") => {
@@ -234,6 +238,54 @@ pub(crate) enum ChannelProjection {
     Summary,
 }
 
+pub(crate) async fn read_number_range(
+    connection: &mut SqliteConnection,
+    user: &User,
+    start: f64,
+    end: f64,
+) -> Result<Value, StoreError> {
+    let mut query = QueryBuilder::new(
+        "SELECT c.id,COALESCE(o.name,c.name) AS name,
+            COALESCE(o.channel_number,c.channel_number) AS channel_number,
+            COALESCE(o.channel_group_id,c.channel_group_id) AS channel_group_id,
+            CASE WHEN length(CAST(g.name AS BLOB))<=32768 THEN g.name END AS channel_group,
+            g.name IS NULL OR length(CAST(g.name AS BLOB))<=32768 AS group_capacity,
+            c.auto_created,NULLIF(c.auto_created_by_id,0) AS auto_created_by_account_id,
+            (o.id IS NOT NULL AND o.channel_number IS NOT NULL) AS has_channel_number_override
+         FROM dispatcharr_channels_channel c
+         LEFT JOIN dispatcharr_channels_channeloverride o ON o.channel_id=c.id
+         LEFT JOIN dispatcharr_channels_channelgroup g ON g.id=COALESCE(o.channel_group_id,c.channel_group_id)
+         WHERE true",
+    );
+    scope(&mut query, user);
+    query
+        .push(" AND COALESCE(o.channel_number,c.channel_number)>=")
+        .push_bind(start)
+        .push(" AND COALESCE(o.channel_number,c.channel_number)<=")
+        .push_bind(end)
+        .push(" ORDER BY COALESCE(o.channel_number,c.channel_number) LIMIT 50");
+    let rows = query.build().fetch_all(connection).await?;
+    let mut occupants = Vec::with_capacity(rows.len());
+    for row in rows {
+        if !row.try_get::<bool, _>("group_capacity")? {
+            return Err(StoreError::Unsupported("Channel range group name capacity"));
+        }
+        let number = serde_json::Number::from_f64(row.try_get("channel_number")?)
+            .ok_or(StoreError::Unsupported("Channel range output nonfinite"))?;
+        occupants.push(json!({
+            "id": row.try_get::<i64, _>("id")?,
+            "name": row.try_get::<String, _>("name")?,
+            "channel_number": number,
+            "channel_group": row.try_get::<Option<String>, _>("channel_group")?,
+            "channel_group_id": row.try_get::<Option<i64>, _>("channel_group_id")?,
+            "auto_created": row.try_get::<bool, _>("auto_created")?,
+            "auto_created_by_account_id": row.try_get::<Option<i64>, _>("auto_created_by_account_id")?,
+            "has_channel_number_override": row.try_get::<bool, _>("has_channel_number_override")?,
+        }));
+    }
+    Ok(json!({"occupants": occupants}))
+}
+
 pub(crate) async fn read_projection(
     connection: &mut SqliteConnection,
     user: &User,
@@ -342,4 +394,82 @@ pub(crate) async fn read(
     Ok(channels::channel_page_response(
         base, page, pages, count, payload, unassigned,
     ))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use sqlx::Connection;
+
+    #[tokio::test]
+    async fn number_range_respects_copied_sqlite_overrides_and_account_scope() {
+        let mut db = SqliteConnection::connect("sqlite::memory:").await.unwrap();
+        sqlx::raw_sql(
+            "CREATE TABLE dispatcharr_channels_channel(
+                id INTEGER PRIMARY KEY, name TEXT NOT NULL, channel_number REAL NOT NULL,
+                channel_group_id INTEGER, auto_created INTEGER NOT NULL,
+                auto_created_by_id INTEGER, is_adult INTEGER NOT NULL,
+                user_level INTEGER NOT NULL);
+             CREATE TABLE dispatcharr_channels_channeloverride(
+                id INTEGER PRIMARY KEY, channel_id INTEGER NOT NULL,
+                name TEXT, channel_number REAL, channel_group_id INTEGER);
+             CREATE TABLE dispatcharr_channels_channelgroup(id INTEGER PRIMARY KEY, name TEXT);
+             CREATE TABLE accounts_user_channel_profiles(user_id INTEGER, channelprofile_id INTEGER);
+             CREATE TABLE dispatcharr_channels_channelprofilemembership(
+                channel_profile_id INTEGER, channel_id INTEGER, enabled INTEGER);
+             INSERT INTO dispatcharr_channels_channelgroup VALUES(1,'Base'),(2,'Override');
+             INSERT INTO dispatcharr_channels_channel VALUES
+                (1,'Owned',80,1,1,7,0,0),(2,'Adult',120,1,0,NULL,1,0),
+                (3,'Admin only',121,NULL,0,NULL,0,10),(4,'Other profile',119,1,0,0,0,0);
+             INSERT INTO dispatcharr_channels_channeloverride VALUES(1,1,'Owned override',120.5,2);
+             INSERT INTO accounts_user_channel_profiles VALUES(8,3);
+             INSERT INTO dispatcharr_channels_channelprofilemembership VALUES
+                (3,1,1),(3,2,1),(3,3,1),(3,4,0);",
+        )
+        .execute(&mut db)
+        .await
+        .unwrap();
+        let mut user = User {
+            id: 8,
+            username: "owned-account".to_owned(),
+            password: "!".to_owned(),
+            is_active: true,
+            user_level: 1,
+            stream_limit: 0,
+            custom_properties: json!({"hide_adult_content": true}),
+        };
+        let range = channels::parse_number_range(
+            &"/api/channels/channels/numbers-in-range/?start=12&start=121&end=119"
+                .parse()
+                .unwrap(),
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(range, (119.0, 121.0));
+        let standard = read_number_range(&mut db, &user, range.0, range.1)
+            .await
+            .unwrap();
+        assert_eq!(
+            standard,
+            json!({"occupants":[{
+                "id":1,"name":"Owned override","channel_number":120.5,
+                "channel_group":"Override","channel_group_id":2,"auto_created":true,
+                "auto_created_by_account_id":7,"has_channel_number_override":true
+            }]})
+        );
+        user.user_level = 10;
+        let admin = read_number_range(&mut db, &user, range.0, range.1)
+            .await
+            .unwrap();
+        assert_eq!(
+            admin["occupants"]
+                .as_array()
+                .unwrap()
+                .iter()
+                .map(|row| row["id"].as_i64().unwrap())
+                .collect::<Vec<_>>(),
+            [4, 2, 1, 3]
+        );
+        assert!(admin["occupants"][0]["auto_created_by_account_id"].is_null());
+    }
 }
