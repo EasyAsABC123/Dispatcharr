@@ -70,8 +70,15 @@ const MAX_SERIES_INTENTS: usize = 32;
 
 struct NormalRule {
     value: Value,
-    mode: (Option<bool>, SeriesTitle),
+    mode: SeriesRuleMatch,
 }
+#[derive(Debug, PartialEq, Eq)]
+struct SeriesRuleMatch {
+    new_only: Option<bool>,
+    title_match: SeriesTitle,
+    description_match: Option<String>,
+}
+
 #[derive(Debug)]
 pub struct SeriesReport {
     task: Uuid,
@@ -228,25 +235,39 @@ fn number(v: &Value) -> Result<u32, Error> {
 /// The signed editor persists description fields even for title-only exact
 /// rules. Normal Main carries new-only selection separately from the
 /// existing preclaim shape. Legacy configured callers stay exact/all.
-fn normalize_normal_series_rule(rule: &mut Value) -> Result<(Option<bool>, SeriesTitle), Error> {
+fn normalize_normal_series_rule(rule: &mut Value) -> Result<SeriesRuleMatch, Error> {
     let rule = rule.as_object_mut().ok_or(Error::Unsupported)?;
     let strip = |value: &str| {
         value
             .trim_matches(|c: char| c.is_whitespace() || ('\u{1c}'..='\u{1f}').contains(&c))
             .to_owned()
     };
-    match rule.remove("description") {
-        None | Some(Value::Null) => {}
-        Some(Value::String(value)) if strip(&value).is_empty() => {}
+    let description_match = match rule.remove("description") {
+        None | Some(Value::Null) => None,
+        Some(Value::String(value)) => {
+            let value = strip(&value);
+            if value.is_empty() {
+                None
+            } else if value.len() <= 255
+                && value.is_ascii()
+                && !value.bytes().any(|byte| byte.is_ascii_control())
+            {
+                Some(value)
+            } else {
+                return Err(Error::Unsupported);
+            }
+        }
         _ => return Err(Error::Unsupported),
-    }
+    };
     match rule.remove("description_mode") {
         None | Some(Value::Null) => {}
         Some(Value::String(value))
             if value.is_empty()
-                || ["contains", "search", "regex"]
-                    .iter()
-                    .any(|mode| value.eq_ignore_ascii_case(mode)) => {}
+                || value.eq_ignore_ascii_case("contains")
+                || (description_match.is_none()
+                    && ["search", "regex"]
+                        .iter()
+                        .any(|mode| value.eq_ignore_ascii_case(mode))) => {}
         _ => return Err(Error::Unsupported),
     }
     let normalize = |key, default: &str| match rule.get(key) {
@@ -282,7 +303,11 @@ fn normalize_normal_series_rule(rule: &mut Value) -> Result<(Option<bool>, Serie
             *value = strip(value);
         }
     }
-    Ok((new_only, title_match))
+    Ok(SeriesRuleMatch {
+        new_only,
+        title_match,
+        description_match,
+    })
 }
 
 fn normal_rules(group: &Value) -> Result<Vec<NormalRule>, Error> {
@@ -334,6 +359,7 @@ fn programme(
     channel: i64,
     source: i64,
     new_only: Option<bool>,
+    description_selected: bool,
 ) -> Result<Option<Programme>, Error> {
     let properties = row.custom_properties.unwrap_or(Value::Null);
     let original = properties.as_object();
@@ -348,7 +374,7 @@ fn programme(
                     "season" | "episode" | "new" | "previously_shown" | "previously_shown_details"
                 )
             })
-        }) || row.description.is_some()
+        }) || (!description_selected && row.description.is_some())
         {
             return Err(Error::Unsupported);
         }
@@ -362,7 +388,7 @@ fn programme(
         )
     } else {
         let props = original.ok_or(Error::Unsupported)?;
-        if props.len() != 2 || row.description.is_some() {
+        if props.len() != 2 || (!description_selected && row.description.is_some()) {
             return Err(Error::Unsupported);
         }
         (
@@ -380,6 +406,7 @@ fn programme(
         title: row.title.ok_or(Error::Unsupported)?,
         subtitle,
         original_air_date: air_date,
+        description: row.description,
         start: row.start_time,
         end: row.end_time,
         season,
@@ -446,7 +473,16 @@ impl Service {
             .filter(|v| v.len() == 1)
             .ok_or(Error::Unsupported)?;
         let rule = self
-            .prepare_series_rule(&rules[0], now, owner, (None, SeriesTitle::Exact))
+            .prepare_series_rule(
+                &rules[0],
+                now,
+                owner,
+                SeriesRuleMatch {
+                    new_only: None,
+                    title_match: SeriesTitle::Exact,
+                    description_match: None,
+                },
+            )
             .await?;
         Ok(PreparedSeries {
             origin: self.identity.clone(),
@@ -460,7 +496,11 @@ impl Service {
         value: &Value,
         now: DateTime<Utc>,
         owner: Arc<dyn Send + Sync>,
-        (new_only, title_match): (Option<bool>, SeriesTitle),
+        SeriesRuleMatch {
+            new_only,
+            title_match,
+            description_match,
+        }: SeriesRuleMatch,
     ) -> Result<PreparedRule, Error> {
         let title_mode = match title_match {
             SeriesTitle::Exact => "exact",
@@ -492,14 +532,20 @@ impl Service {
         }
         let channel = value["channel_id"].as_i64().ok_or(Error::Unsupported)?;
         let source = value["epg_source_id"].as_i64().ok_or(Error::Unsupported)?;
-        let scope = SeriesScope::new(channel, source, tvg.clone(), title.clone(), title_match)
+        let mut scope = SeriesScope::new(channel, source, tvg.clone(), title.clone(), title_match)
             .ok_or(Error::Unsupported)?;
+        let description_selected = description_match.is_some();
+        if let Some(description_match) = description_match {
+            scope = scope.with_description_match(description_match);
+        }
         let snapshot = recording_schedule::series_snapshot(self.pool.clone(), scope, now, owner)
             .await
             .map_err(Error::Snapshot)?;
         let mut programmes = Vec::new();
         for row in snapshot.programmes {
-            if let Some(programme) = programme(row, channel, source, new_only)? {
+            if let Some(programme) =
+                programme(row, channel, source, new_only, description_selected)?
+            {
                 programmes.push(programme);
             }
         }
@@ -554,6 +600,20 @@ impl Service {
             &existing,
         )
         .map_err(|_| Error::Unsupported)?;
+        if description_selected
+            && intents.iter().any(|intent| {
+                FutureRecording::new(
+                    intent.channel_id,
+                    intent.start,
+                    intent.end,
+                    intent.properties.clone(),
+                    now,
+                )
+                .is_none()
+            })
+        {
+            return Err(Error::Unsupported);
+        }
         Ok(PreparedRule {
             title,
             tvg,
@@ -901,7 +961,7 @@ mod normal_defaults_controls {
         assert_eq!(imported, canonical);
 
         for unsupported in [
-            json!({"description":"world news"}),
+            json!({"description":"world news","description_mode":"regex"}),
             json!({"description":false}),
             json!({"description_mode":"unknown"}),
             json!({"title_mode":"regex"}),
@@ -942,7 +1002,14 @@ mod normal_defaults_controls {
             "description":"", "description_mode":"contains", "untagged_is_new":true
         });
         let policy = normalize_normal_series_rule(&mut signed).unwrap();
-        assert_eq!(policy, (Some(true), SeriesTitle::Exact));
+        assert_eq!(
+            policy,
+            SeriesRuleMatch {
+                new_only: Some(true),
+                title_match: SeriesTitle::Exact,
+                description_match: None
+            }
+        );
         assert_eq!(signed["mode"], "new");
 
         for (properties, default_new, opted_new) in [
@@ -958,9 +1025,15 @@ mod normal_defaults_controls {
         ] {
             for (untagged, admitted) in [(false, default_new), (true, opted_new)] {
                 assert_eq!(
-                    programme(guide_row(1, 2, properties.clone()), 2, 1, Some(untagged))
-                        .unwrap()
-                        .is_some(),
+                    programme(
+                        guide_row(1, 2, properties.clone()),
+                        2,
+                        1,
+                        Some(untagged),
+                        false
+                    )
+                    .unwrap()
+                    .is_some(),
                     admitted,
                     "{properties} {untagged}"
                 );
@@ -980,7 +1053,7 @@ mod normal_defaults_controls {
         let now = inputs[0].start_time - chrono::Duration::hours(2);
         let programmes: Vec<_> = inputs
             .into_iter()
-            .filter_map(|row| programme(row, 2, 1, Some(false)).unwrap())
+            .filter_map(|row| programme(row, 2, 1, Some(false), false).unwrap())
             .collect();
         let intents = decisions::series(
             now,
@@ -1021,11 +1094,60 @@ mod normal_defaults_controls {
         .is_empty());
         assert!(
             matches!(
-                programme(guide_row(4, 5, json!({"new":true})), 2, 1, None),
+                programme(guide_row(4, 5, json!({"new":true})), 2, 1, None, false),
                 Err(Error::Unsupported)
             ),
             "legacy preclaim shape stays unchanged"
         );
+    }
+
+    #[test]
+    fn description_selected_rule_preserves_original_programme_summary_in_booking() {
+        let raw = "The latest news from around the world.";
+        let mut rule = pinned_rule("test.channel.1", "Test Show", 2);
+        rule["description"] = json!(" latest AND news ");
+        assert_eq!(
+            normalize_normal_series_rule(&mut rule)
+                .unwrap()
+                .description_match
+                .as_deref(),
+            Some("latest AND news")
+        );
+
+        let with_description = || {
+            let mut row = guide_row(1, 2, json!({"season":1,"episode":2}));
+            row.description = Some(raw.into());
+            row
+        };
+        assert!(matches!(
+            programme(with_description(), 2, 1, None, false),
+            Err(Error::Unsupported)
+        ));
+        let selected = programme(with_description(), 2, 1, None, true)
+            .unwrap()
+            .unwrap();
+        let now = selected.start - chrono::Duration::hours(2);
+        let [intent] = decisions::series(
+            now,
+            ("Test Show", SeriesTitle::Exact),
+            "test.channel.1",
+            2,
+            1,
+            &[selected],
+            &[],
+        )
+        .unwrap()
+        .try_into()
+        .unwrap();
+        assert_eq!(intent.properties["program"]["description"], raw);
+        assert!(FutureRecording::new(
+            intent.channel_id,
+            intent.start,
+            intent.end,
+            intent.properties,
+            now
+        )
+        .is_some());
     }
 
     fn pinned_rule(station: &str, title: &str, channel_id: i64) -> Value {

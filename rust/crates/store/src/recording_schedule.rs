@@ -2,7 +2,7 @@
 //! Derived from Dispatcharr Recording post_save and django-celery-beat models;
 //! original authors retain credit. No application or task registration.
 //! Serial owned execution only: concurrent model/sentinel writers are unproved.
-use crate::epg_program_http::series_preview::append_contains_title;
+use crate::epg_program_http::series_preview::append_contains;
 use chrono::{DateTime, Utc};
 use serde_json::Value;
 use sqlx::{Connection, PgConnection, PgPool, Postgres, QueryBuilder};
@@ -353,6 +353,7 @@ pub struct SeriesScope {
     tvg: String,
     title: String,
     mode: SeriesTitle,
+    description_match: Option<String>,
 }
 impl SeriesScope {
     pub fn new(
@@ -383,10 +384,16 @@ impl SeriesScope {
             tvg,
             title,
             mode,
+            description_match: None,
         })
     }
 
-    fn append_title<'a>(
+    pub fn with_description_match(mut self, value: String) -> Self {
+        self.description_match = Some(value);
+        self
+    }
+
+    fn append_filters<'a>(
         &self,
         query: &mut QueryBuilder<'a, Postgres>,
     ) -> Result<(), SnapshotError> {
@@ -398,11 +405,18 @@ impl SeriesScope {
                     .push(")");
             }
             SeriesTitle::Contains => {
-                if !append_contains_title(query, &self.title).unwrap_or(false) {
+                if !append_contains(query, &self.title, "title").unwrap_or(false) {
                     return Err(SnapshotError::Unsupported(
                         "bounded Series title expression",
                     ));
                 }
+            }
+        }
+        if let Some(value) = &self.description_match {
+            if !append_contains(query, value, "description").unwrap_or(false) {
+                return Err(SnapshotError::Unsupported(
+                    "bounded Series description expression",
+                ));
             }
         }
         Ok(())
@@ -456,7 +470,7 @@ pub async fn series_snapshot(
             );
             query.push_bind(ids[0]).push(" AND end_time>").push_bind(now)
                 .push(" AND start_time<=").push_bind(now + chrono::Duration::days(7));
-            scope.append_title(&mut query)?;
+            scope.append_filters(&mut query)?;
             let programme_rows: Vec<ProgrammeTuple> = query
                 .push(" ORDER BY start_time LIMIT 33").build_query_as()
                 .fetch_all(&mut *connection).await
@@ -584,6 +598,27 @@ mod series_title_tests {
     use sqlx::Execute;
 
     #[test]
+    fn queued_description_contains_and_title_both_filter_sql() {
+        let rule = SeriesScope::new(
+            2,
+            1,
+            "station".into(),
+            "Test Show".into(),
+            SeriesTitle::Exact,
+        )
+        .unwrap()
+        .with_description_match("latest AND news".into());
+        let mut sql = QueryBuilder::<Postgres>::new("SELECT title FROM epg_programdata WHERE true");
+        rule.append_filters(&mut sql).unwrap();
+        assert_eq!(sql.build().sql(), "SELECT title FROM epg_programdata WHERE true AND UPPER(title::text)=UPPER($1) AND (strpos(upper(description), upper($2)) > 0 AND strpos(upper(description), upper($3)) > 0)");
+        let mut sql = QueryBuilder::<Postgres>::new("SELECT title FROM epg_programdata WHERE true");
+        assert!(rule
+            .with_description_match("(".into())
+            .append_filters(&mut sql)
+            .is_err());
+    }
+
+    #[test]
     fn queued_contains_reuses_bound_source_expression_without_widening_exact() {
         let rule = |title: &str, mode| {
             SeriesScope::new(2, 1, "station".into(), title.into(), mode).unwrap()
@@ -593,21 +628,21 @@ mod series_title_tests {
             "News AND (Evening OR \"Day and Night\")",
             SeriesTitle::Contains,
         )
-        .append_title(&mut sql)
+        .append_filters(&mut sql)
         .unwrap();
         let query = sql.build();
         assert_eq!(query.sql(), "SELECT title FROM epg_programdata WHERE true AND (strpos(upper(title), upper($1)) > 0 AND (strpos(upper(title), upper($2)) > 0 OR strpos(upper(title), upper($3)) > 0))");
         assert!(!query.sql().contains("Night"));
         let mut sql = QueryBuilder::<Postgres>::new("SELECT title FROM epg_programdata WHERE true");
         rule("News", SeriesTitle::Exact)
-            .append_title(&mut sql)
+            .append_filters(&mut sql)
             .unwrap();
         assert!(sql
             .build()
             .sql()
             .ends_with("AND UPPER(title::text)=UPPER($1)"));
         assert!(rule("(", SeriesTitle::Contains)
-            .append_title(&mut sql)
+            .append_filters(&mut sql)
             .is_err());
     }
 }

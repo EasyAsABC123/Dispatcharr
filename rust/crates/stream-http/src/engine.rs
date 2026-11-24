@@ -292,16 +292,37 @@ fn next_assigned_stream(
     Ok(&ordered[index])
 }
 
+fn next_direct_switch<'a>(
+    ordered: &'a [OrderedChannelStream],
+    previous: (source_switch::Source, u32),
+    active: &PlaybackCandidate,
+) -> Result<(i64, Option<&'a str>), PlaybackError> {
+    if (source_switch::source(active), active.provider_max_streams) != previous {
+        return Err(PlaybackError::new(
+            409,
+            "Active source changed while selecting next",
+        ));
+    }
+    let selected = next_assigned_stream(ordered, active.stream_id)?;
+    let url = selected.direct_url.as_deref().ok_or_else(|| {
+        PlaybackError::new(
+            501,
+            "Next Stream requires a current direct profile with the same limit",
+        )
+    })?;
+    Ok((selected.id, Some(url)))
+}
+
 #[cfg(test)]
 #[test]
 fn next_stream_uses_persisted_order_and_wraps_without_filtering() {
     let ordered = [71, 94, 12].map(|id| OrderedChannelStream {
         id,
-        unlimited_direct_url: (id != 94).then(|| "http://localhost/unused".into()),
+        direct_url: (id != 94).then(|| "http://localhost/unused".into()),
     });
     let next = next_assigned_stream(&ordered, 71).unwrap();
     assert_eq!(next.id, 94);
-    assert!(next.unlimited_direct_url.is_none());
+    assert!(next.direct_url.is_none());
     assert_eq!(next_assigned_stream(&ordered, 94).unwrap().id, 12);
     assert_eq!(next_assigned_stream(&ordered, 12).unwrap().id, 71);
     assert_eq!(next_assigned_stream(&ordered, 203).unwrap().id, 71);
@@ -465,12 +486,13 @@ impl StreamEngine {
         resolver: &dyn PlaybackResolver,
     ) -> Result<Option<NextStreamSwitch<'_>>, PlaybackError> {
         let session = self.local_switch_session(channel);
-        let previous = session
-            .as_ref()
-            .map(|session| source_switch::source(&session.current.lock().unwrap()));
-        let ordered = resolver
-            .ordered_channel_streams(channel, previous.and_then(|(_, profile)| profile))
-            .await?;
+        let previous = session.as_ref().map(|session| {
+            let active = session.current.lock().unwrap();
+            (source_switch::source(&active), active.provider_max_streams)
+        });
+        let profile = previous
+            .and_then(|((_, profile), capacity)| profile.map(|profile| (profile, capacity)));
+        let ordered = resolver.ordered_channel_streams(channel, profile).await?;
         let Some((session, previous)) = session.zip(previous) else {
             if let Some(store) = &self.inner.clients {
                 let metadata = store
@@ -500,28 +522,9 @@ impl StreamEngine {
         {
             return Err(PlaybackError::new(409, "Local source owner changed"));
         }
-        if session.current.lock().unwrap().provider_max_streams != 0 {
-            return Err(PlaybackError::new(
-                501,
-                "Next Stream requires a current direct unlimited profile",
-            ));
-        }
         let (previous, next, url) = self
-            .switch_in_local_session(&session, |current| {
-                if current != previous {
-                    return Err(PlaybackError::new(
-                        409,
-                        "Active source changed while selecting next",
-                    ));
-                }
-                let selected = next_assigned_stream(&ordered, current.0)?;
-                let url = selected.unlimited_direct_url.as_deref().ok_or_else(|| {
-                    PlaybackError::new(
-                        501,
-                        "Next Stream requires a current direct unlimited profile",
-                    )
-                })?;
-                Ok((selected.id, Some(url)))
+            .switch_in_local_session(&session, |active| {
+                next_direct_switch(&ordered, previous, active)
             })
             .await?;
         Ok(Some(NextStreamSwitch {
@@ -539,12 +542,12 @@ impl StreamEngine {
     async fn switch_in_local_session<'a>(
         &self,
         session: &Session,
-        select: impl FnOnce(source_switch::Source) -> Result<(i64, Option<&'a str>), PlaybackError>,
+        select: impl FnOnce(&PlaybackCandidate) -> Result<(i64, Option<&'a str>), PlaybackError>,
     ) -> Result<(i64, i64, String), PlaybackError> {
         let (reply, previous, stream_id, url) = {
             let active = session.current.lock().unwrap();
             let current = source_switch::source(&active);
-            let (stream_id, saved_url) = select(current)?;
+            let (stream_id, saved_url) = select(&active)?;
             let control = session
                 .source_switch
                 .as_ref()
@@ -1826,6 +1829,50 @@ mod retained_source_tests {
             headers: Vec::new(),
             metadata: Vec::new(),
         }
+    }
+
+    #[test]
+    fn finite_next_stream_requires_fresh_direct_target_and_same_active_cap() {
+        let active = PlaybackCandidate {
+            credential_pool: None,
+            ..candidate(11)
+        };
+        let previous = (source_switch::source(&active), 1);
+        let mut ordered = [
+            OrderedChannelStream {
+                id: 11,
+                direct_url: Some("http://owned-origin/11.ts".into()),
+            },
+            OrderedChannelStream {
+                id: 12,
+                direct_url: None,
+            },
+            OrderedChannelStream {
+                id: 13,
+                direct_url: Some("http://owned-origin/13.ts".into()),
+            },
+        ];
+        assert_eq!(
+            next_direct_switch(&ordered, previous, &active)
+                .unwrap_err()
+                .status,
+            501
+        );
+        ordered[1].direct_url = Some("http://owned-origin/12.ts".into());
+        assert_eq!(
+            next_direct_switch(&ordered, previous, &active).unwrap(),
+            (12, Some("http://owned-origin/12.ts"))
+        );
+        let new_limit = PlaybackCandidate {
+            provider_max_streams: 0,
+            ..active
+        };
+        assert_eq!(
+            next_direct_switch(&ordered, previous, &new_limit)
+                .unwrap_err()
+                .status,
+            409
+        );
     }
 
     #[test]

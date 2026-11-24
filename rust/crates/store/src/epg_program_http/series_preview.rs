@@ -394,15 +394,16 @@ impl Expression {
     }
 }
 
-pub(crate) fn append_contains_title(
+pub(crate) fn append_contains(
     query: &mut QueryBuilder<'_, Postgres>,
-    title: &str,
+    value: &str,
+    field: &'static str,
 ) -> Result<bool, StoreError> {
-    let Some(predicate) = parse_text(title, "contains")? else {
+    let Some(predicate) = parse_text(value, "contains")? else {
         return Ok(false);
     };
     query.push(" AND ");
-    predicate.write_sql(query, "title");
+    predicate.write_sql(query, field);
     Ok(true)
 }
 

@@ -2324,7 +2324,7 @@ impl PlaybackResolver for NextStreamResolver {
     fn ordered_channel_streams(
         &self,
         channel: &str,
-        active_profile: Option<i64>,
+        active_profile: Option<(i64, u32)>,
     ) -> BoxFuture<'_, Result<Vec<OrderedChannelStream>, PlaybackError>> {
         assert_eq!(channel, "owned");
         assert_eq!(active_profile, None);
@@ -2334,7 +2334,7 @@ impl PlaybackResolver for NextStreamResolver {
                 .into_iter()
                 .map(|id| OrderedChannelStream {
                     id,
-                    unlimited_direct_url: None,
+                    direct_url: None,
                 })
                 .collect())
         })

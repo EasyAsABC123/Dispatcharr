@@ -1162,15 +1162,20 @@ impl PlaybackResolver for AuthService {
     fn ordered_channel_streams(
         &self,
         channel: &str,
-        active_profile: Option<i64>,
+        active_profile: Option<(i64, u32)>,
     ) -> BoxFuture<'_, Result<Vec<OrderedChannelStream>, PlaybackError>> {
         let channel = uuid::Uuid::parse_str(channel).map_err(|_| StoreError::NotFound);
         Box::pin(async move {
             // Original orders the relationship independently of provider eligibility.
             // The LEFT JOIN distinguishes an existing channel without assignments.
+            let (profile_id, capacity) = active_profile
+                .filter(|(_, capacity)| *capacity <= 1)
+                .map_or((None, None), |(profile, capacity)| {
+                    (Some(profile), Some(i64::from(capacity)))
+                });
             let rows = sqlx::query_as::<_, (Option<i64>, Option<i32>, Option<String>)>(
                 r#"SELECT cs.stream_id::bigint, cs."order",
-                       CASE WHEN p.is_active AND p.is_default AND p.max_streams=0
+                       CASE WHEN p.is_active AND p.is_default AND p.max_streams::bigint=$3
                                  AND (p.search_pattern='' OR p.replace_pattern=''
                                       OR (p.search_pattern='^(.*)$' AND p.replace_pattern='$1'))
                                  AND strpos(s.url, chr(10))=0 AND strpos(s.url, chr(13))=0
@@ -1184,10 +1189,11 @@ impl PlaybackResolver for AuthService {
                    LEFT JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id
                    WHERE c.uuid=$1
                    ORDER BY cs."order"
-                   LIMIT $3"#,
+                   LIMIT $4"#,
             )
             .bind(channel.map_err(playback_error)?)
-            .bind(active_profile)
+            .bind(profile_id)
+            .bind(capacity)
             .bind((MAX_CANDIDATES + 1) as i64)
             .fetch_all(self.store.pool())
             .await
@@ -1205,11 +1211,8 @@ impl PlaybackResolver for AuthService {
             }
             Ok(rows
                 .into_iter()
-                .filter_map(|(id, _, unlimited_direct_url)| {
-                    id.map(|id| OrderedChannelStream {
-                        id,
-                        unlimited_direct_url,
-                    })
+                .filter_map(|(id, _, direct_url)| {
+                    id.map(|id| OrderedChannelStream { id, direct_url })
                 })
                 .collect())
         })

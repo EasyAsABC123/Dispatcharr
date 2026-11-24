@@ -24,6 +24,7 @@ pub struct Programme {
     pub title: String,
     pub subtitle: Option<String>,
     pub original_air_date: String,
+    pub description: Option<String>,
     pub start: DateTime<Utc>,
     pub end: DateTime<Utc>,
     pub season: Option<u32>,
@@ -163,7 +164,7 @@ pub fn series(
         exact.insert((p.tvg_id.clone(), p.start, p.end));
         episodes.insert((p.tvg_id.clone(), title, identity));
         output.push(Intent { channel_id, start:p.start, end:p.end, artwork_publications:2,
-            properties:json!({"program":{"id":p.id,"tvg_id":p.tvg_id,"title":p.title,"sub_title":p.subtitle,"description":null,"original_air_date":p.original_air_date,"start_time":iso(p.start),"end_time":iso(p.end),"season":p.season,"episode":p.episode,"onscreen_episode":null,"epg_source_id":source_id}}) });
+            properties:json!({"program":{"id":p.id,"tvg_id":p.tvg_id,"title":p.title,"sub_title":p.subtitle,"description":p.description,"original_air_date":p.original_air_date,"start_time":iso(p.start),"end_time":iso(p.end),"season":p.season,"episode":p.episode,"onscreen_episode":null,"epg_source_id":source_id}}) });
     }
     Ok(output)
 }
@@ -240,6 +241,7 @@ mod tests {
             title: "Owned Exact Series".into(),
             subtitle: Some(format!("Owned Episode {episode}")),
             original_air_date: String::new(),
+            description: None,
             start: now() + Duration::hours(hours),
             end: now() + Duration::hours(hours + 1),
             season: Some(1),
@@ -395,6 +397,7 @@ mod source_normal_cases {
                         title: p["title"].as_str().unwrap().into(),
                         subtitle: p["sub_title"].as_str().map(str::to_owned),
                         original_air_date: String::new(),
+                        description: None,
                         start: time(&p["start_time"]),
                         end: time(&p["end_time"]),
                         season: p["custom_properties"]["season"].as_u64().map(|n| n as u32),

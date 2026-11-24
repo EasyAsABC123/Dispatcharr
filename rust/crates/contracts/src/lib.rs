@@ -316,9 +316,9 @@ pub enum PlaybackResolution {
 /// One saved channel assignment, even when its provider cannot currently play it.
 pub struct OrderedChannelStream {
     pub id: i64,
-    /// Present only where the selected profile is still active, default and
-    /// unlimited for this stream, and the stored URL fits the live route's limit.
-    pub unlimited_direct_url: Option<String>,
+    /// Present only for a direct URL on the verified default active profile,
+    /// with the same unlimited or one-slot limit as the active session.
+    pub direct_url: Option<String>,
 }
 
 pub trait PlaybackResolver: Send + Sync + 'static {
@@ -362,11 +362,12 @@ pub trait PlaybackResolver: Send + Sync + 'static {
     fn authorize_admin(&self, request: PlaybackRequest)
         -> BoxFuture<'_, Result<(), PlaybackError>>;
     /// The current channel association order, including inputs ineligible for playback.
+    /// The active profile argument carries its ID and the session's current capacity.
     /// Call only after admin authorization.
     fn ordered_channel_streams(
         &self,
         _channel: &str,
-        _active_profile: Option<i64>,
+        _active_profile: Option<(i64, u32)>,
     ) -> BoxFuture<'_, Result<Vec<OrderedChannelStream>, PlaybackError>> {
         Box::pin(async {
             Err(PlaybackError::new(
