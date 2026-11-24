@@ -1,0 +1,152 @@
+{
+  "by_protocol": {
+    "vod": {
+      "median_pair_change_percent": {
+        "capture_throughput_bytes_per_second": -0.0002463974193123164,
+        "cpu_core_seconds": -6.284971187744609,
+        "peak_sampled_working_set_bytes": -33.29510095091906
+      },
+      "pairs": [
+        {
+          "block": 1,
+          "candidate_change_percent": {
+            "capture_throughput_bytes_per_second": -0.0016996276775982366,
+            "cpu_core_seconds": -5.652586435315721,
+            "peak_sampled_working_set_bytes": -34.63678367288976
+          }
+        },
+        {
+          "block": 2,
+          "candidate_change_percent": {
+            "capture_throughput_bytes_per_second": 0.0012068328389736038,
+            "cpu_core_seconds": -10.182127127379415,
+            "peak_sampled_working_set_bytes": -36.627909835058134
+          }
+        },
+        {
+          "block": 3,
+          "candidate_change_percent": {
+            "capture_throughput_bytes_per_second": -0.0018655153898539112,
+            "cpu_core_seconds": -6.917355940173497,
+            "peak_sampled_working_set_bytes": -31.95341822894835
+          }
+        },
+        {
+          "block": 4,
+          "candidate_change_percent": {
+            "capture_throughput_bytes_per_second": 0.019720481756446695,
+            "cpu_core_seconds": -3.028223692092724,
+            "peak_sampled_working_set_bytes": -27.39161186438127
+          }
+        }
+      ],
+      "prefix_ttfb_p95_change_percent": -1.0021747395431602,
+      "prefix_ttfb_p95_ms": {
+        "candidate": 263.7460579862818,
+        "source": 266.41601196024567
+      },
+      "prefix_ttfb_samples_per_backend": 4
+    }
+  },
+  "matched_work": true,
+  "measurement_claim_eligible": true,
+  "mock": false,
+  "phases": [
+    {
+      "block": 1,
+      "capture_throughput_bytes_per_second": 279616.5395635687,
+      "cpu_core_seconds": 1.260538,
+      "duration_seconds": 16.72257562202867,
+      "memory_samples": 17,
+      "peak_sampled_working_set_bytes": 807604224,
+      "phase": "vod/source",
+      "ttfb_ms": 264.1150769777596
+    },
+    {
+      "block": 1,
+      "capture_throughput_bytes_per_second": 279611.78712347115,
+      "cpu_core_seconds": 1.189285,
+      "duration_seconds": 16.78905921196565,
+      "memory_samples": 17,
+      "peak_sampled_working_set_bytes": 527876096,
+      "phase": "vod/candidate",
+      "ttfb_ms": 259.16007603518665
+    },
+    {
+      "block": 2,
+      "capture_throughput_bytes_per_second": 279615.64040640293,
+      "cpu_core_seconds": 1.229498,
+      "duration_seconds": 16.79556316602975,
+      "memory_samples": 17,
+      "peak_sampled_working_set_bytes": 527982592,
+      "phase": "vod/candidate",
+      "ttfb_ms": 257.99244799418375
+    },
+    {
+      "block": 2,
+      "capture_throughput_bytes_per_second": 279612.2659537556,
+      "cpu_core_seconds": 1.368879,
+      "duration_seconds": 16.82112739997683,
+      "memory_samples": 17,
+      "peak_sampled_working_set_bytes": 833146880,
+      "phase": "vod/source",
+      "ttfb_ms": 266.29629300441593
+    },
+    {
+      "block": 3,
+      "capture_throughput_bytes_per_second": 279620.6295013389,
+      "cpu_core_seconds": 1.352511,
+      "duration_seconds": 16.766624975018203,
+      "memory_samples": 17,
+      "peak_sampled_working_set_bytes": 850120704,
+      "phase": "vod/source",
+      "ttfb_ms": 266.41601196024567
+    },
+    {
+      "block": 3,
+      "capture_throughput_bytes_per_second": 279615.4131354623,
+      "cpu_core_seconds": 1.258953,
+      "duration_seconds": 16.996398453018628,
+      "memory_samples": 17,
+      "peak_sampled_working_set_bytes": 578478080,
+      "phase": "vod/candidate",
+      "ttfb_ms": 258.60700994962826
+    },
+    {
+      "block": 4,
+      "capture_throughput_bytes_per_second": 279678.15415162855,
+      "cpu_core_seconds": 1.24645,
+      "duration_seconds": 16.8786098069977,
+      "memory_samples": 17,
+      "peak_sampled_working_set_bytes": 592883712,
+      "phase": "vod/candidate",
+      "ttfb_ms": 263.7460579862818
+    },
+    {
+      "block": 4,
+      "capture_throughput_bytes_per_second": 279623.01114672853,
+      "cpu_core_seconds": 1.285374,
+      "duration_seconds": 16.754145846003667,
+      "memory_samples": 17,
+      "peak_sampled_working_set_bytes": 816549888,
+      "phase": "vod/source",
+      "ttfb_ms": 265.14579000649974
+    }
+  ],
+  "candidate": {
+    "git": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+    "original_git": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "image_id": "sha256:3cb8dff78119b1d0a40740a9f31f5ab8814a063a509f1891be9fef93ee2d39a6",
+    "build_manifest_sha256": "4127965d9e780ceb2b459f3b2feff0e80035f0d4768dc7f4ea966315207ee164"
+  },
+  "matched_evidence_sha256": "5e02aeddd6cc35ee48bfb181b024634e0d335624dcc61d56bd8dc6a5ccee8554",
+  "recomputation_sha256": "a42204e124340769af506793788dc6cea210910e01aaf965354fd6deaba3dd73",
+  "actual_owner_exit": 0,
+  "actual_controller_exit": 0,
+  "exact_cleanup": true,
+  "windows": 8,
+  "samples": 136,
+  "frames_per_video_decode": 200,
+  "capture_bytes": 1048576,
+  "whole_M4_qualified": false
+}

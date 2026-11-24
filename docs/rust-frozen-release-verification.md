@@ -1150,3 +1150,19 @@ peak concurrent working memory and 6.0% more CPU. First-byte latency and
 delivered goodput were similar. Both arms passed equivalent-work,
 zero-throttling and exact cleanup checks.
 [ARM64 VOD resource proof](rust-m4-arm64-vod-reconnect-resource-3d8f9672.md)
+
+### Current pinned Django passive controls
+
+The pinned Original Django passive controls passed all
+19 cases in their intended container. The container retired. The controls
+observe framework metadata without dispatching the underlying views.
+
+### Current AMD64 VOD resource comparison
+
+Four matched VOD pairs passed with eight strict 200-frame A/V decodes.
+Rust used a median 6.3% less CPU and 33.3% less peak sampled working
+memory. Capture goodput was effectively unchanged. First-body-byte
+p95 was 263.75 ms for Rust and 266.42 ms for Original across four
+observations per backend. The independent reducer reproduced the
+results and verified equal work and exact cleanup.
+[Measured AMD64 VOD proof](rust-m4-amd64-vod-resource-3d8f9672.md)
