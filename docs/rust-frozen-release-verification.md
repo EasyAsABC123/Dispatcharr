@@ -45,6 +45,10 @@ The backup component uses the locked bundled SQLite library already used by the 
 
 The ordinary package still needs SQLite startup, ownership wiring, migration compatibility, and image linkage. The SQLite component tests alone do not close M8 or M9.
 
+## Recording and profile delivery owners
+
+The scheduled 61-second recording fixture can dispatch directly through the coordinator after the one-off Beat prerequisite. It verifies broker and result identity, natural recorder retirement, a full audio/video decode, and independent cleanup. The Native profile-delivery owner reuses the two retained Original profile authorities, and the isolated controller validates the repository holding those receipts before admitting the binding. The coordinator and recording regressions passed offline, including recording admission before any physical receipt exists.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.

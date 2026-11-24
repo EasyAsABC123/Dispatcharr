@@ -58,3 +58,43 @@ Keep their two epochs separate. Future missing-domain execution must declare
 the host snapshots the guest/shared tooling before app commands. The earlier
 runs retain their documented missing launch-tool-binding limit. Native paired
 execution and the full required M6 matrix remain open.
+
+### Ordinary recording61
+
+The recording61 owner uses the existing sealed ordinary Native AIO campaign and pinned Original comparator. The campaign
+still observes a signed 61-second booking, one real Beat publication, the exact
+broker/result UUID, natural retirement, full video/audio decode, separate strict
+diagnostics and typed Native cleanup. The checker replays the raw receipts
+through the sealed reducer and independently checks process settlement, decoder
+EOF, task identity and scoped teardown.
+
+During the coordinated final verification, prepare the frozen ordinary AMD64
+package and run `prepare_recording61.py TEMPLATE CANDIDATE.json FRESH-STAGE`.
+Supply `owner_bindings.m6.recording61` with the returned absolute `stage` and
+`seal`. Use `recording61_owner.dispatch_spec(stage, seal, candidate, repository,
+entrypoint, output)` to build the binding. The coordinator checks the binding
+offline before the stage has any execution receipts. It dispatches the physical
+owner itself after the one-off Beat predecessor, under the same exclusive lock.
+At launch the owner checks the live coordinator parent, its active attempt receipt
+and its exclusive lock descriptor on the same inode. The execution uses the
+explicit private daemon and scoped normal package environment. Cleanup and
+evaluation run through the coordinator's regular receipt flow.
+
+The retained 2d3ffe53 Native campaign is an offline regression input. Its receipts
+are refused for any other candidate. Use `check` to replay a completed historical
+stage offline.
+
+```sh
+M6_REPLAY_ARTIFACTS=/home/justin/github/Dispatcharr/artifacts/rust \
+M6_REPLAY_RECORDING61=/tmp/dispatcharr-2d3f-recording61-native \
+  python3 -B -m unittest discover -s scripts/rust-milestone-batches/m6 -p test_recording61_owner.py
+```
+
+The accompanying scheduler replay binds the four retained version200 Original
+worker/HTTP/SQL observations, the historical 239ba8 paired scheduled version200
+run, and the Original calendar observation. The calendar
+replay distinguishes the real Beat spring-gap publication and SQL persistence at
+the controlled clock from fall-fold, Lord Howe and quarter-hour calculation
+vectors. Current Native package version consumer/default Beat lineage and broader
+real calendar scenarios still need physical evidence. None of these retained
+scheduler observations promote a current Native release row.

@@ -14,6 +14,33 @@ c = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(c)
 
 
+class RetainedM235Custody(unittest.TestCase):
+    def test_uses_existing_default_without_an_explicit_repo(self):
+        default = Path("/reviewed/repo")
+        self.assertIs(c.retained_m235_repo({}, default), default)
+
+    def test_explicit_repo_must_own_the_bound_package_inputs(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory).resolve()
+            repo = root / "repo"
+            repo.mkdir()
+            manifest = repo / "manifest.json"
+            manifest.write_text("{}")
+            archive = repo / "source.tar"
+            archive.touch()
+            binding = {"repo": str(repo), "candidate": {
+                "manifest": {"path": str(manifest)}, "archive": {"path": str(archive)}}}
+            self.assertEqual(c.retained_m235_repo(binding, root), repo)
+            alias = repo / "alias.json"
+            alias.symlink_to(manifest)
+            for target in (str(alias), str(root)):
+                binding["candidate"]["manifest"]["path"] = target
+                with self.assertRaisesRegex(ValueError, "differs from bound package custody"):
+                    c.retained_m235_repo(binding, root)
+            with self.assertRaisesRegex(ValueError, "absolute existing"):
+                c.retained_m235_repo(binding | {"repo": "."}, root)
+
+
 class BindingFragments(unittest.TestCase):
     def setUp(self):
         directory = tempfile.TemporaryDirectory()

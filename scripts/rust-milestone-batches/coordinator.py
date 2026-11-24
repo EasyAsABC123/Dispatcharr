@@ -150,6 +150,23 @@ def validate(nodes, bindings):
                 raise ValueError("bound input changed: " + name)
 
 
+def retained_m235_repo(owner_binding, default):
+    """Use the reviewed fixture repository independently from a copied coordinator."""
+    if "repo" not in owner_binding:
+        return default
+    repo = Path(owner_binding["repo"])
+    if not repo.is_absolute() or not repo.is_dir() or repo.resolve() != repo:
+        raise ValueError("absolute existing frozen evidence repository required")
+    # A copied controller can use the same reviewed repository that owns its
+    # current package inputs. Merely pointing at any other copy is insufficient.
+    package = owner_binding.get("candidate", {})
+    for name in ("manifest", "archive"):
+        candidate = Path(package.get(name, {}).get("path", ""))
+        if not candidate.is_file() or candidate.resolve() != candidate or not candidate.is_relative_to(repo):
+            raise ValueError("retained Source repository differs from bound package custody")
+    return repo
+
+
 def owner_readiness(nodes, document, output=None):
     """An arbitrary argv binding cannot bypass an owner's actual readiness.
 
@@ -170,13 +187,15 @@ def owner_readiness(nodes, document, output=None):
             owner_binding = owners.get("m235", {})
             retained_sources = owner_binding.get("retained_sources", {})
             if key == "source/cache-and-profile-contexts" and "cache_profile_contexts" in retained_sources:
+                evidence_repo = retained_m235_repo(owner_binding, HERE.parents[1])
                 adapter = module(HERE / "m235/retained_cache_profile.py", "retained_cache_profile")
-                resolved = adapter.resolve(retained_sources["cache_profile_contexts"], HERE.parents[1])
+                resolved = adapter.resolve(retained_sources["cache_profile_contexts"], evidence_repo)
             elif key == "source/media-profile-and-format-workflows" and "media_profile_formats" in retained_sources:
+                evidence_repo = retained_m235_repo(owner_binding, HERE.parents[1])
                 cache_adapter = module(HERE / "m235/retained_cache_profile.py", "retained_cache_profile")
-                cache = cache_adapter.resolve(retained_sources.get("cache_profile_contexts"), HERE.parents[1])
+                cache = cache_adapter.resolve(retained_sources.get("cache_profile_contexts"), evidence_repo)
                 adapter = module(HERE / "m235/retained_source_media.py", "retained_source_media")
-                resolved = adapter.resolve(retained_sources["media_profile_formats"], HERE.parents[1], cache)
+                resolved = adapter.resolve(retained_sources["media_profile_formats"], evidence_repo, cache)
             else:
                 resolved = m235.resolve_node(key, owner_binding, HERE.parents[1])
             if resolved.get("status") == "retained_source_authority":
@@ -246,6 +265,16 @@ def owner_readiness(nodes, document, output=None):
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
         elif key in bindings and node["owner"] == "m6":
+            if key == "m6/recording61-video-audio":
+                owner = module(HERE / "m6/recording61_owner.py", "readiness_m6_recording61")
+                context = owners.get("m6", {}).get("recording61")
+                if not context:
+                    raise ValueError("M6 recording61 sealed campaign context required")
+                expected = owner.dispatch_spec(Path(context["stage"]), context["seal"],
+                                               document["candidate"], HERE.parents[1], node["entrypoint"], output)
+                if bindings[key] != expected:
+                    raise ValueError("M6 recording61 exact checker, cleanup, and evaluator binding required")
+                continue
             if key in {"m6/guide-current-output", "m6/second-import-replaces-title"}:
                 owner = module(HERE / "m6/second_import_owner.py", "readiness_m6_second_import")
                 if not {owner.SOURCE, owner.NATIVE} <= bindings.keys():
