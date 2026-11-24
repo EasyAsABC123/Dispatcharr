@@ -17,6 +17,10 @@ type Owner = Arc<dyn Send + Sync>;
 #[derive(Debug)]
 pub enum Error {
     Caught(String),
+    InterruptedBody {
+        message: String,
+        groups_result: String,
+    },
     Unsupported,
     Unsettled,
 }
@@ -120,11 +124,22 @@ pub async fn transfer(
             .parse::<u64>()
             .map_err(|_| Error::Unsupported)?,
     };
-    let mut body = dispatcharr_upstream_http::body_limited(
-        response,
-        PreparationLimits::default().cache_bytes as usize,
-    )
-    .map_err(|_| Error::Unsupported)?;
+    let limit = PreparationLimits::default().cache_bytes;
+    let plain_fixed_length = status == 200
+        && total > 0
+        && total <= limit
+        && matches!(
+            response.version(),
+            reqwest::Version::HTTP_10 | reqwest::Version::HTTP_11
+        )
+        && !response
+            .headers()
+            .contains_key(reqwest::header::CONTENT_ENCODING)
+        && !response
+            .headers()
+            .contains_key(reqwest::header::TRANSFER_ENCODING);
+    let mut body = dispatcharr_upstream_http::body_limited(response, limit as usize)
+        .map_err(|_| Error::Unsupported)?;
     let path = raw.clone();
     let url = input.url.clone();
     let retained = owner.clone();
@@ -150,19 +165,75 @@ pub async fn transfer(
             }
         }
     });
-    let flow=async {
-  observer.began(owner.clone()).await?;let start=Instant::now();let mut notified=Instant::now();let mut downloaded=0u64;
-  while let Some(chunk)=body.next().await {
-   let chunk=chunk.map_err(|_|Error::Unsupported)?;downloaded=downloaded.checked_add(chunk.len()as u64).ok_or(Error::Unsupported)?;
-   send.send(Write::Chunk(chunk.to_vec())).await.map_err(|_|Error::Unsettled)?;
-   let elapsed=start.elapsed().as_secs_f64();if total>0&&notified.elapsed()>=Duration::from_millis(500)&&elapsed>0.0 {
-    let speed=downloaded as f64/elapsed/1024.0;let progress=downloaded as f64/total as f64*100.0;let remaining=(total as f64-downloaded as f64)/(speed*1024.0);
-    observer.progress(Progress{progress,speed,elapsed,remaining,message:format!("Downloading: {progress:.1}% - {speed:.1} KB/s - {remaining:.1}s remaining")},owner.clone()).await?;notified=Instant::now();
-   }
-  }
-  if attempt.cookie_budget_exceeded(){return Err(Error::Unsupported)}
-  send.send(Write::Finish).await.map_err(|_|Error::Unsettled)
- }.await;
+    let flow = async {
+        observer.began(owner.clone()).await?;
+        let start = Instant::now();
+        let mut notified = Instant::now();
+        let mut downloaded = 0u64;
+        let mut last_progress_message: Option<String> = None;
+        while let Some(chunk) = body.next().await {
+            let chunk = chunk.map_err(|error| {
+                // Reqwest wraps incoming body framing errors as decoding errors.
+                // In this plain, fixed-length response there is no content decoder.
+                if plain_fixed_length
+                    && downloaded < total
+                    && error
+                        .get_ref()
+                        .and_then(|cause| cause.downcast_ref::<reqwest::Error>())
+                        .is_some_and(|cause| cause.is_decode() && !cause.is_timeout())
+                {
+                    Error::InterruptedBody {
+                        message: format!(
+                            "Connection error while fetching M3U file from URL: {}",
+                            input.url
+                        ),
+                        // Original persists the connection failure via a fresh query.
+                        // Groups returns the in-memory account's last download message.
+                        groups_result: last_progress_message
+                            .as_deref()
+                            .unwrap_or("Starting download...")
+                            .to_owned(),
+                    }
+                } else {
+                    Error::Unsupported
+                }
+            })?;
+            downloaded = downloaded
+                .checked_add(chunk.len() as u64)
+                .ok_or(Error::Unsupported)?;
+            send.send(Write::Chunk(chunk.to_vec()))
+                .await
+                .map_err(|_| Error::Unsettled)?;
+            let elapsed = start.elapsed().as_secs_f64();
+            if total > 0 && notified.elapsed() >= Duration::from_millis(500) && elapsed > 0.0 {
+                let speed = downloaded as f64 / elapsed / 1024.0;
+                let progress = downloaded as f64 / total as f64 * 100.0;
+                let remaining = (total as f64 - downloaded as f64) / (speed * 1024.0);
+                let message = format!(
+                    "Downloading: {progress:.1}% - {speed:.1} KB/s - {remaining:.1}s remaining"
+                );
+                observer
+                    .progress(
+                        Progress {
+                            progress,
+                            speed,
+                            elapsed,
+                            remaining,
+                            message: message.clone(),
+                        },
+                        owner.clone(),
+                    )
+                    .await?;
+                last_progress_message = Some(message);
+                notified = Instant::now();
+            }
+        }
+        if attempt.cookie_budget_exceeded() {
+            return Err(Error::Unsupported);
+        }
+        send.send(Write::Finish).await.map_err(|_| Error::Unsettled)
+    }
+    .await;
     drop(send);
     drop(body);
     let settled = writer.await.map_err(|_| Error::Unsettled)?;
@@ -240,4 +311,118 @@ async fn error_response(
     let preview = text.chars().take(1000).collect::<String>();
     let message=match status{884=>format!("Server returned HTTP 884 (authentication/authorization failure) from URL: {url}. Server message: {preview}"),800..=u16::MAX=>format!("Server returned non-standard HTTP status {status} from URL: {url}. Server message: {preview}"),404=>format!("M3U file not found (404) at URL: {url}. Server message: {preview}"),403=>format!("Access forbidden (403) to M3U file at URL: {url}. Server message: {preview}"),401=>format!("Authentication required (401) for M3U file at URL: {url}. Server message: {preview}"),500=>format!("Server error (500) while fetching M3U file from URL: {url}. Server message: {preview}"),_=>format!("HTTP error ({status}) while fetching M3U file from URL: {url}. Server message: {preview}")};
     Ok(Error::Caught(message))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::{
+        fs,
+        io::{Read, Write},
+        net::TcpListener,
+    };
+
+    struct Scratch(PathBuf);
+    impl Scratch {
+        fn new() -> Self {
+            let path = std::env::temp_dir().join(format!("remote-m3u-{}", uuid::Uuid::new_v4()));
+            fs::create_dir(&path).unwrap();
+            Self(path)
+        }
+    }
+
+    impl Drop for Scratch {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    struct NoopObserver;
+    impl Observer for NoopObserver {
+        fn starting(&self, _owner: Owner) -> BoxFuture<'_, Result<(), Error>> {
+            Box::pin(async { Ok(()) })
+        }
+
+        fn began(&self, _owner: Owner) -> BoxFuture<'_, Result<(), Error>> {
+            Box::pin(async { Ok(()) })
+        }
+
+        fn progress(&self, _value: Progress, _owner: Owner) -> BoxFuture<'_, Result<(), Error>> {
+            Box::pin(async { Ok(()) })
+        }
+    }
+
+    async fn short_transfer(content_encoding: &str, content_length: u64) -> (Error, String) {
+        let listener = TcpListener::bind("127.0.0.1:0").unwrap();
+        let url = format!("http://{}/broken-body", listener.local_addr().unwrap());
+        let response = format!(
+            "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: {content_length}\r\n{content_encoding}Connection: close\r\n\r\n"
+        );
+        let server = std::thread::spawn(move || {
+            let (mut socket, _) = listener.accept().unwrap();
+            socket
+                .set_read_timeout(Some(Duration::from_secs(10)))
+                .unwrap();
+            let mut request = Vec::new();
+            while !request.ends_with(b"\r\n\r\n") {
+                assert!(request.len() < 8192);
+                let mut byte = [0u8];
+                socket.read_exact(&mut byte).unwrap();
+                request.push(byte[0]);
+            }
+            socket.write_all(response.as_bytes()).unwrap();
+            socket
+                .write_all(b"#EXTM3U\n#EXTINF:-1,Fixture\nhttp://fixture/live\n")
+                .unwrap();
+            socket.flush().unwrap();
+        });
+
+        let scratch = Scratch::new();
+        fs::write(scratch.0.join("17.m3u"), b"previous cache").unwrap();
+        fs::write(scratch.0.join("17.json"), b"previous parsed cache").unwrap();
+        let result = transfer(
+            Input {
+                account: 17,
+                url: url.clone(),
+                agent: "Café".into(),
+                directory: scratch.0.clone(),
+                use_cache: false,
+            },
+            Arc::new(NoopObserver),
+            Arc::new(()),
+        )
+        .await;
+        server.join().unwrap();
+        let Err(error) = result else {
+            panic!("short transfer unexpectedly succeeded")
+        };
+        assert_eq!(
+            fs::read(scratch.0.join("17.m3u")).unwrap(),
+            b"previous cache"
+        );
+        assert_eq!(
+            fs::read(scratch.0.join("17.json")).unwrap(),
+            b"previous parsed cache"
+        );
+        assert_eq!(fs::read_dir(&scratch.0).unwrap().count(), 2);
+        (error, url)
+    }
+
+    #[tokio::test]
+    async fn interrupted_plain_playlist_uses_original_caught_message_after_writer_retirement() {
+        let (error, url) = short_transfer("", 144).await;
+        assert!(matches!(
+            error, Error::InterruptedBody { message, groups_result }
+                if message == format!("Connection error while fetching M3U file from URL: {url}")
+                   && groups_result == "Starting download..."
+        ));
+    }
+
+    #[tokio::test]
+    async fn encoded_and_oversized_transfers_do_not_use_plain_connection_error() {
+        let (encoded, _) = short_transfer("Content-Encoding: gzip\r\n", 144).await;
+        assert!(matches!(encoded, Error::Unsupported));
+        let (oversized, _) = short_transfer("", PreparationLimits::default().cache_bytes + 1).await;
+        assert!(matches!(oversized, Error::Unsupported));
+    }
 }

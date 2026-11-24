@@ -493,7 +493,21 @@ async fn execute_body(
         };
         let downloaded = match transfer {
             Ok(v) => v,
-            Err(dispatcharr_store::remote_m3u_io::Error::Caught(message_text)) => {
+            Err(error) => {
+                use dispatcharr_store::remote_m3u_io::Error as TransferError;
+                let (message_text, groups_result) = match error {
+                    TransferError::Caught(message) => (message, None),
+                    TransferError::InterruptedBody {
+                        message,
+                        groups_result,
+                    } => (message, Some(groups_result)),
+                    _ => {
+                        if let Some(lease) = group_lease {
+                            let _ = lease.release_owned_detailed().await;
+                        }
+                        return Err(fault("HTTP/file transfer"));
+                    }
+                };
                 prepared
                     .caught_remote_error(&message_text, "downloading")
                     .await
@@ -506,14 +520,8 @@ async fn execute_body(
                 return Ok(Outcome::Value(if message.kind == Kind::Single {
                     json!("Failed to update m3u account - download failed or other error")
                 } else {
-                    json!([message_text, null])
+                    json!([groups_result.unwrap_or(message_text), null])
                 }));
-            }
-            Err(_) => {
-                if let Some(lease) = group_lease {
-                    let _ = lease.release_owned_detailed().await;
-                }
-                return Err(fault("HTTP/file transfer"));
             }
         };
         prepared
