@@ -1512,7 +1512,10 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 
 - **M0 and M5** All 18 signed numeric AppData GET, HEAD and JSON OPTIONS cases matched Original, including selected response headers and unchanged tracked SQL. [AppData qualification](rust-m0-2d3ffe53-numeric-appdata-parity.md)
 - **M8** Fresh ARM64 Main created the missing scanner directories and kept the scheduler live. The test verified natural retention from five backups to two and durable schedule state after Main exited. The second same-package owner verified valid restore, credentials, schema, media and installed PostgreSQL files. [Fresh-volume schedule](rust-m8-2d3ffe53-arm64-fresh-scanner-schedule.md) · [Same-package PostgreSQL evidence](rust-m8-2d3ffe53-arm64-postgresql-group.md)
-- **M1** The exact AMD64 package passed six signed functional phases and three Original qualification windows at 1, 10 and 100 viewers, with a maximum of one concurrent upstream. Comparative CPU, memory and first-byte results are pending.
+- **M1** The exact AMD64 package passed six signed functional phases and nine paired performance runs at 1, 10 and 100 viewers, each sharing one active upstream. [Signed live performance and quality gates](rust-m1-2d3ffe53-amd64-signed-live-performance.md)
+
+- **M7** On Lappy, both configured HDHomeRun profiles returned decodable A/V before and after a graceful application restart on both backends. All deliveries used one upstream connection. [ARM64 HDHomeRun profiles](rust-m7-2d3ffe53-arm64-hdhr-two-profile-restart.md)
+- **M8 and M9** The held backup survived one TERM, completed after release of its PostgreSQL lock, and retired cleanly. A separate Original startup audit verified four live stock roots and retirement of the temporary observer. [ARM64 shutdown and startup diagnostics](rust-2d3ffe-arm64-backup-drain-and-memory-diagnostic.md)
 
 ## Latest scoped runtime evidence for 2ee64c43
 

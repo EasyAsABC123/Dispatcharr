@@ -1,0 +1,249 @@
+{
+  "candidate_image": "sha256:248614e76779972352315362fe306d60fac47c817dff924f1a7535644bc164c5",
+  "candidate_manifest_sha256": "ebcae7bc9c03c00fb21d9ee4a653b9ac3261bf83c81fe1198cbaa16bfb293b75",
+  "candidate_revision": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1",
+  "cohorts": [
+    {
+      "first_byte_p95_ms": {
+        "candidate": {
+          "maximum": 4.020723979920149,
+          "median": 3.853560017887503,
+          "minimum": 3.7825870094820857
+        },
+        "source": {
+          "maximum": 19.070741022005677,
+          "median": 18.334160035010427,
+          "minimum": 17.675370967481285
+        }
+      },
+      "maximum_first_byte_ratio_with_50_ms_floor": 1.0,
+      "median_paired_CPU_reduction_percent": 38.45530836652381,
+      "median_paired_working_memory_reduction_percent": 49.94562966031483,
+      "minimum_measured_throughput_ratio": 0.9830508474576272,
+      "pairs": 3,
+      "resource_measurements": {
+        "candidate": {
+          "median_cpu_percent": 1.6869518277661681,
+          "median_peak_working_memory_bytes": 237563904
+        },
+        "source": {
+          "median_cpu_percent": 2.7416048404458593,
+          "median_peak_working_memory_bytes": 482717696
+        }
+      },
+      "viewers": 1
+    },
+    {
+      "first_byte_p95_ms": {
+        "candidate": {
+          "maximum": 21.298513980582356,
+          "median": 19.103332015220076,
+          "minimum": 16.760367958340794
+        },
+        "source": {
+          "maximum": 166.81166901253164,
+          "median": 150.0163939781487,
+          "minimum": 140.12287504738197
+        }
+      },
+      "maximum_first_byte_ratio_with_50_ms_floor": 0.35682967526246306,
+      "median_paired_CPU_reduction_percent": 57.72452929424183,
+      "median_paired_working_memory_reduction_percent": 44.605217447506405,
+      "minimum_measured_throughput_ratio": 0.9830508474576272,
+      "pairs": 3,
+      "resource_measurements": {
+        "candidate": {
+          "median_cpu_percent": 1.8633161872912862,
+          "median_peak_working_memory_bytes": 280870912
+        },
+        "source": {
+          "median_cpu_percent": 4.598091075011087,
+          "median_peak_working_memory_bytes": 508248064
+        }
+      },
+      "viewers": 10
+    },
+    {
+      "first_byte_p95_ms": {
+        "candidate": {
+          "maximum": 150.41137399384752,
+          "median": 146.6012970195152,
+          "minimum": 138.44674895517528
+        },
+        "source": {
+          "maximum": 1875.231200014241,
+          "median": 1508.7613009964116,
+          "minimum": 1387.8252130234614
+        }
+      },
+      "maximum_first_byte_ratio_with_50_ms_floor": 0.10563383316846894,
+      "median_paired_CPU_reduction_percent": 87.39896967387546,
+      "median_paired_working_memory_reduction_percent": 47.56513567311179,
+      "minimum_measured_throughput_ratio": 0.9996552912788693,
+      "pairs": 3,
+      "resource_measurements": {
+        "candidate": {
+          "median_cpu_percent": 2.8163276162772664,
+          "median_peak_working_memory_bytes": 290246656
+        },
+        "source": {
+          "median_cpu_percent": 21.71310409267921,
+          "median_peak_working_memory_bytes": 553537536
+        }
+      },
+      "viewers": 100
+    }
+  ],
+  "fixed_thresholds": {
+    "first_byte_floor_ms": 50,
+    "maximum_CPU_ratio": 0.9,
+    "maximum_first_byte_ratio": 1.1,
+    "maximum_working_memory_ratio": 0.95,
+    "measurement_seconds": 60,
+    "minimum_delivered_bytes_ratio": 0.95,
+    "warmup_seconds": 15
+  },
+  "independent_review_sha256": "17d432e95e08d7802abd5164a4880755a98aafa09c4acf711969fa0e03c297cd",
+  "maximum_concurrent_upstream": 1,
+  "paired_ratios": [
+    {
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "ratios": {
+        "CPU": 0.6093061145301865,
+        "first_byte_p95": 1.0,
+        "memory": 0.5005437033968517,
+        "throughput": 0.9830508474576272
+      },
+      "trial": 1,
+      "viewers": 1
+    },
+    {
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "ratios": {
+        "CPU": 0.6189340092316623,
+        "first_byte_p95": 1.0,
+        "memory": 0.49119651084844423,
+        "throughput": 0.9830508474576272
+      },
+      "trial": 2,
+      "viewers": 1
+    },
+    {
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "ratios": {
+        "CPU": 0.6154469163347619,
+        "first_byte_p95": 1.0,
+        "memory": 0.5233492383622739,
+        "throughput": 1.0
+      },
+      "trial": 3,
+      "viewers": 1
+    },
+    {
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "ratios": {
+        "CPU": 0.40184658961448777,
+        "first_byte_p95": 0.35682967526246306,
+        "memory": 0.5591315022988229,
+        "throughput": 0.9897610921501706
+      },
+      "trial": 1,
+      "viewers": 10
+    },
+    {
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "ratios": {
+        "CPU": 0.43445735237276756,
+        "first_byte_p95": 0.2997392226574016,
+        "memory": 0.5526256406950131,
+        "throughput": 0.9830508474576272
+      },
+      "trial": 2,
+      "viewers": 10
+    },
+    {
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "ratios": {
+        "CPU": 0.4227547070575817,
+        "first_byte_p95": 0.3332969062520125,
+        "memory": 0.5539478255249359,
+        "throughput": 0.9982788296041308
+      },
+      "trial": 3,
+      "viewers": 10
+    },
+    {
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "ratios": {
+        "CPU": 0.1317734110232495,
+        "first_byte_p95": 0.10563383316846894,
+        "memory": 0.5299277222873595,
+        "throughput": 1.0001695202576708
+      },
+      "trial": 1,
+      "viewers": 100
+    },
+    {
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "ratios": {
+        "CPU": 0.12601030326124538,
+        "first_byte_p95": 0.08020950909557459,
+        "memory": 0.5219431695116291,
+        "throughput": 1.0
+      },
+      "trial": 2,
+      "viewers": 100
+    },
+    {
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "ratios": {
+        "CPU": 0.11350472690400848,
+        "first_byte_p95": 0.09176186376449522,
+        "memory": 0.5243486432688821,
+        "throughput": 0.9996552912788693
+      },
+      "trial": 3,
+      "viewers": 100
+    }
+  ],
+  "pairs": 9,
+  "physical_compose_cleanup": {
+    "project_labels_empty": true,
+    "retired_container_ids": 21
+  },
+  "physical_report_sha256": "6dcf1130d04c34eaf9e8f5176f0836ca602f6fda35eb975f881f14bde111cf57",
+  "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+  "resource_samples": 1062,
+  "schema": "dispatcharr-signed-live-ts-paired-performance/1",
+  "scope": "ordinary signed AMD64 live MPEG-TS performance",
+  "signed_readers": 666,
+  "source_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "windows": 18
+}
