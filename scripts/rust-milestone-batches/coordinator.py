@@ -17,7 +17,7 @@ import time
 
 HERE = Path(__file__).resolve().parent
 STATES = {"passed", "failed", "blocked", "not_run"}
-PARTIAL_PROBES = {"m6/api202-publication", "m6/default-job-graph"}
+PARTIAL_PROBES = {"m6/api202-publication", "m6/default-job-graph", "m6/programme-index"}
 
 
 def save(path, value):
@@ -265,6 +265,16 @@ def owner_readiness(nodes, document, output=None):
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
         elif key in bindings and node["owner"] == "m6":
+            if key == "m6/programme-index":
+                owner = module(HERE / "m6/programme_index_owner.py", "readiness_m6_programme_index")
+                context = owners.get("m6", {}).get("programme_index")
+                if not context:
+                    raise ValueError("M6 Programme Index sealed grouped stage required")
+                expected = owner.dispatch_spec(HERE.parents[1], Path(context["stage"]), context["seal"],
+                                               document["candidate"], node["entrypoint"], Path(output))
+                if bindings[key] != expected:
+                    raise ValueError("M6 Programme Index exact grouped owner binding required")
+                continue
             if key == "m6/scanner-first":
                 owner = module(HERE / "m6/scanner_first_owner.py", "readiness_m6_scanner_first")
                 context = owners.get("m6", {}).get("scanner_first")
