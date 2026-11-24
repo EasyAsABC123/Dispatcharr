@@ -20,9 +20,13 @@ fn cached_info_live_scope_uses_wall_clock_and_accepts_source_positive_get_ids() 
         assert!(!ordinary_cached_info_request(&Method::HEAD, Some(value)));
         assert!(!ordinary_cached_info_request(&Method::POST, Some(value)));
     }
+    for missing in [None, Some("")] {
+        assert!(ordinary_cached_info_request(&Method::GET, missing));
+        for method in [Method::HEAD, Method::POST, Method::OPTIONS] {
+            assert!(!ordinary_cached_info_request(&method, missing));
+        }
+    }
     for value in [
-        None,
-        Some(""),
         Some("0"),
         Some("-1"),
         Some("1.0"),

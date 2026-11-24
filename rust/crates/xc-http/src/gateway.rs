@@ -101,10 +101,14 @@ fn unsupported_action() -> StoreError {
 }
 fn ordinary_cached_info_request(method: &Method, id: Option<&str>) -> bool {
     method == Method::GET
-        && id
-            .and_then(dispatcharr_ingest_core::source_integer_literal)
-            .and_then(|raw| raw.parse::<i64>().ok())
-            .is_some_and(|id| id > 0)
+        && match id {
+            // The existing info lookup turns either missing spelling into
+            // Django's Not Found before touching the catalogue or provider.
+            None | Some("") => true,
+            Some(raw) => dispatcharr_ingest_core::source_integer_literal(raw)
+                .and_then(|raw| raw.parse::<i64>().ok())
+                .is_some_and(|id| id > 0),
+        }
 }
 struct Worker(Arc<Inner>);
 impl Drop for Worker {

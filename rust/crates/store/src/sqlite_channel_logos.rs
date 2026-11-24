@@ -1,8 +1,7 @@
 //! Read the Logo collection from the detached SQLite copy.
 //! Original Dispatcharr authors retain application and serializer credit.
-use crate::StoreError;
+use crate::{logos::page_window, StoreError};
 use futures_util::TryStreamExt;
-use num_bigint::BigInt;
 use serde_json::{json, Value};
 use sqlx::{types::Json, Connection, SqliteConnection};
 use std::collections::HashMap;
@@ -55,33 +54,6 @@ struct Page {
     count: usize,
     next: Option<String>,
     previous: Option<String>,
-}
-
-fn page_window(
-    values: &HashMap<String, String>,
-    count: usize,
-) -> Result<(usize, usize, usize), StoreError> {
-    use crate::json_compat::python_int_string;
-    let invalid_page = || StoreError::StatusBody(404, json!({"detail":"Invalid page."}));
-    let size = values
-        .get("page_size")
-        .and_then(|value| python_int_string(value).ok())
-        .and_then(|value| usize::try_from(value.min(BigInt::from(1000))).ok())
-        .filter(|&value| value != 0)
-        .unwrap_or(50);
-    let pages = count.div_ceil(size).max(1);
-    let number = match values.get("page").map(String::as_str) {
-        Some("last") => pages,
-        None | Some("") => 1,
-        Some(raw) => {
-            let number = python_int_string(raw).map_err(|_| invalid_page())?;
-            usize::try_from(number).map_err(|_| invalid_page())?
-        }
-    };
-    if number == 0 || number > pages {
-        return Err(invalid_page());
-    }
-    Ok((number, size, pages))
 }
 
 pub(crate) async fn select(

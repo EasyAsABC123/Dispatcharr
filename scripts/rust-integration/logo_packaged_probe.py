@@ -67,6 +67,7 @@ for case in fixture['cases']:
   selected={key:response.headers[key]for key in HEADERS if key in response.headers}
   if response.status_code!=expected['status']:failures.append('status')
   if digest(selected)!=digest(expected['headers']):failures.append('headers')
+  if case['name'].startswith('pagination-') and hashlib.sha256(response.content).hexdigest()!=expected['body_sha256']:failures.append('json_bytes')
   if 'json'in expected:
    try:equal=digest(normalize(response.json(),case['clock_hash']))==digest(normalize(expected['json'],case['clock_hash']))
    except ValueError:equal=False

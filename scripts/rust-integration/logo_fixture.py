@@ -116,6 +116,15 @@ case('cache-inactive',role='inactive')
 case('cache-head',method='HEAD')
 case('cache-local-head',method='HEAD',url='/data/logos/rust-probe-logo.png')
 base='/api/channels/logos/'
+for name,query in [
+ ('unicode','page=%D9%A2&page_size=1'),
+ ('underscore','page_size=0_1'),
+ ('signed','page=%2B2&page_size=%20%2B1%20'),
+ ('last','page=last&page_size=1'),
+ ('invalid','page=1__0'),
+ ('unpaginated','no_pagination=true&page=1__0'),
+]:
+ case('pagination-'+name,path=base+'?'+query,role='standard')
 for payload in [{},{'name':'new'},{'url':'x'},{'name':None,'url':None},{'name':' ','url':''},{'name':False,'url':True},{'name':42,'url':56},{'name':' '+('N'*260)+' ','url':'not-a-url','channel_count':9,'id':123},{'name':'unique','url':'https://fixture.invalid/duplicate.png'},['not-a-map']]:
  case('create-'+str(len(cases)),method='POST',path=base,role='admin',body={'json':payload})
 case('create-form',method='POST',path=base,role='admin',body={'form':{'name':' form name ','url':' plain text url '}})

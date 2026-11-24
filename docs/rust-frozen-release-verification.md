@@ -171,8 +171,13 @@ the request without redialing. Focused route, ticket, media-body and Main
 checks passed. The paired fixture runs unlimited and one-slot phases in
 the same application context per backend. It checks Redis ownership and
 viewer continuity, then requires full retirement before changing capacity.
-Remote owners, cross-profile switching and transformed streams still
-require coverage.
+The local product also covers switching and Next between two eligible
+unlimited direct profiles. It keeps the initial alias and releases the
+previous reservation. When the immediate saved Next target has no active
+default profile, the existing route reports the Original 404. The grouped
+fixture checks owner, viewer and counter continuity through both positive
+paths and the denial. Multi-worker remote switching and other profile shapes
+still require coverage.
 
 The ordinary Series DVR API can save a signed rule through the existing
 DVR permission and settings writer. The worker evaluates a saved exact-title
@@ -222,6 +227,36 @@ also admits the canonical saved URL override. For a refresh of a local
 upload, explicitly disabling automatic live group enablement applies to new
 relationships while preserving existing group toggles. The paired fixtures
 will verify the saved configuration, result and persisted stream hashes.
+
+The Programme Index writer settles the failed PostgreSQL transaction
+and waits for its trailing reply before releasing the owned job. The final
+fault fixture must show the job staying active while that reply is held.
+Local XMLTV refreshes with a missing file or a readable nonempty truncated
+file preserve guide data. After status and locks settle, the worker returns
+the measured null result. Their paired API fixture shares the signed
+publication, worker, Redis, SQL and event checks.
+
+An interrupted plain HTTP M3U download with a bounded declared length
+preserves both old cache files and publishes the same saved connection
+error as Original. Focused loopback tests passed. The grouped remote-owner
+fixture waits for observed download progress before closing the Origin
+connection. It compares that progress with the worker's terminal result
+and verifies the independently persisted account error and cache digests.
+
+## Channel logo pagination and Xtream information
+
+The ordinary PostgreSQL Logo API uses the same Python-style integer parsing
+for pagination as the copied SQLite API. Supplied forms include Unicode
+decimal digits, underscores and explicit plus signs. The existing paired
+Logo fixture adds six signed cases and checks exact JSON bytes alongside its
+existing SQL, file and Origin checks.
+
+Ordinary Xtream Movie and Series information GETs with an omitted ID now
+pass through the existing authenticated lookup to the measured HTTP 404.
+The paired Xtream fixture reuses its signed catalogue and metadata owner.
+It checks the two missing-ID cases for exact response bytes and no further
+provider or datastore effects. Focused Rust tests passed for both API
+changes. Packaged acceptance still uses the final common revision.
 
 ## One frozen verification campaign
 

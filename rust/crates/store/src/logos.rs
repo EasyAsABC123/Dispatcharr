@@ -14,6 +14,7 @@ use axum::{
     Json, Router,
 };
 use md5::{Digest, Md5};
+use num_bigint::BigInt;
 use serde_json::{json, Map, Value};
 use sqlx::{Postgres, QueryBuilder};
 use std::{
@@ -225,6 +226,33 @@ pub(crate) async fn serialized(
         .await
         .map_err(|_| StoreError::StatusBody(503, json!({"detail":"Logo metadata unavailable."})))
 }
+pub(crate) fn page_window(
+    values: &HashMap<String, String>,
+    count: usize,
+) -> Result<(usize, usize, usize), StoreError> {
+    use crate::json_compat::python_int_string;
+    let invalid_page = || StoreError::StatusBody(404, json!({"detail":"Invalid page."}));
+    let size = values
+        .get("page_size")
+        .and_then(|value| python_int_string(value).ok())
+        .and_then(|value| usize::try_from(value.min(BigInt::from(1000))).ok())
+        .filter(|&value| value != 0)
+        .unwrap_or(50);
+    let pages = count.div_ceil(size).max(1);
+    let number = match values.get("page").map(String::as_str) {
+        Some("last") => pages,
+        None | Some("") => 1,
+        Some(raw) => {
+            let number = python_int_string(raw).map_err(|_| invalid_page())?;
+            usize::try_from(number).map_err(|_| invalid_page())?
+        }
+    };
+    if number == 0 || number > pages {
+        return Err(invalid_page());
+    }
+    Ok((number, size, pages))
+}
+
 async fn read(
     auth: AuthService,
     peer: SocketAddr,
@@ -258,32 +286,11 @@ async fn read(
             json!({"detail":"No Logo matches the given query."}),
         ));
     }
-    let size = values
-        .get("page_size")
-        .and_then(|v| v.trim().parse::<usize>().ok())
-        .filter(|v| *v > 0)
-        .unwrap_or(50)
-        .min(1000);
-    let pages = count.div_ceil(size).max(1);
-    let page = if no_pagination {
-        1
-    } else if values.get("page").is_some_and(|v| v == "last") {
-        pages
+    let (page, size, pages) = if no_pagination {
+        (1, 50, 1)
     } else {
-        values
-            .get("page")
-            .filter(|v| !v.is_empty())
-            .map(|v| v.trim().parse::<usize>())
-            .transpose()
-            .map_err(|_| StoreError::StatusBody(404, json!({"detail":"Invalid page."})))?
-            .unwrap_or(1)
+        page_window(&values, count)?
     };
-    if page == 0 || page > pages {
-        return Err(StoreError::StatusBody(
-            404,
-            json!({"detail":"Invalid page."}),
-        ));
-    }
     let mut query=QueryBuilder::new(format!("SELECT json_build_object('id',l.id,'name',l.name,'url',l.url,'channel_count',(SELECT count(*) FROM dispatcharr_channels_channel c WHERE c.logo_id=l.id),'channel_names',COALESCE((SELECT json_agg('Channel: '||n.name) FROM (SELECT c.name FROM dispatcharr_channels_channel c WHERE c.logo_id=l.id LIMIT 5)n),'[]'::json)){FROM}"));
     filters(&mut query, &pairs);
     if let Some(id) = detail {
@@ -322,24 +329,7 @@ async fn read(
     } else {
         None
     };
-    let previous = if page > 2 {
-        Some(page_url(&base, page - 1))
-    } else if page == 2 {
-        let mut previous = base.clone();
-        let mut pairs = previous
-            .query_pairs()
-            .filter(|(k, _)| k != "page")
-            .map(|(k, v)| (k.into_owned(), v.into_owned()))
-            .collect::<Vec<_>>();
-        pairs.sort_by(|a, b| a.0.cmp(&b.0));
-        previous.query_pairs_mut().clear().extend_pairs(pairs);
-        if previous.query() == Some("") {
-            previous.set_query(None);
-        }
-        Some(previous.to_string())
-    } else {
-        None
-    };
+    let previous = crate::streams::previous(&base, page);
     Ok(Json(
         json!({"count":count,"next":next,"previous":previous,"results":rows}),
     ))
@@ -492,6 +482,30 @@ mod tests {
         let original_serialization = serialize(payload, "http://localhost");
         assert_eq!(original_serialization, list["results"][0]);
         assert_ne!(serde_json::to_string(&original_serialization).unwrap(), row);
+    }
+
+    #[test]
+    fn postgres_logo_pagination_accepts_original_integer_forms() {
+        let options = |query| {
+            params(&format!("/api/channels/logos/?{query}").parse().unwrap())
+                .into_iter()
+                .collect()
+        };
+        for query in [
+            "page=%D9%A2&page_size=1_0",
+            "page=%2B2&page_size=%20%2B10%20",
+            "page=last&page=2&page_size=3&page_size=10",
+        ] {
+            assert_eq!(page_window(&options(query), 51).unwrap(), (2, 10, 6));
+        }
+        assert_eq!(
+            page_window(&options("page=last&page_size=999999"), 2030).unwrap(),
+            (3, 1000, 3)
+        );
+        assert!(matches!(
+            page_window(&options("page=1__0"), 51),
+            Err(StoreError::StatusBody(404, _))
+        ));
     }
 
     #[test]
