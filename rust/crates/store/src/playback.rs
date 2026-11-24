@@ -137,7 +137,13 @@ fn std_sample_credential_pool(
         || url.as_str() != sample
         || !url.username().is_empty()
         || url.password().is_some()
-        || url.query().is_some()
+        || url.query().is_some_and(|query| {
+            // Original's typed lookup scans the entire sample URL. Restrict
+            // this query slice to bytes that cannot introduce a second path.
+            !query.bytes().all(|byte| {
+                byte.is_ascii_alphanumeric() || matches!(byte, b'-' | b'_' | b'.' | b'=' | b'&')
+            })
+        })
         || url.fragment().is_some()
     {
         return Err(unsupported_std_sample());
@@ -502,7 +508,10 @@ impl Store {
                 return Err(playback_capacity());
             }
         }
-        let ordinary_std_pool = preview.is_none() && profile_locked && profile_name == "Proxy";
+        // Source Channel.get_stream reserves the provider credential pool before
+        // choosing an input transport. Both the direct and command-backed channel
+        // candidates carry that pool to the same reservation owner.
+        let ordinary_std_pool = preview.is_none() && !redirect;
         let mut std_accounts = Vec::new();
         if ordinary_std_pool {
             for row in &rows {
@@ -640,9 +649,7 @@ impl Store {
                         &current.password,
                     )?)
                 }
-                (Some(group), true)
-                    if account_type == "STD" && ordinary_std_pool && input_command.is_none() =>
-                {
+                (Some(group), true) if account_type == "STD" && ordinary_std_pool => {
                     let account: i64 = row.try_get("provider_account_id")?;
                     let sample = std_samples
                         .get(&account)
@@ -1349,12 +1356,37 @@ mod output_tests {
     }
 
     #[test]
+    fn ordinary_std_account_sample_query_preserves_path_and_saved_identity() {
+        let endpoint = "http://origin.invalid";
+        let saved = xc_credential_pool(7, 1, "saved", "account").unwrap();
+        let media = xc_credential_pool(7, 1, "media", "pair").unwrap();
+        for query in ["?key=abc123", "?key=abc-_.123&mode=auto"] {
+            let typed = format!("{endpoint}/live/media/pair/1.ts{query}");
+            let short = format!("{endpoint}/media/pair/1.ts{query}");
+            assert_eq!(
+                std_sample_credential_pool(7, 1, &typed, "saved", "account").unwrap(),
+                media
+            );
+            assert_eq!(
+                std_sample_credential_pool(7, 1, &short, "saved", "account").unwrap(),
+                saved
+            );
+            assert_eq!(
+                std_sample_credential_pool(7, 1, &short, "", "").unwrap(),
+                media
+            );
+        }
+    }
+
+    #[test]
     fn ordinary_std_account_sample_rejects_unqualified_path_shapes() {
         for suffix in [
             "/",
             "/live/only-two.ts",
             "/movie/a/b/1.ts",
-            "/a/b/1.ts?query=1",
+            "/a/b/1.ts?key=/live/other/pair/id.ts",
+            "/a/b/1.ts?key=%2Flive%2Fother%2Fpair%2Fid.ts",
+            "/a/b/1.ts?key=abc#fragment",
             "/a/b/1.ts/",
             "/a%20b/c/1.ts",
         ] {

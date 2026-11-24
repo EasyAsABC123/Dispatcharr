@@ -119,6 +119,7 @@ impl ArchiveResolver for Resolver {
                 account_id: self.profile,
                 profile_id,
                 max_streams: 1,
+                credential_pool: None,
                 provider_stream_id: "fixture".into(),
                 provider_timestamp: "2026-11-09:11-00".into(),
                 provider_timezone: None,

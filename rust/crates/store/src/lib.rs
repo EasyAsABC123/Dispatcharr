@@ -126,6 +126,17 @@ pub use django_admin_session::{
 pub use passwords::verify_password;
 pub use playback::{ProviderStream, ResolvedChannel};
 
+/// Derive the Original shared capacity counter for an XC login already resolved
+/// by the selected provider profile.
+pub fn xc_group_credential_pool(
+    group: i64,
+    maximum: u32,
+    username: &str,
+    password: &str,
+) -> Result<dispatcharr_contracts::PlaybackCredentialPool, StoreError> {
+    playback::xc_credential_pool(group, maximum, username, password)
+}
+
 use serde_json::Value;
 use sqlx::{postgres::PgPoolOptions, PgPool, Row};
 use std::{net::IpAddr, time::Duration};

@@ -77,6 +77,7 @@ fn request(sid: &str, profile: i64) -> ArchivePoolRequest {
         virtual_channel_id: format!("123_fixture_{sid}"),
         provider_profile_id: profile,
         provider_max_streams: 1,
+        provider_credential_pool: None,
         stream_limit: 0,
         limit_policy: Default::default(),
         pool_fields: BTreeMap::from([

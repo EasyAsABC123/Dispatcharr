@@ -499,7 +499,11 @@ impl CatchupMedia {
                     if self
                         .inner
                         .pool
-                        .redirect_capacity(candidate.profile_id, candidate.max_streams)
+                        .redirect_capacity(
+                            candidate.profile_id,
+                            candidate.max_streams,
+                            candidate.credential_pool.as_ref(),
+                        )
                         .await?
                     {
                         let build = if query_layout {
@@ -891,6 +895,7 @@ fn descriptor(
         virtual_channel_id,
         provider_profile_id: candidate.profile_id,
         provider_max_streams: candidate.max_streams,
+        provider_credential_pool: candidate.credential_pool.clone(),
         stream_limit: source.user.stream_limit.max(0) as u32,
         limit_policy: source.limit_policy.clone(),
         pool_fields,

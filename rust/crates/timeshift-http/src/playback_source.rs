@@ -1,7 +1,10 @@
 //! Provider setup ported from Dispatcharr's catch-up view/helpers.
 //! Original Dispatcharr authors and contributors retain all application credit.
 use dispatcharr_contracts::UserLimitPolicy;
-use dispatcharr_store::{AuthService, ChannelIdentity, Store, StoreError, User};
+use dispatcharr_coordination::CredentialPool;
+use dispatcharr_store::{
+    xc_group_credential_pool, AuthService, ChannelIdentity, Store, StoreError, User,
+};
 use dispatcharr_timeshift_core::{
     candidate_urls, client_duration_window, parse_timestamp, programme_age_days,
     provider_timestamp, utc_timestamp, ProviderCredentials, DEFAULT_DURATION_MINUTES,
@@ -17,6 +20,7 @@ pub struct CatchupCandidate {
     pub account_id: i64,
     pub profile_id: i64,
     pub max_streams: u32,
+    pub credential_pool: Option<CredentialPool>,
     pub provider_stream_id: String,
     pub provider_timestamp: String,
     pub provider_timezone: Option<String>,
@@ -24,6 +28,22 @@ pub struct CatchupCandidate {
     pub urls: Vec<String>,
     pub user_agent: String,
 }
+fn archive_credential_pool(
+    group: Option<i64>,
+    maximum: u32,
+    credentials: &ProviderCredentials,
+) -> Result<Option<CredentialPool>, StoreError> {
+    let Some(group) = group.filter(|_| maximum > 0) else {
+        return Ok(None);
+    };
+    let pool =
+        xc_group_credential_pool(group, maximum, &credentials.username, &credentials.password)?;
+    Ok(Some(CredentialPool {
+        counter_key: pool.counter_key,
+        max_streams: pool.max_streams,
+    }))
+}
+
 pub struct CatchupSource {
     pub user: User,
     pub channel: ChannelIdentity,
@@ -200,11 +220,6 @@ impl SqlCatchupResolver {
             };
             let search: String = row.try_get("search_pattern")?;
             let replacement: String = row.try_get("replace_pattern")?;
-            if row.try_get::<Option<i64>, _>("server_group_id")?.is_some() {
-                return Err(StoreError::Unsupported(
-                    "Catch-up server-group credentials are not implemented",
-                ));
-            }
             let (Some(server), Some(username), Some(password)) = (
                 row.try_get::<Option<String>, _>("server_url")?,
                 row.try_get::<Option<String>, _>("username")?,
@@ -217,6 +232,12 @@ impl SqlCatchupResolver {
             else {
                 continue;
             };
+            let max_streams = row.try_get::<i32, _>("max_streams")?.max(0) as u32;
+            let credential_pool = archive_credential_pool(
+                row.try_get("server_group_id")?,
+                max_streams,
+                &credentials,
+            )?;
             let default_properties: Option<Value> = row.try_get("default_properties")?;
             let zone = default_properties
                 .as_ref()
@@ -229,7 +250,8 @@ impl SqlCatchupResolver {
                 stream_id: row.try_get("stream_id")?,
                 account_id: row.try_get("account_id")?,
                 profile_id,
-                max_streams: row.try_get::<i32, _>("max_streams")?.max(0) as u32,
+                max_streams,
+                credential_pool,
                 provider_stream_id: stream,
                 provider_timestamp: local_timestamp,
                 provider_timezone: zone.map(str::to_owned),
@@ -360,6 +382,29 @@ fn normalized_server(value: &str) -> Option<String> {
 
 #[cfg(test)]
 mod tests {
+    #[test]
+    fn catchup_group_uses_the_shared_counter_only_for_limited_profiles() {
+        let credentials = super::ProviderCredentials {
+            server_url: "http://fixture.invalid".into(),
+            username: " Sample-Login ".into(),
+            password: " sample-pass ".into(),
+        };
+        assert!(super::archive_credential_pool(Some(17), 0, &credentials)
+            .unwrap()
+            .is_none());
+        assert!(super::archive_credential_pool(None, 2, &credentials)
+            .unwrap()
+            .is_none());
+        let group = super::archive_credential_pool(Some(17), 2, &credentials)
+            .unwrap()
+            .unwrap();
+        let current =
+            dispatcharr_store::xc_group_credential_pool(17, 2, "sample-login", "sample-pass")
+                .unwrap();
+        assert_eq!(group.counter_key, current.counter_key);
+        assert_eq!(group.max_streams, 2);
+    }
+
     use super::*;
 
     #[test]

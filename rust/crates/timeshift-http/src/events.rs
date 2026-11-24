@@ -242,6 +242,7 @@ mod tests {
             virtual_channel_id: media.to_owned(),
             provider_profile_id: profile,
             provider_max_streams: 2,
+            provider_credential_pool: None,
             stream_limit: 0,
             limit_policy: UserLimitPolicy::default(),
             pool_fields: BTreeMap::from([
@@ -431,6 +432,7 @@ mod tests {
                 virtual_channel_id: "1_fixture".into(),
                 provider_profile_id: profile,
                 provider_max_streams: 2,
+                provider_credential_pool: None,
                 stream_limit: 0,
                 limit_policy: UserLimitPolicy::default(),
                 pool_fields: BTreeMap::from([

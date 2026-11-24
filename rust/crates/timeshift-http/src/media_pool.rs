@@ -3,7 +3,9 @@
 use crate::events::Producer;
 use dispatcharr_clients::timeshift::{self, Admission};
 use dispatcharr_contracts::UserLimitPolicy;
-use dispatcharr_coordination::{AcquireRequest, Coordinator, Lease, ProviderReservation};
+use dispatcharr_coordination::{
+    AcquireRequest, Coordinator, CredentialPool, Lease, ProviderReservation,
+};
 use dispatcharr_output_store::transport::{RedisTransport, TransportConfig};
 use dispatcharr_store::StoreError;
 use serde_json::json;
@@ -27,6 +29,7 @@ pub struct ArchivePoolRequest {
     pub virtual_channel_id: String,
     pub provider_profile_id: i64,
     pub provider_max_streams: u32,
+    pub provider_credential_pool: Option<CredentialPool>,
     pub stream_limit: u32,
     pub limit_policy: UserLimitPolicy,
     pub pool_fields: BTreeMap<String, String>,
@@ -386,14 +389,33 @@ impl ArchivePool {
         &self,
         profile: i64,
         maximum: u32,
+        credential_pool: Option<&CredentialPool>,
     ) -> Result<bool, StoreError> {
         if maximum == 0 {
             return Ok(true);
         }
-        let (available,_):(i64,())=self.inner.transport.command(
-            "local value=tonumber(redis.call('GET',KEYS[1]) or '0');if not value then return redis.error_reply('invalid profile counter') end return value<tonumber(ARGV[1]) and 1 or 0",
-            &[format!("profile_connections:{profile}")],&[maximum.to_string().as_bytes()],()
-        ).await.map_err(|_|unavailable())?;
+        let mut counters = vec![format!("profile_connections:{profile}")];
+        let mut limits = vec![maximum.to_string()];
+        if let Some(pool) = credential_pool {
+            counters.push(pool.counter_key.clone());
+            limits.push(pool.max_streams.to_string());
+        }
+        let limits: Vec<_> = limits.iter().map(|limit| limit.as_bytes()).collect();
+        let (available, _): (i64, ()) = self
+            .inner
+            .transport
+            .command(
+                "for i,key in ipairs(KEYS) do
+                 local count=tonumber(redis.call('GET',key) or '0')
+                 if not count then return redis.error_reply('invalid provider counter') end
+                 if count>=tonumber(ARGV[i]) then return 0 end
+             end return 1",
+                &counters,
+                &limits,
+                (),
+            )
+            .await
+            .map_err(|_| unavailable())?;
         Ok(available == 1)
     }
     pub async fn busy_probe(
@@ -898,13 +920,14 @@ impl ArchivePool {
                     channel_id: entry.request.session_id.clone(),
                     provider_profile_id: Some(entry.request.provider_profile_id),
                     provider_max_streams: entry.request.provider_max_streams,
-                    credential_pool: None,
+                    credential_pool: entry.request.provider_credential_pool.clone(),
                 },
                 Arc::new(Operation::new(entry)),
             )
             .await
             .map_err(|error| match error {
-                dispatcharr_coordination::Error::ProfileFull => {
+                dispatcharr_coordination::Error::ProfileFull
+                | dispatcharr_coordination::Error::CredentialFull => {
                     StoreError::StatusBody(503, json!("No available stream"))
                 }
                 dispatcharr_coordination::Error::OwnerHeld => {
@@ -998,7 +1021,7 @@ impl ArchivePool {
         let provider = ProviderReservation {
             profile_id: Some(request.provider_profile_id),
             max_streams: request.provider_max_streams,
-            credential_pool: None,
+            credential_pool: request.provider_credential_pool.clone(),
         };
         // This owned task retains rollback through quota reservation even when
         // the HTTP setup future is dropped before Redis returns.
@@ -1012,7 +1035,8 @@ impl ArchivePool {
         });
         let (reserved, rollback) = task.await.map_err(|_| unavailable())?;
         reserved.map_err(|error| match error {
-            dispatcharr_coordination::Error::ProfileFull => {
+            dispatcharr_coordination::Error::ProfileFull
+            | dispatcharr_coordination::Error::CredentialFull => {
                 StoreError::StatusBody(503, json!("No available stream"))
             }
             _ => unavailable(),
@@ -1961,9 +1985,28 @@ mod direct_tests {
         assert_eq!(pool.owner_state(&exact, user + 1).await.unwrap(), 1);
         let counter = format!("profile_connections:{user}");
         let _: () = redis.set(&counter, 1).await.unwrap();
-        assert!(!pool.redirect_capacity(user, 1).await.unwrap());
-        assert!(pool.redirect_capacity(user, 0).await.unwrap());
+        assert!(!pool.redirect_capacity(user, 1, None).await.unwrap());
+        assert!(pool.redirect_capacity(user, 0, None).await.unwrap());
+        let credential = CredentialPool {
+            counter_key: format!("server_group_connections:{user}:0a1b2c3d4e5f6789"),
+            max_streams: 2,
+        };
+        let _: () = redis.set(&credential.counter_key, 2).await.unwrap();
+        assert!(pool.redirect_capacity(user, 2, None).await.unwrap());
+        assert!(!pool
+            .redirect_capacity(user, 2, Some(&credential))
+            .await
+            .unwrap());
+        assert!(pool
+            .redirect_capacity(user, 0, Some(&credential))
+            .await
+            .unwrap());
         assert_eq!(redis.get::<_, i64>(&counter).await.unwrap(), 1);
+        assert_eq!(
+            redis.get::<_, i64>(&credential.counter_key).await.unwrap(),
+            2
+        );
+        let _: () = redis.del(&credential.counter_key).await.unwrap();
         let _: () = redis
             .del(&[
                 format!("timeshift:pool:{first}"),

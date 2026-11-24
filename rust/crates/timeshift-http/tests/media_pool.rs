@@ -46,6 +46,7 @@ fn request(sid: &str, profile: i64) -> ArchivePoolRequest {
         virtual_channel_id: "123_2026-11-09T11-00-00Z_fixture".into(),
         provider_profile_id: profile,
         provider_max_streams: 1,
+        provider_credential_pool: None,
         stream_limit: 0,
         limit_policy: Default::default(),
         pool_fields: BTreeMap::from([
@@ -127,8 +128,17 @@ async fn cross_worker_idle_reopen_fences_the_old_finalizer_and_reuses_one_provid
     let [first_pool, second_pool, contender]: [ArchivePool; 3] = pools.try_into().ok().unwrap();
     let sid = uuid::Uuid::new_v4().to_string();
     let profile = (uuid::Uuid::new_v4().as_u128() % 1_000_000_000_000) as i64 + 1000;
+    let group =
+        dispatcharr_store::xc_group_credential_pool(profile, 1, "archive-fixture", "fixture-key")
+            .unwrap();
+    let credential_pool = dispatcharr_coordination::CredentialPool {
+        counter_key: group.counter_key,
+        max_streams: group.max_streams,
+    };
+    let credential_key = &credential_pool.counter_key;
     let new_request = || {
         let mut request = request(&sid, profile);
+        request.provider_credential_pool = Some(credential_pool.clone());
         request
             .client_fields
             .insert("programme_vid".into(), request.virtual_channel_id.clone());
@@ -148,6 +158,20 @@ async fn cross_worker_idle_reopen_fences_the_old_finalizer_and_reuses_one_provid
     let connected: String = redis.hget(&client, "connected_at").await.unwrap();
     let initialized: String = redis.hget(&metadata, "init_time").await.unwrap();
     assert_eq!(redis.get::<_, u64>(&provider).await.unwrap(), 1);
+    assert_eq!(redis.get::<_, u64>(credential_key).await.unwrap(), 1);
+    let alternate_session = uuid::Uuid::new_v4().to_string();
+    let mut alternate = request(&alternate_session, profile + 1);
+    alternate.provider_credential_pool = Some(credential_pool.clone());
+    assert!(matches!(contender.open(alternate).await,
+        Err(dispatcharr_store::StoreError::StatusBody(503, detail))
+        if detail == serde_json::json!("No available stream")));
+    wait(async || contender.is_idle()).await;
+    let alternate_count: Option<u64> = redis.get(profile_key(profile + 1)).await.unwrap();
+    assert_eq!(alternate_count.unwrap_or(0), 0);
+    assert!(!redis
+        .exists::<_, bool>(pool_key(&alternate_session))
+        .await
+        .unwrap());
     assert!(contender.open(new_request()).await.is_err());
     wait(async || contender.is_idle()).await;
     first.forwarded(8192);
@@ -163,6 +187,8 @@ async fn cross_worker_idle_reopen_fences_the_old_finalizer_and_reuses_one_provid
     .await;
     assert!(!redis.exists::<_, bool>(&owner).await.unwrap());
     assert_eq!(redis.get::<_, u64>(&provider).await.unwrap(), 0);
+    let released: Option<u64> = redis.get(credential_key).await.unwrap();
+    assert_eq!(released.unwrap_or(0), 0);
     let mut wrong_profile = new_request();
     wrong_profile.provider_profile_id += 1;
     wrong_profile.pool_fields.insert(
@@ -201,6 +227,7 @@ async fn cross_worker_idle_reopen_fences_the_old_finalizer_and_reuses_one_provid
     // Shutting down the first worker forces its old finalizer during playback.
     assert!(first_pool.shutdown().await);
     assert!(second.alive().await.unwrap());
+    assert_eq!(redis.get::<_, u64>(credential_key).await.unwrap(), 1);
     assert_eq!(redis.get::<_, u64>(&provider).await.unwrap(), 1);
     assert_eq!(
         redis
@@ -239,7 +266,12 @@ async fn cross_worker_idle_reopen_fences_the_old_finalizer_and_reuses_one_provid
     assert!(contender.shutdown().await);
     assert!(!redis.exists::<_, bool>(&owner).await.unwrap());
     assert!(!redis.exists::<_, bool>(&pool).await.unwrap());
-    let _: () = redis.del(provider).await.unwrap();
+    let released: Option<u64> = redis.get(credential_key).await.unwrap();
+    assert_eq!(released.unwrap_or(0), 0);
+    let _: () = redis
+        .del(&[provider, profile_key(profile + 1), credential_key.clone()])
+        .await
+        .unwrap();
 }
 
 #[tokio::test]
