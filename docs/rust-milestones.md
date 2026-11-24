@@ -1538,6 +1538,9 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 - **M2 and M5** Ordinary Main verified its expiry clock from load dispatch. The current Chromium pair saved and reloaded the setting, with signed Standard writes denied. The separate AMD64 signed pair verified the live callback and restart. [Cache clock and browser Settings](rust-2d3ffe53-cache-clock-and-react-settings.md) · [Signed settings restart](rust-m5-2d3ffe53-amd64-signed-settings-pair.md)
 - **M8** Four real Store callback cases and two Job Transport lifecycle checks passed on the compiled current peers, with exact cleanup. [Backup lifecycle tests](rust-m8-2d3ffe53-amd64-backup-lifecycle-components.md)
 
+- **M0** The current ordinary AMD64 baseline passed 18 suites and 1,024 checks. The independently reconciled release matrix now has 14 current executions, 4 retained Original authorities and 109 open rows. [Packaged baseline and current matrix](rust-m0-2d3ffe53-amd64-baseline-all.md)
+- **M6** The ordinary scheduler reinstalled a disabled default, matched three startup terminals and the recurring scopes, and kept the count durable across shutdown. [Current scheduler evidence](rust-m6-2d3ffe53-amd64-ordinary-recurring-scheduler.md)
+
 ## Latest scoped runtime evidence for 2ee64c43
 
 - **M6** Eleven signed invalid string IDs now match the Original 500 response, with no broker publication. Both ordinary packages passed signed startup and the exact source passed 1,775 workspace tests. [Invalid guide input evidence](rust-m6-2ee64c43-invalid-guide-ids.md)
