@@ -1,11 +1,18 @@
 //! Original Dispatcharr core helper read APIs. Original authors retain credit.
 //! The timezone dataset is pinned to the original runtime, not the host OS.
-use crate::{AuthService, StoreError};
+use crate::{
+    channels::{
+        channel_options_headers, channel_options_indentation, options_json_response,
+        serialize_options_json,
+    },
+    AuthService, StoreError,
+};
 #[path = "persisted_log_list.rs"]
 mod persisted_logs;
 use axum::{
     extract::{ConnectInfo, RawQuery, State},
-    http::HeaderMap,
+    http::{header, HeaderMap, HeaderValue, StatusCode, Uri},
+    response::{IntoResponse, Response},
     routing::get,
     Json, Router,
 };
@@ -14,6 +21,8 @@ use num_bigint::BigInt;
 use serde_json::{json, Map, Value};
 use sqlx::Row;
 use std::{net::SocketAddr, sync::OnceLock};
+
+const TIMEZONE_ALLOW: HeaderValue = HeaderValue::from_static("GET, HEAD, OPTIONS");
 
 fn timezone_data() -> &'static Value {
     static DATA: OnceLock<Value> = OnceLock::new();
@@ -31,17 +40,57 @@ fn timezone_data() -> &'static Value {
                 .expect("timezone group")
                 .push(zone.clone().into());
         }
-        json!({"count":zones.len(),"timezones":zones,"grouped":grouped})
+        json!({"timezones":zones,"grouped":grouped,"count":zones.len()})
     })
 }
 async fn timezones(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
-) -> Result<Json<Value>, StoreError> {
-    auth.account_user(peer, headers, false).await?;
-    Ok(Json(timezone_data().clone()))
+) -> Response {
+    let response = match auth.account_user(peer, headers, false).await {
+        Ok(_) => Json(timezone_data().clone()).into_response(),
+        Err(error) => error.into_response(),
+    };
+    channel_options_headers(response, TIMEZONE_ALLOW)
 }
+
+fn timezone_options_entity(indentation: usize) -> Result<Response, StoreError> {
+    let metadata = json!({
+        "name": "Timezone List",
+        "description": "API endpoint that returns all available timezones supported by pytz.\nReturns a list of timezone names grouped by region for easy selection.\nThis is a general utility endpoint that can be used throughout the application.",
+        "renders": ["application/json", "text/html"],
+        "parses": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"]
+    });
+    options_json_response(
+        serialize_options_json(
+            metadata.as_object().expect("timezone metadata"),
+            indentation,
+        )
+        .ok_or(StoreError::UnhandledRestFault)?,
+    )
+}
+
+async fn timezone_options(
+    State(auth): State<AuthService>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: Uri,
+) -> Response {
+    let Ok(indentation) = channel_options_indentation(&uri, &headers) else {
+        return (
+            StatusCode::METHOD_NOT_ALLOWED,
+            [(header::ALLOW, "GET,HEAD")],
+        )
+            .into_response();
+    };
+    let response = match auth.account_user(peer, headers, false).await {
+        Ok(_) => timezone_options_entity(indentation).unwrap_or_else(IntoResponse::into_response),
+        Err(error) => error.into_response(),
+    };
+    channel_options_headers(response, TIMEZONE_ALLOW)
+}
+
 fn event_error() -> StoreError {
     StoreError::StatusBody(500, json!({"error":"Failed to fetch system events"}))
 }
@@ -164,7 +213,10 @@ async fn events(
 }
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
-        .route("/api/core/timezones/", get(timezones))
+        .route(
+            "/api/core/timezones/",
+            get(timezones).options(timezone_options),
+        )
         .route("/api/core/system-events/", get(events))
         .with_state(auth.clone())
         .merge(persisted_logs::router(auth))
@@ -192,6 +244,72 @@ mod tests {
             .unwrap()
             .contains(&json!("UTC")));
     }
+    #[tokio::test]
+    async fn timezone_json_and_options_match_the_pinned_drf_renderer() {
+        use axum::{
+            body::{to_bytes, Body},
+            http::{Method, Request},
+        };
+        use sha2::{Digest, Sha256};
+        use tower::ServiceExt;
+
+        let data = serde_json::to_vec(timezone_data()).unwrap();
+        assert_eq!(data.len(), 16_054);
+        assert_eq!(
+            format!("{:x}", Sha256::digest(&data)),
+            "4e01d773719fbe4eaa56f514e2a02b8d054b9fed5aa63941153f82ac22eb00ea"
+        );
+        for (indentation, length, digest) in [
+            (
+                0,
+                393,
+                "69d37635de0de78d2d82933c5b1ed2125bf366e0dcaa3b1a57a7596b62341f73",
+            ),
+            (
+                2,
+                441,
+                "181027cd4d580975606bb00aebe9b2776961be646cc7b3d977e9ac83e40a4de6",
+            ),
+        ] {
+            let reply = channel_options_headers(
+                timezone_options_entity(indentation).unwrap(),
+                TIMEZONE_ALLOW,
+            );
+            assert_eq!(reply.status(), StatusCode::OK);
+            assert_eq!(reply.headers()[header::ALLOW], "GET, HEAD, OPTIONS");
+            assert_eq!(reply.headers()[header::VARY], "Accept");
+            assert_eq!(reply.headers()[header::CONTENT_LENGTH], length.to_string());
+            let body = to_bytes(reply.into_body(), length).await.unwrap();
+            assert_eq!(format!("{:x}", Sha256::digest(&body)), digest);
+        }
+
+        let auth = AuthService::new(
+            crate::Store::from_pool(
+                sqlx::postgres::PgPoolOptions::new()
+                    .connect_lazy_with(sqlx::postgres::PgConnectOptions::new()),
+            ),
+            crate::AuthConfig::new("synthetic-timezone-component".into()).unwrap(),
+        );
+        let app = router(auth);
+        for method in [Method::GET, Method::HEAD, Method::OPTIONS] {
+            let mut request = Request::builder()
+                .method(method.clone())
+                .uri("/api/core/timezones/")
+                .header(header::ACCEPT, "application/json")
+                .body(Body::empty())
+                .unwrap();
+            request
+                .extensions_mut()
+                .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1234))));
+            let reply = app.clone().oneshot(request).await.unwrap();
+            assert_eq!(reply.status(), StatusCode::UNAUTHORIZED);
+            assert_eq!(reply.headers()[header::ALLOW], "GET, HEAD, OPTIONS");
+            assert_eq!(reply.headers()[header::VARY], "Accept");
+            let body = to_bytes(reply.into_body(), 4096).await.unwrap();
+            assert_eq!(body.is_empty(), method == Method::HEAD);
+        }
+    }
+
     #[test]
     fn source_pagination_retains_empty_negative_slice() {
         let p = page(Some("offset=10&limit=-1".into())).unwrap();

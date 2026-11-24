@@ -121,6 +121,15 @@ The EPG import route now attaches the declared POST and OPTIONS methods and the 
 
 The first positive local XMLTV import now has its own evaluator using the existing paired two-import fixture. It checks the signed response, owned file, Original worker arguments, exact typed results, expiry and realtime updates. This uses the same paired package reservation as Guide and the second import. Thirty M6 and 34 coordinator tests passed offline.
 
+## Core timezone choices
+
+The existing React timezone selector receives Original's JSON field order
+and 433 timezone entries. The JSON OPTIONS route now returns Original's
+metadata for authenticated users. Pinned Django, DRF and pytz checked
+20 role and method cases. The Rust check compared the exact GET and
+OPTIONS bodies and anonymous route responses. The signed package still
+needs its grouped replay.
+
 ## Core settings publication during shutdown
 
 Selected Main drains its workers while retaining the shared Jobs broker. After the stream and HTTP drains, Main settles the already-admitted Core settings requests and then closes the broker. This lets a settings request reach its first broker lease after a held database write clears. The remaining broker drain budget still comes from the selected worker drain. The app compiled and both files passed formatting. The final regression holds a real PostgreSQL update across termination and checks for the corresponding durable publication and exact resource cleanup.
