@@ -28,6 +28,8 @@ use uuid::Uuid;
 pub(super) mod recurring;
 mod series_bulk_remove;
 mod series_evaluate_http;
+mod series_save;
+pub(super) use series_save::PATH as SERIES_RULES_PATH;
 pub use recurring::{
     execute_recurring_purge, preflight_recurring_purge, CONFIGURED_REBUILD_HORIZON_DAYS,
 };
@@ -361,6 +363,7 @@ impl RecordingHttp {
             )
             .route(recurring::PATH, any(recurring::handle))
             .route(series_bulk_remove::PATH, any(series_bulk_remove::handle))
+            .route(series_save::PATH, axum::routing::post(series_save::handle))
             .route(
                 series_evaluate_http::PATH,
                 any(series_evaluate_http::handle),
@@ -383,6 +386,7 @@ impl RecordingHttp {
                 axum::routing::get(recurring::collection_with_playback),
             )
             .route(recurring::PATH, any(recurring::with_playback))
+            .route(series_save::PATH, any(series_save::with_playback))
             .route(
                 series_bulk_remove::PATH,
                 any(series_bulk_remove::with_playback),
@@ -1634,6 +1638,12 @@ mod recording_jobs_binding_tests {
                 "/api/channels/recordings/17/comskip/",
                 StatusCode::NOT_IMPLEMENTED,
                 json!({"error":"Comskip intake closed"}),
+            ),
+            (
+                Method::POST,
+                "/api/channels/series-rules/",
+                StatusCode::SERVICE_UNAVAILABLE,
+                json!({"error":"Recording intake closed"}),
             ),
             (
                 Method::POST,

@@ -61,6 +61,7 @@ impl RecordingPlayback {
                 )
                 .route("/api/channels/recordings/{id}/", any(library_get))
                 .route("/api/channels/recordings/{id}", any(library_get))
+                .route(super::recording_http::SERIES_RULES_PATH, any(library_get))
                 .route(recording_http::recurring::COLLECTION, get(recurring_rules))
                 .route(recording_http::recurring::PATH, get(recurring_rule))
                 .route("/api/channels/recordings/{id}/file/", get(handle))
@@ -73,7 +74,6 @@ impl RecordingPlayback {
         Router::new()
             .route("/api/channels/recordings.json", any(library_get))
             .route("/api/channels/recordings.json/", any(library_get))
-            .route("/api/channels/series-rules/", any(library_get))
             .route(
                 recording_http::recurring::JSON_LIST,
                 recurring_get_only(recurring_rules),

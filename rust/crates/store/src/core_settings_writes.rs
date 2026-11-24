@@ -841,7 +841,7 @@ impl AuthService {
         invalidate(self, "backup_settings").await
     }
 }
-async fn invalidate(auth: &AuthService, key: &str) -> Result<(), StoreError> {
+pub(crate) async fn invalidate(auth: &AuthService, key: &str) -> Result<(), StoreError> {
     let cache = auth
         .notification_cache
         .as_ref()
