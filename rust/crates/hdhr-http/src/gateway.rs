@@ -749,8 +749,12 @@ fn endpoint(path: &str) -> Result<Endpoint, StoreError> {
     let (profile, output) = match &parts[..parts.len() - 1] {
         [] => (None, None),
         [profile] => (Some(decode(profile)), None),
-        ["output_profile", output] => (None, Some(normalize_id(output)?)),
-        [profile, "output_profile", output] => (Some(decode(profile)), Some(normalize_id(output)?)),
+        // Django's int converter sees the decoded path segment. Keep the
+        // existing ASCII-digit check and canonicalize leading zeros afterward.
+        ["output_profile", output] => (None, Some(normalize_id(&decode(output))?)),
+        [profile, "output_profile", output] => {
+            (Some(decode(profile)), Some(normalize_id(&decode(output))?))
+        }
         _ => return Err(StoreError::NotFound),
     };
     match route {
@@ -1229,6 +1233,34 @@ mod tests {
             .body(Body::empty())
             .unwrap()
     }
+    #[test]
+    fn escaped_hdhr_output_ids_use_the_same_route_and_canonical_digit_segment() {
+        for path in [
+            "/hdhr/output_profile/00042/discover.json",
+            "/hdhr/output_profile/%30%300%34%32/discover.json",
+        ] {
+            let Endpoint::Discover { profile, output } = endpoint(path).unwrap() else {
+                panic!("expected ordinary discovery");
+            };
+            assert_eq!(profile, None);
+            assert_eq!(output.as_deref(), Some("42"));
+        }
+        let path = "/hdhr/Kids%20&%20News/output_profile/%3402/lineup.json";
+        let Endpoint::Lineup { profile, output } = endpoint(path).unwrap() else {
+            panic!("expected named lineup");
+        };
+        assert_eq!(profile.as_deref(), Some("Kids & News"));
+        assert_eq!(output.as_deref(), Some("402"));
+        assert!(matches!(
+            endpoint("/hdhr/output_profile/%30%32/lineup_status.json"),
+            Ok(Endpoint::Status)
+        ));
+        for output in ["%2531", "1%2F2", "%2B1", "%FF", "12a"] {
+            let path = format!("/hdhr/output_profile/{output}/discover.json");
+            assert!(matches!(endpoint(&path), Err(StoreError::NotFound)));
+        }
+    }
+
     #[tokio::test]
     #[ignore = "requires disposable original PostgreSQL schema"]
     async fn held_final_frame_retains_budget_after_shutdown() {
