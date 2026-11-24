@@ -176,11 +176,9 @@ pub(super) async fn file(
     header(&mut response, "content-type", &mime)?;
     header(&mut response, "content-length", &length)?;
     header(&mut response, "accept-ranges", "bytes")?;
-    header(
-        &mut response,
-        "content-disposition",
-        &format!("inline; filename=\"{name}\""),
-    )?;
+    response
+        .headers_mut()
+        .insert("content-disposition", inline_file_disposition(&name)?);
     if let Some(range) = content_range {
         header(&mut response, "content-range", &range)?;
     }
@@ -353,6 +351,11 @@ async fn resolve_prefix(path: &Path) -> io::Result<PathBuf> {
     Ok(current)
 }
 
+fn inline_file_disposition(name: &str) -> Result<HeaderValue, StoreError> {
+    crate::backup_files::django_file_header(&format!("inline; filename=\"{name}\""))
+        .ok_or_else(fault)
+}
+
 fn file_disposition(name: &str) -> String {
     if name.is_ascii() {
         format!(
@@ -375,6 +378,24 @@ fn file_disposition(name: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[test]
+    fn completed_files_keep_django_inline_filename_wire_encoding() {
+        for (name, expected) in [
+            ("News.mkv", b"inline; filename=\"News.mkv\"".as_slice()),
+            ("Café.mkv", b"inline; filename=\"Caf\xe9.mkv\"".as_slice()),
+            (
+                "東京.mkv",
+                b"=?utf-8?b?aW5saW5lOyBmaWxlbmFtZT0i5p2x5LqsLm1rdiI=?=".as_slice(),
+            ),
+        ] {
+            assert_eq!(inline_file_disposition(name).unwrap().as_bytes(), expected);
+        }
+        assert_eq!(
+            file_disposition("東京.ts"),
+            "inline; filename*=utf-8''%E6%9D%B1%E4%BA%AC.ts"
+        );
+    }
+
     #[test]
     fn original_ranges_keep_suffix_and_malformed_fallback_semantics() {
         let parsed = range("bytes=-5", 20).unwrap();

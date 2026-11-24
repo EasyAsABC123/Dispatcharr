@@ -213,10 +213,10 @@ fn invalid(name: &str) -> bool {
     name.contains("..") || name.contains('/') || name.contains('\\')
 }
 fn download_disposition(filename: &str) -> Option<HeaderValue> {
-    django_download_header(&format!("attachment; filename=\"{filename}\""))
+    django_file_header(&format!("attachment; filename=\"{filename}\""))
 }
 
-fn django_download_header(value: &str) -> Option<HeaderValue> {
+pub(crate) fn django_file_header(value: &str) -> Option<HeaderValue> {
     if let Some(latin) = value
         .chars()
         .map(|c| u8::try_from(c as u32).ok())
@@ -275,7 +275,7 @@ fn nginx_filename(filename: &str) -> bool {
 }
 
 fn nginx_download_response(filename: &str) -> Option<Response> {
-    let redirect = django_download_header(&format!("/protected-backups/{filename}"))?;
+    let redirect = django_file_header(&format!("/protected-backups/{filename}"))?;
     let disposition = download_disposition(filename)?;
     Some(
         (
