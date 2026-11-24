@@ -1,0 +1,302 @@
+{
+  "approval": {
+    "answered_at_utc_approximate": "2026-11-24T19:25:00Z",
+    "application_manifest_sha256": "4127965d9e780ceb2b459f3b2feff0e80035f0d4768dc7f4ea966315207ee164",
+    "application_revision": "3d8f96725ed90f5d37e406492e264e7c4d37f89a",
+    "coordinator_relay_message_id": "6d6b9130-e854-40d9-b1d5-19716c399f12",
+    "copied_sqlite_utility": {
+      "copied_data_only": true,
+      "in_scope": true,
+      "input_must_remain_unchanged": true,
+      "opt_in": true
+    },
+    "decision_maker": "Justin",
+    "evidence_publication_revision": "7cda686b8ab705c3362ef1956055b152b20745f7",
+    "fork_graph_snapshot": "64a2d89935509a9f51279b6ddbdfec325b495b59",
+    "full_postgresql_workflow_gate": "pending",
+    "live_sqlite_same_engine_backup_restore_required_in_selected_release": false,
+    "live_sqlite_service_required_in_selected_release": false,
+    "ordinary_service_database": "postgresql",
+    "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "production_or_cutover_authorized": false,
+    "recorded_from": "Coordinator relay of Justin's explicit asynchronous scope selection",
+    "schema": "datastore-scope-decision-record/v1",
+    "selection_verbatim": "PostgreSQL service plus the copied SQLite migration utility (Recommended)",
+    "signature": null
+  },
+  "graph_projection": {
+    "base_graph_revision": "64a2d89935509a9f51279b6ddbdfec325b495b59",
+    "canonical_binding_installed": false,
+    "canonical_rows_credited": 0,
+    "decision_sha256": "6c1441b96b3f4ddbe7c1ab44047b139ba4d2defb23782c7498fb90fdcaf4d287",
+    "engine_calls": 0,
+    "external_status": "explicit_selection_recorded_canonical_intake_unbound",
+    "historical_rows": {
+      "Main/SQLite-compatibility": {
+        "assertions": "Required SQLite/source datastore behavior or explicit user-approved supported-domain disposition. Postgres component success doesnotcoverSQLite.",
+        "depends_on": [
+          "external/M9/datastore-scope"
+        ],
+        "entrypoint": "production-Main+unchangedReact",
+        "exclusive_heavy": false,
+        "fixture_group": "Main-control-and-React",
+        "id": "Main/SQLite-compatibility",
+        "implementation": "unsupported-unresolved",
+        "input_requires": [
+          "candidate",
+          "workflow-binding/Main/SQLite-compatibility"
+        ],
+        "milestones": [
+          "M5"
+        ],
+        "performance": false,
+        "reuse_constraint": "Reuse same SQL/auth/browser cohort with explicit scoped row resets; no boot per case.",
+        "runner": "Main-workflow",
+        "source_authority": "Existing Source register/actual retained API authorities; unmeasured clauses remain batch Source cells, never inferred from tests count."
+      },
+      "native/backup-SQLite-upgrade": {
+        "Source_authority": [
+          "source/backup-SQLite-upgrade"
+        ],
+        "actual_calls": null,
+        "assertions": [
+          "Same Source engine/file/roundtrip/upgrade semantics, no silent PG-only substitution",
+          "Restored system usable with exact retained data/password/secret/media-reference boundaries"
+        ],
+        "declared_calls": null,
+        "entry_point": "actual supported database/backup implementation and packaged operator path",
+        "evidence": null,
+        "exclusive_resources": [],
+        "execution_status": "not_run",
+        "id": "native/backup-SQLite-upgrade",
+        "implementation_status": "known_missing",
+        "known_missing": "Native Store is PostgreSQL-only; SQLite and general upgrade/rollback are unported",
+        "milestone": "M8",
+        "owner": "milestone_ops",
+        "required": true,
+        "requires": [
+          "source/backup-SQLite-upgrade"
+        ]
+      },
+      "source/backup-SQLite-upgrade": {
+        "Source_authority": [
+          "Original apps/backups/services.py SQLite branches",
+          "retained PostgreSQL Source16 does NOT supply SQLite authority"
+        ],
+        "actual_calls": null,
+        "assertions": [
+          "Previously unmeasured SQLite file/schema/IDs/passwords/transaction/ZIP metadata behavior",
+          "Upgrade/restore/rollback uses only copied disposable DB/files, preserves JWT/media reference scope",
+          "SQLite manifests retain actual engine-specific tables/sequences; never label PG6259 as SQLite evidence"
+        ],
+        "declared_calls": null,
+        "entry_point": "pinned real SQLite backup/restore plus copied-version upgrade context",
+        "evidence": null,
+        "exclusive_resources": [],
+        "execution_status": "not_run",
+        "id": "source/backup-SQLite-upgrade",
+        "implementation_status": "literal_cases_needed",
+        "known_missing": null,
+        "milestone": "M8",
+        "owner": "milestone_ops",
+        "required": true,
+        "requires": []
+      }
+    },
+    "proposed_direct_dependency_updates": [
+      {
+        "before": [
+          "package/baseline-all",
+          "package/proxy-auth",
+          "package/auth-hash",
+          "package/live-react-stats",
+          "package/user-agent",
+          "package/output-profile",
+          "package/profile-restart",
+          "package/guide-grid-packaged",
+          "package/current-packaged",
+          "package/m4-functional",
+          "package/clean-install",
+          "package/category-browser",
+          "package/unified-HTML-browser",
+          "package/complete-refresh-original",
+          "package/complete-refresh",
+          "package/static-Chrome-HTML-browser",
+          "package/packaged-provider-actions",
+          "package/packaged-cached-provider-info",
+          "package/channel-logos",
+          "package/packaged-vod-images",
+          "package/provider-modal-browser",
+          "package/fresh-Original17capture",
+          "package/shipped-safe17",
+          "package/shipped-createsuperuser22",
+          "package/strict-typed154",
+          "package/sharedTS18",
+          "package/sharedTS6-all-down",
+          "package/retention100",
+          "source/cache-and-profile-contexts",
+          "native/proxy-health",
+          "native/core-normal51",
+          "native/core-late-faults",
+          "Main/core-settings-workflow",
+          "Main/active-profile-status-probes",
+          "native/profile-delivery",
+          "native/HLS-fMP4-workflows",
+          "Main/lifecycle-fault-workflow",
+          "Main/React-cross-workflows",
+          "Main/accounts-auth-and-channels",
+          "Main/settings-task-consumers",
+          "Main/SQLite-compatibility",
+          "source/media-profile-and-format-workflows",
+          "Main/input-profile-and-provider-probes"
+        ],
+        "field": "depends_on",
+        "id": "performance/M2-M3-M5",
+        "proposed_after": [
+          "package/baseline-all",
+          "package/proxy-auth",
+          "package/auth-hash",
+          "package/live-react-stats",
+          "package/user-agent",
+          "package/output-profile",
+          "package/profile-restart",
+          "package/guide-grid-packaged",
+          "package/current-packaged",
+          "package/m4-functional",
+          "package/clean-install",
+          "package/category-browser",
+          "package/unified-HTML-browser",
+          "package/complete-refresh-original",
+          "package/complete-refresh",
+          "package/static-Chrome-HTML-browser",
+          "package/packaged-provider-actions",
+          "package/packaged-cached-provider-info",
+          "package/channel-logos",
+          "package/packaged-vod-images",
+          "package/provider-modal-browser",
+          "package/fresh-Original17capture",
+          "package/shipped-safe17",
+          "package/shipped-createsuperuser22",
+          "package/strict-typed154",
+          "package/sharedTS18",
+          "package/sharedTS6-all-down",
+          "package/retention100",
+          "source/cache-and-profile-contexts",
+          "native/proxy-health",
+          "native/core-normal51",
+          "native/core-late-faults",
+          "Main/core-settings-workflow",
+          "Main/active-profile-status-probes",
+          "native/profile-delivery",
+          "native/HLS-fMP4-workflows",
+          "Main/lifecycle-fault-workflow",
+          "Main/React-cross-workflows",
+          "Main/accounts-auth-and-channels",
+          "Main/settings-task-consumers",
+          "source/media-profile-and-format-workflows",
+          "Main/input-profile-and-provider-probes"
+        ]
+      },
+      {
+        "before": [
+          "native/plugin-execution-and-install",
+          "native/plugin-TLS-DNS-GPG16",
+          "native/backup-workflow",
+          "native/backup-SQLite-upgrade",
+          "native/admin-session-CSRF",
+          "native/operator-operational",
+          "native/VOD-lifecycle-recovery",
+          "native/VOD-ranges-catchup",
+          "native/XC-catalogue-refresh-info",
+          "native/M3U-XMLTV-HDHR",
+          "native/realtime-connect",
+          "package/clean-install"
+        ],
+        "field": "requires",
+        "id": "Main/M4-M7-M8-required-routes",
+        "proposed_after": [
+          "native/plugin-execution-and-install",
+          "native/plugin-TLS-DNS-GPG16",
+          "native/backup-workflow",
+          "native/copied-SQLite-migration-utility",
+          "native/admin-session-CSRF",
+          "native/operator-operational",
+          "native/VOD-lifecycle-recovery",
+          "native/VOD-ranges-catchup",
+          "native/XC-catalogue-refresh-info",
+          "native/M3U-XMLTV-HDHR",
+          "native/realtime-connect",
+          "package/clean-install"
+        ]
+      }
+    ],
+    "proposed_m235_m5_criteria": {
+      "after": [
+        "package/baseline-all",
+        "package/auth-hash",
+        "package/user-agent",
+        "package/output-profile",
+        "package/category-browser",
+        "package/unified-HTML-browser",
+        "package/static-Chrome-HTML-browser",
+        "package/provider-modal-browser",
+        "native/core-normal51",
+        "native/core-late-faults",
+        "native/proxy-health",
+        "Main/core-settings-workflow",
+        "Main/React-cross-workflows",
+        "performance/M2-M3-M5",
+        "Main/accounts-auth-and-channels",
+        "Main/settings-task-consumers"
+      ],
+      "before": [
+        "package/baseline-all",
+        "package/auth-hash",
+        "package/user-agent",
+        "package/output-profile",
+        "package/category-browser",
+        "package/unified-HTML-browser",
+        "package/static-Chrome-HTML-browser",
+        "package/provider-modal-browser",
+        "native/core-normal51",
+        "native/core-late-faults",
+        "native/proxy-health",
+        "Main/core-settings-workflow",
+        "Main/React-cross-workflows",
+        "performance/M2-M3-M5",
+        "Main/accounts-auth-and-channels",
+        "Main/settings-task-consumers",
+        "Main/SQLite-compatibility"
+      ]
+    },
+    "proposed_new_utility_row": {
+      "formal_credit": false,
+      "id": "native/copied-SQLite-migration-utility",
+      "owner": "M8",
+      "proof": "7cda686b8ab705c3362ef1956055b152b20745f7",
+      "required": true,
+      "scope": "packaged opt-in detached copied SQLite; immutable input and exact teardown"
+    },
+    "proposed_root_workflow": {
+      "preserve": [
+        "native/backup-workflow",
+        "root/M9-rollback"
+      ],
+      "remove_required_live_sqlite": [
+        "source/backup-SQLite-upgrade",
+        "native/backup-SQLite-upgrade",
+        "Main/SQLite-compatibility"
+      ],
+      "require": [
+        "external/M9/datastore-scope",
+        "native/copied-SQLite-migration-utility"
+      ]
+    },
+    "prospective_applicability": {
+      "Main/SQLite-compatibility": "out_of_scope_for_selected_release",
+      "native/backup-SQLite-upgrade": "out_of_scope_for_selected_release",
+      "source/backup-SQLite-upgrade": "out_of_scope_for_selected_release"
+    },
+    "trusted_authority_protocol_present": false
+  }
+}
