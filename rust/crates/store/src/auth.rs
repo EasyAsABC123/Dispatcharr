@@ -99,6 +99,8 @@ pub struct AuthService {
         Arc<std::sync::OnceLock<Arc<dyn crate::ProviderRehashBroker>>>,
     pub(crate) tvg_programme_publisher:
         Arc<std::sync::OnceLock<Arc<dyn crate::TvgProgrammePublisher>>>,
+    pub(crate) sd_guide_root_publisher:
+        Arc<std::sync::OnceLock<Arc<dyn crate::SdGuideRootPublisher>>>,
     pub(crate) images: crate::image_proxy::ImageRuntime,
     pub(crate) stream_files: crate::stream_files::Runtime,
     pub(crate) ip_lookup: crate::ip_lookup::IpLookup,
@@ -137,6 +139,7 @@ impl AuthService {
             normal_core_task_broker: false,
             provider_rehash_broker: Arc::new(std::sync::OnceLock::new()),
             tvg_programme_publisher: Arc::new(std::sync::OnceLock::new()),
+            sd_guide_root_publisher: Arc::new(std::sync::OnceLock::new()),
             images: crate::image_proxy::ImageRuntime::new(),
             stream_files: crate::stream_files::Runtime::new(),
             ip_lookup: crate::ip_lookup::IpLookup::new(crate::IpLookupConfig::default()),

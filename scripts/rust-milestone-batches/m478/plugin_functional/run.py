@@ -79,13 +79,15 @@ def materialize(out,candidate):
     return tools,inputs,schema,generated,authority
 
 def run(args):
+    unsigned = args.scope == 'unsigned25'
+    epochs = ('retained24', 'fresh404') if unsigned else ('transport16', 'retained24', 'fresh404')
     candidate=read(args.candidate);gate=load_module(HERE.parent/'batch.py','owner_candidate')
     need(gate.candidate_ready(candidate),'actual current source/archive/build/image binding')
     out=args.output.absolute();need(out.is_relative_to(REPO/'artifacts/rust') and not out.exists() and not any(p.is_symlink() for p in out.parents),'fresh owned artifact output')
     out.mkdir(mode=0o700);tools,inputs,schema,assets,authority=materialize(out,candidate)
     bounded=load_module(ASSETS.parent/'assets/bounded_cli.py','owned_cli');project='dispatcharr-plugin-functional-'+uuid.uuid4().hex[:10];name=project+'-main';environment=os.environ.copy();environment.update(DOCKER_HOST='unix:///tmp/dispatcharr-docker.sock')
     began=time.monotonic();serial=0;used=0;cleanup=False;cleanup_began=None;live=None;created=False;databases=[];loopback_job=None;loopback_record=None;known_cids=[]
-    report={'candidate':candidate,'project':project,'passed':False,'full_M8_accepted':False,'Source_application_runs':0,'Source_API_calls':0,'planned_reference_calls':41,'planned_diagnostics':1,'cohorts':{},'commands':[],'fixture_services_reused':True,'handler_drain_adversarial_qualified':False,'shutdown_scope':'Normal completed requests only; explicit Plugin handler-drain API remains an M8 blocker'}
+    report={'candidate':candidate,'project':project,'passed':False,'full_M8_accepted':False,'Source_application_runs':0,'Source_API_calls':0,'planned_reference_calls':25 if unsigned else 41,'planned_diagnostics':0 if unsigned else 1,'scope':args.scope,'cohorts':{},'commands':[],'fixture_services_reused':True,'handler_drain_adversarial_qualified':False,'shutdown_scope':'Normal completed requests only; explicit Plugin handler-drain API remains an M8 blocker'}
     save(out/'report.json',report)
     def command(argv,seconds=30,check=True,combine=False,docker=True):
         nonlocal serial,used
@@ -100,7 +102,7 @@ def run(args):
     compose=['compose','-p',project,'-f',str(out/'compose.json')]
     def dc(*argv,seconds=30):return command(compose+list(argv),seconds)
     def driver(action,label,database,epoch='transport16',seconds=45):
-        return dc('exec','-T','-e','PLUGIN_REPO_DRIVER=owned-native-pluginrepo-only','-e','PLUGIN_REPO_ACTION='+action,'-e','PLUGIN_REPO_LABEL='+label,'-e','PLUGIN_REPO_DATABASE='+database,'-e','PLUGIN_UNSIGNED_EPOCH='+epoch,'storage','/dispatcharrpy/bin/python','-B','/native-tools/driver.py',seconds=seconds)
+        return dc('exec','-T','-e','PLUGIN_REPO_DRIVER=owned-native-pluginrepo-only','-e','PLUGIN_REPO_ACTION='+action,'-e','PLUGIN_REPO_LABEL='+label,'-e','PLUGIN_REPO_DATABASE='+database,'-e','PLUGIN_UNSIGNED_EPOCH='+epoch,'-e','PLUGIN_REFERENCE_ONLY='+('1' if unsigned else '0'),'storage','/dispatcharrpy/bin/python','-B','/native-tools/driver.py',seconds=seconds)
     def psql(sql,db='postgres'):
         return dc('exec','-T','-e','PGOPTIONS=-c statement_timeout=7000 -c lock_timeout=7000','storage','psql','-XAtq','-h','/var/run/postgresql','-U','dispatch','-d',db,'-v','ON_ERROR_STOP=1','-c',sql)
     def wait_file(path,seconds=180):
@@ -134,11 +136,12 @@ def run(args):
             stop_module=load_module(tools/'bounded_stop.py','owned_stop')
             report['emergency_stop']={}
             stop_module.collect(['docker','--host','unix:///tmp/dispatcharr-docker.sock',*compose,'stop','--timeout','10'],environment,out,report['emergency_stop'],limit=65536,timeout=15,save=save)
-        loopback_job=helper_module.Collected(['docker','--host','unix:///tmp/dispatcharr-docker.sock',*compose,'exec','-T','storage','/dispatcharrpy/bin/python','-B','/plugin-tools/loopback_http.py','--body','/native-root/inputs/loopback-body.json','--phase-cue','/evidence/native-phase.json','--output','/evidence/loopback'],environment,1048576,stop_owned,stdout_path=out/'loopback.stdout',stderr_path=out/'loopback.stderr')
-        proc=loopback_job.process;generation=Path('/proc',str(proc.pid),'stat').read_text().rsplit(')',1)[1].split()[19]
-        loopback_record={'pid':proc.pid,'generation':generation,'PID_namespace':os.readlink('/proc/self/ns/pid')};report['loopback_host_CLI']=loopback_record
-        wait_file(out/'loopback/ready.json',15)
-        for epoch in ['transport16','retained24','fresh404']:
+        if not unsigned:
+            loopback_job=helper_module.Collected(['docker','--host','unix:///tmp/dispatcharr-docker.sock',*compose,'exec','-T','storage','/dispatcharrpy/bin/python','-B','/plugin-tools/loopback_http.py','--body','/native-root/inputs/loopback-body.json','--phase-cue','/evidence/native-phase.json','--output','/evidence/loopback'],environment,1048576,stop_owned,stdout_path=out/'loopback.stdout',stderr_path=out/'loopback.stderr')
+            proc=loopback_job.process;generation=Path('/proc',str(proc.pid),'stat').read_text().rsplit(')',1)[1].split()[19]
+            loopback_record={'pid':proc.pid,'generation':generation,'PID_namespace':os.readlink('/proc/self/ns/pid')};report['loopback_host_CLI']=loopback_record
+            wait_file(out/'loopback/ready.json',15)
+        for epoch in epochs:
             database='rust_probe_pluginrepo_'+uuid.uuid4().hex[:10];databases.append(database);cell={'actual_source_count':authority[epoch]['count'],'database':database,'passed':False};report['cohorts'][epoch]=cell;save(out/'report.json',report)
             try:
                 psql('CREATE DATABASE '+database);dc('exec','-T','storage','psql','-Xq','-h','/var/run/postgresql','-U','dispatch','-d',database,'-v','ON_ERROR_STOP=1','-1','-f','/native-source/rust/crates/store/schema/original-1241b3-schema.sql')
@@ -192,7 +195,7 @@ def run(args):
                 command(['stop','--time','10',live],20);wait=command(['wait',live],15).decode().strip();cell['actual_Main_exit']=int(wait);need(wait=='0','actual Main graceful shutdown0')
                 if origin_file.is_file():
                     origin_lines=origin_file.read_text().splitlines()[origin_offset:];save(out/(epoch+'-Origin-observations.json'),[json.loads(line) for line in origin_lines])
-                    try:cell['Origin']=validate_origin(out,epoch,authority)
+                    try:cell['Origin']=validate_origin(out,epoch,authority, numeric_diagnostic=not unsigned)
                     except Exception as error:cell['Origin_error']={'type':type(error).__name__,'message':str(error)}
                     cell['passed']=cell['passed'] and cell.get('Origin',{}).get('passed') is True
                 else:cell['passed']=False;cell['Origin_error']={'message':'actual Origin observations missing'}
@@ -206,17 +209,20 @@ def run(args):
                     command(['rm','--volumes',live]);live=None
                 backend=json.loads(psql("SELECT COALESCE(json_agg(t),'[]') FROM (SELECT pid,state FROM pg_stat_activity WHERE datname='"+database+"')t"));need(backend==[],'failed context backend physical settlement before next seed')
                 save(out/'report.json',report)
-        ready=read(out/'loopback/ready.json')
-        signal_script="import os,json;from pathlib import Path;r=json.loads("+repr(json.dumps(ready))+");assert os.readlink('/proc/self/ns/pid')==r['PID_namespace'];assert Path('/proc',str(r['pid']),'stat').read_text().rsplit(')',1)[1].split()[19]==r['starttime'];os.kill(r['pid'],15)"
-        dc('exec','-T','storage','/dispatcharrpy/bin/python','-c',signal_script)
-        loopback_job.wait(10);loopback_record.update(actual_wait_exit=loopback_job.process.poll(),physical_settled=loopback_job.physically_settled,readers_settled=not any(t.is_alive() for t in loopback_job.threads),invalid=loopback_job.invalid)
-        need(loopback_record['actual_wait_exit']==0 and loopback_record['physical_settled'] and loopback_record['readers_settled'] and loopback_record['invalid'] is None,'actual loopback helper CLI wait/EOF0')
-        terminal=read(out/'loopback/terminal.json');need(terminal['complete'] is True and terminal['contacts']==1,'actual measured rebind loopback contact only');report['loopback']=terminal
+        if not unsigned:
+            ready=read(out/'loopback/ready.json')
+            signal_script="import os,json;from pathlib import Path;r=json.loads("+repr(json.dumps(ready))+");assert os.readlink('/proc/self/ns/pid')==r['PID_namespace'];assert Path('/proc',str(r['pid']),'stat').read_text().rsplit(')',1)[1].split()[19]==r['starttime'];os.kill(r['pid'],15)"
+            dc('exec','-T','storage','/dispatcharrpy/bin/python','-c',signal_script)
+            loopback_job.wait(10);loopback_record.update(actual_wait_exit=loopback_job.process.poll(),physical_settled=loopback_job.physically_settled,readers_settled=not any(t.is_alive() for t in loopback_job.threads),invalid=loopback_job.invalid)
+            need(loopback_record['actual_wait_exit']==0 and loopback_record['physical_settled'] and loopback_record['readers_settled'] and loopback_record['invalid'] is None,'actual loopback helper CLI wait/EOF0')
+            terminal=read(out/'loopback/terminal.json');need(terminal['complete'] is True and terminal['contacts']==1,'actual measured rebind loopback contact only');report['loopback']=terminal
         dc('stop','--timeout','10','origin',seconds=20);origin_terminal=read(out/'origins/terminal.json');need(origin_terminal['passed'] is True,'actual Origin child waits0');report['origin_terminal']=origin_terminal
         for name in ['http','dns']:
             terminal=read(out/('origins/tls/'+name+'/terminal.json'));need(terminal['complete'] is True and terminal['errors']==[],'actual bounded '+name+' shutdown');report[name+'_terminal']=terminal
         driver('default','default-after','dispatcharr');need((out/'default-before.json').read_bytes()==(out/'default-after.json').read_bytes(),'literal default62/59 unchanged')
-        report['reference_functional_passed']=all(c['passed'] for c in report['cohorts'].values());report['numeric_domain_complete']=False;report['passed']=False
+        report['reference_functional_passed']=set(report['cohorts']) == set(epochs) and all(c['passed'] for c in report['cohorts'].values())
+        report['numeric_domain_complete']=False
+        report['passed']=unsigned and report['reference_functional_passed']
     except Exception as error:report['error']={'type':type(error).__name__,'message':str(error)}
     finally:
         cleanup=True;cleanup_began=time.monotonic();errors=[]
@@ -246,10 +252,10 @@ def run(args):
                 need(current!=generation,'actual host generation absent')
             except Exception as error:errors.append({'stage':'host PID cleanup','message':str(error)})
         report['cleanup_errors']=errors;report['cleanup_verified']=not errors;report['actual_commands']=serial;report['actual_cli_output_bytes']=used+(loopback_job.used if loopback_job is not None else 0);report['cleanup_seconds']=time.monotonic()-cleanup_began;report['elapsed_seconds']=time.monotonic()-began;save(out/'report.json',report)
-    return 2
+    return 0 if report['passed'] and report['cleanup_verified'] else 2
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--execute-batch',action='store_true');parser.add_argument('--emit-binding',action='store_true');parser.add_argument('--candidate',type=Path);parser.add_argument('--output',type=Path);args=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--execute-batch',action='store_true');parser.add_argument('--emit-binding',action='store_true');parser.add_argument('--scope',choices=('diagnostic41','unsigned25'),default='diagnostic41');parser.add_argument('--candidate',type=Path);parser.add_argument('--output',type=Path);args=parser.parse_args()
     if args.emit_binding:
         need(args.candidate is not None and args.output is not None,'concrete future candidate/output paths required')
         inputs={str(p):sha(p) for p in HERE.iterdir() if p.is_file() and p.suffix in ('.py','.sh','.json')}
@@ -261,6 +267,14 @@ def main():
         for row in read(HERE/'source-authority.json').values():
             inputs[row['source_path']]=row['source_sha256'];inputs[row['plan_path']]=row['plan_sha256']
         binding={'id':'native/plugin-transport-functional41','owner':'m478','covers_existing_cells':['native/plugin-TLS-DNS-GPG16','native/plugin-unsigned25'],'entrypoint':'production-Main plugin transport16 and retained unsigned25','depends_on':[],'resources':['ipam:11.253.250.0/29'],'heavy':False,'argv':['python','-B',str(HERE/'run.py'),'--execute-batch','--candidate',str(args.candidate.absolute()),'--output',str(args.output.absolute())],'evaluator_argv':['python','-B',str(HERE/'evaluate.py'),'--output',str(args.output.absolute())],'cleanup_argv':['python','-B',str(HERE/'cleanup.py'),'--output',str(args.output.absolute())],'seconds':1200,'cleanup_seconds':90,'output_bytes':67108864,'cwd':str(REPO),'input_sha256':inputs,'environment':{'DOCKER_HOST':'unix:///tmp/dispatcharr-docker.sock'},'global_fixture_slots':1,'one_dispatch_only':True,'Source_API_calls':0,'image_builds':0,'full_M8_acceptance':False,'explicit_blockers':['Floating-point signing remains unsupported','Adversarial Plugin actor drain remains unqualified','Original lifecycle passive network gates remain failed; observation authority reused only']}
+        if args.scope == 'unsigned25':
+            binding.update(id='native/plugin-unsigned25',
+                           covers_existing_cells=['native/plugin-unsigned25'],
+                           entrypoint='reuse normal24+fresh404 controller as one ordered two-context cohort')
+            binding['argv'] += ['--scope', 'unsigned25']
+            binding['evaluator_argv'] += ['--scope', 'unsigned25', '--candidate', str(args.candidate.absolute()),
+                                          '--execution', '@EXECUTION@']
+            inputs[str(args.candidate.absolute())] = sha(args.candidate)
         print(json.dumps(binding,indent=2));return 0
     if not args.execute_batch:
         print(json.dumps({'status':'not_run','reference_cases':41,'numeric_diagnostics':1,'Source_API_calls':0,'image_builds':0,'ordinary_global_slots':1,'exclusive_resource':'ipam:11.253.250.0/29','performance_claims':False}));return 0

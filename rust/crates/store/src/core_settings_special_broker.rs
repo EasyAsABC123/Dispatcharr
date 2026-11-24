@@ -223,6 +223,29 @@ pub(crate) async fn publish_tvg_programmes(
         .await
 }
 
+pub(crate) async fn publish_sd_guide_root(
+    auth: &AuthService,
+    mapped: bool,
+    target: i64,
+) -> Result<(), StoreError> {
+    let publisher = auth
+        .sd_guide_root_publisher
+        .get()
+        .ok_or(StoreError::Unsupported(
+            "Schedules Direct guide publisher unavailable",
+        ))?;
+    let task = if mapped {
+        "apps.epg.tasks.fetch_sd_mapped_guide_batch"
+    } else {
+        "apps.epg.tasks.parse_programs_for_tvg_id"
+    };
+    let (raw, id, charge) = build_frame(auth, &Scratch::new(), task, json!([target]), json!({}))?;
+    let frame = crate::SdGuideRootPublication(CoreTaskPublication::new(raw, &id)?);
+    publisher
+        .publish(frame, auth.core_publication_owner(charge))
+        .await
+}
+
 pub(crate) async fn publish_profiles_root(
     auth: &AuthService,
     scratch: &Scratch,
@@ -255,6 +278,7 @@ fn build_frame(
     if ![
         "core.tasks.rehash_streams",
         "apps.epg.tasks.parse_programs_for_tvg_id",
+        "apps.epg.tasks.fetch_sd_mapped_guide_batch",
         "apps.m3u.tasks.refresh_m3u_groups",
         "apps.m3u.tasks.refresh_account_profiles",
         "apps.channels.tasks.reschedule_upcoming_recordings_for_offset_change",
@@ -303,7 +327,11 @@ fn build_frame(
             group: None,
             group_index: None,
             retries: 0,
-            timelimit: if task == "apps.epg.tasks.parse_programs_for_tvg_id" {
+            timelimit: if matches!(
+                task,
+                "apps.epg.tasks.parse_programs_for_tvg_id"
+                    | "apps.epg.tasks.fetch_sd_mapped_guide_batch"
+            ) {
                 [Some(3600), Some(3500)]
             } else {
                 [None, None]

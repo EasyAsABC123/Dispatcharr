@@ -106,7 +106,39 @@ pub trait TvgProgrammePublisher: Send + Sync {
     ) -> BoxFuture<'_, Result<(), StoreError>>;
 }
 
+/// A sealed, immediate HTTP root for the selected Schedules Direct guide worker.
+pub struct SdGuideRootPublication(pub(crate) CoreTaskPublication);
+
+impl SdGuideRootPublication {
+    pub fn bytes(&self) -> &[u8] {
+        self.0.bytes()
+    }
+
+    pub fn task_id(&self) -> Uuid {
+        self.0.task_id()
+    }
+}
+
+pub trait SdGuideRootPublisher: Send + Sync {
+    fn ready(&self) -> bool;
+
+    fn publish(
+        &self,
+        publication: SdGuideRootPublication,
+        owner: Arc<dyn Send + Sync>,
+    ) -> BoxFuture<'_, Result<(), StoreError>>;
+}
+
 impl AuthService {
+    pub fn bind_sd_guide_root_publisher(
+        &self,
+        publisher: Arc<dyn SdGuideRootPublisher>,
+    ) -> Result<(), StoreError> {
+        self.sd_guide_root_publisher.set(publisher).map_err(|_| {
+            StoreError::Unsupported("Schedules Direct guide publisher already composed")
+        })
+    }
+
     pub fn bind_provider_rehash_broker(
         &self,
         broker: Arc<dyn ProviderRehashBroker>,

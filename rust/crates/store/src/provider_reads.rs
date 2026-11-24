@@ -459,6 +459,8 @@ provider_json_aliases!(
     server_group
 );
 provider_json_aliases!(epg_data_json, epg_data, epg_entry_json, epg_entry);
+provider_json_aliases!(accounts_json, accounts, account_detail_json, account_detail);
+provider_json_aliases!(epg_sources_json, epg_sources, epg_source_json, epg_source);
 
 struct ProviderJsonFormatter;
 impl serde_json::ser::Formatter for ProviderJsonFormatter {
@@ -834,6 +836,20 @@ pub(crate) fn router(auth: AuthService) -> Router {
             axum::routing::patch(crate::vod_category_settings::patch),
         )
         .route(
+            "/api/m3u/accounts.json",
+            get(accounts_json)
+                .layer(axum::middleware::map_response(account_collection_headers))
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/m3u/accounts/{json_id}",
+            get(account_detail_json)
+                .layer(axum::middleware::map_response(account_detail_headers))
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
             "/api/m3u/accounts/",
             get(accounts)
                 .post(crate::provider_account_writes::create)
@@ -969,6 +985,26 @@ pub(crate) fn router(auth: AuthService) -> Router {
                 .delete(crate::provider_mutations::delete_server_group),
         )
         .route(
+            "/api/epg/sources.json",
+            get(epg_sources_json)
+                .layer(from_fn_with_state(
+                    CRUD_LIST_ALLOW,
+                    epg_library_json_headers,
+                ))
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
+            "/api/epg/sources/{json_id}",
+            get(epg_source_json)
+                .layer(from_fn_with_state(
+                    CRUD_DETAIL_ALLOW,
+                    epg_library_json_headers,
+                ))
+                .head(omitted_json_method)
+                .fallback(omitted_json_method),
+        )
+        .route(
             "/api/epg/sources/",
             get(epg_sources)
                 .layer(from_fn_with_state(
@@ -1056,6 +1092,45 @@ mod tests {
         );
         let _router = router(auth);
     }
+    #[tokio::test]
+    async fn provider_account_and_epg_source_json_aliases_mount_read_only() {
+        use axum::body::Body;
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://unused:unused@127.0.0.1:1/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("fixture-only-key".into()).unwrap(),
+        );
+        let app = router(auth);
+        for path in [
+            "/api/m3u/accounts.json",
+            "/api/m3u/accounts/2.json",
+            "/api/epg/sources.json",
+            "/api/epg/sources/27.json",
+        ] {
+            for (method, status) in [
+                (Method::GET, StatusCode::NOT_ACCEPTABLE),
+                (Method::HEAD, StatusCode::NOT_FOUND),
+                (Method::POST, StatusCode::NOT_FOUND),
+            ] {
+                let mut request = Request::builder()
+                    .method(method)
+                    .uri(format!("{path}?format=api"))
+                    .header(header::ACCEPT, "text/html")
+                    .body(Body::empty())
+                    .unwrap();
+                request
+                    .extensions_mut()
+                    .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1234))));
+                let response = app.clone().oneshot(request).await.unwrap();
+                assert_eq!(response.status(), status, "{path}");
+            }
+        }
+    }
+
     #[test]
     fn epg_source_keeps_original_compact_json_field_order() {
         let raw = json!({

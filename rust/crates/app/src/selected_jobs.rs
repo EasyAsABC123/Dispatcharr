@@ -765,6 +765,12 @@ impl SelectedJobs {
                     .map_err(|_| "Selected matching SD registry unavailable")?,
             )
             .map_err(|_| "Selected matching SD composition failed")?;
+        auth.bind_sd_guide_root_publisher(Arc::new(
+            sd_guide
+                .capability(&queue)
+                .map_err(|_| "Selected HTTP SD guide registry unavailable")?,
+        ))
+        .map_err(|_| "Selected HTTP SD guide binding failed")?;
         let scheduler = match beat {
             Beat::Core => jobs::normal_beat::Scheduler::prepare_core_schedules_for_selected(
                 queue

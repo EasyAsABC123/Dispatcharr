@@ -775,6 +775,7 @@ macro_rules! json_reader {
 json_reader!(useragent_json, useragent);
 json_reader!(streamprofile_json, streamprofile);
 json_reader!(outputprofile_json, outputprofile);
+json_reader!(setting_json, setting);
 
 macro_rules! useragent_json_writer {
     ($alias:ident, $canonical:ident, $payload:ty) => {
@@ -811,6 +812,10 @@ pub(crate) fn router_without_settings_detail(auth: AuthService) -> Router {
 fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
     let mut router = Router::new()
         .route("/api/core/settings/", get(settings))
+        .route(
+            "/api/core/settings.json",
+            catalogue_options::json_alias(settings, catalogue_options::COLLECTION_ALLOW),
+        )
         .route(
             "/api/core/useragents/",
             get(direct_useragents)
@@ -916,7 +921,12 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
                 .fallback(omitted_json_method),
         );
     if detail {
-        router = router.route("/api/core/settings/{id}/", get(setting));
+        router = router
+            .route("/api/core/settings/{id}/", get(setting))
+            .route(
+                "/api/core/settings/{json_id}",
+                catalogue_options::json_alias(setting_json, catalogue_options::DETAIL_ALLOW),
+            );
     }
     router.with_state(auth)
 }
@@ -1450,6 +1460,54 @@ mod json_profile_tests {
                 .body(Body::empty())
                 .unwrap();
             assert_eq!(app.clone().oneshot(request).await.unwrap().status(), status);
+        }
+    }
+}
+
+#[cfg(test)]
+mod core_settings_alias_tests {
+    use super::*;
+    use axum::body::Body;
+    use tower::ServiceExt;
+
+    #[tokio::test]
+    async fn core_settings_aliases_preserve_optional_legacy_detail_mount() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy("postgresql://unused:unused@127.0.0.1:1/unused")
+            .unwrap();
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("fixture-only-key".into()).unwrap(),
+        );
+        let apps = [
+            (router(auth.clone()), true),
+            (router_without_settings_detail(auth), false),
+        ];
+        for (app, legacy_detail) in apps {
+            for path in ["/api/core/settings.json", "/api/core/settings/26.json"] {
+                for (method, status) in [
+                    (Method::GET, StatusCode::NOT_ACCEPTABLE),
+                    (Method::HEAD, StatusCode::NOT_FOUND),
+                    (Method::PATCH, StatusCode::NOT_FOUND),
+                ] {
+                    let mut request = Request::builder()
+                        .method(method)
+                        .uri(format!("{path}?format=api"))
+                        .header(header::ACCEPT, "text/html")
+                        .body(Body::empty())
+                        .unwrap();
+                    request
+                        .extensions_mut()
+                        .insert(ConnectInfo(SocketAddr::from(([127, 0, 0, 1], 1234))));
+                    let response = app.clone().oneshot(request).await.unwrap();
+                    let expected = if path.ends_with("/26.json") && !legacy_detail {
+                        StatusCode::NOT_FOUND
+                    } else {
+                        status
+                    };
+                    assert_eq!(response.status(), expected, "{path}");
+                }
+            }
         }
     }
 }

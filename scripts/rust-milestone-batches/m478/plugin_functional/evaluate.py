@@ -7,12 +7,13 @@ from origin_check import validate as validate_origin
 HERE = Path(__file__).resolve().parent
 ENTRY = 'production-Main plugin transport16 and retained unsigned25'
 
-def evaluate(out):
+def evaluate(out, *, unsigned=False):
     report = json.loads((out / 'report.json').read_text())
     authority = json.loads((out / 'inputs/authority.json').read_text())
     wanted = json.loads((HERE / 'source-authority.json').read_text())
     rows = {}
-    for epoch in ['transport16', 'retained24', 'fresh404']:
+    epochs = ('retained24', 'fresh404') if unsigned else ('transport16', 'retained24', 'fresh404')
+    for epoch in epochs:
         result = {'status': 'failed'}
         rows[epoch] = result
         try:
@@ -35,7 +36,7 @@ def evaluate(out):
             for child, line in zip(result['GPG']['children'], proof[1:marker]):
                 need(child['PID_namespace'] == namespace, "explicit independent invariant: child['PID_namespace'] == namespace")
                 need(line == 'ABSENT ' + str(child['pid']) or (line.split(' ', 1)[0] == str(child['pid']) and line.rsplit(')', 1)[1].split()[19] != child['generation']), "explicit independent invariant: line == 'ABSENT ' + str(child['pid']) or (line.split(' ', 1)[0] == str(child['pid']) and line.rsplit(')', 1)[1].split()[19] != child['generation'])")
-            result['Origin'] = validate_origin(out, epoch, authority)
+            result['Origin'] = validate_origin(out, epoch, authority, numeric_diagnostic=not unsigned)
             result['status'] = 'passed'
         except Exception as error:
             result['error'] = {'type': type(error).__name__, 'message': str(error)}
@@ -44,14 +45,46 @@ def evaluate(out):
     diagnostic = json.loads((out / 'fresh404-capture.json').read_text()).get('numeric_diagnostic', {})
     numeric = {'actual_status': diagnostic.get('status'), 'status': 'failed_unsupported' if diagnostic.get('status') == 501 else 'blocked_unmeasured_Source_numeric_context', 'accepted': False}
     result = {'candidate': report['candidate'], 'entrypoint': ENTRY, 'reference_functional_passed': reference_passed, 'semantic_assertions_passed': False, 'full_required_workflow': False, 'cohorts': rows, 'numeric_diagnostic': numeric, 'default62tables59sequences_literal_equal': default_equal, 'handler_drain_adversarial_qualified': False, 'Source_API_runs': 0, 'Root_full_M8_acceptance': False, 'performance_measured': False}
+    if unsigned:
+        need(report['scope'] == 'unsigned25' and set(report['cohorts']) == set(epochs),
+             'exact ordered unsigned scope')
+        need(report['passed'] is report['cleanup_verified'] is True and not diagnostic
+             and report['Source_API_calls'] == 0 and report['Source_application_runs'] == 0,
+             'actual unsigned owner success and no Original replay or diagnostic')
+        cleanup = json.loads((out / 'independent-cleanup.json').read_text())
+        need(cleanup['exact_owned_absence'] is cleanup['PID_namespace_checked'] is True
+             and cleanup['normal_cleanup_report_valid'] is True and cleanup['fresh_CID_queries'] == 4,
+             'actual storage, Origin and both Main generations independently retired')
+        calls = [rows[epoch].get('functional', {}).get('actual_Native_TCP_cases') for epoch in epochs]
+        origins = [rows[epoch].get('Origin', {}).get('actual_unsigned_reference_requests') for epoch in epochs]
+        need(reference_passed and calls == [24, 1] and origins == [17, 1],
+             'complete 25-call strict unsigned comparator')
+        result.update(entrypoint='reuse normal24+fresh404 controller as one ordered two-context cohort',
+                      semantic_assertions_passed=True, full_required_workflow=True,
+                      actual_calls=25, numeric_diagnostic=None)
     (out / 'independent-functional-review.json').write_text(json.dumps(result, indent=2) + '\n')
     return result
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--scope', choices=('diagnostic41', 'unsigned25'), default='diagnostic41')
+    parser.add_argument('--candidate', type=Path)
+    parser.add_argument('--execution', type=Path)
     args = parser.parse_args()
     try:
-        print(json.dumps(evaluate(args.output)))
+        unsigned = args.scope == 'unsigned25'
+        if unsigned:
+            execution = json.loads(args.execution.read_text())
+            observed = execution['execution']
+            need(execution['id'] == 'native/plugin-unsigned25' and execution['cleanup_verified'] is True
+                 and type(observed['actual_exit']) is int and observed['actual_exit'] == 0
+                 and observed['failure'] is None and all(observed[key] is True for key in
+                     ('process_group_settled', 'stdout_EOF', 'stderr_EOF')), 'fresh coordinator execution and cleanup')
+            report = json.loads((args.output / 'report.json').read_text())
+            need(report['candidate'] == json.loads(args.candidate.read_text()), 'exact frozen candidate')
+        print(json.dumps(evaluate(args.output, unsigned=unsigned)))
+        if unsigned:
+            raise SystemExit(0)
     except Exception as error:
         print(json.dumps({'semantic_assertions_passed': False, 'full_required_workflow': False, 'error': {'type': type(error).__name__, 'message': str(error)}}))
         raise SystemExit(2)

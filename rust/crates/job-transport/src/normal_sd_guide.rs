@@ -62,6 +62,62 @@ impl Capability {
         })
     }
 }
+impl dispatcharr_store::SdGuideRootPublisher for Capability {
+    fn ready(&self) -> bool {
+        self.inner
+            .upgrade()
+            .is_some_and(|inner| !inner.closed.load(Ordering::Acquire))
+    }
+
+    fn publish(
+        &self,
+        publication: dispatcharr_store::SdGuideRootPublication,
+        owner: Owner,
+    ) -> BoxFuture<'_, Result<(), dispatcharr_store::StoreError>> {
+        Box::pin(async move {
+            use dispatcharr_store::StoreError;
+            let inner = self
+                .inner
+                .upgrade()
+                .filter(|inner| self.owns(&inner.jobs))
+                .ok_or(StoreError::Unsupported(
+                    "Schedules Direct guide worker is stopped",
+                ))?;
+            let id = publication.task_id();
+            validate_http_guide_root(publication.bytes(), id)
+                .map_err(|_| StoreError::UnhandledRestFault)?;
+            let receipt = inner
+                .jobs
+                .publish_sd_guide(publication.bytes(), owner)
+                .await
+                .map_err(|_| StoreError::UnhandledRestFault)?;
+            if receipt.task_id != id {
+                return Err(StoreError::UnhandledRestFault);
+            }
+            Ok(())
+        })
+    }
+}
+
+fn validate_http_guide_root(raw: &[u8], id: uuid::Uuid) -> Result<(), WireError> {
+    use crate::sd_guide_protocol::{parse, Kind};
+    let message = parse(raw).map_err(|_| WireError::Protocol)?;
+    if message.common.id != id
+        || message.common.root != id
+        || message.common.parent.is_some()
+        || message.eta.is_some()
+        || message.force
+        || message.defer != 0
+        || !matches!(
+            (message.kind, message.delegated),
+            (Kind::Mapped, false) | (Kind::Single, true)
+        )
+    {
+        return Err(WireError::Protocol);
+    }
+    Ok(())
+}
+
 struct Active(Arc<Inner>);
 impl Drop for Active {
     fn drop(&mut self) {

@@ -3,7 +3,7 @@ import base64,hashlib,json
 from pathlib import Path
 from gpg_trace import need
 
-def validate(output,epoch,authority):
+def validate(output,epoch,authority, *, numeric_diagnostic=True):
     observed=json.loads((output/(epoch+'-Origin-observations.json')).read_text())
     if epoch=='transport16':
         wanted=[json.loads(line) for line in (output/'inputs/transport16-origin.jsonl').read_text().splitlines()]
@@ -18,7 +18,7 @@ def validate(output,epoch,authority):
     binding=authority[epoch];reference=output/'inputs'/binding['actual_Source_origin_filename'];need(hashlib.sha256(reference.read_bytes()).hexdigest()==binding['actual_Source_origin_sha256'],'exact observed unsigned Origin reference')
     wanted=[json.loads(line) for line in reference.read_text().splitlines()];regular=[row for row in observed if row['path']!='/numeric-float.json'];numeric=[row for row in observed if row['path']=='/numeric-float.json']
     need(len(regular)==len(wanted)==binding['actual_Source_origin_count'],'measured unsigned Origin count17or1')
-    need(len(numeric)==(1 if epoch=='fresh404' else 0),'one declared numeric diagnostic only')
+    need(len(numeric)==(1 if epoch=='fresh404' and numeric_diagnostic else 0),'one declared numeric diagnostic only')
     for a,b in zip(wanted,regular):
         need(b['valid'] is True and b['wire_write_complete'] is True and b['peer'][0]=='11.253.250.3','actual owned Origin request')
         need(all(a[key]==b[key] for key in ['method','path','path_occurrence','status','content_type','body_hex','body_sha256']),'retained exact unsigned Origin request/reply')

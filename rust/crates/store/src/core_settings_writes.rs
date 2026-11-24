@@ -1,7 +1,10 @@
 //! Inert generic CoreSettings API, ported from pinned Original Source32.
 //! Original Dispatcharr authors retain model/serializer/signal/application credit.
 //! No Main registration, new pool, default worker or task-coupled write exists.
-use crate::{admin_writes::character, AuthService, RestReadLimits, StoreError, XcUserReadLimits};
+use crate::{
+    admin_writes::character, catalogue_options, core_reads::JsonReadId, AuthService,
+    RestReadLimits, StoreError, XcUserReadLimits,
+};
 use axum::{
     body::HttpBody,
     extract::{ConnectInfo, Path, Request, State},
@@ -147,6 +150,10 @@ impl CoreSettingsWrites {
         Router::new()
             .route("/api/core/settings/", post(create))
             .route("/api/core/settings/check/", post(check))
+            .route(
+                "/api/core/settings/{json_id}",
+                catalogue_options::json_alias(read_json, catalogue_options::DETAIL_ALLOW),
+            )
             .route(
                 "/api/core/settings/{id}/",
                 get(read).put(put).patch(patch).delete(delete),
@@ -1166,6 +1173,15 @@ async fn read(
 ) -> Result<Response, StoreError> {
     s.run(p, Some(id), r, Kind::Read).await
 }
+async fn read_json(
+    state: State<CoreSettingsWrites>,
+    peer: ConnectInfo<SocketAddr>,
+    JsonReadId(id): JsonReadId,
+    request: Request,
+) -> Result<Response, StoreError> {
+    read(state, peer, Path(id), request).await
+}
+
 async fn put(
     State(s): State<CoreSettingsWrites>,
     ConnectInfo(p): ConnectInfo<SocketAddr>,

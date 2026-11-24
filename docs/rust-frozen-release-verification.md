@@ -25,9 +25,11 @@ Administrator Channel Batch now accepts ordered stream replacement and explicit 
 
 Channel Batch also accepts raw channel numbers, TVG IDs, guide station IDs, and EPG assignments. It distinguishes explicit clears from omitted fields and preserves the existing compact-number behavior when a request also changes visibility. Raw EPG writes preserve Original's bulk-update behavior and skip guide publication.
 
-Nested Channel Batch EPG edits support XMLTV, dummy, and source-less guides, including explicit clears. A changed request invalidates the guide cache once and publishes one programme job for each eligible newly assigned guide. Schedules Direct still requires its HTTP-originated task dispatch. Twenty focused Channel Batch Store tests passed.
+Nested Channel Batch overrides support name, TVG ID, guide station ID, channel number, and EPG assignments. Guide changes invalidate the cache once and publish distinct programme jobs. For Schedules Direct, the plan skips guides with existing programmes, publishes individual jobs below three unfilled mappings per source, and publishes one mapped-guide job at the threshold. The normal application binds the publisher to its registered Schedules Direct worker.
 
-Numeric Movie, Series, Episode and Category detail GETs and Movie, Series, Episode and Unified collection GETs accept Original's literal JSON suffix. The aliases reuse authorization, bounded SQL reads, and JSON negotiation. Focused Store tests passed. The final Compose fixtures still need to verify persisted ordering, catch-up response timing, and signed role behavior on the ordinary packaged handlers.
+Numeric Movie, Series, Episode and Category detail GETs and Movie, Series, Episode and Unified collection GETs accept Original's literal JSON suffix. M3U Accounts, EPG Sources, and Core Settings also accept that suffix on collection and numeric detail GETs. The aliases reuse existing authorization, SQL reads, negotiation, and credential filtering. Focused Store tests and the ordinary application build check passed. The final Compose fixtures still need to verify signed roles, persistence, and real guide job settlement.
+
+The unsigned plugin repository owner can schedule the full 25-call comparison against the frozen candidate using the retained 24 Original observations and one retained 404. It independently checks application and fixture retirement, and 11 offline fixture controls passed. Full plugin lifecycle and performance retain their own release checks.
 
 ## One frozen verification campaign
 

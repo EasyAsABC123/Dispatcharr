@@ -85,7 +85,7 @@ def collect(database, epoch, source, plan, schema, target):
                 row['observation_error']={'type':type(error).__name__,'message':str(error)};raise
             row.update(completed_utc=now(),after=state(database,schema),capture_complete=True);result['completed_capture_count']+=1;save(target,result)
         result['capture_complete']=result['actual_request_count']==result['completed_capture_count']==count
-        if epoch=='fresh404':
+        if epoch=='fresh404' and os.environ.get('PLUGIN_REFERENCE_ONLY') != '1':
             body=json.dumps({'url':'http://11.253.250.2:18080/numeric-float.json','public_key':Path('/plugin-assets/manifest-public-key.asc').read_text()},separators=(',',':')).encode()
             headers={'Content-Type':'application/json','Accept':'application/json','X-Api-Key':users[roles['admin']['id']]['api_key']}
             diag={'name':'floating-point-signing-capability','Source_authority':'unmeasured numeric context; diagnostic cannot pass full domain','before':state(database,schema),'began_utc':now()}

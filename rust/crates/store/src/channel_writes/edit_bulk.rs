@@ -228,6 +228,49 @@ impl OverrideEpg {
 }
 
 #[derive(Debug, Default, PartialEq, Eq)]
+struct OverrideScalars {
+    columns: Map<String, Value>,
+    errors: Map<String, Value>,
+}
+
+impl OverrideScalars {
+    fn parse(raw: &Map<String, Value>) -> Result<Self, StoreError> {
+        let mut result = Self::default();
+        for field in ["name", "channel_number", "tvg_id", "tvc_guide_stationid"] {
+            let Some(value) = raw.get(field) else {
+                continue;
+            };
+            let parsed = match field {
+                "channel_number" => super::decimal(field, value, Some(0.0001)),
+                _ if value.is_null() => Ok(Value::Null),
+                _ => {
+                    let maximum = if field == "name" { 512 } else { 255 };
+                    character(field, value, Some(maximum), true).map(|checked| {
+                        // Source validates the nested serializer value, then
+                        // uses the original override intent for bulk persistence.
+                        Value::String(value.as_str().map_or(checked, str::to_owned))
+                    })
+                }
+            };
+            match parsed {
+                Ok(value) => {
+                    result.columns.insert(field.into(), value);
+                }
+                Err(StoreError::InvalidInput(Value::Object(errors))) => {
+                    result.errors.extend(errors)
+                }
+                Err(error) => return Err(error),
+            }
+        }
+        Ok(result)
+    }
+
+    fn clears(&self) -> bool {
+        self.columns.values().any(Value::is_null)
+    }
+}
+
+#[derive(Debug, Default, PartialEq, Eq)]
 struct Edit {
     id: i64,
     name: Option<String>,
@@ -242,6 +285,7 @@ struct Edit {
     references: References,
     override_references: References,
     override_epg: OverrideEpg,
+    override_scalars: OverrideScalars,
     clear_override: bool,
     hidden: Option<bool>,
     stream_replacement: Option<StreamReplacement>,
@@ -253,6 +297,7 @@ impl Edit {
             || self.override_radio.is_some()
             || self.override_references.present()
             || self.override_epg.reference != Reference::Absent
+            || !self.override_scalars.columns.is_empty()
     }
 
     fn changes_compact_number(&self, before: &LockedChannel, hidden: bool) -> bool {
@@ -440,35 +485,49 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                 Err(error) => return Err(error),
             };
             let override_intent = overrides.get(&id);
-            let (override_group, override_radio, override_references, override_epg) =
-                match override_intent {
-                    None | Some(Value::Null) => {
-                        (None, None, References::default(), OverrideEpg::default())
-                    }
-                    Some(Value::Object(values))
-                        if values.keys().all(|key| {
-                            matches!(
-                                key.as_str(),
-                                "channel_group_id"
-                                    | "is_radio"
-                                    | "stream_profile_id"
-                                    | "logo_id"
-                                    | "epg_data_id"
-                            )
-                        }) =>
-                    {
-                        (
-                            values.get("channel_group_id").map(group).transpose()?,
-                            values
-                                .get("is_radio")
-                                .map(|value| boolean("is_radio", value))
-                                .transpose()?,
-                            References::parse(values)?,
-                            OverrideEpg::parse(values.get("epg_data_id"))?,
+            let (
+                override_group,
+                override_radio,
+                override_references,
+                override_epg,
+                override_scalars,
+            ) = match override_intent {
+                None | Some(Value::Null) => (
+                    None,
+                    None,
+                    References::default(),
+                    OverrideEpg::default(),
+                    OverrideScalars::default(),
+                ),
+                Some(Value::Object(values))
+                    if values.keys().all(|key| {
+                        matches!(
+                            key.as_str(),
+                            "channel_group_id"
+                                | "is_radio"
+                                | "stream_profile_id"
+                                | "logo_id"
+                                | "epg_data_id"
+                                | "name"
+                                | "channel_number"
+                                | "tvg_id"
+                                | "tvc_guide_stationid"
                         )
-                    }
-                    _ => return Err(unsupported()),
-                };
+                    }) =>
+                {
+                    (
+                        values.get("channel_group_id").map(group).transpose()?,
+                        values
+                            .get("is_radio")
+                            .map(|value| boolean("is_radio", value))
+                            .transpose()?,
+                        References::parse(values)?,
+                        OverrideEpg::parse(values.get("epg_data_id"))?,
+                        OverrideScalars::parse(values)?,
+                    )
+                }
+                _ => return Err(unsupported()),
+            };
             Ok(Edit {
                 id,
                 name,
@@ -479,6 +538,7 @@ fn edits(value: Value) -> Result<Vec<Edit>, StoreError> {
                 override_radio,
                 override_references,
                 override_epg,
+                override_scalars,
                 clear_override: override_intent == Some(&Value::Null),
                 hidden: row
                     .get("hidden_from_output")
@@ -689,6 +749,7 @@ async fn validate_and_lock(
             &profiles,
             &logos,
         );
+        nested.extend(edit.override_scalars.errors.clone());
         if let Some(error) = edit.override_epg.validation_error(&epgs) {
             nested.insert("epg_data_id".into(), error);
         }
@@ -739,11 +800,48 @@ fn changed_guides(
     changed
 }
 
+type GuideRow = (i64, Option<i64>, Option<String>);
+
+fn guide_jobs(
+    rows: Vec<GuideRow>,
+    already_filled: &BTreeSet<i64>,
+) -> Result<Vec<crate::auto_sync_epg::Task>, StoreError> {
+    use crate::auto_sync_epg::Task;
+    let mut tasks = Vec::new();
+    let mut sources = Vec::<(i64, Vec<i64>)>::new();
+    let mut source_positions = HashMap::new();
+    for (epg, source, kind) in rows {
+        match kind.as_deref() {
+            Some("dummy") => (),
+            Some("schedules_direct") => {
+                let source = source.ok_or(StoreError::UnhandledRestFault)?;
+                let position = *source_positions.entry(source).or_insert_with(|| {
+                    let position = sources.len();
+                    sources.push((source, Vec::new()));
+                    position
+                });
+                if !already_filled.contains(&epg) {
+                    sources[position].1.push(epg);
+                }
+            }
+            _ => tasks.push(Task::ParseProgrammes(epg)),
+        }
+    }
+    for (source, pending) in sources {
+        if pending.len() >= 3 {
+            tasks.push(Task::FetchSdMappedGuide(source));
+        } else {
+            tasks.extend(pending.into_iter().map(Task::ParseSdProgrammes));
+        }
+    }
+    Ok(tasks)
+}
+
 async fn override_guide_plan(
     auth: &AuthService,
     tx: &mut Transaction<'_, Postgres>,
     edits: &[Edit],
-) -> Result<Option<Vec<i64>>, StoreError> {
+) -> Result<Option<Vec<crate::auto_sync_epg::Task>>, StoreError> {
     let requested: Vec<_> = edits
         .iter()
         .filter(|edit| edit.override_epg.reference != Reference::Absent && !edit.clear_override)
@@ -772,8 +870,8 @@ async fn override_guide_plan(
         return Ok(Some(Vec::new()));
     }
     let changed: Vec<_> = changed.into_iter().collect();
-    let rows = sqlx::query_as::<_, (i64, Option<String>)>(
-        "SELECT e.id, s.source_type FROM epg_epgdata e
+    let rows = sqlx::query_as::<_, GuideRow>(
+        "SELECT e.id::bigint, s.id::bigint, s.source_type FROM epg_epgdata e
          LEFT JOIN epg_epgsource s ON s.id = e.epg_source_id
          WHERE e.id = ANY($1)",
     )
@@ -783,19 +881,44 @@ async fn override_guide_plan(
     if rows.len() != changed.len() {
         return Err(StoreError::UnhandledRestFault);
     }
-    let mut programmes = Vec::new();
-    for (id, kind) in rows {
-        match kind.as_deref() {
-            Some("dummy") => (),
-            source @ (None | Some("xmltv"))
-                if super::channel_guide_publisher_ready(auth, source) =>
-            {
-                programmes.push(id)
-            }
-            _ => return Err(super::guide_unsupported()),
+    let sd_ids: Vec<_> = rows
+        .iter()
+        .filter(|(_, _, kind)| kind.as_deref() == Some("schedules_direct"))
+        .map(|(epg, _, _)| *epg)
+        .collect();
+    let already_filled: BTreeSet<i64> = if sd_ids.is_empty() {
+        BTreeSet::new()
+    } else {
+        sqlx::query_scalar(
+            "SELECT DISTINCT epg_id::bigint FROM epg_programdata WHERE epg_id = ANY($1)",
+        )
+        .bind(sd_ids)
+        .fetch_all(&mut **tx)
+        .await?
+        .into_iter()
+        .collect()
+    };
+    for (_, _, kind) in &rows {
+        if kind
+            .as_deref()
+            .is_none_or(|kind| !matches!(kind, "dummy" | "schedules_direct"))
+            && !super::channel_guide_publisher_ready(auth, kind.as_deref())
+        {
+            return Err(super::guide_unsupported());
         }
     }
-    Ok(Some(programmes))
+    let tasks = guide_jobs(rows, &already_filled)?;
+    if tasks
+        .iter()
+        .any(|task| !matches!(task, crate::auto_sync_epg::Task::ParseProgrammes(_)))
+        && !auth
+            .sd_guide_root_publisher
+            .get()
+            .is_some_and(|publisher| publisher.ready())
+    {
+        return Err(super::guide_unsupported());
+    }
+    Ok(Some(tasks))
 }
 
 const CHANNEL_BATCH_SIZE: usize = 100;
@@ -931,6 +1054,19 @@ async fn apply(
             .iter()
             .map(|edit| edit.override_epg.reference.id())
             .collect();
+        let fields: Vec<_> = chunk
+            .iter()
+            .map(|edit| sqlx::types::Json(&edit.override_scalars.columns))
+            .collect();
+        let numbers: Vec<_> = chunk
+            .iter()
+            .map(|edit| {
+                edit.override_scalars
+                    .columns
+                    .get("channel_number")
+                    .and_then(Value::as_f64)
+            })
+            .collect();
         let has_epgs: Vec<_> = chunk
             .iter()
             .map(|edit| edit.override_epg.reference != Reference::Absent)
@@ -940,22 +1076,28 @@ async fn apply(
         sqlx::query(
             "WITH incoming AS (
                  SELECT * FROM unnest($1::bigint[], $2::bigint[], $3::boolean[], $4::boolean[],
-                                      $5::bigint[], $6::boolean[], $7::bigint[], $8::boolean[], $9::bigint[])
-                     AS change(id, group_id, radio, has_profile, profile, has_logo, logo, has_epg, epg)
+                                      $5::bigint[], $6::boolean[], $7::bigint[], $8::boolean[], $9::bigint[], $10::jsonb[], $11::float8[])
+                     AS change(id, group_id, radio, has_profile, profile, has_logo, logo, has_epg, epg, override_fields, channel_number)
              ), existing AS (
                  UPDATE dispatcharr_channels_channeloverride AS overlay
                  SET channel_group_id = COALESCE(incoming.group_id, overlay.channel_group_id),
                      is_radio = COALESCE(incoming.radio, overlay.is_radio),
                      stream_profile_id = CASE WHEN incoming.has_profile THEN incoming.profile ELSE overlay.stream_profile_id END,
                      logo_id = CASE WHEN incoming.has_logo THEN incoming.logo ELSE overlay.logo_id END,
-                     epg_data_id = CASE WHEN incoming.has_epg THEN incoming.epg ELSE overlay.epg_data_id END
+                     epg_data_id = CASE WHEN incoming.has_epg THEN incoming.epg ELSE overlay.epg_data_id END,
+                     name = CASE WHEN incoming.override_fields ? 'name' THEN incoming.override_fields->>'name' ELSE overlay.name END,
+                     channel_number = CASE WHEN incoming.override_fields ? 'channel_number' THEN incoming.channel_number ELSE overlay.channel_number END,
+                     tvg_id = CASE WHEN incoming.override_fields ? 'tvg_id' THEN incoming.override_fields->>'tvg_id' ELSE overlay.tvg_id END,
+                     tvc_guide_stationid = CASE WHEN incoming.override_fields ? 'tvc_guide_stationid' THEN incoming.override_fields->>'tvc_guide_stationid' ELSE overlay.tvc_guide_stationid END
                  FROM incoming WHERE overlay.channel_id = incoming.id
                  RETURNING overlay.channel_id
              )
              INSERT INTO dispatcharr_channels_channeloverride
-                 (channel_id, channel_group_id, is_radio, stream_profile_id, logo_id, epg_data_id, created_at, updated_at)
+                 (channel_id, channel_group_id, is_radio, stream_profile_id, logo_id, epg_data_id,
+                  name, channel_number, tvg_id, tvc_guide_stationid, created_at, updated_at)
              SELECT incoming.id, incoming.group_id, incoming.radio, incoming.profile, incoming.logo, incoming.epg,
-                    clock_timestamp(), clock_timestamp()
+                    incoming.override_fields->>'name', incoming.channel_number, incoming.override_fields->>'tvg_id',
+                    incoming.override_fields->>'tvc_guide_stationid', clock_timestamp(), clock_timestamp()
              FROM incoming
              WHERE NOT EXISTS (SELECT 1 FROM existing WHERE existing.channel_id = incoming.id)",
         )
@@ -968,6 +1110,8 @@ async fn apply(
         .bind(refs.logos)
         .bind(has_epgs)
         .bind(epgs)
+        .bind(fields)
+        .bind(numbers)
         .execute(&mut **tx)
         .await?;
     }
@@ -975,15 +1119,25 @@ async fn apply(
     if let Some(programmes) = guide_programmes {
         *guide_effects_started = true;
         super::guide_after_save(auth, super::GuideTarget::CacheOnly, owner).await?;
-        for epg in programmes {
-            crate::core_settings_special_broker::publish_tvg_programmes(auth, epg).await?;
+        use crate::auto_sync_epg::Task;
+        use crate::core_settings_special_broker::{publish_sd_guide_root, publish_tvg_programmes};
+        for task in programmes {
+            match task {
+                Task::ParseProgrammes(epg) => publish_tvg_programmes(auth, epg).await?,
+                Task::ParseSdProgrammes(epg) => publish_sd_guide_root(auth, false, epg).await?,
+                Task::FetchSdMappedGuide(source) => {
+                    publish_sd_guide_root(auth, true, source).await?
+                }
+            }
         }
     }
     for chunk in override_edits.chunks(OVERRIDE_BATCH_SIZE) {
         let may_clear: Vec<_> = chunk
             .iter()
             .filter(|edit| {
-                edit.override_references.clears() || edit.override_epg.reference == Reference::Clear
+                edit.override_references.clears()
+                    || edit.override_epg.reference == Reference::Clear
+                    || edit.override_scalars.clears()
             })
             .map(|edit| edit.id)
             .collect();
@@ -1681,6 +1835,35 @@ mod tests {
     }
 
     #[test]
+    fn guide_jobs_prioritize_regular_programmes_then_apply_the_sd_threshold() {
+        use crate::auto_sync_epg::Task;
+        let sd = |epg, source| (epg, Some(source), Some("schedules_direct".to_owned()));
+        let rows = vec![
+            sd(101, 40),
+            sd(201, 50),
+            (1, Some(20), Some("xmltv".to_owned())),
+            sd(102, 40),
+            sd(202, 50),
+            (2, Some(10), Some("dummy".to_owned())),
+            (3, None, None),
+            sd(103, 40),
+            sd(203, 50),
+            sd(204, 50),
+            sd(301, 60),
+        ];
+        assert_eq!(
+            guide_jobs(rows, &BTreeSet::from([102, 201, 301])).unwrap(),
+            [
+                Task::ParseProgrammes(1),
+                Task::ParseProgrammes(3),
+                Task::ParseSdProgrammes(101),
+                Task::ParseSdProgrammes(103),
+                Task::FetchSdMappedGuide(50),
+            ]
+        );
+    }
+
+    #[test]
     fn changed_nested_guides_deduplicate_and_distinguish_a_clear_only_generation() {
         let before = HashMap::from([(1, Some(12)), (2, None), (3, Some(99))]);
         assert_eq!(
@@ -1703,6 +1886,88 @@ mod tests {
             ),
             Some(BTreeSet::from([10, 11]))
         );
+    }
+
+    #[test]
+    fn overlay_text_preserves_raw_intent_and_distinguishes_clear_from_blank() {
+        let rows = edits(json!([
+            {"id": 7, "override": {"name": "  typed name  ", "tvg_id": "", "tvc_guide_stationid": 7.25}},
+            {"id": 8, "override": {"name": null, "tvg_id": null}},
+            {"id": 9, "override": {"name": [], "tvg_id": false, "tvc_guide_stationid": "x".repeat(256)}},
+            {"id": 10, "name": "  trimmed raw name ", "tvg_id": "  trimmed raw TVG ID "}
+        ])).unwrap();
+        assert_eq!(
+            rows[0].override_scalars.columns,
+            json!({
+                "name": "  typed name  ", "tvg_id": "", "tvc_guide_stationid": "7.25"
+            })
+            .as_object()
+            .unwrap()
+            .clone()
+        );
+        assert!(rows[0].has_override_values());
+        assert!(!rows[0].override_scalars.clears());
+        assert_eq!(
+            rows[1].override_scalars.columns,
+            json!({"name": null, "tvg_id": null})
+                .as_object()
+                .unwrap()
+                .clone()
+        );
+        assert!(rows[1].override_scalars.clears());
+        assert_eq!(
+            rows[2].override_scalars.errors,
+            json!({
+                "name": ["Not a valid string."],
+                "tvg_id": ["Not a valid string."],
+                "tvc_guide_stationid": ["Ensure this field has no more than 255 characters."]
+            })
+            .as_object()
+            .unwrap()
+            .clone()
+        );
+        assert_eq!(rows[3].name.as_deref(), Some("trimmed raw name"));
+        assert_eq!(rows[3].raw_metadata.columns["tvg_id"], "trimmed raw TVG ID");
+        assert!(rows[3].override_scalars.columns.is_empty());
+    }
+
+    #[test]
+    fn nested_numbers_are_nullable_and_require_the_source_minimum() {
+        let rows = edits(json!([
+            {"id": 1, "channel_number": 11.5, "override": {"channel_number": "39.75"}},
+            {"id": 2, "override": {"channel_number": null}},
+            {"id": 3, "override": {"channel_number": 0.0001}},
+            {"id": 4, "override": {"channel_number": 0}},
+            {"id": 5, "override": {"channel_number": -1}},
+            {"id": 6, "override": {"channel_number": []}},
+            {"id": 7, "override": {"tvg_id": "preserved"}}
+        ]))
+        .unwrap();
+        assert_eq!(rows[0].raw_metadata.columns["channel_number"], json!(11.5));
+        assert_eq!(
+            rows[0].override_scalars.columns["channel_number"],
+            json!(39.75)
+        );
+        assert!(rows[0].has_override_values());
+        assert!(rows[1].override_scalars.clears());
+        assert_eq!(
+            rows[2].override_scalars.columns["channel_number"],
+            json!(0.0001)
+        );
+        for row in &rows[3..5] {
+            assert_eq!(
+                row.override_scalars.errors["channel_number"],
+                json!(["Ensure this value is greater than or equal to 0.0001."])
+            );
+        }
+        assert_eq!(
+            rows[5].override_scalars.errors["channel_number"],
+            json!(["A valid number is required."])
+        );
+        assert!(!rows[6]
+            .override_scalars
+            .columns
+            .contains_key("channel_number"));
     }
 
     #[test]
