@@ -151,6 +151,87 @@ impl UpdateEventSink for Gate {
     }
 }
 #[tokio::test(flavor = "multi_thread", worker_threads = 2)]
+#[ignore = "requires owned disposable PostgreSQL and Redis"]
+async fn active_worker_keeps_unrelated_dismissals_outside_the_expiration_budget() {
+    let pool = pool().await;
+    reset(&pool).await;
+    let prefix = format!("rust-owned-other-{}-", Uuid::new_v4());
+    let mut seed = pool.begin().await.unwrap();
+    let affected = sqlx::query(
+        "WITH inserted AS (
+            INSERT INTO core_systemnotification
+                (notification_key,notification_type,priority,source,title,message,action_data,is_active,admin_only,created_at,updated_at)
+            SELECT $1||n::text,'version_update','normal','system','Owned','Owned','{}',true,false,now(),now()
+            FROM generate_series(1,1025) n
+            RETURNING id
+        )
+        INSERT INTO core_notificationdismissal(user_id,notification_id,dismissed_at,action_taken)
+        SELECT (SELECT id FROM accounts_user ORDER BY id LIMIT 1),id,now(),NULL FROM inserted",
+    )
+    .bind(&prefix)
+    .execute(&mut *seed)
+    .await
+    .unwrap()
+    .rows_affected();
+    assert_eq!(affected, 1025);
+    seed.commit().await.unwrap();
+
+    let jobs = jobs().await;
+    let message = publish(&jobs).await;
+    let worker = DefaultWorker::new(
+        jobs.clone(),
+        Arc::new(KnownDomains::with_active_notifications(
+            pool.clone(),
+            Arc::new(bus().await),
+        )),
+    )
+    .unwrap();
+    assert!(matches!(
+        worker.run_once(Arc::new(())).await.unwrap(),
+        Run::Completed(id) if id == message.task_id
+    ));
+    assert_eq!(
+        jobs.read(message.task_id, Arc::new(()))
+            .await
+            .unwrap()
+            .unwrap()
+            .state,
+        crate::decode::State::Success
+    );
+    let (active_warnings, unrelated_dismissals): (i64, i64) = sqlx::query_as(
+        "SELECT (SELECT count(*) FROM core_systemnotification WHERE is_active AND notification_key LIKE 'xc-exp-warning-%'),
+                (SELECT count(*) FROM core_notificationdismissal d JOIN core_systemnotification n ON n.id=d.notification_id
+                 WHERE left(n.notification_key,length($1))=$1)",
+    )
+    .bind(&prefix)
+    .fetch_one(&pool)
+    .await
+    .unwrap();
+    assert_eq!((active_warnings, unrelated_dismissals), (1, 1025));
+
+    let mut cleanup = pool.begin().await.unwrap();
+    sqlx::query(
+        "DELETE FROM core_notificationdismissal WHERE notification_id IN (
+            SELECT id FROM core_systemnotification WHERE left(notification_key,length($1))=$1
+        )",
+    )
+    .bind(&prefix)
+    .execute(&mut *cleanup)
+    .await
+    .unwrap();
+    sqlx::query("DELETE FROM core_systemnotification WHERE left(notification_key,length($1))=$1")
+        .bind(&prefix)
+        .execute(&mut *cleanup)
+        .await
+        .unwrap();
+    cleanup.commit().await.unwrap();
+    assert!(worker.shutdown(Duration::from_secs(3)).await);
+    jobs.shutdown(Duration::from_secs(3)).await.unwrap();
+    reset(&pool).await;
+    pool.close().await;
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 2)]
 #[ignore]
 async fn actual_sql_preflight_cancellation_retains_owner() {
     let pool = pool().await;

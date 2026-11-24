@@ -31,6 +31,31 @@ pub(crate) struct Service {
 pub(crate) type Profile = (i64, i64, String, String, DateTime<Utc>);
 const SOURCE_PROFILE_QUERY: &str = r#"SELECT "m3u_m3uaccountprofile"."id", "m3u_m3uaccountprofile"."m3u_account_id", "m3u_m3uaccountprofile"."name", "m3u_m3uaccountprofile"."is_default", "m3u_m3uaccountprofile"."max_streams", "m3u_m3uaccountprofile"."is_active", "m3u_m3uaccountprofile"."search_pattern", "m3u_m3uaccountprofile"."replace_pattern", "m3u_m3uaccountprofile"."current_viewers", "m3u_m3uaccountprofile"."custom_properties", "m3u_m3uaccountprofile"."exp_date", "m3u_m3uaccount"."id", "m3u_m3uaccount"."name", "m3u_m3uaccount"."server_url", "m3u_m3uaccount"."file_path", "m3u_m3uaccount"."server_group_id", "m3u_m3uaccount"."max_streams", "m3u_m3uaccount"."is_active", "m3u_m3uaccount"."created_at", "m3u_m3uaccount"."updated_at", "m3u_m3uaccount"."status", "m3u_m3uaccount"."last_message", "m3u_m3uaccount"."user_agent_id", "m3u_m3uaccount"."locked", "m3u_m3uaccount"."stream_profile_id", "m3u_m3uaccount"."account_type", "m3u_m3uaccount"."username", "m3u_m3uaccount"."password", "m3u_m3uaccount"."custom_properties", "m3u_m3uaccount"."refresh_interval", "m3u_m3uaccount"."refresh_task_id", "m3u_m3uaccount"."stale_stream_days", "m3u_m3uaccount"."priority" FROM "m3u_m3uaccountprofile" INNER JOIN "m3u_m3uaccount" ON ("m3u_m3uaccountprofile"."m3u_account_id" = "m3u_m3uaccount"."id") WHERE ("m3u_m3uaccountprofile"."exp_date" IS NOT NULL AND "m3u_m3uaccountprofile"."is_active" AND "m3u_m3uaccount"."is_active")"#;
 const FILTER:&str="is_active AND (notification_key LIKE 'xc-exp-warning-%' OR notification_key LIKE 'xc-exp-expired-%')";
+fn candidate_counts_sql() -> String {
+    format!(
+        "WITH candidates AS (
+            SELECT id FROM core_systemnotification
+            WHERE ({FILTER})
+               OR notification_key IN (
+                    SELECT 'xc-exp-warning-'||p.id::text
+                    FROM m3u_m3uaccountprofile p JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id
+                    WHERE a.is_active AND p.is_active AND p.exp_date IS NOT NULL
+               )
+               OR notification_key IN (
+                    SELECT 'xc-exp-expired-'||p.id::text
+                    FROM m3u_m3uaccountprofile p JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id
+                    WHERE a.is_active AND p.is_active AND p.exp_date IS NOT NULL
+               )
+            LIMIT 129
+        )
+        SELECT (SELECT count(*) FROM candidates),
+               (SELECT count(*) FROM (
+                    SELECT 1 FROM core_notificationdismissal d
+                    JOIN candidates n ON n.id=d.notification_id
+                    LIMIT 1025
+               ) AS related)"
+    )
+}
 struct Receipt {
     done: Option<oneshot::Sender<()>>,
     _owner: Arc<dyn Send + Sync>,
@@ -103,10 +128,11 @@ impl Service {
                 return Err(e);
             }
         };
-        let notices:i64=sqlx::query_scalar(&format!("SELECT count(*) FROM core_systemnotification WHERE ({FILTER}) OR notification_key IN (SELECT 'xc-exp-warning-'||p.id::text FROM m3u_m3uaccountprofile p JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id WHERE a.is_active AND p.is_active AND p.exp_date IS NOT NULL) OR notification_key IN (SELECT 'xc-exp-expired-'||p.id::text FROM m3u_m3uaccountprofile p JOIN m3u_m3uaccount a ON a.id=p.m3u_account_id WHERE a.is_active AND p.is_active AND p.exp_date IS NOT NULL)")).fetch_one(&mut *connection).await.map_err(Error::Sql)?;
-        // Global bounded dismissal count is conservative; no unbounded related
-        // expansion is materialized before the admitted collector transaction.
-        let dismissals: i64 = sqlx::query_scalar("SELECT count(*) FROM core_notificationdismissal")
+        // Only expiration candidates can reach the collectors. A dismissal
+        // of an unrelated notice cannot consume their admission budget.
+        // Count both bounded sets in one snapshot; deletes still recheck
+        // the exact related rows under their parent locks.
+        let (notices, dismissals): (i64, i64) = sqlx::query_as(&candidate_counts_sql())
             .fetch_one(&mut *connection)
             .await
             .map_err(Error::Sql)?;
