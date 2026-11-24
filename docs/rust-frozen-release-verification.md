@@ -63,6 +63,8 @@ The hourly scheduler tick uses the same owned startup as the saved-default insta
 
 The ordinary scheduler normal-stop row reuses this fixture. Its evaluator requires the actual Main stop command, exit zero without OOM, unchanged run count, empty ready and reserved queues, and exact cleanup. The combined M6 owner suite passed 23 offline tests.
 
+The EPG import route now attaches the declared POST and OPTIONS methods and the Accept variation to handled API responses. Front-door admission, over-limit, unsupported and uncaught server responses keep their own headers. A focused job-transport test passed, and the paired signed import owner still needs the actual worker, broker and cleanup receipts.
+
 ## VOD admission cleanup
 
 When all providers definitely refuse a new VOD session at capacity, the 503 response now waits within its bound for token-fenced cleanup of the provisional session. The retained cleanup owner handles unresolved Redis replies. Four authenticated-restart tests passed and the held-Redis-reply regression compiled for the final fixture.
@@ -84,6 +86,8 @@ The Xtream gateway also accepts one trailing slash for `/player_api.php` and `/p
 The Core UserAgent and StreamProfile JSON collections also accept their registered trailing slash. GET and POST use the same authentication, representation and method handlers as the existing spelling. A focused test checked the exact authentication responses for both methods and both spellings. Signed collection responses and mutation effects remain part of the final packaged Core fixture.
 
 The Channels summary and number-range JSON collection actions also accept their registered trailing slash. Both spellings use the existing query and permission handlers. The focused router test exercised 12 requests, and the same-copy Channels fixture will check signed responses on the final package.
+
+The Logo JSON collection also accepts its registered trailing slash for GET and uses the same permission and serialization paths. The focused router check passed. The signed Channels and Logo fixture will compare 24 requests per backend against the same fixture state.
 
 ## EPG Programme JSON and HDHomeRun renderer selection
 

@@ -16,7 +16,7 @@ use crate::{
 use axum::{
     body::to_bytes,
     extract::{ConnectInfo, Request, State},
-    http::{Method, StatusCode},
+    http::{header, HeaderValue, Method, StatusCode},
     response::{IntoResponse, Response},
     routing::any,
     Json, Router,
@@ -535,7 +535,7 @@ async fn import(
     let owner = Arc::new(HttpOwner { _permit: permit });
     let (tx, rx) = tokio::sync::oneshot::channel();
     tokio::spawn(async move {
-        let result = service.request(peer, request, owner).await;
+        let result = finalize_import_response(service.request(peer, request, owner).await);
         let _ = tx.send(result);
     });
     match tokio::time::timeout(Duration::from_secs(5), rx).await {
@@ -545,6 +545,58 @@ async fn import(
             "Refresh publication remains unconfirmed",
         )
             .into_response(),
+    }
+}
+
+fn finalize_import_response(mut response: Response) -> Response {
+    // The Original DRF view declares POST and OPTIONS and has two renderers.
+    // Replies generated outside the view keep their own response headers.
+    if matches!(
+        response.status(),
+        StatusCode::OK
+            | StatusCode::ACCEPTED
+            | StatusCode::BAD_REQUEST
+            | StatusCode::UNAUTHORIZED
+            | StatusCode::FORBIDDEN
+            | StatusCode::METHOD_NOT_ALLOWED
+    ) {
+        let headers = response.headers_mut();
+        headers.insert(header::ALLOW, HeaderValue::from_static("POST, OPTIONS"));
+        headers.append(header::VARY, HeaderValue::from_static("Accept"));
+    }
+    response
+}
+
+#[cfg(test)]
+mod import_response_tests {
+    use super::*;
+
+    #[test]
+    fn epg_import_declares_source_methods_and_renderer_variation() {
+        for status in [
+            StatusCode::OK,
+            StatusCode::ACCEPTED,
+            StatusCode::BAD_REQUEST,
+            StatusCode::UNAUTHORIZED,
+            StatusCode::FORBIDDEN,
+            StatusCode::METHOD_NOT_ALLOWED,
+        ] {
+            let response = finalize_import_response(status.into_response());
+            assert_eq!(response.status(), status);
+            assert_eq!(response.headers()[header::ALLOW], "POST, OPTIONS");
+            assert_eq!(response.headers()[header::VARY], "Accept");
+        }
+        for status in [
+            StatusCode::INTERNAL_SERVER_ERROR,
+            StatusCode::NOT_IMPLEMENTED,
+            StatusCode::PAYLOAD_TOO_LARGE,
+            StatusCode::SERVICE_UNAVAILABLE,
+        ] {
+            let response = finalize_import_response(status.into_response());
+            assert_eq!(response.status(), status);
+            assert!(!response.headers().contains_key(header::ALLOW));
+            assert!(!response.headers().contains_key(header::VARY));
+        }
     }
 }
 
