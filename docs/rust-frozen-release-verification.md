@@ -742,10 +742,16 @@ same bounded manual, single-stream channel shape as the existing name edit.
 Missing name returns the exact required-field response without writing. A
 successful update changes name and its modification timestamp in one transaction.
 The disposable-file tests survey stored rows and SQLite types across all 63
-captured tables and verify the updated name after close and reopen. Retained
-Original evidence covers required-name refusal and a broader scalar replacement.
-The copied SQLite name-only implementation is supported by the pinned Original
-serializer's treatment of omitted optional fields and stream links.
+captured tables and verify the updated name after close and reopen.
+
+Pinned Original Django and Django REST framework also passed eight actual
+requests on a separate disposable SQLite fixture with synthetic roles. Admin
+name-only PUT made one Channel UPDATE and preserved the stream link, custom
+group marker and every unrelated value across ten fixture tables. An independent
+reopen reproduced the exact response. Empty and read-only-ID bodies returned
+the required-name 400 without writing. This covers the bounded operation on
+both implementations. A paired run through signed packaged endpoints is still
+required.
 
 Pinned Linux Rust checks cover the copied-data Main build, both Channel Group
 metadata tests, 19 copied SQLite create and name-edit tests, and seven profile
