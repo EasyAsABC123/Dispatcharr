@@ -275,6 +275,12 @@ cases and six private PostgreSQL projection cases distinguished those
 defaults from an explicit inactive choice and an oversized database
 value. Two focused Rust tests passed.
 
+The watcher now accepts lowercase suffix-only filenames and routes
+`.m3u8` inputs to the existing plain playlist reader. Original admitted
+nine measured filenames and rejected ten controls. Rust passed 36
+scanner tests. The existing paired package fixture still needs the
+watcher-to-worker handoff check.
+
 An automatic Stream Settings update now maps a confirmed global rehash
 broker rejection to the measured 500 response. A pinned Original
 component confirmed that the setting remains saved and the owned locks

@@ -761,13 +761,14 @@ fn inspect_domain(roots: Roots, mixed: bool) -> Result<Vec<WatchFile>, Error> {
                 .and_then(|v| v.to_str())
                 .ok_or(Error::Unsupported)?
                 .to_owned();
-            let ext = path.extension().and_then(|v| v.to_str()).unwrap_or("");
-            let known = if epg {
-                matches!(ext, "xml" | "gz" | "zip" | "xz")
+            // Original matches literal filename suffixes, including names
+            // made up entirely of a suffix such as ".m3u" or ".xml".
+            let suffixes: &[&str] = if epg {
+                &[".xml", ".gz", ".zip", ".xz"]
             } else {
-                matches!(ext, "m3u" | "m3u8")
+                &[".m3u", ".m3u8"]
             };
-            if !known {
+            if !suffixes.iter().any(|&suffix| name.ends_with(suffix)) {
                 continue;
             }
             supported += 1;
@@ -837,5 +838,56 @@ mod auto_import_tests {
     #[test]
     fn mapped_file_scanner_preserves_oversized_settings_refusal() {
         assert!(matches!(auto_import(Some(&None)), Err(Error::Unsupported)));
+    }
+}
+
+#[cfg(test)]
+mod watch_suffix_tests {
+    use super::*;
+
+    #[test]
+    fn mapped_scanner_uses_case_sensitive_original_filename_suffixes() {
+        let root = std::env::temp_dir().join(format!("rust-owned-watch-suffix-{}", Uuid::new_v4()));
+        let roots = Roots {
+            m3u: root.join("m3u"),
+            epg: root.join("epg"),
+            logos: root.join("logos"),
+        };
+        for directory in [&roots.m3u, &roots.epg, &roots.logos] {
+            std::fs::create_dir_all(directory).unwrap();
+        }
+        let playlist = [".m3u", ".m3u8", "ordinary.m3u", "ordinary.m3u8"];
+        let guide = [".gz", ".xml", ".xz", ".zip", "ordinary.xml.gz"];
+        let admitted = |files: Vec<WatchFile>| {
+            let mut names = files.into_iter().map(|file| file.name).collect::<Vec<_>>();
+            names.sort();
+            names
+        };
+        for name in playlist.into_iter().chain([
+            "upper.M3U8",
+            "mixed.M3u",
+            "missingdotm3u",
+            "playlist.m3u.gz",
+        ]) {
+            std::fs::write(roots.m3u.join(name), b"").unwrap();
+        }
+        std::fs::create_dir(roots.m3u.join("nested.m3u")).unwrap();
+        assert_eq!(
+            admitted(inspect_domain(roots.clone(), true).unwrap()),
+            playlist
+        );
+        for name in playlist {
+            std::fs::remove_file(roots.m3u.join(name)).unwrap();
+        }
+        for name in
+            guide
+                .into_iter()
+                .chain(["mixed.xml.Gz", "upper.ZIP", "guide.gzip", "missingdotxml"])
+        {
+            std::fs::write(roots.epg.join(name), b"").unwrap();
+        }
+        std::fs::create_dir(roots.epg.join("nested.xml")).unwrap();
+        assert_eq!(admitted(inspect_domain(roots, true).unwrap()), guide);
+        std::fs::remove_dir_all(root).unwrap();
     }
 }

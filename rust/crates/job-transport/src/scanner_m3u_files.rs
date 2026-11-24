@@ -140,13 +140,14 @@ pub(crate) enum InputFormat {
 }
 
 pub(crate) fn input_format(path: &Path) -> Option<InputFormat> {
-    if path.extension().is_some_and(|extension| extension == "m3u") {
-        return Some(InputFormat::Plain);
+    let name = path.file_name()?.to_str()?;
+    if name.ends_with(".m3u") || name.ends_with(".m3u8") {
+        Some(InputFormat::Plain)
+    } else if name.ends_with(".m3u.gz") {
+        Some(InputFormat::Gzip)
+    } else {
+        None
     }
-    path.file_name()
-        .and_then(|name| name.to_str())
-        .filter(|name| name.ends_with(".m3u.gz"))
-        .map(|_| InputFormat::Gzip)
 }
 
 pub(crate) fn input(path: &Path) -> Result<Catalog, Error> {
@@ -387,6 +388,29 @@ mod tests {
         std::os::unix::fs::symlink(&plain, &zipped).unwrap();
         assert!(matches!(input(&zipped), Err(Error::Unsupported)));
         assert!(input_format(&root.join("owned.m3u.xz")).is_none());
+        fs::remove_dir_all(root).unwrap();
+    }
+
+    #[test]
+    fn mapped_scanner_child_reads_plain_m3u8_and_extension_only_m3u_files() {
+        let root =
+            std::env::temp_dir().join(format!("rust-owned-mapped-m3u8-{}", uuid::Uuid::new_v4()));
+        fs::create_dir(&root).unwrap();
+        let playlist = b"#EXTM3U\n#EXTINF:-1 group-title=\"Owned Group\",Owned stream\nhttp://127.0.0.1:9/owned-never-played.ts\n";
+        let control = root.join("ordinary.m3u");
+        fs::write(&control, playlist).unwrap();
+        let control = input(&control).unwrap();
+        for name in [".m3u", ".m3u8", "ordinary.m3u8"] {
+            let path = root.join(name);
+            fs::write(&path, playlist).unwrap();
+            let loaded = input(&path).unwrap();
+            assert_eq!(loaded.entries, control.entries);
+            assert_eq!(loaded.groups, control.groups);
+            assert_eq!(loaded.raw, control.raw);
+        }
+        for name in ["ordinary.M3U8", "plainm3u", "ordinary.m3u8.gz"] {
+            assert!(input_format(&root.join(name)).is_none());
+        }
         fs::remove_dir_all(root).unwrap();
     }
 
