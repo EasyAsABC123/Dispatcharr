@@ -30,7 +30,10 @@ pub fn router(
     fmp4: Option<Fmp4Gateway>,
 ) -> Router {
     Router::new()
-        .route("/proxy/ts/stream/{channel_id}", get(stream).head(stream))
+        .route(
+            "/proxy/ts/stream/{channel_id}",
+            get(stream).head(stream_head),
+        )
         .with_state(Playback {
             engine,
             resolver,
@@ -55,6 +58,20 @@ fn error(reason: PlaybackError) -> Response {
     }
     response
 }
+async fn stream_head(
+    state: State<Playback>,
+    path: Path<String>,
+    query: Query<Vec<(String, String)>>,
+    headers: HeaderMap,
+    peer: Option<Extension<ConnectInfo<SocketAddr>>>,
+) -> Response {
+    let mut response = stream(Method::HEAD, state, path, query, headers, peer).await;
+    response
+        .headers_mut()
+        .insert("allow", "GET, OPTIONS".parse().unwrap());
+    response
+}
+
 async fn stream(
     method: Method,
     State(app): State<Playback>,
@@ -86,15 +103,11 @@ async fn stream(
         if let Err(reason) = app.resolver.authenticate_optional(request).await {
             return error(reason);
         }
-        let mut response = (
+        return (
             StatusCode::METHOD_NOT_ALLOWED,
             Json(serde_json::json!({"detail":"Method \"HEAD\" not allowed."})),
         )
             .into_response();
-        response
-            .headers_mut()
-            .insert("allow", "GET, OPTIONS".parse().unwrap());
-        return response;
     }
     let resolution = match app.resolver.resolve_response(request).await {
         Ok(resolution) => resolution,
@@ -145,6 +158,107 @@ async fn dispatch_resolution(
 mod tests {
     use super::*;
     use dispatcharr_contracts::{PlaybackRedirectPlan, PlaybackViewer, UserLimitPolicy};
+
+    struct HeadResolver;
+
+    impl PlaybackResolver for HeadResolver {
+        fn resolve(
+            &self,
+            _request: PlaybackRequest,
+        ) -> dispatcharr_contracts::BoxFuture<
+            '_,
+            Result<dispatcharr_contracts::PlaybackSource, PlaybackError>,
+        > {
+            panic!("HEAD must not start playback")
+        }
+
+        fn authenticate_optional(
+            &self,
+            request: PlaybackRequest,
+        ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), PlaybackError>> {
+            Box::pin(async move {
+                if request.header("authorization") == Some("Bearer fixture-inactive") {
+                    return Err(PlaybackError {
+                        status: 401,
+                        body: serde_json::json!({"detail": "Fixture credential was rejected."}),
+                    });
+                }
+                Ok(())
+            })
+        }
+
+        fn authorize_admin(
+            &self,
+            request: PlaybackRequest,
+        ) -> dispatcharr_contracts::BoxFuture<'_, Result<(), PlaybackError>> {
+            Box::pin(async move {
+                if request.header("authorization") == Some("Bearer fixture-admin") {
+                    return Ok(());
+                }
+                Err(PlaybackError {
+                    status: 401,
+                    body: serde_json::json!({"detail": "Authentication credentials were not provided."}),
+                })
+            })
+        }
+    }
+
+    #[tokio::test]
+    async fn original_ts_head_routes_keep_allow_without_starting_playback() {
+        use axum::{body::Body, http::header};
+        use tower::ServiceExt;
+
+        let engine = StreamEngine::new(dispatcharr_stream_http::EngineConfig::default()).unwrap();
+        let resolver = Arc::new(HeadResolver);
+        let app = engine
+            .controls_router(resolver.clone())
+            .merge(router(engine, resolver, None, None));
+        let playback = "/proxy/ts/stream/00000000-0000-4000-8000-000000000001?output_format=ts";
+        let status = "/proxy/ts/status";
+        let outcomes = [
+            (playback, None, 405, "41"),
+            (playback, Some("fixture-admin"), 405, "41"),
+            (playback, Some("fixture-inactive"), 401, "45"),
+            (status, None, 401, "58"),
+            (status, Some("fixture-admin"), 405, "41"),
+        ];
+        for (path, actor, code, content_length) in outcomes {
+            let mut request = axum::http::Request::builder()
+                .method(Method::HEAD)
+                .uri(path);
+            if let Some(actor) = actor {
+                request = request.header(header::AUTHORIZATION, format!("Bearer {actor}"));
+            }
+            let response = app
+                .clone()
+                .oneshot(request.body(Body::empty()).unwrap())
+                .await
+                .unwrap();
+            assert_eq!(response.status(), code);
+            assert_eq!(response.headers()[header::ALLOW], "GET, OPTIONS");
+            assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+            assert_eq!(response.headers()[header::CONTENT_LENGTH], content_length);
+            if code == 401 {
+                assert_eq!(
+                    response.headers()[header::WWW_AUTHENTICATE],
+                    "Bearer realm=\"api\""
+                );
+            }
+            assert!(axum::body::to_bytes(response.into_body(), 0)
+                .await
+                .unwrap()
+                .is_empty());
+        }
+        let admin = "fixture-admin";
+        let request = axum::http::Request::builder()
+            .uri(status)
+            .header(header::AUTHORIZATION, format!("Bearer {admin}"))
+            .body(Body::empty())
+            .unwrap();
+        let response = app.oneshot(request).await.unwrap();
+        assert_eq!(response.status(), StatusCode::OK);
+        assert!(!response.headers().contains_key(header::ALLOW));
+    }
 
     #[tokio::test]
     async fn ordinary_capacity_error_keeps_original_wire_format() {

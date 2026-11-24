@@ -32,7 +32,7 @@ impl StreamEngine {
 
     pub fn controls_router(&self, resolver: Arc<dyn PlaybackResolver>) -> Router {
         Router::new()
-            .route("/proxy/ts/status", get(status).head(admin_head))
+            .route("/proxy/ts/status", get(status).head(status_head))
             .route("/internal/proxy/ts/v1/memory", get(memory).head(admin_head))
             .route(
                 "/proxy/ts/stop_client/{channel_id}",
@@ -138,6 +138,19 @@ async fn stream_head(
     .await;
     error(result.unwrap_err())
 }
+async fn status_head(
+    state: State<App>,
+    query: Query<Vec<(String, String)>>,
+    headers: HeaderMap,
+    peer: Option<Extension<ConnectInfo<SocketAddr>>>,
+) -> Response {
+    let mut response = admin_head(state, query, headers, peer).await;
+    response
+        .headers_mut()
+        .insert(header::ALLOW, "GET, OPTIONS".parse().unwrap());
+    response
+}
+
 async fn admin_head(
     State(app): State<App>,
     Query(query): Query<Vec<(String, String)>>,
