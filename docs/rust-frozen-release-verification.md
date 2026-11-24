@@ -69,6 +69,8 @@ The ordinary scheduler normal-stop row reuses this fixture. Its evaluator requir
 
 The EPG import route now attaches the declared POST and OPTIONS methods and the Accept variation to handled API responses. Front-door admission, over-limit, unsupported and uncaught server responses keep their own headers. A focused job-transport test passed, and the paired signed import owner still needs the actual worker, broker and cleanup receipts.
 
+The first positive local XMLTV import now has its own evaluator using the existing paired two-import fixture. It checks the signed response, owned file, Original worker arguments, exact typed results, expiry and realtime updates. This uses the same paired package reservation as Guide and the second import. Thirty M6 and 34 coordinator tests passed offline.
+
 ## Core settings publication during shutdown
 
 Selected Main drains its workers while retaining the shared Jobs broker. After the stream and HTTP drains, Main settles the already-admitted Core settings requests and then closes the broker. This lets a settings request reach its first broker lease after a held database write clears. The remaining broker drain budget still comes from the selected worker drain. The app compiled and both files passed formatting. The final regression holds a real PostgreSQL update across termination and checks for the corresponding durable publication and exact resource cleanup.

@@ -314,7 +314,7 @@ def owner_readiness(nodes, document, output=None):
                 if bindings[key] != expected:
                     raise ValueError("M6 recording61 exact checker, cleanup, and evaluator binding required")
                 continue
-            if key in {"m6/guide-current-output", "m6/second-import-replaces-title"}:
+            if key in {"m6/refresh-local-positive", "m6/guide-current-output", "m6/second-import-replaces-title"}:
                 owner = module(HERE / "m6/second_import_owner.py", "readiness_m6_second_import")
                 if not {owner.SOURCE, owner.NATIVE} <= bindings.keys():
                     raise ValueError("M6 complete-refresh cell requires both existing complete-refresh package bindings")
@@ -683,7 +683,8 @@ def schedule(nodes, bindings, output, candidate, worker=execute, authorities=Non
                             'paired_lease': lease, 'reason': str(error)}]
         second = invoke(native)
         second.update(paired_lease=lease, reference_age_at_dispatch_seconds=age)
-        if (native['id'] == 'package/complete-refresh' and 'm6/guide-current-output' in bindings
+        if (native['id'] == 'package/complete-refresh'
+                and {'m6/refresh-local-positive', 'm6/guide-current-output'} & bindings.keys()
                 and accepted(second) and second.get('cleanup_verified') is True):
             result_digests = {
                 key: hashlib.sha256((directory(key) / 'result.json').read_bytes()).hexdigest()

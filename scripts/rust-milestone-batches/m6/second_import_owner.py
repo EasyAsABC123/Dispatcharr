@@ -12,7 +12,8 @@ from uuid import UUID
 
 NODE = "m6/second-import-replaces-title"
 GUIDE = "m6/guide-current-output"
-CELLS = (GUIDE, NODE)
+LOCAL = "m6/refresh-local-positive"
+CELLS = (LOCAL, GUIDE, NODE)
 SOURCE = "package/complete-refresh-original"
 NATIVE = "package/complete-refresh"
 ENTRYPOINT = "production-Main; owner full workflow evaluator required"
@@ -112,8 +113,8 @@ def dispatch_spec(candidate, owner_root, controller_root, repository, *, node=NO
     need(stamp(manifest) == candidate["build_manifest_sha256"], "exact common package manifest")
     prefix = [PYTHON, "-I", "-B", str(script), "--owner-root", str(owner_root),
               "--coordinator-output", str(controller_root), "--candidate", wire(candidate)]
-    if node == GUIDE:
-        prefix += ["--workflow-node", GUIDE]
+    if node != NODE:
+        prefix += ["--workflow-node", node]
     return {"argv": [*prefix, "check"], "cleanup_argv": [*prefix, "cleanup"],
             "evaluator_argv": [*prefix, "evaluate", "--execution", "@EXECUTION@"],
             "cwd": str(repository), "environment": {},
@@ -240,7 +241,7 @@ def compare(owner_root, controller_root, candidate, *, node=NODE):
          and manifest["passed"] is True and manifest["exit_code"] == 0
          and manifest["source_archive_sha256"] == candidate["source_archive_sha256"],
          "exact current complete-refresh production package")
-    metrics, authority, guide = {}, {}, {}
+    metrics, authority, projections = {}, {}, {}
     for arm in (SOURCE, NATIVE):
         authority[arm] = phase_closure(owner_root, controller_root, arm, candidate, True)
         integration, observed, work = workflow_receipt(owner_root, arm, candidate, manifest)
@@ -250,15 +251,42 @@ def compare(owner_root, controller_root, candidate, *, node=NODE):
         }
         authority[arm]["raw_workflow_sha256"] = stamp(work)
         if node == GUIDE:
-            guide[arm] = guide_output(observed, integration)
+            projections[arm] = guide_output(observed, integration)
+        elif node == LOCAL:
+            projections[arm] = positive_local_refresh(observed, integration)
     need(metrics[SOURCE] == metrics[NATIVE], "equal exact two-import typed workloads and reference clock")
     proof = {"node": node, "authority": authority, "new_physical_resources": False}
-    if node == GUIDE:
-        need(guide[SOURCE] == guide[NATIVE], "equal signed Current and programme JSON")
-        proof.update(guide_current=guide[NATIVE], same_package_reservation=paired_guide_lease(controller_root, candidate, authority))
+    if node in (LOCAL, GUIDE):
+        need(projections[SOURCE] == projections[NATIVE], "same signed local XMLTV workflow projection")
+        label = "guide_current" if node == GUIDE else "positive_local_refresh"
+        proof[label] = projections[NATIVE]
+        proof["same_package_reservation"] = paired_guide_lease(controller_root, candidate, authority)
     else:
         proof["two_imports"] = metrics[NATIVE]
     return proof
+
+
+def positive_local_refresh(observed, integration):
+    first = observed["imports"][0]
+    root = next(task for task in first["completed"] if task["task"] == TASKS[0])
+    if observed["native_candidate"]:
+        source_id = integration["ordinary_aio_verified"]["source_id"]
+    else:
+        worker, = [call for call in observed["path_context"]["workers"] if call["id"] == root["id"]]
+        need(worker["task"] == TASKS[0] and worker["parent_id"] is None
+             and worker["root_id"] == root["id"] and worker["kwargs"] == {"force": True},
+             "actual Original signed local Refresh root")
+        source_id, = worker["args"]
+    need(type(source_id) is int and source_id > 0 and first["file_mode"] == "0o644"
+         and Path(observed["path_context"]["file"]).name == "guide.xml",
+         "exact ordinary readable local XMLTV fixture")
+    ttl_checks = {f"resultTTL1-{task}" for task in TASKS}
+    need(ttl_checks <= {row["name"] for row in observed["checks"] if row["passed"] is True},
+         "first local import kept actual result expiry")
+    return {"source_id": source_id, "file_sha256": first["file_sha256"],
+            "http": first["http"], "source_status": first["source_status"],
+            "typed_terminals": {job["task"]: job["result"] for job in first["completed"]},
+            "realtime_events": len(first["events"])}
 
 
 def guide_output(observed, integration):

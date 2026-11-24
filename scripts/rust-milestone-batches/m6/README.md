@@ -205,3 +205,17 @@ M6_REPLAY_ARTIFACTS=/home/justin/github/Dispatcharr/artifacts/rust \
 M6_VERSION_COLD_CANDIDATE=/absolute/path/to/common-candidate.json \
   python3 -B -m unittest discover -s scripts/rust-milestone-batches/m6 -p test_version200_owner.py
 ```
+
+## Local XMLTV positive refresh
+
+The `m6/refresh-local-positive` evaluator shares the existing paired
+complete-refresh package execution with the signed Guide output and second
+import rows. The new evaluator consumes the first actual import. It checks the
+owned readable XMLTV file, the positive source ID and force value on the
+Original worker, the signed HTTP acceptance, three typed task terminals,
+result expiry, realtime event count and the exact shared package reservation.
+
+The binding admits the three evaluators before the physical executions exist.
+The final wave still needs both fresh package receipts under one coordinator
+lease. Offline tests replay the older qualified pair and reject changed
+file permissions, expiry evidence, and Source task ancestry.
