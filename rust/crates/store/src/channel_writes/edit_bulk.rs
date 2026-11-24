@@ -802,7 +802,7 @@ fn changed_guides(
 
 type GuideRow = (i64, Option<i64>, Option<String>);
 
-fn guide_jobs(
+pub(crate) fn guide_jobs(
     rows: Vec<GuideRow>,
     already_filled: &BTreeSet<i64>,
 ) -> Result<Vec<crate::auto_sync_epg::Task>, StoreError> {

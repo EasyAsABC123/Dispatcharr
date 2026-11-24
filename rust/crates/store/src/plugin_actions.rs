@@ -348,7 +348,7 @@ impl PluginActions {
         drop(reads);
         if method == Method::OPTIONS {
             let name = match action {
-                Action::List => "Plugins List API",
+                Action::List => "Plugins List Api",
                 Action::ManagedInstall => "Plugin Install From Repo API",
                 Action::Available => "Available Plugins API",
                 Action::DetailManifest => "Plugin Detail Manifest API",

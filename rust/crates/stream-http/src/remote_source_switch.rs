@@ -51,7 +51,10 @@ async fn remote_order(
 }
 
 fn remote_capacity(kind: RemoteSwitchKind) -> u32 {
-    u32::from(kind == RemoteSwitchKind::AssignedOneSlot)
+    u32::from(matches!(
+        kind,
+        RemoteSwitchKind::AssignedOneSlot | RemoteSwitchKind::NextOneSlot
+    ))
 }
 
 fn remote_target_url(
@@ -76,7 +79,7 @@ fn remote_target_url(
     url.ok_or_else(|| {
         PlaybackError::new(
             501,
-            if kind == RemoteSwitchKind::AssignedOneSlot {
+            if remote_capacity(kind) == 1 {
                 "Remote switch requires assigned direct streams on the same capacity-one profile"
             } else {
                 "Remote switch requires assigned direct streams on the same unlimited profile"
@@ -91,7 +94,7 @@ fn owner_target_url(
     target: i64,
     kind: RemoteSwitchKind,
 ) -> Result<&str, PlaybackError> {
-    if kind == RemoteSwitchKind::Next {
+    if matches!(kind, RemoteSwitchKind::Next | RemoteSwitchKind::NextOneSlot) {
         verify_transfer_order(rows, current, target)?;
     }
     remote_target_url(rows, current, target, kind)
@@ -204,15 +207,29 @@ impl StreamEngine {
         let worker = self.local_source_switch_worker().ok_or_else(|| {
             PlaybackError::new(501, "Remote source switch requires worker identity")
         })?;
-        let rows = request_order(&context, resolver, channel, RemoteSwitchKind::Next).await?;
+        let next_kind = RemoteSwitchKind::Next;
+        let rows = request_order(&context, resolver, channel, next_kind).await?;
         let previous = context.source.stream;
         let successor = next_assigned_stream(&rows, previous)?;
         let next = successor.id;
         if successor.missing_active_default_profile {
             return Ok(NextStreamOutcome::MissingActiveDefault { previous, next });
         }
-        let url = remote_target_url(&rows, previous, next, RemoteSwitchKind::Next)?.to_owned();
-        let verdict = request_remote_switch(context, next, &url, RemoteSwitchKind::Next).await?;
+        let (kind, url) = match remote_target_url(&rows, previous, next, next_kind) {
+            Ok(url) => (next_kind, url.to_owned()),
+            Err(original_refusal) => {
+                let kind = RemoteSwitchKind::NextOneSlot;
+                let capped = request_order(&context, resolver, channel, kind).await?;
+                verify_transfer_order(&capped, previous, next)?;
+                if next_assigned_stream(&capped, previous)?.missing_active_default_profile {
+                    return Ok(NextStreamOutcome::MissingActiveDefault { previous, next });
+                }
+                let url = remote_target_url(&capped, previous, next, kind)
+                    .map_err(|_| original_refusal)?;
+                (kind, url.to_owned())
+            }
+        };
+        let verdict = request_remote_switch(context, next, &url, kind).await?;
         Ok(NextStreamOutcome::Remote {
             selected: NextStreamSwitch {
                 previous,
@@ -622,5 +639,35 @@ mod tests {
             "http://owned-origin/12.ts"
         );
         assert!(owner_target_url(&rows, 11, 11, RemoteSwitchKind::AssignedOneSlot).is_err());
+    }
+
+    #[test]
+    fn remote_finite_next_rechecks_the_same_successor_and_uses_one_slot_mode() {
+        let mut rows = [11, 12, 13].map(|id| OrderedChannelStream {
+            id,
+            direct_url: Some(format!("http://owned-origin/{id}.ts")),
+            missing_active_default_profile: false,
+        });
+        let kind = RemoteSwitchKind::NextOneSlot;
+        assert_eq!(remote_capacity(kind), 1);
+        assert_eq!(
+            owner_target_url(&rows, 11, 12, kind).unwrap(),
+            "http://owned-origin/12.ts"
+        );
+        assert_eq!(
+            owner_target_url(&rows, 13, 11, kind).unwrap(),
+            "http://owned-origin/11.ts"
+        );
+        assert!(owner_target_url(&rows, 11, 11, kind).is_err());
+        rows.swap(1, 2);
+        assert_eq!(
+            owner_target_url(&rows, 11, 12, kind).unwrap_err().status,
+            409
+        );
+        rows[1].direct_url = None;
+        assert_eq!(
+            owner_target_url(&rows, 11, 13, kind).unwrap_err().status,
+            501
+        );
     }
 }

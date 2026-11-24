@@ -17,7 +17,7 @@ import time
 
 HERE = Path(__file__).resolve().parent
 STATES = {"passed", "failed", "blocked", "not_run"}
-PARTIAL_PROBES = {"m6/api202-publication", "m6/default-job-graph", "m6/programme-index"}
+PARTIAL_PROBES = {"m6/api202-publication", "m6/default-job-graph", "m6/programme-index", "m6/schedules-direct-guide"}
 
 
 def save(path, value):
@@ -265,6 +265,16 @@ def owner_readiness(nodes, document, output=None):
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
         elif key in bindings and node["owner"] == "m6":
+            if key == "m6/schedules-direct-guide":
+                owner = module(HERE / "m6/sd_guide_owner.py", "readiness_m6_sd_guide")
+                context = owners.get("m6", {}).get("schedules_direct")
+                if not context:
+                    raise ValueError("M6 Schedules Direct sealed owned stage required")
+                expected = owner.dispatch_spec(HERE.parents[1], Path(context["stage"]), context["seal"],
+                                               document["candidate"], node["entrypoint"], Path(output))
+                if bindings[key] != expected:
+                    raise ValueError("M6 Schedules Direct exact owner binding required")
+                continue
             if key == "m6/programme-index":
                 owner = module(HERE / "m6/programme_index_owner.py", "readiness_m6_programme_index")
                 context = owners.get("m6", {}).get("programme_index")

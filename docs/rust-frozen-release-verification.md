@@ -47,7 +47,15 @@ Administrator Channel Batch now accepts ordered stream replacement and explicit 
 
 Channel Batch also accepts raw channel numbers, TVG IDs, guide station IDs, and EPG assignments. It distinguishes explicit clears from omitted fields and preserves the existing compact-number behavior when a request also changes visibility. Raw EPG writes preserve Original's bulk-update behavior and skip guide publication.
 
-Nested Channel Batch overrides support name, TVG ID, guide station ID, channel number, and EPG assignments. Guide changes invalidate the cache once and publish distinct programme jobs. For Schedules Direct, the plan skips guides with existing programmes, publishes individual jobs below three unfilled mappings per source, and publishes one mapped-guide job at the threshold. The normal application binds the publisher to its registered Schedules Direct worker.
+Nested Channel Batch overrides support name, TVG ID, guide station ID, channel number, and EPG assignments. Guide changes invalidate the cache once and publish distinct programme jobs. For Schedules Direct, the plan skips guides with existing programmes, publishes individual jobs below three unfilled mappings per source, and publishes one mapped-guide job at the threshold.
+
+The signed batch EPG assignment action uses that same Schedules Direct
+dispatch rule. It checks publisher availability before changing assignments
+that need new work. The existing populated mappings can still be assigned
+without dispatch. Focused Rust tests and the exact query passed against
+disposable PostgreSQL. The grouped Schedules Direct fixture also covers
+nine retained cases, including the same-worker 90-second retry. The final
+package must confirm the actual receipts and cleanup. The normal application binds the publisher to its registered Schedules Direct worker.
 
 Numeric Movie, Series, Episode, Category, and Unified detail GETs and Movie, Series, Episode, Category, and Unified collection GETs accept Original's literal JSON suffix. M3U Accounts, EPG Sources, and Core Settings also accept that suffix on collection and numeric detail GETs. Numeric Notification detail GETs use the same per-user visibility rules and response serializer on the JSON suffix routes. Accounts Group detail and recurring DVR rule collection and detail GETs also accept the suffix through their existing access checks. The Connect integrations collection accepts the same suffix on its bounded administrator read. The aliases reuse existing authorization, SQL reads, negotiation, and credential filtering. Focused Store tests and the ordinary application build check passed. The final Compose fixtures still need to verify signed roles, persistence, and real guide job settlement.
 
@@ -56,7 +64,8 @@ The unsigned plugin repository owner can schedule the full 25-call comparison ag
 The signed plugin list negotiates JSON indentation and returns the measured
 JSON 406 for unsupported media types. The current browser representation
 continues through the same handler. The paired lifecycle owner will verify
-the signed responses and their unchanged datastore and plugin state.
+the signed responses and their unchanged datastore and plugin state. The
+list's OPTIONS display name uses Original's capitalization.
 
 ## HDHomeRun HTTP output profiles
 
@@ -226,7 +235,9 @@ will require exactly one new upstream connection and decoded audio and
 video after the edit. The same owner also exercises two direct saved
 streams on one capacity-one provider profile. The switch retains the
 current reservation, and the test checks that its count stays at one
-through two viewers and returns to zero after both close.
+through two viewers and returns to zero after both close. Next Stream now
+uses that same held reservation for the immediate eligible saved
+successor on another worker.
 
 The ordinary Series DVR API can save a signed rule through the existing
 DVR permission and settings writer. The worker evaluates a saved exact-title

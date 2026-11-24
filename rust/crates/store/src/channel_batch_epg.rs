@@ -1,6 +1,6 @@
 //! Original Dispatcharr's bulk EPG assignment with scoped programme dispatch.
 //! Original Dispatcharr authors and contributors retain full application credit.
-use crate::{AuthService, StoreError};
+use crate::{auto_sync_epg::Task, AuthService, StoreError};
 use axum::{
     body::to_bytes,
     extract::{ConnectInfo, Request, State},
@@ -9,7 +9,10 @@ use axum::{
     Json,
 };
 use serde_json::{json, Map, Value};
-use std::{collections::BTreeMap, net::SocketAddr};
+use std::{
+    collections::{BTreeMap, BTreeSet},
+    net::SocketAddr,
+};
 
 const UPDATE: &str = "
 WITH requested AS (
@@ -22,17 +25,29 @@ WITH requested AS (
     ORDER BY c.id
     FOR UPDATE OF c
 ), guides AS MATERIALIZED (
-    SELECT assigned.epg_id, e.id IS NOT NULL AS guide_exists, s.source_type
-    FROM (SELECT DISTINCT epg_id FROM changed WHERE epg_id IS NOT NULL) assigned
-    LEFT JOIN epg_epgdata e ON e.id = assigned.epg_id
+    SELECT e.id::bigint AS epg_id, s.id::bigint AS source_id, s.source_type,
+           s.source_type = 'schedules_direct' AND EXISTS (
+               SELECT 1 FROM epg_programdata p WHERE p.epg_id = e.id
+           ) AS has_programmes
+    FROM epg_epgdata e
     LEFT JOIN epg_epgsource s ON s.id = e.epg_source_id
+    WHERE e.id IN (SELECT epg_id FROM changed WHERE epg_id IS NOT NULL)
 ), domain AS MATERIALIZED (
     SELECT NOT EXISTS (
         SELECT 1
+        FROM changed c
+        WHERE c.epg_id IS NOT NULL AND NOT EXISTS (
+            SELECT 1 FROM guides g WHERE g.epg_id = c.epg_id
+        )
+    ) AND NOT EXISTS (
+        SELECT 1
         FROM guides g
-        WHERE g.source_type IS DISTINCT FROM 'dummy'
-          AND (NOT $3::boolean OR NOT g.guide_exists
-               OR (g.source_type IS NOT NULL AND g.source_type <> 'xmltv'))
+        WHERE CASE g.source_type
+            WHEN 'dummy' THEN false
+            WHEN 'schedules_direct' THEN NOT g.has_programmes AND NOT $4::boolean
+            WHEN 'xmltv' THEN NOT $3::boolean
+            ELSE g.source_type IS NOT NULL OR NOT $3::boolean
+        END
     ) AS allowed
 ), updated AS (
     UPDATE dispatcharr_channels_channel c
@@ -42,7 +57,9 @@ WITH requested AS (
     RETURNING c.id
 )
 SELECT d.allowed, (SELECT count(*) FROM updated),
-       ARRAY(SELECT g.epg_id FROM guides g WHERE d.allowed AND g.source_type IS DISTINCT FROM 'dummy')
+       COALESCE((SELECT jsonb_agg(jsonb_build_array(
+           g.epg_id, g.source_id, g.source_type, COALESCE(g.has_programmes, false)
+       )) FROM guides g WHERE d.allowed), '[]'::jsonb)
 FROM domain d
 ";
 
@@ -51,7 +68,7 @@ fn required() -> StoreError {
 }
 
 fn unsupported() -> StoreError {
-    StoreError::Unsupported("Batch EPG assignment is limited to dummy guides and clearing")
+    StoreError::Unsupported("Batch EPG assignment outside supported guide publication domain")
 }
 
 fn positive_id(value: &Value) -> Result<i64, StoreError> {
@@ -113,6 +130,22 @@ pub(crate) async fn batch_body(request: Request) -> Result<Map<String, Value>, S
     }
 }
 
+type Guide = (i64, Option<i64>, Option<String>, bool);
+
+fn programme_jobs(guides: Vec<Guide>) -> Result<Vec<Task>, StoreError> {
+    let mut already_filled = BTreeSet::new();
+    let rows = guides
+        .into_iter()
+        .map(|(epg, source, kind, has_programmes)| {
+            if has_programmes {
+                already_filled.insert(epg);
+            }
+            (epg, source, kind)
+        })
+        .collect();
+    crate::channel_writes::guide_jobs(rows, &already_filled)
+}
+
 pub(super) async fn set(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -132,20 +165,32 @@ pub(super) async fn set(
         let (channels, epgs): (Vec<_>, Vec<_>) = associations(rows)?.into_iter().unzip();
         let publisher_ready =
             crate::channel_writes::channel_guide_publisher_ready(&auth, Some("xmltv"));
-        let (allowed, updated, programmes): (bool, i64, Vec<i64>) = sqlx::query_as(UPDATE)
-            .bind(channels)
-            .bind(epgs)
-            .bind(publisher_ready)
-            .fetch_one(auth.store.pool())
-            .await?;
+        let sd_ready = auth
+            .sd_guide_root_publisher
+            .get()
+            .is_some_and(|publisher| publisher.ready());
+        let (allowed, updated, sqlx::types::Json(guides)): (bool, i64, sqlx::types::Json<Vec<Guide>>) =
+            sqlx::query_as(UPDATE)
+                .bind(channels)
+                .bind(epgs)
+                .bind(publisher_ready)
+                .bind(sd_ready)
+                .fetch_one(auth.store.pool())
+                .await?;
         if !allowed {
             return Err(unsupported());
         }
-        // Original bulk_update commits before dispatching once per changed
-        // guide. It skips the single-channel model save and cache signal.
+        // Original bulk_update commits before dispatch. It skips the
+        // single-channel model save and cache signal.
+        let programmes = programme_jobs(guides)?;
         let programs_refreshed = programmes.len();
-        for guide_id in programmes {
-            crate::core_settings_special_broker::publish_tvg_programmes(&auth, guide_id).await?;
+        use crate::core_settings_special_broker::{publish_sd_guide_root, publish_tvg_programmes};
+        for task in programmes {
+            match task {
+                Task::ParseProgrammes(epg) => publish_tvg_programmes(&auth, epg).await?,
+                Task::ParseSdProgrammes(epg) => publish_sd_guide_root(&auth, false, epg).await?,
+                Task::FetchSdMappedGuide(source) => publish_sd_guide_root(&auth, true, source).await?,
+            }
         }
         Ok((
             [(header::ALLOW, "POST, OPTIONS")],
@@ -174,6 +219,32 @@ mod tests {
         ];
         let expected = BTreeMap::from([(9, None), (12, None), (15, Some(51))]);
         assert_eq!(associations(&rows).unwrap(), expected);
+    }
+
+    #[test]
+    fn batch_dispatch_reuses_source_sd_threshold_and_skips_filled_stations() {
+        let station =
+            |epg, source, filled| (epg, Some(source), Some("schedules_direct".into()), filled);
+        let guides = vec![
+            station(21, 6, false),
+            station(22, 6, true),
+            station(31, 7, false),
+            station(32, 7, false),
+            station(33, 7, false),
+            station(41, 8, true),
+            (51, Some(9), Some("dummy".into()), false),
+            (61, Some(10), Some("xmltv".into()), false),
+            (71, None, None, false),
+        ];
+        assert_eq!(
+            programme_jobs(guides).unwrap(),
+            [
+                Task::ParseProgrammes(61),
+                Task::ParseProgrammes(71),
+                Task::ParseSdProgrammes(21),
+                Task::FetchSdMappedGuide(7),
+            ]
+        );
     }
 
     #[test]

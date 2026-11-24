@@ -25,7 +25,7 @@ mod reorder;
 #[path = "sqlite_channel_relation_effects.rs"]
 pub(crate) mod sqlite_relation_effects;
 pub(crate) use assign_numbers::handle as assign_numbers;
-pub(crate) use edit_bulk::handle as edit_bulk;
+pub(crate) use edit_bulk::{guide_jobs, handle as edit_bulk};
 pub(crate) use from_stream::handle as create_from_stream;
 pub(crate) use reorder::handle as reorder;
 
