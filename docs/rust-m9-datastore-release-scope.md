@@ -8,4 +8,16 @@ The current Rust candidate `3d8f96725ed90f5d37e406492e264e7c4d37f89a` passed the
 
 The current 127-row ledger remains available as historical evidence for this decision. Its three live SQLite rows will retain their original dispositions in that ledger. The revised release graph will mark those rows out of scope and require a separate copied SQLite utility row. The full PostgreSQL workflow, backup lifecycle, rollback, soak and performance gates remain required. This record leaves the release on hold pending the remaining acceptance work. [Recorded decision and graph projection](rust-m8-m9-datastore-scope-3d8f9672.json)
 
+## Release matrix
+
+Use the reviewed profile for this datastore scope. The default coordinator export retains the historical 127-row graph. The selected profile contains 125 required rows, including the recorded policy and the exact copied-utility proof. Those two authority records satisfy dependencies without adding physical executions. The scope intake checks the approved commit, exact application and Original revisions, historical graph digest, and the verified five-case utility artifact.
+
+```bash
+python3 -B scripts/rust-milestone-batches/coordinator.py --export \
+  --graph-profile postgresql-copied-sqlite-v1 \
+  --datastore-decision-commit 152d96dfe554448031ee70e18ba757dc52172301
+```
+
+Use the same flags for binding preflight and physical execution. This profile binds the verified frozen candidate. A later package requires separate current utility evidence for its release ledger.
+
 Original Dispatcharr and upstream contributors retain full authorship, attribution and license credit.

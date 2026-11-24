@@ -455,7 +455,7 @@ def owner_readiness(nodes, document, output=None):
     return authorities
 
 
-def load_binding_fragments(paths, nodes, output):
+def load_binding_fragments(paths, nodes, output, release_policy=None):
     """Validate each owner's context before scheduling a common candidate."""
     documents = [json.loads(path.read_text()) for path in paths]
     candidate = documents[0]["candidate"]
@@ -473,6 +473,9 @@ def load_binding_fragments(paths, nodes, output):
     validate(nodes, bindings)
 
     authorities = {}
+    if release_policy is not None:
+        policy, metadata = release_policy
+        authorities.update(policy.authorities(metadata, candidate, bindings))
     for document in documents:
         for key, authority in owner_readiness(nodes, document, output).items():
             if key in bindings:
@@ -493,10 +496,14 @@ def binding_coverage(nodes, bindings, authorities):
     """Report missing release inputs without executing any fixture or crediting a pass."""
     required = {node["id"] for node in nodes}
     partial = {key for key, binding in bindings.items() if is_partial_binding(key, binding)}
+    release_scope = {key for key, row in authorities.items() if row.get("status") in {
+        "recorded_scope_authority", "retained_copied_utility_authority",
+    }}
     return {
         "required_rows": len(required),
         "execution_bindings": sorted(bindings.keys() - partial),
-        "retained_source_authority": sorted(authorities),
+        "retained_source_authority": sorted(authorities.keys() - release_scope),
+        **({"release_scope_authority": sorted(release_scope)} if release_scope else {}),
         "partial_probes": sorted(partial),
         "unbound_rows": sorted(required - bindings.keys() - authorities.keys()),
     }
@@ -766,7 +773,9 @@ def schedule(nodes, bindings, output, candidate, worker=execute, authorities=Non
     successors = set(pairs.values())
 
     def accepted(row):
-        return row['status'] == 'passed' or (row['status'] == 'retained_source_authority' and row.get('satisfies_dependency') is True)
+        return row['status'] == 'passed' or (row['status'] in {
+            'retained_source_authority', 'recorded_scope_authority', 'retained_copied_utility_authority'
+        } and row.get('satisfies_dependency') is True)
 
     def directory(key):
         return output / (key.replace('/', '__') + '-' + hashlib.sha256(key.encode()).hexdigest()[:12])
@@ -884,14 +893,26 @@ def main():
     parser.add_argument("--bindings", action="append", type=Path,
                         help="reviewed binding document for the common candidate; may be repeated")
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--graph-profile", choices=("historical", "postgresql-copied-sqlite-v1"),
+                        default="historical")
+    parser.add_argument("--datastore-decision-commit")
     args = parser.parse_args()
     nodes = inventory()
+    release_policy = None
+    metadata = {}
+    if args.graph_profile != "historical":
+        policy = module(HERE / "datastore_release.py", "datastore_release_policy")
+        nodes, metadata = policy.project(HERE.parents[1], nodes, args.datastore_decision_commit)
+        validate(nodes, {})
+        release_policy = (policy, metadata)
+    elif args.datastore_decision_commit:
+        parser.error("datastore decision commit requires the explicit release graph profile")
     if args.export:
-        print(json.dumps({"nodes": nodes, "global_fixture_limit": 3, "heavy_exclusive": True}, indent=2))
+        print(json.dumps({"nodes": nodes, "global_fixture_limit": 3, "heavy_exclusive": True, **metadata}, indent=2))
         return 0
     if not args.bindings or not args.output:
         parser.error("binding validation and execution require --bindings and a fresh --output")
-    candidate, bindings, authorities = load_binding_fragments(args.bindings, nodes, args.output)
+    candidate, bindings, authorities = load_binding_fragments(args.bindings, nodes, args.output, release_policy)
     if args.check_bindings:
         coverage = binding_coverage(nodes, bindings, authorities)
         print(json.dumps(coverage, indent=2))
