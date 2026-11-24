@@ -1563,15 +1563,19 @@ WHERE p.id=$2::bigint AND p.name=$3::text AND p.task=$4::text
   AND octet_length(p.headers)<=65536
 FOR SHARE OF p,c NOWAIT"#;
 
-// Match the local Single receiver's bounded account and default interval lane.
-// Both SQL paths use these same predicates before admitting a row.
+// Both SQL paths retain the same bounded account and default interval lane.
+// A canonical saved URL override uses the local receiver's existing URL mode
+// independently of the global settings. Leave other saved CSV forms outside
+// Beat selection until their live scheduler/receiver boundary is qualified.
 macro_rules! local_m3u_account {
     () => {
         r#"a.account_type='STD' AND a.is_active
            AND a.server_url IS NULL AND a.file_path <> ''
            AND a.user_agent_id IS NULL AND a.stream_profile_id IS NULL
            AND a.username IS NULL AND a.password IS NULL
-           AND a.custom_properties IN (
+           AND (CASE WHEN a.custom_properties->'hash_key'='"url"'::jsonb
+                     THEN a.custom_properties - 'hash_key'
+                     ELSE a.custom_properties END) IN (
              '{}'::jsonb,
              '{"enable_vod":false,"auto_enable_new_groups_live":true,
                "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true}'::jsonb
@@ -3082,6 +3086,63 @@ mod tests {
         let mut invalid = entry;
         invalid.queue = Some("celery".into());
         assert!(!scope.admits(&invalid));
+    }
+
+    #[test]
+    fn selected_local_account_url_override_uses_same_locked_snapshot_guard() {
+        let account_predicate = local_m3u_account!();
+        let selection = LOAD_SELECTED_CORE_QUERY.find(account_predicate).unwrap();
+        assert!(selection < LOAD_SELECTED_CORE_QUERY.find("LIMIT 257").unwrap());
+        assert!(LOCK_CURRENT_LOCAL_M3U.contains(account_predicate));
+        assert!(!LOCK_CURRENT_SAVED_XC.contains(account_predicate));
+        assert!(LOCK_CURRENT_LOCAL_M3U.contains("FOR SHARE NOWAIT"));
+        assert!(LOCK_CURRENT_LOCAL_M3U.contains("p.id=a.refresh_task_id"));
+        assert!(LOCK_CURRENT_LOCAL_M3U.contains("p.total_run_count=$6::bigint"));
+        assert!(LOCK_CURRENT_LOCAL_M3U.contains("FOR SHARE OF p,i NOWAIT"));
+    }
+
+    #[tokio::test]
+    #[ignore = "requires a disposable PostgreSQL connection in DISPATCHARR_BEAT_TEST_DATABASE_URL"]
+    async fn selected_local_account_url_override_matches_actual_jsonb_predicate() {
+        let mut pg =
+            PgConnection::connect(&std::env::var("DISPATCHARR_BEAT_TEST_DATABASE_URL").unwrap())
+                .await
+                .unwrap();
+        // No schema is needed. Run the exact shared account predicate against
+        // typed PostgreSQL rows, including rows the SQL must actively exclude.
+        let query = format!(
+            r#"SELECT item.ord
+               FROM unnest($1::jsonb[]) WITH ORDINALITY AS item(properties,ord)
+               CROSS JOIN LATERAL (SELECT 'STD'::text account_type,true is_active,
+                   NULL::text server_url,'/data/m3us/synthetic.m3u'::text file_path,
+                   NULL::integer user_agent_id,NULL::integer stream_profile_id,
+                   NULL::text username,NULL::text password,item.properties custom_properties,
+                   'Owned local'::text name,NULL::text last_message) AS a
+               WHERE {} ORDER BY item.ord"#,
+            local_m3u_account!()
+        );
+        let defaults = json!({"enable_vod":false,"auto_enable_new_groups_live":true,
+            "auto_enable_new_groups_vod":true,"auto_enable_new_groups_series":true});
+        let mut override_defaults = defaults.clone();
+        override_defaults["hash_key"] = json!("url");
+        let rows = vec![
+            json!({}),
+            defaults,
+            json!({"hash_key":"url"}),
+            override_defaults,
+            json!({"hash_key":"name,url"}),
+            json!({"hash_key":null}),
+            json!({"hash_key":"unknown"}),
+            json!({"hash_key":["url"]}),
+            json!({"hash_key":"url","enable_vod":true}),
+            json!(["url"]),
+        ];
+        let found: Vec<i64> = sqlx::query_scalar(&query)
+            .bind(rows)
+            .fetch_all(&mut pg)
+            .await
+            .unwrap();
+        assert_eq!(found, [1, 2, 3, 4]);
     }
 
     #[test]
