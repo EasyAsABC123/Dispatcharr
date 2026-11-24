@@ -1,0 +1,33 @@
+{
+  "both_selected_postgres_groups_observed": true,
+  "canonical_dependencies_remaining": [
+    "native/backup-lifecycle",
+    "native/backup-workflow",
+    "source/backup-restore-schedules"
+  ],
+  "canonical_rows_credited": 0,
+  "credit": "Original Dispatcharr and upstream contributors retain full credit.",
+  "historical_result_transferred": false,
+  "image": "sha256:9c6376f386e18489cf018e10b62efe2d1b50ce106aed5cf51715625b45935f99",
+  "out_of_scope": [
+    "SQLite implementation and upgrade acceptance",
+    "backup callback and worker lifecycle faults",
+    "mixed-schema return and deployment",
+    "whole M8 resource benchmark"
+  ],
+  "physical_fixture_proofs": {
+    "run_scheduler_refusals_retention": {
+      "actual_jobs": 4,
+      "proof_sha256": "5ad41dbf0de498d49e98db7de341e3ee61b611fdcb4a29dfe9dba89d004b7e29"
+    },
+    "run_valid_restore_roundtrip": {
+      "actual_jobs": 2,
+      "manifest": "a15e1dbf9dd05655ab90598917a8b54f702c9b77e0ee7968d09bc8a3b8cebb71",
+      "proof_sha256": "f93052d6b3e0464bc97359bb296a152ac7220814f5afa1fb3171fc6e6be2021d"
+    }
+  },
+  "physical_package_audit_sha256": "df1143eb9aca388f28082605d5257c0234d84ca641b78432e88e5ef52dc7afe4",
+  "platform": "linux/arm64",
+  "revision": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1",
+  "whole_m8_accepted": false
+}
