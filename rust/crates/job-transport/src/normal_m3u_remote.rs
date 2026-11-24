@@ -11,7 +11,9 @@ use crate::{
 use dispatcharr_contracts::UpdateEventSink;
 use dispatcharr_coordination::{TaskLockDetailedError, TaskLockError, TaskLocks};
 use dispatcharr_ingest_core::{CacheReadLimits, Entry, ValidatedCache};
-use dispatcharr_store::{xc_live_tasks::Prepared, AuthService, Store, StoreError};
+use dispatcharr_store::{
+    xc_live_tasks::Prepared, AuthService, ScannerM3uLookupCap, Store, StoreError,
+};
 use serde_json::{json, Value};
 use std::{
     path::PathBuf,
@@ -21,7 +23,7 @@ use std::{
     },
     time::{Duration, Instant},
 };
-use tokio::sync::{mpsc, Semaphore};
+use tokio::sync::{mpsc, oneshot, Semaphore};
 type Owner = Arc<dyn Send + Sync>;
 struct Inner {
     sd: std::sync::OnceLock<crate::normal_sd_guide::Capability>,
@@ -570,13 +572,28 @@ async fn execute_body(
         .map_err(|error| store_error(error, message.id))?;
     let (sender, mut receiver) = mpsc::channel(1);
     let retained = owner.clone();
-    let actor = tokio::task::spawn_blocking(move || produce_batches(parsed, sender, retained));
+    let (send_retries, retries) = oneshot::channel();
+    let actor =
+        tokio::task::spawn_blocking(move || produce_batches(parsed, sender, retries, retained));
+    let mut send_retries = Some(send_retries);
     let mut total = dispatcharr_store::ImportCounts::default();
+    let mut failed_first_pass = Vec::new();
     let mut failed = 0usize;
     let mut import_error = None;
-    while let Some(batch) = receiver.recv().await {
-        match prepared.std_batch(batch, &groups, &mut total).await {
+    while let Some(delivery) = receiver.recv().await {
+        let (index, entries) = match delivery {
+            Delivery::Batch { index, entries } => (index, entries),
+            Delivery::FirstPassComplete => {
+                let sender = send_retries.take().expect("one cache first pass");
+                // The consumer has settled every preceding SQL attempt by
+                // the time it sees the ordered producer marker.
+                let _ = sender.send(std::mem::take(&mut failed_first_pass));
+                continue;
+            }
+        };
+        match prepared.std_batch(entries, &groups, &mut total).await {
             Ok(true) => {}
+            Ok(false) if send_retries.is_some() => failed_first_pass.push(index),
             Ok(false) => failed += 1,
             Err(error) => {
                 // A SQL error must not drop the parser's JoinHandle and then
@@ -589,6 +606,7 @@ async fn execute_body(
         }
     }
     drop(receiver);
+    drop(send_retries);
     let parsed = actor.await.map_err(|_| fault("parser supervisor"))?;
     if let Some(error) = import_error {
         // The producer can report the expected closed consumer here. Its actual
@@ -646,34 +664,74 @@ async fn probe(path: PathBuf, owner: Owner) -> Result<Option<u64>, D> {
     .await
     .map_err(|_| fault("cache probe supervisor"))?
 }
+enum Delivery {
+    Batch { index: usize, entries: Vec<Entry> },
+    FirstPassComplete,
+}
+
 fn produce_batches(
     path: PathBuf,
-    sender: mpsc::Sender<Vec<Entry>>,
+    sender: mpsc::Sender<Delivery>,
+    retries: oneshot::Receiver<Vec<usize>>,
     owner: Owner,
 ) -> Result<(), ()> {
     let _owner = owner;
     let mut cache = open_cache(&path).map_err(|_| ())?;
-    let mut rows = Vec::with_capacity(1000);
+    produce_pass(&mut cache, &sender, None)?;
+    sender
+        .blocking_send(Delivery::FirstPassComplete)
+        .map_err(|_| ())?;
+    let failed = retries.blocking_recv().map_err(|_| ())?;
+    if !failed.is_empty() {
+        // Retry only failed indexes from the same validated open descriptor.
+        produce_pass(&mut cache, &sender, Some(&failed))?;
+    }
+    Ok(())
+}
+
+fn produce_pass(
+    cache: &mut ValidatedCache,
+    sender: &mpsc::Sender<Delivery>,
+    selected: Option<&[usize]>,
+) -> Result<(), ()> {
+    let batch_size = ScannerM3uLookupCap::STANDARD_M3U_BATCH_ROWS;
+    let mut entries = Vec::with_capacity(batch_size);
+    let mut index = 0;
+    let mut count = 0;
     let mut bytes = 0usize;
+    let active = |index| selected.is_none_or(|failed| failed.binary_search(&index).is_ok());
+    let deliver = |index, entries| {
+        sender
+            .blocking_send(Delivery::Batch { index, entries })
+            .map_err(|_| "closed batch consumer")
+    };
     cache
         .for_each(|entry| {
-            let encoded = serde_json::to_vec(&entry).map_err(|_| "entry byte accounting")?;
-            bytes = bytes
-                .checked_add(encoded.len())
-                .filter(|n| *n <= dispatcharr_store::MAX_IMPORT_BATCH_BYTES)
-                .ok_or("logical batch capacity")?;
-            rows.push(entry);
-            if rows.len() == 1000 {
-                sender
-                    .blocking_send(std::mem::take(&mut rows))
-                    .map_err(|_| "closed batch consumer")?;
+            if sender.is_closed() {
+                return Err("closed batch consumer".to_owned());
+            }
+            count += 1;
+            if active(index) {
+                let encoded = serde_json::to_vec(&entry).map_err(|_| "entry byte accounting")?;
+                bytes = bytes
+                    .checked_add(encoded.len())
+                    .filter(|n| *n <= dispatcharr_store::MAX_IMPORT_BATCH_BYTES)
+                    .ok_or("logical batch capacity")?;
+                entries.push(entry);
+            }
+            if count == batch_size {
+                if active(index) {
+                    deliver(index, std::mem::take(&mut entries))?;
+                }
+                index += 1;
+                count = 0;
                 bytes = 0;
             }
             Ok(())
         })
         .map_err(|_| ())?;
-    if !rows.is_empty() {
-        sender.blocking_send(rows).map_err(|_| ())?;
+    if !entries.is_empty() {
+        deliver(index, entries).map_err(|_| ())?;
     }
     Ok(())
 }
@@ -711,5 +769,95 @@ pub(crate) async fn admit_missing_input_cache(
         Ok(())
     } else {
         Err(D::UnsupportedDomain)
+    }
+}
+
+#[cfg(test)]
+mod batch_tests {
+    use super::*;
+    use std::io::Write;
+
+    struct OwnedCache(PathBuf);
+
+    impl Drop for OwnedCache {
+        fn drop(&mut self) {
+            let _ = std::fs::remove_file(&self.0);
+        }
+    }
+
+    #[test]
+    fn normal_standard_cache_keeps_source_batch_before_projection() {
+        let cache = OwnedCache(std::env::temp_dir().join(format!(
+            "dispatcharr-m3u-batch-{}.json",
+            uuid::Uuid::new_v4()
+        )));
+        let mut file = std::fs::OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&cache.0)
+            .unwrap();
+        write!(file, "{{\"extinf_data\":[").unwrap();
+        for index in 1..=1501 {
+            if index > 1 {
+                write!(file, ",").unwrap();
+            }
+            serde_json::to_writer(
+                &mut file,
+                &json!({
+                    "name":index.to_string(),
+                    "display_name":index.to_string(),
+                    "url":"http://127.0.0.1/owned",
+                    "attributes":{"group-title": if index <= 1000 {"Disabled"} else {"Enabled"}}
+                }),
+            )
+            .unwrap();
+        }
+        write!(file, "],\"groups\":{{}}}}").unwrap();
+        drop(file);
+
+        let (sender, mut receiver) = mpsc::channel(2);
+        let (send_retries, retries) = oneshot::channel();
+        let path = cache.0.clone();
+        let actor =
+            std::thread::spawn(move || produce_batches(path, sender, retries, Arc::new(())));
+        let Some(Delivery::Batch {
+            index: 0,
+            entries: first,
+        }) = receiver.blocking_recv()
+        else {
+            panic!("first source batch");
+        };
+        assert_eq!(first.len(), 1500);
+        assert_eq!(first[0].attributes["group-title"], "Disabled");
+        assert_eq!(first[1000].name, "1001");
+        assert_eq!(first[1499].name, "1500");
+        let Some(Delivery::Batch {
+            index: 1,
+            entries: remaining,
+        }) = receiver.blocking_recv()
+        else {
+            panic!("sibling source batch before retry");
+        };
+        assert_eq!(remaining.len(), 1);
+        assert_eq!(remaining[0].name, "1501");
+        assert!(matches!(
+            receiver.blocking_recv(),
+            Some(Delivery::FirstPassComplete)
+        ));
+        assert!(matches!(
+            receiver.try_recv(),
+            Err(mpsc::error::TryRecvError::Empty)
+        ));
+        send_retries.send(vec![0]).unwrap();
+        let Some(Delivery::Batch {
+            index: 0,
+            entries: second,
+        }) = receiver.blocking_recv()
+        else {
+            panic!("same failed batch only");
+        };
+        assert_eq!(first, second);
+        assert!(receiver.blocking_recv().is_none());
+        actor.join().unwrap().unwrap();
     }
 }

@@ -223,7 +223,10 @@ and no new upstream connection opens. If the saved direct URL changes,
 the owner verifies the open input before replacing it. The existing
 producer and viewers keep their lease and stream ID. The final fixture
 will require exactly one new upstream connection and decoded audio and
-video after the edit.
+video after the edit. The same owner also exercises two direct saved
+streams on one capacity-one provider profile. The switch retains the
+current reservation, and the test checks that its count stays at one
+through two viewers and returns to zero after both close.
 
 The ordinary Series DVR API can save a signed rule through the existing
 DVR permission and settings writer. The worker evaluates a saved exact-title
@@ -312,6 +315,15 @@ tests passed, and the pinned Original helper confirmed the outcome across
 empty or HTML response follows the same separate account and Groups
 reporting, with the prior raw and parsed caches preserved. The two
 cases are part of the same signed fixture.
+
+The ordinary remote Standard importer now groups 1,500 raw entries
+before projection, matching the Original transaction boundary. The paired
+fixture adds a 1,501-entry refresh with an owned write failure. It checks
+rollback of the first batch, the last row's commit, retention of the
+previous lineup, cache invalidation and worker settlement. It also checks
+that the importer retries a failed batch once after all first-pass
+transactions. A second signed refresh requires that retry to observe a
+row from the successful sibling transaction.
 
 ## Channel logo pagination and Xtream information
 

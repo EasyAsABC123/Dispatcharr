@@ -43,10 +43,15 @@ async fn remote_order(
     resolver: &dyn PlaybackResolver,
     channel: &str,
     source: &RemoteSwitchSource,
+    capacity: u32,
 ) -> Result<Vec<OrderedChannelStream>, PlaybackError> {
     resolver
-        .ordered_channel_streams(channel, Some((source.profile, 0)))
+        .ordered_channel_streams(channel, Some((source.profile, capacity)))
         .await
+}
+
+fn remote_capacity(kind: RemoteSwitchKind) -> u32 {
+    u32::from(kind == RemoteSwitchKind::AssignedOneSlot)
 }
 
 fn remote_target_url(
@@ -71,7 +76,11 @@ fn remote_target_url(
     url.ok_or_else(|| {
         PlaybackError::new(
             501,
-            "Remote switch requires assigned direct streams on the same unlimited profile",
+            if kind == RemoteSwitchKind::AssignedOneSlot {
+                "Remote switch requires assigned direct streams on the same capacity-one profile"
+            } else {
+                "Remote switch requires assigned direct streams on the same unlimited profile"
+            },
         )
     })
 }
@@ -163,16 +172,21 @@ impl StreamEngine {
             .observe_remote_switch(channel)
             .await?
             .ok_or_else(|| PlaybackError::new(404, "Channel not found"))?;
-        let rows = request_order(&context, resolver, channel).await?;
-        let url = remote_target_url(
-            &rows,
-            context.source.stream,
-            target,
-            RemoteSwitchKind::Assigned,
-        )?
-        .to_owned();
-        let verdict =
-            request_remote_switch(context, target, &url, RemoteSwitchKind::Assigned).await?;
+        let rows = request_order(&context, resolver, channel, RemoteSwitchKind::Assigned).await?;
+        let current = context.source.stream;
+        let (kind, url) =
+            match remote_target_url(&rows, current, target, RemoteSwitchKind::Assigned) {
+                Ok(url) => (RemoteSwitchKind::Assigned, url.to_owned()),
+                Err(reason) if current == target => return Err(reason),
+                Err(original_refusal) => {
+                    let kind = RemoteSwitchKind::AssignedOneSlot;
+                    let rows = request_order(&context, resolver, channel, kind).await?;
+                    let url = remote_target_url(&rows, current, target, kind)
+                        .map_err(|_| original_refusal)?;
+                    (kind, url.to_owned())
+                }
+            };
+        let verdict = request_remote_switch(context, target, &url, kind).await?;
         Ok(AssignedSwitch::Remote { url, verdict })
     }
 
@@ -190,7 +204,7 @@ impl StreamEngine {
         let worker = self.local_source_switch_worker().ok_or_else(|| {
             PlaybackError::new(501, "Remote source switch requires worker identity")
         })?;
-        let rows = request_order(&context, resolver, channel).await?;
+        let rows = request_order(&context, resolver, channel, RemoteSwitchKind::Next).await?;
         let previous = context.source.stream;
         let successor = next_assigned_stream(&rows, previous)?;
         let next = successor.id;
@@ -215,10 +229,11 @@ async fn request_order(
     context: &RemoteContext<'_>,
     resolver: &dyn PlaybackResolver,
     channel: &str,
+    kind: RemoteSwitchKind,
 ) -> Result<Vec<OrderedChannelStream>, PlaybackError> {
     time::timeout_at(
         context.deadline,
-        remote_order(resolver, channel, &context.source),
+        remote_order(resolver, channel, &context.source, remote_capacity(kind)),
     )
     .await
     .map_err(|_| PlaybackError::new(504, "Remote switch lookup timed out"))?
@@ -454,7 +469,7 @@ async fn submit_owned(
 ) -> Result<PendingSourceSwitch, PlaybackError> {
     let ordered = time::timeout(
         OWNER_RESOLVE,
-        remote_order(resolver, channel, &intent.source),
+        remote_order(resolver, channel, &intent.source, remote_capacity(kind)),
     )
     .await
     .map_err(|_| PlaybackError::new(504, "Owner source lookup timed out"))??;
@@ -482,7 +497,10 @@ async fn submit_owned(
     };
     engine.submit_in_local_session(session, None, admission, |active| {
         if (source_switch::source(active), active.provider_max_streams)
-            != ((intent.source.stream, Some(intent.source.profile)), 0)
+            != (
+                (intent.source.stream, Some(intent.source.profile)),
+                remote_capacity(kind),
+            )
         {
             return Err(PlaybackError::new(
                 409,
@@ -587,5 +605,22 @@ mod tests {
                 .status,
             501
         );
+    }
+
+    #[test]
+    fn remote_one_slot_is_only_a_distinct_target_and_retains_a_separate_mode() {
+        let rows = [11, 12].map(|id| OrderedChannelStream {
+            id,
+            direct_url: Some(format!("http://owned-origin/{id}.ts")),
+            missing_active_default_profile: false,
+        });
+        assert_eq!(remote_capacity(RemoteSwitchKind::Assigned), 0);
+        assert_eq!(remote_capacity(RemoteSwitchKind::Next), 0);
+        assert_eq!(remote_capacity(RemoteSwitchKind::AssignedOneSlot), 1);
+        assert_eq!(
+            owner_target_url(&rows, 11, 12, RemoteSwitchKind::AssignedOneSlot).unwrap(),
+            "http://owned-origin/12.ts"
+        );
+        assert!(owner_target_url(&rows, 11, 11, RemoteSwitchKind::AssignedOneSlot).is_err());
     }
 }

@@ -488,6 +488,12 @@ fn hash_keys(account: &Value, global: &Value) -> Result<Vec<String>, StoreError>
         Ok(local)
     }
 }
+#[derive(Clone)]
+enum BatchStreams {
+    Standard(Vec<ImportedStream>),
+    Xtream(Vec<ImportedXcStream>),
+}
+
 impl Prepared {
     /// Actual STD row had neither a truthy server URL nor uploaded file path.
     /// Its caller must require cold parsed cache and Single task semantics.
@@ -754,12 +760,16 @@ impl Prepared {
                 }
             }
             if eligible.is_multiple_of(1000)
-                && !self.batch(std::mem::take(&mut batch), &mut total).await?
+                && !self
+                    .batch(BatchStreams::Xtream(std::mem::take(&mut batch)), &mut total)
+                    .await?
             {
                 failed += 1
             }
         }
-        if !eligible.is_multiple_of(1000) && !self.batch(batch, &mut total).await? {
+        if !eligible.is_multiple_of(1000)
+            && !self.batch(BatchStreams::Xtream(batch), &mut total).await?
+        {
             failed += 1
         }
         if failed > 0 {
@@ -994,15 +1004,10 @@ impl Prepared {
                 {
                     continue;
                 }
-                let stream = ImportedStream::from(projected);
-                rows.push(ImportedXcStream {
-                    logo_url: Some(stream.logo_url.clone()),
-                    tvg_id: Some(stream.tvg_id.clone()),
-                    stream,
-                });
+                rows.push(ImportedStream::from(projected));
             }
         }
-        self.batch(rows, total).await
+        self.apply_batch(BatchStreams::Standard(rows), total).await
     }
     pub async fn parsing_only(&self) -> Result<(), StoreError> {
         let id = self.account.id;
@@ -1085,38 +1090,58 @@ impl Prepared {
     }
     async fn batch(
         &self,
-        rows: Vec<ImportedXcStream>,
+        rows: BatchStreams,
         counts: &mut crate::ImportCounts,
     ) -> Result<bool, StoreError> {
-        for attempt in 0..2 {
-            let store = self.store.clone();
-            let id = self.account.id;
-            let rows = rows.clone();
-            let result = self
-                .session
-                .run(move |c| {
-                    Box::pin(async move { store.import_xc_batch_on_connection(c, id, rows).await })
-                })
-                .await?;
-            match result {
-                Ok(n) => {
-                    counts.created += n.created;
-                    counts.updated += n.updated;
-                    counts.unchanged += n.unchanged;
-                    return Ok(true);
-                }
-                Err(crate::BoundedM3uBatchError::MutationRolledBack {
-                    source: sqlx::Error::Database(_),
-                    ..
-                }) => {
-                    if attempt == 1 {
-                        return Ok(false);
-                    }
-                }
-                Err(_) => return Err(unsupported()),
-            }
+        if self.apply_batch(rows.clone(), counts).await? {
+            return Ok(true);
         }
-        Err(unsupported())
+        self.apply_batch(rows, counts).await
+    }
+
+    async fn apply_batch(
+        &self,
+        rows: BatchStreams,
+        counts: &mut crate::ImportCounts,
+    ) -> Result<bool, StoreError> {
+        let store = self.store.clone();
+        let id = self.account.id;
+        let result = self
+            .session
+            .run(move |c| {
+                Box::pin(async move {
+                    match rows {
+                        BatchStreams::Standard(rows) => {
+                            store
+                                .import_m3u_batch_with_lookup_cap_on_connection(
+                                    c,
+                                    id,
+                                    rows,
+                                    crate::ScannerM3uLookupCap::standard_refresh(),
+                                )
+                                .await
+                        }
+                        BatchStreams::Xtream(rows) => {
+                            store.import_xc_batch_on_connection(c, id, rows).await
+                        }
+                    }
+                })
+            })
+            .await?;
+
+        match result {
+            Ok(n) => {
+                counts.created += n.created;
+                counts.updated += n.updated;
+                counts.unchanged += n.unchanged;
+                Ok(true)
+            }
+            Err(crate::BoundedM3uBatchError::MutationRolledBack {
+                source: sqlx::Error::Database(_),
+                ..
+            }) => Ok(false),
+            Err(_) => Err(unsupported()),
+        }
     }
     async fn status(
         &self,

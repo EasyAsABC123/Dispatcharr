@@ -5,11 +5,13 @@ use serde_json::{json, Value};
 use uuid::Uuid;
 
 const ASSIGNED_SWITCH_EVENT: &str = "dispatcharr_rust_assigned_source_switch";
+const ASSIGNED_ONE_SLOT_EVENT: &str = "dispatcharr_rust_assigned_one_slot_source_switch";
 const NEXT_SWITCH_EVENT: &str = "dispatcharr_rust_next_source_switch";
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum RemoteSwitchKind {
     Assigned,
+    AssignedOneSlot,
     Next,
 }
 
@@ -17,6 +19,7 @@ impl RemoteSwitchKind {
     fn event(self) -> &'static str {
         match self {
             Self::Assigned => ASSIGNED_SWITCH_EVENT,
+            Self::AssignedOneSlot => ASSIGNED_ONE_SLOT_EVENT,
             Self::Next => NEXT_SWITCH_EVENT,
         }
     }
@@ -24,6 +27,7 @@ impl RemoteSwitchKind {
     fn redis_name(self) -> &'static [u8] {
         match self {
             Self::Assigned => b"assigned",
+            Self::AssignedOneSlot => b"assigned-one-slot",
             Self::Next => b"next",
         }
     }
@@ -81,6 +85,7 @@ impl RemoteSwitchWake {
     pub(crate) fn decode(topic: &[u8], data: &Value) -> Result<Option<Self>, Error> {
         let kind = match data["event"].as_str() {
             Some(ASSIGNED_SWITCH_EVENT) => RemoteSwitchKind::Assigned,
+            Some(ASSIGNED_ONE_SLOT_EVENT) => RemoteSwitchKind::AssignedOneSlot,
             Some(NEXT_SWITCH_EVENT) => RemoteSwitchKind::Next,
             _ => return Ok(None),
         };
@@ -177,7 +182,7 @@ impl OutputStore {
     ) -> Result<bool, Error> {
         if wake.request.is_nil()
             || intent.target <= 0
-            || (wake.kind == RemoteSwitchKind::Next && intent.target == intent.source.stream)
+            || (wake.kind != RemoteSwitchKind::Assigned && intent.target == intent.source.stream)
             || !is_digest(&intent.url_sha256)
         {
             return Err(Error::InvalidKey);
@@ -354,8 +359,8 @@ if fence~=ARGV[2] then return {} end
 local state=redis.call('HMGET',KEYS[4],'fence','request','phase','stream','profile','deadline','target','digest','claimant','kind','kind_request')
 if operation=='begin' then
     local kind=ARGV[10] or 'assigned'
-    if kind~='assigned' and kind~='next' then return {} end
-    if kind=='next' and ARGV[4]==ARGV[7] then return {} end
+    if kind~='assigned' and kind~='next' and kind~='assigned-one-slot' then return {} end
+    if kind~='assigned' and ARGV[4]==ARGV[7] then return {} end
     local fields=active()
     if not fields or fields[4]~=ARGV[4] or fields[5]~=ARGV[5] or state[1]==fence then return {} end
     local remaining=tonumber(ARGV[6])-millis()
@@ -447,6 +452,25 @@ mod tests {
             RemoteSwitchWake::decode(format!("live:events:{}", wake.channel).as_bytes(), &payload)
                 .unwrap(),
             Some(wake)
+        );
+    }
+
+    #[test]
+    fn remote_assigned_one_slot_wake_only_carries_distinct_identity() {
+        let wire = RemoteSwitchWake {
+            channel: Uuid::from_u128(11),
+            request: Uuid::from_u128(12),
+            kind: RemoteSwitchKind::AssignedOneSlot,
+        };
+        let payload: Value = serde_json::from_slice(&wire.payload()).unwrap();
+        assert_eq!(payload["event"], ASSIGNED_ONE_SLOT_EVENT);
+        assert_ne!(payload["event"], ASSIGNED_SWITCH_EVENT);
+        assert_ne!(payload["event"], NEXT_SWITCH_EVENT);
+        assert_eq!(payload.as_object().unwrap().len(), 3);
+        assert_eq!(
+            RemoteSwitchWake::decode(format!("live:events:{}", wire.channel).as_bytes(), &payload)
+                .unwrap(),
+            Some(wire)
         );
     }
 

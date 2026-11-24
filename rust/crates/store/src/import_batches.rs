@@ -174,7 +174,18 @@ pub struct ScannerM3uLookupCap {
 impl ScannerM3uLookupCap {
     /// Same serialized-text cap for early admission and the actual Store fetch.
     pub const FIELD_TEXT_BYTES: i64 = 8192;
-    /// Source process_m3u_batch uses batches of 1000, under the existing 8MiB budget.
+    /// Original slices the raw ordinary Standard refresh before projection.
+    pub const STANDARD_M3U_BATCH_ROWS: usize = 1_500;
+
+    pub(crate) const fn standard_refresh() -> Self {
+        Self {
+            unique_hashes: Self::STANDARD_M3U_BATCH_ROWS,
+            logo_bytes: Self::FIELD_TEXT_BYTES,
+            properties_text_bytes: Self::FIELD_TEXT_BYTES,
+        }
+    }
+
+    /// Retain the separately qualified Xtream lookup bound.
     pub const fn xc_batch1000() -> Self {
         Self {
             unique_hashes: 1000,
