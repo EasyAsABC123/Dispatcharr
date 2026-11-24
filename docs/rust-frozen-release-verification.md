@@ -161,6 +161,16 @@ metadata for authenticated users. Pinned Django, DRF and pytz checked
 OPTIONS bodies and anonymous route responses. The signed package still
 needs its grouped replay.
 
+## System Events
+
+The existing System Events API now accepts Python-style Unicode pagination
+and exposes the administrator JSON OPTIONS response. HEAD and unsupported
+methods authenticate before returning the method error. Handled pagination
+failures keep the declared methods and Accept variation on their JSON
+response. A pinned Original component checked 24 method, role and query
+cases. Five focused Rust utility tests passed. The grouped signed Stats
+workflow still needs its final package.
+
 ## Core settings publication during shutdown
 
 Selected Main drains its workers while retaining the shared Jobs broker. After the stream and HTTP drains, Main settles the already-admitted Core settings requests and then closes the broker. This lets a settings request reach its first broker lease after a held database write clears. The remaining broker drain budget still comes from the selected worker drain. The app compiled and both files passed formatting. The final regression holds a real PostgreSQL update across termination and checks for the corresponding durable publication and exact resource cleanup.

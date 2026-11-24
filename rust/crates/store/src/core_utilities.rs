@@ -11,7 +11,7 @@ use crate::{
 mod persisted_logs;
 use axum::{
     extract::{ConnectInfo, RawQuery, State},
-    http::{header, HeaderMap, HeaderValue, StatusCode, Uri},
+    http::{header, HeaderMap, HeaderValue, Method, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::get,
     Json, Router,
@@ -55,10 +55,14 @@ async fn timezones(
     channel_options_headers(response, TIMEZONE_ALLOW)
 }
 
-fn timezone_options_entity(indentation: usize) -> Result<Response, StoreError> {
+fn utility_options(
+    name: &str,
+    description: &str,
+    indentation: usize,
+) -> Result<Response, StoreError> {
     let metadata = json!({
-        "name": "Timezone List",
-        "description": "API endpoint that returns all available timezones supported by pytz.\nReturns a list of timezone names grouped by region for easy selection.\nThis is a general utility endpoint that can be used throughout the application.",
+        "name": name,
+        "description": description,
         "renders": ["application/json", "text/html"],
         "parses": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"]
     });
@@ -68,6 +72,14 @@ fn timezone_options_entity(indentation: usize) -> Result<Response, StoreError> {
             indentation,
         )
         .ok_or(StoreError::UnhandledRestFault)?,
+    )
+}
+
+fn timezone_options_entity(indentation: usize) -> Result<Response, StoreError> {
+    utility_options(
+        "Timezone List",
+        "API endpoint that returns all available timezones supported by pytz.\nReturns a list of timezone names grouped by region for easy selection.\nThis is a general utility endpoint that can be used throughout the application.",
+        indentation,
     )
 }
 
@@ -94,20 +106,9 @@ async fn timezone_options(
 fn event_error() -> StoreError {
     StoreError::StatusBody(500, json!({"error":"Failed to fetch system events"}))
 }
-// Python int(query_string) accepts underscore separators but not decimal fractions.
 fn integer(raw: &str) -> Result<BigInt, StoreError> {
-    let raw = raw.trim();
-    let digits = raw.strip_prefix(['+', '-']).unwrap_or(raw);
-    if digits.is_empty()
-        || digits.starts_with('_')
-        || digits.ends_with('_')
-        || digits.contains("__")
-        || !digits.bytes().all(|v| v.is_ascii_digit() || v == b'_')
-        || digits.bytes().filter(u8::is_ascii_digit).count() > 4300
-    {
-        return Err(event_error());
-    }
-    BigInt::parse_bytes(raw.replace('_', "").as_bytes(), 10).ok_or_else(event_error)
+    let literal = dispatcharr_ingest_core::source_integer_literal(raw).ok_or_else(event_error)?;
+    BigInt::parse_bytes(literal.as_bytes(), 10).ok_or_else(event_error)
 }
 struct Page {
     limit: BigInt,
@@ -199,17 +200,55 @@ async fn event_data(auth: &AuthService, raw: Option<String>) -> Result<Value, St
         json!({"events":events,"count":events.len(),"total":total,"offset":serde_json::from_str::<Value>(&page.offset.to_string()).expect("integer"),"limit":serde_json::from_str::<Value>(&page.limit.to_string()).expect("integer")}),
     )
 }
+const SYSTEM_EVENTS_ALLOW: HeaderValue = HeaderValue::from_static("GET, OPTIONS");
+const SYSTEM_EVENTS_DESCRIPTION: &str = "Get recent system events (channel start/stop, buffering, client connections, etc.)\n\nQuery Parameters:\n    limit: Number of events to return per page (default: 100, max: 1000)\n    offset: Number of events to skip (for pagination, default: 0)\n    event_type: Filter by specific event type (optional)";
+
 async fn events(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     RawQuery(raw): RawQuery,
-) -> Result<Json<Value>, StoreError> {
-    auth.account_user(peer, headers, true).await?;
-    event_data(&auth, raw)
-        .await
-        .map(Json)
-        .map_err(|_| event_error())
+    uri: Uri,
+    method: Method,
+) -> Response {
+    let result = async {
+        crate::epg_program_http::json_negotiation(&headers, &uri)?;
+        let indentation = (method == Method::OPTIONS)
+            .then(|| channel_options_indentation(&Uri::from_static("/"), &headers).unwrap_or(0));
+        auth.account_user(peer, headers, true).await?;
+        match method {
+            Method::GET => event_data(&auth, raw)
+                .await
+                .map(|data| Json(data).into_response())
+                .map_err(|_| event_error()),
+            Method::OPTIONS => utility_options(
+                "Get System Events",
+                SYSTEM_EVENTS_DESCRIPTION,
+                indentation.unwrap_or_default(),
+            ),
+            _ => Err(StoreError::StatusBody(
+                405,
+                json!({"detail": format!("Method \"{method}\" not allowed.")}),
+            )),
+        }
+    }
+    .await;
+    let mut response = result.unwrap_or_else(IntoResponse::into_response);
+    // A pagination/database error is a handled JSON response in Original.
+    // An uncaught HTML server response keeps its framework headers.
+    if response
+        .headers()
+        .get(header::CONTENT_TYPE)
+        .is_some_and(|content_type| content_type == "application/json")
+    {
+        response
+            .headers_mut()
+            .insert(header::ALLOW, SYSTEM_EVENTS_ALLOW);
+        response
+            .headers_mut()
+            .insert(header::VARY, HeaderValue::from_static("Accept"));
+    }
+    response
 }
 pub(crate) fn router(auth: AuthService) -> Router {
     Router::new()
@@ -217,7 +256,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/core/timezones/",
             get(timezones).options(timezone_options),
         )
-        .route("/api/core/system-events/", get(events))
+        .route("/api/core/system-events/", get(events).fallback(events))
         .with_state(auth.clone())
         .merge(persisted_logs::router(auth))
 }
@@ -308,6 +347,81 @@ mod tests {
             let body = to_bytes(reply.into_body(), 4096).await.unwrap();
             assert_eq!(body.is_empty(), method == Method::HEAD);
         }
+    }
+
+    #[tokio::test]
+    async fn system_event_metadata_matches_pinned_methods() {
+        use axum::{
+            body::{to_bytes, Body},
+            extract::Request,
+            Extension,
+        };
+        use sha2::{Digest, Sha256};
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("synthetic-events-component".into()).unwrap(),
+        );
+        let app = router(auth).layer(Extension(ConnectInfo(SocketAddr::from((
+            [127, 0, 0, 1],
+            1234,
+        )))));
+        for method in [Method::GET, Method::HEAD, Method::OPTIONS, Method::POST] {
+            let response = app
+                .clone()
+                .oneshot(
+                    Request::builder()
+                        .uri("/api/core/system-events/")
+                        .method(method.clone())
+                        .header(header::ACCEPT, "application/json")
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), StatusCode::UNAUTHORIZED);
+            assert_eq!(response.headers()[header::ALLOW], SYSTEM_EVENTS_ALLOW);
+            assert_eq!(response.headers()[header::VARY], "Accept");
+        }
+        for (indentation, expected) in [
+            (
+                0,
+                "a5b757e5410596a8b31646533652e99cd0c25e6e0c274ad751637b1a3d0e3f25",
+            ),
+            (
+                4,
+                "2ab8eb8e3d71f70ffe0451dfea29d326e0f868a6131a13bf303c4a1a1bd6d7c9",
+            ),
+        ] {
+            let response =
+                utility_options("Get System Events", SYSTEM_EVENTS_DESCRIPTION, indentation)
+                    .unwrap();
+            let bytes = to_bytes(response.into_body(), 1024).await.unwrap();
+            assert_eq!(format!("{:x}", Sha256::digest(&bytes)), expected);
+        }
+    }
+
+    #[test]
+    fn system_events_pagination_decodes_source_unicode_integers() {
+        assert_eq!(
+            page(Some("limit=%EF%BC%92&offset=%D9%A0%D9%A1".into()))
+                .unwrap()
+                .fetch,
+            Some((2, 1))
+        );
+        assert_eq!(
+            page(Some("limit=bad&limit=%D9%A2".into())).unwrap().fetch,
+            Some((2, 0))
+        );
+        assert!(page(Some("limit=%D9%A2&limit=bad".into())).is_err());
+        assert!(page(Some("offset=-%D9%A1".into())).is_err());
+        let p = page(Some("offset=%D9%A1&limit=-%D9%A1".into())).unwrap();
+        assert!(p.fetch.is_none());
+        assert_eq!(p.offset, 1.into());
+        assert_eq!(p.limit, (-1).into());
     }
 
     #[test]
