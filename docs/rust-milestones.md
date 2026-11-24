@@ -1517,6 +1517,9 @@ The [8fc7eef0 AMD64 signed 61-second recording pair](rust-m6-8fc7eef0-recording6
 - **M7** On Lappy, both configured HDHomeRun profiles returned decodable A/V before and after a graceful application restart on both backends. All deliveries used one upstream connection. [ARM64 HDHomeRun profiles](rust-m7-2d3ffe53-arm64-hdhr-two-profile-restart.md)
 - **M8 and M9** The held backup survived one TERM, completed after release of its PostgreSQL lock, and retired cleanly. A separate Original startup audit verified four live stock roots and retirement of the temporary observer. [ARM64 shutdown and startup diagnostics](rust-2d3ffe-arm64-backup-drain-and-memory-diagnostic.md)
 
+- **M3** The current AMD64 package passed shared TS and full worker outage recovery. Both ARM64 backends passed paired signed HLS with strict media decoding and one upstream per test. [Shared streams and restart evidence](rust-2d3ffe53-shared-streams-guide-and-memory.md#m3-shared-streams-and-worker-recovery)
+- **M6 and M9** The current ordered guide and scheduled scanner validated matching worker results. The separate Original idle observation measured 59,207,680 bytes of growth without playback. [Guide scheduling and idle diagnosis](rust-2d3ffe53-shared-streams-guide-and-memory.md#m6-guide-request-before-scheduled-scanner)
+
 ## Latest scoped runtime evidence for 2ee64c43
 
 - **M6** Eleven signed invalid string IDs now match the Original 500 response, with no broker publication. Both ordinary packages passed signed startup and the exact source passed 1,775 workspace tests. [Invalid guide input evidence](rust-m6-2ee64c43-invalid-guide-ids.md)

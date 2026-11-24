@@ -1,0 +1,76 @@
+{
+  "arms": {
+    "Native": {
+      "exact_cleanup": true,
+      "guide": {
+        "actual_redis_lock_order": [
+          "SET NX",
+          "DEL"
+        ],
+        "borrowed_worker_generation": false,
+        "broadcasts": 0,
+        "journal_sha256": "09fa1d0c948c507303f6445c15eed93c77361ebbf80217c8bfd050616f551865",
+        "owned_cache_lock_released": true,
+        "owned_orphan_schedule_and_interval_removed": true,
+        "published_count": 1,
+        "served_status": 202,
+        "terminal": "SUCCESS",
+        "typed_lock_suffix": "None",
+        "typed_result": "EPG source None does not exist, task cleaned up",
+        "unrelated_scoped_SQL_equal": true
+      },
+      "guide_claim_ack_and_terminal_verified_before_scanner": true,
+      "literal_phases_verified": true,
+      "physical_review_sha256": "51ed1653ea71d64c03f4cd79dc079e23a984b75b8a9de64b4eb78db11347f541",
+      "same_db_and_worker_generation": true,
+      "scanner": {
+        "actual_publication_after_due": true,
+        "group_signal_child_terminal": "SUCCESS",
+        "input_sha256": "1be5e98e400d16fb10e2194a7dfe4fc28aa0c540945af8ef545eb2cd69f69704",
+        "one_actual_group_signal_child_and_parent_owned_lineage": true,
+        "parent_terminal": "SUCCESS",
+        "periodic_name": "scan-files",
+        "periodic_run_count": 1,
+        "remaining_ready_or_reserved": 0,
+        "scan_marker_matches_file_mtime": true
+      }
+    },
+    "Original": {
+      "exact_cleanup": true,
+      "guide": {
+        "actual_redis_lock_order": [
+          "SET NX",
+          "DEL"
+        ],
+        "borrowed_worker_generation": false,
+        "broadcasts": 0,
+        "journal_sha256": "7af111785e2e55aae59981bc4f274b9d2dd4aa7bb15e1731f094ffe36cdb1134",
+        "owned_cache_lock_released": true,
+        "owned_orphan_schedule_and_interval_removed": true,
+        "published_count": 1,
+        "served_status": 202,
+        "terminal": "SUCCESS",
+        "typed_lock_suffix": "None",
+        "typed_result": "EPG source None does not exist, task cleaned up",
+        "unrelated_scoped_SQL_equal": true
+      },
+      "guide_claim_ack_and_terminal_verified_before_scanner": true,
+      "literal_phases_verified": true,
+      "physical_review_sha256": "506f8236f54b1df239967dca001231ed304cd1b8ed77db1b10e4ef35c3b69231",
+      "same_db_and_worker_generation": true,
+      "scanner": {
+        "actual_publication_after_due": true,
+        "group_signal_child_terminal": "SUCCESS",
+        "input_sha256": "1be5e98e400d16fb10e2194a7dfe4fc28aa0c540945af8ef545eb2cd69f69704",
+        "one_actual_group_signal_child_and_parent_owned_lineage": true,
+        "parent_terminal": "SUCCESS",
+        "periodic_name": "scan-files",
+        "periodic_run_count": 1,
+        "remaining_ready_or_reserved": 0,
+        "scan_marker_matches_file_mtime": true
+      }
+    }
+  },
+  "canonical_m6_coverage": false,
+  "revision": "2d3ffe5386a7d09b72cda387d0ec9e4f4ab0abc1"
+}
