@@ -594,15 +594,18 @@ fn negotiation_status(
     if !browser_format && format.is_some_and(|value| !value.is_empty() && value != "json") {
         return Some(StatusCode::NOT_FOUND);
     }
+    // An explicit format restricts the eligible renderer before Accept
+    // matching. With no selector, public data views can use either renderer.
+    let accepts_html = browser_format || (django_response && format != Some("json"));
+    let accepts_json = !browser_format;
     let rejected = accept.is_some_and(|value| {
         !value.split(',').any(|part| {
             let value = part.split(';').next().unwrap_or("").trim();
-            if browser_format {
-                matches!(value, "text/html" | "text/*" | "*/*")
-            } else {
-                matches!(value, "application/json" | "*/*" | "application/*")
-                    || (django_response && matches!(value, "text/html" | "text/*"))
-            }
+            let matches =
+                |names: &[&str]| names.iter().any(|kind| value.eq_ignore_ascii_case(kind));
+            value == "*/*"
+                || (accepts_json && matches(&["application/json", "application/*"]))
+                || (accepts_html && matches(&["text/html", "text/*"]))
         })
     });
     rejected.then_some(StatusCode::NOT_ACCEPTABLE)
@@ -1070,6 +1073,55 @@ mod tests {
                     None,
                     "{method} {path}"
                 );
+            }
+        }
+    }
+
+    #[test]
+    fn explicit_json_excludes_browser_only_accept_and_matches_case_insensitive_media_types() {
+        for path in [
+            "/hdhr/discover.json",
+            "/api/hdhr/device.xml",
+            "/hdhr/House/lineup.json",
+            "/hdhr/House/output_profile/2/lineup_status.json",
+        ] {
+            let route = endpoint(path).unwrap();
+            for method in [Method::GET, Method::HEAD] {
+                for (format, accept, expected) in [
+                    (
+                        Some("json"),
+                        Some("text/html"),
+                        Some(StatusCode::NOT_ACCEPTABLE),
+                    ),
+                    (
+                        Some("json"),
+                        Some("TEXT/*"),
+                        Some(StatusCode::NOT_ACCEPTABLE),
+                    ),
+                    (
+                        Some("json"),
+                        Some("text/html, APPLICATION/JSON;q=0.5"),
+                        None,
+                    ),
+                    (Some("json"), Some("APPLICATION/*"), None),
+                    (Some("json"), Some("*/*"), None),
+                    (Some("json"), None, None),
+                    (None, Some("TEXT/HTML"), None),
+                    (Some(""), Some("text/html"), None),
+                    (Some("api"), Some("Text/HTML; charset=UTF-8"), None),
+                    (
+                        Some("api"),
+                        Some("application/json"),
+                        Some(StatusCode::NOT_ACCEPTABLE),
+                    ),
+                    (Some("xml"), Some("*/*"), Some(StatusCode::NOT_FOUND)),
+                ] {
+                    assert_eq!(
+                        negotiation_status(&method, &route, format, accept),
+                        expected,
+                        "{method} {path} {format:?} {accept:?}"
+                    );
+                }
             }
         }
     }

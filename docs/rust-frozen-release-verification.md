@@ -77,6 +77,12 @@ The ordinary Accounts User detail route accepts the numeric JSON suffix for GET 
 
 The Xtream gateway also accepts one trailing slash for `/player_api.php` and `/panel_api.php`. The gateway suite passed 65 tests. The ARM64 fixture signs in as a Standard user and checks that the same live-stream request returns the expected list in the player and full account document in the panel, with the same behavior through the slash aliases.
 
+## EPG Programme JSON and HDHomeRun renderer selection
+
+Both numeric EPG Programme JSON routes accept a trailing slash for GET through their existing permission checks and bounded renderer. The focused Store check covers both routes and checks the retained JSON representation behavior. The paired fixture will also check the signed Programme responses and scoped datastore state.
+
+For public HDHomeRun output, an explicit JSON selector limits negotiation to JSON. A client that accepts only HTML receives 406. MIME matching accepts case variations. The HDHomeRun library passed 15 tests, and focused comparison with the retained Original negotiator matched all 85 cases.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.

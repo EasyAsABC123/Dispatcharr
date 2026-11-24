@@ -2,7 +2,7 @@
 //! Original Dispatcharr authors and contributors retain full credit.
 use crate::{
     catalogue_options,
-    core_reads::{negotiate_literal_json_alias, omitted_json_method, JsonReadId},
+    core_reads::{negotiate_literal_json_alias, omitted_json_method},
     AuthService, EpgReadResource, StoreError,
 };
 use axum::{
@@ -372,18 +372,17 @@ impl EpgProgramReads {
         })
     }
     pub fn router(self) -> Router {
+        let list_json = get(list_json_alias)
+            .head(omitted_json_method)
+            .fallback(omitted_json_method);
         Router::new()
             .route("/api/epg/programs/", get(list).options(programme_options))
             .route(
                 series_preview::PATH,
                 axum::routing::post(series_preview::handle),
             )
-            .route(
-                "/api/epg/programs.json",
-                get(list_json_alias)
-                    .head(omitted_json_method)
-                    .fallback(omitted_json_method),
-            )
+            .route("/api/epg/programs.json", list_json.clone())
+            .route("/api/epg/programs.json/", list_json)
             .route(
                 "/api/epg/programs/{json_id}",
                 get(detail_json_alias)
@@ -714,12 +713,21 @@ async fn list_json_alias(
 
 async fn detail_json_alias(
     State(state): State<EpgProgramReads>,
-    JsonReadId(id): JsonReadId,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
     uri: Uri,
 ) -> Result<Response, StoreError> {
-    respond_json_alias(state, peer, headers, Some(id), uri).await
+    let id = programme_json_id(uri.path()).ok_or(StoreError::NotFound)?;
+    respond_json_alias(state, peer, headers, Some(id.to_owned()), uri).await
+}
+
+fn programme_json_id(path: &str) -> Option<&str> {
+    let id = path
+        .strip_suffix('/')
+        .unwrap_or(path)
+        .strip_prefix("/api/epg/programs/")?
+        .strip_suffix(".json")?;
+    (!id.is_empty() && id.bytes().all(|byte| byte.is_ascii_digit())).then_some(id)
 }
 
 async fn programme_options(
@@ -781,6 +789,9 @@ async fn detail(
     method: Method,
     uri: Uri,
 ) -> Result<Response, StoreError> {
+    if let Some(id) = programme_json_id(uri.path()).filter(|_| method == Method::GET) {
+        return respond_json_alias(state, peer, headers, Some(id.to_owned()), uri).await;
+    }
     let media = programme_media(&method, &uri, &headers);
     if let Some(ProgrammeMedia::Html { format_alias }) = media {
         let user = state
@@ -825,6 +836,58 @@ mod tests {
         "text/html,application/xhtml+xml,application/xml;q=0.9,",
         "image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
     );
+
+    #[tokio::test]
+    async fn epg_programme_json_trailing_slash_uses_the_existing_get_policy() {
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let auth = AuthService::new(
+            crate::Store::from_pool(pool),
+            crate::AuthConfig::new("owned-programme-alias-fixture".into()).unwrap(),
+        );
+        let reads = EpgProgramReads::new(auth, EpgProgramReadLimits::default()).unwrap();
+        let peer: SocketAddr = "127.0.0.1:12345".parse().unwrap();
+        let router = reads.router().layer(Extension(ConnectInfo(peer)));
+        for path in ["/api/epg/programs.json/", "/api/epg/programs/18.json/"] {
+            for (accept, query, expected) in [
+                ("application/json", "", StatusCode::UNAUTHORIZED),
+                ("application/json", "?format=api", StatusCode::UNAUTHORIZED),
+                ("text/html", "", StatusCode::NOT_ACCEPTABLE),
+            ] {
+                let request = Request::builder()
+                    .uri(format!("{path}{query}"))
+                    .header(header::ACCEPT, accept)
+                    .body(Body::empty())
+                    .unwrap();
+                let response = router.clone().oneshot(request).await.unwrap();
+                assert_eq!(response.status(), expected, "{path}{query}");
+                if expected == StatusCode::UNAUTHORIZED {
+                    assert_eq!(
+                        response.headers()[header::WWW_AUTHENTICATE],
+                        "Bearer realm=\"api\""
+                    );
+                    assert_eq!(
+                        to_bytes(response.into_body(), 128).await.unwrap().as_ref(),
+                        br#"{"detail":"Authentication credentials were not provided."}"#
+                    );
+                }
+            }
+        }
+        for method in [Method::HEAD, Method::POST, Method::OPTIONS] {
+            let request = Request::builder()
+                .method(method)
+                .uri("/api/epg/programs.json/")
+                .body(Body::empty())
+                .unwrap();
+            assert_eq!(
+                router.clone().oneshot(request).await.unwrap().status(),
+                StatusCode::NOT_FOUND
+            );
+        }
+        assert_eq!(programme_json_id("/api/epg/programs/18.json/"), Some("18"));
+        assert_eq!(programme_json_id("/api/epg/programs/18%2Ejson/"), None);
+        assert_eq!(programme_json_id("/api/epg/programs/18.json.json/"), None);
+    }
 
     #[tokio::test]
     async fn seven_catalogue_json_aliases_use_protected_get_without_forcing_canonical_changes() {
