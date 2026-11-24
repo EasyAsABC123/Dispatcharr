@@ -1,12 +1,12 @@
 //! Account API shapes and permissions mirror apps/accounts serializers and views.
-use crate::{auth::request, AuthService, Store, StoreError, User};
+use crate::{auth::request, core_reads::JsonReadId, AuthService, Store, StoreError, User};
 use axum::{
-    extract::{ConnectInfo, FromRequestParts, Path, Request, State},
+    extract::{ConnectInfo, FromRequest, FromRequestParts, Path, Request, State},
     http::{HeaderMap, HeaderValue, Method, StatusCode},
     middleware::{from_fn_with_state, Next},
     response::{IntoResponse, Response},
-    routing::get,
-    Json, Router,
+    routing::{get, post},
+    Extension, Json, Router,
 };
 use chrono::{DateTime, SecondsFormat, Utc};
 use serde_json::{json, Value};
@@ -29,6 +29,12 @@ pub(crate) fn router(auth: AuthService) -> Router {
             get(users).post(crate::admin_writes::create_user),
         )
         .route(
+            "/api/accounts/users.json",
+            post(create_account_json)
+                .layer(Extension(AccountDetail::User))
+                .fallback(crate::core_reads::omitted_json_method),
+        )
+        .route(
             "/api/accounts/users/me/",
             get(me).patch(crate::account_writes::patch_me),
         )
@@ -44,11 +50,20 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/accounts/users/{id}",
             user_read
                 .head(crate::core_reads::omitted_json_method)
+                .put(change_account_json)
+                .delete(change_account_json)
+                .layer(Extension(AccountDetail::User))
                 .fallback(crate::core_reads::omitted_json_method),
         )
         .route(
             "/api/accounts/groups/",
             get(groups).post(crate::admin_writes::create_group),
+        )
+        .route(
+            "/api/accounts/groups.json",
+            post(create_account_json)
+                .layer(Extension(AccountDetail::Group))
+                .fallback(crate::core_reads::omitted_json_method),
         )
         .route(
             "/api/accounts/groups/{id}/",
@@ -62,6 +77,10 @@ pub(crate) fn router(auth: AuthService) -> Router {
             "/api/accounts/groups/{id}",
             group_read
                 .head(crate::core_reads::omitted_json_method)
+                .put(change_account_json)
+                .patch(change_account_json)
+                .delete(change_account_json)
+                .layer(Extension(AccountDetail::Group))
                 .fallback(crate::core_reads::omitted_json_method),
         )
         .route("/api/accounts/permissions/", get(permissions))
@@ -252,6 +271,59 @@ impl AccountDetail {
     }
 }
 
+async fn create_account_json(
+    auth: State<AuthService>,
+    Extension(owner): Extension<AccountDetail>,
+    peer: ConnectInfo<SocketAddr>,
+    request: Request,
+) -> Result<Response, StoreError> {
+    crate::core_reads::negotiate_literal_json_alias(request.headers())?;
+    let headers = request.headers().clone();
+    let body = Json::from_request(request, &auth.0).await;
+    match owner {
+        AccountDetail::User => crate::admin_writes::create_user(auth, peer, headers, body).await,
+        AccountDetail::Group => crate::admin_writes::create_group(auth, peer, headers, body).await,
+    }
+}
+
+async fn change_account_json(
+    auth: State<AuthService>,
+    Extension(owner): Extension<AccountDetail>,
+    peer: ConnectInfo<SocketAddr>,
+    JsonReadId(raw_id): JsonReadId,
+    request: Request,
+) -> Result<Response, StoreError> {
+    crate::core_reads::negotiate_literal_json_alias(request.headers())?;
+    let id = Path(raw_id.parse::<i64>().map_err(|_| StoreError::NotFound)?);
+    let method = request.method().clone();
+    let headers = request.headers().clone();
+    if method == Method::DELETE {
+        let status = match owner {
+            AccountDetail::User => {
+                crate::admin_writes::delete_user(auth, id, peer, headers).await?
+            }
+            AccountDetail::Group => {
+                crate::admin_writes::delete_group(auth, id, peer, headers).await?
+            }
+        };
+        return Ok(status.into_response());
+    }
+    let body = Json::from_request(request, &auth.0).await;
+    let entity = match (owner, method) {
+        (AccountDetail::User, Method::PUT) => {
+            crate::admin_writes::put_user(auth, id, peer, headers, body).await?
+        }
+        (AccountDetail::Group, Method::PUT) => {
+            crate::admin_writes::put_group(auth, id, peer, headers, body).await?
+        }
+        (AccountDetail::Group, Method::PATCH) => {
+            crate::admin_writes::patch_group(auth, id, peer, headers, body).await?
+        }
+        _ => return Err(StoreError::NotFound),
+    };
+    Ok(entity.into_response())
+}
+
 async fn account_detail_json_alias(
     State((auth, owner)): State<(AuthService, AccountDetail)>,
     request: Request,
@@ -313,6 +385,84 @@ async fn api_key(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[tokio::test]
+    async fn measured_json_account_writes_reach_the_existing_admin_writers() {
+        use axum::{
+            body::{to_bytes, Body},
+            http::header,
+        };
+        use tower::ServiceExt;
+
+        let pool = sqlx::postgres::PgPoolOptions::new()
+            .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
+        let app = router(AuthService::new(
+            Store::from_pool(pool),
+            crate::AuthConfig::new("owned-account-json-test-only".into()).unwrap(),
+        ));
+        for (method, path) in [
+            (Method::POST, "/api/accounts/users.json"),
+            (Method::PUT, "/api/accounts/users/27.json"),
+            (Method::DELETE, "/api/accounts/users/23.json"),
+            (Method::POST, "/api/accounts/groups.json"),
+            (Method::PUT, "/api/accounts/groups/10.json"),
+            (Method::PATCH, "/api/accounts/groups/8.json"),
+            (Method::DELETE, "/api/accounts/groups/4.json"),
+        ] {
+            for (accept, expected) in [
+                ("application/json", StatusCode::UNAUTHORIZED),
+                ("text/html", StatusCode::NOT_ACCEPTABLE),
+            ] {
+                let response = app
+                    .clone()
+                    .oneshot(
+                        Request::builder()
+                            .method(method.clone())
+                            .uri(path)
+                            .extension(ConnectInfo("127.0.0.1:1234".parse::<SocketAddr>().unwrap()))
+                            .header(header::ACCEPT, accept)
+                            .header(header::CONTENT_TYPE, "application/json")
+                            .body(Body::from("{"))
+                            .unwrap(),
+                    )
+                    .await
+                    .unwrap();
+                assert_eq!(response.status(), expected, "{method} {path} {accept}");
+                if expected == StatusCode::UNAUTHORIZED {
+                    assert_eq!(
+                        response.headers()[header::WWW_AUTHENTICATE],
+                        r#"Bearer realm="api""#
+                    );
+                    assert_eq!(
+                        to_bytes(response.into_body(), 128).await.unwrap().as_ref(),
+                        br#"{"detail":"Authentication credentials were not provided."}"#
+                    );
+                }
+            }
+        }
+        for (method, path) in [
+            (Method::PATCH, "/api/accounts/users/27.json"),
+            (Method::PUT, "/api/accounts/users/27"),
+            (Method::PATCH, "/api/accounts/groups/8.xml"),
+            (Method::OPTIONS, "/api/accounts/groups/8.json"),
+            (Method::GET, "/api/accounts/users.json"),
+            (Method::OPTIONS, "/api/accounts/groups.json"),
+        ] {
+            let response = app
+                .clone()
+                .oneshot(
+                    Request::builder()
+                        .method(method)
+                        .uri(path)
+                        .extension(ConnectInfo("127.0.0.1:1234".parse::<SocketAddr>().unwrap()))
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), StatusCode::NOT_FOUND, "{path}");
+        }
+    }
 
     #[tokio::test]
     async fn ordinary_account_user_detail_json_uses_the_admin_read_handler() {
