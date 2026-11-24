@@ -1,7 +1,7 @@
 //! Owned draft. Original Dispatcharr and dependency authors retain full credit.
 //! No constructor changes defaults; the restore worker must explicitly bind this port.
 use super::*;
-use std::sync::Weak;
+use std::sync::{OnceLock, Weak};
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub(super) enum Phase {
@@ -23,6 +23,7 @@ struct Shared {
     changes: watch::Sender<Phase>,
     // A cancelled restore must not silently relinquish its physical caller.
     retained: StateMutex<Vec<Arc<dyn Send + Sync>>>,
+    core_registry: OnceLock<crate::normal_queue::CoreRegistrySource>,
 }
 pub(super) struct Control {
     shared: Arc<Shared>,
@@ -41,9 +42,23 @@ impl Control {
                 }),
                 changes: changes.clone(),
                 retained: StateMutex::new(Vec::new()),
+                core_registry: OnceLock::new(),
             }),
             changes,
         }
+    }
+    pub(super) fn bind_core_registry(
+        &self,
+        source: crate::normal_queue::CoreRegistrySource,
+    ) -> Result<(), Error> {
+        let state = self.shared.state.lock().map_err(|_| Error::Supervisor)?;
+        if state.phase != Phase::Active || state.elected || state.stopped {
+            return Err(Error::Drain);
+        }
+        self.shared
+            .core_registry
+            .set(source)
+            .map_err(|_| Error::Configuration("duplicate Core restore registry"))
     }
     pub(super) fn blocked(&self) -> bool {
         self.shared
@@ -170,14 +185,88 @@ impl RestorePauseClient {
     }
 }
 impl RestorePause {
+    pub(crate) fn core_registry_available(&self) -> bool {
+        self.shared
+            .core_registry
+            .get()
+            .is_some_and(|source| source.available())
+    }
+    pub(crate) async fn registry_sublease<'scope>(
+        &'scope self,
+        reservation: &'scope dispatcharr_store::TasklessRestoreReservation,
+    ) -> Result<Option<ReadOnlyCoreRegistry<'scope>>, dispatcharr_store::StoreError> {
+        self.validate_taskless_reservation(reservation)
+            .map_err(|_| {
+                dispatcharr_store::StoreError::Unsupported(
+                    "Core restore pause identity unavailable",
+                )
+            })?;
+        let Some(source) = self.shared.core_registry.get() else {
+            return Ok(None);
+        };
+        let Some(lease) = source.lease(reservation).await? else {
+            return Ok(None);
+        };
+        let view = ReadOnlyCoreRegistry {
+            pause: self,
+            reservation,
+            lease,
+        };
+        view.validate().map_err(|_| {
+            dispatcharr_store::StoreError::Unsupported(
+                "Core restore registry generation unavailable",
+            )
+        })?;
+        Ok(Some(view))
+    }
+    /// Adopt an additional no-effect reservation owner without replacing the
+    /// original worker/caller. This grants no new scheduler or effect permission.
+    pub(crate) fn retain_noeffect(
+        mut self,
+        additional: Arc<dyn Send + Sync>,
+    ) -> Result<Self, Error> {
+        if self.destructive || self.disposed {
+            return Err(Error::Drain);
+        }
+        {
+            let state = self.shared.state.lock().map_err(|_| Error::Supervisor)?;
+            if state.phase != Phase::Parked || !state.elected {
+                return Err(Error::Drain);
+            }
+        }
+        let original = self.owner.take().ok_or(Error::Drain)?;
+        self.owner = Some(Arc::new((original, additional)));
+        Ok(self)
+    }
     pub(crate) fn validate_admission(
         &self,
         admission: &dispatcharr_store::BackupRestoreAdmission,
     ) -> Result<(), Error> {
+        self.validate_identity(
+            admission.current_database(),
+            admission.server_started_micros(),
+        )
+    }
+    pub(crate) fn validate_taskless_reservation(
+        &self,
+        reservation: &dispatcharr_store::TasklessRestoreReservation,
+    ) -> Result<(), Error> {
+        reservation.check_lifetime().map_err(|_| {
+            Error::Configuration("restore scheduler taskless reservation is not live")
+        })?;
+        self.validate_identity(
+            reservation.current_database(),
+            reservation.server_started_micros(),
+        )
+    }
+    fn validate_identity(&self, database: &str, server: i64) -> Result<(), Error> {
         let s = self.shared.state.lock().map_err(|_| Error::Supervisor)?;
-        let matches = s.identity.as_ref().is_some_and(|(database, server)| {
-            database == admission.current_database() && *server == admission.server_started_micros()
-        });
+        let matches = s
+            .identity
+            .as_ref()
+            .is_some_and(|(observed_database, observed_server)| {
+                observed_database == database && *observed_server == server
+            });
         if s.phase != Phase::Parked || !s.elected || !matches {
             return Err(Error::Configuration(
                 "restore scheduler SQL authority mismatch",
@@ -213,6 +302,27 @@ impl RestorePause {
     }
     pub(crate) fn complete_reconciled(self) -> Result<(), Error> {
         self.resume(true)
+    }
+}
+/// Borrowed from the same pause and real Store reservation; not Clone,
+/// serializable, or an execution/restore permission. No raw rows are retained.
+pub(crate) struct ReadOnlyCoreRegistry<'scope> {
+    pause: &'scope RestorePause,
+    reservation: &'scope dispatcharr_store::TasklessRestoreReservation,
+    lease: crate::normal_queue::CoreRegistryLease,
+}
+impl ReadOnlyCoreRegistry<'_> {
+    pub(crate) fn validate(&self) -> Result<(), Error> {
+        self.pause.validate_taskless_reservation(self.reservation)?;
+        if !self.lease.validate(self.reservation) {
+            return Err(Error::Configuration(
+                "Core restore registry generation changed",
+            ));
+        }
+        Ok(())
+    }
+    pub(crate) fn summary(&self) -> (usize, usize) {
+        self.lease.summary()
     }
 }
 impl Scheduler {
@@ -290,6 +400,158 @@ mod tests {
             destructive: false,
             disposed: false,
         }
+    }
+    #[test]
+    fn typed_validation_uses_only_the_elected_parked_database_generation() {
+        let token = parked();
+        token.shared.state.lock().unwrap().identity = Some(("owned".into(), 7));
+        assert!(token.validate_identity("owned", 7).is_ok());
+        assert!(token.validate_identity("other", 7).is_err());
+        assert!(token.validate_identity("owned", 8).is_err());
+        token.shared.state.lock().unwrap().elected = false;
+        assert!(token.validate_identity("owned", 7).is_err());
+        token.shared.state.lock().unwrap().elected = true;
+        token.shared.state.lock().unwrap().phase = Phase::Quarantined;
+        assert!(token.validate_identity("owned", 7).is_err());
+    }
+
+    #[test]
+    fn adopted_noeffect_scope_retains_both_original_and_additional_owners() {
+        let original = Arc::new(());
+        let original_weak = Arc::downgrade(&original);
+        let additional = Arc::new(());
+        let additional_weak = Arc::downgrade(&additional);
+        let mut token = parked();
+        token.owner = Some(original.clone());
+        let shared = token.shared.clone();
+        let token = token.retain_noeffect(additional.clone()).unwrap();
+        drop(original);
+        drop(additional);
+        drop(token);
+        assert_eq!(shared.state.lock().unwrap().phase, Phase::Quarantined);
+        assert!(original_weak.upgrade().is_some());
+        assert!(additional_weak.upgrade().is_some());
+        shared.retained.lock().unwrap().clear();
+        assert!(original_weak.upgrade().is_none());
+        assert!(additional_weak.upgrade().is_none());
+    }
+
+    #[test]
+    fn submitted_pause_cannot_be_relabelled_as_noeffect() {
+        let mut token = parked();
+        token.destructive_submission();
+        let shared = token.shared.clone();
+        assert!(token.retain_noeffect(Arc::new(())).is_err());
+        assert_eq!(shared.state.lock().unwrap().phase, Phase::Quarantined);
+    }
+
+    #[test]
+    fn unelected_pause_cannot_adopt_a_reservation_owner() {
+        let token = parked();
+        let shared = token.shared.clone();
+        shared.state.lock().unwrap().elected = false;
+        assert!(token.retain_noeffect(Arc::new(())).is_err());
+        assert_eq!(shared.state.lock().unwrap().phase, Phase::Quarantined);
+    }
+
+    #[test]
+    fn unparked_pause_cannot_adopt_a_reservation_owner() {
+        let token = parked();
+        let shared = token.shared.clone();
+        shared.state.lock().unwrap().phase = Phase::Requested;
+        assert!(token.retain_noeffect(Arc::new(())).is_err());
+        assert_eq!(shared.state.lock().unwrap().phase, Phase::Active);
+    }
+
+    #[test]
+    fn actual_caller_is_required_before_noeffect_adoption() {
+        let mut token = parked();
+        token.owner = None;
+        assert!(token.retain_noeffect(Arc::new(())).is_err());
+    }
+
+    #[test]
+    fn every_nonparked_phase_rejects_noeffect_adoption() {
+        for phase in [
+            Phase::Active,
+            Phase::Requested,
+            Phase::Resume,
+            Phase::SettledOnStop,
+            Phase::Quarantined,
+        ] {
+            let token = parked();
+            token.shared.state.lock().unwrap().phase = phase;
+            let additional = Arc::new(());
+            let weak = Arc::downgrade(&additional);
+            assert!(token.retain_noeffect(additional.clone()).is_err());
+            drop(additional);
+            assert!(weak.upgrade().is_none());
+        }
+    }
+
+    #[test]
+    fn already_disposed_token_cannot_adopt_a_reservation_owner() {
+        let mut token = parked();
+        token.disposed = true;
+        assert!(token.retain_noeffect(Arc::new(())).is_err());
+    }
+
+    #[tokio::test]
+    async fn missing_plugin_bridge_consumer_declines_actual_pause_without_sql_or_quarantine() {
+        let original = Arc::new(());
+        let weak = Arc::downgrade(&original);
+        let mut token = parked();
+        token.owner = Some(original.clone());
+        drop(original);
+        let shared = token.shared.clone();
+        let observed = crate::guarded_restore_preflight::observe_core_noeffect(
+            token,
+            None,
+            String::new(),
+            Arc::new(()),
+            tokio::time::Instant::now(),
+        )
+        .await
+        .unwrap();
+        assert!(observed.is_none());
+        assert!(weak.upgrade().is_none());
+        assert_eq!(shared.state.lock().unwrap().phase, Phase::Resume);
+        assert!(shared.retained.lock().unwrap().is_empty());
+    }
+    #[tokio::test]
+    async fn missing_bridge_during_stop_settles_without_ticks_or_quarantine() {
+        let token = parked();
+        let shared = token.shared.clone();
+        shared.state.lock().unwrap().stopped = true;
+        assert!(crate::guarded_restore_preflight::observe_core_noeffect(
+            token,
+            None,
+            String::new(),
+            Arc::new(()),
+            tokio::time::Instant::now(),
+        )
+        .await
+        .unwrap()
+        .is_none());
+        assert_eq!(shared.state.lock().unwrap().phase, Phase::SettledOnStop);
+        assert!(shared.retained.lock().unwrap().is_empty());
+    }
+    #[test]
+    fn unconfigured_registry_is_known_untouched_and_declines_without_quarantine() {
+        let token = parked();
+        let shared = token.shared.clone();
+        assert!(!token.core_registry_available());
+        crate::guarded_restore_preflight::decline_unconfigured(token).unwrap();
+        assert_eq!(shared.state.lock().unwrap().phase, Phase::Resume);
+        assert!(shared.retained.lock().unwrap().is_empty());
+    }
+    #[test]
+    fn unconfigured_bridge_cannot_disguise_submitted_scope_as_noeffect() {
+        let mut token = parked();
+        token.destructive_submission();
+        let shared = token.shared.clone();
+        assert!(crate::guarded_restore_preflight::decline_unconfigured(token).is_err());
+        assert_eq!(shared.state.lock().unwrap().phase, Phase::Quarantined);
     }
     #[test]
     fn cancel_never_resumes_or_drops_owner() {

@@ -136,6 +136,11 @@ impl TasklessRestoreReservation {
             .is_ok_and(|held| held.runtime.same_instance(runtime))
     }
 
+    /// Actual retained Main auth-writer identity, not database-name metadata.
+    pub fn belongs_to_auth(&self, auth: &crate::AuthService) -> bool {
+        self.admission.shares_auth_writer(auth)
+    }
+
     pub fn target(&self) -> &TasklessRestoreTarget {
         &self.target
     }

@@ -21,7 +21,7 @@ use tokio::sync::{oneshot, watch, Mutex, OwnedSemaphorePermit, Semaphore};
 use uuid::Uuid;
 #[path = "normal_beat_restore_pause.rs"]
 mod restore_pause;
-pub(crate) use restore_pause::{RestorePause, RestorePauseClient};
+pub(crate) use restore_pause::{ReadOnlyCoreRegistry, RestorePause, RestorePauseClient};
 #[derive(Debug)]
 pub enum Error {
     Closed,
@@ -707,7 +707,8 @@ impl Scheduler {
             worker.owns_saved_stats(),
             worker.owns_saved_xc(),
         )?;
-        Self::prepare_scoped(
+        let registry = worker.restore_registry_source();
+        let scheduler = Self::prepare_scoped(
             worker.pool(),
             worker.jobs(),
             worker.identity(),
@@ -715,7 +716,11 @@ impl Scheduler {
             Some(ScheduleConsumer::Selected(worker)),
             Some(scope),
             None,
-        )
+        )?;
+        if let Some(registry) = registry {
+            scheduler.inner.restore_pause.bind_core_registry(registry)?;
+        }
+        Ok(scheduler)
     }
 
     /// Prepare one explicitly selected saved cleanup row without a receiver.

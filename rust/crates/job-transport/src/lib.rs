@@ -340,3 +340,6 @@ mod vod_ingestion_protocol;
 
 mod comskip_media;
 pub mod normal_comskip;
+
+// Owned no-effect scheduler/SQL prerequisite; grants no restore execution authority.
+pub mod guarded_restore_preflight;

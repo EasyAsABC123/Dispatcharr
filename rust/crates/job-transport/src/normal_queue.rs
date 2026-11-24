@@ -19,6 +19,8 @@ use std::{
     time::Duration,
 };
 use tokio::sync::{watch, OwnedSemaphorePermit, Semaphore};
+#[path = "normal_core_registry_policy.rs"]
+mod core_registry_policy;
 /// Existing global Celery lane budget, shared with the standalone Auto family.
 /// This is not an additional semaphore or a capacity increase.
 pub(crate) const CELERY_CONCURRENCY: usize = 6;
@@ -347,6 +349,7 @@ pub struct SelectedCoreSchedules {
     plugin_refresh: bool,
     saved_stats: bool,
     saved_xc: Option<crate::normal_xc_live::Worker>,
+    restore_registry: Option<Weak<crate::normal_registered_plugins::Prepared>>,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
@@ -357,6 +360,53 @@ pub(super) enum SelectedScheduleAvailability {
 }
 
 impl SelectedCoreSchedules {
+    /// Bind only the actual prepared RegisteredPlugin handler on THIS receiver.
+    /// This prepares read-only restore observation, never a Taskless owner mode.
+    pub fn with_restore_registry(
+        mut self,
+        plugins: &Arc<crate::normal_registered_plugins::Prepared>,
+    ) -> Result<Self, Error> {
+        if self.restore_registry.is_some() {
+            return Err(Error::Configuration);
+        }
+        let receiver = self.receiver.upgrade().ok_or(Error::Closed)?;
+        let stop = self.stop.upgrade().ok_or(Error::Closed)?;
+        if !receiver.require_registered {
+            return Err(Error::Configuration);
+        }
+        let expected: Arc<dyn Handler> = plugins.clone();
+        let backup: Arc<dyn Handler> = self.backup.clone();
+        if !core_registry_bindings_match(
+            &receiver.families,
+            receiver.require_registered,
+            &expected,
+            &backup,
+        ) {
+            return Err(Error::Configuration);
+        }
+        let lifecycle = receiver.lifecycle.lock().map_err(|_| Error::Poisoned)?;
+        if lifecycle.0 || lifecycle.1 || *stop.0.borrow() {
+            return Err(Error::Closed);
+        }
+        if *receiver
+            .schedule_owner
+            .lock()
+            .map_err(|_| Error::Poisoned)?
+            != ScheduleOwner::Core
+        {
+            return Err(Error::Configuration);
+        }
+        self.restore_registry = Some(Arc::downgrade(plugins));
+        Ok(self)
+    }
+    pub(super) fn restore_registry_source(&self) -> Option<CoreRegistrySource> {
+        Some(CoreRegistrySource {
+            receiver: self.receiver.clone(),
+            stop: self.stop.clone(),
+            plugins: self.restore_registry.clone()?,
+            backup: Arc::downgrade(&self.backup),
+        })
+    }
     pub fn with_saved_xc(
         mut self,
         scanner: &crate::normal_scanner::Prepared,
@@ -811,6 +861,193 @@ impl CoreScheduledWorker {
     }
 }
 
+fn core_registry_bindings_match(
+    families: &BTreeMap<Family, Arc<OwnedFamily>>,
+    registered: bool,
+    plugin: &Arc<dyn Handler>,
+    backup: &Arc<dyn Handler>,
+) -> bool {
+    registered
+        && [
+            (Family::RegisteredPlugin, plugin, CELERY_CONCURRENCY),
+            (Family::BackupCreate, backup, 1),
+            (Family::BackupScheduled, backup, 1),
+        ]
+        .iter()
+        .all(|(family, expected, maximum)| {
+            families.get(family).is_some_and(|actual| {
+                Arc::ptr_eq(&actual.inner, expected)
+                    && actual.inner.supports_selected_head()
+                    && actual.inner.maximum_concurrency() == *maximum
+                    && !actual.closed.load(Ordering::Acquire)
+            })
+        })
+}
+fn core_registry_members(
+    families: &BTreeMap<Family, Arc<OwnedFamily>>,
+    registered: bool,
+    plugin: &Arc<dyn Handler>,
+    backup: &Arc<dyn Handler>,
+    rows: &[serde_json::Value],
+) -> Option<BTreeMap<Family, Arc<OwnedFamily>>> {
+    if rows.len() > 256 || !core_registry_bindings_match(families, registered, plugin, backup) {
+        return None;
+    }
+    let mut selected = BTreeMap::new();
+    let mut ids = BTreeSet::new();
+    for row in rows {
+        let id = row["id"].as_i64().filter(|id| *id > 0)?;
+        if !ids.insert(id) || !row["enabled"].is_boolean() {
+            return None;
+        }
+        let family = milestone_dispatch::builtin_family(row["task"].as_str()?)?;
+        let actual = families.get(&family)?;
+        if actual.closed.load(Ordering::Acquire) || !actual.inner.supports_selected_head() {
+            return None;
+        }
+        selected.insert(family, actual.clone());
+    }
+    Some(selected)
+}
+
+/// Read-only source for one existing Core registry. No public constructor,
+/// serialization, task allowlist input, or execution method is provided.
+#[derive(Clone)]
+pub(crate) struct CoreRegistrySource {
+    receiver: Weak<Inner>,
+    stop: Weak<Lifetime>,
+    plugins: Weak<crate::normal_registered_plugins::Prepared>,
+    backup: Weak<crate::normal_backup::Application>,
+}
+pub(crate) struct CoreRegistryLease {
+    source: CoreRegistrySource,
+    receiver: Arc<Inner>,
+    plugins: Arc<crate::normal_registered_plugins::Prepared>,
+    backup: Arc<crate::normal_backup::Application>,
+    families: BTreeMap<Family, Arc<OwnedFamily>>,
+    rows: usize,
+}
+struct CoreRegistryOwners {
+    receiver: Arc<Inner>,
+    plugins: Arc<crate::normal_registered_plugins::Prepared>,
+    backup: Arc<crate::normal_backup::Application>,
+}
+impl CoreRegistrySource {
+    fn resolve(&self) -> Option<CoreRegistryOwners> {
+        let receiver = self.receiver.upgrade()?;
+        let plugins = self.plugins.upgrade()?;
+        let backup = self.backup.upgrade()?;
+        let stop = self.stop.upgrade()?;
+        let lifecycle = receiver.lifecycle.lock().ok()?;
+        let core = *receiver.schedule_owner.lock().ok()? == ScheduleOwner::Core;
+        if !core_registry_policy::live_receiver(lifecycle.0, lifecycle.1, *stop.0.borrow(), core)
+            || !receiver.require_registered
+            || !backup.scheduled_admission_open()
+        {
+            return None;
+        }
+        let jobs = backup.scheduled_jobs();
+        if !jobs.allows_defaults()
+            || receiver
+                .heads
+                .iter()
+                .any(|head| !head.uses_configured_ports(&jobs))
+        {
+            return None;
+        }
+        let plugin: Arc<dyn Handler> = plugins.clone();
+        let archive: Arc<dyn Handler> = backup.clone();
+        if !core_registry_bindings_match(
+            &receiver.families,
+            receiver.require_registered,
+            &plugin,
+            &archive,
+        ) {
+            return None;
+        }
+        drop(lifecycle);
+        Some(CoreRegistryOwners {
+            receiver,
+            plugins,
+            backup,
+        })
+    }
+    pub(super) fn available(&self) -> bool {
+        self.resolve().is_some()
+    }
+    pub(super) async fn lease(
+        &self,
+        reservation: &dispatcharr_store::TasklessRestoreReservation,
+    ) -> Result<Option<CoreRegistryLease>, dispatcharr_store::StoreError> {
+        let Some(CoreRegistryOwners {
+            receiver,
+            plugins,
+            backup,
+        }) = self.resolve()
+        else {
+            return Ok(None);
+        };
+        if !reservation.belongs_to_runtime(plugins.runtime())
+            || !backup.owns_core_restore_reservation(reservation)
+        {
+            return Ok(None);
+        }
+        // Data origin is this real retained SQL session, never caller rows.
+        let observed = reservation.observe_registry().await?;
+        reservation.revalidate().await?;
+        let rows = &observed.periodic;
+        if rows.len() > 256 {
+            return Ok(None);
+        }
+        let plugin: Arc<dyn Handler> = plugins.clone();
+        let archive: Arc<dyn Handler> = backup.clone();
+        let Some(families) = core_registry_members(
+            &receiver.families,
+            receiver.require_registered,
+            &plugin,
+            &archive,
+            rows,
+        ) else {
+            return Ok(None);
+        };
+        let lease = CoreRegistryLease {
+            source: self.clone(),
+            receiver,
+            plugins,
+            backup,
+            families,
+            rows: rows.len(),
+        };
+        Ok(lease.validate(reservation).then_some(lease))
+    }
+}
+impl CoreRegistryLease {
+    pub(super) fn validate(
+        &self,
+        reservation: &dispatcharr_store::TasklessRestoreReservation,
+    ) -> bool {
+        if !core_registry_policy::same_generation(&self.source.receiver, &self.receiver)
+            || !core_registry_policy::same_generation(&self.source.plugins, &self.plugins)
+            || !core_registry_policy::same_generation(&self.source.backup, &self.backup)
+            || !reservation.belongs_to_runtime(self.plugins.runtime())
+            || !self.backup.owns_core_restore_reservation(reservation)
+            || self.source.resolve().is_none()
+        {
+            return false;
+        }
+        self.families.iter().all(|(family, held)| {
+            self.receiver.families.get(family).is_some_and(|actual| {
+                Arc::ptr_eq(actual, held)
+                    && !actual.closed.load(Ordering::Acquire)
+                    && actual.inner.supports_selected_head()
+            })
+        })
+    }
+    pub(super) fn summary(&self) -> (usize, usize) {
+        (self.rows, self.families.len())
+    }
+}
+
 /// Read-only witness for the observed taskless restore periodic domain.
 #[derive(Clone)]
 pub struct TasklessBuiltins {
@@ -949,6 +1186,7 @@ impl Application {
             plugin_refresh: self.inner.families.contains_key(&Family::PluginRefresh),
             saved_stats: true,
             saved_xc: None,
+            restore_registry: None,
         })
     }
 
@@ -2572,5 +2810,160 @@ mod taskless_builtin_controls {
         ] {
             assert_eq!(taskless_builtin_family(task), None);
         }
+    }
+}
+
+#[cfg(test)]
+mod core_registry_sublease_tests {
+    use super::*;
+    use serde_json::json;
+    struct Actor {
+        maximum: usize,
+        selected: bool,
+    }
+    impl Lifecycle for Actor {
+        fn shutdown(&self, _: Duration) -> BoxFuture<'_, Result<(), Disposition>> {
+            Box::pin(async { Ok(()) })
+        }
+    }
+    impl Handler for Actor {
+        fn maximum_concurrency(&self) -> usize {
+            self.maximum
+        }
+        fn supports_selected_head(&self) -> bool {
+            self.selected
+        }
+        fn run_once(
+            &self,
+            _: Arc<dyn Send + Sync>,
+        ) -> BoxFuture<'_, Result<Disposition, Disposition>> {
+            Box::pin(async { Err(Disposition::UnsupportedDomain) })
+        }
+    }
+    pub(super) fn actor(maximum: usize) -> Arc<dyn Handler> {
+        Arc::new(Actor {
+            maximum,
+            selected: true,
+        })
+    }
+    pub(super) fn entry(inner: Arc<dyn Handler>) -> Arc<OwnedFamily> {
+        Arc::new(OwnedFamily {
+            slot: Arc::new(Semaphore::new(inner.maximum_concurrency())),
+            inner,
+            closed: AtomicBool::new(false),
+        })
+    }
+    type Fixture = (
+        BTreeMap<Family, Arc<OwnedFamily>>,
+        Arc<dyn Handler>,
+        Arc<dyn Handler>,
+    );
+    fn prepared() -> Fixture {
+        let plugin = actor(CELERY_CONCURRENCY);
+        let backup = actor(1);
+        let map = [
+            (Family::RegisteredPlugin, entry(plugin.clone())),
+            (Family::BackupCreate, entry(backup.clone())),
+            (Family::BackupScheduled, entry(backup.clone())),
+        ]
+        .into_iter()
+        .collect();
+        (map, plugin, backup)
+    }
+    #[test]
+    fn actual_bound_handlers_and_enabled_or_disabled_snapshot_rows_are_read_only_members() {
+        let (map, plugin, backup) = prepared();
+        assert!(core_registry_members(&map, true, &plugin, &backup, &[]).is_some());
+        for enabled in [true, false] {
+            let rows = vec![
+                json!({"id":1,"task":"apps.backups.tasks.scheduled_backup_task","enabled":enabled}),
+            ];
+            let members = core_registry_members(&map, true, &plugin, &backup, &rows).unwrap();
+            assert!(Arc::ptr_eq(
+                members.get(&Family::BackupScheduled).unwrap(),
+                map.get(&Family::BackupScheduled).unwrap()
+            ));
+        }
+    }
+    #[test]
+    fn same_metadata_foreign_handlers_and_missing_registration_cannot_issue_even_empty_snapshot() {
+        let (map, plugin, backup) = prepared();
+        assert!(
+            core_registry_members(&map, true, &actor(CELERY_CONCURRENCY), &backup, &[]).is_none()
+        );
+        assert!(core_registry_members(&map, true, &plugin, &actor(1), &[]).is_none());
+        assert!(core_registry_members(&map, false, &plugin, &backup, &[]).is_none());
+    }
+    #[test]
+    fn missing_closed_and_unprepared_actual_family_reject_before_metadata_can_supply_authority() {
+        let (mut map, plugin, backup) = prepared();
+        let old = map.remove(&Family::BackupCreate).unwrap();
+        assert!(core_registry_members(&map, true, &plugin, &backup, &[]).is_none());
+        map.insert(Family::BackupCreate, old);
+        map[&Family::RegisteredPlugin]
+            .closed
+            .store(true, Ordering::Release);
+        assert!(core_registry_members(&map, true, &plugin, &backup, &[]).is_none());
+        map[&Family::RegisteredPlugin]
+            .closed
+            .store(false, Ordering::Release);
+        map.insert(
+            Family::BackupScheduled,
+            entry(Arc::new(Actor {
+                maximum: 1,
+                selected: false,
+            })),
+        );
+        assert!(core_registry_members(&map, true, &plugin, &backup, &[]).is_none());
+    }
+    #[test]
+    fn matching_pointer_without_selected_support_is_not_a_prepared_receiver() {
+        let (mut map, plugin, _) = prepared();
+        let backup: Arc<dyn Handler> = Arc::new(Actor {
+            maximum: 1,
+            selected: false,
+        });
+        map.insert(Family::BackupCreate, entry(backup.clone()));
+        map.insert(Family::BackupScheduled, entry(backup.clone()));
+        assert!(core_registry_members(&map, true, &plugin, &backup, &[]).is_none());
+    }
+    #[test]
+    fn unknown_missing_malformed_duplicate_or_over_cap_rows_fail_closed() {
+        let (map, plugin, backup) = prepared();
+        let row = json!({"id":1,"task":"apps.backups.tasks.scheduled_backup_task","enabled":true});
+        for rows in [
+            vec![json!({"id":1,"task":"unowned.plugin.task","enabled":true})],
+            vec![json!({"id":1,"task":"apps.m3u.tasks.refresh_single_m3u_account","enabled":true})],
+            vec![
+                json!({"id":1,"task":"apps.backups.tasks.scheduled_backup_task","enabled":"true"}),
+            ],
+            vec![row.clone(), row.clone()],
+            vec![row.clone(); 257],
+        ] {
+            assert!(core_registry_members(&map, true, &plugin, &backup, &rows).is_none());
+        }
+        map[&Family::BackupScheduled]
+            .closed
+            .store(true, Ordering::Release);
+        assert!(core_registry_members(&map, true, &plugin, &backup, &[row]).is_none());
+    }
+}
+
+#[cfg(test)]
+mod core_registry_budget_controls {
+    use super::core_registry_sublease_tests::{actor, entry};
+    use super::*;
+    #[test]
+    fn actual_registered_concurrency_is_required_even_with_matching_pointer() {
+        let plugin = actor(1);
+        let backup = actor(1);
+        let map = [
+            (Family::RegisteredPlugin, entry(plugin.clone())),
+            (Family::BackupCreate, entry(backup.clone())),
+            (Family::BackupScheduled, entry(backup.clone())),
+        ]
+        .into_iter()
+        .collect();
+        assert!(!core_registry_bindings_match(&map, true, &plugin, &backup));
     }
 }

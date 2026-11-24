@@ -797,6 +797,8 @@ impl SelectedJobs {
                 queue
                     .core_schedule_receiver(&backup_handler, &stats)
                     .map_err(|_| "Selected Core Beat receiver configuration failed")?
+                    .with_restore_registry(&plugin_tasks)
+                    .map_err(|_| "Selected Core restore registry binding failed")?
                     .with_saved_xc(&scanner)
                     .map_err(|_| "Selected Core Beat XC and VOD receiver binding failed")?,
                 Duration::from_secs(5),

@@ -148,6 +148,21 @@ calls with pinned Original renderer evidence. The nine fixture channel
 rows stayed unchanged, and the private PostgreSQL instance retired.
 Packaged ingress and HTML remain open.
 
+## Guarded Core restore preflight
+
+The ordinary Core scheduler now binds its read-only restore registry
+check to the configured receiver and the same retained PostgreSQL writer.
+A missing plugin bridge or registry releases the parked scheduler before
+SQL reservation. With the required owners present, the preflight verifies
+registry membership and closes the check before returning the existing
+restore refusal.
+
+Thirty-four focused Linux tests passed, including the exact missing-bridge
+consumer. A private PostgreSQL run verified that a second scheduler cannot
+take ownership until the actual elected session settles. The installed
+plugin and builtin backup fixture is prepared for the signed package.
+Restore apply and plugin-owned task execution remain open.
+
 ## Account permission catalogue
 
 The administrator permission picker now receives Original's JSON OPTIONS

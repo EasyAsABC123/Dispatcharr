@@ -292,7 +292,47 @@ pub(crate) enum PausedPrepareError {
     Scheduler,
     Admission(BackupRestoreError),
 }
+fn guarded_preflight_error(error: crate::guarded_restore_preflight::Error) -> PausedPrepareError {
+    match error {
+        crate::guarded_restore_preflight::Error::Reservation(error) => {
+            PausedPrepareError::Admission(error)
+        }
+        crate::guarded_restore_preflight::Error::Scheduler(_)
+        | crate::guarded_restore_preflight::Error::Ownership => PausedPrepareError::Scheduler,
+    }
+}
 impl Executor {
+    pub(crate) fn owns_core_restore_reservation(
+        &self,
+        reservation: &dispatcharr_store::TasklessRestoreReservation,
+    ) -> bool {
+        reservation.belongs_to_auth(&self.auth)
+    }
+    async fn observe_guarded_preflight(
+        &self,
+        pause: crate::normal_beat::RestorePause,
+        owner: Arc<dyn Send + Sync>,
+        deadline: tokio::time::Instant,
+    ) -> Result<(), PausedPrepareError> {
+        let observed = crate::guarded_restore_preflight::observe_core_noeffect(
+            pause,
+            self.restore_plugins.get(),
+            self.config.database.clone(),
+            owner,
+            deadline,
+        )
+        .await
+        .map_err(guarded_preflight_error)?;
+        let Some((rows, families)) = observed else {
+            return Err(PausedPrepareError::Admission(
+                BackupRestoreError::UnsupportedPlugins,
+            ));
+        };
+        // Bounded internal receipt only; the outer worker still refuses restore.
+        eprintln!("Read-only guarded-restore snapshot closed: rows={rows} families={families}");
+        Ok(())
+    }
+
     pub(crate) async fn prepare_paused_restore(
         &self,
         scheduler: &crate::normal_beat::RestorePauseClient,
@@ -307,6 +347,16 @@ impl Executor {
             .map_err(|_| PausedPrepareError::Scheduler)?;
         let admission = match self.prepare_restore_until(owner.clone(), deadline).await {
             Ok(admission) => admission,
+            Err(BackupRestoreError::UnsupportedPlugins) => {
+                // This is still the original unclaimed, no-effect parked scope.
+                // Exercise the real guarded reservation prerequisite, settle it,
+                // and retain the existing refusal until registry/effects qualify.
+                self.observe_guarded_preflight(pause, owner, deadline)
+                    .await?;
+                return Err(PausedPrepareError::Admission(
+                    BackupRestoreError::UnsupportedPlugins,
+                ));
+            }
             Err(error) => {
                 // These existing typed outcomes occur before destructive submit;
                 // store admission returns them only after acquired scope closure.
@@ -566,5 +616,32 @@ mod live_admission_disposition_tests {
                 );
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod guarded_consumer_tests {
+    use super::*;
+    #[test]
+    fn no_effect_preflight_errors_cannot_grant_restore_or_hide_store_uncertainty() {
+        use crate::guarded_restore_preflight::Error as Guarded;
+        assert!(matches!(
+            guarded_preflight_error(Guarded::Ownership),
+            PausedPrepareError::Scheduler
+        ));
+        assert!(matches!(
+            guarded_preflight_error(Guarded::Scheduler(crate::normal_beat::Error::Drain)),
+            PausedPrepareError::Scheduler
+        ));
+        assert!(matches!(
+            guarded_preflight_error(Guarded::Reservation(BackupRestoreError::UnsupportedPlugins)),
+            PausedPrepareError::Admission(BackupRestoreError::UnsupportedPlugins)
+        ));
+        assert!(matches!(
+            guarded_preflight_error(Guarded::Reservation(BackupRestoreError::Store(Box::new(
+                StoreError::Unsupported("unit uncertainty")
+            )))),
+            PausedPrepareError::Admission(BackupRestoreError::Store(_))
+        ));
     }
 }

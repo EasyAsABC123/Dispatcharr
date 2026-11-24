@@ -155,6 +155,15 @@ impl Application {
         Ok(pending.as_ref().map(selected_taskless::Held::stage))
     }
 
+    pub(crate) fn owns_core_restore_reservation(
+        &self,
+        reservation: &dispatcharr_store::TasklessRestoreReservation,
+    ) -> bool {
+        self.inner
+            .executor
+            .owns_core_restore_reservation(reservation)
+    }
+
     pub fn bind_restore_plugins(&self, plugins: PluginActions) -> Result<(), Error> {
         if !self.inner.jobs.allows_normal_restore() {
             return Err(Error::Configuration);
