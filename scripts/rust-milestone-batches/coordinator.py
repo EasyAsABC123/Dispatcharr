@@ -264,6 +264,16 @@ def owner_readiness(nodes, document, output=None):
                 raise ValueError("M478 exact controller/evaluator differs: " + key)
             if bindings[key].get("environment", {}) != resolved["environment"]:
                 raise ValueError("M478 owner environment differs")
+        elif key == "m6/scanner-empty-and-content" and node["owner"] == "m6":
+            context = owners.get("m6", {}).get("scanner_original")
+            if context is not None:
+                adapter = module(HERE / "m6/original_scanner_authority.py", "retained_m6_scanner_original")
+                if node["depends_on"] != [adapter.PREDECESSOR] or node["resources"] != ["m6/scheduler-default"]:
+                    raise ValueError("M6 scanner requires the existing scheduler-default Stats predecessor")
+                adapter.resolve(context, HERE.parents[1], document["candidate"])
+            if key in bindings:
+                raise ValueError("M6 scanner requires an admitted resident Native scheduler owner")
+            continue
         elif key == "m6/Source-missing-domains" and node["owner"] == "m6":
             if key in bindings:
                 raise ValueError("qualified M6 Original cases cannot be dispatched again")

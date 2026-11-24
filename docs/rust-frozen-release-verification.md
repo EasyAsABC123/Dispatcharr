@@ -864,3 +864,17 @@ requests across canonical POST, OPTIONS and suffix POST. Both suffix POST
 spellings reproduce the authenticated Original's HTML 500 response
 before any fixture SQL or deletion. Four focused Rust tests passed.
 Signed packaged and browser verification remain open.
+
+### Ordinary Original scanner acceptance
+
+One pinned Original Compose project ran a naturally scheduled empty scan
+and then a content scan using the same worker, Beat, database and web
+generations. The disarmed schedule retained a count of two. The
+independent reducer verified two separate broker journals, three worker
+results and exact teardown. Preflight, run, proof and outer exits all
+returned zero on the isolated Beepboop engine.
+
+The coordinator can verify those exact Original receipts without
+replaying the workload. The Native scheduler still needs the packaged
+counterpart to pass its own Stats, scan and teardown checks. The Original
+receipt supplies the Source prerequisite for this row.
