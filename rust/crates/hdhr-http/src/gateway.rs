@@ -9,7 +9,8 @@ use axum::{
 use bytes::Bytes;
 use dispatcharr_contracts::PlaybackRequest;
 use dispatcharr_store::{source_browsable_csrf, AuthService, Store, StoreError};
-use serde_json::json;
+use serde::Serialize;
+use serde_json::{json, ser::PrettyFormatter};
 use std::{
     net::{IpAddr, Ipv4Addr, SocketAddr},
     sync::{
@@ -354,17 +355,14 @@ impl HdhrGateway {
             set_lineup_status_browsable_headers(response.headers_mut(), cookie);
             return Ok(response);
         }
-        if method == Method::OPTIONS && request.uri().path() == LINEUP_STATUS_PATH {
-            return self.retained(
-                StatusCode::OK,
-                Some(LINEUP_STATUS_OPTIONS.as_bytes().to_vec()),
-                memory,
-                false,
-            );
+        if method == Method::OPTIONS {
+            let accept = headers
+                .get(header::ACCEPT)
+                .and_then(|value| value.to_str().ok());
+            let metadata = public_options_metadata(&endpoint, accept)?;
+            return self.retained(StatusCode::OK, Some(metadata), memory, false);
         }
-        let mut response = if method == Method::OPTIONS {
-            Json(json!({"name":match endpoint{Endpoint::Discover{..}=>"Discover Api",Endpoint::Lineup{..}=>"Lineup Api",Endpoint::Status=>"Lineup Status Api",Endpoint::Xml=>"Hdhr Device Xml Api",_=>unreachable!()},"description":match endpoint{Endpoint::Discover{..}=>"Returns device discovery information",Endpoint::Lineup{..}=>"Returns available channel lineup",Endpoint::Status=>"Returns the current status of the HDHR lineup",Endpoint::Xml=>"Returns HDHomeRun device configuration in XML",_=>unreachable!()},"renders":["application/json","text/html"],"parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]})).into_response()
-        } else if method != Method::GET && method != Method::HEAD {
+        let mut response = if method != Method::GET && method != Method::HEAD {
             error(
                 StatusCode::METHOD_NOT_ALLOWED,
                 &format!("Method \"{method}\" not allowed."),
@@ -409,11 +407,97 @@ impl HdhrGateway {
     }
 }
 const LINEUP_STATUS_PATH: &str = "/hdhr/lineup_status.json";
-const LINEUP_STATUS_OPTIONS: &str = concat!(
-    r#"{"name":"Lineup Status Api","description":"Returns the current status of the HDHR lineup","#,
-    r#""renders":["application/json","text/html"],"#,
-    r#""parses":["application/json","application/x-www-form-urlencoded","multipart/form-data"]}"#,
-);
+#[derive(Serialize)]
+struct PublicOptions {
+    name: &'static str,
+    description: &'static str,
+    renders: [&'static str; 2],
+    parses: [&'static str; 3],
+}
+
+fn public_options_metadata(
+    endpoint: &Endpoint,
+    accept: Option<&str>,
+) -> Result<Vec<u8>, StoreError> {
+    let (name, description) = match endpoint {
+        Endpoint::Discover { .. } => ("Discover Api", "Returns device discovery information"),
+        Endpoint::Lineup { .. } => ("Lineup Api", "Returns available channel lineup"),
+        Endpoint::Status => (
+            "Lineup Status Api",
+            "Returns the current status of the HDHR lineup",
+        ),
+        Endpoint::Xml => (
+            "Hdhr Device Xmlapi",
+            "Returns HDHomeRun device configuration in XML",
+        ),
+        Endpoint::Root | Endpoint::Devices { .. } => unreachable!(),
+    };
+    let metadata = PublicOptions {
+        name,
+        description,
+        renders: ["application/json", "text/html"],
+        parses: [
+            "application/json",
+            "application/x-www-form-urlencoded",
+            "multipart/form-data",
+        ],
+    };
+    let Some(indent) = accept.and_then(options_json_indent) else {
+        return serde_json::to_vec(&metadata).map_err(|_| unavailable());
+    };
+    let mut body = Vec::new();
+    let formatter = PrettyFormatter::with_indent(&b"        "[..indent]);
+    metadata
+        .serialize(&mut serde_json::Serializer::with_formatter(
+            &mut body, formatter,
+        ))
+        .map_err(|_| unavailable())?;
+    Ok(body)
+}
+
+fn options_json_indent(accept: &str) -> Option<usize> {
+    let mut selected = None::<(u8, Option<&str>)>;
+    for range in accept.split(',') {
+        let (media, parameters) = range.split_once(';').unwrap_or((range, ""));
+        let media = media.trim();
+        let rank = if media.eq_ignore_ascii_case("application/json") {
+            2
+        } else if media.eq_ignore_ascii_case("application/*") {
+            1
+        } else if media == "*/*" {
+            0
+        } else {
+            continue;
+        };
+        let mut indent = None;
+        let mut has_non_quality_parameter = false;
+        for (key, value) in parameters
+            .split(';')
+            .filter_map(|part| part.split_once('='))
+        {
+            let key = key.trim();
+            has_non_quality_parameter |= !key.eq_ignore_ascii_case("q");
+            if key.eq_ignore_ascii_case("indent") {
+                indent = Some(value.trim());
+            }
+        }
+        let rank = rank + u8::from(rank == 2 && has_non_quality_parameter);
+        if selected.is_none_or(|(previous, _)| rank > previous) {
+            selected = Some((rank, indent));
+        }
+    }
+    let value = selected?.1?;
+    let value = value
+        .strip_prefix('"')
+        .and_then(|quoted| quoted.strip_suffix('"'))
+        .unwrap_or(value);
+    let integer = dispatcharr_ingest_core::source_integer_literal(value)?;
+    if integer.starts_with('-') {
+        return None;
+    }
+    let indentation = integer.parse::<usize>().unwrap_or(8).min(8);
+    (indentation > 0).then_some(indentation)
+}
 
 const BROWSABLE_AUTH_VARY: HeaderValue = HeaderValue::from_static("Accept, origin, Cookie");
 const LINEUP_STATUS_AUTH_SHELL: &str = include!("../datasets/lineup-status-auth.rs");
@@ -1128,17 +1212,19 @@ mod tests {
 
     #[test]
     fn lineup_status_options_preserves_the_source_wire_order() {
-        let fields: Vec<_> = LINEUP_STATUS_OPTIONS
+        let body = public_options_metadata(&Endpoint::Status, None).unwrap();
+        let body = std::str::from_utf8(&body).unwrap();
+        let fields: Vec<_> = body
             .match_indices(r#"":"#)
             .map(|(offset, _)| {
-                let prefix = &LINEUP_STATUS_OPTIONS[..offset];
+                let prefix = &body[..offset];
                 prefix.rsplit('"').next().unwrap()
             })
             .collect();
         assert_eq!(fields, ["name", "description", "renders", "parses"]);
-        assert_eq!(LINEUP_STATUS_OPTIONS.len(), 221);
+        assert_eq!(body.len(), 221);
         assert_eq!(
-            serde_json::from_str::<serde_json::Value>(LINEUP_STATUS_OPTIONS).unwrap(),
+            serde_json::from_str::<serde_json::Value>(body).unwrap(),
             serde_json::json!({
                 "name": "Lineup Status Api",
                 "description": "Returns the current status of the HDHR lineup",
@@ -1146,6 +1232,56 @@ mod tests {
                 "parses": ["application/json", "application/x-www-form-urlencoded", "multipart/form-data"]
             })
         );
+    }
+
+    #[test]
+    fn public_json_options_uses_bounded_drf_indentation() {
+        for (accept, expected) in [
+            ("application/json", None),
+            ("application/json; indent=2", Some(2)),
+            (r#"Application/JSON; InDeNt="4""#, Some(4)),
+            ("application/json; indent=12", Some(8)),
+            (
+                "application/json; indent=999999999999999999999999999999999",
+                Some(8),
+            ),
+            ("application/json; indent=-1", None),
+            ("application/json; indent=0", None),
+            ("application/json; indent=text", None),
+            ("application/json,application/json; indent=3", Some(3)),
+            ("application/*; indent=3", Some(3)),
+            ("*/*; indent=3", Some(3)),
+            ("application/json; indent=2; q=0.4", Some(2)),
+            ("text/html; indent=7, application/json; indent=2", Some(2)),
+            ("application/json, application/*; indent=2", None),
+        ] {
+            assert_eq!(options_json_indent(accept), expected, "{accept}");
+        }
+        for (route, name, sizes) in [
+            ("discover.json", "Discover Api", [207, 255, 351]),
+            ("lineup.json", "Lineup Api", [201, 249, 345]),
+            ("lineup_status.json", "Lineup Status Api", [221, 269, 365]),
+            ("device.xml", "Hdhr Device Xmlapi", [222, 270, 366]),
+        ] {
+            let endpoint = endpoint(&format!("/hdhr/{route}")).unwrap();
+            let compact = public_options_metadata(&endpoint, Some("application/json")).unwrap();
+            let pretty =
+                public_options_metadata(&endpoint, Some("application/json; indent=2")).unwrap();
+            assert!(pretty.starts_with(format!("{{\n  \"name\": \"{name}\",\n").as_bytes()));
+            assert!(pretty.ends_with(b"\n}"));
+            assert!(!compact.contains(&b'\n'));
+            let clamped =
+                public_options_metadata(&endpoint, Some("application/json; indent=12")).unwrap();
+            assert_eq!(
+                [compact.len(), pretty.len(), clamped.len()],
+                sizes,
+                "{route}"
+            );
+            assert_eq!(
+                serde_json::from_slice::<serde_json::Value>(&compact).unwrap(),
+                serde_json::from_slice::<serde_json::Value>(&pretty).unwrap(),
+            );
+        }
     }
 
     #[test]

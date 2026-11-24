@@ -413,6 +413,15 @@ and produced the same response. The Rust library passed 67 focused
 tests, with 25 external-fixture tests reserved for owned runtime checks.
 The existing paired owner adds eight signed overflow cases.
 
+## HDHomeRun metadata
+
+Public HDHomeRun OPTIONS metadata uses the selected JSON indentation
+with the eight-space cap and the measured device XML name. Forty-eight
+pinned Original view calls checked the renderer across four public views.
+Seventeen Rust library tests passed and three external-fixture cases
+remain reserved. The existing ARM64 paired owner adds twelve signed
+or public wire checks and compares exact status, headers and body.
+
 ## One frozen verification campaign
 
 1. Integrate the reviewed product and workflow changes. Freeze a single Rust application Git revision and build its ordinary AMD64 and ARM64 packages. Record the committed input map, archive, actual manifests, image digests, React asset equality, licenses and attribution. Run `scripts/rust-milestone-batches/verify_release_packages.py` with the common AMD64 binding, independent ARM64 package audit, and both reviewed file digests. It checks that the two platform images use the same complete source map and rejects stale revisions.
