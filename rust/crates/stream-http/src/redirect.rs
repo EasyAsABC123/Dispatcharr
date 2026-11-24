@@ -96,13 +96,25 @@ async fn validate(candidate: &PlaybackCandidate) -> bool {
     if !reply.status().is_success() || attempt.cookie_budget_exceeded() {
         return false;
     }
+    // Original probes one Requests iter_content(188 * 10) result. For an
+    // unencoded fixed-length response that means a full sample (or the
+    // declared shorter body), potentially supplied by several frames.
+    const PROBE_BYTES: u64 = 188 * 10;
+    let mut remaining = if reply
+        .headers()
+        .contains_key(reqwest::header::CONTENT_ENCODING)
+    {
+        1
+    } else {
+        reply.content_length().unwrap_or(1).clamp(1, PROBE_BYTES) as usize
+    };
     let Ok(mut body) = crate::upstream::body(reply) else {
         return false;
     };
     while let Some(frame) = body.next().await {
         match frame {
-            Ok(bytes) if !bytes.is_empty() => return true,
-            Ok(_) => {}
+            Ok(bytes) if bytes.len() >= remaining => return true,
+            Ok(bytes) => remaining -= bytes.len(),
             Err(_) => return false,
         }
     }
@@ -283,6 +295,64 @@ mod tests {
             .await
             .unwrap()
             .unwrap();
+    }
+    #[tokio::test]
+    async fn fixed_length_get_probe_waits_for_the_requested_sample() {
+        for (declared, remaining, accepted) in [
+            (1881, 1880 - 32, true),
+            (1881, 0, false),
+            (33, 1, true),
+            (33, 0, false),
+        ] {
+            let listener = tokio::net::TcpListener::bind("127.0.0.1:0").await.unwrap();
+            let address = listener.local_addr().unwrap();
+            let (first_sent, first) = tokio::sync::oneshot::channel();
+            let (finish, wait_for_finish) = tokio::sync::oneshot::channel();
+            let peer = tokio::spawn(async move {
+                let (mut socket, _) = listener.accept().await.unwrap();
+                assert!(headers(&mut socket).await.starts_with("HEAD /profile "));
+                socket.write_all(b"HTTP/1.1 405 Method Not Allowed\r\nContent-Length: 0\r\nConnection: close\r\n\r\n").await.unwrap();
+                drop(socket);
+                let (mut socket, _) = listener.accept().await.unwrap();
+                assert!(headers(&mut socket).await.starts_with("GET /profile "));
+                socket
+                    .write_all(
+                        format!("HTTP/1.1 200 OK\r\nContent-Length: {declared}\r\nConnection: close\r\n\r\n")
+                            .as_bytes(),
+                    )
+                    .await
+                    .unwrap();
+                socket.write_all(&[b'x'; 32]).await.unwrap();
+                first_sent.send(()).unwrap();
+                wait_for_finish.await.unwrap();
+                socket.write_all(&vec![b'x'; remaining]).await.unwrap();
+            });
+            let mut probe = tokio::spawn(async move {
+                validate(&candidate(format!("http://{address}/profile"))).await
+            });
+            time::timeout(Duration::from_secs(2), first)
+                .await
+                .unwrap()
+                .unwrap();
+            let early = time::timeout(Duration::from_millis(150), &mut probe).await;
+            finish.send(()).unwrap();
+            assert!(
+                early.is_err(),
+                "Content-Length {declared} needs more than 32 bytes"
+            );
+            let observed = time::timeout(Duration::from_secs(2), probe)
+                .await
+                .unwrap()
+                .unwrap();
+            assert_eq!(
+                observed, accepted,
+                "Content-Length {declared}, extra {remaining} bytes"
+            );
+            time::timeout(Duration::from_secs(2), peer)
+                .await
+                .unwrap()
+                .unwrap();
+        }
     }
     #[tokio::test]
     async fn successful_head_redirect_probe_preserves_requested_profile_url_for_external_client() {
