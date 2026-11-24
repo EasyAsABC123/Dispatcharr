@@ -342,12 +342,16 @@ async fn fixed_json_logs(
             .await
             .into_response()
     } else {
-        let mut rejection = unacceptable_log_media();
-        rejection
+        unacceptable_log_media()
+    };
+    if matches!(
+        response.status(),
+        StatusCode::UNAUTHORIZED | StatusCode::FORBIDDEN | StatusCode::NOT_ACCEPTABLE
+    ) {
+        response
             .headers_mut()
             .insert(header::ALLOW, HeaderValue::from_static(LOGS_ALLOW));
-        rejection
-    };
+    }
     response
         .headers_mut()
         .append(header::VARY, HeaderValue::from_static("Accept"));
@@ -822,10 +826,10 @@ mod tests {
                     .unwrap();
                 assert_eq!(response.status(), code);
                 assert_eq!(response.headers()[header::VARY], "Accept");
+                assert_eq!(response.headers()[header::ALLOW], LOGS_ALLOW);
+                assert_eq!(response.headers().get_all(header::ALLOW).iter().count(), 1);
                 if code == StatusCode::NOT_ACCEPTABLE {
                     assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
-                    assert_eq!(response.headers()[header::ALLOW], LOGS_ALLOW);
-                    assert_eq!(response.headers().get_all(header::ALLOW).iter().count(), 1);
                     assert!(!response.headers().contains_key(header::WWW_AUTHENTICATE));
                     let body = to_bytes(response.into_body(), 57).await.unwrap();
                     assert_eq!(
@@ -833,7 +837,15 @@ mod tests {
                         br#"{"detail":"Could not satisfy the request Accept header."}"#
                     );
                 } else {
-                    assert!(response.headers().contains_key(header::WWW_AUTHENTICATE));
+                    assert_eq!(
+                        response.headers()[header::WWW_AUTHENTICATE],
+                        "Bearer realm=\"api\""
+                    );
+                    let body = to_bytes(response.into_body(), 58).await.unwrap();
+                    assert_eq!(
+                        &body[..],
+                        br#"{"detail":"Authentication credentials were not provided."}"#
+                    );
                 }
             }
         }

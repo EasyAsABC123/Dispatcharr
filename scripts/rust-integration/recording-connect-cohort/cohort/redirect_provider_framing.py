@@ -204,3 +204,144 @@ def run(f):
     report["status"] = "passed"
     save(out, report)
     return report
+
+
+SAME_SLOT_SEED = """
+from django.db import transaction
+from apps.channels.models import Channel, ChannelStream, Stream
+from apps.m3u.models import M3UAccount, M3UAccountProfile
+from core.models import CoreSettings, StreamProfile
+with transaction.atomic():
+    settings = CoreSettings.objects.select_for_update().get(key='proxy_settings')
+    prior = settings.value
+    assert isinstance(prior, dict)
+    settings.value = {**prior, 'validate_redirect_urls': True}
+    settings.save(update_fields=['value'])
+    redirect = StreamProfile.objects.get(name='Redirect', locked=True)
+    account = M3UAccount.objects.bulk_create([
+        M3UAccount(name=marker, account_type='STD', is_active=True)
+    ])[0]
+    assert account.server_group_id is None
+    profile = M3UAccountProfile.objects.bulk_create([
+        M3UAccountProfile(m3u_account=account, name=marker, is_default=True,
+                          is_active=True, search_pattern='', replace_pattern='', max_streams=1)
+    ])[0]
+    primary, backup = Stream.objects.bulk_create([
+        Stream(name=marker, m3u_account=account, url=url) for url in (primary_url, backup_url)
+    ])
+    channel = Channel.objects.bulk_create([Channel(name=marker, stream_profile=redirect)])[0]
+    ChannelStream.objects.bulk_create([
+        ChannelStream(channel=channel, stream=primary, order=0),
+        ChannelStream(channel=channel, stream=backup, order=1),
+    ])
+    assert list(ChannelStream.objects.filter(channel=channel).values_list('stream_id','order')) == [
+        (primary.pk, 0), (backup.pk, 1)]
+print(json.dumps({'channel':channel.pk,'channel_uuid':str(channel.uuid),'profile':profile.pk,
+                  'account':account.pk,'streams':[primary.pk,backup.pk],'prior':prior}))
+"""
+SAME_SLOT_CLEANUP = """
+from django.db import transaction
+from apps.channels.models import Channel, ChannelStream, Stream
+from apps.m3u.models import M3UAccount, M3UAccountProfile
+from core.models import CoreSettings
+with transaction.atomic():
+    assert ChannelStream.objects.filter(channel_id=seed['channel'],stream_id__in=seed['streams'])._raw_delete('default') == 2
+    assert Channel.objects.filter(pk=seed['channel'],name=marker)._raw_delete('default') == 1
+    assert Stream.objects.filter(pk__in=seed['streams'],name=marker)._raw_delete('default') == 2
+    assert M3UAccountProfile.objects.filter(pk=seed['profile'],name=marker)._raw_delete('default') == 1
+    assert M3UAccount.objects.filter(pk=seed['account'],name=marker)._raw_delete('default') == 1
+    row = CoreSettings.objects.select_for_update().get(key='proxy_settings')
+    row.value = seed['prior']
+    row.save(update_fields=['value'])
+    assert CoreSettings.objects.get(pk=row.pk).value == seed['prior']
+print(json.dumps({'fixture_rows_deleted':7,'original_settings_restored':True}))
+"""
+SAME_SLOT_OBSERVE = """
+local live='live:channel:'..ARGV[1]
+return {redis.call('GET','channel_stream:'..ARGV[2])or'',
+ redis.call('GET','stream_profile:'..ARGV[3])or'',
+ redis.call('GET','stream_profile:'..ARGV[4])or'',
+ redis.call('GET','profile_connections:'..ARGV[5])or'0',
+ redis.call('SCARD',live..':clients'),redis.call('EXISTS',live..':owner'),
+ redis.call('EXISTS','profile_credential_release:'..ARGV[5])}
+"""
+SAME_SLOT_EMPTY = ["", "", "", "0", 0, 0, 0]
+
+
+def run_same_slot(f):
+    endpoint = scope(f)
+    out = f.output / "same-profile-one-slot-redirect-fallback.json"
+    need(not out.exists(), "OneSameProfileRedirectCasePerOwner")
+    nonce = uuid.uuid4().hex
+    marker = "owned-redirect-same-slot-" + nonce
+    prefix = "/same-slot/" + nonce
+    primary_path, backup_path = prefix + "/primary.ts", prefix + "/fallback.ts"
+    state = Path(f._redirect_state)
+    variables = dict(marker=marker, primary_url=LOCAL_ORIGIN + primary_path,
+                     backup_url=LOCAL_ORIGIN + backup_path)
+    setup = "\n".join(f"{key}={value!r}" for key, value in variables.items())
+    report = {"status": "running", "backend": f.backend, "checks": {}}
+    save(out, report)
+    seed = f.sql(setup + "\n" + SAME_SLOT_SEED, secret=True)
+
+    def observe():
+        return f.redis(0, SAME_SLOT_OBSERVE, seed["channel_uuid"], seed["channel"],
+                       *seed["streams"], seed["profile"])
+
+    def marker_read(suffix):
+        path = str(state / (nonce + suffix + ".json"))
+        return json.loads(f.python("from pathlib import Path;p=Path(" + repr(path)
+                                   + ");print(p.read_text() if p.exists() else 'null')", seconds=3))
+
+    work = report["checks"]
+    try:
+        need(observe() == SAME_SLOT_EMPTY, "ExactInitiallyIdleSingleProfileAndChannel")
+        bearer = f.actual_admin_token()
+        with ThreadPoolExecutor(max_workers=1) as executor:
+            pending = executor.submit(request, endpoint.port, seed["channel_uuid"], bearer)
+            try:
+                entered = f.wait(lambda: marker_read("-same-slot-entered"), 6,
+                                 "actual-on-wire-eligible-same-profile-backup")
+                need(entered == {"method": "HEAD", "backup": True} and not pending.done(),
+                     "ActualBackupHeadHeldBeforeReply")
+                need(observe() == [str(seed["streams"][0]), str(seed["profile"]),
+                                   "", "1", 0, 0, 0] and not pending.done(),
+                     "OwnOriginalAliasesWithExactlyOneSlotAndNoLiveOwnerOrCredentialPool")
+                work.update(held_backup_head=True, exact_one_owned_slot=True,
+                            no_second_assignment_or_live_owner=True)
+                save(out, report)
+            finally:
+                release = str(state / (nonce + ".same-slot-release"))
+                f.python("from pathlib import Path;Path(" + repr(release) +
+                         ").write_text('release')", seconds=3)
+            status, location, body_bytes = pending.result(timeout=13)
+        need(marker_read("-same-slot-finished") == {"released_by_fixture": True},
+             "OwnedBackupGateCompleted")
+        need(status == 302 and location == LOCAL_ORIGIN + backup_path and body_bytes == 0,
+             "OrdinaryRedirectHandsOffToSameProfileBackup")
+        ledger_path = str(state / "requests.json")
+        ledger = json.loads(f.python("from pathlib import Path;print(Path(" +
+                                     repr(ledger_path) + ").read_text())", seconds=3))
+        events = [[row["method"], row["path"]] for row in ledger if row["path"].startswith(prefix + "/")]
+        need(events == [["HEAD", primary_path], ["GET", primary_path], ["HEAD", backup_path]],
+             "ExactSameProviderPrimaryFailureAndAlternateValidationOrder")
+        work.update(fallback_status=status, exact_probe_order=True)
+        f.wait(lambda: observe() == SAME_SLOT_EMPTY, 8, "actual-one-slot-fallback-retirement")
+        work["exact_redis_retired"] = True
+    except Exception as error:
+        report.update(failure_type=type(error).__name__,
+                      failed_checkpoint=str(error) if isinstance(error, AssertionError) else type(error).__name__)
+        raise
+    finally:
+        try:
+            if observe() == SAME_SLOT_EMPTY:
+                retirement = f.sql("seed=" + repr(seed) + "\nmarker=" + repr(marker) +
+                                   "\n" + SAME_SLOT_CLEANUP, secret=True)
+                need(retirement == {"fixture_rows_deleted": 7, "original_settings_restored": True},
+                     "ExactSingleSlotOwnedSqlRollback")
+                work["sql_retirement"] = retirement
+        finally:
+            save(out, report)
+    report["status"] = "passed"
+    save(out, report)
+    return report

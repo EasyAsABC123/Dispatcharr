@@ -27,6 +27,23 @@ fn shared_single_profile(
             && alternate.credential_pool.is_none()
     })
 }
+fn redirect_alternates(
+    candidates: &[PlaybackCandidate],
+    primary: i64,
+) -> impl Iterator<Item = &PlaybackCandidate> {
+    // The resolver preserves saved stream order, with each stream's profile
+    // variants adjacent. Source starts after the current stream and wraps.
+    let pivot = candidates
+        .iter()
+        .position(|candidate| candidate.stream_id == primary)
+        .map_or(0, |index| index + 1);
+    let (before, after) = candidates.split_at(pivot);
+    after
+        .iter()
+        .chain(before)
+        .filter(move |candidate| candidate.stream_id != primary)
+}
+
 fn response(url: &str) -> Result<Response<Body>, PlaybackError> {
     let manual = ["rtsp://", "rtp://", "udp://"]
         .iter()
@@ -222,7 +239,7 @@ impl StreamEngine {
                 if validate(&primary).await{return response(&primary.url)}
                 let candidates=if let Some(assignment)=plan.assignment.as_ref(){assignment.resolver.candidates().await?}else{plan.candidates};
                 let mut tried=std::collections::HashSet::new();tried.insert(primary.stream_id);
-                for candidate in &candidates {
+                for candidate in redirect_alternates(&candidates, primary.stream_id) {
                     if tried.contains(&candidate.stream_id){continue}
                     // Source exempts a channel's own current profile for its
                     // alternate validation. Require our exact Redirect grant
@@ -261,6 +278,25 @@ mod tests {
             metadata: Vec::new(),
         }
     }
+    #[test]
+    fn redirect_validation_starts_after_resolved_stream_then_wraps_saved_order() {
+        let values = [(41, 1), (15, 2), (15, 3), (72, 4), (72, 5)].map(|(id, profile)| {
+            let mut candidate = candidate(format!("http://owned-origin.test/{id}/{profile}"));
+            candidate.stream_id = id;
+            candidate.provider_profile_id = Some(profile);
+            candidate
+        });
+        let collect = |primary| {
+            redirect_alternates(&values, primary)
+                .map(|candidate| (candidate.stream_id, candidate.provider_profile_id.unwrap()))
+                .collect::<Vec<_>>()
+        };
+        assert_eq!(collect(15), [(72, 4), (72, 5), (41, 1)]);
+        assert_eq!(collect(72), [(41, 1), (15, 2), (15, 3)]);
+        assert_eq!(collect(41), [(15, 2), (15, 3), (72, 4), (72, 5)]);
+        assert_eq!(collect(92), [(41, 1), (15, 2), (15, 3), (72, 4), (72, 5)]);
+    }
+
     #[test]
     fn redirect_alternate_reuses_only_its_same_unshared_single_profile() {
         let mut primary = candidate("http://origin.test/primary".to_string());

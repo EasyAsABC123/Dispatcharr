@@ -53,6 +53,48 @@ def witness():
     return report, entries
 
 
+def lifecycle_witness():
+    wire = []
+    passes = []
+    for number, children in ((1, 2), (2, 0), (3, 2)):
+        part, entries = witness()
+        entries = entries[:1 + children]
+        metas = {}
+        root_id = None
+        for i, entry in enumerate(entries):
+            head = entry["frame"]["headers"]
+            ident = str(UUID(int=(number << 32) + i + (4 << 76) + (2 << 62)))
+            old = head["id"]
+            if not i:
+                root_id = ident
+            head.update(id=ident, parent_id=root_id if i else None, root_id=root_id)
+            entry["frame"]["properties"]["correlation_id"] = ident
+            entry["actual_redis_time"] += number * 100
+            metas[ident] = part["terminals"][old] | {"task_id": ident, "parent_id": head["parent_id"], "children": []}
+        metas[root_id]["children"] = [[[value, None], None] for value in list(metas)[1:]]
+        if passes:
+            part["before"] = passes[-1]["after"]
+        part["after"]["schedule"].update(count=number, last_run_at=f"2026-11-24T01:0{number}:00+00:00")
+        part["arm"]["count"] = number - 1
+        part.update(journal_cursor=len(wire), arm_started=99 + number * 100, arm_finished=101 + number * 100,
+                    terminals=metas, main="new" if number == 3 else "old",
+                    jobs=scenario.publications(entries, set(part["seed"]["ids"][:children])))
+        if number == 2:
+            state = {"held": [42, "2026-11-24T01:00:00+00:00"], "waiters": []}
+            part.update(lock_before_arm=state, lock_after_root=deepcopy(state))
+        if number == 3:
+            state = {"held": [43, "2026-11-24T01:03:00+00:00"], "waiters": []}
+            part.update(lock_before_arm=state, blocked_first_helper=state | {"waiters": [44]},
+                        blocked_root_result=["celery-tasks:celery-task-meta-" + root_id, 0, ["400", "500000"]])
+        passes.append(part)
+        wire.extend(entries)
+    first, repeat, restarted = passes
+    return {"seed": first["seed"], "before": first["before"], "after": restarted["after"], "passes": passes,
+            "retained_results": first["terminals"] | repeat["terminals"],
+            "restart": {"old": "old", "new": "new", "exit": {"actual_exit": 0, "oom_killed": False, "expected_exit": 0},
+                        "after_stop": repeat["after"], "after_start": repeat["after"]}}, wire
+
+
 class ScannerFirst(unittest.TestCase):
     def test_sql_null_json_null_and_excluded_actual_job_controls(self):
         report, wire = witness()
@@ -80,6 +122,33 @@ class ScannerFirst(unittest.TestCase):
         report["events"]["events"].append("unexpected")
         with self.assertRaisesRegex(ValueError, "emit no file summary"):
             scenario.validate(report, wire)
+
+    def test_same_main_repeat_and_cold_restart_evidence(self):
+        report, wire = lifecycle_witness()
+        self.assertEqual(scenario.validate_lifecycle(report, wire)["index_children"], [2, 0, 2])
+
+    def test_missing_lock_restart_and_retained_results_are_refused(self):
+        for key, expected, replacement in (
+            ("lock_after_root", "same actual Index lock", {"held": None, "waiters": []}),
+            ("main", "same process repeat", "different"),
+        ):
+            with self.subTest(key=key):
+                report, wire = lifecycle_witness()
+                report["passes"][1][key] = replacement
+                with self.assertRaisesRegex(ValueError, expected):
+                    scenario.validate_lifecycle(report, wire)
+        report, wire = lifecycle_witness()
+        report["retained_results"] = {}
+        with self.assertRaisesRegex(ValueError, "DB2 retained"):
+            scenario.validate_lifecycle(report, wire)
+        report, wire = lifecycle_witness()
+        report["passes"][2]["blocked_root_result"][1] = 1
+        with self.assertRaisesRegex(ValueError, "lack its own DB2"):
+            scenario.validate_lifecycle(report, wire)
+        report, wire = lifecycle_witness()
+        wire[3] = wire[1]
+        with self.assertRaisesRegex(ValueError, "excluded or unrelated"):
+            scenario.validate_lifecycle(report, wire)
 
     @unittest.skipUnless(ROOT and TEMPLATE and CANDIDATE, "set exact retained scanner and package inputs")
     def test_prepare_checks_original_and_native_without_starting_an_engine(self):

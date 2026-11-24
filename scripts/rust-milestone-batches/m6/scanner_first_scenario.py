@@ -1,5 +1,6 @@
 """First saved scanner tick in the owned ordinary Native SQL/Redis fixture."""
 from base64 import b64decode
+from contextlib import contextmanager
 from datetime import datetime
 from hashlib import sha256
 import json
@@ -168,24 +169,25 @@ def publications(entries, expected):
                  and head["root_id"] == head["parent_id"] and head.get("periodic_task_name") is None,
                  "scanner selected an excluded or unrelated Index source")
             children.append({"id": identity, "source_id": args[0], "parent": head["parent_id"], "when": when})
-    need(len(roots) <= 1 and len(children) <= 2
+    need(len(roots) <= 1 and len(children) <= len(expected)
          and len({row["source_id"] for row in children}) == len(children), "duplicate first-scan publication")
-    if len(roots) != 1 or len(children) != 2:
+    if len(roots) != 1 or len(children) != len(expected):
         return None
     root, = roots
-    need(len({root["id"], *(row["id"] for row in children)}) == 3
+    need(len({root["id"], *(row["id"] for row in children)}) == len(expected) + 1
          and all(row["parent"] == root["id"] and row["when"] >= root["when"] for row in children),
          "actual scanner root must precede the exact two parented publications")
     return {"root": root, "children": children}
 
 
-def validate(report, wire):
-    expected = eligibility(report["seed"], report["before"])
+def validate_pass(report, wire, number, expected):
+    before, after = report["before"], report["after"]
+    need(before["schedule"]["count"] == number - 1, "ordered scanner saved run count")
     projected = publications(wire, expected)
     need(projected is not None and projected == report["jobs"], "closed broker journal differs from first scanner report")
     root = projected["root"]
     arm = report["arm"]
-    need(arm["id"] == report["seed"]["schedule_id"] and arm["enabled"] is True and type(arm["count"]) is int and arm["count"] == 0
+    need(arm["id"] == report["seed"]["schedule_id"] and arm["enabled"] is True and type(arm["count"]) is int and arm["count"] == number - 1
          and report["arm_started"] <= root["when"] <= report["arm_finished"] + 35
          and all(float(entry["actual_redis_time"]) < report["arm_started"]
                  or entry["frame"]["headers"]["task"] in (SCAN, INDEX) for entry in wire),
@@ -200,53 +202,105 @@ def validate(report, wire):
              "actual matching scanner/child terminal differs")
     need(metas[root["id"]]["children"] == [[[child["id"], None], None] for child in children],
          "scanner report child order differs from real broker publication order")
-    before, after = report["before"], report["after"]
     need({key: value for key, value in after.items() if key != "schedule"}
          == {key: value for key, value in before.items() if key != "schedule"},
          "scanner changed source/index/parser/programme/playlist/logo or file state")
-    need(after["schedule"] == (before["schedule"] | {"count": 1, "last_run_at": after["schedule"]["last_run_at"]})
+    need(after["schedule"] == (before["schedule"] | {"count": number, "last_run_at": after["schedule"]["last_run_at"]})
          and datetime.fromisoformat(after["schedule"]["last_run_at"]) > datetime.fromisoformat(arm["last_run_at"])
          and datetime.fromisoformat(after["schedule"]["last_run_at"]).utcoffset() is not None
          and type(report["ready_or_reserved"]) is int and report["ready_or_reserved"] == 0
          and report["events"] == {"actual_receiver": report["receiver"], "events": [], "raw_events_base64": []},
          "first saved scan must advance once, drain and emit no file summary")
     return {"root": root["id"], "eligible_source_count": len(expected), "excluded_source_count": 5,
-            "scanner_count": 1, "empty_file_events": True}
+            "scanner_count": number, "empty_file_events": True}
 
 
-def run(fixture, out):
-    from dvr_domain_cases import producer_observer_stop
-    from m3u_refresh_all_cases import receiver_begin, receiver_read
-    from scanner_wire_support import broker_snapshot, from_journal, receive
+def validate(report, wire):
+    expected = eligibility(report["seed"], report["before"])
+    return validate_pass(report, wire, 1, expected)
 
-    out.mkdir()
-    seed = fixture.scanner_first_seed
-    observer = fixture.scanner_first_observer
-    report = {"seed": seed}
-    try:
-        report["before"] = snapshot(fixture, seed)
-        expected = eligibility(seed, report["before"])
-        receiver = receiver_begin(fixture, "scanner-first-exact")
-        report["receiver"] = receiver
-        need(not any(entry["frame"]["headers"]["task"] in (SCAN, INDEX) for entry in broker_snapshot(observer)),
-             "no scanner publication before the due arm")
-        script = DB + """
-from datetime import timedelta
-from django.utils import timezone
-from django_celery_beat.models import PeriodicTask,PeriodicTasks
-row=PeriodicTask.objects.get(pk=__ROW__)
-assert row.name=='scan-files' and not row.enabled and row.total_run_count==0
-row.enabled=True;row.last_run_at=timezone.now()-timedelta(seconds=21)
-row.save(update_fields=['enabled','last_run_at'])
-PeriodicTasks.update_changed()
-print(json.dumps({'id':row.pk,'count':row.total_run_count,'enabled':row.enabled,'last_run_at':row.last_run_at},default=str))
+
+LOCK_STATE = DB + """
+with connection.cursor() as cur:
+    cur.execute("""
+LOCK_STATE += repr("""
+SELECT a.pid, a.backend_start::text
+FROM pg_locks l JOIN pg_stat_activity a ON a.pid=l.pid
+WHERE l.relation='epg_epgsourceindex'::regclass
+  AND l.granted AND l.mode='AccessExclusiveLock'
+  AND a.datname=current_database() AND a.application_name='owned-scanner-index-contract'
+""") + """)
+    locks=cur.fetchall()
+    assert len(locks)<=1
+    cur.execute("""
+LOCK_STATE += repr("""
+SELECT a.pid
+FROM pg_locks l JOIN pg_stat_activity a ON a.pid=l.pid
+WHERE l.relation='epg_epgsourceindex'::regclass AND NOT l.granted
+  AND a.datname=current_database() AND a.wait_event_type='Lock'
+  AND a.query LIKE 'SELECT %epg_epgsourceindex%' ORDER BY a.pid
+""") + """)
+    print(json.dumps({'held':list(locks[0]) if locks else None,'waiters':[row[0] for row in cur.fetchall()]}))
 """
-        report["arm_started"] = time.time()
-        report["arm"] = fixture.sql(script.replace("__ROW__", repr(seed["schedule_id"])), secret=True)
-        report["arm_finished"] = time.time()
-        jobs = fixture.wait(lambda: publications(broker_snapshot(observer), expected), 35, "first scanner publication")
+
+LOCK_ROLE = """
+import os, signal, time
+import psycopg
+stop = False
+def terminate(*args):
+    global stop
+    stop = True
+signal.signal(signal.SIGTERM, terminate)
+with psycopg.connect(dbname=os.environ['POSTGRES_DB'], user=os.environ['POSTGRES_USER'],
+                     password=os.environ['POSTGRES_PASSWORD'], host='/var/run/postgresql',
+                     application_name='owned-scanner-index-contract') as conn:
+    conn.execute('LOCK TABLE epg_epgsourceindex IN ACCESS EXCLUSIVE MODE NOWAIT')
+    deadline = time.monotonic() + 110
+    while not stop and time.monotonic() < deadline:
+        time.sleep(.05)
+    assert stop
+"""
+
+
+def lock_state(fixture):
+    return fixture.sql(LOCK_STATE, secret=True)
+
+
+@contextmanager
+def index_lock(fixture, enabled):
+    if not enabled:
+        yield None
+        return
+    role = "scanner-index-lock"
+    fixture.role(role, ["/dispatcharrpy/bin/python", "-c", LOCK_ROLE])
+    try:
+        state = fixture.wait(lambda: state if (state := lock_state(fixture))["held"] else None,
+                             10, "actual exclusive Index table lock")
+        need(state["waiters"] == [], "Index lock must begin on idle copied SQL")
+        yield state
+    finally:
+        fixture.role(role, [], stop=True)
+
+
+def run_pass(fixture, seed, observer, number, expected, before):
+    from m3u_refresh_all_cases import receiver_begin, receiver_read
+    from scanner_wire_support import broker_snapshot, receive
+
+    receiver = receiver_begin(fixture, f"scanner-pass-{number}")
+    report = {"seed": seed, "before": before, "receiver": receiver}
+
+    def journal_entries():
+        return [entry for entry in broker_snapshot(observer) if entry["queue"] == "celery"]
+
+    initial_entries = journal_entries()
+    cursor = len(initial_entries)
+    need(number != 1 or not any(entry["frame"]["headers"]["task"] in (SCAN, INDEX)
+                               for entry in initial_entries), "no scanner publication before first arm")
+
+    def finish():
+        jobs = fixture.wait(lambda: publications(journal_entries()[cursor:], expected), 35, "saved scanner publications")
         report["jobs"] = jobs
-        report["terminals"] = {ident: fixture.wait(lambda: receive(fixture, ident), 35, "first scanner DB2 terminal")
+        report["terminals"] = {ident: fixture.wait(lambda: receive(fixture, ident), 35, "saved scanner DB2 terminal")
                                for ident in [jobs["root"]["id"], *(child["id"] for child in jobs["children"])]}
         need(fixture.sql(DB + "from django_celery_beat.models import PeriodicTasks;PeriodicTasks.update_changed();print(json.dumps(True))") is True,
              "sync the actual saved run through the scheduler marker")
@@ -254,30 +308,137 @@ print(json.dumps({'id':row.pk,'count':row.total_run_count,'enabled':row.enabled,
 from django_celery_beat.models import PeriodicTask,PeriodicTasks
 row=PeriodicTask.objects.get(pk=__ROW__)
 assert row.name=='scan-files'
-if row.total_run_count==1:
+if row.total_run_count==__NEXT__:
  row.enabled=False;row.save(update_fields=['enabled']);PeriodicTasks.update_changed()
 print(json.dumps(row.total_run_count))
 """
-        fixture.wait(lambda: fixture.sql(stop.replace("__ROW__", repr(seed["schedule_id"]))) == 1, 20,
+        fixture.wait(lambda: fixture.sql(stop.replace("__ROW__", repr(seed["schedule_id"])).replace("__NEXT__", str(number))) == number, 20,
                      "one durable saved scanner run")
-        report["after"] = snapshot(fixture, seed)
-        report["ready_or_reserved"] = fixture.wait(lambda: fixture.redis(1, QUEUES) == 0, 15,
-                                                    "first scanner queue drain") and fixture.redis(1, QUEUES)
-        queue_receipt = fixture.cli[-1]
-        report["queue_command"] = Path(queue_receipt["stdout"]).with_suffix(".json").name
-        events = receiver_read(fixture, receiver)
-        report["events"] = events
+
+    with index_lock(fixture, number in (2, 3)) as lock:
+        if lock:
+            report["lock_before_arm"] = lock
+        script = DB + """
+from datetime import timedelta
+from django.utils import timezone
+from django_celery_beat.models import PeriodicTask,PeriodicTasks
+row=PeriodicTask.objects.get(pk=__ROW__)
+assert row.name=='scan-files' and not row.enabled and row.total_run_count==__COUNT__
+row.enabled=True;row.last_run_at=timezone.now()-timedelta(seconds=21)
+row.save(update_fields=['enabled','last_run_at'])
+PeriodicTasks.update_changed()
+print(json.dumps({'id':row.pk,'count':row.total_run_count,'enabled':row.enabled,'last_run_at':row.last_run_at},default=str))
+"""
+        report["arm_started"] = time.time()
+        report["arm"] = fixture.sql(script.replace("__ROW__", repr(seed["schedule_id"])).replace("__COUNT__", str(number - 1)), secret=True)
+        report["arm_finished"] = time.time()
+        if number == 3:
+            root = fixture.wait(lambda: publications(journal_entries()[cursor:], set()), 35,
+                                "saved scanner root while the Index table is held")["root"]["id"]
+            report["blocked_first_helper"] = fixture.wait(
+                lambda: state if (state := lock_state(fixture))["waiters"] else None,
+                15, "cold Main helper waits on the actual Index table lock")
+            key = "celery-tasks:celery-task-meta-" + root
+            report["blocked_root_result"] = fixture.redis(
+                2, "return {ARGV[1],redis.call('EXISTS',ARGV[1]),redis.call('TIME')}", key)
+            need(report["blocked_root_result"][:2] == [key, 0], "held cold scanner root must lack a DB2 terminal")
+        else:
+            finish()
+        if number == 2:
+            report["lock_after_root"] = lock_state(fixture)
+            need(report["lock_after_root"]["held"] and report["lock_after_root"]["waiters"] == [],
+                 "repeat root completed while the Index table lock stayed held")
+    if number == 3:
+        finish()
+    report["after"] = snapshot(fixture, seed)
+    report["ready_or_reserved"] = fixture.wait(lambda: fixture.redis(1, QUEUES) == 0, 15,
+                                                "saved scanner queue drain") and fixture.redis(1, QUEUES)
+    queue_receipt = fixture.cli[-1]
+    report["queue_command"] = Path(queue_receipt["stdout"]).with_suffix(".json").name
+    events = receiver_read(fixture, receiver)
+    report["events"] = events
+
+    report["journal_cursor"] = cursor
+    return report
+
+
+def validate_lifecycle(report, wire):
+    expected = eligibility(report["seed"], report["before"])
+    passes = report["passes"]
+    need(len(passes) == 3 and passes[0]["before"] == report["before"]
+         and passes[2]["after"] == report["after"]
+         and all(part["seed"] == report["seed"] for part in passes), "complete scanner lifecycle snapshots required")
+    first, repeat, restarted = passes
+    need(first["after"] == repeat["before"] and repeat["after"] == restarted["before"]
+         and report["restart"]["after_stop"] == report["restart"]["after_start"] == repeat["after"],
+         "same copied SQL and roots across cold Main replacement required")
+    need(first["main"] == repeat["main"] != restarted["main"]
+         and report["restart"]["old"] == repeat["main"] and report["restart"]["new"] == restarted["main"]
+         and report["restart"]["exit"] == {"actual_exit": 0, "oom_killed": False, "expected_exit": 0},
+         "same process repeat and clean cold Main replacement required")
+    held = repeat["lock_before_arm"]
+    need(held == repeat["lock_after_root"] and held["waiters"] == []
+         and isinstance(held["held"], list) and len(held["held"]) == 2
+         and type(held["held"][0]) is int and held["held"][0] > 0 and held["held"][1],
+         "repeat must complete with the same actual Index lock held")
+    cold_lock, waiter = restarted["lock_before_arm"], restarted["blocked_first_helper"]
+    need(cold_lock["held"] and cold_lock["held"] == waiter["held"] and cold_lock["waiters"] == []
+         and len(waiter["waiters"]) == 1 and type(waiter["waiters"][0]) is int and waiter["waiters"][0] > 0,
+         "fresh Main must actually wait on the Index table")
+    key, present, clock = restarted["blocked_root_result"]
+    cold_jobs = restarted["jobs"]
+    need(key == "celery-tasks:celery-task-meta-" + cold_jobs["root"]["id"]
+         and type(present) is int and present == 0
+         and len(clock) == 2 and all(isinstance(value, str) and value.isascii() and value.isdecimal() for value in clock)
+         and 0 <= int(clock[1]) < 1000000, "held cold scanner root must lack its own DB2 result")
+    observed = int(clock[0]) + int(clock[1]) / 1000000
+    need(cold_jobs["root"]["when"] <= observed
+         and all(child["when"] >= observed for child in cold_jobs["children"]),
+         "cold Index publications must follow the held SQL observation")
+    cuts = [part["journal_cursor"] for part in passes] + [len(wire)]
+    need(all(type(a) is int and 0 <= a < b for a, b in zip(cuts, cuts[1:]))
+         and not any(entry["frame"]["headers"]["task"] in (SCAN, INDEX) for entry in wire[:cuts[0]]),
+         "exact ordered scanner journal partitions required")
+    result = [validate_pass(part, wire[cuts[i]:cuts[i+1]], i + 1, ids)
+              for i, (part, ids) in enumerate(zip(passes, (expected, set(), expected), strict=True))]
+    identities = [ident for part in passes for ident in part["terminals"]]
+    need(len(identities) == len(set(identities)) == 7
+         and report["retained_results"] == first["terminals"] | repeat["terminals"],
+         "distinct saved runs and first generation DB2 retained through restart required")
+    return {"passes": result, "index_children": [2, 0, 2], "repeat_completed_under_index_table_lock": True,
+            "cold_main_replaced": True, "cold_scanner_helper_held_by_index_sql": True, "retained_original_scope": "scanner-logo-only"}
+
+
+def run(fixture, out):
+    from dvr_domain_cases import producer_observer_stop
+    from scanner_wire_support import from_journal, receive
+
+    out.mkdir()
+    seed = fixture.scanner_first_seed
+    observer = fixture.scanner_first_observer
+    try:
+        before = snapshot(fixture, seed)
+        expected = eligibility(seed, before)
+        old = fixture.native
+        first = run_pass(fixture, seed, observer, 1, expected, before) | {"main": old}
+        repeat = run_pass(fixture, seed, observer, 2, set(), first["after"]) | {"main": old}
+        exit_state = fixture.stop_native(expected=0)
+        stopped_sql = snapshot(fixture, seed)
+        fixture.start_native()
+        new = fixture.native
+        restarted_sql = snapshot(fixture, seed)
+        retained = {ident: receive(fixture, ident) for part in (first, repeat) for ident in part["terminals"]}
+        restarted = run_pass(fixture, seed, observer, 3, expected, restarted_sql) | {"main": new}
         closing, observer = observer, None
         journal = producer_observer_stop(fixture, closing)
         stream = Path(journal["raw_journal_path"])
-        stopped = journal["observer_stop"]
-        need(type(stopped["actual_exit"]) is int and stopped["actual_exit"] == 0 and stopped["forced"] is False
-             and all(stopped[key] is True for key in ("actual_wait_completed", "stdout_EOF", "stderr_EOF",
-                                                      "all_original_process_generations_absent")),
-             "actual scanner broker observer retirement required")
-        report.update(journal_path=str(stream.relative_to(fixture.output)), journal_sha256=journal["raw_journal_sha256"],
-                      observer_stopped=stopped, passed=True)
-        validate(report, from_journal(stream))
+        report = {"seed": seed, "before": before, "after": restarted["after"], "passes": [first, repeat, restarted],
+                  "restart": {"old": old, "new": new, "exit": exit_state,
+                              "after_stop": stopped_sql, "after_start": restarted_sql},
+                  "retained_results": retained, "journal_path": str(stream.relative_to(fixture.output)),
+                  "journal_sha256": journal["raw_journal_sha256"], "observer_stopped": journal["observer_stop"],
+                  "passed": True}
+        validate_lifecycle(report, from_journal(stream))
         write(out / "scenario.json", report)
         return report
     finally:

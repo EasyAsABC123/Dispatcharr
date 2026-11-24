@@ -259,7 +259,7 @@ controlled DST transition. The canonical calendar row therefore remains open,
 with normal stop still its predecessor. Both fresh Native boundary evidence
 and the separate real Original fall acquisition remain pending.
 
-### First saved scanner occurrence
+### Saved scanner lifecycle
 
 The `m6/scanner-first` owner matches the pinned Original first-pass selector
 in an isolated copy. The saved ordinary `scan-files` row starts disabled. A
@@ -269,7 +269,12 @@ absent and SQL-null rows. The JSON-null, empty map, dummy, Schedules Direct,
 and inactive cases stay excluded. The evaluator links the scanner's recorded
 child order to the actual DB2 terminals, checks the empty file-summary
 observation, verifies the affected SQL snapshots through application exit,
-and requires exact fixture retirement.
+and requires exact fixture retirement. The same Main must complete a second
+saved run without Index children while PostgreSQL holds an exclusive lock on
+the Index table. A cold Main in the same fixture must retain the copied SQL,
+watched roots and first-generation DB2 results. Its next saved run must
+actually wait for that Index lock and have no DB2 root result until release,
+then publish the two Index children again.
 
 Prepare the frozen ordinary AMD64 owner without contacting the engine:
 
@@ -282,9 +287,11 @@ Supply its `stage` and `seal` under `owner_bindings.m6.scanner_first`; call
 `scanner_first_owner.dispatch_spec(repository, stage, seal, candidate,
 entrypoint, output)` for the coordinator binding. The live owner borrows the
 coordinator's exclusive lock. The signed API202 row remains its formal
-predecessor. The existing scanner-logo Original capture is reused and
-programme-index acceptance, repeated and restarted scanners, and file-failure
-semantics stay outside this first-occurrence row.
+predecessor. The scanner-logo Original capture establishes the first, repeat
+and restart selection in its isolated scanner scope. Current ordinary Native
+acceptance requires this fresh grouped run. The held SQL check exercises the
+scanner helper's dependency on the Index table. A separately held Index worker,
+programme-index acceptance and file-failure semantics still have their own scope.
 
 ### Programme Index task failures
 

@@ -56,6 +56,14 @@ def original(repository):
         ids.append(header["id"])
     require(len(set(ids)) == 2 and first["metadata"]["children"] == [[[value, None], None] for value in ids],
             "Original scanner child result order differs")
+    for label, children, queries in (("second-scan-retains-children", 0, 0),
+                                      ("worker-restart-republishes-missing-index", 2, 1)):
+        row, = [case for case in dataset["cases"] if case["name"] == label]
+        require(len(row["children"]) == children and len(row["sql"]["queries"]) == queries
+                and row["events"] == [] and row["metadata"]["status"] == "SUCCESS"
+                and row["metadata"]["result"] is None, "exact Original scanner continuation evidence required")
+    require({"second-no-new-child-or-deletion", "restart-actual-duplicate-source-publications",
+             "restart-preserves-all-four-descendants"} <= checks, "retained Original child custody required")
     return {str(path): value for path, value in paths.items()}
 
 
@@ -130,7 +138,7 @@ def prepare(repository, package_template, candidate, stage):
                                               "all_original_process_generations_absent")),
          "exact first-scanner observer process must retire")
     import scanner_wire_support
-    validated = missing_scenario.validate(report, scanner_wire_support.from_journal(journal))
+    validated = missing_scenario.validate_lifecycle(report, scanner_wire_support.from_journal(journal))
     need(read(business / "after-application-exit.json") == report["after"],
          "same affected SQL projection after literal application stop")
     verify_shutdown(side, read(OUT / side / "application-shutdown.json"))
@@ -229,17 +237,58 @@ def evaluate(stage, candidate, driver):
     require(read(fixture / "ordinary-aio-ready.json")
             == {"ordinary_aio": True, "core_saved_scheduler_observed": True, "both_lanes_accepting": True},
             "real default-selected scanner Main readiness required")
-    command_name = report["queue_command"]
-    require(re.fullmatch(r"command-[0-9]{4}\.json", command_name), "exact queue command receipt required")
-    queue = read(fixture / command_name)
-    stdout = Path(queue["stdout"])
-    raw_queue = read(stdout)
-    require(stdout.is_relative_to(fixture) and common.settled(queue)
-            and digest(stdout) == queue["stdout_sha256"] and type(raw_queue) is int and raw_queue == 0,
-            "actual ready/reserved queue must drain")
-    ids = [report["jobs"]["root"]["id"], *(child["id"] for child in report["jobs"]["children"])]
-    wanted = [report["before"], report["arm"], *(report["terminals"][ident] for ident in ids), report["after"], report["events"],
-              read(lane / "business/after-application-exit.json")]
+    restart = report["restart"]
+    project = read(lane / "fixture.json")["project"]
+    generations = []
+    networks = set()
+    for name in (restart["old"], restart["new"]):
+        require(re.fullmatch(re.escape(project) + r"-native-[0-9a-f]{5}", name), "exact owned Main name")
+        info = read(fixture / (name + "-inspection.json"))
+        require(info["Name"] == "/" + name and info["Image"] == candidate["image_id"]
+                and info["State"]["Running"] is True and type(info["State"]["Pid"]) is int
+                and info["State"]["Pid"] > 0 and info["HostConfig"]["NetworkMode"].startswith("container:")
+                and info["Config"]["Labels"]["com.docker.compose.project"] == project
+                and len(info["Mounts"]) == 1 and info["Mounts"][0]["Destination"] == "/data"
+                and info["Mounts"][0]["Source"] == str(fixture / "data" / scenario.CONTEXT),
+                "exact owned candidate and retained Main mounts/network")
+        generations.append(info["Id"])
+        networks.add(info["HostConfig"]["NetworkMode"])
+    require(len(set(generations)) == 2 and len(networks) == 1
+            and read(fixture / (restart["old"] + "-exit.json")) == restart["exit"]
+            and read(fixture / (restart["new"] + "-exit.json"))
+            == read(lane / "application-shutdown.json")["native_application"],
+            "both distinct Main container IDs and real retirement receipts required")
+
+    def queue_proof(part):
+        command_name = part["queue_command"]
+        require(re.fullmatch(r"command-[0-9]{4}\.json", command_name), "exact queue command receipt required")
+        queue = read(fixture / command_name)
+        stdout = Path(queue["stdout"])
+        raw_queue = read(stdout)
+        require(stdout.is_relative_to(fixture) and common.settled(queue)
+                and digest(stdout) == queue["stdout_sha256"] and type(raw_queue) is int and raw_queue == 0,
+                "actual ready/reserved queue must drain")
+
+    wanted = [report["before"]]
+    for number, part in enumerate(report["passes"], 1):
+        queue_proof(part)
+        if number == 3:
+            wanted.extend((restart["after_stop"], restart["after_start"]))
+            for prior in report["passes"][:2]:
+                jobs = prior["jobs"]
+                wanted.extend(report["retained_results"][ident] for ident in
+                              [jobs["root"]["id"], *(child["id"] for child in jobs["children"])])
+        if number in (2, 3):
+            wanted.append(part["lock_before_arm"])
+        wanted.append(part["arm"])
+        if number == 3:
+            wanted.extend((part["blocked_first_helper"], part["blocked_root_result"]))
+        ids = [part["jobs"]["root"]["id"], *(child["id"] for child in part["jobs"]["children"])]
+        wanted.extend(part["terminals"][ident] for ident in ids)
+        if number == 2:
+            wanted.append(part["lock_after_root"])
+        wanted.extend((part["after"], part["events"]))
+    wanted.append(read(lane / "business/after-application-exit.json"))
     observed = 0
     for path in sorted(fixture.glob("command-*.json")):
         receipt = read(path)

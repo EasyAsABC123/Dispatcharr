@@ -17,6 +17,36 @@ def main():
     with lock:
      if len(entries)>=128:raise RuntimeError('OriginJournal128Bound')
      entries.append({'method':self.command,'path':self.path,'monotonic':time.monotonic()});save('requests',entries)
+    ordered=re.fullmatch(r'/redirect-order/([a-f0-9]{32})/(peer|first|middle|last)[.]ts',self.path)
+    if ordered:
+     ident,target=ordered.groups()
+     if target in ('peer','middle') and self.command=='HEAD':
+      save(ident+'-'+target+'-order-entered',{'method':'HEAD','role':target})
+      release=root/(ident+'.'+target+'-order-release')
+      until=time.monotonic()+4.5
+      while not stop.is_set() and not release.exists() and time.monotonic()<until:stop.wait(.01)
+      released=release.exists()
+      save(ident+'-'+target+'-order-finished',{'released_by_fixture':released})
+      code=(204 if target=='peer' else 405) if released else 502
+     elif target in ('first','last') and self.command=='HEAD':code=204
+     else:code=502
+     self.send_response(code);self.send_header('Content-Length','0');self.send_header('Connection','close');self.end_headers()
+     return
+    single=re.fullmatch(r'/same-slot/([a-f0-9]{32})/(primary|fallback)[.]ts',self.path)
+    if single:
+     ident,scenario=single.groups()
+     if scenario=='primary':
+      code=405 if self.command=='HEAD' else 502
+     elif self.command=='HEAD':
+      save(ident+'-same-slot-entered',{'method':'HEAD','backup':True})
+      until=time.monotonic()+4.5
+      while not stop.is_set() and not(root/(ident+'.same-slot-release')).exists() and time.monotonic()<until:stop.wait(.01)
+      released=(root/(ident+'.same-slot-release')).exists()
+      save(ident+'-same-slot-finished',{'released_by_fixture':released})
+      code=204 if released else 502
+     else:code=404
+     self.send_response(code);self.send_header('Content-Length','0');self.send_header('Connection','close');self.end_headers()
+     return
     pooled=re.fullmatch(r'/pooled-frame/([a-f0-9]{32})/(primary[.]ts[?]Policy=owned%2Fsample~&Signature=abc[+]def%2Bgh%3D|fallback[.]ts)',self.path)
     if pooled and pooled[2].startswith('primary'):
      if self.command=='HEAD':
