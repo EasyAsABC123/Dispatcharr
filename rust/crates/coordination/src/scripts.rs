@@ -215,9 +215,11 @@ return 1
 pub const SWITCH_ACTIVE_SOURCE: &str = r#"
 local owner,ledger=KEYS[1],KEYS[2]
 local token,stream,pid,nextpid=ARGV[1],ARGV[2],ARGV[3],ARGV[4]
+local same_unlimited_profile=ARGV[5]=='1'
 if redis.call('GET',owner)~=token or redis.call('HGET',ledger,'token')~=token then return 0 end
 local reserved=redis.call('HGET',ledger,'reserved')
-if (reserved~='1' and (nextpid==pid or reserved~='0'))
+if (reserved~='1' and (reserved~='0' or (nextpid==pid and not same_unlimited_profile)))
+    or (same_unlimited_profile and (pid~=nextpid or redis.call('HGET',ledger,'credential')~=''))
     or redis.call('HGET',ledger,'source_slot_shared')~='1'
     or redis.call('HGET',ledger,'source_borrowed')=='1'
     or redis.call('HGET',ledger,'profile')~='profile_connections:'..pid then return 0 end
@@ -237,7 +239,8 @@ if not channel_alias or not stream_alias or not channel_receipt or not stream_re
     or redis.call('HGET',channel_receipt,'ledger')~=ledger or redis.call('HGET',stream_receipt,'ledger')~=ledger
     or redis.call('HGET',channel_receipt,'stream')~=alias_sid or redis.call('HGET',channel_receipt,'profile')~=pid then return 0 end
 local previous_key='profile_connections:'..pid
-local previous_count=counter_value(previous_key)
+local previous_count
+if reserved=='1' or nextpid~=pid then previous_count=counter_value(previous_key) end
 if reserved=='1' and previous_count<1 then return 0 end
 if nextpid~=pid then
     -- A fresh unlimited Native reservation carries no counter. Refuse to

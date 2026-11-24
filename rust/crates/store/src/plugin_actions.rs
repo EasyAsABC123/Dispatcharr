@@ -24,6 +24,7 @@ use std::{
 use tokio::sync::Notify;
 #[path = "plugin_files.rs"]
 mod files;
+pub(crate) use files::PinnedMutationLock;
 #[path = "plugin_hub.rs"]
 mod hub;
 #[path = "plugin_managed.rs"]
@@ -613,8 +614,19 @@ impl PluginActions {
             return Ok(reply(200, body));
         }
         if matches!(action, Action::Delete) {
-            registry::mutable(&snapshot)?;
             let key = key.ok_or_else(guard)?;
+            if enabled_delete_candidate(&snapshot, &key) {
+                let runtime = self.inner.runtime.get().ok_or_else(guard)?;
+                runtime
+                    .delete_enabled_unmanaged(key, session.clone(), live)
+                    .await?;
+                // The guest already refreshed its registry and broadcast its
+                // reload token. Discard Rust's cached file projection even if
+                // the filesystem reports the same token timestamp.
+                *self.inner.cache.lock().map_err(|_| guard())? = None;
+                return Ok(reply(200, json!({"success":true})));
+            }
+            registry::mutable(&snapshot)?;
             let lock_root = self.inner.root.clone();
             let lock_owner = live.clone();
             let lock = Arc::new(
@@ -1075,9 +1087,31 @@ fn reply(status: u16, value: Value) -> Response {
     )
         .into_response()
 }
+fn enabled_delete_candidate(snapshot: &registry::Snapshot, key: &str) -> bool {
+    let mut executable = snapshot
+        .configs
+        .iter()
+        .filter(|row| row["enabled"] == true || row["ever_enabled"] == true);
+    let Some(row) = executable.next() else {
+        return false;
+    };
+    executable.next().is_none()
+        && row["key"].as_str() == Some(key)
+        && row["enabled"] == true
+        && row["ever_enabled"] == true
+        && row.get("source_repo_id") == Some(&Value::Null)
+        && row["slug"].as_str() == Some("")
+        && snapshot.configs.iter().all(|config| {
+            config["owned_tasks"].as_array().is_some_and(Vec::is_empty)
+                && config["suspended_schedules"]
+                    .as_array()
+                    .is_some_and(Vec::is_empty)
+        })
+}
+
 fn varies_on_accept(action: Action, status: StatusCode) -> bool {
     matches!(action, Action::List | Action::Settings | Action::Run)
-        || (matches!(action, Action::Enabled) && status == StatusCode::OK)
+        || (matches!(action, Action::Enabled | Action::Delete) && status == StatusCode::OK)
 }
 
 async fn response(
@@ -1244,6 +1278,39 @@ mod request_compat_tests {
         }
         builder.body(Body::from(raw)).unwrap()
     }
+    #[test]
+    fn enabled_delete_requires_one_taskless_unmanaged_executable_config() {
+        let mut snapshot = registry::Snapshot {
+            configs: vec![json!({
+                "key": "owned",
+                "enabled": true,
+                "ever_enabled": true,
+                "source_repo_id": null,
+                "slug": "",
+                "owned_tasks": [],
+                "suspended_schedules": []
+            })],
+            repos: vec![],
+        };
+        let eligible = snapshot.configs[0].clone();
+        assert!(enabled_delete_candidate(&snapshot, "owned"));
+        assert!(!enabled_delete_candidate(&snapshot, "other"));
+        for (field, value) in [
+            ("enabled", json!(false)),
+            ("ever_enabled", json!(false)),
+            ("source_repo_id", json!(1)),
+            ("slug", json!("managed")),
+            ("owned_tasks", json!(["owned.task"])),
+            ("suspended_schedules", json!(null)),
+        ] {
+            snapshot.configs[0][field] = value;
+            assert!(!enabled_delete_candidate(&snapshot, "owned"), "{field}");
+            snapshot.configs[0] = eligible.clone();
+        }
+        snapshot.configs.push(eligible);
+        assert!(!enabled_delete_candidate(&snapshot, "owned"));
+    }
+
     #[tokio::test]
     async fn actual_request_parser_preserves_json_forms_and_drf_empty_content_type() {
         assert_eq!(

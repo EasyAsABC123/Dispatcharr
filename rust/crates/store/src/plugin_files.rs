@@ -146,13 +146,13 @@ impl MutationLock {
 }
 /// The same cooperating filesystem lock as normal plugin mutations, with a
 /// nonblocking acquire and a stable-name recheck under an existing SQL fence.
-pub(super) struct PinnedMutationLock {
+pub(crate) struct PinnedMutationLock {
     _file: File,
     path: PathBuf,
 }
 impl PinnedMutationLock {
     #[cfg(unix)]
-    pub(super) fn try_acquire(root: &Path) -> Result<Option<Self>, StoreError> {
+    pub(crate) fn try_acquire(root: &Path) -> Result<Option<Self>, StoreError> {
         use std::os::unix::fs::OpenOptionsExt;
         let root = root.canonicalize().map_err(io)?;
         let path = root.join(MUTATION_LOCK);
@@ -176,10 +176,10 @@ impl PinnedMutationLock {
         }
     }
     #[cfg(not(unix))]
-    pub(super) fn try_acquire(_: &Path) -> Result<Option<Self>, StoreError> {
+    pub(crate) fn try_acquire(_: &Path) -> Result<Option<Self>, StoreError> {
         Err(unsupported())
     }
-    pub(super) fn validate(&self) -> Result<(), StoreError> {
+    pub(crate) fn validate(&self) -> Result<(), StoreError> {
         #[cfg(unix)]
         {
             use std::os::unix::fs::MetadataExt;

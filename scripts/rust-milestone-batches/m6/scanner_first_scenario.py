@@ -283,10 +283,10 @@ def index_lock(fixture, enabled):
 
 
 def run_pass(fixture, seed, observer, number, expected, before):
-    from m3u_refresh_all_cases import receiver_begin, receiver_read
+    import owned_update_receiver
     from scanner_wire_support import broker_snapshot, receive
 
-    receiver = receiver_begin(fixture, f"scanner-pass-{number}")
+    receiver = owned_update_receiver.begin(fixture)
     report = {"seed": seed, "before": before, "receiver": receiver}
 
     def journal_entries():
@@ -355,7 +355,7 @@ print(json.dumps({'id':row.pk,'count':row.total_run_count,'enabled':row.enabled,
                                                 "saved scanner queue drain") and fixture.redis(1, QUEUES)
     queue_receipt = fixture.cli[-1]
     report["queue_command"] = Path(queue_receipt["stdout"]).with_suffix(".json").name
-    events = receiver_read(fixture, receiver)
+    events = owned_update_receiver.read(fixture, receiver)
     report["events"] = events
 
     report["journal_cursor"] = cursor

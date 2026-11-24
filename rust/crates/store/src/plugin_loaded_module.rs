@@ -20,6 +20,10 @@ pub struct LoadedTasklessModule {
     metadata: [String; 3],
 }
 impl LoadedTasklessModule {
+    pub(super) fn load_sequence(&self) -> u64 {
+        self.load_sequence
+    }
+
     /// Callers can compare fresh observations while retaining actual ownership.
     pub fn same_loaded_module(&self, current: &Self) -> bool {
         crate::plugin_python_registry::same(&self.identity, &current.identity)
@@ -55,6 +59,7 @@ pub(super) struct InstalledModule {
     source: PathBuf,
     code: Fingerprint,
     manifest: Fingerprint,
+    logo: Option<Fingerprint>,
 }
 
 #[derive(PartialEq, Eq)]
@@ -119,7 +124,7 @@ fn fingerprint(path: &Path) -> Result<Fingerprint, StoreError> {
 }
 
 impl InstalledModule {
-    pub(super) fn inspect(root: &Path, key: &str) -> Result<Self, StoreError> {
+    pub(super) fn inspect(root: &Path, key: &str, include_logo: bool) -> Result<Self, StoreError> {
         if key.is_empty()
             || key.len() > 128
             || !key
@@ -140,19 +145,14 @@ impl InstalledModule {
                 return Err(unavailable());
             }
         }
-        let mut count = 0;
+        let mut logo = None;
         for entry in fs::read_dir(&folder).map_err(|_| unavailable())? {
             let entry = entry.map_err(|_| unavailable())?;
-            if !matches!(
-                entry.file_name().to_str(),
-                Some("plugin.py" | "plugin.json")
-            ) {
-                return Err(unavailable());
+            match entry.file_name().to_str() {
+                Some("plugin.py" | "plugin.json") => {}
+                Some("logo.png") if include_logo => logo = Some(fingerprint(&entry.path())?),
+                _ => return Err(unavailable()),
             }
-            count += 1;
-        }
-        if count != 2 {
-            return Err(unavailable());
         }
         let source = folder.join("plugin.py");
         let code = fingerprint(&source)?;
@@ -164,6 +164,7 @@ impl InstalledModule {
             source,
             code,
             manifest,
+            logo,
         })
     }
 
@@ -209,7 +210,7 @@ mod tests {
         fs::create_dir_all(&plugin).unwrap();
         fs::write(plugin.join("plugin.py"), b"class Plugin: pass\n").unwrap();
         fs::write(plugin.join("plugin.json"), b"{}\n").unwrap();
-        let before = InstalledModule::inspect(&root, "existing_plugin").unwrap();
+        let before = InstalledModule::inspect(&root, "existing_plugin", false).unwrap();
         let raw = fs::read_to_string("/proc/self/stat").unwrap();
         let (_, tail) = raw.rsplit_once(')').unwrap();
         let identity = Identity {
@@ -229,10 +230,10 @@ mod tests {
             ],
         };
         let capture = |observed| {
-            InstalledModule::inspect(&root, "existing_plugin")
+            InstalledModule::inspect(&root, "existing_plugin", false)
                 .unwrap()
                 .attest(
-                    InstalledModule::inspect(&root, "existing_plugin").unwrap(),
+                    InstalledModule::inspect(&root, "existing_plugin", false).unwrap(),
                     identity.clone(),
                     observed,
                 )
@@ -260,15 +261,24 @@ mod tests {
         assert!(!first.same_loaded_module(&capture(changed_metadata).unwrap()));
         assert!(capture(observe(0, 1, digest.clone())).is_err());
         assert!(capture(observe(identity.pid, 1, "0".repeat(64))).is_err());
-        assert!(before == InstalledModule::inspect(&root, "existing_plugin").unwrap());
+        assert!(before == InstalledModule::inspect(&root, "existing_plugin", false).unwrap());
         fs::write(plugin.join("plugin.py"), b"class Plugin: pass\n\n").unwrap();
-        assert!(before != InstalledModule::inspect(&root, "existing_plugin").unwrap());
+        assert!(before != InstalledModule::inspect(&root, "existing_plugin", false).unwrap());
+        fs::write(plugin.join("logo.png"), b"reviewed owned logo").unwrap();
+        assert!(InstalledModule::inspect(&root, "existing_plugin", false).is_err());
+        let with_logo = InstalledModule::inspect(&root, "existing_plugin", true).unwrap();
+        fs::write(plugin.join("logo.png"), b"changed owned logo").unwrap();
+        assert!(with_logo != InstalledModule::inspect(&root, "existing_plugin", true).unwrap());
+        fs::remove_file(plugin.join("logo.png")).unwrap();
+        std::os::unix::fs::symlink(plugin.join("plugin.json"), plugin.join("logo.png")).unwrap();
+        assert!(InstalledModule::inspect(&root, "existing_plugin", true).is_err());
+        fs::remove_file(plugin.join("logo.png")).unwrap();
         fs::write(plugin.join("helper.py"), b"pass\n").unwrap();
-        assert!(InstalledModule::inspect(&root, "existing_plugin").is_err());
+        assert!(InstalledModule::inspect(&root, "existing_plugin", false).is_err());
         fs::remove_file(plugin.join("helper.py")).unwrap();
         fs::remove_file(plugin.join("plugin.py")).unwrap();
         std::os::unix::fs::symlink(plugin.join("plugin.json"), plugin.join("plugin.py")).unwrap();
-        assert!(InstalledModule::inspect(&root, "existing_plugin").is_err());
+        assert!(InstalledModule::inspect(&root, "existing_plugin", false).is_err());
         fs::remove_dir_all(root).unwrap();
     }
 }

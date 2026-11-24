@@ -78,7 +78,18 @@ impl Lease {
         stream: i64,
         profile: i64,
     ) -> Result<(), Error> {
-        self.switch_active_source(stream, profile, profile).await
+        self.switch_active_source(stream, profile, profile, false)
+            .await
+    }
+    /// Change the active input on the same owned unlimited profile. Keep the
+    /// initial aliases and any count already acquired by a profile transfer.
+    pub async fn switch_active_source_on_unlimited_profile(
+        &self,
+        stream: i64,
+        profile: i64,
+    ) -> Result<(), Error> {
+        self.switch_active_source(stream, profile, profile, true)
+            .await
     }
     /// Move an owned raw source between two independently resolved unlimited
     /// profiles. This preserves the initial alias and charges precisely one
@@ -92,7 +103,7 @@ impl Lease {
         if previous_profile == next_profile {
             return Err(Error::InvalidRequest);
         }
-        self.switch_active_source(stream, previous_profile, next_profile)
+        self.switch_active_source(stream, previous_profile, next_profile, false)
             .await
     }
     async fn switch_active_source(
@@ -100,6 +111,7 @@ impl Lease {
         stream: i64,
         profile: i64,
         next_profile: i64,
+        same_unlimited_profile: bool,
     ) -> Result<(), Error> {
         if stream <= 0
             || profile <= 0
@@ -114,6 +126,7 @@ impl Lease {
                 stream,
                 profile,
                 next_profile,
+                same_unlimited_profile,
             },
             true,
         )

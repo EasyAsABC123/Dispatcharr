@@ -3,7 +3,8 @@ No Original API view/task is invoked. Rust selects the Source effect ordering;
 these narrow helpers preserve actual model/compiler/signals and user hooks.
 Original Dispatcharr/Django/plugin authors retain full implementation credit.
 """
-import base64,contextvars,logging
+import base64,contextvars,logging,shutil
+from pathlib import Path
 from .wire import current,CompatibilityUnavailable
 _enabled=contextvars.ContextVar('native_enabled_config',default=None)
 
@@ -68,6 +69,55 @@ def change_enabled(value):
    body['plugin']=plugin_entry
   return rendered(200,body)
  except PluginConfig.DoesNotExist:return rendered(404,{'success':False,'error':'Plugin not found'})
+
+def delete_enabled(value):
+ """Staged Action-host entry. Only the reserved Action-host dispatch supplies admission."""
+ from django.db import transaction
+ from apps.plugins.loader import PluginManager
+ from apps.plugins.models import PluginConfig
+ from .task_registry import seal
+ from .loaded_module_witness import observe
+
+ key=value['key']
+ if not isinstance(key,str) or not key or len(key)>512 or key in ('.','..') or '/' in key or chr(92) in key:
+  raise CompatibilityUnavailable('Invalid native delete identity')
+ if set(value)!={'key','load_sequence','mutation_lock_held'} or value['mutation_lock_held'] is not True:
+  raise CompatibilityUnavailable('Owned delete mutation boundary unavailable')
+ pm=PluginManager.get()
+ pm.refresh_task_ownership()
+ if type(value['load_sequence']) is not int or observe(pm,key)['load_sequence']!=value['load_sequence']:
+  raise CompatibilityUnavailable('Owned loaded plugin changed before stop')
+ root=Path(pm.plugins_dir).resolve(strict=True)
+ target=Path(pm.get_plugin_path(key))
+ if target.is_symlink() or target.resolve(strict=True)!=root/key or not target.is_dir():
+  raise CompatibilityUnavailable('Invalid owned plugin directory')
+ identity=target.stat()
+ with transaction.atomic(durable=True):
+  cfg=PluginConfig.objects.select_for_update().get(key=key)
+  if not cfg.enabled or not cfg.ever_enabled or cfg.source_repo_id is not None or cfg.slug:
+   raise CompatibilityUnavailable('Only the owned enabled unmanaged lifecycle is staged')
+  if cfg.owned_tasks!=[] or cfg.suspended_schedules!=[] or pm._owned_task_names(cfg,path=str(target)):
+   raise CompatibilityUnavailable('Plugin task ownership requires a separate drain')
+  if pm.stop_plugin(key,reason='delete') is not True:
+   raise CompatibilityUnavailable('Actual delete stop did not complete')
+  cfg.refresh_from_db(fields=['owned_tasks','suspended_schedules'])
+  if cfg.owned_tasks!=[] or cfg.suspended_schedules!=[] or pm._owned_task_names(cfg,path=str(target)):
+   raise CompatibilityUnavailable('Stop changed exact task ownership')
+  # Do not restore the files after a later database failure, matching Original.
+  if target.is_symlink() or target.resolve(strict=True)!=root/key:
+   raise CompatibilityUnavailable('Owned delete directory changed during stop')
+  settled=target.stat()
+  if (settled.st_dev,settled.st_ino)!=(identity.st_dev,identity.st_ino):
+   raise CompatibilityUnavailable('Owned delete directory identity changed during stop')
+  shutil.rmtree(target)
+  if pm.delete_plugin_periodic_tasks(key,path=str(target))!=0:
+   raise CompatibilityUnavailable('Unadmitted plugin task deletion')
+  cfg.delete()
+ pm.discover_plugins(force_reload=True)
+ if pm.get_plugin(key) is not None:
+  raise CompatibilityUnavailable('Deleted plugin remains loaded')
+ seal()
+ return {'key':key,'stopped':True,'committed':True,'registry_sealed':True}
 
 def list_plugins(value):
  from apps.plugins.loader import PluginManager

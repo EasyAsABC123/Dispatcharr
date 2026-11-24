@@ -3,6 +3,7 @@
 //! still guarded by actual prepared Jobs capabilities; full parity is unproved.
 //! Original Dispatcharr/CPython/Celery authors retain full algorithm credit.
 use super::{
+    plugin_actions::PinnedMutationLock,
     plugin_execution_host::{Config, Error as HostError, Host, Invocation, Mode, TasklessHostHold},
     plugin_execution_ports::{NativePluginJobs, NativePorts},
     plugin_process_guard::GuardedPluginProcesses,
@@ -17,7 +18,7 @@ use std::{
     path::PathBuf,
     sync::{
         atomic::{AtomicBool, Ordering},
-        Arc,
+        Arc, OnceLock,
     },
     time::Duration,
 };
@@ -26,6 +27,23 @@ use uuid::Uuid;
 mod loaded_module;
 pub use loaded_module::LoadedTasklessModule;
 type Owner = Arc<dyn Send + Sync>;
+// Only the runtime can construct this authorization. Its lifetime spans the
+// operation, the real SQL settlement, and quarantine if either is uncertain.
+pub(crate) struct EnabledDeleteOwner {
+    key: String,
+    session: TaskSqlSession,
+    lock: PinnedMutationLock,
+    hold: TasklessHostHold,
+    _caller: Owner,
+}
+impl EnabledDeleteOwner {
+    pub(crate) fn dispatch(
+        &self,
+    ) -> Result<(&str, &TaskSqlSession, &TasklessHostHold), StoreError> {
+        self.lock.validate()?;
+        Ok((&self.key, &self.session, &self.hold))
+    }
+}
 struct TaskActor {
     host: Host,
     ports: Arc<NativePorts>,
@@ -51,6 +69,7 @@ struct Inner {
     claims: PluginTraceClaims,
     closed: AtomicBool,
     unsettled_sql: AtomicBool,
+    unsettled_delete: OnceLock<Arc<EnabledDeleteOwner>>,
 }
 #[derive(Clone)]
 pub struct PluginRuntime {
@@ -151,6 +170,7 @@ impl PluginRuntime {
                 claims,
                 closed: AtomicBool::new(false),
                 unsettled_sql: AtomicBool::new(false),
+                unsettled_delete: OnceLock::new(),
             }),
         })
     }
@@ -248,6 +268,17 @@ impl PluginRuntime {
         owner: Owner,
         hold: Option<&TasklessHostHold>,
     ) -> Result<LoadedTasklessModule, StoreError> {
+        self.witness_loaded_module(session, owner, hold, false)
+            .await
+    }
+
+    async fn witness_loaded_module(
+        &self,
+        session: TaskSqlSession,
+        owner: Owner,
+        hold: Option<&TasklessHostHold>,
+        include_logo: bool,
+    ) -> Result<LoadedTasklessModule, StoreError> {
         if self.inner.closed.load(Ordering::Acquire)
             || !session.shares_auth_writer(&self.inner.auth)
             || !self.inner.registry.registered_names()?.is_empty()
@@ -283,7 +314,7 @@ impl PluginRuntime {
             let key = key.clone();
             tokio::task::spawn_blocking(move || {
                 let _owned = physical;
-                loaded_module::InstalledModule::inspect(&root, &key)
+                loaded_module::InstalledModule::inspect(&root, &key, include_logo)
             })
         };
         let before = inspect(owner.clone()).await.map_err(|_| unavailable())??;
@@ -406,6 +437,114 @@ impl PluginRuntime {
             .map_err(host_error)?;
         Ok(json!({"success":true,"count":plugins.as_array().ok_or_else(unavailable)?.len()}))
     }
+    // The signed delete handler supplies its own session and retained writer.
+    pub(crate) async fn delete_enabled_unmanaged(
+        &self,
+        key: String,
+        session: TaskSqlSession,
+        caller: Owner,
+    ) -> Result<(), StoreError> {
+        let runtime = self.clone();
+        tokio::spawn(async move { runtime.delete_enabled_owned(key, session, caller).await })
+            .await
+            .map_err(|_| unavailable())?
+    }
+
+    async fn delete_enabled_owned(
+        &self,
+        key: String,
+        session: TaskSqlSession,
+        caller: Owner,
+    ) -> Result<(), StoreError> {
+        if !session.shares_auth_writer(&self.inner.auth) {
+            return Err(unavailable());
+        }
+        let root = self.inner.plugin_root.clone();
+        let lock_caller = caller.clone();
+        let lock = tokio::task::spawn_blocking(move || {
+            let _caller = lock_caller;
+            PinnedMutationLock::try_acquire(&root)
+        })
+        .await
+        .map_err(|_| unavailable())??
+        .ok_or_else(unavailable)?;
+        let hold = self.try_hold_taskless_host()?.ok_or_else(unavailable)?;
+        let owner = Arc::new(EnabledDeleteOwner {
+            key,
+            session,
+            lock,
+            hold,
+            _caller: caller,
+        });
+        let witness = self
+            .witness_loaded_module(
+                owner.session.clone(),
+                owner.clone(),
+                Some(&owner.hold),
+                true,
+            )
+            .await?;
+        if !witness.matches_registry_key(&json!({"key": &owner.key})) {
+            return Err(unavailable());
+        }
+        let result = async {
+            let terminal = self
+                .inner
+                .actions
+                .delete_enabled(owner.clone(), witness.load_sequence())
+                .await
+                .map_err(host_error)?;
+            let expected = json!({
+                "key": &owner.key,
+                "stopped": true,
+                "committed": true,
+                "registry_sealed": true
+            });
+            if terminal != expected || !self.inner.registry.registered_names()?.is_empty() {
+                return Err(unavailable());
+            }
+            let key = owner.key.clone();
+            let exists = owner
+                .session
+                .run(move |connection| {
+                    Box::pin(async move {
+                        sqlx::query_scalar::<_, bool>(
+                            "SELECT EXISTS(SELECT 1 FROM plugins_pluginconfig WHERE key=$1)",
+                        )
+                        .bind(key)
+                        .fetch_one(connection)
+                        .await
+                    })
+                })
+                .await??;
+            if exists {
+                return Err(unavailable());
+            }
+            let root = self.inner.plugin_root.clone();
+            let physical = owner.clone();
+            tokio::task::spawn_blocking(move || {
+                physical.lock.validate()?;
+                match std::fs::symlink_metadata(root.join(&physical.key)) {
+                    Err(error) if error.kind() == std::io::ErrorKind::NotFound => Ok(()),
+                    _ => Err(unavailable()),
+                }
+            })
+            .await
+            .map_err(|_| unavailable())??;
+            owner.session.close().await
+        }
+        .await;
+        if result.is_err() {
+            // A missing terminal can follow a real file removal or COMMIT.
+            // This owner cannot release the mutation boundary as a clean exit.
+            self.inner.unsettled_sql.store(true, Ordering::Release);
+            self.stop_admission();
+            let _ = self.inner.unsettled_delete.set(owner.clone());
+            let _ = owner.session.abort_physical().await;
+        }
+        result
+    }
+
     pub async fn change_enabled(
         &self,
         key: String,

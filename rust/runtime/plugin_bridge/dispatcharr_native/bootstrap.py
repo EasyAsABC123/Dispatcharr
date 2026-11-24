@@ -70,6 +70,10 @@ def main():
     if args.role!='actions':raise CompatibilityUnavailable('Task host cannot mutate plugin enabled lifecycle')
     from dispatcharr_native.plugin_lifecycle import change_enabled
     result=change_enabled(value)
+   elif method=='delete_enabled':
+    if args.role!='actions':raise CompatibilityUnavailable('Task host cannot own enabled deletion')
+    from dispatcharr_native.plugin_lifecycle import delete_enabled
+    result=delete_enabled(value)
    elif method=='plugin_logo':
     if args.role!='actions':raise CompatibilityUnavailable('Task host cannot serve web plugin logo')
     from dispatcharr_native.plugin_lifecycle import plugin_logo

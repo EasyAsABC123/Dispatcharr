@@ -637,9 +637,11 @@ impl StreamEngine {
                     "Active source is outside the local switch scope",
                 ));
             }
-            if (active.provider_max_streams == 1 || transfer_profile.is_some())
-                && !matches!(*session.startup.borrow(), Startup::Ready)
-            {
+            let requires_ready_slot = active.provider_max_streams == 1
+                || transfer_profile.is_some()
+                || (stream_id != current.0
+                    && session.source_slot_published.load(Ordering::Acquire));
+            if requires_ready_slot && !matches!(*session.startup.borrow(), Startup::Ready) {
                 return Err(PlaybackError::new(409, "Local provider slot is not ready"));
             }
             let target = (stream_id, transfer_profile.or(current.1));
@@ -1904,15 +1906,17 @@ fn same_live_reservation(current: &PlaybackCandidate, next: &PlaybackCandidate) 
 }
 
 // Manual changes are narrower than automatic failover. Use the existing
-// fenced retained-reservation transition only for an already owned one-slot
-// direct provider; no credential, preview or borrowed slot is transferred.
-fn retain_explicit_one_slot(
+// fenced retained-reservation transition only for an already owned direct
+// profile. Standalone, preview and borrowed input never transfer this slot.
+fn retain_explicit_slot(
     ready_owned_slot: bool,
     current: &PlaybackCandidate,
     target: Option<&PlaybackCandidate>,
 ) -> bool {
     ready_owned_slot
-        && current.provider_max_streams == 1
+        && current
+            .provider_profile_id
+            .is_some_and(|profile| profile > 0)
         && target.is_some_and(|target| source_switch::compatible(current, target))
 }
 
@@ -2049,6 +2053,32 @@ mod retained_source_tests {
     }
 
     #[test]
+    fn same_profile_unlimited_switch_reuses_only_an_owned_direct_slot() {
+        let active = PlaybackCandidate {
+            credential_pool: None,
+            provider_max_streams: 0,
+            ..candidate(11)
+        };
+        let target = PlaybackCandidate {
+            credential_pool: None,
+            provider_max_streams: 0,
+            ..candidate(12)
+        };
+        assert!(retain_explicit_slot(true, &active, Some(&target)));
+        assert!(!retain_explicit_slot(false, &active, Some(&target)));
+        assert!(!retain_explicit_slot(true, &active, Some(&active)));
+        assert!(!retain_explicit_slot(
+            true,
+            &active,
+            Some(&PlaybackCandidate {
+                provider_profile_id: None,
+                ..target.clone()
+            })
+        ));
+        assert!(!same_live_reservation(&active, &target));
+    }
+
+    #[test]
     fn explicit_source_switch_retains_only_the_owned_same_profile_one_slot() {
         let start = PlaybackCandidate {
             credential_pool: None,
@@ -2058,9 +2088,9 @@ mod retained_source_tests {
             credential_pool: None,
             ..candidate(12)
         };
-        assert!(retain_explicit_one_slot(true, &start, Some(&target)));
-        assert!(!retain_explicit_one_slot(false, &start, Some(&target)));
-        assert!(!retain_explicit_one_slot(true, &start, None));
+        assert!(retain_explicit_slot(true, &start, Some(&target)));
+        assert!(!retain_explicit_slot(false, &start, Some(&target)));
+        assert!(!retain_explicit_slot(true, &start, None));
         for refused in [
             PlaybackCandidate {
                 provider_profile_id: Some(4),
@@ -2084,7 +2114,7 @@ mod retained_source_tests {
             },
             candidate(12),
         ] {
-            assert!(!retain_explicit_one_slot(true, &start, Some(&refused)));
+            assert!(!retain_explicit_slot(true, &start, Some(&refused)));
         }
     }
 
@@ -2516,14 +2546,24 @@ async fn run_upstream(
                                     )
                                     .await
                             } else if keep_source_slot {
-                                lease
-                                    .switch_active_source_with_reservation(
-                                        candidate.stream_id,
-                                        candidate
-                                            .provider_profile_id
-                                            .expect("retained provider profile"),
-                                    )
-                                    .await
+                                let profile = candidate
+                                    .provider_profile_id
+                                    .expect("retained provider profile");
+                                if candidate.provider_max_streams == 0 {
+                                    lease
+                                        .switch_active_source_on_unlimited_profile(
+                                            candidate.stream_id,
+                                            profile,
+                                        )
+                                        .await
+                                } else {
+                                    lease
+                                        .switch_active_source_with_reservation(
+                                            candidate.stream_id,
+                                            profile,
+                                        )
+                                        .await
+                                }
                             } else if let Some(clients) = inner.clients.as_ref() {
                                 lease
                                     .publish_source_assignment_with_metadata(
@@ -2640,7 +2680,7 @@ async fn run_upstream(
                     let retain = if transferring {
                         ready_owned_slot && numeric_channel.is_some() && requested_target.is_some()
                     } else {
-                        retain_explicit_one_slot(
+                        retain_explicit_slot(
                             ready_owned_slot,
                             candidate,
                             requested_target.map(|target| &candidates[target]),

@@ -17,6 +17,7 @@ use tokio::{
     process::{Child, ChildStdin},
     sync::{mpsc, oneshot, watch, Mutex},
 };
+const DELETE_ENABLED: &str = "delete_enabled";
 const FRAME: usize = 8 * 1024 * 1024;
 #[path = "plugin_host_diagnostics.rs"]
 pub(crate) mod diagnostics;
@@ -773,6 +774,9 @@ impl Host {
         args: Value,
         scope: Invocation,
     ) -> Result<Value, Error> {
+        if method == DELETE_ENABLED {
+            return Err(Error::Unavailable);
+        }
         self.call_bound(method, args, scope, None, None).await
     }
     pub(crate) fn try_hold_taskless_child(
@@ -819,6 +823,36 @@ impl Host {
         )
         .await
     }
+    pub(crate) async fn delete_enabled(
+        &self,
+        owner: Arc<super::plugin_runtime::EnabledDeleteOwner>,
+        load_sequence: u64,
+    ) -> Result<Value, Error> {
+        let (key, session, hold) = owner.dispatch().map_err(|_| Error::Unavailable)?;
+        if !Arc::ptr_eq(&self.inner, &hold.host) || !hold.is_live() {
+            return Err(Error::Closed);
+        }
+        let args = json!({
+            "key": key,
+            "load_sequence": load_sequence,
+            "mutation_lock_held": true
+        });
+        let required_child = hold.identity.clone();
+        let permit = hold.permit.clone();
+        let sql = session.clone();
+        self.call_bound(
+            DELETE_ENABLED.into(),
+            args,
+            Invocation {
+                owner,
+                sql: Some(sql),
+            },
+            Some(required_child),
+            Some(permit),
+        )
+        .await
+    }
+
     async fn call_bound(
         &self,
         method: String,
@@ -1215,6 +1249,19 @@ mod deadline_tests {
             owner: Arc::new(()),
             sql: None,
         };
+        assert!(matches!(
+            host.call(
+                DELETE_ENABLED.into(),
+                json!({"mutation_lock_held": true}),
+                scope.clone()
+            )
+            .await,
+            Err(Error::Unavailable)
+        ));
+        assert!(matches!(
+            commands.try_recv(),
+            Err(mpsc::error::TryRecvError::Empty)
+        ));
         let prior = host.inner.activity.clone().try_read_owned().unwrap();
         assert!(matches!(
             host.try_hold_taskless_child(identity.clone()),

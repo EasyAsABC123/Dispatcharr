@@ -701,6 +701,7 @@ enum LeaseMutation {
         stream: i64,
         profile: i64,
         next_profile: i64,
+        same_unlimited_profile: bool,
     },
     AdoptSourceAssignment {
         assignment: LiveChannelAssignment,
@@ -810,8 +811,13 @@ async fn lease_mutation_observed(
                 stream,
                 profile,
                 next_profile,
+                same_unlimited_profile,
             } => {
-                invocation.arg(stream).arg(profile).arg(next_profile);
+                invocation
+                    .arg(stream)
+                    .arg(profile)
+                    .arg(next_profile)
+                    .arg(i32::from(*same_unlimited_profile));
             }
             LeaseMutation::Release | LeaseMutation::ClearProvider => {}
         }

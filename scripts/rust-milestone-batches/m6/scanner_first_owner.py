@@ -86,6 +86,7 @@ def prepare(repository, package_template, candidate, stage):
     manifest, package = rebind_package(old, candidate)
     data = {name: (template / name).read_bytes() for name in SUPPORT}
     data["scanner_wire_support.py"] = (template / "missing_scenario.py").read_bytes()
+    data["owned_update_receiver.py"] = Path(__file__).with_name("owned_update_receiver.py").read_bytes()
     checker = (package_template / "candidate.py").read_text()
     for key in ("candidate", "image", "manifest"):
         checker = replace(checker, old[key], package[key])
@@ -186,7 +187,7 @@ def prepare(repository, package_template, candidate, stage):
 
 def stage_binding(repository, stage, seal, candidate):
     inputs, files = common.sealed_inputs(stage, seal)
-    require(set(SUPPORT) | {"missing_scenario.py", "scanner_wire_support.py", "package-binding.json"} <= files
+    require(set(SUPPORT) | {"missing_scenario.py", "scanner_wire_support.py", "owned_update_receiver.py", "package-binding.json"} <= files
             and digest(stage / "missing_scenario.py") == digest(Path(scenario.__file__).resolve()),
             "exact fresh scanner evaluator and runtime inputs required")
     value = read(stage / "package-binding.json")
