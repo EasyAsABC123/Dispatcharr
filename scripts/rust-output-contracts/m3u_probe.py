@@ -93,6 +93,15 @@ def capture(base,control,label,error_path=None):
     finally:control('restore',label)
 
 
+# Exact Django JsonResponse bytes for the four physically measured denials.
+EXACT_DENIAL_CASES = {
+    "xc-missing",
+    "xc-wrong",
+    "m3u-network-before-missing-profile",
+    "xc-network-before-password",
+}
+
+
 def compare(source,candidate):
     differences=[]
     if not source.get('capture_complete') or not candidate.get('capture_complete'):differences.append({'case':'capture','detail':'incomplete'})
@@ -101,16 +110,17 @@ def compare(source,candidate):
         a={key:value for key,value in left.items() if key!='render_fixture'};b={key:value for key,value in right.items() if key!='render_fixture'}
         # Existing application JSON error contracts compare objects; each
         # transport Content-Length is still checked against its own bytes.
-        if 'body' in a and isinstance(a['body'],(dict,list)):
+        if isinstance(a.get('body'),(dict,list)):
             for value in [a,b]:
                 length=value['headers'].get('content-length')
                 if length is not None and int(length)!=value['bytes']:differences.append({'case':left['case'],'field':'invalid Content-Length'})
-                for key in ['bytes','sha256']:value.pop(key,None)
-                value['headers']=dict(value['headers']);value['headers'].pop('content-length',None)
+                if left['case'] not in EXACT_DENIAL_CASES:
+                    for key in ['bytes','sha256']:value.pop(key,None)
+                    value['headers']=dict(value['headers']);value['headers'].pop('content-length',None)
         if a!=b:differences.append({'case':left['case'],'source':a,'candidate':b})
     for key in ['django_cache_string_interop','two_second_cache','system_event_counts','large_catalog']:
         if source.get(key)!=candidate.get(key):differences.append({'case':key,'source':source.get(key),'candidate':candidate.get(key)})
-    return {'captured_m3u_http_matches':not differences,'differences':differences,'normalizations':['JSON error objects compared semantically; their own Content-Length remains validated'],'application_parity_verified':False,'performance_verified':False}
+    return {'captured_m3u_http_matches':not differences,'differences':differences,'normalizations':['Other JSON errors compare semantically and keep their own length checks; four known denials compare exact wire bytes'],'application_parity_verified':False,'performance_verified':False}
 
 
 def capture_large(base,control,label,error_path=None):

@@ -559,23 +559,20 @@ impl Store {
                 return Err(playback_capacity());
             }
         }
-        // Source Channel.get_stream resolves the credential pool for Redirect
-        // as well as direct and command-backed playback. Stream previews use a
-        // separate lookup and still require their own sample authority.
-        let ordinary_std_pool = preview.is_none();
+        // Source Channel.get_stream and both Stream.get_stream preview
+        // branches reserve through the same profile and credential-pool helper.
+        // Keep the sample lookup and qualified transforms shared by all three.
         let mut std_accounts = Vec::new();
-        if ordinary_std_pool {
-            for row in &rows {
-                if row.try_get::<&str, _>("account_type")? == "STD"
-                    && row.try_get::<Option<i64>, _>("server_group_id")?.is_some()
-                    && row.try_get::<i32, _>("max_streams")? > 0
-                {
-                    std_accounts.push(row.try_get("provider_account_id")?);
-                }
+        for row in &rows {
+            if row.try_get::<&str, _>("account_type")? == "STD"
+                && row.try_get::<Option<i64>, _>("server_group_id")?.is_some()
+                && row.try_get::<i32, _>("max_streams")? > 0
+            {
+                std_accounts.push(row.try_get("provider_account_id")?);
             }
-            std_accounts.sort_unstable();
-            std_accounts.dedup();
         }
+        std_accounts.sort_unstable();
+        std_accounts.dedup();
         let std_samples = std_account_samples(self, &std_accounts).await?;
         let mut streams = Vec::new();
         let mut ffmpeg_template: Option<crate::source_input_profile::Template> = None;
@@ -700,7 +697,7 @@ impl Store {
                         &current.password,
                     )?)
                 }
-                (Some(group), true) if account_type == "STD" && ordinary_std_pool => {
+                (Some(group), true) if account_type == "STD" => {
                     let account: i64 = row.try_get("provider_account_id")?;
                     let sample = std_samples
                         .get(&account)
@@ -732,7 +729,7 @@ impl Store {
                 }
                 (Some(_), true) => {
                     return Err(StoreError::Unsupported(
-                        "STD credential sample-URL precedence is not implemented",
+                        "Provider credential pool type is unsupported",
                     ))
                 }
                 // Original unlimited profiles skip BOTH profile and credential counters.

@@ -3,7 +3,7 @@ import copy
 import json
 from pathlib import Path
 import unittest
-from m3u_probe import compare
+from m3u_probe import EXACT_DENIAL_CASES, compare
 
 
 class M3uAcceptance(unittest.TestCase):
@@ -22,10 +22,16 @@ class M3uAcceptance(unittest.TestCase):
             if mutation=='cache':candidate['two_second_cache']['expired_body_changed']=False
             if mutation=='audit':candidate['system_event_counts']['m3u_download']-=1
             self.assertFalse(compare(self.source,candidate)['captured_m3u_http_matches'])
-    def test_json_error_whitespace_preserves_transport_length_validation(self):
-        candidate=copy.deepcopy(self.source)
-        event=next(value for value in candidate['events'] if isinstance(value.get('body'),dict))
-        event['bytes']-=1;event['headers']['content-length']=str(event['bytes']);event['sha256']='different JSON whitespace'
-        self.assertTrue(compare(self.source,candidate)['captured_m3u_http_matches'])
-        event['headers']['content-length']=str(event['bytes']+1)
-        self.assertFalse(compare(self.source,candidate)['captured_m3u_http_matches'])
+    def test_known_json_denials_require_exact_body_and_content_length(self):
+        for case in EXACT_DENIAL_CASES:
+            with self.subTest(case=case):
+                candidate = copy.deepcopy(self.source)
+                event = next(value for value in candidate['events'] if value['case'] == case)
+                event['bytes'] -= 1
+                event['headers']['content-length'] = str(event['bytes'])
+                event['sha256'] = 'different JSON whitespace'
+                self.assertFalse(compare(self.source,candidate)['captured_m3u_http_matches'])
+                fixture = copy.deepcopy(self.source)
+                event = next(value for value in fixture['events'] if value['case'] == case)
+                event['headers']['content-length'] = str(event['bytes'] + 1)
+                self.assertFalse(compare(fixture,fixture)['captured_m3u_http_matches'])

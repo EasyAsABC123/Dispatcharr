@@ -285,7 +285,7 @@ impl OutputGateway {
                         _ => 500,
                     };
                     self.event("m3u_blocked",json!({"user":identity.parameter("username").unwrap_or("unknown"),"reason":match status{403=>"Network access denied (XC API)",429=>"XC auth rate limited",_=>"Invalid XC credentials"},"client_ip":ip,"user_agent":agent})).await;
-                    return Err(error);
+                    return Ok(xc_export_error(error));
                 }
             }
         } else {
@@ -296,11 +296,7 @@ impl OutputGateway {
                 .await?
             {
                 self.event("m3u_blocked",json!({"profile":profile.as_deref().unwrap_or("all"),"reason":"Network access denied","client_ip":ip,"user_agent":agent})).await;
-                return Ok((
-                    StatusCode::FORBIDDEN,
-                    axum::Json(json!({"error":"Forbidden"})),
-                )
-                    .into_response());
+                return Ok(json_denial(StatusCode::FORBIDDEN, FORBIDDEN_JSON));
             }
             if method == Method::HEAD {
                 return Ok(self.attachment(Vec::new(), reservation));
@@ -537,6 +533,28 @@ impl OutputGateway {
     }
 }
 
+const FORBIDDEN_JSON: &str = r#"{"error": "Forbidden"}"#;
+const UNAUTHORIZED_JSON: &str = r#"{"error": "Unauthorized"}"#;
+
+fn xc_export_error(error: StoreError) -> Response {
+    // The M3U views use Django's spaced JsonResponse for these two denials.
+    match error {
+        StoreError::XcDenied {
+            status: 401,
+            retry_after: None,
+        } => json_denial(StatusCode::UNAUTHORIZED, UNAUTHORIZED_JSON),
+        StoreError::XcDenied {
+            status: 403,
+            retry_after: None,
+        } => json_denial(StatusCode::FORBIDDEN, FORBIDDEN_JSON),
+        error => error.into_response(),
+    }
+}
+
+fn json_denial(status: StatusCode, body: &'static str) -> Response {
+    (status, [("content-type", "application/json")], body).into_response()
+}
+
 fn html(status: StatusCode, body: &'static str) -> Response {
     (status, [("content-type", "text/html; charset=utf-8")], body).into_response()
 }
@@ -672,6 +690,48 @@ async fn dispatch(
 #[cfg(test)]
 mod tests {
     use super::*;
+    #[tokio::test]
+    async fn m3u_denials_match_django_body_bytes_and_keep_retry_after() {
+        let cases = [
+            (
+                xc_export_error(StoreError::XcDenied {
+                    status: 401,
+                    retry_after: None,
+                }),
+                StatusCode::UNAUTHORIZED,
+                r#"{"error": "Unauthorized"}"#,
+            ),
+            (
+                xc_export_error(StoreError::XcDenied {
+                    status: 403,
+                    retry_after: None,
+                }),
+                StatusCode::FORBIDDEN,
+                r#"{"error": "Forbidden"}"#,
+            ),
+            (
+                json_denial(StatusCode::FORBIDDEN, FORBIDDEN_JSON),
+                StatusCode::FORBIDDEN,
+                r#"{"error": "Forbidden"}"#,
+            ),
+        ];
+        for (response, status, expected) in cases {
+            assert_eq!(response.status(), status);
+            assert_eq!(response.headers()["content-type"], "application/json");
+            assert!(!response.headers().contains_key("retry-after"));
+            let body = axum::body::to_bytes(response.into_body(), expected.len())
+                .await
+                .unwrap();
+            assert_eq!(body, expected);
+        }
+
+        let throttled = xc_export_error(StoreError::XcDenied {
+            status: 429,
+            retry_after: Some(17),
+        });
+        assert_eq!(throttled.status(), StatusCode::TOO_MANY_REQUESTS);
+        assert_eq!(throttled.headers()["retry-after"], "17");
+    }
     #[tokio::test]
     async fn stop_before_body_subscription_does_not_wait_for_slow_input_deadline() {
         let (stop, _) = watch::channel(false);

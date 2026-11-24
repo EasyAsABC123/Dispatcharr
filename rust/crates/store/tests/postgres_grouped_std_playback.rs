@@ -1,6 +1,6 @@
 //! Read-only opt-in test against a disposable Django-migrated PostgreSQL fixture.
 use dispatcharr_contracts::{PlaybackRequest, PlaybackResolution, PlaybackResolver};
-use dispatcharr_store::{AuthConfig, AuthService, Store};
+use dispatcharr_store::{AuthConfig, AuthService, NotificationCache, Store};
 
 fn required(name: &str) -> String {
     std::env::var(name)
@@ -135,5 +135,66 @@ async fn grouped_std_redirect_carries_pool_for_both_redirect_selection_modes() {
             );
             assert_eq!(pool.max_streams, 1);
         }
+    }
+}
+
+#[tokio::test]
+#[ignore = "requires owned Django-migrated PostgreSQL and Redis with one grouped STD preview"]
+async fn grouped_std_preview_resolves_the_same_pool_for_default_and_scoped_workers() {
+    assert_eq!(required("DISPATCHARR_STORE_TEST_FIXTURE"), "isolated");
+    let store = Store::connect(&required("TEST_DATABASE_URL"), 2)
+        .await
+        .expect("isolated PostgreSQL must be available");
+    let cache = NotificationCache::connect(&required("TEST_REDIS_URL"))
+        .await
+        .expect("isolated Redis must be available");
+    let auth = AuthService::new(
+        store,
+        AuthConfig::new(required("TEST_DJANGO_SECRET_KEY")).unwrap(),
+    )
+    .with_notification_cache(cache);
+    let hash = required("TEST_STD_PREVIEW_HASH");
+    let provider: i64 = required("TEST_STD_PREVIEW_PROFILE_ID").parse().unwrap();
+    let token = required("TEST_DJANGO_ADMIN_ACCESS_TOKEN");
+    let counter = required("TEST_STD_SAMPLE_COUNTER_KEY");
+    for scoped in [false, true] {
+        let mut query = vec![("output_format".into(), "ts".into())];
+        if scoped {
+            query.push(("skip_redirect".into(), "1".into()));
+        }
+        let request = PlaybackRequest {
+            channel_id: hash.clone(),
+            query,
+            headers: vec![("authorization".into(), format!("Bearer {token}"))],
+            peer_ip: "127.0.0.1".parse().unwrap(),
+        };
+        let resolved = auth
+            .resolve_response(request)
+            .await
+            .unwrap_or_else(|error| panic!("preview failed with status {}", error.status));
+        let PlaybackResolution::Stream(source) = resolved else {
+            panic!("preview should produce media")
+        };
+        let worker = if scoped {
+            format!("{hash}.p{provider}")
+        } else {
+            hash.clone()
+        };
+        assert_eq!(source.channel_id, worker);
+        assert_eq!(source.provider_profile_id, Some(provider));
+        assert_eq!(source.provider_max_streams, 1);
+        let pool = source
+            .credential_pool
+            .expect("finite grouped STD preview pool");
+        assert!(pool.counter_key == counter, "owned preview pool identity");
+        assert_eq!(pool.max_streams, 1);
+        let preview = source
+            .metadata
+            .iter()
+            .find(|(name, _)| name == "source_preview")
+            .unwrap();
+        let projection: serde_json::Value = serde_json::from_str(&preview.1).unwrap();
+        assert_eq!(projection["scoped"], scoped);
+        assert_eq!(projection["hash"], hash);
     }
 }
