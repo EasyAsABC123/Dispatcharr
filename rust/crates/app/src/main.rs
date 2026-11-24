@@ -554,6 +554,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
     let engine =
         StreamEngine::new_with_shared_inputs(config, coordinator.clone(), clients.clone(), inputs)
             .and_then(StreamEngine::with_source_http_retry_backoff)
+            .and_then(StreamEngine::with_local_source_switches)
             .map_err(|_| "Invalid streaming configuration")?;
     let engine = match core_settings.as_ref().filter(|_| dynamic_health) {
         Some(core) => engine

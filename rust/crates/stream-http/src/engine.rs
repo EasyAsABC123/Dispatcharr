@@ -6,6 +6,8 @@ mod profile_process;
 mod redirect;
 #[path = "source_keepalive.rs"]
 mod source_keepalive;
+#[path = "source_switch.rs"]
+mod source_switch;
 use axum::{body::Body, http::Response};
 use bytes::Bytes;
 use dispatcharr_clients::{ClientLease, ClientStore};
@@ -191,6 +193,7 @@ pub(crate) struct Inner {
     health_settings: Option<Arc<dyn HealthSettingsSource>>,
     live_client_connect: Option<Arc<dyn dispatcharr_contracts::LiveClientConnectObserver>>,
     profiles: Option<Arc<output_profiles::Profiles>>,
+    local_source_switches: bool,
     sessions: Mutex<HashMap<String, Arc<Session>>>,
     slots: Arc<Semaphore>,
     coordinator: Option<Coordinator>,
@@ -238,6 +241,7 @@ struct Session {
     metadata_wake: Notify,
     publisher: Mutex<Option<input_writer::InputWriter>>,
     input_owner: Mutex<Option<String>>,
+    source_switch: Option<Box<source_switch::Control>>,
     _permit: Arc<OwnedSemaphorePermit>,
 }
 
@@ -342,6 +346,7 @@ impl StreamEngine {
                 health_settings: None,
                 live_client_connect: None,
                 profiles: None,
+                local_source_switches: false,
                 sessions: Mutex::new(HashMap::new()),
                 slots,
                 coordinator,
@@ -378,6 +383,94 @@ impl StreamEngine {
         })?;
         inner.health_settings = Some(source);
         Ok(self)
+    }
+
+    /// Enable owner-local source switches before starting the engine.
+    pub fn with_local_source_switches(mut self) -> Result<Self, PlaybackError> {
+        let inner = Arc::get_mut(&mut self.inner).ok_or_else(|| {
+            PlaybackError::new(500, "Source switches must be bound before engine sharing")
+        })?;
+        inner.local_source_switches = true;
+        Ok(self)
+    }
+
+    /// Select an unambiguous, already-resolved raw HTTP target on the current
+    /// unlimited profile. The caller must have checked control authorization.
+    pub async fn switch_local_source(
+        &self,
+        channel: &str,
+        stream_id: i64,
+    ) -> Result<String, PlaybackError> {
+        let session = self
+            .inner
+            .sessions
+            .lock()
+            .unwrap()
+            .get(channel)
+            .cloned()
+            .ok_or_else(|| PlaybackError::new(404, "Channel not found"))?;
+        let control = session
+            .source_switch
+            .as_ref()
+            .ok_or_else(|| PlaybackError::new(409, "Local source switch is unavailable"))?;
+        let (reply, url) = {
+            let active = session.current.lock().unwrap();
+            if !source_switch::supported(&active) {
+                return Err(PlaybackError::new(
+                    409,
+                    "Active source is outside the local switch scope",
+                ));
+            }
+            let current = source_switch::source(&active);
+            let target = (stream_id, current.1);
+            if target == current {
+                return Err(PlaybackError::new(
+                    409,
+                    "Requested stream is already active",
+                ));
+            }
+            let primary = session.source.primary();
+            let mut matches = std::iter::once(&primary)
+                .chain(&session.source.alternates)
+                .filter(|candidate| {
+                    source_switch::source(candidate) == target
+                        && source_switch::supported(candidate)
+                });
+            let Some(candidate) = matches.next().filter(|_| matches.next().is_none()) else {
+                return Err(PlaybackError::new(
+                    404,
+                    "Requested stream is outside the local switch scope",
+                ));
+            };
+            if candidate.url == active.url {
+                return Err(PlaybackError::new(409, "Requested URL is already active"));
+            }
+            (control.submit(current, target)?, candidate.url.clone())
+        };
+        // Once a producer begins a handoff it owns the bounded transition even
+        // if this waiter times out. A timeout never queues another handoff.
+        match time::timeout(self.inner.config.startup_timeout, reply).await {
+            Ok(Ok(result)) => result.map(|()| url),
+            Ok(Err(_)) => Err(PlaybackError::new(
+                502,
+                "Source attempt ended before switching",
+            )),
+            Err(_) => Err(PlaybackError::new(
+                504,
+                "Local source switch was not confirmed",
+            )),
+        }
+    }
+
+    pub(crate) fn local_source_switch_body_deadline(&self) -> Duration {
+        self.inner.config.startup_timeout
+    }
+
+    pub(crate) fn local_source_switch_worker(&self) -> Option<&str> {
+        self.inner
+            .clients
+            .as_ref()
+            .map(|clients| clients.worker_id())
     }
 
     /// Sample the same TS settings slot used by channel health. A standalone
@@ -541,7 +634,19 @@ impl StreamEngine {
                     .map_err(runtime_error)?;
                 let (stop, _) = watch::channel(false);
                 let (startup, _) = watch::channel(Startup::Pending);
-                let current = Mutex::new(source.primary());
+                let primary = source.primary();
+                let source_switch = (register_client
+                    && self.inner.local_source_switches
+                    && source.output_format == dispatcharr_contracts::OutputFormat::MpegTs
+                    && source_switch::supported(&primary)
+                    && source.alternates.iter().any(|candidate| {
+                        source_switch::supported(candidate)
+                            && candidate.provider_profile_id == primary.provider_profile_id
+                            && candidate.stream_id != primary.stream_id
+                            && candidate.url != primary.url
+                    }))
+                .then(|| Box::new(source_switch::Control::new()));
+                let current = Mutex::new(primary);
                 let session = Arc::new(Session {
                     source,
                     channel,
@@ -571,6 +676,7 @@ impl StreamEngine {
                     metadata_wake: Notify::new(),
                     publisher: Mutex::new(None),
                     input_owner: Mutex::new(None),
+                    source_switch,
                     _permit: Arc::new(permit),
                 });
                 sessions.insert(key.clone(), session.clone());
@@ -1839,6 +1945,7 @@ async fn run_upstream(
     .then(|| crate::retry::ProviderCapacityWait::new(Instant::now()));
     let mut input = InputAccumulator::new(inner.config.chunk_bytes);
     let mut last_error = PlaybackError::new(502, "Upstream did not provide stream data");
+    let mut pending_switch = None;
     'session: loop {
         if let Some(error) = assignment_error.take() {
             last_error = error;
@@ -1912,6 +2019,7 @@ async fn run_upstream(
         if !provider_full {
             capacity_wait = None;
         }
+        let mut requested_switch = None;
         match reservation {
             Err(error) => last_error = error,
             Ok(()) => {
@@ -2026,7 +2134,7 @@ async fn run_upstream(
                     };
                     last_candidate = Some(current);
                     attempts = attempts.saturating_add(1);
-                    drive_candidate(
+                    requested_switch = drive_candidate(
                         &inner,
                         &session,
                         &worker,
@@ -2038,11 +2146,23 @@ async fn run_upstream(
                         &mut retry,
                         &mut stop,
                         &mut lost,
+                        &mut pending_switch,
                     )
                     .await;
                     session.connecting.store(true, Ordering::Relaxed);
                     if *stop.borrow() || *lost.borrow() {
                         break 'session;
+                    }
+                    if requested_switch.is_some() {
+                        break;
+                    }
+                    if let (Some(control), Some(request)) =
+                        (&session.source_switch, pending_switch.take())
+                    {
+                        control.fail(
+                            request,
+                            PlaybackError::new(502, "Requested source did not publish media"),
+                        );
                     }
                     last_error = PlaybackError::new(502, "Upstream did not provide stream data");
                     if retry.failure(Instant::now(), inner.config.retry_window)
@@ -2056,7 +2176,8 @@ async fn run_upstream(
                 let final_initializing_source = session.native_initializing.load(Ordering::Acquire)
                     && matches!(*session.startup.borrow(), Startup::Pending)
                     && (0..candidates.len()).all(|index| retry.tried.contains(&index));
-                retained_source_slot = inner.config.source_initialization
+                retained_source_slot = requested_switch.is_none()
+                    && inner.config.source_initialization
                     && !source_borrowed
                     && preview_assignment.is_none()
                     && lease.is_some()
@@ -2075,6 +2196,29 @@ async fn run_upstream(
                     }
                 }
             }
+        }
+        if let (Some(control), Some(request)) = (&session.source_switch, requested_switch.take()) {
+            let target = candidates.iter().position(|candidate| {
+                source_switch::source(candidate) == request.target
+                    && source_switch::supported(candidate)
+            });
+            if let Some(target) = target {
+                current = target;
+                retry.tried.clear();
+                retry.rotations = 0;
+                pending_switch = Some(request);
+                continue;
+            }
+            control.fail(
+                request,
+                PlaybackError::new(502, "Requested source is unavailable"),
+            );
+        }
+        if let (Some(control), Some(request)) = (&session.source_switch, pending_switch.take()) {
+            control.fail(
+                request,
+                PlaybackError::new(502, "Requested source could not start"),
+            );
         }
         // After actual input attempts, Original compares the next source URL
         // with the outgoing one. An unavailable slot alone supplies no URL to
@@ -2123,6 +2267,12 @@ async fn run_upstream(
             break;
         };
         current = next;
+    }
+    if let (Some(control), Some(request)) = (&session.source_switch, pending_switch.take()) {
+        control.fail(
+            request,
+            PlaybackError::new(503, "Source switch owner ended"),
+        );
     }
     if *lost.borrow() {
         last_error = PlaybackError::new(503, "Channel ownership was lost");
@@ -2551,13 +2701,14 @@ async fn drive_candidate(
     retry: &mut crate::retry::RetryState,
     stop: &mut watch::Receiver<bool>,
     lost: &mut watch::Receiver<bool>,
-) {
+    pending_switch: &mut Option<source_switch::Request>,
+) -> Option<source_switch::Request> {
     if !inner.config.source_initialization {
         *input = InputAccumulator::new(inner.config.chunk_bytes);
     } else if discontinuity {
         if let Some((data, mark)) = input.flush_for_switch() {
             if session.publish_data(data, mark).await.is_err() {
-                return;
+                return None;
             }
         }
     }
@@ -2565,7 +2716,7 @@ async fn drive_candidate(
         let writer = session.publisher.lock().unwrap().clone();
         if let Some(writer) = writer {
             if writer.mark_discontinuity().await.is_err() {
-                return;
+                return None;
             }
         }
         input.arm_switch();
@@ -2622,7 +2773,7 @@ async fn drive_candidate(
                         safe_input_spawn_error(&error)
                     );
                 }
-                return;
+                return None;
             }
         }
     } else {
@@ -2630,12 +2781,12 @@ async fn drive_candidate(
             inner.config.connect_timeout,
             inner.config.read_timeout,
         ) else {
-            return;
+            return None;
         };
         let Ok(request) =
             attempt.request(&candidate.url, &candidate.user_agent, &candidate.headers)
         else {
-            return;
+            return None;
         };
         {
             let mut health = session.health.lock().unwrap();
@@ -2643,17 +2794,17 @@ async fn drive_candidate(
             health.connected = true;
         }
         let response = tokio::select! {
-            _ = stop.changed() => return, _ = lost.changed() => return,
+            _ = stop.changed() => return None, _ = lost.changed() => return None,
             response = request.send() => response,
         };
         let Ok(response) = response else {
-            return;
+            return None;
         };
         if response.status() != reqwest::StatusCode::OK || attempt.cookie_budget_exceeded() {
-            return;
+            return None;
         }
         let Ok(body) = crate::upstream::body(response) else {
-            return;
+            return None;
         };
         CandidateBytes::Http {
             bytes: body,
@@ -2666,6 +2817,11 @@ async fn drive_candidate(
         mark_chunk,
         chunk,
     } = input;
+    let control = session
+        .source_switch
+        .as_ref()
+        .filter(|_| source_switch::supported(candidate));
+    let mut requested_switch = None;
     let mut first_media = None;
     let mut stable_noted = false;
     let mut flush = time::interval_at(
@@ -2679,6 +2835,10 @@ async fn drive_candidate(
             biased;
             _ = stop.changed() => break,
             _ = lost.changed() => break,
+            request = async { control.unwrap().receive().await }, if control.is_some() => {
+                requested_switch = Some(request);
+                break;
+            }
             frame = bytes.next() => {
                 let Some(Ok(frame)) = frame else { break };
                 if frame.is_empty(){continue;}
@@ -2733,6 +2893,16 @@ async fn drive_candidate(
             }
         }
         if published {
+            if let Some(control) =
+                control.filter(|_| first_media.is_none() && !*stop.borrow() && !*lost.borrow())
+            {
+                let current_source = source_switch::source(candidate);
+                if let Some(request) = pending_switch.take() {
+                    control.confirm(request, current_source);
+                } else {
+                    control.arm(current_source);
+                }
+            }
             retry.had_media = true;
             let began = *first_media.get_or_insert_with(Instant::now);
             session.connecting.store(false, Ordering::Relaxed);
@@ -2744,6 +2914,9 @@ async fn drive_candidate(
                 stable_noted = true;
             }
         }
+    }
+    if let Some(control) = control {
+        control.disarm();
     }
     if inner.config.flush_partial_chunks
         && !chunk.is_empty()
@@ -2761,6 +2934,7 @@ async fn drive_candidate(
         }
     }
     bytes.finish().await;
+    requested_switch
 }
 
 fn coordination_error(error: dispatcharr_coordination::Error) -> PlaybackError {

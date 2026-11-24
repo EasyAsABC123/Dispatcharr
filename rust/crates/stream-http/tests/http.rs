@@ -1976,3 +1976,211 @@ async fn source_owner_waiting_for_a_healthy_input_does_not_insert_keepalive_pack
     assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
     origin.abort();
 }
+
+#[tokio::test]
+async fn local_explicit_source_switch_keeps_two_existing_http_bodies() {
+    for source_initialization in [false, true] {
+        local_source_switch(source_initialization).await;
+    }
+}
+
+async fn local_source_switch(source_initialization: bool) {
+    let primary_counts = Arc::new(Counts::default());
+    let target_counts = Arc::new(Counts::default());
+    let primary = primary_counts.clone();
+    let target = target_counts.clone();
+    let router = Router::new()
+        .route(
+            "/primary",
+            get(move || {
+                let counts = primary.clone();
+                async move { packet_origin(counts, 100) }
+            }),
+        )
+        .route(
+            "/target",
+            get(move || {
+                let counts = target.clone();
+                async move { packet_origin(counts, 200) }
+            }),
+        );
+    let (base, server) = serve(router).await;
+    let mut playback = source(format!("{base}/primary"), "manual");
+    playback.provider_profile_id = Some(8);
+    let mut alternate = candidate(format!("{base}/target"), 2);
+    alternate.provider_profile_id = playback.provider_profile_id;
+    playback.alternates.push(alternate);
+    let engine = StreamEngine::new(EngineConfig {
+        source_initialization,
+        ..config()
+    })
+    .unwrap()
+    .with_local_source_switches()
+    .unwrap();
+    let mut first = engine.play(playback.clone()).await.unwrap().into_body();
+    let mut second = engine.play(playback).await.unwrap().into_body();
+
+    async fn observe_pid(body: &mut Body, expected: u8) {
+        time::timeout(Duration::from_secs(2), async {
+            loop {
+                let data = body.frame().await.unwrap().unwrap().into_data().unwrap();
+                assert_eq!(data.len() % 188, 0);
+                if data
+                    .chunks_exact(188)
+                    .any(|ts| ts[0] == 0x47 && ts[2] == expected)
+                {
+                    return;
+                }
+            }
+        })
+        .await
+        .unwrap();
+    }
+    observe_pid(&mut first, 100).await;
+    observe_pid(&mut second, 100).await;
+    assert_eq!(
+        engine
+            .switch_local_source("manual", 99)
+            .await
+            .unwrap_err()
+            .status,
+        404
+    );
+    assert_eq!(primary_counts.connections.load(Ordering::SeqCst), 1);
+    assert_eq!(target_counts.connections.load(Ordering::SeqCst), 0);
+    assert_eq!(engine.status()[0].viewer_count, 2);
+    engine.switch_local_source("manual", 2).await.unwrap();
+    assert_eq!(engine.status()[0].stream_id, 2);
+    assert_eq!(engine.status()[0].viewer_count, 2);
+    observe_pid(&mut first, 200).await;
+    observe_pid(&mut second, 200).await;
+    wait_for(|| primary_counts.active.load(Ordering::SeqCst) == 0).await;
+    assert_eq!(target_counts.active.load(Ordering::SeqCst), 1);
+    assert_eq!(target_counts.connections.load(Ordering::SeqCst), 1);
+    assert_eq!(
+        engine
+            .switch_local_source("manual", 2)
+            .await
+            .unwrap_err()
+            .status,
+        409
+    );
+    engine.switch_local_source("manual", 1).await.unwrap();
+    assert_eq!(engine.status()[0].stream_id, 1);
+    assert_eq!(engine.status()[0].viewer_count, 2);
+    observe_pid(&mut first, 100).await;
+    observe_pid(&mut second, 100).await;
+    wait_for(|| target_counts.active.load(Ordering::SeqCst) == 0).await;
+    assert_eq!(primary_counts.connections.load(Ordering::SeqCst), 2);
+    drop((first, second));
+    assert!(engine.shutdown_wait(Duration::from_secs(2)).await);
+    wait_for(|| engine.status().is_empty()).await;
+    server.abort();
+}
+
+#[tokio::test]
+async fn assigned_source_switch_control_checks_admin_before_reading_target() {
+    let engine = StreamEngine::new(config())
+        .unwrap()
+        .with_local_source_switches()
+        .unwrap();
+    let resolver = Arc::new(Resolver {
+        source: source("http://127.0.0.1:1/unused".into(), "owned"),
+        resolutions: AtomicUsize::new(0),
+    });
+    let router = engine.controls_router(resolver.clone());
+    for (method, actor, body, status, expected) in [
+        ("POST", "viewer", "{", 403, r#"{"error":"Forbidden"}"#),
+        (
+            "GET",
+            "admin",
+            "",
+            405,
+            r#"{"detail":"Method \"GET\" not allowed."}"#,
+        ),
+        ("POST", "admin", "{", 400, r#"{"error":"Invalid JSON"}"#),
+        (
+            "POST",
+            "admin",
+            r#"{"url":"http://127.0.0.1:1/unused"}"#,
+            501,
+            r#"{"error":"Only an assigned stream ID is supported"}"#,
+        ),
+        (
+            "POST",
+            "admin",
+            r#"{"stream_id":2}"#,
+            501,
+            r#"{"error":"Local source switch requires worker identity"}"#,
+        ),
+        (
+            "POST",
+            "admin",
+            r#"{"stream_id":2,"url":"http://127.0.0.1:1/ignored","user_agent":"ignored"}"#,
+            501,
+            r#"{"error":"Local source switch requires worker identity"}"#,
+        ),
+    ] {
+        let response = router
+            .clone()
+            .oneshot(
+                axum::http::Request::builder()
+                    .method(method)
+                    .uri("/proxy/ts/change_stream/owned")
+                    .header("authorization", format!("Bearer {actor}"))
+                    .body(Body::from(body))
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), status);
+        assert_eq!(response.headers()["allow"], "OPTIONS, POST");
+        assert_eq!(response.headers()["vary"], "Accept");
+        assert_eq!(response.headers()["content-type"], "application/json");
+        assert_eq!(
+            response.into_body().collect().await.unwrap().to_bytes(),
+            expected
+        );
+    }
+    assert_eq!(resolver.resolutions.load(Ordering::SeqCst), 0);
+    assert!(engine.status().is_empty());
+}
+
+#[tokio::test]
+async fn assigned_source_switch_bounds_authenticated_delayed_body() {
+    let engine = StreamEngine::new(EngineConfig {
+        startup_timeout: Duration::from_millis(25),
+        ..config()
+    })
+    .unwrap()
+    .with_local_source_switches()
+    .unwrap();
+    let resolver = Arc::new(Resolver {
+        source: source("http://127.0.0.1:1/unused".into(), "owned"),
+        resolutions: AtomicUsize::new(0),
+    });
+    let request = axum::http::Request::builder()
+        .method("POST")
+        .uri("/proxy/ts/change_stream/owned")
+        .header("authorization", "Bearer admin")
+        .body(Body::from_stream(futures_util::stream::pending::<
+            Result<Bytes, Infallible>,
+        >()))
+        .unwrap();
+    let response = time::timeout(
+        Duration::from_secs(1),
+        engine.controls_router(resolver.clone()).oneshot(request),
+    )
+    .await
+    .expect("body collection should use the shorter engine deadline")
+    .unwrap();
+    assert_eq!(response.status(), StatusCode::REQUEST_TIMEOUT);
+    assert_eq!(response.headers()["allow"], "OPTIONS, POST");
+    assert_eq!(response.headers()["vary"], "Accept");
+    assert_eq!(
+        response.into_body().collect().await.unwrap().to_bytes(),
+        r#"{"error":"Stream change request body timed out"}"#
+    );
+    assert_eq!(resolver.resolutions.load(Ordering::SeqCst), 0);
+    assert!(engine.status().is_empty());
+}

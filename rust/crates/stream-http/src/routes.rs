@@ -1,7 +1,7 @@
 use crate::StreamEngine;
 use axum::body::Bytes;
 use axum::{
-    extract::{ConnectInfo, Path, Query, State},
+    extract::{ConnectInfo, Path, Query, Request, State},
     http::{header, HeaderMap, StatusCode},
     response::{IntoResponse, Response},
     routing::{get, post},
@@ -33,6 +33,10 @@ impl StreamEngine {
     pub fn controls_router(&self, resolver: Arc<dyn PlaybackResolver>) -> Router {
         Router::new()
             .route("/proxy/ts/status", get(status).head(status_head))
+            .route(
+                "/proxy/ts/change_stream/{channel_id}",
+                post(change_stream).get(change_stream),
+            )
             .route("/internal/proxy/ts/v1/memory", get(memory).head(admin_head))
             .route(
                 "/proxy/ts/stop_client/{channel_id}",
@@ -284,6 +288,87 @@ async fn channel_status(
         Ok(None) => error(PlaybackError::new(404, &format!("Channel {id} not found"))),
         Err(reason) => error(reason),
     }
+}
+
+async fn change_stream(
+    State(app): State<App>,
+    Path(id): Path<String>,
+    Query(query): Query<Vec<(String, String)>>,
+    peer: Option<Extension<ConnectInfo<SocketAddr>>>,
+    incoming: Request,
+) -> Response {
+    let request = match request(id.clone(), query, incoming.headers().clone(), peer) {
+        Ok(request) => request,
+        Err(failure) => return error(failure),
+    };
+    let mut response = if let Err(reason) = app.resolver.authorize_admin(request).await {
+        error(reason)
+    } else if incoming.method() != axum::http::Method::POST {
+        error(PlaybackError {
+            status: 405,
+            body: serde_json::json!({
+                "detail": format!("Method \"{}\" not allowed.", incoming.method()),
+            }),
+        })
+    } else {
+        match change_assigned_stream(&app.engine, &id, incoming).await {
+            Ok(body) => ([(header::CONTENT_TYPE, "application/json")], body).into_response(),
+            Err(reason) => error(reason),
+        }
+    };
+    response.headers_mut().insert(
+        header::ALLOW,
+        axum::http::HeaderValue::from_static("OPTIONS, POST"),
+    );
+    response
+        .headers_mut()
+        .append(header::VARY, axum::http::HeaderValue::from_static("Accept"));
+    response
+}
+
+async fn change_assigned_stream(
+    engine: &StreamEngine,
+    channel: &str,
+    request: Request,
+) -> Result<String, PlaybackError> {
+    let body = tokio::time::timeout(
+        engine.local_source_switch_body_deadline(),
+        axum::body::to_bytes(request.into_body(), 16 * 1024),
+    )
+    .await
+    .map_err(|_| PlaybackError::new(408, "Stream change request body timed out"))?
+    .map_err(|_| PlaybackError::new(400, "Invalid JSON"))?;
+    let data: serde_json::Map<String, serde_json::Value> =
+        serde_json::from_slice(&body).map_err(|_| PlaybackError::new(400, "Invalid JSON"))?;
+    // Original resolves a supplied stream ID and replaces both caller fields.
+    // The Engine receives only that ID, never a caller URL or user agent.
+    let Some(stream_id) = data
+        .get("stream_id")
+        .and_then(serde_json::Value::as_i64)
+        .filter(|id| *id > 0)
+    else {
+        return Err(
+            if data.contains_key("url") || data.contains_key("stream_id") {
+                PlaybackError::new(501, "Only an assigned stream ID is supported")
+            } else {
+                PlaybackError::new(400, "Either url or stream_id must be provided")
+            },
+        );
+    };
+    let worker = engine
+        .local_source_switch_worker()
+        .ok_or_else(|| PlaybackError::new(501, "Local source switch requires worker identity"))?;
+    let url = engine.switch_local_source(channel, stream_id).await?;
+    Ok(changed_stream_response(channel, &url, worker, stream_id))
+}
+
+fn changed_stream_response(channel: &str, url: &str, worker: &str, stream_id: i64) -> String {
+    let channel = serde_json::Value::from(channel);
+    let url = serde_json::Value::from(url);
+    let worker = serde_json::Value::from(worker);
+    format!(
+        r#"{{"message": "Stream changed successfully", "channel": {channel}, "url": {url}, "owner": true, "worker_id": {worker}, "stream_id": {stream_id}}}"#
+    )
 }
 
 async fn stop(
