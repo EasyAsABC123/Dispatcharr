@@ -11,7 +11,7 @@ use dispatcharr_store::{
 };
 use serde_json::{json, Value};
 use sqlx::PgPool;
-use std::sync::Arc;
+use std::{collections::HashSet, sync::Arc};
 use tokio::sync::oneshot;
 use uuid::Uuid;
 
@@ -53,28 +53,65 @@ pub struct Service {
     identity: Arc<()>,
 }
 pub struct PreparedSeries {
-    no_rules: bool,
     origin: Arc<()>,
     task: DirectTask,
+    rules: Vec<PreparedRule>,
+}
+struct PreparedRule {
     title: String,
     tvg: String,
     intents: Vec<Intent>,
 }
+
+const MAX_SERIES_RULES: usize = 8;
+// A Series booking can publish two artwork children. The existing lineage
+// verifier and result writer accept at most 64 child/recording pairs.
+const MAX_SERIES_INTENTS: usize = 32;
+
+struct NormalRule {
+    value: Value,
+    mode: (Option<bool>, SeriesTitle),
+}
 #[derive(Debug)]
 pub struct SeriesReport {
-    no_rules: bool,
     task: Uuid,
     root: Uuid,
     parent: Option<Uuid>,
-    title: String,
-    tvg: String,
     created: u32,
     children: Vec<Uuid>,
     artwork_targets: Vec<(Uuid, i64)>,
     artwork_frames: Vec<crate::recording_artwork_protocol::Message>,
-    caught_insert_errors: Vec<String>,
+    details: Vec<Value>,
 }
 impl SeriesReport {
+    fn new(task: DirectTask) -> Self {
+        Self {
+            task: task.id(),
+            root: task.root(),
+            parent: task.parent(),
+            created: 0,
+            children: vec![],
+            artwork_targets: vec![],
+            artwork_frames: vec![],
+            details: vec![],
+        }
+    }
+
+    fn add_rule(&mut self, tvg: String, title: String, outcome: IntentOutcome) {
+        self.created += outcome.created;
+        self.children.extend(outcome.children);
+        self.artwork_targets.extend(outcome.artwork_targets);
+        self.artwork_frames.extend(outcome.artwork_frames);
+        self.details.extend(
+            outcome
+                .caught_insert_errors
+                .into_iter()
+                .map(|error| json!({"tvg_id":tvg,"status":"error","error":error.message()})),
+        );
+        self.details
+            .push(json!({"tvg_id":tvg,"title":title,"status":"ok","created":outcome.created}));
+    }
+
     #[cfg(test)]
     pub(crate) fn provenance_control(
         parent: &crate::series_protocol::SeriesMessage,
@@ -82,18 +119,16 @@ impl SeriesReport {
         tvg: String,
         frames: Vec<crate::recording_artwork_protocol::Message>,
     ) -> Self {
+        let created = frames.len() as u32;
         Self {
-            no_rules: false,
             task: parent.task_id,
             root: parent.root,
             parent: parent.parent,
-            title,
-            tvg,
-            created: frames.len() as u32,
+            created,
             children: frames.iter().map(|m| m.task_id).collect(),
             artwork_targets: frames.iter().map(|m| (m.task_id, m.recording)).collect(),
             artwork_frames: frames,
-            caught_insert_errors: vec![],
+            details: vec![json!({"tvg_id":tvg,"title":title,"status":"ok","created":created})],
         }
     }
     pub(crate) fn artwork_frames(&self) -> &[crate::recording_artwork_protocol::Message] {
@@ -115,18 +150,7 @@ impl SeriesReport {
         self.children.clone()
     }
     pub fn value(&self) -> Value {
-        if self.no_rules {
-            return crate::series_protocol::KnownReturn::NoRules.value();
-        }
-        let mut details: Vec<Value> = self
-            .caught_insert_errors
-            .iter()
-            .map(|error| json!({"tvg_id":self.tvg,"status":"error","error":error}))
-            .collect();
-        details.push(
-            json!({"tvg_id":self.tvg,"title":self.title,"status":"ok","created":self.created}),
-        );
-        json!({"scheduled":self.created,"details":details})
+        json!({"scheduled":self.created,"details":self.details})
     }
 }
 #[derive(Debug)]
@@ -261,6 +285,43 @@ fn normalize_normal_series_rule(rule: &mut Value) -> Result<(Option<bool>, Serie
     Ok((new_only, title_match))
 }
 
+fn normal_rules(group: &Value) -> Result<Vec<NormalRule>, Error> {
+    if !group.is_object() {
+        return Err(Error::Unsupported);
+    }
+    let mut stations = HashSet::new();
+    let mut selected = Vec::new();
+    for mut value in group["series_rules"]
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter(|entry| entry.is_object())
+        .cloned()
+    {
+        if selected.len() == MAX_SERIES_RULES {
+            return Err(Error::Unsupported);
+        }
+        let mode = normalize_normal_series_rule(&mut value)?;
+        let tvg = small(&value["tvg_id"])?;
+        // Across distinct stations, neither Original's exact-airing key nor
+        // its stable episode key can collide across prepared rule lists.
+        if !stations.insert(tvg.to_owned()) {
+            return Err(Error::Unsupported);
+        }
+        selected.push(NormalRule { value, mode });
+    }
+    Ok(selected)
+}
+
+fn series_offsets(group: &Value) -> Result<(), Error> {
+    if group.get("pre_offset_minutes").and_then(Value::as_i64) != Some(0)
+        || group.get("post_offset_minutes").and_then(Value::as_i64) != Some(0)
+    {
+        return Err(Error::Unsupported);
+    }
+    Ok(())
+}
+
 fn optional_episode(value: Option<&Value>) -> Result<Option<u32>, Error> {
     value
         .filter(|value| !value.is_null())
@@ -350,41 +411,27 @@ impl Service {
         task: DirectTask,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<PreparedSeries, Error> {
-        let mut group = group.as_object().cloned().ok_or(Error::Unsupported)?;
-        let mut rules = group
-            .get("series_rules")
-            .and_then(Value::as_array)
-            .map(|rules| {
-                rules
-                    .iter()
-                    .filter(|rule| rule.is_object())
-                    .cloned()
-                    .collect::<Vec<_>>()
-            })
-            .unwrap_or_default();
-        if rules.is_empty() {
-            return Ok(PreparedSeries {
-                no_rules: true,
-                origin: self.identity.clone(),
-                task,
-                title: String::new(),
-                tvg: String::new(),
-                intents: vec![],
-            });
+        let selected = normal_rules(group)?;
+        let mut rules = Vec::with_capacity(selected.len());
+        if !selected.is_empty() {
+            series_offsets(group)?;
         }
-        let (new_only, title_match) = match rules.as_mut_slice() {
-            [rule] => normalize_normal_series_rule(rule)?,
-            _ => return Err(Error::Unsupported),
-        };
-        group.insert("series_rules".into(), Value::Array(rules));
-        self.prepare_series_mode(
-            &Value::Object(group),
-            now,
+        let mut intents = 0;
+        for rule in selected {
+            let prepared = self
+                .prepare_series_rule(&rule.value, now, owner.clone(), rule.mode)
+                .await?;
+            intents += prepared.intents.len();
+            if intents > MAX_SERIES_INTENTS {
+                return Err(Error::Unsupported);
+            }
+            rules.push(prepared);
+        }
+        Ok(PreparedSeries {
+            origin: self.identity.clone(),
             task,
-            owner,
-            (new_only, title_match),
-        )
-        .await
+            rules,
+        })
     }
     pub async fn prepare_series(
         &self,
@@ -393,34 +440,34 @@ impl Service {
         task: DirectTask,
         owner: Arc<dyn Send + Sync>,
     ) -> Result<PreparedSeries, Error> {
-        self.prepare_series_mode(group, now, task, owner, (None, SeriesTitle::Exact))
-            .await
+        series_offsets(group)?;
+        let rules = group["series_rules"]
+            .as_array()
+            .filter(|v| v.len() == 1)
+            .ok_or(Error::Unsupported)?;
+        let rule = self
+            .prepare_series_rule(&rules[0], now, owner, (None, SeriesTitle::Exact))
+            .await?;
+        Ok(PreparedSeries {
+            origin: self.identity.clone(),
+            task,
+            rules: vec![rule],
+        })
     }
 
-    async fn prepare_series_mode(
+    async fn prepare_series_rule(
         &self,
-        group: &Value,
+        value: &Value,
         now: DateTime<Utc>,
-        task: DirectTask,
         owner: Arc<dyn Send + Sync>,
         (new_only, title_match): (Option<bool>, SeriesTitle),
-    ) -> Result<PreparedSeries, Error> {
+    ) -> Result<PreparedRule, Error> {
         let title_mode = match title_match {
             SeriesTitle::Exact => "exact",
             SeriesTitle::Contains => "contains",
         };
         let expected_mode = if new_only.is_some() { "new" } else { "all" };
-        if group.get("pre_offset_minutes").and_then(Value::as_i64) != Some(0)
-            || group.get("post_offset_minutes").and_then(Value::as_i64) != Some(0)
-        {
-            return Err(Error::Unsupported);
-        }
-        let rules = group
-            .get("series_rules")
-            .and_then(Value::as_array)
-            .filter(|v| v.len() == 1)
-            .ok_or(Error::Unsupported)?;
-        let rule = rules[0].as_object().ok_or(Error::Unsupported)?;
+        let rule = value.as_object().ok_or(Error::Unsupported)?;
         let keys = [
             "title",
             "tvg_id",
@@ -436,17 +483,15 @@ impl Service {
         {
             return Err(Error::Unsupported);
         }
-        let title = small(&rules[0]["title"])?.to_owned();
-        let tvg = small(&rules[0]["tvg_id"])?.to_owned();
+        let title = small(&value["title"])?.to_owned();
+        let tvg = small(&value["tvg_id"])?.to_owned();
         // Source strips these rule values; this first domain refuses noncanonical
         // spacing rather than silently accepting a broader normalization domain.
         if title.trim() != title || tvg.trim() != tvg {
             return Err(Error::Unsupported);
         }
-        let channel = rules[0]["channel_id"].as_i64().ok_or(Error::Unsupported)?;
-        let source = rules[0]["epg_source_id"]
-            .as_i64()
-            .ok_or(Error::Unsupported)?;
+        let channel = value["channel_id"].as_i64().ok_or(Error::Unsupported)?;
+        let source = value["epg_source_id"].as_i64().ok_or(Error::Unsupported)?;
         let scope = SeriesScope::new(channel, source, tvg.clone(), title.clone(), title_match)
             .ok_or(Error::Unsupported)?;
         let snapshot = recording_schedule::series_snapshot(self.pool.clone(), scope, now, owner)
@@ -509,10 +554,7 @@ impl Service {
             &existing,
         )
         .map_err(|_| Error::Unsupported)?;
-        Ok(PreparedSeries {
-            no_rules: false,
-            origin: self.identity.clone(),
-            task,
+        Ok(PreparedRule {
             title,
             tvg,
             intents,
@@ -709,42 +751,21 @@ impl Service {
         }
         let task = prepared.task;
         tokio::spawn(async move {
-            if prepared.no_rules {
-                return Ok(SeriesReport {
-                    no_rules: true,
-                    task: task.id(),
-                    root: task.root(),
-                    parent: task.parent(),
-                    title: String::new(),
-                    tvg: String::new(),
-                    created: 0,
-                    children: vec![],
-                    artwork_targets: vec![],
-                    artwork_frames: vec![],
-                    caught_insert_errors: vec![],
-                });
+            let mut report = SeriesReport::new(task);
+            if prepared.rules.is_empty() {
+                return Ok(report);
             }
-            let outcome = self
-                .execute_intents(prepared.intents, task, owner.clone())
-                .await?;
-            self.event(Some(outcome.created), owner).await?;
-            Ok(SeriesReport {
-                no_rules: false,
-                task: task.id(),
-                root: task.root(),
-                parent: task.parent(),
-                title: prepared.title,
-                tvg: prepared.tvg,
-                created: outcome.created,
-                children: outcome.children,
-                artwork_targets: outcome.artwork_targets,
-                artwork_frames: outcome.artwork_frames,
-                caught_insert_errors: outcome
-                    .caught_insert_errors
-                    .into_iter()
-                    .map(|e| e.message().to_owned())
-                    .collect(),
-            })
+            for PreparedRule {
+                title,
+                tvg,
+                intents,
+            } in prepared.rules
+            {
+                let outcome = self.execute_intents(intents, task, owner.clone()).await?;
+                report.add_rule(tvg, title, outcome);
+            }
+            self.event(Some(report.created), owner).await?;
+            Ok(report)
         })
         .await
         .map_err(|_| Error::Supervisor)?
@@ -795,20 +816,19 @@ mod caught_insert_tests {
             if case["name"] == "series-SQL-P0001" {
                 let value = &case["backend"]["result"];
                 let report = SeriesReport {
-                    no_rules: false,
                     task: Uuid::parse_str(case["backend"]["task_id"].as_str().unwrap()).unwrap(),
                     root: Uuid::parse_str(case["backend"]["task_id"].as_str().unwrap()).unwrap(),
                     parent: None,
-                    title: "Owned Exact Series".into(),
-                    tvg: "rust.owned.configured".into(),
                     created: 0,
                     children: Vec::new(),
                     artwork_targets: Vec::new(),
                     artwork_frames: Vec::new(),
-                    caught_insert_errors: vec![value["details"][0]["error"]
-                        .as_str()
-                        .unwrap()
-                        .to_owned()],
+                    details: vec![
+                        json!({"tvg_id":"rust.owned.configured","status":"error",
+                            "error":value["details"][0]["error"].as_str().unwrap()}),
+                        json!({"tvg_id":"rust.owned.configured","title":"Owned Exact Series",
+                            "status":"ok","created":0}),
+                    ],
                 };
                 assert_eq!(report.value(), *value);
                 assert_eq!(case["event_delta"].as_array().unwrap().len(), 1);
@@ -1005,6 +1025,91 @@ mod normal_defaults_controls {
                 Err(Error::Unsupported)
             ),
             "legacy preclaim shape stays unchanged"
+        );
+    }
+
+    fn pinned_rule(station: &str, title: &str, channel_id: i64) -> Value {
+        json!({"tvg_id":station,"title":title,"mode":"all","title_mode":"exact",
+            "channel_id":channel_id,"epg_source_id":1,
+            "description":"","description_mode":"contains"})
+    }
+
+    #[test]
+    fn disjoint_same_source_rules_preserve_order_and_reject_overlaps_before_snapshot() {
+        let first = pinned_rule("test.channel.1", "Show A", 1);
+        let second = pinned_rule("test.channel.2", "Show B", 2);
+        let group = json!({"series_rules":[null,first,second]});
+        let selected = normal_rules(&group).unwrap();
+        assert_eq!(selected.len(), 2);
+        assert_eq!(
+            selected[0].value["epg_source_id"],
+            selected[1].value["epg_source_id"]
+        );
+        assert_eq!(selected[0].value["channel_id"], 1);
+        assert_eq!(selected[1].value["channel_id"], 2);
+        assert_eq!(selected[0].value["title"], "Show A");
+        assert_eq!(selected[1].value["title"], "Show B");
+
+        let repeated_station = pinned_rule(" test.channel.1 ", "Unqualified overlap", 9);
+        assert!(matches!(
+            normal_rules(&json!({"series_rules":[first,repeated_station]})),
+            Err(Error::Unsupported)
+        ));
+        let too_many = (0..=MAX_SERIES_RULES)
+            .map(|i| pinned_rule(&format!("station.{i}"), "Show", 1))
+            .collect::<Vec<_>>();
+        assert!(matches!(
+            normal_rules(&json!({"series_rules":too_many})),
+            Err(Error::Unsupported)
+        ));
+    }
+
+    #[test]
+    fn aggregate_series_keeps_result_details_and_child_order_under_one_parent() {
+        let root = Uuid::new_v4();
+        let parent = Uuid::new_v4();
+        let message = crate::series_protocol::SeriesMessage {
+            task_id: parent,
+            root,
+            parent: Some(root),
+        };
+        let mut report = SeriesReport::new(DirectTask::observed_series(&message).unwrap());
+        let mut expected_children = Vec::new();
+        for (tv, title, created) in [
+            ("test.channel.1", "Show A", 1),
+            ("test.channel.2", "Show B", 1),
+            ("test.channel.3", "Repeat", 0),
+        ] {
+            let children = (0..(2 * created))
+                .map(|_| Uuid::new_v4())
+                .collect::<Vec<_>>();
+            expected_children.extend_from_slice(&children);
+            let artwork_targets = children
+                .iter()
+                .map(|id| (*id, i64::from(created)))
+                .collect();
+            report.add_rule(
+                tv.into(),
+                title.into(),
+                IntentOutcome {
+                    created,
+                    children,
+                    artwork_targets,
+                    artwork_frames: vec![],
+                    caught_insert_errors: vec![],
+                },
+            );
+        }
+        assert!(report.matches(&message));
+        assert_eq!(report.children(), expected_children);
+        assert_eq!(report.artwork_targets().len(), 4);
+        assert_eq!(
+            report.value(),
+            json!({"scheduled":2,"details":[
+                {"tvg_id":"test.channel.1","title":"Show A","status":"ok","created":1},
+                {"tvg_id":"test.channel.2","title":"Show B","status":"ok","created":1},
+                {"tvg_id":"test.channel.3","title":"Repeat","status":"ok","created":0}
+            ]})
         );
     }
 
