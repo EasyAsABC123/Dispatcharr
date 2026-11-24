@@ -900,9 +900,30 @@ fn outside_range(start: u64, end: u64, total: u64) -> bool {
     start >= total || start > end
 }
 
+// Original tests the parsed start against the known file length before
+// touching the end. On the fast u64 path this is already resolved by
+// range_bounds. Only the failed tuple needs the Python spelling/overflow path.
+fn source_start_is_outside(value: &str, total: u64) -> bool {
+    let Some((start, _)) = value
+        .strip_prefix("bytes=")
+        .and_then(|value| value.split_once('-'))
+    else {
+        return false;
+    };
+    let Some(start) = dispatcharr_ingest_core::source_integer_literal(start) else {
+        return false;
+    };
+    // A minus cannot occur before the split delimiter. Every remaining
+    // overflow here is a positive Python integer greater than total.
+    start.parse::<u64>().map_or(true, |start| start >= total)
+}
+
 pub(crate) fn range_is_unsatisfiable(value: &str, total: u64) -> bool {
     total > 0
-        && range_bounds(value, total).is_some_and(|(start, end)| outside_range(start, end, total))
+        && range_bounds(value, total).map_or_else(
+            || source_start_is_outside(value, total),
+            |(start, end)| outside_range(start, end, total),
+        )
 }
 
 // Literal compatibility port of RedisBackedVODConnection._validate_range_header.
@@ -910,6 +931,7 @@ fn validate_range(value: &str, total: u64) -> Option<String> {
     match range_bounds(value, total) {
         Some((start, end)) if outside_range(start, end, total) => None,
         Some((start, end)) => Some(format!("bytes={start}-{end}")),
+        None if source_start_is_outside(value, total) => None,
         None => Some(value.into()),
     }
 }
@@ -1725,6 +1747,41 @@ mod existing_range_admission {
             assert_eq!(validate_range(range, 100).as_deref(), normalized);
             assert!(!range_is_unsatisfiable(range, 0));
         }
+    }
+
+    #[test]
+    fn source_rejects_an_outside_start_even_with_an_unparsed_end() {
+        for range in [
+            "bytes=100-invalid",
+            "bytes=18446744073709551616-",
+            "bytes=18446744073709551616-invalid",
+            "bytes=+1_00-invalid",
+            "bytes= 100-invalid",
+        ] {
+            assert!(range_is_unsatisfiable(range, 100), "{range}");
+            assert_eq!(validate_range(range, 100), None, "{range}");
+            assert!(
+                !range_is_unsatisfiable(range, 0),
+                "length is unknown without a previous reply"
+            );
+        }
+        for range in [
+            "bytes=99-invalid",
+            "bytes=invalid-",
+            "bytes=+1_0-invalid",
+            "Bytes=18446744073709551616-",
+            "bytes=18446744073709551616",
+        ] {
+            assert!(!range_is_unsatisfiable(range, 100), "{range}");
+            assert_eq!(
+                validate_range(range, 100).as_deref(),
+                Some(range),
+                "{range}"
+            );
+        }
+        let too_long = format!("bytes={}-", "9".repeat(4301));
+        assert!(!range_is_unsatisfiable(&too_long, 100));
+        assert_eq!(validate_range(&too_long, 100), Some(too_long));
     }
 
     #[tokio::test]
