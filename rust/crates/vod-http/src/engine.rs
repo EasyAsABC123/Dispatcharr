@@ -7,7 +7,7 @@ use crate::{
 use axum::{
     body::Body,
     extract::{ConnectInfo, Path, State},
-    http::{header, HeaderMap, Request, StatusCode},
+    http::{header, HeaderMap, HeaderValue, Request, StatusCode},
     response::{IntoResponse, Response},
     routing::get,
     Router,
@@ -356,24 +356,17 @@ impl VodEngine {
         } else {
             StatusCode::OK
         };
+        let content_type = vod_content_type(upstream.headers(), &ticket.session.candidate.url);
         let metadata = [
             ("content_length", total.to_string()),
-            (
-                "content_type",
-                upstream
-                    .headers()
-                    .get("content-type")
-                    .and_then(|v| v.to_str().ok())
-                    .unwrap_or("")
-                    .into(),
-            ),
+            ("content_type", content_type.to_str().unwrap_or("").into()),
             ("final_url", upstream.url().as_str().into()),
         ];
         self.inner
             .sessions
             .update(&ticket.session, &metadata)
             .await?;
-        let headers = successful_headers(upstream.headers(), original_range, total)?;
+        let headers = successful_headers(content_type, original_range, total)?;
         // Preserve Python's Range response contract, including its documented
         // suffix/conditional quirks. Correcting these is outside the 1:1 port.
         // A single bounded channel decouples cancellation from downstream body
@@ -920,12 +913,53 @@ fn validate_range(value: &str, total: u64) -> Option<String> {
         None => Some(value.into()),
     }
 }
+// Original uses the provider reply header when present, then the originally
+// resolved stream path. A redirect's destination or URL query does not change
+// which explicit provider extension determines the fallback media type.
+fn vod_content_type(source: &HeaderMap, provider_url: &str) -> HeaderValue {
+    if let Some(value) = source
+        .get(header::CONTENT_TYPE)
+        .filter(|value| !value.is_empty())
+    {
+        return value.clone();
+    }
+    let mime = provider_extension_mime(provider_url).unwrap_or("video/mp4");
+    HeaderValue::from_static(mime)
+}
+
+fn provider_extension_mime(provider_url: &str) -> Option<&'static str> {
+    let url = url::Url::parse(provider_url).ok()?;
+    let leaf = url.path().rsplit('/').next()?;
+    // urllib.parse.urlparse separates the last segment's semicolon params.
+    let file = leaf.split(';').next()?;
+    let (stem, extension) = file.rsplit_once('.')?;
+    if stem.bytes().all(|byte| byte == b'.') {
+        return None;
+    }
+    let mime = match extension.to_ascii_lowercase().as_str() {
+        "mp4" => "video/mp4",
+        "mkv" => "video/x-matroska",
+        "avi" => "video/x-msvideo",
+        "mov" => "video/quicktime",
+        "wmv" => "video/x-ms-wmv",
+        "flv" => "video/x-flv",
+        "webm" => "video/webm",
+        "m4v" => "video/x-m4v",
+        "3gp" => "video/3gpp",
+        "ts" => "video/mp2t",
+        "m3u8" => "application/x-mpegURL",
+        "mpg" | "mpeg" => "video/mpeg",
+        _ => return None,
+    };
+    Some(mime)
+}
+
 fn successful_headers(
-    source: &HeaderMap,
+    content_type: HeaderValue,
     range: Option<&str>,
     total: u64,
 ) -> Result<HeaderMap, StoreError> {
-    let mut headers = compatibility_headers(source, range, total);
+    let mut headers = compatibility_headers(content_type, range, total);
     headers.insert(
         "x-worker-id",
         crate::worker_identity::current().map_err(|_| {
@@ -937,7 +971,7 @@ fn successful_headers(
     );
     Ok(headers)
 }
-fn compatibility_headers(source: &HeaderMap, range: Option<&str>, total: u64) -> HeaderMap {
+fn compatibility_headers(content_type: HeaderValue, range: Option<&str>, total: u64) -> HeaderMap {
     let mut headers = HeaderMap::new();
     for (name, value) in [
         ("cache-control", "no-cache"),
@@ -951,13 +985,7 @@ fn compatibility_headers(source: &HeaderMap, range: Option<&str>, total: u64) ->
             axum::http::HeaderValue::from_static(value),
         );
     }
-    headers.insert(
-        "content-type",
-        source
-            .get("content-type")
-            .cloned()
-            .unwrap_or_else(|| axum::http::HeaderValue::from_static("video/mp4")),
-    );
+    headers.insert(header::CONTENT_TYPE, content_type);
     if total > 0 {
         headers.insert(
             "accept-ranges",
@@ -1528,8 +1556,9 @@ mod header_tests {
         let mut provider = HeaderMap::new();
         provider.insert("content-type", HeaderValue::from_static("video/mp4"));
         provider.insert("x-worker-id", HeaderValue::from_static("provider-spoof"));
-        let full = super::successful_headers(&provider, None, 64).unwrap();
-        let range = super::successful_headers(&provider, Some("bytes=0-15"), 64).unwrap();
+        let content_type = super::vod_content_type(&provider, "http://fixture.invalid/archive.mkv");
+        let full = super::successful_headers(content_type.clone(), None, 64).unwrap();
+        let range = super::successful_headers(content_type, Some("bytes=0-15"), 64).unwrap();
         assert_eq!(
             full["x-worker-id"],
             crate::worker_identity::current().unwrap()
@@ -1566,6 +1595,51 @@ mod header_tests {
             .headers()
             .contains_key("x-worker-id"));
     }
+    #[test]
+    fn missing_provider_mime_uses_original_resolved_extension_for_full_and_range() {
+        use axum::http::{header::CONTENT_TYPE, HeaderMap, HeaderValue};
+
+        let mut provider = HeaderMap::new();
+        for (url, expected) in [
+            (
+                "http://fixture.invalid/item.MKV?query=.mp4",
+                "video/x-matroska",
+            ),
+            ("http://fixture.invalid/item.WEBM;type=unique", "video/webm"),
+            ("http://fixture.invalid/item.ts#source.webm", "video/mp2t"),
+            ("http://fixture.invalid/item.m3u8", "application/x-mpegURL"),
+            ("http://fixture.invalid/item.mpeg", "video/mpeg"),
+            ("http://fixture.invalid/item.unknown?q=.mkv", "video/mp4"),
+            ("http://fixture.invalid/.mkv", "video/mp4"),
+            ("http://fixture.invalid/...", "video/mp4"),
+        ] {
+            let resolved = super::vod_content_type(&provider, url);
+            assert_eq!(resolved, expected);
+            assert_eq!(
+                super::successful_headers(resolved.clone(), None, 32).unwrap()[CONTENT_TYPE],
+                expected
+            );
+            let ranged = super::successful_headers(resolved, Some("bytes=8-15"), 32).unwrap();
+            assert_eq!(ranged[CONTENT_TYPE], expected);
+            assert_eq!(ranged["content-range"], "bytes 8-15/32");
+        }
+
+        let provider_url = "http://fixture.invalid/item.mkv";
+        provider.insert(CONTENT_TYPE, HeaderValue::from_static(""));
+        assert_eq!(
+            super::vod_content_type(&provider, provider_url),
+            "video/x-matroska"
+        );
+        provider.insert(
+            CONTENT_TYPE,
+            HeaderValue::from_static("application/octet-stream"),
+        );
+        assert_eq!(
+            super::vod_content_type(&provider, provider_url),
+            "application/octet-stream"
+        );
+    }
+
     use super::{iri_location, session_redirect};
     use crate::VodRequest;
     use dispatcharr_contracts::PlaybackRequest;
