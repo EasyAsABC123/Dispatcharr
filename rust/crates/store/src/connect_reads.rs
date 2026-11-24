@@ -31,6 +31,7 @@ mod test_integration;
 // The quote covers nested rows, JSON-escaped strings, field names and separators.
 const RESPONSE_LIMIT: i64 = 1024 * 1024;
 const INTEGRATIONS_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
+const LOGS_ALLOW: &str = "GET, HEAD, OPTIONS";
 const LIST: &str = r#"
 WITH size_bound AS (
     SELECT (SELECT COALESCE(SUM(octet_length(to_json(i.name)::text)::bigint
@@ -341,7 +342,11 @@ async fn fixed_json_logs(
             .await
             .into_response()
     } else {
-        unacceptable_log_media()
+        let mut rejection = unacceptable_log_media();
+        rejection
+            .headers_mut()
+            .insert(header::ALLOW, HeaderValue::from_static(LOGS_ALLOW));
+        rejection
     };
     response
         .headers_mut()
@@ -596,7 +601,7 @@ fn fixed_json_response_allow(request: &ConnectRequest) -> Option<&'static str> {
                 "/api/connect/logs.json" | "/api/connect/logs.json/"
             ) =>
         {
-            Some("GET, HEAD, OPTIONS")
+            Some(LOGS_ALLOW)
         }
         _ => None,
     }
@@ -819,6 +824,8 @@ mod tests {
                 assert_eq!(response.headers()[header::VARY], "Accept");
                 if code == StatusCode::NOT_ACCEPTABLE {
                     assert_eq!(response.headers()[header::CONTENT_TYPE], "application/json");
+                    assert_eq!(response.headers()[header::ALLOW], LOGS_ALLOW);
+                    assert_eq!(response.headers().get_all(header::ALLOW).iter().count(), 1);
                     assert!(!response.headers().contains_key(header::WWW_AUTHENTICATE));
                     let body = to_bytes(response.into_body(), 57).await.unwrap();
                     assert_eq!(

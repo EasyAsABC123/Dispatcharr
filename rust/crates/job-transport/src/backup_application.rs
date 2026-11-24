@@ -114,16 +114,27 @@ pub fn project_status(metadata: Option<Metadata>) -> Result<Value, StoreError> {
         State::Started => Ok(json!({"state":"started"})),
         State::Retry => Ok(json!({"state":"retry"})),
         State::Success => {
-            let result = meta.result.as_object().ok_or(StoreError::Unsupported(
-                "Non-object backup result grammar is not migrated",
-            ))?;
-            if result.get("status") == Some(&json!("completed")) {
-                Ok(json!({"state":"completed","result":meta.result}))
-            } else {
-                Ok(
-                    json!({"state":"failed","error":result.get("error").cloned().unwrap_or(json!("Unknown error"))}),
-                )
-            }
+            let kind = match &meta.result {
+                Value::Object(result) => {
+                    return if result.get("status") == Some(&json!("completed")) {
+                        Ok(json!({"state":"completed","result":meta.result}))
+                    } else {
+                        Ok(
+                            json!({"state":"failed","error":result.get("error").cloned().unwrap_or(json!("Unknown error"))}),
+                        )
+                    };
+                }
+                Value::Null => "NoneType",
+                Value::Bool(_) => "bool",
+                Value::Number(value) if value.is_f64() => "float",
+                Value::Number(_) => "int",
+                Value::String(_) => "str",
+                Value::Array(_) => "list",
+            };
+            Err(StoreError::StatusBody(
+                500,
+                json!({"detail":format!("Failed to get task status: '{kind}' object has no attribute 'get'")}),
+            ))
         }
         State::Failure | State::Revoked => Err(StoreError::Unsupported(
             "Raised backup task exception grammar is not migrated",
@@ -199,16 +210,40 @@ mod tests {
         );
     }
     #[test]
-    fn unobserved_nonobject_success_and_tagged_values_keep_explicit_gaps() {
+    fn captured_source_nonobject_success_errors_use_real_decoder_and_projection() {
+        let source: Value = serde_json::from_str(include_str!(
+            "../../store/src/backup_jobs_source_vectors.json"
+        ))
+        .unwrap();
+        let seed = vectors();
+        let id = Uuid::parse_str(seed["actual_backend"]["task_id"].as_str().unwrap()).unwrap();
+        let mut observed = 0;
+        for row in source["vectors"].as_array().unwrap() {
+            if row["kind"] != "success" || row["result"].is_object() {
+                continue;
+            }
+            let mut backend = seed["actual_backend"].clone();
+            backend["result"] = row["result"].clone();
+            let decoded =
+                crate::decode::decode(&serde_json::to_vec(&backend).unwrap(), id).unwrap();
+            assert!(matches!(decoded.state, State::Success));
+            assert!(decoded.tagged_values.is_empty());
+            match project_status(Some(decoded)) {
+                Err(StoreError::StatusBody(code, body)) => {
+                    assert_eq!(code, row["expected"]["status"].as_u64().unwrap() as u16);
+                    assert_eq!(body, row["expected"]["body"], "{}", row["name"]);
+                }
+                other => panic!("captured Source error projection differs: {other:?}"),
+            }
+            observed += 1;
+        }
+        assert_eq!(observed, 3);
+    }
+
+    #[test]
+    fn tagged_success_still_keeps_explicit_gap() {
         let v = vectors();
         let id = Uuid::parse_str(v["actual_backend"]["task_id"].as_str().unwrap()).unwrap();
-        let mut metadata =
-            crate::decode::decode(&serde_json::to_vec(&v["actual_backend"]).unwrap(), id).unwrap();
-        metadata.result = json!([]);
-        assert!(matches!(
-            project_status(Some(metadata)),
-            Err(StoreError::Unsupported(_))
-        ));
         let mut metadata =
             crate::decode::decode(&serde_json::to_vec(&v["actual_backend"]).unwrap(), id).unwrap();
         metadata.tagged_values.push(crate::decode::TaggedValue {
