@@ -138,10 +138,14 @@ fn supplied_auth(peer: SocketAddr, headers: &HeaderMap) -> PlaybackRequest {
                 .map(|(key, value)| (key.as_str(), value.as_bytes())),
         ),
     };
-    // Pinned Source uses SimpleJWT Bearer and X-API-Key. Its REST views use AllowAny
+    // Pinned Source uses SimpleJWT Bearer and ApiKey/X-API-Key. Its REST views use AllowAny
     // after authenticating supplied credentials; there is no signed role gate.
     request.headers.retain(|(name, value)| {
-        name != "authorization" || value.split_whitespace().next() == Some("Bearer")
+        name != "authorization"
+            || value
+                .split_whitespace()
+                .next()
+                .is_some_and(|scheme| scheme == "Bearer" || scheme.eq_ignore_ascii_case("ApiKey"))
     });
     request
 }
@@ -174,9 +178,7 @@ fn success(uri: &Uri, headers: &HeaderMap, renderer: Renderer, schema: bool) -> 
     } else if uri.path() == "/api/redoc/" {
         ([(header::CONTENT_TYPE, "text/html; charset=utf-8")], REDOC).into_response()
     } else {
-        let cookie = headers
-            .get(header::COOKIE)
-            .and_then(|value| value.to_str().ok());
+        let cookie = crate::admin_channelgroup::cookie(headers, "csrftoken");
         let (_, masked, set_cookie) = dispatcharr_store::source_browsable_csrf(cookie);
         (
             [
@@ -262,6 +264,72 @@ mod tests {
             )
             .await
             .unwrap()
+    }
+
+    #[test]
+    fn source_api_key_authorization_is_preserved_for_authentication() {
+        let peer = SocketAddr::from(([127, 0, 0, 1], 9192));
+        for supplied in [
+            "ApiKey owned-key",
+            "apikey revoked-key",
+            "APIKEY inactive-key",
+            "Bearer invalid-token",
+        ] {
+            let mut headers = HeaderMap::new();
+            headers.insert(
+                header::AUTHORIZATION,
+                HeaderValue::from_str(supplied).unwrap(),
+            );
+            assert_eq!(
+                supplied_auth(peer, &headers).header("authorization"),
+                Some(supplied)
+            );
+        }
+        let mut headers = HeaderMap::new();
+        headers.insert(
+            header::AUTHORIZATION,
+            HeaderValue::from_static("Basic ignored"),
+        );
+        headers.insert("x-api-key", HeaderValue::from_static("owned-header-key"));
+        let request = supplied_auth(peer, &headers);
+        assert_eq!(request.header("authorization"), None);
+        assert_eq!(request.header("x-api-key"), Some("owned-header-key"));
+    }
+
+    #[tokio::test]
+    async fn swagger_reuses_browser_csrf_secret_with_fresh_masks() {
+        let secret = "abcdefghijklmnopqrstuvwxyz012345";
+        let cookie = format!("sessionid=owned-session; csrftoken={secret}; theme=dark");
+        let mut masks = Vec::new();
+        for _ in 0..2 {
+            let response = fixture()
+                .oneshot(
+                    Request::builder()
+                        .uri("/api/swagger/")
+                        .header(header::COOKIE, &cookie)
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), StatusCode::OK);
+            let set_cookie = response.headers()[header::SET_COOKIE].to_str().unwrap();
+            assert!(set_cookie.starts_with(&format!("csrftoken={secret};")));
+            let raw = to_bytes(response.into_body(), 8192).await.unwrap();
+            let body = std::str::from_utf8(&raw).unwrap();
+            // Locate the sole actual rendered CSRF JavaScript value without
+            // depending on any other template bytes or generated entropy.
+            let marker = "X-CSRFTOKEN";
+            let token_area = body.split_once(marker).unwrap().1;
+            let masked = token_area
+                .split('\"')
+                .find(|part| part.len() == 64 && part.bytes().all(|b| b.is_ascii_alphanumeric()))
+                .unwrap();
+            let (unmasked, _, _) = dispatcharr_store::source_browsable_csrf(Some(masked));
+            assert_eq!(unmasked, secret);
+            masks.push(masked.to_owned());
+        }
+        assert_ne!(masks[0], masks[1]);
     }
 
     #[tokio::test]
