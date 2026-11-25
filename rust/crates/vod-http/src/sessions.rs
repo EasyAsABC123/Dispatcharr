@@ -717,24 +717,27 @@ impl SessionPool {
                         cleanup_needed: true,
                     });
                 }
-                scope
-                    .enter_current_or_idle(
-                        &body,
-                        admission,
-                        source
-                            .candidates
-                            .iter()
-                            .find(|candidate| candidate.profile_id == scope.profile_id())
-                            .map(|candidate| candidate.max_streams),
-                    )
-                    .await
-                    .map_err(|error| {
-                        if let recovery::Error::Admission(error) = error {
-                            admission_error(error, limit)
-                        } else {
-                            scope_error(error)
-                        }
-                    })?;
+                let profile_max = source
+                    .candidates
+                    .iter()
+                    .find(|candidate| candidate.profile_id == scope.profile_id())
+                    .map(|candidate| candidate.max_streams);
+                let entered = if requested_alias {
+                    scope
+                        .enter_changed_id(&body, admission, profile_max, id)
+                        .await
+                } else {
+                    scope
+                        .enter_current_or_idle(&body, admission, profile_max)
+                        .await
+                };
+                entered.map_err(|error| {
+                    if let recovery::Error::Admission(error) = error {
+                        admission_error(error, limit)
+                    } else {
+                        scope_error(error)
+                    }
+                })?;
                 let ordinary = if previous.authenticated_restart {
                     Some(
                         scope
@@ -1307,6 +1310,11 @@ impl SessionPool {
         // entry on their exact-ID and signed-claim paths.
         if request.session_id.is_some()
             && signed_alias.is_none()
+            && !(source.limit_policy.terminate_on_limit_exceeded
+                && source
+                    .user
+                    .as_ref()
+                    .is_some_and(|user| user.stream_limit > 0))
             && self
                 .inner
                 .recovery
@@ -1831,6 +1839,9 @@ fn monitor_scope(id: String, scope: LocalScope, pool: Weak<Inner>, authenticated
 fn scope_error(error: recovery::Error) -> dispatcharr_store::StoreError {
     match error {
         recovery::Error::ProfileFull => provider_full(),
+        recovery::Error::RequestedIdOccupied => dispatcharr_store::StoreError::Unsupported(
+            "Legacy or cross-worker VOD session adoption is not implemented",
+        ),
         recovery::Error::StillOwned | recovery::Error::PartialState => {
             dispatcharr_store::StoreError::Unsupported(
                 "VOD recovery state requires a separately verified transition",

@@ -130,6 +130,9 @@ impl Drop for Proxy {
     }
 }
 async fn proxy(kind: &str, drop_reply: bool) -> Proxy {
+    proxy_at(kind, drop_reply, false).await
+}
+async fn proxy_at(kind: &str, drop_reply: bool, before_command: bool) -> Proxy {
     let extract = |source: &str, name: &str| {
         source
             .split_once(&format!("const {name}: &str = r#\""))
@@ -148,6 +151,8 @@ async fn proxy(kind: &str, drop_reply: bool) -> Proxy {
             include_str!("../src/generation_profile_handoff.rs"),
             "COMMIT",
         )
+    } else if kind == "ENTER_CURRENT" {
+        extract(include_str!("../src/generation_scope.rs"), kind)
     } else {
         extract(include_str!("../src/generation_idle.rs"), kind)
     };
@@ -169,8 +174,11 @@ async fn proxy(kind: &str, drop_reply: bool) -> Proxy {
                             let command=frame(&mut client,&mut input).await?;let args=arguments(&command).ok_or(std::io::ErrorKind::InvalidData)?;
                             let target=args.first().is_some_and(|x|x==b"EVALSHA")&&args.get(1).is_some_and(|x|x==hash.as_bytes())
                                 ||args.first().is_some_and(|x|x==b"EVAL")&&args.get(1).is_some_and(|x|x==script.as_bytes());
+                            if target && before_command && count.fetch_add(1, Ordering::SeqCst)==0 {
+                                ready.wait_for(|x|*x).await.map_err(|_|std::io::ErrorKind::BrokenPipe)?;
+                            }
                             server.write_all(&command).await?;let response=frame(&mut server,&mut output).await?;
-                            if target&&!response.starts_with(b"-NOSCRIPT") {
+                            if target&&!before_command&&!response.starts_with(b"-NOSCRIPT") {
                                 let n=count.fetch_add(1,Ordering::SeqCst);
                                 if n==0 {ready.wait_for(|x|*x).await.map_err(|_|std::io::ErrorKind::BrokenPipe)?;if drop_reply{return Ok::<(),std::io::Error>(());}}
                             }
@@ -247,6 +255,108 @@ async fn empty(
         .unwrap();
     f.empty().await;
 }
+#[tokio::test]
+#[ignore = "requires the owned Redis recovery fixture and loopback command barrier"]
+async fn changed_id_entry_denies_requested_state_created_after_selection() {
+    use scoped::functional::prototype::Error;
+    use std::collections::BTreeMap;
+    // ENTER_CURRENT can attach immediately if the retained generation turns
+    // active. CLAIM separately linearizes a transition from retained idle.
+    // At each boundary insert a stop, a same-user row and a foreign row.
+    for phase in ["ENTER_CURRENT", "CLAIM"] {
+        for requested_user in [None, Some("prototype-user"), Some("foreign-viewer")] {
+            let p = proxy_at(phase, false, true).await;
+            let (mut f, scope) = if phase == "ENTER_CURRENT" {
+                let (f, scope, _) = scoped::initial_with_connection(Some(&p.url)).await;
+                (f, scope)
+            } else {
+                begin(&p).await
+            };
+            let requested = uuid::Uuid::new_v4().simple().to_string();
+            let row = format!("vod_persistent_connection:{requested}");
+            let stop = format!("vod_proxy:client:{requested}:stop");
+            let metadata = f.metadata();
+            let ledger = f.ledger();
+            let counter = f.counter();
+            assert!(!f.redis.exists::<_, bool>(&row).await.unwrap());
+            assert!(!f.redis.exists::<_, bool>(&stop).await.unwrap());
+            let before_row: BTreeMap<String, String> = f.redis.hgetall(&metadata).await.unwrap();
+            let before_ledger: BTreeMap<String, String> = f.redis.hgetall(&ledger).await.unwrap();
+            let before_counter: i64 = f.redis.get(&counter).await.unwrap();
+            let body = scope
+                .attach_entry_pending(Arc::new(()), None)
+                .await
+                .unwrap();
+            let data = admission(&f);
+            let task = tokio::spawn({
+                let scope = scope.clone();
+                let body = body.clone();
+                let requested = requested.clone();
+                async move {
+                    scope
+                        .enter_changed_id(&body, data, Some(1), &requested)
+                        .await
+                }
+            });
+            wait(|| p.seen.load(Ordering::SeqCst) != 0).await;
+            let expected = if let Some(user) = requested_user {
+                let _: () = f
+                    .redis
+                    .hset_multiple(
+                        &row,
+                        &[
+                            ("user_id", user),
+                            ("rust_owner_token", "requested-generation"),
+                        ],
+                    )
+                    .await
+                    .unwrap();
+                Error::RequestedIdOccupied
+            } else {
+                let _: () = f.redis.set(&stop, "true").await.unwrap();
+                Error::Stopped
+            };
+            p.release.send_replace(true);
+            assert_eq!(
+                task.await.unwrap(),
+                Err(expected),
+                "{phase} {requested_user:?}"
+            );
+            assert!(!scope.close(&body).await.unwrap().changed);
+            assert_eq!(
+                f.redis
+                    .hgetall::<_, BTreeMap<String, String>>(&metadata)
+                    .await
+                    .unwrap(),
+                before_row
+            );
+            assert_eq!(
+                f.redis
+                    .hgetall::<_, BTreeMap<String, String>>(&ledger)
+                    .await
+                    .unwrap(),
+                before_ledger
+            );
+            assert_eq!(
+                f.redis.get::<_, i64>(&counter).await.unwrap(),
+                before_counter
+            );
+            if let Some(user) = requested_user {
+                let actual: (String, String) = f
+                    .redis
+                    .hget(&row, &["user_id", "rust_owner_token"])
+                    .await
+                    .unwrap();
+                assert_eq!(actual, (user.to_owned(), "requested-generation".into()));
+            } else {
+                assert_eq!(f.redis.get::<_, String>(&stop).await.unwrap(), "true");
+            }
+            let _: usize = f.redis.del(&[row, stop]).await.unwrap();
+            empty(f, scope).await;
+        }
+    }
+}
+
 #[tokio::test]
 #[ignore = "actual CLAIM reply4s/caller abort retains physical body and control; pending follower unsupported"]
 async fn idle_entry_claim_held_abort_rejects_follower_and_retains_physical_owner() {

@@ -264,6 +264,10 @@ if count>0 then return {'ACTIVE'} end
 redis.call('DEL',KEYS[2]);return {'DELETED'}
 "#;
 pub(crate) const ENTER_CURRENT: &str = r#"
+if KEYS[7] then
+ if redis.call('EXISTS',KEYS[7])~=0 then return {'REQUESTED_OCCUPIED'} end
+ if redis.call('EXISTS',KEYS[8])~=0 then return {'REQUESTED_STOP'} end
+end
 if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[2]
  or redis.call('HGET',KEYS[3],'token')~=ARGV[1] then return {'FOREIGN'} end
 if ARGV[12]=='1' and redis.call('EXISTS',KEYS[4])~=0 then return {'STOP'} end
@@ -965,9 +969,41 @@ impl LocalScope {
         admission: NewAdmission,
         profile_max: Option<u32>,
     ) -> Result<(), Error> {
+        self.enter_current_or_idle_for(body, admission, profile_max, None)
+            .await
+    }
+
+    /// Supervised entry through a different, unoccupied requested SID.
+    pub async fn enter_changed_id(
+        &self,
+        body: &Body,
+        admission: NewAdmission,
+        profile_max: Option<u32>,
+        requested_id: &str,
+    ) -> Result<(), Error> {
+        if self.inner.authenticated_restart
+            || requested_id == self.inner.id
+            || requested_id.is_empty()
+            || requested_id.len() > 128
+            // A late requested-SID rejection must not leave a quota stop.
+            || (admission.limit > 0 && admission.policy.terminate_on_limit_exceeded)
+        {
+            return Err(Error::Configuration);
+        }
+        self.enter_current_or_idle_for(body, admission, profile_max, Some(requested_id))
+            .await
+    }
+
+    async fn enter_current_or_idle_for(
+        &self,
+        body: &Body,
+        admission: NewAdmission,
+        profile_max: Option<u32>,
+        requested_id: Option<&str>,
+    ) -> Result<(), Error> {
         let allow_idle = !self.inner.authenticated_restart;
         match self
-            .enter_current_inner(body, admission, allow_idle)
+            .enter_current_inner(body, admission, allow_idle, requested_id.map(str::to_owned))
             .await?
         {
             Some(admission) => {
@@ -975,6 +1011,7 @@ impl LocalScope {
                     body,
                     admission,
                     profile_max.ok_or(Error::PartialState)?,
+                    requested_id.map(str::to_owned),
                 )
                 .await
             }
@@ -982,7 +1019,7 @@ impl LocalScope {
         }
     }
     pub async fn enter_current(&self, body: &Body, admission: NewAdmission) -> Result<(), Error> {
-        self.enter_current_inner(body, admission, false)
+        self.enter_current_inner(body, admission, false, None)
             .await
             .map(|_| ())
     }
@@ -991,6 +1028,7 @@ impl LocalScope {
         body: &Body,
         admission: NewAdmission,
         allow_idle: bool,
+        requested_id: Option<String>,
     ) -> Result<Option<NewAdmission>, Error> {
         if self.inner.idle_pending.load(Ordering::Acquire)
             && !self.inner.pending_followers.load(Ordering::Acquire)
@@ -1027,11 +1065,9 @@ impl LocalScope {
             }
             // Source skips optional user restoration while public metadata exists.
             // Anonymous request policy does not authorize changing its public subject.
-            if !admission
-                .fields
-                .get("user_id")
-                .is_some_and(|user| user == &gen.user_id || user == "unknown")
-            {
+            if !admission.fields.get("user_id").is_some_and(|user| {
+                user == &gen.user_id || (requested_id.is_none() && user == "unknown")
+            }) {
                 return Err(Error::Configuration);
             }
 
@@ -1094,7 +1130,9 @@ impl LocalScope {
                 }
                 *entry = Some(receipt.clone());
             }
-            let reply: Result<Vec<String>, redis::RedisError> = Script::new(ENTER_CURRENT)
+            let script = Script::new(ENTER_CURRENT);
+            let mut entry = script.prepare_invoke();
+            entry
                 .key(owner_key)
                 .key(key(&inner.id))
                 .key(ledger(&inner, &gen.lease))
@@ -1103,7 +1141,13 @@ impl LocalScope {
                     "profile_connections:{}",
                     inner.profile.load(Ordering::Acquire)
                 ))
-                .key(&receipt.key)
+                .key(&receipt.key);
+            if let Some(id) = &requested_id {
+                entry
+                    .key(key(id))
+                    .key(format!("vod_proxy:client:{id}:stop"));
+            }
+            let reply: Result<Vec<String>, redis::RedisError> = entry
                 .arg(gen.lease.token())
                 .arg(&gen.token)
                 .arg(&gen.user_id)
@@ -1144,6 +1188,15 @@ impl LocalScope {
                     } else {
                         Err(Error::PartialState)
                     };
+                }
+                Some("REQUESTED_OCCUPIED" | "REQUESTED_STOP") => {
+                    // A definite refusal has neither an increment nor a receipt.
+                    hold.receipt.lock().unwrap().take();
+                    return Err(if reply[0] == "REQUESTED_OCCUPIED" {
+                        Error::RequestedIdOccupied
+                    } else {
+                        Error::Stopped
+                    });
                 }
                 Some("STOP") => return Err(Error::Stopped),
                 Some("FOREIGN") => return Err(Error::ForeignOwner),
