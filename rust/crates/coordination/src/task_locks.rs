@@ -364,13 +364,29 @@ impl TaskLocks {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<TaskLease, TaskLockDetailedError> {
+        self.acquire_series_rules(caller, false).await
+    }
+
+    /// Prepare the dormant cache connection for ordinary broker-selected Series Rules.
+    pub async fn acquire_broker_series_rules_retained(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
+        self.acquire_series_rules(caller, true).await
+    }
+
+    async fn acquire_series_rules(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+        prepare_connection: bool,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
         self.acquire_suffix_impl(
             "evaluate_series_rules",
             "all",
             Some(caller),
             true,
             false,
-            false,
+            prepare_connection,
         )
         .await
     }

@@ -442,11 +442,18 @@ async fn series(
     if !canonical(&inner, &pending, task) {
         return Err(Error::Unsupported);
     }
-    let lease = match inner
-        .locks
-        .acquire_series_rules_retained(owner.clone())
-        .await
-    {
+    let acquisition = if inner.broker_adoption {
+        inner
+            .locks
+            .acquire_broker_series_rules_retained(owner.clone())
+            .await
+    } else {
+        inner
+            .locks
+            .acquire_series_rules_retained(owner.clone())
+            .await
+    };
+    let lease = match acquisition {
         Ok(lease) => lease,
         Err(TaskLockDetailedError::Operational(TaskLockError::Held)) => {
             claim(&inner, pending, owner.clone())
