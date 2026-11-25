@@ -65,6 +65,7 @@ struct Inner {
     resolver: Arc<dyn VodResolver>,
     sessions: SessionPool,
     client: reqwest::Client,
+    cached_provider_client: reqwest::Client,
     config: VodConfig,
 }
 #[derive(Clone)]
@@ -112,19 +113,25 @@ impl VodEngine {
             config.idle_grace,
         )
         .await?;
-        let builder = reqwest::Client::builder()
-            .connect_timeout(config.connect_timeout)
-            .read_timeout(config.read_timeout)
-            .redirect(reqwest::redirect::Policy::limited(30))
-            .pool_max_idle_per_host(4);
-        let client = dispatcharr_upstream_http::with_playback_requests_trust(builder)
-            .build()
-            .map_err(|_| StoreError::Unsupported("VOD HTTP client setup failed"))?;
+        let build_client = |redirect, idle_per_host| {
+            let builder = reqwest::Client::builder()
+                .connect_timeout(config.connect_timeout)
+                .read_timeout(config.read_timeout)
+                .redirect(redirect)
+                .pool_max_idle_per_host(idle_per_host);
+            dispatcharr_upstream_http::with_playback_requests_trust(builder)
+                .build()
+                .map_err(|_| StoreError::Unsupported("VOD HTTP client setup failed"))
+        };
+        let client = build_client(reqwest::redirect::Policy::limited(30), 4)?;
+        // The cached hop never follows redirects. Bound its separate idle pool.
+        let cached_provider_client = build_client(reqwest::redirect::Policy::none(), 1)?;
         Ok(Self {
             inner: Arc::new(Inner {
                 resolver,
                 sessions,
                 client,
+                cached_provider_client,
                 config,
             }),
         })
@@ -295,32 +302,52 @@ impl VodEngine {
             )
             .await?;
         let provider_url = ticket.session.provider_url();
-        let mut upstream_request = self
-            .inner
-            .client
-            .get(provider_url.as_ref())
-            .header("user-agent", &ticket.session.candidate.user_agent)
-            .header("accept-encoding", "identity");
         let original_range = request
             .playback
             .header("range")
             .filter(|value| !value.is_empty());
         let known_total = ticket.session.content_length.load(Ordering::Relaxed);
-        if let Some(range) = original_range {
+        let provider_range = if let Some(range) = original_range {
             let Some(range) = validate_range(range, known_total) else {
                 return Ok(range_not_satisfiable());
             };
-            upstream_request = upstream_request.header("range", range);
-        }
-        // The original VOD path forwards Range, but does not forward HTTP
-        // conditional validators. Preserve that compatibility behavior.
-        for name in ["accept", "referer", "origin"] {
-            if let Some(value) = request.playback.header(name) {
-                upstream_request = upstream_request.header(name, value);
+            Some(range)
+        } else {
+            None
+        };
+        let provider_request = |client: &reqwest::Client, url: &str| {
+            let mut upstream_request = client
+                .get(url)
+                .header("user-agent", &ticket.session.candidate.user_agent)
+                .header("accept-encoding", "identity");
+            if let Some(range) = &provider_range {
+                upstream_request = upstream_request.header("range", range);
             }
-        }
+            // Original forwards Range and selected playback headers, without
+            // forwarding the client's HTTP conditional validators.
+            for name in ["accept", "referer", "origin"] {
+                if let Some(value) = request.playback.header(name) {
+                    upstream_request = upstream_request.header(name, value);
+                }
+            }
+            upstream_request
+        };
+        let response = ticket.session.final_provider_url.send(
+            async {
+                let response = provider_request(&self.inner.client, &provider_url)
+                    .send()
+                    .await?;
+                Ok((response.status(), response))
+            },
+            |url| async move {
+                let response = provider_request(&self.inner.cached_provider_client, url.as_str())
+                    .send()
+                    .await?;
+                Ok((response.status(), response))
+            },
+        );
         let upstream = tokio::select! {
-            response = upstream_request.send() => response.map_err(|_| StoreError::StatusBody(500,json!("Streaming error: VOD provider request failed")))?,
+            response = response => response.map_err(|_: reqwest::Error| StoreError::StatusBody(500,json!("Streaming error: VOD provider request failed")))?,
             _ = stopped(&ticket) => return Err(StoreError::StatusBody(503,json!({"error":"VOD session stopped"}))),
         };
         if original_range.is_some_and(|range| {
@@ -369,6 +396,9 @@ impl VodEngine {
             .sessions
             .update(&ticket.session, &metadata)
             .await?;
+        if total > 0 {
+            ticket.session.final_provider_url.remember(upstream.url());
+        }
         let headers = successful_headers(content_type, original_range, total)?;
         // Preserve Python's Range response contract, including its documented
         // suffix/conditional quirks. Correcting these is outside the 1:1 port.

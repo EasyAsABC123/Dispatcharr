@@ -1,0 +1,262 @@
+{
+  "application_sole_parent": "3d767ccb81839c5a6e8808fbacf17b1b2226bbc0",
+  "candidate_image_id": "sha256:2a9976f6117c61d39f8b256ec086ae4751ceaf7620c0e16e83107e4b90a1bab9",
+  "candidate_revision": "d6ebd8134ed19a7792fefce069e100ba220b29c7",
+  "cleanup_verified_generations": 4,
+  "compose_project_resource_inventories_empty": true,
+  "credit": "Original Dispatcharr and all upstream contributors retain full credit.",
+  "engine_inventory_before_and_after_empty": true,
+  "evidence_sha256": {
+    "audit_stdout": "6622df2afdac1401cc5e9e72c756aaa0221aa9e283f6ecd2d0775913f3a6028c",
+    "run_stdout": "08d4b31ed89f4e1c1b1ba5036d1d5a362c2dd3cf5c68b6a49a555b50a80c3ee4",
+    "wrapper_stdout": "f5522d0ceab4a6450f978511ae403ad66e7763fa31304f0c7b1aeb284967c55b"
+  },
+  "exact_owned_cleanup": true,
+  "existing_cold_suffix_and_warm_prefix_qualified": true,
+  "existing_full_MP4_decoder_qualified": true,
+  "formal_M4_accepted": false,
+  "independent_cleanup_sha256": "0c43e460a22b31eaa895fb362b247c008f30cfc1ae971d9c43b043779986b2c8",
+  "independent_read_only_replay": true,
+  "literal_component_exits": {
+    "audit": 0,
+    "bind": 0,
+    "cold": 0,
+    "controls": 0,
+    "ordinary_feature_zero_audit": 0,
+    "paired_physical_fixture": 0,
+    "run": 0
+  },
+  "literal_wrapper_exits": {
+    "campaign": 1,
+    "internal_owner": 1,
+    "outer_owner": 1
+  },
+  "manifest_sha256": "c1783caa5c34cc7f24c06b817de9615683dba92e57a2757429845e08a34e4712",
+  "new_signed_requests_per_backend": 14,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false,
+  "platform": "linux/amd64",
+  "private_raw_report_sha256": "3e6d949b6681b023095206a6ec3f3896eb3744bfe657173944b47cfda4928d16",
+  "same_session_cases": [
+    {
+      "downstream": {
+        "body_sha256": "b2554114e1fb18c79d224041e146a457a306f3d8d0ce272d35f5369d19627ab2",
+        "bytes": 256,
+        "content_range": "bytes 0-255/4299455",
+        "declared_bytes": 256,
+        "status": 206
+      },
+      "held_single_grant": false,
+      "phase": "initialize",
+      "provider_hops": [
+        [
+          "gateway",
+          302
+        ],
+        [
+          "final",
+          206
+        ]
+      ],
+      "range_start": 0,
+      "slot": 7
+    },
+    {
+      "downstream": {
+        "body_sha256": "d80e16127b1f8b5b20275e7357e76c1f07964b37dddcca72f103648aa36a3305",
+        "bytes": 256,
+        "content_range": "bytes 256-511/4299455",
+        "declared_bytes": 256,
+        "status": 206
+      },
+      "held_single_grant": true,
+      "phase": "held-reuse",
+      "provider_hops": [
+        [
+          "final",
+          206
+        ]
+      ],
+      "range_start": 256,
+      "slot": 7
+    },
+    {
+      "downstream": {
+        "body_sha256": "b2554114e1fb18c79d224041e146a457a306f3d8d0ce272d35f5369d19627ab2",
+        "bytes": 256,
+        "content_range": "bytes 0-255/4299455",
+        "declared_bytes": 256,
+        "status": 206
+      },
+      "held_single_grant": false,
+      "phase": "initialize",
+      "provider_hops": [
+        [
+          "gateway",
+          302
+        ],
+        [
+          "final",
+          206
+        ]
+      ],
+      "range_start": 0,
+      "slot": 8
+    },
+    {
+      "downstream": {
+        "bytes": 0,
+        "content_range": "bytes 256-511/4299455",
+        "declared_bytes": 256,
+        "status": 206
+      },
+      "held_single_grant": false,
+      "phase": "cached-redirect",
+      "provider_hops": [
+        [
+          "final",
+          302
+        ]
+      ],
+      "range_start": 256,
+      "slot": 8
+    },
+    {
+      "downstream": {
+        "body_sha256": "b2554114e1fb18c79d224041e146a457a306f3d8d0ce272d35f5369d19627ab2",
+        "bytes": 256,
+        "content_range": "bytes 0-255/4299455",
+        "declared_bytes": 256,
+        "status": 206
+      },
+      "held_single_grant": false,
+      "phase": "initialize",
+      "provider_hops": [
+        [
+          "gateway",
+          302
+        ],
+        [
+          "final",
+          206
+        ]
+      ],
+      "range_start": 0,
+      "slot": 9
+    },
+    {
+      "downstream": {
+        "body_sha256": "d80e16127b1f8b5b20275e7357e76c1f07964b37dddcca72f103648aa36a3305",
+        "bytes": 256,
+        "content_range": "bytes 256-511/4299455",
+        "declared_bytes": 256,
+        "status": 206
+      },
+      "held_single_grant": false,
+      "phase": "successful-fallback",
+      "provider_hops": [
+        [
+          "final",
+          404
+        ],
+        [
+          "gateway",
+          302
+        ],
+        [
+          "replacement",
+          206
+        ]
+      ],
+      "range_start": 256,
+      "slot": 9
+    },
+    {
+      "downstream": {
+        "body_sha256": "a45eaf1dfc5c933121646a6a67c04bdf229efadf8e5435ef32e247065c3303f5",
+        "bytes": 256,
+        "content_range": "bytes 512-767/4299455",
+        "declared_bytes": 256,
+        "status": 206
+      },
+      "held_single_grant": false,
+      "phase": "origin-after-success",
+      "provider_hops": [
+        [
+          "gateway",
+          302
+        ],
+        [
+          "replacement",
+          206
+        ]
+      ],
+      "range_start": 512,
+      "slot": 9
+    },
+    {
+      "downstream": {
+        "body_sha256": "b2554114e1fb18c79d224041e146a457a306f3d8d0ce272d35f5369d19627ab2",
+        "bytes": 256,
+        "content_range": "bytes 0-255/4299455",
+        "declared_bytes": 256,
+        "status": 206
+      },
+      "held_single_grant": false,
+      "phase": "initialize",
+      "provider_hops": [
+        [
+          "gateway",
+          302
+        ],
+        [
+          "final",
+          206
+        ]
+      ],
+      "range_start": 0,
+      "slot": 10
+    },
+    {
+      "downstream": {
+        "status": 500
+      },
+      "held_single_grant": false,
+      "phase": "failed-fallback",
+      "provider_hops": [
+        [
+          "final",
+          404
+        ],
+        [
+          "gateway",
+          503
+        ]
+      ],
+      "range_start": 256,
+      "slot": 10
+    },
+    {
+      "downstream": {
+        "body_sha256": "a45eaf1dfc5c933121646a6a67c04bdf229efadf8e5435ef32e247065c3303f5",
+        "bytes": 256,
+        "content_range": "bytes 512-767/4299455",
+        "declared_bytes": 256,
+        "status": 206
+      },
+      "held_single_grant": false,
+      "phase": "retained-after-failure",
+      "provider_hops": [
+        [
+          "final",
+          206
+        ]
+      ],
+      "range_start": 512,
+      "slot": 10
+    }
+  ],
+  "schema": "dispatcharr-same-session-vod-provider-cache/v1",
+  "scoped_product_pair_qualified": true,
+  "wrapper_disposition": "Raw stdout comparison included the paired observer status line. The audit JSON was byte-identical after removing that one typed line."
+}
