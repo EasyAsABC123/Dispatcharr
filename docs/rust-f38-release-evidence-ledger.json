@@ -1,0 +1,841 @@
+{
+  "application": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+  "attribution": "Original Dispatcharr and dependency authors retain full credit.",
+  "counts": {
+    "admitted_authorities": 2,
+    "formal_exact_passes": 17,
+    "historical_passes_transferred": 0,
+    "open": 102,
+    "required": 125,
+    "verified_current_imported_receipts": 4
+  },
+  "independent_status_sha256": "949896daa6e049ed4af1a00eabfa9c02596b4aee22ce204fc75e60c668e058fe",
+  "latest_companion_observation": "Formal proof failed at the 64 MiB idle working-memory check before the descriptor check. A separate replay of retained samples also exceeded the unchanged descriptor limit.",
+  "release_hold": true,
+  "rows": {
+    "Main/M4-M7-M8-required-routes": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "native/M3U-XMLTV-HDHR",
+        "native/VOD-lifecycle-recovery",
+        "native/VOD-ranges-catchup",
+        "native/XC-catalogue-refresh-info",
+        "native/admin-session-CSRF",
+        "native/backup-workflow",
+        "native/operator-operational",
+        "native/plugin-TLS-DNS-GPG16",
+        "native/plugin-execution-and-install",
+        "native/realtime-connect"
+      ]
+    },
+    "Main/React-cross-workflows": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "native/proxy-health"
+      ]
+    },
+    "Main/accounts-auth-and-channels": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "Main/active-profile-status-probes": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "Main/core-settings-workflow": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "native/proxy-health"
+      ]
+    },
+    "Main/input-profile-and-provider-probes": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "Main/lifecycle-fault-workflow": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "Main/settings-task-consumers": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/default-job-graph"
+      ]
+    },
+    "external/M9/datastore-scope": {
+      "state": "recorded_scope_authority",
+      "waiting_on": []
+    },
+    "m6/SQL-ErrorResponse-heldReady": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "m6/Source-missing-domains": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "m6/account-CSV-hash-overrides": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/python-regex-filters-general-hash"
+      ]
+    },
+    "m6/account-warning-expiration": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/scanner-empty-and-content"
+      ]
+    },
+    "m6/api202-publication": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "m6/backend-cleanup-expiry": {
+      "state": "verified_current_receipt",
+      "waiting_on": []
+    },
+    "m6/cache-reply-held": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/SQL-ErrorResponse-heldReady"
+      ]
+    },
+    "m6/calendar-timezone-boundaries": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/scheduler-normal-stop"
+      ]
+    },
+    "m6/channel-signal-tvg-programmes": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/Source-missing-domains",
+        "m6/m3u-groups-single"
+      ]
+    },
+    "m6/configured-series-positive": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/programme-index"
+      ]
+    },
+    "m6/configured-series-repeat": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/configured-series-positive"
+      ]
+    },
+    "m6/default-job-graph": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/calendar-timezone-boundaries"
+      ]
+    },
+    "m6/durable-retry-cancel-restart": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/import-partial-failure-retention"
+      ]
+    },
+    "m6/dvr-offset-reschedule-settings-callback": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/stream-rehash-settings-callback"
+      ]
+    },
+    "m6/event-reply-held": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/cache-reply-held"
+      ]
+    },
+    "m6/guide-current-output": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/recording61-video-audio",
+        "package/complete-refresh"
+      ]
+    },
+    "m6/import-partial-failure-retention": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/longrunning-poison-recovery"
+      ]
+    },
+    "m6/local-logo-artwork-positive-repeat": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/configured-series-repeat"
+      ]
+    },
+    "m6/longrunning-poison-recovery": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/restart-preserves-unconsumed-head"
+      ]
+    },
+    "m6/m3u-groups-single": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/scanner-first"
+      ]
+    },
+    "m6/matching-custom-dummy-offsets": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/schedules-direct-guide"
+      ]
+    },
+    "m6/observer-loss-physical-retention": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/result-reply-postend"
+      ]
+    },
+    "m6/oneoff-beat-publication": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/local-logo-artwork-positive-repeat"
+      ]
+    },
+    "m6/playback-during-refresh": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/durable-retry-cancel-restart"
+      ]
+    },
+    "m6/programme-index": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/refresh-local-positive"
+      ]
+    },
+    "m6/python-regex-filters-general-hash": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/vod-import"
+      ]
+    },
+    "m6/recording61-video-audio": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/oneoff-beat-publication"
+      ]
+    },
+    "m6/recurring-positive-repeat": {
+      "state": "verified_current_receipt",
+      "waiting_on": []
+    },
+    "m6/refresh-local-positive": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/channel-signal-tvg-programmes",
+        "package/complete-refresh"
+      ]
+    },
+    "m6/remote-m3u-download-cache-compression": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/second-import-replaces-title"
+      ]
+    },
+    "m6/restart-preserves-unconsumed-head": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/unknown-FIFO-head-unchanged"
+      ]
+    },
+    "m6/result-reply-postend": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/event-reply-held"
+      ]
+    },
+    "m6/scanner-empty-and-content": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "m6/scanner-first": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/api202-publication"
+      ]
+    },
+    "m6/scheduler-install-known-defaults": {
+      "state": "verified_current_receipt",
+      "waiting_on": []
+    },
+    "m6/scheduler-normal-stop": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/version200-update-no-update-malformed"
+      ]
+    },
+    "m6/scheduler-tick-publication": {
+      "state": "verified_current_receipt",
+      "waiting_on": []
+    },
+    "m6/schedules-direct-guide": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/account-CSV-hash-overrides"
+      ]
+    },
+    "m6/second-import-replaces-title": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/guide-current-output",
+        "package/complete-refresh"
+      ]
+    },
+    "m6/shutdown-drain": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/observer-loss-physical-retention"
+      ]
+    },
+    "m6/stats-live-ghost": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "m6/stream-rehash-settings-callback": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/matching-custom-dummy-offsets"
+      ]
+    },
+    "m6/unknown-FIFO-head-unchanged": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/shutdown-drain"
+      ]
+    },
+    "m6/version200-update-no-update-malformed": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/Source-missing-domains",
+        "m6/version503"
+      ]
+    },
+    "m6/version503": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/account-warning-expiration"
+      ]
+    },
+    "m6/vod-import": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/xc-stream-import"
+      ]
+    },
+    "m6/xc-stream-import": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/remote-m3u-download-cache-compression"
+      ]
+    },
+    "native/HLS-fMP4-workflows": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "native/M3U-XMLTV-HDHR": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "source/M7-hash-regex-realtime"
+      ]
+    },
+    "native/VOD-lifecycle-recovery": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "source/VOD-missing-boundaries"
+      ]
+    },
+    "native/VOD-ranges-catchup": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "native/profile-delivery"
+      ]
+    },
+    "native/XC-catalogue-refresh-info": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "native/admin-session-CSRF": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "source/admin-session-CSRF"
+      ]
+    },
+    "native/backup-lifecycle": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "native/backup-workflow"
+      ]
+    },
+    "native/backup-workflow": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "source/backup-restore-schedules"
+      ]
+    },
+    "native/copied-SQLite-migration-utility": {
+      "state": "retained_copied_utility_authority",
+      "waiting_on": []
+    },
+    "native/core-late-faults": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "native/core-normal51": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "native/operator-operational": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "source/operator-remaining-arguments"
+      ]
+    },
+    "native/plugin-TLS-DNS-GPG16": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "source/plugin-TLS-DNS-GPG16"
+      ]
+    },
+    "native/plugin-execution-and-install": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "source/plugin-managed-archives"
+      ]
+    },
+    "native/plugin-normal-metadata": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "native/plugin-shared-ownership": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "native/core-normal51",
+        "native/plugin-normal-metadata"
+      ]
+    },
+    "native/plugin-unsigned25": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "native/profile-delivery": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "source/cache-and-profile-contexts",
+        "source/media-profile-and-format-workflows"
+      ]
+    },
+    "native/proxy-health": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "source/cache-and-profile-contexts"
+      ]
+    },
+    "native/realtime-connect": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/default-job-graph",
+        "native/core-normal51",
+        "source/M7-hash-regex-realtime"
+      ]
+    },
+    "package/auth-hash": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "package/baseline-all": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/category-browser": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/channel-logos": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/clean-install": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/complete-refresh": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "package/complete-refresh-original"
+      ]
+    },
+    "package/complete-refresh-original": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "package/current-packaged": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "package/fresh-Original17capture": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "package/guide-grid-packaged": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "package/live-react-stats": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "package/m4-functional": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/output-profile": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "package/packaged-cached-provider-info": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "package/packaged-provider-actions": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "package/packaged-vod-images": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/profile-restart": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "package/provider-modal-browser": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/proxy-auth": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/retention100": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/sharedTS18": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/sharedTS6-all-down": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/shipped-createsuperuser22": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/shipped-safe17": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "package/fresh-Original17capture"
+      ]
+    },
+    "package/static-Chrome-HTML-browser": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/strict-typed154": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/unified-HTML-browser": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "package/user-agent": {
+      "state": "passed_exact",
+      "waiting_on": []
+    },
+    "performance/M2-M3-M5": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "Main/React-cross-workflows",
+        "Main/accounts-auth-and-channels",
+        "Main/active-profile-status-probes",
+        "Main/core-settings-workflow",
+        "Main/input-profile-and-provider-probes",
+        "Main/lifecycle-fault-workflow",
+        "Main/settings-task-consumers",
+        "native/HLS-fMP4-workflows",
+        "native/core-late-faults",
+        "native/core-normal51",
+        "native/profile-delivery",
+        "native/proxy-health",
+        "package/auth-hash",
+        "package/complete-refresh",
+        "package/complete-refresh-original",
+        "package/current-packaged",
+        "package/fresh-Original17capture",
+        "package/guide-grid-packaged",
+        "package/live-react-stats",
+        "package/output-profile",
+        "package/packaged-cached-provider-info",
+        "package/packaged-provider-actions",
+        "package/profile-restart",
+        "package/shipped-safe17",
+        "source/cache-and-profile-contexts",
+        "source/media-profile-and-format-workflows"
+      ]
+    },
+    "performance/M6-whole-graph": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "m6/SQL-ErrorResponse-heldReady",
+        "m6/Source-missing-domains",
+        "m6/account-CSV-hash-overrides",
+        "m6/account-warning-expiration",
+        "m6/api202-publication",
+        "m6/cache-reply-held",
+        "m6/calendar-timezone-boundaries",
+        "m6/channel-signal-tvg-programmes",
+        "m6/configured-series-positive",
+        "m6/configured-series-repeat",
+        "m6/default-job-graph",
+        "m6/durable-retry-cancel-restart",
+        "m6/dvr-offset-reschedule-settings-callback",
+        "m6/event-reply-held",
+        "m6/guide-current-output",
+        "m6/import-partial-failure-retention",
+        "m6/local-logo-artwork-positive-repeat",
+        "m6/longrunning-poison-recovery",
+        "m6/m3u-groups-single",
+        "m6/matching-custom-dummy-offsets",
+        "m6/observer-loss-physical-retention",
+        "m6/oneoff-beat-publication",
+        "m6/playback-during-refresh",
+        "m6/programme-index",
+        "m6/python-regex-filters-general-hash",
+        "m6/recording61-video-audio",
+        "m6/refresh-local-positive",
+        "m6/remote-m3u-download-cache-compression",
+        "m6/restart-preserves-unconsumed-head",
+        "m6/result-reply-postend",
+        "m6/scanner-empty-and-content",
+        "m6/scanner-first",
+        "m6/scheduler-normal-stop",
+        "m6/schedules-direct-guide",
+        "m6/second-import-replaces-title",
+        "m6/shutdown-drain",
+        "m6/stream-rehash-settings-callback",
+        "m6/unknown-FIFO-head-unchanged",
+        "m6/version200-update-no-update-malformed",
+        "m6/version503",
+        "m6/vod-import",
+        "m6/xc-stream-import"
+      ]
+    },
+    "performance/VOD-catchup": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "Main/M4-M7-M8-required-routes"
+      ]
+    },
+    "performance/operations-plugins": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "Main/M4-M7-M8-required-routes"
+      ]
+    },
+    "performance/outputs-realtime": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "Main/M4-M7-M8-required-routes"
+      ]
+    },
+    "root/M0-executable-coverage": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "root/M1-core-acceptance": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "root/M0-executable-coverage"
+      ]
+    },
+    "root/M9-rollback": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "root/M9-workflow-parity"
+      ]
+    },
+    "root/M9-soak": {
+      "state": "soak_held_after_S360_descriptor_proof_failure",
+      "waiting_on": [
+        "root/M9-workflow-parity"
+      ]
+    },
+    "root/M9-whole-service-performance": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "root/M9-soak",
+        "root/M9-workflow-parity"
+      ]
+    },
+    "root/M9-workflow-parity": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "Main/M4-M7-M8-required-routes",
+        "Main/React-cross-workflows",
+        "Main/accounts-auth-and-channels",
+        "Main/active-profile-status-probes",
+        "Main/core-settings-workflow",
+        "Main/input-profile-and-provider-probes",
+        "Main/lifecycle-fault-workflow",
+        "Main/settings-task-consumers",
+        "m6/SQL-ErrorResponse-heldReady",
+        "m6/Source-missing-domains",
+        "m6/account-CSV-hash-overrides",
+        "m6/account-warning-expiration",
+        "m6/api202-publication",
+        "m6/cache-reply-held",
+        "m6/calendar-timezone-boundaries",
+        "m6/channel-signal-tvg-programmes",
+        "m6/configured-series-positive",
+        "m6/configured-series-repeat",
+        "m6/default-job-graph",
+        "m6/durable-retry-cancel-restart",
+        "m6/dvr-offset-reschedule-settings-callback",
+        "m6/event-reply-held",
+        "m6/guide-current-output",
+        "m6/import-partial-failure-retention",
+        "m6/local-logo-artwork-positive-repeat",
+        "m6/longrunning-poison-recovery",
+        "m6/m3u-groups-single",
+        "m6/matching-custom-dummy-offsets",
+        "m6/observer-loss-physical-retention",
+        "m6/oneoff-beat-publication",
+        "m6/playback-during-refresh",
+        "m6/programme-index",
+        "m6/python-regex-filters-general-hash",
+        "m6/recording61-video-audio",
+        "m6/refresh-local-positive",
+        "m6/remote-m3u-download-cache-compression",
+        "m6/restart-preserves-unconsumed-head",
+        "m6/result-reply-postend",
+        "m6/scanner-empty-and-content",
+        "m6/scanner-first",
+        "m6/scheduler-normal-stop",
+        "m6/schedules-direct-guide",
+        "m6/second-import-replaces-title",
+        "m6/shutdown-drain",
+        "m6/stream-rehash-settings-callback",
+        "m6/unknown-FIFO-head-unchanged",
+        "m6/version200-update-no-update-malformed",
+        "m6/version503",
+        "m6/vod-import",
+        "m6/xc-stream-import",
+        "native/HLS-fMP4-workflows",
+        "native/M3U-XMLTV-HDHR",
+        "native/VOD-lifecycle-recovery",
+        "native/VOD-ranges-catchup",
+        "native/XC-catalogue-refresh-info",
+        "native/admin-session-CSRF",
+        "native/backup-lifecycle",
+        "native/backup-workflow",
+        "native/core-late-faults",
+        "native/core-normal51",
+        "native/operator-operational",
+        "native/plugin-TLS-DNS-GPG16",
+        "native/plugin-execution-and-install",
+        "native/plugin-normal-metadata",
+        "native/plugin-shared-ownership",
+        "native/plugin-unsigned25",
+        "native/profile-delivery",
+        "native/proxy-health",
+        "native/realtime-connect",
+        "package/auth-hash",
+        "package/complete-refresh",
+        "package/complete-refresh-original",
+        "package/current-packaged",
+        "package/fresh-Original17capture",
+        "package/guide-grid-packaged",
+        "package/live-react-stats",
+        "package/output-profile",
+        "package/packaged-cached-provider-info",
+        "package/packaged-provider-actions",
+        "package/profile-restart",
+        "package/shipped-safe17",
+        "root/M0-executable-coverage",
+        "root/M1-core-acceptance",
+        "source/M7-hash-regex-realtime",
+        "source/VOD-missing-boundaries",
+        "source/admin-session-CSRF",
+        "source/backup-restore-schedules",
+        "source/cache-and-profile-contexts",
+        "source/media-profile-and-format-workflows",
+        "source/operator-remaining-arguments",
+        "source/plugin-TLS-DNS-GPG16",
+        "source/plugin-managed-archives",
+        "tools/M8-transport-materials"
+      ]
+    },
+    "source/M7-hash-regex-realtime": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "source/VOD-missing-boundaries": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "source/admin-session-CSRF": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "source/backup-restore-schedules": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "source/cache-and-profile-contexts": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "source/media-profile-and-format-workflows": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "source/cache-and-profile-contexts"
+      ]
+    },
+    "source/operator-remaining-arguments": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "source/plugin-TLS-DNS-GPG16": {
+      "state": "waiting_for_exact_predecessors",
+      "waiting_on": [
+        "tools/M8-transport-materials"
+      ]
+    },
+    "source/plugin-managed-archives": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    },
+    "tools/M8-transport-materials": {
+      "state": "full_current_owner_receipt_pending",
+      "waiting_on": []
+    }
+  },
+  "scope_policy": {
+    "approval": "152d96dfe554448031ee70e18ba757dc52172301",
+    "approved_graph_sha256": "1f95e3470b36b482f579af5b92c0bbf23edcb470893461029025bdcbec031946",
+    "datastore_authority": "exact f38 verified and admitted",
+    "evidence_commit": "2361c85378c94829db016ca3d1c64eb64823ef1f",
+    "evidence_sha256": "8bd312b34f9df7c55bd1eeae890a8cc30b7acbf3849ede082351156e30fa6228",
+    "service": "PostgreSQL",
+    "utility": "detached copied SQLite"
+  }
+}

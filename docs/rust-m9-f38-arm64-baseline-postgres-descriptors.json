@@ -1,0 +1,161 @@
+{
+  "active_observations": 73,
+  "actual_exit": 0,
+  "application": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+  "arm64_package_audit_sha256": "6e30896ec6180217ab3e74b4f14c81bab850fb83ce4faba7f15580ff4c0e44e7",
+  "attribution": "Original Dispatcharr and PostgreSQL and other dependency authors retain full credit.",
+  "baseline_postgres_background_process_count": 4,
+  "baseline_postgres_background_regular_files_by_observation": {
+    "after_active_210": 2,
+    "after_active_240": 33,
+    "after_active_295": 137,
+    "after_active_335": 209,
+    "after_formal_idle": 383,
+    "before_viewers": 2
+  },
+  "companion_proof_exit": 0,
+  "companion_proof_sha256": "806c0c1ed4d1a6e93caa917ae78e196928d3123770a9de199122039c1f1c49ba",
+  "decoded_av_captures": 20,
+  "exact_cleanup": true,
+  "exact_refresh_terminals": 1,
+  "formal_idle_replay": {
+    "first_formal_failure": "idle_working_memory_over_64_mib",
+    "formal_stderr_sha256": "63cd62e40c0a0eeba3ecb9374ada427afe526a816ff18155d4ebb794120670c5",
+    "idle_attribution_sha256": "7e54298020953ecba7b8a92f976ba76e8db205507756245e1facfed34668f576",
+    "raw_measurements_sha256": "44a35f3b1ae8b2f93c5a30fdd9c7907e2cd52632261ca639f94dd1bf0fda11cf",
+    "roles": {
+      "baseline": {
+        "active_file": {
+          "after": 181997568,
+          "before": 181997568,
+          "delta": 0
+        },
+        "anon": {
+          "after": 34390016,
+          "before": 27742208,
+          "delta": 6647808
+        },
+        "file": {
+          "after": 361213952,
+          "before": 349421568,
+          "delta": 11792384
+        },
+        "file_mapped": {
+          "after": 52953088,
+          "before": 33636352,
+          "delta": 19316736
+        },
+        "inactive_file": {
+          "after": 50503680,
+          "before": 50503680,
+          "delta": 0
+        },
+        "working_bytes": {
+          "after": 371060736,
+          "before": 353124352,
+          "delta": 17936384
+        }
+      },
+      "candidate": {
+        "active_file": {
+          "after": 159178752,
+          "before": 88514560,
+          "delta": 70664192
+        },
+        "anon": {
+          "after": 28336128,
+          "before": 15978496,
+          "delta": 12357632
+        },
+        "file": {
+          "after": 193904640,
+          "before": 122281984,
+          "delta": 71622656
+        },
+        "file_mapped": {
+          "after": 49508352,
+          "before": 46231552,
+          "delta": 3276800
+        },
+        "inactive_file": {
+          "after": 34725888,
+          "before": 33767424,
+          "delta": 958464
+        },
+        "working_bytes": {
+          "after": 191733760,
+          "before": 108498944,
+          "delta": 83234816
+        }
+      },
+      "origin": {
+        "active_file": {
+          "after": 8810496,
+          "before": 8810496,
+          "delta": 0
+        },
+        "anon": {
+          "after": 17915904,
+          "before": 15790080,
+          "delta": 2125824
+        },
+        "file": {
+          "after": 112291840,
+          "before": 123342848,
+          "delta": -11051008
+        },
+        "file_mapped": {
+          "after": 4497408,
+          "before": 4497408,
+          "delta": 0
+        },
+        "inactive_file": {
+          "after": 103485440,
+          "before": 114536448,
+          "delta": -11051008
+        },
+        "working_bytes": {
+          "after": 30461952,
+          "before": 28749824,
+          "delta": 1712128
+        }
+      }
+    },
+    "windows": {
+      "file_descriptors": {
+        "after": 497,
+        "before": 268,
+        "delta": 229
+      },
+      "processes": {
+        "after": 11,
+        "before": 11,
+        "delta": 0
+      },
+      "socket_descriptors": {
+        "after": 62,
+        "before": 152,
+        "delta": -90
+      },
+      "threads": {
+        "after": 23,
+        "before": 23,
+        "delta": 0
+      },
+      "working_memory_bytes": {
+        "after": 593076224,
+        "before": 490090496,
+        "delta": 102985728
+      }
+    }
+  },
+  "formal_proof_exit": 1,
+  "idle_limits": {
+    "file_descriptor_growth": 16,
+    "working_memory_bytes_growth": 67108864
+  },
+  "original_prior_generation_exactly_identified": false,
+  "s7200_admitted": false,
+  "scope": "companion_with_separate_baseline_subcensus",
+  "stable_background_process_regular_file_growth": 381
+}
