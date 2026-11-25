@@ -972,33 +972,27 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/m3u/server-groups.json",
-            catalogue_options::read_denial_headers(
-                get(server_groups_json),
-                catalogue_options::COLLECTION_ALLOW,
-            )
-            .layer(from_fn_with_state(
-                CRUD_LIST_ALLOW,
-                epg_library_json_headers,
-            ))
-            .post(m3u_json::create_group)
-            .options(catalogue_options::server_group_json_alias)
-            .fallback(omitted_json_method),
+            get(server_groups_json)
+                .layer(from_fn_with_state(
+                    catalogue_options::COLLECTION_ALLOW,
+                    catalogue_options::typed_catalogue_read_headers,
+                ))
+                .post(m3u_json::create_group)
+                .options(catalogue_options::server_group_json_alias)
+                .fallback(omitted_json_method),
         )
         .route(
             "/api/m3u/server-groups/{json_id}",
-            catalogue_options::read_denial_headers(
-                get(server_group_json),
-                catalogue_options::DETAIL_ALLOW,
-            )
-            .layer(from_fn_with_state(
-                CRUD_DETAIL_ALLOW,
-                epg_library_json_headers,
-            ))
-            .patch(m3u_json::patch_group)
-            .put(m3u_json::put_group)
-            .delete(m3u_json::delete_group)
-            .options(catalogue_options::server_group_json_alias)
-            .fallback(omitted_json_method),
+            get(server_group_json)
+                .layer(from_fn_with_state(
+                    catalogue_options::DETAIL_ALLOW,
+                    catalogue_options::typed_catalogue_read_headers,
+                ))
+                .patch(m3u_json::patch_group)
+                .put(m3u_json::put_group)
+                .delete(m3u_json::delete_group)
+                .options(catalogue_options::server_group_json_alias)
+                .fallback(omitted_json_method),
         )
         .route(
             "/api/m3u/server-groups/",
@@ -1072,23 +1066,23 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/epg/epgdata.json",
-            catalogue_options::read_denial_headers(
-                get(epg_data_json),
-                catalogue_options::READ_ONLY_ALLOW,
-            )
-            .layer(from_fn_with_state(EPG_DATA_ALLOW, epg_library_json_headers))
-            .options(catalogue_options::epg_data_json_alias)
-            .fallback(omitted_json_method),
+            get(epg_data_json)
+                .layer(from_fn_with_state(
+                    catalogue_options::READ_ONLY_ALLOW,
+                    catalogue_options::typed_catalogue_read_headers,
+                ))
+                .options(catalogue_options::epg_data_json_alias)
+                .fallback(omitted_json_method),
         )
         .route(
             "/api/epg/epgdata/{json_id}",
-            catalogue_options::read_denial_headers(
-                get(epg_entry_json),
-                catalogue_options::READ_ONLY_ALLOW,
-            )
-            .layer(from_fn_with_state(EPG_DATA_ALLOW, epg_library_json_headers))
-            .options(catalogue_options::epg_data_json_alias)
-            .fallback(omitted_json_method),
+            get(epg_entry_json)
+                .layer(from_fn_with_state(
+                    catalogue_options::READ_ONLY_ALLOW,
+                    catalogue_options::typed_catalogue_read_headers,
+                ))
+                .options(catalogue_options::epg_data_json_alias)
+                .fallback(omitted_json_method),
         )
         .route(
             "/api/epg/epgdata/",
