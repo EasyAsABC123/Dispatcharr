@@ -171,6 +171,17 @@ async fn detail_options(
     .await
 }
 
+async fn detail_json_options(
+    auth: State<AuthService>,
+    JsonReadId(id): JsonReadId,
+    peer: ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    uri: OriginalUri,
+) -> Result<Response, StoreError> {
+    negotiate_literal_json_alias(&headers)?;
+    Ok(detail_options(auth, Path(id), peer, headers, uri).await)
+}
+
 async fn claim_options(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -588,7 +599,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
                 get(retrieve_json_alias),
                 catalogue_options::DETAIL_ALLOW,
             )
-            .head(omitted_json_method)
+            .options(detail_json_options)
             .fallback(omitted_json_method),
         )
         .route(

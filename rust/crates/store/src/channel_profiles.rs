@@ -451,6 +451,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
                     catalogue_options::COLLECTION_ALLOW,
                     catalogue_options::typed_catalogue_read_headers,
                 ))
+                .options(catalogue_options::channel_profile_json_alias)
                 .fallback(omitted_profile_read_method),
         )
         .route(
@@ -464,6 +465,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
                     catalogue_options::DETAIL_ALLOW,
                     catalogue_options::typed_catalogue_read_headers,
                 ))
+                .options(catalogue_options::channel_profile_json_alias)
                 .fallback(omitted_profile_read_method),
         )
         .route("/api/channels/profiles/{id}/duplicate/", post(duplicate))

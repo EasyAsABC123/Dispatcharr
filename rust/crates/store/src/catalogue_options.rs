@@ -139,10 +139,48 @@ pub(super) async fn respond(
     uri: Uri,
     kind: Kind,
 ) -> Response {
-    let (_, root, query) = kind.definition();
+    let (_, root, _) = kind.definition();
     let Some(id) = detail_id(&uri, root) else {
         return kind.previous_unhandled(true);
     };
+    respond_for_id(auth, peer, headers, uri, kind, id).await
+}
+
+pub(super) async fn respond_json_alias(
+    auth: &AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    uri: Uri,
+    kind: Kind,
+) -> Response {
+    let (_, root, _) = kind.definition();
+    let id = if uri.path().strip_suffix(".json") == root.strip_suffix('/') {
+        None
+    } else if let Some(id) = uri
+        .path()
+        .strip_prefix(root)
+        .and_then(|key| key.strip_suffix(".json"))
+        .filter(|key| !key.is_empty() && key.bytes().all(|byte| byte.is_ascii_digit()))
+    {
+        Some(id.parse().unwrap_or(-1))
+    } else {
+        return StoreError::NotFound.into_response();
+    };
+    if let Err(error) = negotiate_literal_json_alias(&headers) {
+        return error.into_response();
+    }
+    respond_for_id(auth, peer, headers, uri, kind, id).await
+}
+
+async fn respond_for_id(
+    auth: &AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    uri: Uri,
+    kind: Kind,
+    id: Option<i64>,
+) -> Response {
+    let (_, _, query) = kind.definition();
     let detail = id.is_some();
     let Ok(indentation) = channel_options_indentation(&uri, &headers) else {
         return kind.previous_unhandled(detail);
@@ -171,21 +209,29 @@ pub(super) async fn respond(
 }
 
 macro_rules! options {
-    ($name:ident, $kind:ident) => {
+    ($name:ident, $kind:ident, $respond:ident) => {
         pub(super) async fn $name(
             State(auth): State<AuthService>,
             ConnectInfo(peer): ConnectInfo<SocketAddr>,
             headers: HeaderMap,
             OriginalUri(uri): OriginalUri,
         ) -> Response {
-            respond(&auth, peer, headers, uri, Kind::$kind).await
+            $respond(&auth, peer, headers, uri, Kind::$kind).await
         }
     };
 }
-options!(output_profile, OutputProfile);
-options!(channel_profile, ChannelProfile);
-options!(server_group, ServerGroup);
-options!(epg_data, EpgData);
+options!(output_profile, OutputProfile, respond);
+options!(output_profile_json_alias, OutputProfile, respond_json_alias);
+options!(channel_profile, ChannelProfile, respond);
+options!(
+    channel_profile_json_alias,
+    ChannelProfile,
+    respond_json_alias
+);
+options!(server_group, ServerGroup, respond);
+options!(server_group_json_alias, ServerGroup, respond_json_alias);
+options!(epg_data, EpgData, respond);
+options!(epg_data_json_alias, EpgData, respond_json_alias);
 
 pub(super) async fn typed_read_headers(
     state: State<&'static str>,

@@ -373,9 +373,7 @@ impl EpgProgramReads {
         })
     }
     pub fn router(self) -> Router {
-        let list_json = get(list_json_alias)
-            .head(omitted_json_method)
-            .fallback(omitted_json_method);
+        let list_json = get(list_json_alias).fallback(omitted_json_method);
         Router::new()
             .route(
                 "/api/epg/programs/",
@@ -387,16 +385,22 @@ impl EpgProgramReads {
             )
             .route(
                 "/api/epg/programs.json",
-                list_json.clone().post(mutations::create_json),
+                list_json
+                    .clone()
+                    .post(mutations::create_json)
+                    .options(programme_json_options),
             )
-            .route("/api/epg/programs.json/", list_json)
+            .route(
+                "/api/epg/programs.json/",
+                list_json.head(omitted_json_method),
+            )
             .route(search::PATH, search::routes())
             .route("/api/epg/programs/search.json", search::routes())
             .route("/api/epg/programs/search.json/", search::routes())
             .route(
                 "/api/epg/programs/{json_id}",
                 get(detail_json_alias)
-                    .head(omitted_json_method)
+                    .options(programme_json_options)
                     .put(mutations::change_json)
                     .patch(mutations::change_json)
                     .delete(mutations::change_json)
@@ -770,6 +774,22 @@ async fn programme_options(
     .await
 }
 
+async fn programme_json_options(
+    State(state): State<EpgProgramReads>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    catalogue_options::respond_json_alias(
+        state.auth(),
+        peer,
+        headers,
+        uri,
+        catalogue_options::Kind::Programme,
+    )
+    .await
+}
+
 async fn list(
     State(state): State<EpgProgramReads>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
@@ -977,7 +997,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn seven_catalogue_json_aliases_use_protected_get_without_forcing_canonical_changes() {
+    async fn grouped_catalogue_json_aliases_use_protected_reads_and_options() {
         let pool = sqlx::postgres::PgPoolOptions::new()
             .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
         let auth = AuthService::new(
@@ -989,9 +1009,17 @@ mod tests {
         let router = reads
             .router()
             .merge(crate::channel_groups::router(auth.clone()))
+            .merge(crate::core_reads::router(auth.clone()))
+            .merge(crate::channel_profiles::router(auth.clone()))
             .merge(crate::provider_reads::router(auth))
             .layer(Extension(ConnectInfo(peer)));
         for path in [
+            "/api/core/useragents/1.json",
+            "/api/core/streamprofiles.json",
+            "/api/core/outputprofiles.json",
+            "/api/core/outputprofiles/1.json",
+            "/api/channels/profiles.json",
+            "/api/channels/profiles/1.json",
             "/api/channels/groups/1.json",
             "/api/m3u/server-groups.json",
             "/api/m3u/server-groups/1.json",
@@ -1014,12 +1042,17 @@ mod tests {
                     StatusCode::UNAUTHORIZED,
                 ),
                 (Method::GET, "text/html", "", StatusCode::NOT_ACCEPTABLE),
-                (Method::HEAD, "application/json", "", StatusCode::NOT_FOUND),
+                (
+                    Method::HEAD,
+                    "application/json",
+                    "",
+                    StatusCode::UNAUTHORIZED,
+                ),
                 (
                     Method::OPTIONS,
                     "application/json",
                     "",
-                    StatusCode::NOT_FOUND,
+                    StatusCode::UNAUTHORIZED,
                 ),
                 (
                     Method::POST,
@@ -1035,6 +1068,12 @@ mod tests {
                     },
                 ),
             ] {
+                if !matches!(method, Method::HEAD | Method::OPTIONS)
+                    && (path.starts_with("/api/core/")
+                        || path.starts_with("/api/channels/profiles"))
+                {
+                    continue;
+                }
                 let request = Request::builder()
                     .method(method.clone())
                     .uri(format!("{path}{query}"))
@@ -1044,6 +1083,12 @@ mod tests {
                 let response = router.clone().oneshot(request).await.unwrap();
                 assert_eq!(response.status(), expected, "{method} {path}{query}");
                 assert!(!response.headers().contains_key(header::SET_COOKIE));
+                if method == Method::HEAD {
+                    assert!(to_bytes(response.into_body(), 1024)
+                        .await
+                        .unwrap()
+                        .is_empty());
+                }
             }
         }
         for path in [
