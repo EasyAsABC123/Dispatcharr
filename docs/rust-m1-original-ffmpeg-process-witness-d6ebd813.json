@@ -1,0 +1,49 @@
+{
+  "application_performance_verified": false,
+  "candidate_build_sha256": "c1783caa5c34cc7f24c06b817de9615683dba92e57a2757429845e08a34e4712",
+  "candidate_revision": "d6ebd8134ed19a7792fefce069e100ba220b29c7",
+  "credit": "Original Dispatcharr and FFmpeg authors and dependency contributors retain full credit.",
+  "diagnostic_only": true,
+  "full_M1_accepted": false,
+  "literal_controller_exit": 1,
+  "original": {
+    "active_profile_routes": {
+      "HLS": 302,
+      "TS": 200
+    },
+    "backend": "Original",
+    "both_three_second_av_decodes": true,
+    "exact_cleanup": true,
+    "one_shared_upstream": true,
+    "paced_reader_useful_bytes": 982864,
+    "profile_process_and_origin_retired": false,
+    "regular_reader_fresh_bytes_after_paced_close": 255868,
+    "regular_reader_useful_bytes": 1279340
+  },
+  "prior_original": "exact_retirement_timeout",
+  "replayed_original_report_sha256": "6853a62a8709da96edd40bd1973900e1147bc744d58e0c9710987a9728926e58",
+  "retirement_category": "same_generation_zombie_at_timeout",
+  "witness": {
+    "at_overlap": {
+      "group_relation": "same_profile_group",
+      "parent_relation": "same_profile_parent",
+      "state": "live",
+      "web_group_relation": "different_owned_web_group"
+    },
+    "profile_leads_group_at_overlap": true,
+    "samples": 40,
+    "scope_complete": true,
+    "sequence": [
+      {
+        "group_relation": "same_profile_group",
+        "parent_relation": "owned_container_init",
+        "polls": 40,
+        "state": "zombie",
+        "web_group_relation": "different_owned_web_group"
+      }
+    ],
+    "states": {
+      "zombie": 40
+    }
+  }
+}

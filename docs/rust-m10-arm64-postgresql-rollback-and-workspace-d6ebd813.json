@@ -1,0 +1,132 @@
+{
+  "application": {
+    "arm64_application_archive_sha256": "63e4a2e4794df602094eba438f2456985a53a3c4e6a3ac60fbe7c2c384b5443c",
+    "input_cardinality": {
+      "archive_and_compiled_source_map": {
+        "application_inputs": 2261,
+        "protected_inputs": 497
+      },
+      "assembler_reported": {
+        "application_inputs": 2260,
+        "protected_inputs": 497
+      }
+    },
+    "published_merge": "30a661e814694a23637afaea0c518aec9d6e2009",
+    "revision": "d6ebd8134ed19a7792fefce069e100ba220b29c7",
+    "source_tree_sha256": "d5c5f94f0b31b6ee05612b979830f5f262edc287c10f1c0d79472c108b493d22"
+  },
+  "arm64_copied_postgresql_cold_rollback": {
+    "arm_child": "sha256:d0eeb3cc470b0b0e1274a55182f17a5dbb566f93bba0e05f61f883911549d7f4",
+    "arm_config": "sha256:2905f6b6359028851c9d982282b3ed5b536f53ed35d8033f16db1f5af0118332",
+    "build_sha256": "b1253d761cf553b22eefe7da69ebe8d4df9e38c83974335d62c07f650fa9d090",
+    "first_attempt": {
+      "captured_owner_sha256": "5d348f40803de80f74212ad2ac96282532cc511b9407f4f4b58491afaac51bd8",
+      "freeze_exit": 1,
+      "owner_exit": 1,
+      "physical_started": false,
+      "reason": "stale assembler count in the exact package receipt"
+    },
+    "image": "sha256:81a8eb84e2721a2ba7c4b25f3490f4e460f1d3d1d39ac338cb3512729aa2e227",
+    "ordinary_package_audit_sha256": "a42429f0d4e9769e42586521bb2485f2f4aee2d1625aaf13dcfb1df5cd36626b",
+    "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+    "retry": {
+      "captured_owner_sha256": "7257d8cb821406b79d74c531a5c74e55870abd22eaa61d11541eb34c435a9d1f",
+      "engine_running_after_empty": true,
+      "fixture_seal_sha256": "e555295b1e32e1bc6930d4f15957ec7051135c8125caa052fbefde745540a0f6",
+      "independent_intake_sha256": "6cca3a3192f7f2a401dbe2b30ddb2db83e22c52b799a781cb5fc3b53f0b5a62a",
+      "literal_exits": {
+        "campaign": 0,
+        "freeze": 0,
+        "intake": 0,
+        "owner": 0,
+        "prepare": 0
+      },
+      "physical_owner_proof_sha256": "b3fc9e03b086eee38f6ead6b7733dc9564f66e36cb43efd173dd31df755c9fe5",
+      "transport_sha256": "dc22ae0a3876c844813e180e0e4475acea2f2dccdfa32d9278e06b7788de9a4b",
+      "typed_intake_sha256": "0f982fef188fc42037e24b5e0eaf716c47cf50f928377c5f86959f529358819f",
+      "workspace_receipt_sha256": "50ab78366c74d6e5c11900ccccc9a57d2b55385a86efe793954128251f6ebf21"
+    },
+    "signed_auth_sha256": "ea86255667355f37424b17c37a72c76b52ec03cef8d9f88756cacca686641614",
+    "verified_postgresql_rehearsal": {
+      "cold_return": {
+        "other_startup_fields_exact_within_each_scope": true,
+        "paired_bounded_startup_timestamp_effect_count": 4,
+        "post_ready_read_and_stop_exact": true,
+        "same_session_read_saw_acknowledged_rename": true
+      },
+      "copied_media_read_count": 4,
+      "copy": {
+        "byte_equal_cold_checkpoint_count": 5,
+        "exact_cold_preboot_order_rows_sequences": true,
+        "fresh_cold_restores": 2,
+        "initial_logical_restores": 2,
+        "logical_columns": 501,
+        "logical_tables": 62,
+        "temporary_archives_retired": true
+      },
+      "ingress": {
+        "Original_reconciliation_PATCHes": 0,
+        "Source_issued_session_requests": 8,
+        "signed_requests": 10,
+        "total_requests": 14
+      },
+      "original_raw_data_or_credentials_transferred": false,
+      "route_order": [
+        "Original",
+        "Native",
+        "OriginalCold"
+      ],
+      "teardown": {
+        "compose_down_exit": 0,
+        "exact_container_ids": 16,
+        "exact_named_volumes": 6,
+        "exact_network_id_and_name": 1,
+        "original_project_inventories_empty": true,
+        "reserved_names_observed_absent_postdown": 16,
+        "reserved_names_proven_absent_prestart": 16,
+        "temporary_compose_removed": true
+      },
+      "write": {
+        "rows": 1,
+        "writer_SQL_sessions_after_stop": 0,
+        "writer_exit": 0
+      }
+    }
+  },
+  "credit": "Original Dispatcharr and upstream authors retain full authorship and license credit.",
+  "formal_M10_accepted": false,
+  "formal_M11_accepted": false,
+  "host_workspace": {
+    "focused_tests": [
+      "cached_http_failure_drops_response_before_one_origin_fallback_and_clears",
+      "cold_disabled_oversized_and_transport_error_keep_existing_paths",
+      "initialized_session_uses_only_its_first_cached_hop",
+      "unsuccessful_origin_fallback_does_not_discard_the_previous_destination"
+    ],
+    "independent_receipt_replay_exit": 0,
+    "literal_exits": {
+      "clippy": 0,
+      "format": 0,
+      "own": 0,
+      "targeted": 0,
+      "tests": 0
+    },
+    "platform": "x86_64-unknown-linux-gnu",
+    "rust_toolchain": "1.90.0",
+    "source_custody_digest": "87a10b98d3c36d22fc35e13668e4ce402bddefcb2fa3c1cbcb0e0407c461a669",
+    "source_verified_before_and_after_each_phase": true,
+    "test_counts": {
+      "failed": 0,
+      "groups": 194,
+      "ignored": 843,
+      "passed": 1988
+    },
+    "workspace_members": 30,
+    "workspace_receipt_sha256": "50ab78366c74d6e5c11900ccccc9a57d2b55385a86efe793954128251f6ebf21"
+  },
+  "original_author_credit_retained": true,
+  "paired_performance_measured": false,
+  "production_deployment_performed": false,
+  "schema_version": 1,
+  "scope": "D6 full Rust host workspace and isolated linux/arm64 copied PostgreSQL cold rollback"
+}
