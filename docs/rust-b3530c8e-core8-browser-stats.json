@@ -1,0 +1,71 @@
+{
+  "application": "b3530c8eeab4741256f3225d479785b5a622dda9",
+  "dedicated_core8": {
+    "passed": true,
+    "scope": "Separate active core container/common stopped-web PGRedis infrastructure; release native ELF and actual Source buffer functional correctness only, no resource samples or qualification/measurement",
+    "cleanup": "project removed",
+    "default_database_unchanged": true,
+    "performance_verified": false,
+    "resource_sample_count": 0,
+    "phases": [
+      {
+        "backend": "source",
+        "viewers": 1
+      },
+      {
+        "backend": "native",
+        "viewers": 1
+      },
+      {
+        "backend": "source",
+        "viewers": 10
+      },
+      {
+        "backend": "native",
+        "viewers": 10
+      },
+      {
+        "backend": "source",
+        "viewers": 100
+      },
+      {
+        "backend": "native",
+        "viewers": 100
+      }
+    ],
+    "held_controls_passed": true
+  },
+  "browser_stats": {
+    "active_channel_stats_HTTP_200": true,
+    "actual_advancing_video": true,
+    "displayed_active_clients_per_arm": 1,
+    "entrypoint": "production-Main",
+    "exact_static_assets": 112,
+    "full_required_workflow": true,
+    "normal_UI_player_close": true,
+    "paired_browser_arms": 2,
+    "post_close_empty_Stats_HTTP_and_DOM_per_arm": true,
+    "semantic_assertions_passed": true,
+    "stats_browser_arms": 2,
+    "teardown": {
+      "Chromium_groups_absent": true,
+      "application": "b3530c8eeab4741256f3225d479785b5a622dda9",
+      "archived_marker_sha256": "19b5006b467d6703d51c5a2460be784a71b8c128075f4893964d26e906fe8f2e",
+      "frontend_donor_retired": true,
+      "full_global_inventory_matched": true,
+      "independent_cleanup_sha256": "3ef698d030cae69e409d9be58677fe70b9f4733cd8892519cffd2f693da2c332",
+      "original_controller_failure_retained": true,
+      "owned_project_roles_retired": 4,
+      "standalone_cleanup_exit": 0
+    },
+    "original_controller_exit": 2,
+    "original_execution_exit": 0,
+    "original_cleanup_exit": 1,
+    "original_evaluation_exit": 1,
+    "independent_evaluation_exit": 0,
+    "canonical_controller_status_promoted": false,
+    "copied_upgrade_run": false
+  },
+  "core_functional_sha256": "403b05ba45d99b26be426cf4dc8bb15a5a48c2a586bd66bc6cd92739295ae864",
+  "browser_independent_evaluator_sha256": "6b838a71dccaaf91e617bb4e5ba6df95914ed72a5d3000b8b4e98b3251c4a821"
+}
