@@ -733,10 +733,16 @@ async fn shared_owner_restart_rehydrates_index_window_and_marks_new_media_discon
         .unwrap(),
         1
     );
-    old.publish(&serde_json::json!({"window":[{"seq":1,"dur":4.0,"disc":false}],"target":4.0,"adv_target":6,"disc_seq":0,"start_behind":2.0,"ts":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64()})).await.unwrap();
+    old.publish(&serde_json::json!({"window":[{"seq":1,"dur":4.0,"disc":false}],"target":4.0,"adv_target":6,"disc_seq":0,"start_behind":2.0,"ts":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64()-60.0})).await.unwrap();
     time::sleep(Duration::from_millis(90)).await;
-    let (gateway, engine, clients, url, origin_requests, server) =
-        setup(GatewayConfig::default(), true).await;
+    let (gateway, engine, clients, url, origin_requests, server) = setup(
+        GatewayConfig {
+            max_managers: 1,
+            ..Default::default()
+        },
+        true,
+    )
+    .await;
     let store = dispatcharr_output_store::OutputStore::connect(&redis_url, Default::default())
         .await
         .unwrap();
@@ -754,12 +760,48 @@ async fn shared_owner_restart_rehydrates_index_window_and_marks_new_media_discon
         .unwrap()
         .to_owned();
     until(|| async {
-        get(&gateway, format!("/proxy/hls/{failed_token}/index.m3u8"))
+        store
+            .snapshot(&channel, "hls")
             .await
-            .status()
-            == 410
+            .unwrap()
+            .owner
+            .is_none()
+            && get(&gateway, format!("/proxy/hls/{failed_token}/1.ts"))
+                .await
+                .status()
+                == 200
     })
     .await;
+    let playlist = get(&gateway, format!("/proxy/hls/{failed_token}/index.m3u8")).await;
+    assert_eq!(playlist.status(), 200);
+    let body = playlist.into_body().collect().await.unwrap().to_bytes();
+    assert!(std::str::from_utf8(&body)
+        .unwrap()
+        .lines()
+        .any(|line| line == "1.ts"));
+    let original_media = get(&gateway, format!("/proxy/hls/{failed_token}/1.ts")).await;
+    assert_eq!(original_media.status(), 200);
+    assert_eq!(
+        original_media
+            .into_body()
+            .collect()
+            .await
+            .unwrap()
+            .to_bytes(),
+        clip()
+    );
+    assert_eq!(
+        get(&gateway, format!("/proxy/hls/{failed_token}/999.ts"))
+            .await
+            .status(),
+        404
+    );
+    assert_eq!(
+        get(&gateway, format!("/proxy/hls/{}/1.ts", "a".repeat(32)))
+            .await
+            .status(),
+        410
+    );
     assert_eq!(origin_requests.load(Ordering::SeqCst), 0);
     let retained = store.snapshot(&channel, "hls").await.unwrap();
     assert!(retained.owner.is_none());
@@ -810,6 +852,130 @@ async fn shared_owner_restart_rehydrates_index_window_and_marks_new_media_discon
         200,
         "unexpired pre-restart segment remains addressable"
     );
+    let current_index = snapshot.index;
+    assert_eq!(
+        get(
+            &gateway,
+            format!("/proxy/hls/{failed_token}/{current_index}.ts")
+        )
+        .await
+        .status(),
+        200,
+        "the original signed capability can follow the new fenced producer"
+    );
+    let stopped = gateway
+        .router()
+        .oneshot(
+            Request::builder()
+                .method("DELETE")
+                .uri(format!("/api/proxy/hls/sessions/{failed_token}/"))
+                .header("x-owner", "8")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(stopped.status(), 404);
+    let stopped = gateway
+        .router()
+        .oneshot(
+            Request::builder()
+                .method("DELETE")
+                .uri(format!("/api/proxy/hls/sessions/{failed_token}/"))
+                .header("x-owner", "7")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+    assert_eq!(stopped.status(), 204);
+    assert_eq!(
+        get(&gateway, format!("/proxy/hls/{failed_token}/1.ts"))
+            .await
+            .status(),
+        410
+    );
+    assert_eq!(
+        get(&gateway, format!("/proxy/hls/{token}/1.ts"))
+            .await
+            .status(),
+        200
+    );
+
+    gateway.shutdown().await;
+    engine.shutdown();
+    clients.shutdown().await;
+    server.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis"]
+async fn abandoned_shared_token_expires_while_retained_media_still_exists() {
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let channel = channel();
+    let old_store = dispatcharr_output_store::OutputStore::connect(
+        &redis_url,
+        dispatcharr_output_store::OutputConfig {
+            owner_ttl: Duration::from_millis(70),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let old = old_store
+        .claim(&channel, "hls", "old")
+        .await
+        .unwrap()
+        .unwrap();
+    let timestamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs_f64();
+    old.put(&clip(), timestamp).await.unwrap();
+    old.publish(&serde_json::json!({"window":[{"seq":1,"dur":4.0}],"ts":timestamp}))
+        .await
+        .unwrap();
+    time::sleep(Duration::from_millis(90)).await;
+    let (gateway, engine, clients, url, origin_requests, server) = setup(
+        GatewayConfig {
+            initialization_timeout: Duration::from_millis(350),
+            session_idle_timeout: Duration::from_secs(5),
+            ..Default::default()
+        },
+        true,
+    )
+    .await;
+    let gateway = gateway.with_output_store(old_store.clone()).unwrap();
+    let mut rejected = source(channel.clone(), url);
+    rejected.provider_profile_id = Some(1);
+    rejected.provider_max_streams = 1;
+    let reply = gateway.mint(rejected).await.unwrap();
+    let cap = reply.headers()["X-Dispatcharr-Session-Token"]
+        .to_str()
+        .unwrap();
+    until(|| async {
+        old_store
+            .snapshot(&channel, "hls")
+            .await
+            .unwrap()
+            .owner
+            .is_none()
+            && get(&gateway, format!("/proxy/hls/{cap}/1.ts"))
+                .await
+                .status()
+                == 200
+    })
+    .await;
+    // Frequent touches cannot extend the short abandoned-startup authority.
+    until(|| async {
+        get(&gateway, format!("/proxy/hls/{cap}/1.ts"))
+            .await
+            .status()
+            == 410
+    })
+    .await;
+    assert_eq!(origin_requests.load(Ordering::SeqCst), 0);
+    assert!(old_store.get(&channel, "hls", 1).await.unwrap().is_some());
     gateway.shutdown().await;
     engine.shutdown();
     clients.shutdown().await;
