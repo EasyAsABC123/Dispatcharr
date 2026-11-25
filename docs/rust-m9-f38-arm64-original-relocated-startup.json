@@ -1,0 +1,316 @@
+{
+  "backing_inode_or_page_charge_ownership_established": false,
+  "both_owned_fixture_and_engine_retired": true,
+  "changed_formal_soak_decision": false,
+  "counterbalanced_arms": [
+    {
+      "launches": {
+        "original": {
+          "delta": {
+            "baseline": {
+              "active_file": 60506112,
+              "anon": 0,
+              "charged_bytes": 61341696,
+              "file": 61235200,
+              "file_mapped": 212992,
+              "inactive_file": 729088,
+              "working_bytes": 60612608
+            },
+            "candidate": {
+              "active_file": 0,
+              "anon": 0,
+              "charged_bytes": 0,
+              "file": 0,
+              "file_mapped": 0,
+              "inactive_file": 0,
+              "working_bytes": 0
+            },
+            "origin": {
+              "active_file": 0,
+              "anon": 0,
+              "charged_bytes": 0,
+              "file": 0,
+              "file_mapped": 0,
+              "inactive_file": 0,
+              "working_bytes": 0
+            }
+          },
+          "immediate_prelaunch": {
+            "baseline": {
+              "active_file": 181997568,
+              "anon": 33501184,
+              "charged_bytes": 409202688,
+              "file": 349437952,
+              "file_mapped": 33632256,
+              "inactive_file": 50520064,
+              "working_bytes": 358682624
+            },
+            "candidate": {
+              "active_file": 78327808,
+              "anon": 15962112,
+              "charged_bytes": 131018752,
+              "file": 110743552,
+              "file_mapped": 46690304,
+              "inactive_file": 32415744,
+              "working_bytes": 98603008
+            },
+            "origin": {
+              "active_file": 1822720,
+              "anon": 13811712,
+              "charged_bytes": 132243456,
+              "file": 115826688,
+              "file_mapped": 577536,
+              "inactive_file": 114008064,
+              "working_bytes": 18235392
+            }
+          },
+          "launched_role": "baseline"
+        },
+        "relocated": {
+          "delta": {
+            "baseline": {
+              "active_file": 0,
+              "anon": 0,
+              "charged_bytes": -90112,
+              "file": 0,
+              "file_mapped": 0,
+              "inactive_file": 0,
+              "working_bytes": -90112
+            },
+            "candidate": {
+              "active_file": 68841472,
+              "anon": 0,
+              "charged_bytes": 70049792,
+              "file": 69763072,
+              "file_mapped": 0,
+              "inactive_file": 921600,
+              "working_bytes": 69128192
+            },
+            "origin": {
+              "active_file": 0,
+              "anon": 0,
+              "charged_bytes": 0,
+              "file": 0,
+              "file_mapped": 0,
+              "inactive_file": 0,
+              "working_bytes": 0
+            }
+          },
+          "immediate_prelaunch": {
+            "baseline": {
+              "active_file": 242503680,
+              "anon": 33501184,
+              "charged_bytes": 470802432,
+              "file": 410673152,
+              "file_mapped": 33845248,
+              "inactive_file": 51249152,
+              "working_bytes": 419553280
+            },
+            "candidate": {
+              "active_file": 78327808,
+              "anon": 15962112,
+              "charged_bytes": 131018752,
+              "file": 110743552,
+              "file_mapped": 46690304,
+              "inactive_file": 32415744,
+              "working_bytes": 98603008
+            },
+            "origin": {
+              "active_file": 1822720,
+              "anon": 13811712,
+              "charged_bytes": 132243456,
+              "file": 115826688,
+              "file_mapped": 577536,
+              "inactive_file": 114008064,
+              "working_bytes": 18235392
+            }
+          },
+          "launched_role": "candidate"
+        }
+      },
+      "order": [
+        "original",
+        "relocated"
+      ],
+      "proof_sha256": "7fcc25a2d3b120827db2679fe2688b33f3593e74b641b21488c0ac4b578d269e",
+      "relative_relocated_launched_role_delta": {
+        "active_file": 8335360,
+        "anon": 0,
+        "charged_bytes": 8708096,
+        "file": 8527872,
+        "file_mapped": -212992,
+        "inactive_file": 192512,
+        "working_bytes": 8515584
+      },
+      "version_stdout_matches": true,
+      "visible_layout": {
+        "comparable_file_pairs": 0,
+        "different_visible_inode_pairs": 0,
+        "same_visible_inode_pairs": 0,
+        "status": "observed"
+      }
+    },
+    {
+      "launches": {
+        "original": {
+          "delta": {
+            "baseline": {
+              "active_file": 0,
+              "anon": 0,
+              "charged_bytes": 69632,
+              "file": 0,
+              "file_mapped": 0,
+              "inactive_file": 0,
+              "working_bytes": 69632
+            },
+            "candidate": {
+              "active_file": 0,
+              "anon": 0,
+              "charged_bytes": 0,
+              "file": 0,
+              "file_mapped": 0,
+              "inactive_file": 0,
+              "working_bytes": 0
+            },
+            "origin": {
+              "active_file": 0,
+              "anon": 0,
+              "charged_bytes": 0,
+              "file": 0,
+              "file_mapped": 0,
+              "inactive_file": 0,
+              "working_bytes": 0
+            }
+          },
+          "immediate_prelaunch": {
+            "baseline": {
+              "active_file": 4096,
+              "anon": 30830592,
+              "charged_bytes": 165588992,
+              "file": 118308864,
+              "file_mapped": 16924672,
+              "inactive_file": 1384448,
+              "working_bytes": 164204544
+            },
+            "candidate": {
+              "active_file": 0,
+              "anon": 15937536,
+              "charged_bytes": 19550208,
+              "file": 0,
+              "file_mapped": 0,
+              "inactive_file": 0,
+              "working_bytes": 19550208
+            },
+            "origin": {
+              "active_file": 4096,
+              "anon": 14462976,
+              "charged_bytes": 130412544,
+              "file": 112500736,
+              "file_mapped": 0,
+              "inactive_file": 112500736,
+              "working_bytes": 17911808
+            }
+          },
+          "launched_role": "baseline"
+        },
+        "relocated": {
+          "delta": {
+            "baseline": {
+              "active_file": 0,
+              "anon": 0,
+              "charged_bytes": -20480,
+              "file": 0,
+              "file_mapped": 0,
+              "inactive_file": 0,
+              "working_bytes": -20480
+            },
+            "candidate": {
+              "active_file": 0,
+              "anon": 4096,
+              "charged_bytes": 688128,
+              "file": -4096,
+              "file_mapped": 0,
+              "inactive_file": -4096,
+              "working_bytes": 692224
+            },
+            "origin": {
+              "active_file": 0,
+              "anon": 0,
+              "charged_bytes": -4096,
+              "file": 0,
+              "file_mapped": 0,
+              "inactive_file": 0,
+              "working_bytes": -4096
+            }
+          },
+          "immediate_prelaunch": {
+            "baseline": {
+              "active_file": 4096,
+              "anon": 30830592,
+              "charged_bytes": 165679104,
+              "file": 118308864,
+              "file_mapped": 16924672,
+              "inactive_file": 1384448,
+              "working_bytes": 164294656
+            },
+            "candidate": {
+              "active_file": 0,
+              "anon": 15933440,
+              "charged_bytes": 18923520,
+              "file": 4096,
+              "file_mapped": 0,
+              "inactive_file": 4096,
+              "working_bytes": 18919424
+            },
+            "origin": {
+              "active_file": 4096,
+              "anon": 14462976,
+              "charged_bytes": 130420736,
+              "file": 112500736,
+              "file_mapped": 0,
+              "inactive_file": 112500736,
+              "working_bytes": 17920000
+            }
+          },
+          "launched_role": "candidate"
+        }
+      },
+      "order": [
+        "relocated",
+        "original"
+      ],
+      "proof_sha256": "8adeabb55a1e3a48d983c722b5baf2bb23e9452a6256ce49f4566f011d98a0a2",
+      "relative_relocated_launched_role_delta": {
+        "active_file": 0,
+        "anon": 4096,
+        "charged_bytes": 618496,
+        "file": -4096,
+        "file_mapped": 0,
+        "inactive_file": -4096,
+        "working_bytes": 622592
+      },
+      "version_stdout_matches": true,
+      "visible_layout": {
+        "comparable_file_pairs": 0,
+        "different_visible_inode_pairs": 0,
+        "same_visible_inode_pairs": 0,
+        "status": "observed"
+      }
+    }
+  ],
+  "diagnostic_only": true,
+  "ffmpeg_sha256": "7944790a81f0062178fb4c627450b413943542da226cb7bb2dd11db26421f5fb",
+  "same_verified_candidate": {
+    "application": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+    "arm_child": "sha256:6dcdc3687a4aea9216a13ce1c969fe32a206b3649c7eda22d0ab0bf38eb7c41d",
+    "arm_config": "sha256:f9b2292f6793fc657c731a390f4d454bbdc82417e82518ff17a7fe070b77fe9c",
+    "build_manifest_sha256": "0dc059e02e90a517197f1b55daf9907226f81ab9d0b6c32aabdf7b956cf4297d",
+    "dispatcharr_rs_sha256": "a00dc91e874a9d86cfcda5b305f35bff0ffc5e794840efb4b051981303f877f5",
+    "image": "sha256:1e71a9f9639766454f05671dd571487008ae04cd807b87b94cf6a1df98600623",
+    "package_audit_sha256": "6e30896ec6180217ab3e74b4f14c81bab850fb83ce4faba7f15580ff4c0e44e7",
+    "platform": "linux/arm64",
+    "signed_auth_sha256": "e9c51c3ebe00e35feff22302ad5078594f210854ac7a5d30970903b054cc8782",
+    "source_tree_sha256": "1f8506bcadf064000d135dc14510a907996ac72fa89cb3a8be616540ca844c43"
+  },
+  "shared_vm_cache_state_possible": true
+}

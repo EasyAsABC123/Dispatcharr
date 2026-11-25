@@ -1,0 +1,152 @@
+{
+  "backend_expiry": {
+    "native": {
+      "actual_journal_sha256": "8e15f6609e3e109e2079c75b92672b618df65b9d3e44fca3f5b2af0a1dd1407d",
+      "case_projection": [
+        {
+          "actual_RESULT_before_ACK": true,
+          "case": "expired_new",
+          "old_SUCCESS_unchanged": false,
+          "physical_reservation_and_ack": true,
+          "typed_result": "expired"
+        },
+        {
+          "actual_RESULT_before_ACK": true,
+          "case": "same_worker_fresh_delivery",
+          "old_SUCCESS_unchanged": false,
+          "physical_reservation_and_ack": true,
+          "typed_result": "revoked"
+        },
+        {
+          "actual_RESULT_before_ACK": false,
+          "case": "expired_existing_success",
+          "old_SUCCESS_unchanged": true,
+          "physical_reservation_and_ack": true,
+          "typed_result": "preserve_success"
+        }
+      ],
+      "exact_cleanup": true,
+      "role_count": 5
+    },
+    "original": {
+      "actual_journal_sha256": "03c9f45063daa906f95e488981ca63d7425cf76515a3ee1f77de2b36b78eac9d",
+      "case_projection": [
+        {
+          "actual_RESULT_before_ACK": true,
+          "case": "expired_new",
+          "old_SUCCESS_unchanged": false,
+          "physical_reservation_and_ack": true,
+          "typed_result": "expired"
+        },
+        {
+          "actual_RESULT_before_ACK": true,
+          "case": "same_worker_fresh_delivery",
+          "old_SUCCESS_unchanged": false,
+          "physical_reservation_and_ack": true,
+          "typed_result": "revoked"
+        },
+        {
+          "actual_RESULT_before_ACK": false,
+          "case": "expired_existing_success",
+          "old_SUCCESS_unchanged": true,
+          "physical_reservation_and_ack": true,
+          "typed_result": "preserve_success"
+        }
+      ],
+      "exact_cleanup": true,
+      "role_count": 6
+    }
+  },
+  "credit": "Original Dispatcharr, Django, Celery and their contributors retain full authorship and license credit.",
+  "full_m6_accepted": false,
+  "group": {
+    "backend_cleanup": {
+      "engine_receipt_sha256": "7904b1c2d5a50adf825e701456ee7fec58b0e22005caa1bde9ad98f39da43f48",
+      "formal_credit": false,
+      "paired_physical_scoped_pass": true,
+      "proof_sha256": "c27f9cb2ef2b997b8be889dedf61214518b71f0160a1ff3b53b37ae5198b1f85",
+      "row": "m6/backend-cleanup-expiry"
+    },
+    "candidate": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+    "prerequisite_proof_sha256": {
+      "m6/scheduler-install-known-defaults": "1ff85351ce7e916110cd7a9c059e12221a6668f160643c2b0a7686d2c239b9e1",
+      "m6/scheduler-tick-publication": "fc0b5cee7bee70709202aaae91e60afa74b3889fdafbb9db983888fb9ea2ecd5"
+    },
+    "recurring": {
+      "engine_receipt_sha256": "392fe84b3299930b3d05ec79a1cf3897b3ca5f04d9eac149b557936711adbacf",
+      "formal_credit": false,
+      "paired_physical_scoped_pass": true,
+      "proof_sha256": "8ba9016caf4dfcd6a710df7d5f490c8c54a503395cde42deabe57762542fdee3",
+      "row": "m6/recurring-positive-repeat"
+    }
+  },
+  "group_replay_sha256": "777ec7d760bd4f7500db7779821f0468ae0a297e43196d1d207867a2712bd182",
+  "ordinary_package_build_sha256": "dc526bb02476e8610b8f79ba018242fcd34bbaa1c19988ee4b7f9e440a761387",
+  "performance_verified": false,
+  "platform": "linux/amd64",
+  "publication": "7927b2d4765f82b650d958fd15d0b70200a6b72c",
+  "recurrence": {
+    "Native": {
+      "actual_exit": 0,
+      "cleanup_sha256": "27a2f7f59598c8c245c5133b01594d6c0f858cace4b007588553533fe74d32ab",
+      "configured_runs": [
+        1,
+        2
+      ],
+      "formal_M6_credit": false,
+      "future_media_dispatched": false,
+      "journal_sha256": "ec95f82066258022da13e4b4b6cf52d264258346c91f94b3d4b21c24df178d59",
+      "linked_artwork": 2,
+      "originating_result_values": [
+        1,
+        1
+      ],
+      "other_owned_bookings_unchanged": true,
+      "replacement_same_slot": true,
+      "scope": "same ordinary configured recording schedule rebuilt twice",
+      "witness_sha256": "a7395d217b98f0da18765a38a94f76ea54bf6ed54fe0b83d6199c088a08c8fe0"
+    },
+    "Original": {
+      "actual_exit": 0,
+      "cleanup_sha256": "abb0bb960c1a1ea4b52ae0d7e9a1c1e2879f50ba7989c8c1d6bbb5b2a0909b88",
+      "configured_runs": [
+        1,
+        2
+      ],
+      "formal_M6_credit": false,
+      "future_media_dispatched": false,
+      "journal_sha256": "6c27ecf79b334368023deacac4774ee818e61fdea93541188d48f80ba2c26f35",
+      "linked_artwork": 2,
+      "originating_result_values": [
+        1,
+        1
+      ],
+      "other_owned_bookings_unchanged": true,
+      "replacement_same_slot": true,
+      "scope": "same ordinary configured recording schedule rebuilt twice",
+      "witness_sha256": "0134e323def60381901620f908956f4af512b67a4246610012017a65f1a1495d"
+    }
+  },
+  "revision": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+  "scheduler": {
+    "install": {
+      "known_default_count": 6,
+      "preserved_default_count": 5,
+      "reinstalled_default": "fetch-channel-statuses",
+      "retained_original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430"
+    },
+    "scoped_dispatch_literal_exit": 2,
+    "tick": {
+      "cadence_seconds": 3600,
+      "due_arms": 2
+    }
+  },
+  "schema": "dispatcharr-f38-scheduler-followon-evidence/1",
+  "stats_executed": false,
+  "verified_current_predecessors": [
+    "m6/backend-cleanup-expiry",
+    "m6/recurring-positive-repeat",
+    "m6/scheduler-install-known-defaults",
+    "m6/scheduler-tick-publication"
+  ]
+}

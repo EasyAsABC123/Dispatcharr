@@ -1,0 +1,63 @@
+{
+  "application": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+  "credit": "Original Dispatcharr, React, FFmpeg and upstream dependency authors retain full authorship, attribution and license credit.",
+  "engine_before_after_empty": true,
+  "formal_M3_complete": false,
+  "full_release_complete": false,
+  "independent_audit_sha256": "ff939d17d9335a210e3356517e9854fa8c3f79f980a560c75400e7caaf1faf2e",
+  "literal_exits": {
+    "independent_audit": 0,
+    "outer_guard": 0,
+    "scoped_dispatcher": 2
+  },
+  "manifest_sha256": "dc526bb02476e8610b8f79ba018242fcd34bbaa1c19988ee4b7f9e440a761387",
+  "owned_cleanup_exact": true,
+  "performance_measured": false,
+  "platform": "linux/amd64",
+  "published_application": "7927b2d4765f82b650d958fd15d0b70200a6b72c",
+  "rows": {
+    "package/retention100": {
+      "counts_and_gates": {
+        "authoritative_per_channel_max": 16777216,
+        "bytes_per_reader": 1500000,
+        "channels": 10,
+        "historical_readers": 100,
+        "lag_seconds": 45,
+        "late_av_decodes": 10,
+        "local_per_channel_max": 4194304,
+        "no_additional_upstream": true,
+        "performance_measured": false,
+        "reference_prefix_bytes": 65536,
+        "retained_captures_hash_verified": 10
+      },
+      "exact_cleanup": true,
+      "result_sha256": "15b9c1190e8fe37c1e47eae5bfb82ea2f1a33262f4e70249f57aad951a5216cc",
+      "status": "passed"
+    },
+    "package/sharedTS18": {
+      "counts_and_gates": {
+        "cases": 3,
+        "checks": 24,
+        "performance_measured": false,
+        "real_decoders": 6,
+        "signed_readers": 6
+      },
+      "exact_cleanup": true,
+      "result_sha256": "ad59b5f8c8a01eaa95b9d01618ed00589beb69a0f55e97bfd62478a053cf199e",
+      "status": "passed"
+    },
+    "package/sharedTS6-all-down": {
+      "counts_and_gates": {
+        "cases": 1,
+        "checks": 14,
+        "performance_measured": false,
+        "real_decoders": 2,
+        "restart_cleanup_seconds": 6.081838013022207,
+        "signed_readers": 2
+      },
+      "exact_cleanup": true,
+      "result_sha256": "0e60429ae77f81b7cd987c99ded1deb430ef583146a3570e2c78f400f208823e",
+      "status": "passed"
+    }
+  }
+}
