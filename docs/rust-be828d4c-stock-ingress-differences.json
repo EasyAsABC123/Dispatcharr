@@ -1,0 +1,63 @@
+{
+  "application": "be828d4cdbbcb5b019ef6dd8c60043daa3e8c3e5",
+  "stock_and_native_actual_exit": 0,
+  "stock_and_native_exact_inventory_exit": 0,
+  "comparison_actual_exit": 1,
+  "conclusive_checked_cases": 484,
+  "cases_with_differences": 484,
+  "fields": {
+    "header_names": 484,
+    "headers": 484,
+    "normalized_sha256": 28,
+    "repeated_headers": 484,
+    "status": 28,
+    "wire_bytes": 28
+  },
+  "header_deltas": [
+    {
+      "field": "allow",
+      "cases": 24
+    },
+    {
+      "field": "content-length",
+      "cases": 28
+    },
+    {
+      "field": "content-type",
+      "cases": 28
+    },
+    {
+      "field": "date",
+      "cases": 484
+    },
+    {
+      "field": "server",
+      "cases": 484
+    }
+  ],
+  "status_deltas": [
+    {
+      "cases": 4,
+      "stock": 200,
+      "native": 404,
+      "edge": "missing-control"
+    },
+    {
+      "cases": 24,
+      "stock": 500,
+      "native": 405,
+      "edge": "default"
+    }
+  ],
+  "replay_sha256": "3f9312f6db51b70a2ad2b5f3a9196304bedb668d320142028be23bd26a4685a0",
+  "native_receipt_sha256": "b568a8ee6341fe823e66cc463226ad236b4117f09e685155e1c519a3c66f343b",
+  "formal_m0_closed": false,
+  "separate_starting_attempt": {
+    "owner_actual_exit": 1,
+    "exact_inventory_exit": 0,
+    "fixture_started": false,
+    "phase": "package preflight",
+    "cause": "git archive returned ENOSPC on the temporary filesystem",
+    "stderr_sha256": "f660ec19dd054185639ec689c477a1eacbb3cb84c8ece9d041b8c7f231be047f"
+  }
+}
