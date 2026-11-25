@@ -340,6 +340,23 @@ impl TaskLocks {
         .await
     }
 
+    /// Prepare the dormant cache connection before taking the scheduled index file lease.
+    pub async fn acquire_epg_index_retained(
+        &self,
+        id: i64,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
+        self.acquire_suffix_impl(
+            "epg_source_file",
+            &id.to_string(),
+            Some(caller),
+            true,
+            true,
+            true,
+        )
+        .await
+    }
+
     /// Source SeriesRules uses the fixed literal `all` suffix and has no
     /// renewer. Keep that authority typed; callers cannot supply arbitrary keys.
     /// SET/cleanup/release retain the caller through actual physical replies.
@@ -347,13 +364,29 @@ impl TaskLocks {
         &self,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<TaskLease, TaskLockDetailedError> {
+        self.acquire_series_rules(caller, false).await
+    }
+
+    /// Prepare the dormant cache connection for ordinary broker-selected Series Rules.
+    pub async fn acquire_broker_series_rules_retained(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
+        self.acquire_series_rules(caller, true).await
+    }
+
+    async fn acquire_series_rules(
+        &self,
+        caller: Arc<dyn Send + Sync>,
+        prepare_connection: bool,
+    ) -> Result<TaskLease, TaskLockDetailedError> {
         self.acquire_suffix_impl(
             "evaluate_series_rules",
             "all",
             Some(caller),
             true,
             false,
-            false,
+            prepare_connection,
         )
         .await
     }
