@@ -1,0 +1,68 @@
+{
+  "HLS": {
+    "factory_clean": true,
+    "historic_physical_settled": true,
+    "historic_success_settled": false,
+    "independent_recovery_verified": true,
+    "node_result_sha256": "011a400d2ad6b32c854da38314f2994756696d1503b120f8747ea8900a49a990",
+    "receipt_sha256": "c00f20bccba89acef1b3995e3e9a5b7a2e1a6431dd778278424f568d29d8e501",
+    "recorded_owned_generations_retired": 4,
+    "restart_failure": "TimeoutError",
+    "restart_observation": {
+      "first_post_mint_observation_under_five_seconds": true,
+      "healthy_same_image_successor": true,
+      "initial_old_output_index": 2,
+      "old_segment_absent_post_mint": true,
+      "old_segment_pre_restart_ttl_ms": 43782,
+      "published_successor_media": false,
+      "successor_output_index": 0,
+      "timeout_gate": "ActualSuccessorPublishedNewMedia",
+      "witnesses_after_signed_mint": 40
+    },
+    "restart_phase": "same-package-main-restart",
+    "status": "failed"
+  },
+  "TS": {
+    "package/retention100": {
+      "node_result_sha256": "1724e7c4d7166ac4dd0ea7b0e61ddd6ee37473da667b011b720f5bea662e4f54",
+      "recorded_cleanup_sha256": "d1e1ba97cb5954c731649c4411ace00f7a18b156c3bb9cfd1c6acd172abc3811",
+      "status": "passed"
+    },
+    "package/sharedTS18": {
+      "node_result_sha256": "06c539625d533c22ba53db6f6061ffd2651fe96d9a8961fc6393b4372c5015c0",
+      "recorded_cleanup_sha256": "30a45888619be4c088a6f77a7002a918deefc3dc3d64b1ebaf38a1668bfd2538",
+      "status": "passed"
+    },
+    "package/sharedTS6-all-down": {
+      "node_result_sha256": "9937fdb992bd590c2c92d1af48ab9e8c65959042a8d642d86fe73ee9e331f7e2",
+      "recorded_cleanup_sha256": "80819ec803b2782fe3b24133fe57f7b91840364bf3211e8d3bdf8106aeaff0c4",
+      "status": "passed"
+    }
+  },
+  "application": "b3530c8eeab4741256f3225d479785b5a622dda9",
+  "attribution": "Original Dispatcharr and all dependency authors retain full credit.",
+  "full_M3_passed": false,
+  "group_actual_exit": 1,
+  "group_report_sha256": "b0e7f969d33498c8d029144e9f9062a72326640a0f2259cff4056d80491e7b86",
+  "historical_scheduler_cleanup_uncertain": true,
+  "independent_exact_file_replay_exit": 0,
+  "independent_exact_file_replay_sha256": "fa19cc8e01ac5a9e9c5b33670c8ed1ba25748301b23a0f57840341fef734dab6",
+  "manifest_sha256": "e1ecab4ca4e53b8d2bc8a1a61094c059c10809261c7661218fe7a7e670eb9660",
+  "owned_teardown_recovery_receipt": {
+    "application": "b3530c8eeab4741256f3225d479785b5a622dda9",
+    "archived_temporary_hold_sha256": "2eefa06f7bb8815b422ff0d21be0773dd2eacca54e0b12da2fb1dacba3d5686c",
+    "exact_original_container_and_host_generations_retired": 4,
+    "global_running_container_count": 0,
+    "host_CLI_groups_settled": true,
+    "observed_HLS_workflow_exit": 1,
+    "original_receipt_sha256": "c00f20bccba89acef1b3995e3e9a5b7a2e1a6431dd778278424f568d29d8e501",
+    "owned_container_network_volume_counts": [
+      0,
+      0,
+      0
+    ],
+    "retained_failure": "ActualHlsRestartAndDiscontinuity",
+    "scope": "native/HLS-fMP4-workflows"
+  },
+  "performance_measured": false
+}

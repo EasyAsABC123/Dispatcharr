@@ -1,0 +1,284 @@
+{
+  "application": "b3530c8eeab4741256f3225d479785b5a622dda9",
+  "application_publication": "3a3e97b35f980f326e9333210489703cab3701df",
+  "arm64_independent_package_audit_sha256": "e045b51023196ef79ae949d799b488327060abbfa5de4acacc8e668ae3b7645a",
+  "attribution": "Original Dispatcharr, PostgreSQL and upstream dependencies retain full authorship and credit.",
+  "full_M9_passed": false,
+  "idle_growth_limits": {
+    "file_descriptors": 16,
+    "working_memory_bytes": 67108864
+  },
+  "s120": {
+    "exact_cleanup": true,
+    "execution_exit": 0,
+    "proof_exit": 0,
+    "proof_sha256": "660ea60caf2182f86393ad529d8fed93210bc15b0da9a96e15648d03767d1632",
+    "scope": {
+      "active_measurement": {
+        "cpu_core_seconds": 10.932725,
+        "maximum_sample_slip_ns": 10058042,
+        "peak_group_working_bytes": 267804672,
+        "samples": 25
+      },
+      "active_seconds": 120,
+      "decoded_av_captures": 20,
+      "formal_M9_accepted": false,
+      "full_descriptor_gate": true,
+      "idle_median_growth": {
+        "file_descriptors": 2,
+        "processes": 0,
+        "socket_descriptors": 2,
+        "threads": 1,
+        "working_memory_bytes": 18157568
+      },
+      "scoped_soak_passed": true,
+      "signed_refresh_terminals": 2
+    }
+  },
+  "s360": {
+    "exact_cleanup": true,
+    "execution_exit": 0,
+    "file_only_audit_sha256": "03511281c673325402ed485389f7a00e38ea7535b3edf09dc3a768697695decf",
+    "first_exact_failure": "idle_file_descriptor_growth",
+    "proof_exit": 1,
+    "same_candidate_s120_replay_exit": 0,
+    "scope": {
+      "all_same_build_predecessor_and_physical_exits_zero": true,
+      "application": "b3530c8eeab4741256f3225d479785b5a622dda9",
+      "attribution": {
+        "roles": {
+          "baseline": {
+            "active_file": {
+              "after": 4096,
+              "before": 4096,
+              "delta": 0
+            },
+            "anon": {
+              "after": 33083392,
+              "before": 28225536,
+              "delta": 4857856
+            },
+            "charged_bytes": {
+              "after": 180101120,
+              "before": 163246080,
+              "delta": 16855040
+            },
+            "file": {
+              "after": 130113536,
+              "before": 118296576,
+              "delta": 11816960
+            },
+            "file_mapped": {
+              "after": 36306944,
+              "before": 16924672,
+              "delta": 19382272
+            },
+            "inactive_file": {
+              "after": 1372160,
+              "before": 1372160,
+              "delta": 0
+            },
+            "kernel": {
+              "after": 13746176,
+              "before": 13418496,
+              "delta": 327680
+            },
+            "shmem": {
+              "after": 128741376,
+              "before": 116924416,
+              "delta": 11816960
+            },
+            "slab_reclaimable": {
+              "after": 9025840,
+              "before": 8783216,
+              "delta": 242624
+            },
+            "slab_unreclaimable": {
+              "after": 2982440,
+              "before": 3042848,
+              "delta": -60408
+            },
+            "working_bytes": {
+              "after": 178728960,
+              "before": 161873920,
+              "delta": 16855040
+            }
+          },
+          "candidate": {
+            "active_file": {
+              "after": 0,
+              "before": 0,
+              "delta": 0
+            },
+            "anon": {
+              "after": 28774400,
+              "before": 15937536,
+              "delta": 12836864
+            },
+            "charged_bytes": {
+              "after": 32206848,
+              "before": 19374080,
+              "delta": 12832768
+            },
+            "file": {
+              "after": 4096,
+              "before": 4096,
+              "delta": 0
+            },
+            "file_mapped": {
+              "after": 0,
+              "before": 0,
+              "delta": 0
+            },
+            "inactive_file": {
+              "after": 4096,
+              "before": 4096,
+              "delta": 0
+            },
+            "kernel": {
+              "after": 1052672,
+              "before": 1130496,
+              "delta": -77824
+            },
+            "shmem": {
+              "after": 0,
+              "before": 0,
+              "delta": 0
+            },
+            "slab_reclaimable": {
+              "after": 375784,
+              "before": 341456,
+              "delta": 34328
+            },
+            "slab_unreclaimable": {
+              "after": 209088,
+              "before": 351464,
+              "delta": -142376
+            },
+            "working_bytes": {
+              "after": 32202752,
+              "before": 19369984,
+              "delta": 12832768
+            }
+          },
+          "origin": {
+            "active_file": {
+              "after": 4096,
+              "before": 4096,
+              "delta": 0
+            },
+            "anon": {
+              "after": 17625088,
+              "before": 15495168,
+              "delta": 2129920
+            },
+            "charged_bytes": {
+              "after": 122720256,
+              "before": 131244032,
+              "delta": -8523776
+            },
+            "file": {
+              "after": 101449728,
+              "before": 112500736,
+              "delta": -11051008
+            },
+            "file_mapped": {
+              "after": 0,
+              "before": 0,
+              "delta": 0
+            },
+            "inactive_file": {
+              "after": 101449728,
+              "before": 112500736,
+              "delta": -11051008
+            },
+            "kernel": {
+              "after": 1130496,
+              "before": 1142784,
+              "delta": -12288
+            },
+            "shmem": {
+              "after": 0,
+              "before": 0,
+              "delta": 0
+            },
+            "slab_reclaimable": {
+              "after": 550112,
+              "before": 573776,
+              "delta": -23664
+            },
+            "slab_unreclaimable": {
+              "after": 370776,
+              "before": 370192,
+              "delta": 584
+            },
+            "working_bytes": {
+              "after": 21270528,
+              "before": 18743296,
+              "delta": 2527232
+            }
+          }
+        },
+        "sha256": "3feb4ccc55232e5b71871c7d75ac30fe9af70022b21335e217c15a77c223a37e"
+      },
+      "exact_cleanup": true,
+      "failure_trace": [
+        {
+          "file": "audit.py",
+          "function": "<module>",
+          "line": 456
+        },
+        {
+          "file": "audit.py",
+          "function": "main",
+          "line": 420
+        },
+        {
+          "file": "formal_descriptors.py",
+          "function": "check_idle_growth",
+          "line": 17
+        },
+        {
+          "file": "binding.py",
+          "function": "need",
+          "line": 45
+        }
+      ],
+      "first_failure": [
+        "formal_idle_resource_budget"
+      ],
+      "formal_audit_exit": 1,
+      "formal_stderr_sha256": "b32b2c05c9be8af34bacdd82b5d3f3116a364d69c0fc56b28f6fb34253cb03d6",
+      "panes_medians": {
+        "file_descriptors": {
+          "after": 497,
+          "before": 268,
+          "delta": 229
+        },
+        "processes": {
+          "after": 11,
+          "before": 11,
+          "delta": 0
+        },
+        "socket_descriptors": {
+          "after": 62,
+          "before": 152,
+          "delta": -90
+        },
+        "threads": {
+          "after": 23,
+          "before": 22,
+          "delta": 1
+        },
+        "working_memory_bytes": {
+          "after": 232587264,
+          "before": 198975488,
+          "delta": 33611776
+        }
+      },
+      "physical_measurements_sha256": "f1730aea3673dfb70235144b315751c97e0b8889e31f070ee22ef5f612b053d2",
+      "sample_count": 73
+    }
+  },
+  "s7200_admitted": false
+}
