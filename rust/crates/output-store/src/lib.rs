@@ -892,6 +892,29 @@ impl OutputLease {
             Err(Error::LostOwnership)
         }
     }
+    /// Relinquish an initializing HLS producer without retiring its
+    /// predecessor's retained timeline. The caller supplies the validated
+    /// sequence observed before opening input. No media TTL is extended.
+    pub async fn abandon_hls_startup(&self, retained_index: u64) -> Result<bool, Error> {
+        if retained_index == 0
+            || !(self.format == "hls" || self.format.starts_with("hls:p"))
+            || self.input_owner.is_some()
+        {
+            return Err(Error::Configuration);
+        }
+        let keys = keys(&self.channel, &self.format)?;
+        let index = retained_index.to_string();
+        let released: i64 = self
+            .store
+            .invoke(
+                ABANDON_HLS_STARTUP,
+                &keys,
+                &[self.token.as_bytes(), index.as_bytes()],
+            )
+            .await?;
+        Ok(released == 1)
+    }
+
     pub async fn release(&self) -> Result<bool, Error> {
         self.release_retained(())
             .await
@@ -970,6 +993,11 @@ if old and old~=ARGV[1] then return 0 end
 redis.call('SET',KEYS[1],ARGV[1],'PX',ARGV[2])
 if not old and ARGV[4]=='1' then redis.call('SET',KEYS[2],'initializing','EX',3600) end
 return 1
+"#;
+const ABANDON_HLS_STARTUP: &str = r#"
+if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('GET',KEYS[2])~=ARGV[2]
+   or redis.call('GET',KEYS[7])~='initializing' then return 0 end
+redis.call('DEL',KEYS[1],KEYS[7]);return 1
 "#;
 const RELEASE: &str = r#"
 if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end

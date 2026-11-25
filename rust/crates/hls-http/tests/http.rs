@@ -735,12 +735,48 @@ async fn shared_owner_restart_rehydrates_index_window_and_marks_new_media_discon
     );
     old.publish(&serde_json::json!({"window":[{"seq":1,"dur":4.0,"disc":false}],"target":4.0,"adv_target":6,"disc_seq":0,"start_behind":2.0,"ts":std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs_f64()})).await.unwrap();
     time::sleep(Duration::from_millis(90)).await;
-    let (gateway, engine, clients, url, _, server) = setup(GatewayConfig::default(), true).await;
+    let (gateway, engine, clients, url, origin_requests, server) =
+        setup(GatewayConfig::default(), true).await;
     let store = dispatcharr_output_store::OutputStore::connect(&redis_url, Default::default())
         .await
         .unwrap();
     let gateway = gateway.with_output_store(store.clone()).unwrap();
+    let original = store.snapshot(&channel, "hls").await.unwrap();
+    let mut rejected = source(channel.clone(), url.clone());
+    // A limited provider without a coordinator fails input admission before
+    // contacting the origin. The gateway still issued a scoped capability.
+    rejected.provider_profile_id = Some(1);
+    rejected.provider_max_streams = 1;
+    let response = gateway.mint(rejected).await.unwrap();
+    assert_eq!(response.status(), 302);
+    let failed_token = response.headers()["X-Dispatcharr-Session-Token"]
+        .to_str()
+        .unwrap()
+        .to_owned();
+    until(|| async {
+        get(&gateway, format!("/proxy/hls/{failed_token}/index.m3u8"))
+            .await
+            .status()
+            == 410
+    })
+    .await;
+    assert_eq!(origin_requests.load(Ordering::SeqCst), 0);
+    let retained = store.snapshot(&channel, "hls").await.unwrap();
+    assert!(retained.owner.is_none());
+    assert_eq!(retained.index, original.index);
+    assert_eq!(retained.descriptor, original.descriptor);
+    assert_eq!(
+        store
+            .get(&channel, "hls", 1)
+            .await
+            .unwrap()
+            .unwrap()
+            .as_ref(),
+        clip().as_ref()
+    );
+
     let token = mint(&gateway, &channel, &url).await;
+    assert_ne!(token, failed_token);
     until(|| async {
         store
             .snapshot(&channel, "hls")

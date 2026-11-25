@@ -568,14 +568,31 @@ impl Inner {
     }
     async fn run_manager(self: Arc<Self>, manager: Arc<Manager>, source: PlaybackSource) {
         let mut cancelled = manager.stop.subscribe();
+        let mut retained_on_startup = None;
         let result=async {
             if *cancelled.borrow() {return Ok(());}
             if let Some(outputs)=&self.outputs {
                 match outputs.claim(&manager.channel,&manager.format,&manager.fence).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {
                     Some(lease)=>{
                         let snapshot=outputs.snapshot(&manager.channel,&manager.format).await.map_err(|_|failure(503,"HLS state unavailable"))?;
-                        {let mut state=lock(&manager.state);state.seq=snapshot.index+1;
-                            if let Some(descriptor)=snapshot.descriptor {let (window,disc_seq,_,ts)=crate::shared::descriptor(&descriptor,self.config.max_stored_segments)?;state.window=window.into();state.disc_seq=disc_seq;state.ts=ts;}
+                        {
+                            let mut state = lock(&manager.state);
+                            state.seq = snapshot.index + 1;
+                            if let Some(descriptor) = snapshot.descriptor {
+                                let (window, disc_seq, _, ts) = crate::shared::descriptor(
+                                    &descriptor,
+                                    self.config.max_stored_segments,
+                                )?;
+                                if snapshot.owner.as_deref() == Some(manager.fence.as_str())
+                                    && snapshot.index > 0
+                                    && !window.is_empty()
+                                {
+                                    retained_on_startup = Some(snapshot.index);
+                                }
+                                state.window = window.into();
+                                state.disc_seq = disc_seq;
+                                state.ts = ts;
+                            }
                         }
                         *lock(&manager.output_lease)=Some(lease.clone());lease.set_state("initializing").await.map_err(|_|failure(503,"HLS state unavailable"))?;
                     },
@@ -583,6 +600,7 @@ impl Inner {
                 }
             }
             let mut input=tokio::select! {result=self.engine.open_input(source)=>result?,_=cancelled.changed()=>return Ok(())};
+            retained_on_startup = None;
             if self.outputs.is_none()&&!self.clients.claim_output_owner(&manager.channel,&manager.format,&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS output is owned by another worker"));}
             lock(&manager.state).ready=Some(Instant::now());manager.notify.notify_waiters();
             let mut segmenter=TSSegmenter::new(SegmenterConfig {target_duration:3.9,max_segment_duration:Some(6.45),max_segment_bytes:self.config.max_segment_bytes,..Default::default()}).map_err(|_|failure(500,"Segmenter unavailable"))?;
@@ -626,7 +644,11 @@ impl Inner {
         }
         let lease = lock(&manager.output_lease).take();
         if let Some(lease) = lease {
-            let _ = lease.release().await;
+            if let Some(index) = retained_on_startup {
+                let _ = lease.abandon_hls_startup(index).await;
+            } else {
+                let _ = lease.release().await;
+            }
         } else if self.outputs.is_none() {
             let _ = self
                 .clients

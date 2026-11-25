@@ -127,6 +127,59 @@ async fn profiled_hls_readiness_follows_the_current_output_owner() {
 
 #[tokio::test]
 #[ignore = "requires real Redis"]
+async fn failed_hls_startup_releases_only_the_same_unpublished_owner() {
+    let store = OutputStore::connect(
+        &url(),
+        OutputConfig {
+            owner_ttl: Duration::from_millis(150),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let channel = channel();
+    let old = store.claim(&channel, "hls", "old").await.unwrap().unwrap();
+    assert_eq!(old.put(b"old-media", now()).await.unwrap(), 1);
+    let descriptor = serde_json::json!({"window":[{"seq":1}]});
+    old.publish(&descriptor).await.unwrap();
+    tokio::time::sleep(Duration::from_millis(180)).await;
+
+    let failed = store
+        .claim(&channel, "hls", "failed")
+        .await
+        .unwrap()
+        .unwrap();
+    failed.set_state("initializing").await.unwrap();
+    assert!(!old.abandon_hls_startup(1).await.unwrap());
+    assert!(!failed.abandon_hls_startup(2).await.unwrap());
+    failed.set_state("active").await.unwrap();
+    assert!(!failed.abandon_hls_startup(1).await.unwrap());
+    failed.set_state("initializing").await.unwrap();
+    assert!(failed.abandon_hls_startup(1).await.unwrap());
+
+    let retained = store.snapshot(&channel, "hls").await.unwrap();
+    assert_eq!(retained.owner, None);
+    assert_eq!(retained.index, 1);
+    assert_eq!(retained.descriptor, Some(descriptor));
+    assert_eq!(store.state(&channel, "hls").await.unwrap(), None);
+    assert_eq!(
+        store
+            .get(&channel, "hls", 1)
+            .await
+            .unwrap()
+            .unwrap()
+            .as_ref(),
+        b"old-media"
+    );
+
+    let next = store.claim(&channel, "hls", "next").await.unwrap().unwrap();
+    assert!(!failed.abandon_hls_startup(1).await.unwrap());
+    assert_eq!(next.put(b"new-media", now()).await.unwrap(), 2);
+    assert!(next.release().await.unwrap());
+    assert!(store.get(&channel, "hls", 1).await.unwrap().is_none());
+}
+#[tokio::test]
+#[ignore = "requires real Redis"]
 async fn retained_read_owner_and_channel_capacity_survive_clones_and_ttl() {
     let store = OutputStore::connect(
         &url(),
