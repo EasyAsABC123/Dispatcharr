@@ -1068,21 +1068,23 @@ pub(crate) fn assemble_playback_source(
         },
         shutdown_delay: channel.shutdown_delay,
         startup_behind: channel.startup_behind,
-        alternates: streams
-            .map(|stream| PlaybackCandidate {
-                input_command: stream.input_command,
-                stream_id: stream.stream_id,
-                provider_profile_id: Some(stream.provider_profile_id),
-                provider_max_streams: stream.provider_max_streams,
-                credential_pool: stream.credential_pool,
-                url: stream.url,
-                user_agent: stream.user_agent,
-                headers: Vec::new(),
-                metadata: stream.metadata,
-            })
-            .collect(),
+        alternates: streams.map(playback_candidate).collect(),
         viewer: Some(viewer),
     })
+}
+
+fn playback_candidate(stream: ProviderStream) -> PlaybackCandidate {
+    PlaybackCandidate {
+        input_command: stream.input_command,
+        stream_id: stream.stream_id,
+        provider_profile_id: Some(stream.provider_profile_id),
+        provider_max_streams: stream.provider_max_streams,
+        credential_pool: stream.credential_pool,
+        url: stream.url,
+        user_agent: stream.user_agent,
+        headers: Vec::new(),
+        metadata: stream.metadata,
+    }
 }
 
 #[cfg(feature = "sqlite-copied-data-runtime")]
@@ -1139,6 +1141,62 @@ impl PlaybackResolver for AuthService {
                 return Err(PlaybackError::new(403, "Forbidden"));
             }
             self.build_playback_source(request, user, None).await
+        })
+    }
+
+    fn refresh_hls_input(
+        &self,
+        channel: &str,
+        numeric_channel: i64,
+        stream_profile: i64,
+        user_id: i64,
+        ip: std::net::IpAddr,
+    ) -> BoxFuture<'_, Result<Vec<PlaybackCandidate>, PlaybackError>> {
+        let channel = channel.to_owned();
+        Box::pin(async move {
+            let denied = || PlaybackError::new(403, "HLS input recovery is no longer authorized");
+            let user = self
+                .store
+                .user_by_id(user_id)
+                .await
+                .map_err(playback_error)?
+                .filter(|user| user.is_active)
+                .ok_or_else(denied)?;
+            if !self
+                .source_network_allowed(ip, "STREAMS", None)
+                .await
+                .map_err(playback_error)?
+            {
+                return Err(denied());
+            }
+            let identity = self
+                .store
+                .channel_for_xc_user_by_id(&user, numeric_channel)
+                .await
+                .map_err(playback_error)?
+                .ok_or_else(denied)?;
+            if identity.uuid.to_string() != channel {
+                return Err(denied());
+            }
+            // resolve_channel has no borrowed assignment/cache input. It checks
+            // current channel membership and provider account/profile eligibility.
+            let current = self
+                .store
+                .resolve_channel(&channel)
+                .await
+                .map_err(playback_error)?;
+            if current.id != channel
+                || current.numeric_channel_id != numeric_channel
+                || current.profile_id != stream_profile
+                || current.redirect
+            {
+                return Err(denied());
+            }
+            Ok(current
+                .streams
+                .into_iter()
+                .map(playback_candidate)
+                .collect())
         })
     }
 

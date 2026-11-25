@@ -59,7 +59,7 @@ impl Lease {
         &self,
         assignment: LiveChannelAssignment,
     ) -> Result<(), Error> {
-        self.publish_assignment(assignment, None).await
+        self.publish_assignment(assignment, None, false).await
     }
     pub async fn publish_source_assignment_with_metadata(
         &self,
@@ -69,7 +69,19 @@ impl Lease {
         if ttl.is_zero() || u64::try_from(ttl.as_millis()).is_err() {
             return Err(Error::InvalidRequest);
         }
-        self.publish_assignment(assignment, Some(ttl)).await
+        self.publish_assignment(assignment, Some(ttl), false).await
+    }
+
+    /// Recheck the recovery reservation's alias-absence fence at publication.
+    pub async fn publish_recovery_source_assignment(
+        &self,
+        assignment: LiveChannelAssignment,
+        ttl: Duration,
+    ) -> Result<(), Error> {
+        if ttl.is_zero() || u64::try_from(ttl.as_millis()).is_err() {
+            return Err(Error::InvalidRequest);
+        }
+        self.publish_assignment(assignment, Some(ttl), true).await
     }
     /// Change the active input without rewriting the initial Source alias or
     /// moving capacity. The same local live owner still holds that reservation.
@@ -143,6 +155,7 @@ impl Lease {
         &self,
         assignment: LiveChannelAssignment,
         metadata_ttl: Option<Duration>,
+        recovering: bool,
     ) -> Result<(), Error> {
         let Some(channel) = self
             .inner
@@ -163,12 +176,14 @@ impl Lease {
             LeaseMutation::SourceAssignment {
                 assignment,
                 metadata_ttl,
+                recovering,
             },
             true,
         )
         .await?
         {
             1 => Ok(()),
+            -2 if recovering => Err(Error::AlreadyReserved),
             _ => {
                 self.inner.lost.send_replace(true);
                 Err(Error::Lost)

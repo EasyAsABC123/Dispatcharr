@@ -340,6 +340,18 @@ pub trait PlaybackResolver: Send + Sync + 'static {
         &self,
         request: PlaybackRequest,
     ) -> BoxFuture<'_, Result<PlaybackSource, PlaybackError>>;
+    /// Resolve fresh cold candidates for an already authorized signed HLS
+    /// replacement whose required Source assignment vanished under its raw lease.
+    fn refresh_hls_input(
+        &self,
+        _channel: &str,
+        _numeric_channel: i64,
+        _stream_profile: i64,
+        _user_id: i64,
+        _ip: std::net::IpAddr,
+    ) -> BoxFuture<'_, Result<Vec<PlaybackCandidate>, PlaybackError>> {
+        Box::pin(async { Err(PlaybackError::new(503, "HLS input recovery unavailable")) })
+    }
     /// DRF authenticates presented credentials even on AllowAny capability routes.
     /// Adapters without an authenticator must not silently accept credentials.
     fn authenticate_optional(

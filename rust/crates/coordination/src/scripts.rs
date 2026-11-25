@@ -154,6 +154,7 @@ pub const RESERVE_PROVIDER: &str = r#"
 if redis.call('GET', KEYS[1]) ~= ARGV[1]
     or redis.call('HGET', KEYS[2], 'token') ~= ARGV[1] then return -1 end
 if redis.call('HGET', KEYS[2], 'reserved') == '1' then return -5 end
+if ARGV[4]=='1' and redis.call('EXISTS',KEYS[7],KEYS[8],KEYS[9],KEYS[10])~=0 then return -6 end
 local maximum = tonumber(ARGV[2])
 local credential_maximum = tonumber(ARGV[3])
 local count = counter_value(KEYS[4])
@@ -175,6 +176,9 @@ if maximum > 0 then
 end
 redis.call('HSET', KEYS[2], 'profile', KEYS[4], 'credential', credential,
     'release_key', KEYS[6], 'reserved', maximum > 0 and '1' or '0')
+if ARGV[4]=='1' then
+ redis.call('HSET',KEYS[2],'recovery_channel_alias',KEYS[7],'recovery_stream_alias',KEYS[8])
+end
 return 1
 "#;
 
@@ -187,6 +191,11 @@ local pid=string.match(profile,'^profile_connections:(%d+)$')
 if not pid or tonumber(pid)<=0 then return -1 end
 for i=4,5 do local kind=redis.call('TYPE',KEYS[i]).ok;if kind~='none' and kind~='string' then return redis.error_reply('Invalid source alias type') end end
 for i=6,7 do local kind=redis.call('TYPE',KEYS[i]).ok;if kind~='none' and kind~='hash' then return redis.error_reply('Invalid source alias receipt') end end
+if ARGV[4]=='1' then
+ if redis.call('HGET',KEYS[2],'recovery_channel_alias')~=KEYS[4]
+    or redis.call('HGET',KEYS[2],'recovery_stream_alias')~=KEYS[5] then return -1 end
+ if redis.call('EXISTS',KEYS[4],KEYS[5],KEYS[6],KEYS[7])~=0 then return -2 end
+end
 local borrowed_check=redis.call('HGET',KEYS[2],'source_borrowed')=='1'
 if borrowed_check and (redis.call('GET',KEYS[4])~=ARGV[2] or redis.call('GET',KEYS[5])~=pid) then return -1 end
 local ttl=tonumber(ARGV[3] or '0')
@@ -207,6 +216,7 @@ redis.call('HSET',KEYS[6],'token',ARGV[1],'scope',borrowed and 'live_borrowed' o
 redis.call('HSET',KEYS[7],'token',ARGV[1],'scope',borrowed and 'live_borrowed' or 'live','ledger',KEYS[2])
 redis.call('HSET',KEYS[2],'alias_channel',KEYS[4],'alias_stream',KEYS[5],
  'alias_channel_receipt',KEYS[6],'alias_stream_receipt',KEYS[7],'alias_sid',ARGV[2],'alias_pid',pid)
+if ARGV[4]=='1' then redis.call('HDEL',KEYS[2],'recovery_channel_alias','recovery_stream_alias') end
 return 1
 "#;
 

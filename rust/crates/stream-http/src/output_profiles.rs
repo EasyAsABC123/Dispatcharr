@@ -338,7 +338,7 @@ impl StreamEngine {
         // A temporary subscription has no phantom ClientStore registration.
         let mut raw = source.clone();
         raw.viewer = None;
-        let raw_subscription = self.open_stream(raw, false).await?;
+        let raw_subscription = self.open_stream(raw, false, None).await?;
         let request = OutputProfileRequest {
             channel: source.channel_id.clone(),
             profile_id: profile,

@@ -582,7 +582,18 @@ impl Lease {
     /// Atomically reserve a provider under the existing owner. The previous
     /// provider must already be cleared; failed attempts allocate nothing.
     pub async fn reserve_provider(&self, provider: ProviderReservation) -> Result<(), Error> {
-        self.reserve_provider_inner(provider, false).await
+        self.reserve_provider_inner(provider, false, None).await
+    }
+
+    /// A recovered Source selection may reserve only while both public aliases
+    /// and their receipts are absent under this raw lease.
+    pub async fn reserve_recovery_source_provider(
+        &self,
+        provider: ProviderReservation,
+        assignment: LiveChannelAssignment,
+    ) -> Result<(), Error> {
+        self.reserve_provider_inner(provider, false, Some(assignment))
+            .await
     }
     /// Return the actual result of one physically owned reservation invocation.
     /// Only a supervised transition with its own observer/cleanup budget may use
@@ -592,12 +603,13 @@ impl Lease {
         &self,
         provider: ProviderReservation,
     ) -> Result<(), Error> {
-        self.reserve_provider_inner(provider, true).await
+        self.reserve_provider_inner(provider, true, None).await
     }
     async fn reserve_provider_inner(
         &self,
         provider: ProviderReservation,
         retain_result: bool,
+        recovery_assignment: Option<LiveChannelAssignment>,
     ) -> Result<(), Error> {
         if self.inner.release_started.load(Ordering::Acquire) {
             return Err(Error::Lost);
@@ -614,7 +626,10 @@ impl Lease {
         }
         let result = lease_mutation_observed(
             &self.inner,
-            LeaseMutation::ReserveProvider(provider),
+            LeaseMutation::ReserveProvider {
+                provider,
+                recovery_assignment,
+            },
             retain_result,
         )
         .await?;
@@ -627,7 +642,7 @@ impl Lease {
             -2 => Err(Error::ProfileFull),
             -3 => Err(Error::CredentialFull),
             -4 => Err(Error::CredentialConflict),
-            -5 => Err(Error::AlreadyReserved),
+            -5 | -6 => Err(Error::AlreadyReserved),
             _ => Err(Error::RedisUnavailable),
         }
     }
@@ -697,10 +712,14 @@ enum LeaseMutation {
     Heartbeat,
     Release,
     ClearProvider,
-    ReserveProvider(ProviderReservation),
+    ReserveProvider {
+        provider: ProviderReservation,
+        recovery_assignment: Option<LiveChannelAssignment>,
+    },
     SourceAssignment {
         assignment: LiveChannelAssignment,
         metadata_ttl: Option<Duration>,
+        recovering: bool,
     },
     SwitchActiveSource {
         stream: i64,
@@ -739,14 +758,14 @@ async fn lease_mutation_observed(
             LeaseMutation::Heartbeat => &inner.heartbeat,
             LeaseMutation::Release => &inner.release,
             LeaseMutation::ClearProvider => &inner.clear_provider,
-            LeaseMutation::ReserveProvider(_) => &inner.reserve_provider,
+            LeaseMutation::ReserveProvider { .. } => &inner.reserve_provider,
             LeaseMutation::SourceAssignment { .. } => &inner.source_assignment,
             LeaseMutation::SwitchActiveSource { .. } => &inner.switch_active_source,
             LeaseMutation::AdoptSourceAssignment { .. } => &inner.adopt_source_assignment,
         };
         let mut invocation = script.prepare_invoke();
         invocation.key(keys.owner).key(keys.ledger).key(keys.index);
-        if let LeaseMutation::ReserveProvider(provider) = &operation {
+        if let LeaseMutation::ReserveProvider { provider, .. } = &operation {
             let profile = provider.profile_id.unwrap_or(0);
             invocation
                 .key(format!("profile_connections:{profile}"))
@@ -759,7 +778,11 @@ async fn lease_mutation_observed(
                 .key(format!("profile_credential_release:{profile}"));
         }
         if let LeaseMutation::SourceAssignment { assignment, .. }
-        | LeaseMutation::AdoptSourceAssignment { assignment, .. } = &operation
+        | LeaseMutation::AdoptSourceAssignment { assignment, .. }
+        | LeaseMutation::ReserveProvider {
+            recovery_assignment: Some(assignment),
+            ..
+        } = &operation
         {
             invocation
                 .key(format!("channel_stream:{}", assignment.channel))
@@ -790,21 +813,29 @@ async fn lease_mutation_observed(
             LeaseMutation::Heartbeat => {
                 invocation.arg(inner.config.ttl.as_millis() as u64);
             }
-            LeaseMutation::ReserveProvider(provider) => {
-                invocation.arg(provider.max_streams).arg(
-                    provider
-                        .credential_pool
-                        .as_ref()
-                        .map_or(0, |pool| pool.max_streams),
-                );
+            LeaseMutation::ReserveProvider {
+                provider,
+                recovery_assignment,
+            } => {
+                invocation
+                    .arg(provider.max_streams)
+                    .arg(
+                        provider
+                            .credential_pool
+                            .as_ref()
+                            .map_or(0, |pool| pool.max_streams),
+                    )
+                    .arg(u8::from(recovery_assignment.is_some()));
             }
             LeaseMutation::SourceAssignment {
                 assignment,
                 metadata_ttl,
+                recovering,
             } => {
                 invocation
                     .arg(assignment.stream)
-                    .arg(metadata_ttl.map_or(0, |ttl| ttl.as_millis() as u64));
+                    .arg(metadata_ttl.map_or(0, |ttl| ttl.as_millis() as u64))
+                    .arg(u8::from(*recovering));
             }
             LeaseMutation::AdoptSourceAssignment {
                 assignment,
