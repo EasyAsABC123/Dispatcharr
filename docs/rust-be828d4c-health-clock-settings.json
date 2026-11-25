@@ -1,0 +1,122 @@
+{
+  "application": "be828d4cdbbcb5b019ef6dd8c60043daa3e8c3e5",
+  "image": "sha256:21ba7f01028428aab218b4402059e9b19e7b5f41978fa5ce398683cf89559543",
+  "manifest_sha256": "4ab4a4b01ff1d2a80dadb8e4f929a5f112e5f8d5c7f16b6aff52a852c842a429",
+  "scope_exit": 0,
+  "exact_engine_inventory_exit": 0,
+  "exact_engine_inventory_sha256": "16f7018e109becafa4b385a7e26038f1bbe165c5a4a75c0f07d2db606a43df89",
+  "proxy_health": {
+    "scoped_arms": 5,
+    "decisions": [
+      {
+        "actual_exit": 0,
+        "exact_cleanup": true,
+        "execution_sha256": "fc3f4aa13da3a44a68ac048eaa04c71b6d314cda19de7330ffb2cb0b7d19353a",
+        "in_window_samples": 6,
+        "opted_in": false,
+        "passed": true,
+        "report_sha256": "ff9675564ffec822c8ac51f64f5b8344088bbfceb2bc484266612810c1e2446e",
+        "role": "default",
+        "same_origin_recovery": true
+      },
+      {
+        "actual_exit": 0,
+        "exact_cleanup": true,
+        "execution_sha256": "b4de568a6d6ba553c9d7bad162e2fbdd69ff2c925ddb7573b9114c18c5f0dd99",
+        "in_window_samples": 6,
+        "opted_in": true,
+        "passed": true,
+        "report_sha256": "dea2519de95bd680c6be9c39a6bc035d16be143c3c9334810b200747b652f452",
+        "role": "dynamic",
+        "same_origin_recovery": true
+      }
+    ],
+    "fault_cases": [
+      {
+        "case": "delayed",
+        "actual_exit": 0,
+        "exact_cleanup": true,
+        "passed": true,
+        "signed_ts_media_bytes": 13160,
+        "workload_passed": true
+      },
+      {
+        "case": "dropped",
+        "actual_exit": 0,
+        "exact_cleanup": true,
+        "passed": true,
+        "signed_ts_media_bytes": 13160,
+        "workload_passed": true
+      },
+      {
+        "case": "shutdown",
+        "actual_exit": 0,
+        "exact_cleanup": true,
+        "passed": true,
+        "signed_ts_media_bytes": null,
+        "workload_passed": true
+      }
+    ],
+    "formal_acceptance": false,
+    "normal_http_specific_waiter_join": false,
+    "independent_proof_sha256": "24dcb351b65bbf10273695e0cb3e80aadb8c7bc710c20800daf955ad9f50c2d9"
+  },
+  "clock": {
+    "campaign_passed": true,
+    "clock": {
+      "completion_based_window_excluded": true,
+      "disposition": "release",
+      "gate_role_drained": true,
+      "held_reply_bytes": 5,
+      "held_reply_sha256": "8b731f85850fac625747bb8f9e4d99f93a230f8ba98898830ade3698b666fc6b",
+      "held_seconds": 1.3749193510739133,
+      "second_read_age_from_first_dispatch_s": 10.000534082995728,
+      "second_read_age_from_first_forwarded_reply_s": 8.625548601034097,
+      "selected_reply_forwarded": true,
+      "selected_requests": 2,
+      "unrelated_frames_retained": 0
+    },
+    "exact_cleanup": true,
+    "literal_execution_exit": 0,
+    "normal_http_subscriber_identity_proved": false,
+    "independent_proof_sha256": "e3eae2dc12a2ce2503568e82fd58202f235f315337347bc77c539a403366037b"
+  },
+  "signed_main_settings": {
+    "controller_exit": 0,
+    "observed": {
+      "credentials_or_tokens_written": false,
+      "django_session_count_unchanged": true,
+      "login_count": 2,
+      "same_PostgreSQL_and_Redis_generations": true,
+      "same_issued_access_token_readback": true,
+      "same_setting_row_value_and_unrelated_settings": true,
+      "signed_standard_detail_and_list": [
+        200,
+        200
+      ],
+      "signed_standard_put_denied": 403,
+      "system_events_after": 110,
+      "warm_cache_invalidated_and_repopulated": true
+    },
+    "paired_effective_collector_max_mb": [
+      5,
+      6
+    ],
+    "real_browser_rendered": false,
+    "replicated_receipts": {
+      "Native": {
+        "exact_roles_retired": 4,
+        "receipt_sha256": "6e4cb47ed359f63f96c70306d2799dc8b97ec864ba659075de5ca1861fefe49b"
+      },
+      "Original": {
+        "exact_roles_retired": 2,
+        "receipt_sha256": "3dc303a07e590ea891a8777c271e6d9152e66f8f92b742e689ca3ceb51a68740"
+      }
+    },
+    "system_save_callback_file_observed_both": true,
+    "main_core_settings_workflow_formally_accepted": false,
+    "independent_proof_sha256": "5956b6671918a0990d53e18dbd30e29340d031adc50fcc206e7915179d3f2814"
+  },
+  "formal_m2_close": false,
+  "performance_measured": false
+}
