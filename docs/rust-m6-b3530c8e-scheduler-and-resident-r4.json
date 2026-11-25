@@ -1,0 +1,77 @@
+{
+  "application": "b3530c8eeab4741256f3225d479785b5a622dda9",
+  "scheduler": {
+    "physical_group_exit": 0,
+    "full_isolated_engine_inventory_matched": true,
+    "independent_intake_exit": 0,
+    "group_proof_sha256": "aff90f861b7956b515a7cac9fbdabc261d92ab9d159cc63507b4aaf57e8b31b7",
+    "dependency_authorities_sha256": "45b667f9f8029803050b2576cd6b105c62aa45800f10e52718b2c532596cf0cd",
+    "independently_reparsed_current_dependencies": {
+      "m6/backend-cleanup-expiry": {
+        "cleanup_verified": true,
+        "counts_as_new_execution": false,
+        "dependencies": {
+          "m6/recurring-positive-repeat": "b5d562496745489fb1d0493fab9d0e1ecf4b33de8ac1a20105ea794de04a9bd8"
+        },
+        "id": "m6/backend-cleanup-expiry",
+        "receipt_sha256": "5dbfda09f57197e5ec249537dc86e90f97b52594da8d8ae8f2a8a3a64c0c443f",
+        "satisfies_dependency": true,
+        "status": "verified_current_receipt"
+      },
+      "m6/recurring-positive-repeat": {
+        "cleanup_verified": true,
+        "counts_as_new_execution": false,
+        "dependencies": {
+          "m6/scheduler-tick-publication": "64de64e19dc090b40748d475012e954bf0a70a0519aed70d2f417ed551dd95b3"
+        },
+        "id": "m6/recurring-positive-repeat",
+        "receipt_sha256": "b5d562496745489fb1d0493fab9d0e1ecf4b33de8ac1a20105ea794de04a9bd8",
+        "satisfies_dependency": true,
+        "status": "verified_current_receipt"
+      },
+      "m6/scheduler-install-known-defaults": {
+        "cleanup_verified": true,
+        "counts_as_new_execution": false,
+        "dependencies": {},
+        "id": "m6/scheduler-install-known-defaults",
+        "receipt_sha256": "a32c582283943300c74f16b24cf04dc5f894eede383f0eeaf50cd9309c930c30",
+        "satisfies_dependency": true,
+        "status": "verified_current_receipt"
+      },
+      "m6/scheduler-tick-publication": {
+        "cleanup_verified": true,
+        "counts_as_new_execution": false,
+        "dependencies": {
+          "m6/scheduler-install-known-defaults": "a32c582283943300c74f16b24cf04dc5f894eede383f0eeaf50cd9309c930c30"
+        },
+        "id": "m6/scheduler-tick-publication",
+        "receipt_sha256": "64de64e19dc090b40748d475012e954bf0a70a0519aed70d2f417ed551dd95b3",
+        "satisfies_dependency": true,
+        "status": "verified_current_receipt"
+      }
+    },
+    "historical_execution_imported": false
+  },
+  "resident_R4": {
+    "owner_exit": 1,
+    "exact_cleanup": true,
+    "full_isolated_engine_inventory_matched": true,
+    "scanner_observations": [
+      {
+        "label": "empty",
+        "root_terminal": "SUCCESS",
+        "child_terminal": null
+      },
+      {
+        "label": "content",
+        "root_terminal": "SUCCESS",
+        "child_terminal": "SUCCESS"
+      }
+    ],
+    "scanner_receipt_sha256": "2609f1fc1f62e2c67ddf17c017a0beb87f0cf626b44773d9d3882b4a1e492ec7",
+    "account_warning_workflow_started": false,
+    "failure_checkpoint": "account-expiration fixture seed contained an already-expiring active profile",
+    "failure_checkpoint_sha256": "ce23549979ff76d6eb794c644e21f6b5964c2f813e2ee5687cfa11bae0f0beb3"
+  },
+  "full_M6_accepted": false
+}
