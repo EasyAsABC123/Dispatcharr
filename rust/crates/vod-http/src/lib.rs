@@ -3,6 +3,7 @@
 mod engine;
 mod events;
 mod offset;
+mod provider_final_url;
 mod resolver;
 // Private opt-in surface; component-only methods remain outside default routes.
 #[allow(dead_code)]
