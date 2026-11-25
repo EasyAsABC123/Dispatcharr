@@ -78,6 +78,18 @@ class SchedulerFollowonReceipts(unittest.TestCase):
                 adapter.resolve({}, self.nodes, self.candidate, {})
             replay.assert_not_called()
 
+    def test_b353_cannot_borrow_f38_candidate_or_proof(self):
+        b353 = {"git": adapter.B353_APPLICATION, "build_manifest_sha256": adapter.B353_MANIFEST}
+        current = {key: row | {"candidate": b353} for key, row in self.authorities.items()}
+        adapter.validate_chain(self.nodes, b353, current)
+        with self.assertRaisesRegex(ValueError, "unverified current scheduler receipt chain"):
+            adapter.validate_chain(self.nodes, b353, self.authorities)
+        with self.assertRaisesRegex(ValueError, "exact four current"):
+            adapter.validate_chain(self.nodes, b353 | {"build_manifest_sha256": adapter.MANIFEST}, current)
+        with self.assertRaisesRegex(ValueError, "exact current scheduler receipt context"):
+            adapter.expected_capsule({"artifact_root": "/artifacts/rust",
+                                      "group_proof_sha256": adapter.GROUP_PROOF_SHA}, b353)
+
     def test_report_distinguishes_current_receipts_from_retained_source(self):
         report = coordinator.binding_coverage(self.nodes, {}, self.authorities)
         self.assertEqual(report["verified_current_receipts"], sorted(adapter.ORDER))

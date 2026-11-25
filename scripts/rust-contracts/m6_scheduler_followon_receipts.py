@@ -1,4 +1,4 @@
-"""Admit the reviewed F38 scheduler follow-ons from their fresh, settled receipts."""
+"""Admit reviewed scheduler follow-ons for the exact application that ran them."""
 from hashlib import file_digest
 import json
 import os
@@ -22,6 +22,17 @@ REVIEWED_PACKAGE = Path(
 )
 MANIFEST = "dc526bb02476e8610b8f79ba018242fcd34bbaa1c19988ee4b7f9e440a761387"
 GROUP_PROOF_SHA = "777ec7d760bd4f7500db7779821f0468ae0a297e43196d1d207867a2712bd182"
+# F38 pins above remain usable for exact historical replay.
+B353_APPLICATION = "b3530c8eeab4741256f3225d479785b5a622dda9"
+B353_MANIFEST = "e1ecab4ca4e53b8d2bc8a1a61094c059c10809261c7661218fe7a7e670eb9660"
+B353_CAPSULE = "paseo-resume-698ce81e/wave-m6-b353-scheduler-dependency-cohort-1/output"
+B353_CAPSULE_SEAL = "6ae4c36df462c7432804301d511be42485eef272db41410e8b315bd9485d1b6e"
+B353_PACKAGE = Path(
+    "paseo-resume-698ce81e/wave-m0-f38-cumulative-product-1/output-amd64-catalogue-b3530c8e-1"
+    "/candidate-1/actual-package-1/package/build.json"
+)
+B353_GROUP_PROOF_SHA = "aff90f861b7956b515a7cac9fbdabc261d92ab9d159cc63507b4aaf57e8b31b7"
+B353_APPROVED_GRAPH_SHA = "d02105f4ac2f8bdb834562528d89417ee94f8789ee7e13da9b4df2ecd00aea67"
 HASH = re.compile("[0-9a-f]{64}")
 
 
@@ -51,10 +62,19 @@ def verify_graph(nodes):
                 "current scheduler receipt requires the exact canonical dependency graph: " + key)
 
 
+def receipt_pins(candidate):
+    application = candidate.get("git")
+    if application == B353_APPLICATION:
+        return B353_MANIFEST, B353_PACKAGE, B353_CAPSULE, B353_CAPSULE_SEAL, B353_GROUP_PROOF_SHA
+    require(application == APPLICATION, "exact reviewed scheduler application required")
+    return MANIFEST, REVIEWED_PACKAGE, CAPSULE, CAPSULE_SEAL, GROUP_PROOF_SHA
+
+
 def validate_chain(nodes, candidate, authorities):
     """Check imported results before the scheduler treats them as dependencies."""
     verify_graph(nodes)
-    require(candidate.get("git") == APPLICATION and candidate.get("build_manifest_sha256") == MANIFEST
+    manifest, *_ = receipt_pins(candidate)
+    require(candidate.get("build_manifest_sha256") == manifest
             and set(authorities) == set(ORDER), "exact four current scheduler receipts required")
     predecessor = {}
     for key in ORDER:
@@ -69,23 +89,23 @@ def validate_chain(nodes, candidate, authorities):
 
 
 def expected_capsule(context, candidate):
+    manifest, package_path, capsule, _, group_sha = receipt_pins(candidate)
     require(type(context) is dict and set(context) == {"artifact_root", "group_proof_sha256"}
             and isinstance(context["artifact_root"], str) and isinstance(context["group_proof_sha256"], str)
-            and context["group_proof_sha256"] == GROUP_PROOF_SHA,
+            and context["group_proof_sha256"] == group_sha,
             "exact current scheduler receipt context required")
     art = Path(context["artifact_root"])
-    package = art / REVIEWED_PACKAGE
+    package = art / package_path
     require(art.is_absolute() and art.resolve() == art and art.name == "rust" and art.parent.name == "artifacts"
-            and candidate.get("git") == APPLICATION
             and candidate.get("build_manifest_file") == str(package)
-            and candidate.get("build_manifest_sha256") == MANIFEST and digest(package) == MANIFEST,
+            and candidate.get("build_manifest_sha256") == manifest and digest(package) == manifest,
             "current scheduler evidence differs from its exact ordinary package")
-    return art / CAPSULE
+    return art / capsule
 
 
-def check_capsule(capsule):
+def check_capsule(capsule, seal):
     manifest = capsule / "SHA256SUMS"
-    require(digest(manifest) == CAPSULE_SEAL, "exact reviewed scheduler capsule seal required")
+    require(digest(manifest) == seal, "exact reviewed scheduler capsule seal required")
     for line in manifest.read_text().splitlines():
         checksum, rel = line.split("  ", 1)
         child = Path(os.path.normpath(capsule / rel))
@@ -110,7 +130,8 @@ def resolve(context, nodes, candidate, bindings):
     verify_graph(nodes)
     require(not bindings.keys() & set(ORDER), "settled current scheduler evidence cannot also be dispatched")
     capsule = expected_capsule(context, candidate)
-    check_capsule(capsule)
+    _, _, _, seal, _ = receipt_pins(candidate)
+    check_capsule(capsule, seal)
     ledger = capsule / "owner-1"
     for phase in ("actual-exit", "scheduler-prerequisite.actual-exit", "recurring.actual-exit",
                   "recurring-proof.actual-exit", "recurring-acceptance.actual-exit",
@@ -125,16 +146,25 @@ def resolve(context, nodes, candidate, bindings):
             and not checked_read(outer / "engine-before.stdout")
             and not checked_read(outer / "engine-after.stdout"),
             "exact scoped matrix exit and empty engine censuses required")
+    application = candidate["git"]
+    if application == B353_APPLICATION:
+        for phase in ("engine-before", "engine-after", "approved-reparse"):
+            require(checked_read(outer / (phase + ".actual-exit")) == b"0\n",
+                    "exact B353 scheduler root control required: " + phase)
+        require(not checked_read(outer / "engine-before.stderr")
+                and not checked_read(outer / "engine-after.stderr")
+                and digest(outer / "approved-reparse.stdout") == B353_APPROVED_GRAPH_SHA,
+                "exact B353 daemon diagnostics and approved graph replay required")
     proof_path = ledger / "group-proof.stdout"
     require(digest(proof_path) == context["group_proof_sha256"], "exact current scheduler group proof required")
     proof = checked_read(proof_path)
     require(checked_read(outer / "group.stdout") == proof, "outer proof differs from independent owner")
     group = replay(capsule, proof)
     require(set(group) == {"candidate", "prerequisite_proof_sha256", "recurring", "backend_cleanup"}
-            and group["candidate"] == APPLICATION, "current scheduler group candidate differs")
+            and group["candidate"] == application, "current scheduler group candidate differs")
     prerequisite = group["prerequisite_proof_sha256"]
     require(set(prerequisite) == {INSTALL, TICK}, "canonical install and tick receipts required")
-    ordered = {"candidate": APPLICATION, "prerequisite_proof_sha256": prerequisite}
+    ordered = {"candidate": application, "prerequisite_proof_sha256": prerequisite}
     require(json.loads(checked_read(ledger / "scheduler-prerequisite.stdout")) == ordered
             and json.loads(checked_read(ledger / "recurring-acceptance.stdout"))
             == ordered | {"recurring": group["recurring"]},
