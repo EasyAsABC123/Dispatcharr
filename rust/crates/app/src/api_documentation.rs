@@ -213,7 +213,7 @@ fn supplied_auth(peer: SocketAddr, headers: &HeaderMap) -> PlaybackRequest {
     request
 }
 
-fn schema_success(renderer: Renderer, version: Option<&str>) -> Response {
+fn schema_success(renderer: Renderer, version: Option<&str>, headers: &HeaderMap) -> Response {
     let (body, prefix) = if renderer.format == "json" {
         (
             OPENAPI_JSON,
@@ -228,6 +228,11 @@ fn schema_success(renderer: Renderer, version: Option<&str>) -> Response {
             Cow::Owned(body.replacen(prefix, &format!("{prefix} ({version})"), 1)),
             format!(" ({version})"),
         ),
+    };
+    let body = if renderer.format == "json" {
+        render_json_indent(body, json_indent(renderer, headers))
+    } else {
+        body
     };
     let disposition = format!(
         "inline; filename=\"Dispatcharr API{suffix}.{}\"",
@@ -292,46 +297,56 @@ fn html_success(uri: &Uri, headers: &HeaderMap, html_format: bool) -> Response {
     response
 }
 
+fn json_indent(renderer: Renderer, headers: &HeaderMap) -> usize {
+    let mime = renderer.mime;
+    let params = headers
+        .get_all(header::ACCEPT)
+        .iter()
+        .filter_map(|value| value.to_str().ok())
+        .flat_map(|value| value.split(','))
+        .filter_map(|range| {
+            let mut parts = range.split(';');
+            let specificity = match_specificity(mime, parts.next()?)?;
+            let indent = parts
+                .filter_map(|part| part.trim().split_once('='))
+                .find(|(key, _)| key.eq_ignore_ascii_case("indent"))
+                .and_then(|(_, value)| value.trim().trim_matches('"').parse::<i32>().ok())
+                .map(|value| value.clamp(0, 8))
+                .filter(|&value| value != 0)
+                .unwrap_or(4);
+            Some((specificity, indent))
+        })
+        .max_by_key(|&(specificity, _)| specificity);
+    params.map_or(4, |(_, value)| value) as usize
+}
+
+fn render_json_indent(body: Cow<'_, str>, count: usize) -> Cow<'_, str> {
+    if count == 4 {
+        return body;
+    }
+    // The approved JSON uses four-space structural indentation. Strings use
+    // escaped newlines, so only leading whitespace on each line is rewritten.
+    let mut result = String::with_capacity(body.len());
+    for (index, line) in body.split('\n').enumerate() {
+        if index != 0 {
+            result.push('\n');
+        }
+        let text = line.trim_start_matches(' ');
+        let depth = (line.len() - text.len()) / 4;
+        result.extend(std::iter::repeat_n(' ', depth * count));
+        result.push_str(text);
+    }
+    Cow::Owned(result)
+}
+
 fn schema_options(renderer: Renderer, headers: &HeaderMap) -> Response {
     let body = if renderer.format == "json" {
-        let mime = renderer.mime;
-        let params = headers
-            .get_all(header::ACCEPT)
-            .iter()
-            .filter_map(|value| value.to_str().ok())
-            .flat_map(|value| value.split(','))
-            .filter_map(|range| {
-                let mut parts = range.split(';');
-                let specificity = match_specificity(mime, parts.next()?)?;
-                let indent = parts
-                    .filter_map(|part| part.trim().split_once('='))
-                    .find(|(key, _)| key.eq_ignore_ascii_case("indent"))
-                    .and_then(|(_, value)| value.trim().trim_matches('"').parse::<i32>().ok())
-                    .map(|value| value.clamp(0, 8))
-                    .filter(|&value| value != 0)
-                    .unwrap_or(4);
-                Some((specificity, indent))
-            })
-            .max_by_key(|&(specificity, _)| specificity);
-        let count = params.map_or(4, |(_, value)| value) as usize;
-        if count == 4 {
-            SCHEMA_OPTIONS_JSON.as_bytes().to_vec()
-        } else {
-            // The frozen metadata has four-space indentation and no literal
-            // newlines inside strings. Rewrite its structural indentation only.
-            SCHEMA_OPTIONS_JSON
-                .split('\n')
-                .map(|line| {
-                    let text = line.trim_start_matches(' ');
-                    let depth = (line.len() - text.len()) / 4;
-                    format!("{}{text}", " ".repeat(depth * count))
-                })
-                .collect::<Vec<_>>()
-                .join("\n")
-                .into_bytes()
-        }
+        render_json_indent(
+            Cow::Borrowed(SCHEMA_OPTIONS_JSON),
+            json_indent(renderer, headers),
+        )
     } else {
-        SCHEMA_OPTIONS_YAML.as_bytes().to_vec()
+        Cow::Borrowed(SCHEMA_OPTIONS_YAML)
     };
     (
         [
@@ -382,7 +397,7 @@ async fn documentation(
                 )
                     .into_response());
             } else if schema {
-                schema_success(renderer, version)
+                schema_success(renderer, version, &headers)
             } else {
                 html_success(&uri, &headers, selected.format.as_deref() == Some("html"))
             }
@@ -539,6 +554,32 @@ mod tests {
         ] {
             assert_eq!(request(path, "*/*").await.status(), StatusCode::NOT_FOUND);
         }
+    }
+
+    #[tokio::test]
+    async fn schema_media_use_captured_entities_and_selected_indentation() {
+        for path in ["/api/schema/", "/api/swagger.json"] {
+            let response = request(path, "application/json").await;
+            let bytes = to_bytes(response.into_body(), 1_000_000).await.unwrap();
+            assert_eq!(&bytes[..], OPENAPI_JSON.as_bytes());
+            assert_eq!(bytes.len(), 841_486);
+
+            let response = request(path, "application/json; indent=2").await;
+            let bytes = to_bytes(response.into_body(), 1_000_000).await.unwrap();
+            assert_eq!(bytes.len(), 598_218);
+            assert_eq!(
+                serde_json::from_slice::<serde_json::Value>(&bytes).unwrap(),
+                serde_json::from_str::<serde_json::Value>(OPENAPI_JSON).unwrap()
+            );
+
+            let response = request(path, "application/yaml").await;
+            let bytes = to_bytes(response.into_body(), 1_000_000).await.unwrap();
+            assert_eq!(&bytes[..], OPENAPI_YAML.as_bytes());
+            assert_eq!(bytes.len(), 409_528);
+        }
+        let response = request("/api/schema/?version=owned-v1", "application/yaml").await;
+        let bytes = to_bytes(response.into_body(), 1_000_000).await.unwrap();
+        assert_eq!(bytes.len(), 409_539);
     }
 
     #[tokio::test]
