@@ -1,0 +1,231 @@
+{
+  "application": "be828d4cdbbcb5b019ef6dd8c60043daa3e8c3e5",
+  "platform": "linux/amd64",
+  "image": "sha256:21ba7f01028428aab218b4402059e9b19e7b5f41978fa5ce398683cf89559543",
+  "manifest_sha256": "4ab4a4b01ff1d2a80dadb8e4f929a5f112e5f8d5c7f16b6aff52a852c842a429",
+  "historical_d6be_adverse_sha256": "4d2ab49cacad68c2b5ad2b6fe7ba8b0e8afbe06fff2cd7fc7435efeb016531b9",
+  "short": {
+    "phase": "short",
+    "active_target_seconds": 120,
+    "observed_rows_by_epoch": {
+      "active": 25,
+      "drain": 1,
+      "post-idle": 11,
+      "pre-idle": 11
+    },
+    "controller_actual_exit": 0,
+    "formal_phase_wrapper_exit": 0,
+    "formal_resource_proof_exit": 0,
+    "tracked_workload_actual_exit": 0,
+    "fixture_workload_passed": true,
+    "exact_fixture_cleanup": true,
+    "exact_root_engine_inventory": true,
+    "workload_observations": {
+      "av_decodes": 20,
+      "guide_terminals": 2,
+      "viewers": 10
+    },
+    "resource_ledger_sha256": "6b906ecccfc5f988d23077be761190575839446d35693dfcad4a3b6f9267cc4a",
+    "strict_resource_summary_sha256": "f9611cb35f5ec746ba359397b034474901de491a6aaaa6782205d12158dad163",
+    "strict_all_role_gate_passed": true,
+    "idle_medians": {
+      "file_descriptors": {
+        "after": 164,
+        "before": 322,
+        "delta": -158,
+        "limit": 16,
+        "passed": true
+      },
+      "processes": {
+        "after": 11,
+        "before": 13,
+        "delta": -2,
+        "limit": 0,
+        "passed": true
+      },
+      "socket_descriptors": {
+        "after": 89,
+        "before": 91,
+        "delta": -2,
+        "limit": 16,
+        "passed": true
+      },
+      "threads": {
+        "after": 23,
+        "before": 25,
+        "delta": -2,
+        "limit": 4,
+        "passed": true
+      },
+      "working_memory_bytes": {
+        "after": 206827520,
+        "before": 200945664,
+        "delta": 5881856,
+        "limit": 67108864,
+        "passed": true
+      }
+    },
+    "health_events_by_role": [],
+    "host_counter_comparison": {
+      "capture_is_read_only": true,
+      "host_pressure_counter_delta_us": {
+        "cpu": {
+          "full": 0,
+          "some": 1017031
+        },
+        "io": {
+          "full": 1310054,
+          "some": 1411176
+        },
+        "memory": {
+          "full": 103170,
+          "some": 116609
+        }
+      },
+      "host_vmstat_counter_delta": {
+        "pgmajfault": 18221,
+        "pswpin": 14690,
+        "pswpout": 205
+      },
+      "mem_available_bytes_after": 45108338688,
+      "mem_available_bytes_before": 45230358528,
+      "same_boot": true,
+      "sampled_configuration_equal_fields": {
+        "MemTotal": true,
+        "SwapTotal": true,
+        "swappiness": true
+      },
+      "sampled_configuration_unchanged": true,
+      "suite_gate_change": false,
+      "swap_used_bytes_after": 35867865088,
+      "swap_used_bytes_before": 35935113216
+    },
+    "independent_projection_sha256": "760efcd9addbb1c81d52d33ca06869b6a6ea2ec66f4690ee1915b5a7158cc25a"
+  },
+  "prefix": {
+    "phase": "prefix",
+    "active_target_seconds": 360,
+    "observed_rows_by_epoch": {
+      "active": 73,
+      "drain": 1,
+      "post-idle": 11,
+      "pre-idle": 11
+    },
+    "controller_actual_exit": 1,
+    "formal_phase_wrapper_exit": 1,
+    "formal_resource_proof_exit": 1,
+    "tracked_workload_actual_exit": 1,
+    "fixture_workload_passed": false,
+    "exact_fixture_cleanup": true,
+    "exact_root_engine_inventory": true,
+    "workload_observations": null,
+    "resource_ledger_sha256": "e4fad1ec444381909c1cf2118435acf07fca9c158bd13c108f9c5b9d17c2031e",
+    "strict_resource_summary_sha256": null,
+    "strict_all_role_gate_passed": false,
+    "idle_medians": {
+      "file_descriptors": {
+        "after": 119,
+        "before": 322,
+        "delta": -203,
+        "limit": 16,
+        "passed": true
+      },
+      "processes": {
+        "after": 11,
+        "before": 13,
+        "delta": -2,
+        "limit": 0,
+        "passed": true
+      },
+      "socket_descriptors": {
+        "after": 43,
+        "before": 91,
+        "delta": -48,
+        "limit": 16,
+        "passed": true
+      },
+      "threads": {
+        "after": 23,
+        "before": 25,
+        "delta": -2,
+        "limit": 4,
+        "passed": true
+      },
+      "working_memory_bytes": {
+        "after": 228098048,
+        "before": 205504512,
+        "delta": 22593536,
+        "limit": 67108864,
+        "passed": true
+      }
+    },
+    "health_events_by_role": [
+      {
+        "role": "baseline",
+        "count": 96,
+        "first": {
+          "epoch": "pre-idle",
+          "offset": 0,
+          "oom_events": 0,
+          "oom_kills": 0,
+          "role": "baseline",
+          "swap_bytes": 249856
+        },
+        "last": {
+          "epoch": "post-idle",
+          "offset": 20,
+          "oom_events": 0,
+          "oom_kills": 0,
+          "role": "baseline",
+          "swap_bytes": 249856
+        },
+        "peak_swap_bytes": 249856,
+        "peak_oom_events": 0
+      }
+    ],
+    "host_counter_comparison": {
+      "capture_is_read_only": true,
+      "host_pressure_counter_delta_us": {
+        "cpu": {
+          "full": 0,
+          "some": 1867458
+        },
+        "io": {
+          "full": 2609771,
+          "some": 2714795
+        },
+        "memory": {
+          "full": 225289,
+          "some": 229188
+        }
+      },
+      "host_vmstat_counter_delta": {
+        "pgmajfault": 94356,
+        "pswpin": 14524,
+        "pswpout": 275
+      },
+      "mem_available_bytes_after": 45218619392,
+      "mem_available_bytes_before": 45065043968,
+      "same_boot": true,
+      "sampled_configuration_equal_fields": {
+        "MemTotal": true,
+        "SwapTotal": true,
+        "swappiness": true
+      },
+      "sampled_configuration_unchanged": true,
+      "suite_gate_change": false,
+      "swap_used_bytes_after": 35731894272,
+      "swap_used_bytes_before": 35867836416
+    },
+    "independent_projection_sha256": "3b2403b39d769bcfe0bc4ca2f6fcf0f87c1a97248b9da4ef8a3e04aeb7d96492",
+    "integration_sha256": "06e3daa278428083c3c5f9c4c1427d9d561618a35cc1a070b1b48ba0ce75a01c",
+    "guide_300_terminal_passed": true,
+    "viewer_ownership_retirement_passed": true,
+    "per_clip_decode_stage_reached": false,
+    "reason": "Original baseline swap at first and all subsequent samples"
+  },
+  "exact_engine_inventory_sha256": "16f7018e109becafa4b385a7e26038f1bbe165c5a4a75c0f07d2db606a43df89",
+  "two_hour_admission_actual_exit": 1,
+  "two_hour_executed": false,
+  "formal_m9_credit": false
+}
