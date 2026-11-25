@@ -1,0 +1,104 @@
+{
+  "application": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+  "application_inputs": 2261,
+  "approved_binding_snapshot": {
+    "new_runtime_passes_claimed": 0,
+    "recorded_scope_authorities": [
+      "external/M9/datastore-scope",
+      "native/copied-SQLite-migration-utility"
+    ],
+    "required_rows": 125,
+    "unbound_in_this_binding": 119,
+    "verified_current_receipts": [
+      "m6/backend-cleanup-expiry",
+      "m6/recurring-positive-repeat",
+      "m6/scheduler-install-known-defaults",
+      "m6/scheduler-tick-publication"
+    ]
+  },
+  "credit": "Original Dispatcharr, React, and upstream contributors retain full authorship and license credit.",
+  "datastore": {
+    "decision_commit": "152d96dfe554448031ee70e18ba757dc52172301",
+    "literal_exits": {
+      "group-proof": 0,
+      "operator-proof": 0,
+      "operator-run": 0,
+      "pg-proof": 0,
+      "pg-run": 0
+    },
+    "physical_evidence_commit": "2361c85378c94829db016ca3d1c64eb64823ef1f",
+    "physical_evidence_sha256": "8bd312b34f9df7c55bd1eeae890a8cc30b7acbf3849ede082351156e30fa6228",
+    "scope": "ordinary PostgreSQL and separate copied SQLite utility"
+  },
+  "decision": "hold",
+  "default_switch_authorized": false,
+  "fallback_retirement_authorized": false,
+  "full_M10_accepted": false,
+  "full_M11_accepted": false,
+  "full_M9_accepted": false,
+  "open_arm_gates": {
+    "existing_vm_s120_repeat": {
+      "exit": 0,
+      "idle": {
+        "after": 228773888,
+        "before": 209309696,
+        "delta": 19464192
+      },
+      "scope": "existing VM"
+    },
+    "first_formal_s120": {
+      "exit": 1,
+      "growth_limit_bytes": 67108864,
+      "idle": {
+        "after": 488333312,
+        "before": 398086144,
+        "delta": 90247168
+      }
+    },
+    "release_performance": "open",
+    "s360": {
+      "cleanup_exit": 0,
+      "failed_idle": {
+        "after": 497,
+        "before": 268,
+        "delta": 229,
+        "limit": 16,
+        "passed": false
+      },
+      "proof_exit": 1
+    },
+    "s7200": "held pending qualifying same-build formal S360"
+  },
+  "ordinary_packages": {
+    "linux/amd64": {
+      "image": "sha256:b3e24f01e0c864dba12d858288d8d27806c19363aa766e4eaf3bd2fd84b54195",
+      "manifest_sha256": "dc526bb02476e8610b8f79ba018242fcd34bbaa1c19988ee4b7f9e440a761387"
+    },
+    "linux/arm64": {
+      "audit_sha256": "6e30896ec6180217ab3e74b4f14c81bab850fb83ce4faba7f15580ff4c0e44e7",
+      "child": "sha256:6dcdc3687a4aea9216a13ce1c969fe32a206b3649c7eda22d0ab0bf38eb7c41d",
+      "config": "sha256:f9b2292f6793fc657c731a390f4d454bbdc82417e82518ff17a7fe070b77fe9c",
+      "image_index": "sha256:1e71a9f9639766454f05671dd571487008ae04cd807b87b94cf6a1df98600623",
+      "signed_auth_sha256": "e9c51c3ebe00e35feff22302ad5078594f210854ac7a5d30970903b054cc8782"
+    }
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "protected_inputs": 497,
+  "published_merge": "7927b2d4765f82b650d958fd15d0b70200a6b72c",
+  "release_authorized": false,
+  "rollback": {
+    "amd64_fixture_cutback_ms": 7862,
+    "amd64_warm_scoped": true,
+    "arm64_cold_scoped": true,
+    "arm64_independent_intake": 0,
+    "arm64_original_wrapper_exit": 1,
+    "full_workspace_tests": {
+      "failed": 0,
+      "groups": 194,
+      "ignored": 843,
+      "passed": 1988
+    }
+  },
+  "source_tree_sha256": "1f8506bcadf064000d135dc14510a907996ac72fa89cb3a8be616540ca844c43",
+  "verified_evidence_cutoff": "2c0d7d9370672a2b7c24be33d7000eb628ce2810"
+}

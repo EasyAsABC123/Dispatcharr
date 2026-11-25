@@ -1,0 +1,18 @@
+# f38 signed same-socket held-capacity admission
+
+The latest retained Original/Native pair passes this scoped explicit-stop admission check. Both the Root wrapper and physical phase have literal exit0; the child coordinator records62.894 seconds, stdout/stderr EOF and settled process group. The candidate is ordinary AMD64 application revision `f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1`, package-manifest SHA `dc526bb02476e8610b8f79ba018242fcd34bbaa1c19988ee4b7f9e440a761387`, image `sha256:b3e24f01e0c864dba12d858288d8d27806c19363aa766e4eaf3bd2fd84b54195`. The paired Source is pinned Original1241/image34f. No previous passing status is transferred to this pair.
+
+Each arm keeps one first-channel viewer and one configured provider slot occupied, transmits one distinct second-channel GET, observes its profile-reservation attempt, and confirms that the saved socket has no response byte, EOF or reset while the original slot/upstream remain held. The authenticated Stop Channel call on the opposite replica then releases that channel. The same saved HTTP connection receives its response once; the recorded request count is1. The sealed fixture checks descriptor identity before response consumption and forbids a second response retrieval. Its Redis witness is matched in memory; raw MONITOR rows were not retained.
+
+| Actual arm | Waiting HTTP/content type | Retained TS bytes | Useful non-null TS bytes | Prior strict decode | Peak upstream handlers |
+|---|---|---:|---:|---|---:|
+| Original1241 |200 / video/mp2t|1,279,340|833,968|3 seconds,74 video frames and audio|1|
+| Native f38 |200 / video/mp2t|1,279,340|833,968|3 seconds,74 video frames and audio|1|
+
+Independent file parsing reproduces the byte totals, all6,805 packet boundaries and zero sync/partial-packet errors for each waiting capture. The two initial viewer captures per arm also retain packet-sync and strict A/V decode proofs: six decoder paths in total. Decoder commands use `-xerror`, map both video and audio, and finish their actual three-second progress logs. This is useful A/V evidence, not full-capture sample/timing equivalence or a new decode performed by the audit.
+
+The passive Origin ledger records the old handler exiting before the new handler enters:80,513,407ns apart on Original and132,166,000ns on Native. Both ledger peaks are1; exactly one additional Origin request serves the waiting channel. The one-slot counters and channel SQL/metadata return to retired state. Cleanup records all five exact containers and their five captured original host generations absent, with the isolated project's container/network/volume inventories empty. The five roles are Source, Origin, Source replica and two Native replicas; no broader host-process inventory is claimed.
+
+Authorization uses a signed administrator Bearer token issued by the guarded disposable Source `seed_accounts.py` through `RefreshToken.for_user`. This does not independently qualify an HTTP login route, full header identity or a role matrix. Public facts contain socket-identity hashes, never raw tokens or credentials.
+
+**Broad M2 remains open.** A provider-reservation witness plus the same saved HTTP socket does not identify that request's membership in the Core settings watch. The Core same-watch lifecycle and its six scoped proxy-health cases remain separate work. Historical two-handler overlap failures and natural-close503 observations remain unchanged. No GPU work, Docker/SSH/HTTP/codec execution, Git operation, performance-gain claim or broad M2 promotion was performed by this independent audit. Original Dispatcharr, Django and dependency authors retain all application and protocol credit.

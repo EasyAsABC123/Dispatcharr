@@ -1,0 +1,138 @@
+{
+  "admitted_evidence_tip": "091124d94cad642efd30d13b0093fe6067d8d649",
+  "application": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+  "application_publication": "7927b2d4765f82b650d958fd15d0b70200a6b72c",
+  "canonical_passes": 4,
+  "credits": "Original Dispatcharr, Django, React and dependency authors retain credit.",
+  "full_release_accepted": false,
+  "historical_acceptance_imported": false,
+  "latest_independent_receiving_tip": "49f243771220e4b5d4db77ff7295951e80cd7277",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "package": {
+    "build_manifest_sha256": "dc526bb02476e8610b8f79ba018242fcd34bbaa1c19988ee4b7f9e440a761387",
+    "image_id": "sha256:b3e24f01e0c864dba12d858288d8d27806c19363aa766e4eaf3bd2fd84b54195",
+    "source_archive_sha256": "b9f9c9c458d122fbe9752bca1f9b5f6dbd4a57f928293519071358063d367385",
+    "source_map_sha256": "ad70a4a3e2a4bba0a3f1bbcebc740471b0d55cad7380db0b143a69e67fa7d956"
+  },
+  "platform": "linux/amd64",
+  "root_exits": {
+    "audit": 0,
+    "coordinator": 0,
+    "run": 0
+  },
+  "rows": {
+    "package/baseline-all": {
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "business": {
+        "checks": 1024,
+        "malformed_settings_id_404_body_equal": true,
+        "ordinary_decoded_frames": 75,
+        "suites": 18
+      },
+      "canonical_dependencies": [],
+      "cleanup": {
+        "full_observed_lifecycle": true,
+        "process_generations": 3,
+        "roles": 4
+      },
+      "entrypoint": "production-Main",
+      "exact_owned_cleanup": true,
+      "independent_replay": {
+        "evaluation_matches": true
+      },
+      "result_sha256": "b54348aa0ba124ad9d5b6846a7a43cfb8cd2474b44e4d68973b5067b77e4d09c",
+      "status": "passed"
+    },
+    "package/clean-install": {
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "business": {
+        "authenticated_routes_per_state": 16,
+        "browser_graceful_close": true,
+        "checks": 11,
+        "initial_and_post_restart_authenticated_states": 2
+      },
+      "canonical_dependencies": [],
+      "cleanup": {
+        "browser_group_absent": true,
+        "browser_launcher_generation_absent": true,
+        "browser_scratch_absent": true
+      },
+      "entrypoint": "production-Main",
+      "exact_owned_cleanup": true,
+      "independent_replay": {
+        "evaluation_matches": true
+      },
+      "result_sha256": "5d8c6f4bce7f1e2ff8f46e70495f649cb73dddcb12bba4fa0c0a4d050bfd623e",
+      "status": "passed"
+    },
+    "package/shipped-createsuperuser22": {
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "business": {
+        "cases": 22,
+        "cli_checks": 95,
+        "default_database_unchanged": true,
+        "native_scope_sha256": "71a56089d6c528be375f9c884fa3c5881de1354a2a93c5c43f527366d1f14cc4"
+      },
+      "canonical_dependencies": [],
+      "cleanup": {
+        "compose_inventories_empty": true
+      },
+      "entrypoint": "production-CLI",
+      "exact_owned_cleanup": true,
+      "independent_replay": {
+        "evaluation_matches": true
+      },
+      "result_sha256": "3d14d114d4f9aeac657071059134d3345aa85204c7da3e901517f137909bb417",
+      "status": "passed"
+    },
+    "package/strict-typed154": {
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "business": {
+        "cases": 22,
+        "comparisons": 154,
+        "create22_native_scope_sha256": "71a56089d6c528be375f9c884fa3c5881de1354a2a93c5c43f527366d1f14cc4",
+        "creation_clock_slots_per_backend": 10
+      },
+      "canonical_dependencies": [
+        "package/shipped-createsuperuser22"
+      ],
+      "cleanup": {
+        "create22_cleanup_join_replayed": true,
+        "offline_comparator_created_resources": false
+      },
+      "entrypoint": "offline-comparison",
+      "exact_owned_cleanup": true,
+      "independent_replay": {
+        "comparator_matches": true,
+        "evaluation_matches": true
+      },
+      "result_sha256": "b06f7a407fb6374337cf7d64b8c35ff23be4e0646ba5a8625c8e73b1cb4730cd",
+      "status": "passed"
+    }
+  },
+  "runtime": {
+    "default_mode_environment": true,
+    "production_Main": "/usr/local/bin/dispatcharr-rs",
+    "source_tree_sha256": "1f8506bcadf064000d135dc14510a907996ac72fa89cb3a8be616540ca844c43",
+    "uid_gid": "65532:65532"
+  },
+  "typed_after_fresh_create22": true
+}
