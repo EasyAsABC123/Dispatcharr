@@ -189,27 +189,36 @@ mod tests {
         );
         let peer: SocketAddr = "127.0.0.1:12345".parse().unwrap();
         let app = super::super::router(auth).layer(Extension(ConnectInfo(peer)));
-        for (path, methods) in [
+        for (path, methods, metadata_status) in [
             (
                 "/api/m3u/accounts/2/profiles.json",
                 &[Method::GET, Method::POST][..],
+                StatusCode::NOT_FOUND,
             ),
             (
                 "/api/m3u/accounts/2/filters.json",
                 &[Method::GET, Method::POST][..],
+                StatusCode::NOT_FOUND,
             ),
             (
                 "/api/m3u/accounts/2/profiles/3.json",
                 &[Method::GET, Method::PUT, Method::PATCH, Method::DELETE][..],
+                StatusCode::NOT_FOUND,
             ),
             (
                 "/api/m3u/accounts/2/filters/3.json",
                 &[Method::GET, Method::PUT, Method::PATCH, Method::DELETE][..],
+                StatusCode::NOT_FOUND,
             ),
-            ("/api/m3u/server-groups.json", &[Method::POST][..]),
+            (
+                "/api/m3u/server-groups.json",
+                &[Method::POST][..],
+                StatusCode::UNAUTHORIZED,
+            ),
             (
                 "/api/m3u/server-groups/3.json",
                 &[Method::PUT, Method::PATCH, Method::DELETE][..],
+                StatusCode::UNAUTHORIZED,
             ),
         ] {
             for method in methods {
@@ -227,7 +236,7 @@ mod tests {
             for method in [Method::HEAD, Method::OPTIONS] {
                 assert_eq!(
                     status(&app, &method, path, "application/json").await,
-                    StatusCode::NOT_FOUND,
+                    metadata_status,
                     "{method} {path}"
                 );
             }
