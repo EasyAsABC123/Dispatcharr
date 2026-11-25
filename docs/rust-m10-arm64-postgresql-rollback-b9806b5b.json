@@ -1,0 +1,98 @@
+{
+  "M11": "hold",
+  "acknowledged_write": {
+    "changed_fields": [
+      "name",
+      "updated_at"
+    ],
+    "rows": 1,
+    "writer_SQL_sessions_after_stop": 0,
+    "writer_exit": 0
+  },
+  "application": {
+    "image": "sha256:8127bc15e6eb7069267f5ec4e3d9593ccb9074ae488f9b8d2ba1706c53fea5f0",
+    "manifest_sha256": "04e0daef7bd2558b4ab118d71995301a06a7c59b425de8a7d1edaf8be007bc87",
+    "platform": "linux/arm64",
+    "revision": "b9806b5bcbe65c87a7df4083029fa7599e698628",
+    "signed_auth_sha256": "b7684607e0ff634cbabdc0283e8b17e2f1fab7ededcf3bc9af3a52b62b98f09c",
+    "source_tree_sha256": "977172e07595c3b4e979c98441d5def6fee6f70f5e238864284d377b76fe7849"
+  },
+  "copied_media": {
+    "kind": "copied_media_file",
+    "observations": [
+      {
+        "bytes": 96,
+        "role": "source",
+        "sequence": 65,
+        "sha256": "5773e4fc1ba216be1edbc6a0d78bba2d92445ef700ebcb1f3c285df9e031194f"
+      },
+      {
+        "bytes": 96,
+        "role": "candidate",
+        "sequence": 133,
+        "sha256": "5773e4fc1ba216be1edbc6a0d78bba2d92445ef700ebcb1f3c285df9e031194f"
+      },
+      {
+        "bytes": 96,
+        "role": "cold-original",
+        "sequence": 224,
+        "sha256": "5773e4fc1ba216be1edbc6a0d78bba2d92445ef700ebcb1f3c285df9e031194f"
+      },
+      {
+        "bytes": 96,
+        "role": "source",
+        "sequence": 240,
+        "sha256": "5773e4fc1ba216be1edbc6a0d78bba2d92445ef700ebcb1f3c285df9e031194f"
+      }
+    ]
+  },
+  "corrected_proof_sha256": "019dba2fab8dd2f659fbcc769319a6f7907e89ecacb309b8f8a81af02657a341",
+  "deployment_actions": 0,
+  "full_M10_accepted": false,
+  "observer_fix": "The original proof treated the one action record as a command row; the replay separately verified both schemas and all original receipts.",
+  "original_author_credit_retained": true,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "original_session_requests": 8,
+  "paired_performance_measured": false,
+  "physical_fixture_and_original_proof_exits": {
+    "fixture": 0,
+    "owner": 1,
+    "preflight": 0,
+    "proof": 1,
+    "run": 0
+  },
+  "postgres_copy": {
+    "byte_equal_cold_checkpoint_count": 5,
+    "common_archive_sha256": "e858f04c8e4e5f11b3c9182543227d1d2aabd1e1d1f5fbdde2d61a71f5abb8a8",
+    "exact_cold_preboot_order_rows_sequences": true,
+    "fresh_cold_restores": 2,
+    "initial_logical_restores": 2,
+    "logical_columns": 501,
+    "logical_tables": 62,
+    "rendered_checkpoint_file_sha256": "20be80e0b10afa269761230644d080746cc3f98a7b65e80ca3980db5da92f620",
+    "semantic_checkpoint_sha256": "abce0c9ca63b7c069cd3e8701a94650ce3e25f140f1e5ad7b1400f1b824ab4a9",
+    "temporary_archives_retired": true
+  },
+  "proof_replay_exit": 0,
+  "proof_replay_sha256": "fb13f9dcbe5bbd4c9cb9a92c5d680d69ac5ea5c06ea876b1c7c3ca8f2343ff02",
+  "receipt_scope": "isolated cold copied-data return on linux/arm64",
+  "same_session_cold_return": {
+    "other_startup_fields_exact_within_each_scope": true,
+    "paired_bounded_startup_timestamp_effect_count": 4,
+    "post_ready_read_and_stop_exact": true,
+    "same_session_read_saw_acknowledged_rename": true
+  },
+  "schema_version": 1,
+  "service_datastore": "PostgreSQL",
+  "signed_requests": 10,
+  "teardown": {
+    "compose_down_exit": 0,
+    "exact_container_ids": 16,
+    "exact_named_volumes": 6,
+    "exact_network_id_and_name": 1,
+    "original_project_inventories_empty": true,
+    "reserved_names_observed_absent_postdown": 16,
+    "reserved_names_proven_absent_prestart": 16,
+    "temporary_compose_removed": true
+  }
+}
