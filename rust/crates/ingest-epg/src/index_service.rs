@@ -461,7 +461,7 @@ impl Inner {
         let lease = match self
             .services
             .locks
-            .acquire_retained_detailed("epg_source_file", request.source_id, job.clone())
+            .acquire_epg_index_retained(request.source_id, job.clone())
             .await
         {
             Ok(lease) => lease,
