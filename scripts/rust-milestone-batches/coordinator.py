@@ -167,7 +167,7 @@ def retained_m235_repo(owner_binding, default):
     return repo
 
 
-def owner_readiness(nodes, document, output=None):
+def owner_readiness(nodes, document, output=None, release_policy=None):
     """An arbitrary argv binding cannot bypass an owner's actual readiness.
 
     Retained Source is a dependency authority, never a newly executed/current
@@ -248,6 +248,17 @@ def owner_readiness(nodes, document, output=None):
                     raise ValueError("owner environment differs: " + key)
         elif node["owner"] == "m478":
             path = owners.get("m478")
+            if key == "native/backup-workflow" and path:
+                owner_bound = m478.bindings(path)
+                backup_context = owner_bound.get("retained_native_backup")
+                if backup_context is not None:
+                    if owner_bound["candidate"] != document["candidate"]:
+                        raise ValueError("M478 backup receipt differs from common candidate")
+                    adapter = module(HERE.parent / "rust-contracts/m8_native_backup_receipts.py",
+                                     "current_native_backup_receipts")
+                    authorities[key] = adapter.resolve(backup_context, nodes, document["candidate"],
+                        bindings, authorities.get(adapter.SOURCE), HERE.parents[1], release_policy)
+                    continue
             if key == m478.SOURCE16 and path:
                 owner_bound = m478.bindings(path)
                 retained = m478.retained_source_baseline(ops_definitions[key], owner_bound)
@@ -481,9 +492,9 @@ def load_binding_fragments(paths, nodes, output, release_policy=None):
         policy, metadata = release_policy
         authorities.update(policy.authorities(metadata, candidate, bindings))
     for document in documents:
-        for key, authority in owner_readiness(nodes, document, output).items():
+        for key, authority in owner_readiness(nodes, document, output, release_policy).items():
             current = authority.get("status") == "verified_current_receipt"
-            kind = "verified current scheduler receipt" if current else "retained Source"
+            kind = "verified current receipt" if current else "retained Source"
             if key in bindings:
                 raise ValueError(kind + " cannot also be dispatched: " + key)
             if authorities.setdefault(key, authority) != authority:
@@ -762,7 +773,7 @@ def _reference_age(node, bound, now):
 
 
 def schedule(nodes, bindings, output, candidate, worker=execute, authorities=None,
-             utc_minute=None, wall_clock=time.time):
+             utc_minute=None, wall_clock=time.time, release_policy=None):
     validate(nodes, bindings)
     # A larger diagnostic cohort can require more isolation than its original
     # inventory probe. Bindings can strengthen reservations, never downgrade them.
@@ -773,6 +784,14 @@ def schedule(nodes, bindings, output, candidate, worker=execute, authorities=Non
     utc_minute = utc_minute or (lambda: time.gmtime().tm_min)
     results, running = dict(authorities or {}), {}
     imported = {key: row for key, row in results.items() if row.get("status") == "verified_current_receipt"}
+    backup = imported.pop("native/backup-workflow", None)
+    if backup is not None:
+        adapter = module(HERE.parent / "rust-contracts/m8_native_backup_receipts.py",
+                         "verified_native_backup_receipt")
+        actual = adapter.resolve(backup.get("authority_context", {}), nodes, candidate,
+            bindings, results.get(adapter.SOURCE), HERE.parents[1], release_policy)
+        if backup != actual:
+            raise ValueError("verified current backup receipt changed")
     if imported:
         if imported.keys() & bindings.keys():
             raise ValueError("verified current scheduler receipt cannot also be dispatched")
@@ -946,7 +965,8 @@ def main():
         return 2 if coverage["unbound_rows"] or coverage["partial_probes"] else 0
     # Lock across scheduler invocations; owner adapters never create their own pool.
     with fixture_lease(HERE / ".dispatcher.lock"):
-        report = schedule(nodes, bindings, args.output, candidate, authorities=authorities)
+        report = schedule(nodes, bindings, args.output, candidate, authorities=authorities,
+                          release_policy=release_policy)
     return 0 if report["full_batch_passed"] else 2
 
 
