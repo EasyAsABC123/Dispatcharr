@@ -155,6 +155,64 @@ async fn admit_inner<C: redis::aio::ConnectionLike + Send + Unpin>(
         _ => Err(Error::RedisUnavailable),
     }
 }
+/// One fresh, signed alias may enter a proven otherwise idle retained row.
+/// The caller owns the retained Session's setup mutex and provider reservation
+/// until this physical mutation or its token-checked cancellation settles.
+pub struct SignedIdleAlias<'a> {
+    pub requested: &'a str,
+    pub prior: &'a str,
+    pub claim: &'a str,
+    pub requester: i64,
+    pub prior_viewer: i64,
+    pub requester_limit: u32,
+    pub content: &'a str,
+    pub profile: i64,
+    pub metadata_token: &'a str,
+    pub lease_key: &'a str,
+    pub lease_token: &'a str,
+    pub now: &'a str,
+}
+
+pub async fn enter_signed_idle_alias<C: redis::aio::ConnectionLike + Send + Unpin>(
+    connection: &mut C,
+    alias: &SignedIdleAlias<'_>,
+) -> Result<bool, Error> {
+    let data = json!({"user_id":alias.requester.to_string(),"content_uuid":alias.content});
+    let reply: Vec<String> = Script::new(ADMIT)
+        .key(format!("vod_persistent_connection:{}", alias.prior))
+        .key(alias.lease_key)
+        .key(format!("vod_proxy:client:{}:stop", alias.prior))
+        .key(format!("vod_persistent_connection:{}", alias.requested))
+        .key(format!("vod_signed_idle_alias:{}", alias.requested))
+        .key(format!("vod_session_user:{}", alias.requested))
+        .arg(data.to_string())
+        .arg("{}")
+        .arg(alias.requester_limit)
+        .arg(0)
+        .arg(50000)
+        .arg("check")
+        .arg(alias.metadata_token)
+        .arg(alias.lease_token)
+        .arg("legacy")
+        .arg(alias.claim)
+        .arg(alias.prior_viewer)
+        .arg(alias.profile)
+        .arg(alias.requested)
+        .arg(alias.now)
+        .invoke_async(connection)
+        .await
+        .map_err(|_| Error::RedisUnavailable)?;
+    match reply.first().map(String::as_str) {
+        Some("OK") => Ok(true),
+        Some("ALIAS_MISS") => Ok(false),
+        Some("LIMIT") => Err(Error::UserLimit),
+        Some("SCAN_LIMIT") => Err(Error::ScanLimit),
+        Some("CORRUPT") => Err(Error::CorruptMetadata),
+        Some("STOPPED") => Err(Error::Stopped),
+        _ => Err(Error::RedisUnavailable),
+    }
+}
+
 const ADMIT: &str = r#"
 local function kind(key)
   local result=redis.call('TYPE',key)
@@ -171,6 +229,28 @@ local policy=cjson.decode(ARGV[2])
 local limit=tonumber(ARGV[3])
 local ttl=tonumber(ARGV[4])
 local user=tostring(data.user_id)
+if ARGV[6]=='create' then
+  local claim='vod_signed_idle_alias:'..data.session_id
+  if kind(claim)=='string' and redis.call('GET',claim)=='used' then return {'EXISTS'} end
+end
+local claim_ttl, previous_activity
+if ARGV[10] then
+  -- A mismatched or consumed alias can never mutate another row.
+  if kind(KEYS[5])~='string' or redis.call('GET',KEYS[5])~=ARGV[10] then return {'ALIAS_MISS'} end
+  claim_ttl=redis.call('PTTL',KEYS[5])
+  if claim_ttl<=0 or claim_ttl>300000 then return {'ALIAS_MISS'} end
+  if kind(KEYS[4])~='none' or kind(KEYS[6])~='string' or redis.call('GET',KEYS[6])~=user then return {'STOPPED'} end
+  if redis.call('GET',KEYS[2])~=ARGV[8] or redis.call('EXISTS',KEYS[3])~=0 then return {'STOPPED'} end
+  local requests=redis.call('HGET',KEYS[1],'request_count')
+  previous_activity=redis.call('HGET',KEYS[1],'last_activity')
+  if not previous_activity or not requests or not string.match(requests,'^[1-9]%d*$') or #requests>15
+    or redis.call('HGET',KEYS[1],'active_streams')~='0'
+    or redis.call('HGET',KEYS[1],'rust_preempted')=='1'
+    or redis.call('HGET',KEYS[1],'user_id')~=ARGV[11]
+    or redis.call('HGET',KEYS[1],'content_uuid')~=data.content_uuid
+    or redis.call('HGET',KEYS[1],'m3u_profile_id')~=ARGV[12]
+    or user==ARGV[11] or limit<=0 then return {'STOPPED'} end
+end
 local clients={}
 local counts={}
 local unique={}
@@ -272,6 +352,13 @@ end
 if ARGV[6]=='create' then
   for key,value in pairs(data) do redis.call('HSET',KEYS[1],key,tostring(value)) end
   redis.call('PEXPIRE',KEYS[1],ttl)
+end
+if ARGV[10] then
+  redis.call('HINCRBY',KEYS[1],'active_streams',1)
+  redis.call('HINCRBY',KEYS[1],'request_count',1)
+  redis.call('HSET',KEYS[1],'last_activity',ARGV[14],'rust_signed_idle_alias',ARGV[13],
+    'rust_signed_idle_alias_previous_activity',previous_activity)
+  redis.call('PSETEX',KEYS[5],claim_ttl,'used')
 end
 return {'OK',tostring(#stop_targets)}
 "#;

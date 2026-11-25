@@ -1,6 +1,6 @@
 //! Real Redis VOD/live admission differential boundaries.
 use dispatcharr_clients::{
-    vod::{admit, Admission},
+    vod::{admit, enter_signed_idle_alias, Admission, SignedIdleAlias},
     ClientConfig, ClientStore, Error,
 };
 use dispatcharr_contracts::{PlaybackViewer, UserLimitPolicy};
@@ -156,6 +156,142 @@ async fn vod_never_gets_live_same_channel_cap_exemption_and_corrupt_stop_is_atom
         .unwrap());
     let _: () = redis
         .del(&[format!("vod_persistent_connection:{first}"), stop])
+        .await
+        .unwrap();
+}
+
+#[tokio::test]
+#[ignore = "requires REDIS_TEST_URL pointing to disposable real Redis"]
+async fn fresh_signed_alias_preserves_both_users_quota_and_reserves_one_retained_row() {
+    let url = std::env::var("REDIS_TEST_URL").unwrap();
+    let mut redis = redis::Client::open(url)
+        .unwrap()
+        .get_multiplexed_async_connection()
+        .await
+        .unwrap();
+    let suffix = uuid::Uuid::new_v4();
+    let prior = format!("vod_prior_{suffix}");
+    let requested = format!("vod_request_{suffix}");
+    let prior_other = format!("vod_prior_other_{suffix}");
+    let requester_other = format!("vod_requester_other_{suffix}");
+    let key = |id: &str| format!("vod_persistent_connection:{id}");
+    let prior_key = key(&prior);
+    let marker = format!("vod_signed_idle_alias:{requested}");
+    let mapping = format!("vod_session_user:{requested}");
+    let lease_key = format!("exact_vod_lease_test:{suffix}");
+    let prior_viewer = (suffix.as_u128() % 1_000_000_000) as i64 + 1000;
+    let requester = prior_viewer + 1;
+    let claim = format!("movie:{suffix}:{requester}");
+    let deny = UserLimitPolicy {
+        terminate_on_limit_exceeded: false,
+        ..Default::default()
+    };
+    assert!(add(
+        &mut redis,
+        &prior,
+        &fields(&prior, prior_viewer, "primary"),
+        &deny
+    )
+    .await
+    .unwrap());
+    let _: () = redis
+        .hset_multiple(
+            &prior_key,
+            &[
+                ("active_streams", "0"),
+                ("request_count", "1"),
+                ("last_activity", "1"),
+                ("m3u_profile_id", "17"),
+            ],
+        )
+        .await
+        .unwrap();
+    let _: () = redis.set(&lease_key, "retained").await.unwrap();
+    let _: () = redis.set_ex(&mapping, requester, 300).await.unwrap();
+    let mut alias = SignedIdleAlias {
+        requested: &requested,
+        prior: &prior,
+        claim: &claim,
+        requester,
+        prior_viewer,
+        requester_limit: 1,
+        content: "primary",
+        profile: 17,
+        metadata_token: &prior,
+        lease_key: &lease_key,
+        lease_token: "retained",
+        now: "2",
+    };
+    assert!(!enter_signed_idle_alias(&mut redis, &alias).await.unwrap());
+    let _: () = redis.set_ex(&marker, &claim, 300).await.unwrap();
+    alias.lease_token = "different-generation";
+    assert_eq!(
+        enter_signed_idle_alias(&mut redis, &alias).await,
+        Err(Error::Stopped)
+    );
+    alias.lease_token = "retained";
+    alias.profile = 18;
+    assert_eq!(
+        enter_signed_idle_alias(&mut redis, &alias).await,
+        Err(Error::Stopped)
+    );
+    alias.profile = 17;
+    let requester_data = fields(&requester_other, requester, "other");
+    assert!(add(&mut redis, &requester_other, &requester_data, &deny)
+        .await
+        .unwrap());
+    assert_eq!(
+        enter_signed_idle_alias(&mut redis, &alias).await,
+        Err(Error::UserLimit)
+    );
+    let _: () = redis.del(key(&requester_other)).await.unwrap();
+    let mut rival = redis.clone();
+    let (one, two) = tokio::join!(
+        enter_signed_idle_alias(&mut redis, &alias),
+        enter_signed_idle_alias(&mut rival, &alias)
+    );
+    assert!(matches!(
+        (one, two),
+        (Ok(true), Ok(false)) | (Ok(false), Ok(true))
+    ));
+    let stored: (i64, i64, i64) = redis
+        .hget(&prior_key, &["user_id", "active_streams", "request_count"])
+        .await
+        .unwrap();
+    assert_eq!(stored, (prior_viewer, 1, 2));
+    assert!(!redis.exists::<_, bool>(key(&requested)).await.unwrap());
+    assert_eq!(redis.get::<_, i64>(&mapping).await.unwrap(), requester);
+    assert_eq!(
+        add(
+            &mut redis,
+            &prior_other,
+            &fields(&prior_other, prior_viewer, "other"),
+            &deny
+        )
+        .await,
+        Err(Error::UserLimit)
+    );
+    assert!(add(&mut redis, &requester_other, &requester_data, &deny)
+        .await
+        .unwrap());
+    assert!(!add(
+        &mut redis,
+        &requested,
+        &fields(&requested, requester, "primary"),
+        &deny
+    )
+    .await
+    .unwrap());
+    let _: () = redis
+        .del(&[
+            prior_key,
+            key(&requested),
+            key(&prior_other),
+            key(&requester_other),
+            marker,
+            mapping,
+            lease_key,
+        ])
         .await
         .unwrap();
 }

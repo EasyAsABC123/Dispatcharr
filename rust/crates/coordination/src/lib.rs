@@ -553,6 +553,11 @@ impl Lease {
     pub fn token(&self) -> &str {
         &self.inner.token
     }
+    /// The exact owner key fenced by this lease's physical operations.
+    pub fn owner_key(&self) -> &str {
+        &self.inner.keys.owner
+    }
+
     pub fn fence(&self) -> u64 {
         self.inner.fence
     }

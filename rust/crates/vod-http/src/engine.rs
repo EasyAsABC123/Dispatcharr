@@ -245,6 +245,9 @@ impl VodEngine {
             }
         };
         let restart_user = signed_restart_subject(user.as_ref(), method);
+        let signed_alias = restart_user
+            .filter(|_| xc_path.is_none())
+            .and_then(|id| crate::sessions::signed_alias_claim(request, id));
         let redirect = |request: &VodRequest, session: &str| match xc_path {
             Some(path) => xc_session_redirect(request, session, path),
             None => session_redirect(request, session),
@@ -272,7 +275,14 @@ impl VodEngine {
                 uuid::Uuid::new_v4().simple()
             );
             if let Some(user) = user {
-                self.inner.sessions.remember_user(&session, user.id).await?;
+                if let Some(claim) = &signed_alias {
+                    self.inner
+                        .sessions
+                        .remember_signed_alias(&session, user.id, claim)
+                        .await?;
+                } else {
+                    self.inner.sessions.remember_user(&session, user.id).await?;
+                }
             }
             return Ok(redirect(request, &session));
         }
@@ -298,7 +308,10 @@ impl VodEngine {
                 source,
                 request,
                 self.inner.resolver.clone(),
-                restart_user,
+                crate::sessions::EntryAuthorization {
+                    restart_user,
+                    signed_alias,
+                },
             )
             .await?;
         let provider_url = ticket.session.provider_url();
