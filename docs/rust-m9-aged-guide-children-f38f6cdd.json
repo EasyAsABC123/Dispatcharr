@@ -1,0 +1,176 @@
+{
+  "S360_accepted": false,
+  "S7200_admitted": false,
+  "candidate": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+  "credits": "Original Dispatcharr authors, contributors and dependencies retain full credit. See ATTRIBUTION.md and LICENSE.",
+  "current_application_publication": {
+    "commit": "7927b2d4765f82b650d958fd15d0b70200a6b72c",
+    "fork": "EasyAsABC123/Dispatcharr",
+    "published_and_independently_received": true,
+    "react_license_and_attribution_unchanged": true,
+    "ref": "refs/heads/rust-backend-migration",
+    "remote_ref_receipt_sha256": "c563a2457b30a687b8ef9afe05bf4f73b0cc53a20849c72cfed8a0de91a68a75"
+  },
+  "diagnostic_only": true,
+  "exact_short_observations": [
+    {
+      "application_revision": "d6ebd8134ed19a7792fefce069e100ba220b29c7",
+      "exact_cleanup": true,
+      "fault_class": "backend",
+      "index_data_present": false,
+      "manifest_sha256": "c1783caa5c34cc7f24c06b817de9615683dba92e57a2757429845e08a34e4712",
+      "observed_boundary": "selected_programme_index_peek_before_claim",
+      "oldest_ready": "index",
+      "programme_index": "unobserved",
+      "queue_depths": {
+        "celery": 2,
+        "dvr": 0,
+        "unacked": 0,
+        "unacked_index": 0
+      },
+      "ready_HTTP": 503,
+      "root": "SUCCESS",
+      "safe_observation_sha256": "03099f4394ddab584d8346ec7bb71314400b8225ef38f3da0eb78191d3ea3b0e",
+      "series_rules": "unobserved"
+    },
+    {
+      "application_revision": "1ffc10c148a4c7fcb5d2625f70185f259d6010e1",
+      "exact_cleanup": true,
+      "fault_class": "execution",
+      "index_data_present": false,
+      "manifest_sha256": "438caa0bc506b910f5afe1c5853883a83a77df42e71df5b16f5b77f51055a395",
+      "observed_boundary": "programme_index_after_claim_before_terminal_result",
+      "oldest_ready": "series",
+      "programme_index": "unobserved",
+      "queue_depths": {
+        "celery": 1,
+        "dvr": 0,
+        "unacked": 0,
+        "unacked_index": 0
+      },
+      "ready_HTTP": 503,
+      "root": "SUCCESS",
+      "safe_observation_sha256": "124b7495bc3300fca04a6405072871a7b16fa01c4def640bc4dffbc4640048a1",
+      "series_rules": "unobserved"
+    },
+    {
+      "application_revision": "014c2369cfa73b784cf793486f5009b7968ad65c",
+      "exact_cleanup": true,
+      "fault_class": "backend",
+      "index_data_present": true,
+      "manifest_sha256": "c17cd37d24e8c1d958a2e81afdae50e744fffed9dc75afdc649ac445e109bbc5",
+      "observed_boundary": "series_peek_before_claim",
+      "oldest_ready": "series",
+      "programme_index": "SUCCESS",
+      "queue_depths": {
+        "celery": 1,
+        "dvr": 0,
+        "unacked": 0,
+        "unacked_index": 0
+      },
+      "ready_HTTP": 503,
+      "root": "SUCCESS",
+      "safe_observation_sha256": "51bf13c05187198daa1c3a3a193ed4ea13692833196766351a9c7d9bb307f13e",
+      "series_rules": "unobserved"
+    },
+    {
+      "application_revision": "eb4787cd0ccc05a87057e0d30768e56a62977137",
+      "child_lock_observed_in_sample": false,
+      "exact_cleanup": true,
+      "fault_class": "other",
+      "fault_family": "series_run_operational",
+      "index_data_present": true,
+      "manifest_sha256": "76fb35aaedbe9bbf36528850e30f0b5b9fdb5672980bf0a6d2a8b479d0a89d08",
+      "observed_boundary": "series_worker_fault_before_observed_claim",
+      "oldest_ready": "series",
+      "programme_index": "SUCCESS",
+      "queue_depths": {
+        "celery": 1,
+        "dvr": 0,
+        "unacked": 0,
+        "unacked_index": 0
+      },
+      "ready_HTTP": 503,
+      "root": "SUCCESS",
+      "safe_observation_sha256": "e590f3897bc68f05eee105179abcc48d53aae231bae5cc8dd091551d6a83c94d",
+      "series_rules": "unobserved",
+      "specific_preclaim_cause_established": false
+    },
+    {
+      "application_revision": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+      "exact_cleanup": true,
+      "index_data_present": true,
+      "manifest_sha256": "dc526bb02476e8610b8f79ba018242fcd34bbaa1c19988ee4b7f9e440a761387",
+      "observed_boundary": "root_and_both_declared_children_succeeded",
+      "programme_index": "SUCCESS",
+      "programme_present": true,
+      "queue_depths": {
+        "celery": 0,
+        "dvr": 0,
+        "unacked": 0,
+        "unacked_index": 0
+      },
+      "ready_HTTP": 200,
+      "root": "SUCCESS",
+      "safe_observation_sha256": "aa47ba97568f7cdfce50456924eff5a98c6c9e49b343770ded506a0eecba5ac9",
+      "series_rules": "SUCCESS"
+    }
+  ],
+  "formal_M9_accepted": false,
+  "method": {
+    "aging_wait_seconds": 4,
+    "matching_terminal_samples_required": 2,
+    "post_submit_observation_limit_seconds": 14,
+    "redis_idle_timeout_seconds": 2,
+    "signed_numeric_import_HTTP": 202
+  },
+  "ordinary_package_attempts": [
+    {
+      "application_revision": "eb4787cd0ccc05a87057e0d30768e56a62977137",
+      "counted_as_package_success": false,
+      "literal_exit": 143,
+      "ordinary_manifest_created": false,
+      "outcome": "stopped_before_docker_build_outer_wrapper_held_inner_lease"
+    },
+    {
+      "application_revision": "eb4787cd0ccc05a87057e0d30768e56a62977137",
+      "literal_exit": 0,
+      "manifest_sha256": "76fb35aaedbe9bbf36528850e30f0b5b9fdb5672980bf0a6d2a8b479d0a89d08",
+      "ordinary_feature_arg": 0,
+      "outcome": "recovered_ordinary_build_using_internal_lease",
+      "platform": "linux/amd64",
+      "runtime_image_id": "sha256:061c347d0017d7f246f9d6003b8f66acdce7c7325ce6483bd81d685fba8e3e0d",
+      "source_archive_sha256": "fe1192454969a32c53a616846808ae12e160bf73693c832c7f878ebb3d95e133"
+    },
+    {
+      "application_revision": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+      "literal_exit": 0,
+      "manifest_sha256": "dc526bb02476e8610b8f79ba018242fcd34bbaa1c19988ee4b7f9e440a761387",
+      "ordinary_feature_arg": 0,
+      "outcome": "verified_f38_ordinary_build",
+      "platform": "linux/amd64",
+      "runtime_image_id": "sha256:b3e24f01e0c864dba12d858288d8d27806c19363aa766e4eaf3bd2fd84b54195",
+      "source_archive_sha256": "b9f9c9c458d122fbe9752bca1f9b5f6dbd4a57f928293519071358063d367385"
+    }
+  ],
+  "performance_measured": false,
+  "prior_full_ARM64_soak": {
+    "accepted": false,
+    "application_revision": "3d767ccb81839c5a6e8808fbacf17b1b2226bbc0",
+    "physical_owner_exit": 1,
+    "platform": "linux/arm64",
+    "queue_depths": {
+      "celery": 2,
+      "dvr": 0,
+      "unacked": 0,
+      "unacked_index": 0
+    },
+    "root_success_results": 1,
+    "safe_projection_sha256": "dbb6cef213060cd2517e3bf9ca36c41fa87ca8b4dd8c3b88d5d1abc65c45bf63",
+    "superseded_by_short_diagnostic": false,
+    "terminal_guide_outcome": "timeout",
+    "window_seconds": 360
+  },
+  "schema": "dispatcharr-m9-short-guide-diagnostic-lineage/v1",
+  "scope": "scoped ordinary AMD64 signed XMLTV guide workflow diagnostic"
+}
