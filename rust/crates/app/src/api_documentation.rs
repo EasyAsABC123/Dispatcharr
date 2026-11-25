@@ -1,14 +1,13 @@
 //! Public documentation from pinned Original discovery and drf-spectacular templates.
 use axum::{
     extract::{ConnectInfo, OriginalUri, State},
-    http::{header, HeaderMap, HeaderValue, Uri},
+    http::{header, HeaderMap, HeaderValue, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::get,
     Router,
 };
 use dispatcharr_contracts::{source_headers, PlaybackRequest};
 use dispatcharr_store::{AuthService, StoreError};
-use serde_json::json;
 use std::net::SocketAddr;
 
 const OPENAPI_JSON: &str = include_str!("../datasets/api-docs/openapi.json");
@@ -25,11 +24,11 @@ struct Renderer {
 
 const SCHEMA_RENDERERS: &[Renderer] = &[
     Renderer {
-        mime: "application/vnd.oai.openapi",
+        mime: "application/vnd.oai.openapi; charset=utf-8",
         format: "yaml",
     },
     Renderer {
-        mime: "application/yaml",
+        mime: "application/yaml; charset=utf-8",
         format: "yaml",
     },
     Renderer {
@@ -72,18 +71,56 @@ fn match_specificity(mime: &str, accepted: &str) -> Option<u8> {
     }
 }
 
+enum NegotiationError {
+    VariantUnavailable,
+    UnknownFormat,
+    Unacceptable,
+}
+
+impl NegotiationError {
+    fn response(self, schema: bool) -> Response {
+        let (status, body) = match (self, schema) {
+            (Self::VariantUnavailable, _) => return StoreError::NotFound.into_response(),
+            (Self::UnknownFormat, true) => (
+                StatusCode::NOT_FOUND,
+                "detail:\n  string: Not found.\n  code: not_found\n",
+            ),
+            (Self::Unacceptable, true) => (
+                StatusCode::NOT_ACCEPTABLE,
+                "detail:\n  string: Could not satisfy the request Accept header.\n  code: not_acceptable\n",
+            ),
+            (Self::UnknownFormat, false) => (StatusCode::NOT_FOUND, "404 Not Found"),
+            (Self::Unacceptable, false) => (StatusCode::NOT_ACCEPTABLE, "406 Not Acceptable"),
+        };
+        let mime = if schema {
+            SCHEMA_RENDERERS[0].mime
+        } else {
+            "text/html; charset=utf-8"
+        };
+        let vary = if schema { "Accept, origin" } else { "origin" };
+        (
+            status,
+            [(header::CONTENT_TYPE, mime), (header::VARY, vary)],
+            body,
+        )
+            .into_response()
+    }
+}
+
 fn negotiate(
     uri: &Uri,
     headers: &HeaderMap,
     renderers: &[Renderer],
-) -> Result<Renderer, StoreError> {
+) -> Result<Renderer, NegotiationError> {
     let query = url::form_urlencoded::parse(uri.query().unwrap_or_default().as_bytes());
     let mut format = None;
     for (key, value) in query {
         match key.as_ref() {
             "format" => format = Some(value),
             // Only the default public discovery snapshot has exact retained provenance.
-            "lang" | "version" if !value.is_empty() => return Err(StoreError::NotFound),
+            "lang" | "version" if !value.is_empty() => {
+                return Err(NegotiationError::VariantUnavailable)
+            }
             _ => {}
         }
     }
@@ -93,7 +130,7 @@ fn negotiate(
             .is_none_or(|value| value.is_empty() || value == r.format)
     };
     if !renderers.iter().any(eligible) {
-        return Err(StoreError::NotFound);
+        return Err(NegotiationError::UnknownFormat);
     }
     let mut accepts = headers.get_all(header::ACCEPT).iter().peekable();
     if accepts.peek().is_none() {
@@ -112,19 +149,16 @@ fn negotiate(
             .iter()
             .filter_map(|value| value.to_str().ok())
             .flat_map(|line| line.split(','))
-            .filter_map(|range| match_specificity(renderer.mime, range.split(';').next()?))
+            .filter_map(|range| {
+                match_specificity(renderer.mime.split(';').next()?, range.split(';').next()?)
+            })
             .max();
         if score.is_some() && score > best {
             best = score;
             selected = Some(*renderer);
         }
     }
-    selected.ok_or_else(|| {
-        StoreError::StatusBody(
-            406,
-            json!({"detail":"Could not satisfy the request Accept header."}),
-        )
-    })
+    selected.ok_or(NegotiationError::Unacceptable)
 }
 
 fn supplied_auth(peer: SocketAddr, headers: &HeaderMap) -> PlaybackRequest {
@@ -151,6 +185,10 @@ fn supplied_auth(peer: SocketAddr, headers: &HeaderMap) -> PlaybackRequest {
 }
 
 fn success(uri: &Uri, headers: &HeaderMap, renderer: Renderer, schema: bool) -> Response {
+    let html_format = url::form_urlencoded::parse(uri.query().unwrap_or_default().as_bytes())
+        .filter(|(key, _)| key == "format")
+        .last()
+        .is_some_and(|(_, value)| value == "html");
     let mut response = if schema {
         let (body, disposition) = if renderer.format == "json" {
             (OPENAPI_JSON, "inline; filename=\"Dispatcharr API.json\"")
@@ -167,19 +205,30 @@ fn success(uri: &Uri, headers: &HeaderMap, renderer: Renderer, schema: bool) -> 
                     header::CONTENT_DISPOSITION,
                     HeaderValue::from_static(disposition),
                 ),
-                (
-                    header::HeaderName::from_static("x-dispatcharr-schema-source"),
-                    HeaderValue::from_static("original-discovery-1241b3f7"),
-                ),
             ],
             body,
         )
             .into_response()
     } else if uri.path() == "/api/redoc/" {
-        ([(header::CONTENT_TYPE, "text/html; charset=utf-8")], REDOC).into_response()
+        let body = if html_format {
+            REDOC.replace(
+                "spec-url=\"/api/schema/\"",
+                "spec-url=\"/api/schema/?format=html\"",
+            )
+        } else {
+            REDOC.to_owned()
+        };
+        ([(header::CONTENT_TYPE, "text/html; charset=utf-8")], body).into_response()
     } else {
         let cookie = crate::admin_channelgroup::cookie(headers, "csrftoken");
         let (_, masked, set_cookie) = dispatcharr_store::source_browsable_csrf(cookie);
+        let mut body = SWAGGER.replace(CSRF_SLOT, &masked);
+        if html_format {
+            body = body.replace(
+                "url: \"/api/schema/\"",
+                r#"url: "/api/schema/?format\u003Dhtml""#,
+            );
+        }
         (
             [
                 (
@@ -195,7 +244,7 @@ fn success(uri: &Uri, headers: &HeaderMap, renderer: Renderer, schema: bool) -> 
                     HeaderValue::from_static("unsafe-none"),
                 ),
             ],
-            SWAGGER.replace(CSRF_SLOT, &masked),
+            body,
         )
             .into_response()
     };
@@ -206,7 +255,7 @@ fn success(uri: &Uri, headers: &HeaderMap, renderer: Renderer, schema: bool) -> 
     } else if uri.path() != "/api/redoc/" {
         response
             .headers_mut()
-            .insert(header::VARY, HeaderValue::from_static("Cookie"));
+            .insert(header::VARY, HeaderValue::from_static("origin, Cookie"));
     }
     response
 }
@@ -223,7 +272,10 @@ async fn documentation(
     } else {
         HTML_RENDERERS
     };
-    let renderer = negotiate(&uri, &headers, renderers)?;
+    let renderer = match negotiate(&uri, &headers, renderers) {
+        Ok(renderer) => renderer,
+        Err(error) => return Ok(error.response(schema)),
+    };
     auth.authenticate(&supplied_auth(peer, &headers)).await?;
     Ok(success(&uri, &headers, renderer, schema))
 }
@@ -231,7 +283,6 @@ async fn documentation(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use axum::http::StatusCode;
     use axum::{
         body::{to_bytes, Body},
         http::Request,
@@ -334,10 +385,46 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn source_format_targets_vary_and_rejection_bodies() {
+        let response = request("/api/swagger?format=html", "*/*").await;
+        assert_eq!(response.headers()[header::VARY], "origin, Cookie");
+        let html = to_bytes(response.into_body(), 5000).await.unwrap();
+        assert_eq!(html.len(), 4665);
+        assert!(std::str::from_utf8(&html)
+            .unwrap()
+            .contains(r#"?format\u003Dhtml"#));
+        let response = request("/api/redoc/?format=html", "*/*").await;
+        let html = to_bytes(response.into_body(), 1000).await.unwrap();
+        assert_eq!(html.len(), 743);
+        assert!(std::str::from_utf8(&html)
+            .unwrap()
+            .contains("/api/schema/?format=html"));
+        let response = request("/api/schema/?format=json", "application/yaml").await;
+        assert_eq!(response.status(), StatusCode::NOT_ACCEPTABLE);
+        assert_eq!(
+            response.headers()[header::CONTENT_TYPE],
+            SCHEMA_RENDERERS[0].mime
+        );
+        let body = to_bytes(response.into_body(), 100).await.unwrap();
+        assert_eq!(body.len(), 86);
+        let response = request("/api/swagger/?format=xml", "*/*").await;
+        let body = to_bytes(response.into_body(), 100).await.unwrap();
+        assert_eq!(&body[..], b"404 Not Found");
+    }
+
+    #[tokio::test]
     async fn exact_schema_aliases_and_media() {
         for (path, accept, content_type) in [
-            ("/api/schema/", "*/*", "application/vnd.oai.openapi"),
-            ("/api/schema/", "application/yaml", "application/yaml"),
+            (
+                "/api/schema/",
+                "*/*",
+                "application/vnd.oai.openapi; charset=utf-8",
+            ),
+            (
+                "/api/schema/",
+                "application/yaml",
+                "application/yaml; charset=utf-8",
+            ),
             (
                 "/api/schema/?format=json",
                 "*/*",
@@ -352,10 +439,9 @@ mod tests {
             let response = request(path, accept).await;
             assert_eq!(response.status(), StatusCode::OK);
             assert_eq!(response.headers()[header::CONTENT_TYPE], content_type);
-            assert_eq!(
-                response.headers()["x-dispatcharr-schema-source"],
-                "original-discovery-1241b3f7"
-            );
+            assert!(!response
+                .headers()
+                .contains_key("x-dispatcharr-schema-source"));
             let raw = to_bytes(response.into_body(), 1_000_000).await.unwrap();
             if content_type.contains("json") {
                 let document: serde_json::Value = serde_json::from_slice(&raw).unwrap();
