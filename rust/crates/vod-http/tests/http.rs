@@ -501,7 +501,7 @@ async fn fresh_vod_ranges_match_original_selected_wire() {
 
     // Every other case uses a new session.
     for (range, conditional, status, bounds) in [
-        (Some("bytes=9000000-"), false, 416, None),
+        (Some("bytes=9000000-"), false, 500, None),
         (Some("bytes=0-255"), false, 206, Some((0, 255))),
         (Some("bytes=1000-1255"), false, 206, Some((1000, 1255))),
         (Some("bytes=1000-"), false, 206, Some((1000, 4095))),
@@ -520,12 +520,12 @@ async fn fresh_vod_ranges_match_original_selected_wire() {
         assert_eq!(response.status().as_u16(), status);
         assert_eq!(response.headers()["allow"], "GET, OPTIONS");
         assert!(!response.headers().contains_key("etag"));
-        let body = if status == 416 {
+        let body = if status == 500 {
             assert_eq!(
                 response.headers()["content-type"],
                 "text/html; charset=utf-8"
             );
-            b"Requested Range Not Satisfiable".to_vec()
+            b"Streaming error: VOD provider request failed".to_vec()
         } else {
             assert_eq!(response.headers()["content-type"], "video/mp4");
             let (start, end) = bounds.unwrap_or((0, 4095));

@@ -363,9 +363,13 @@ impl VodEngine {
             response = response => response.map_err(|_: reqwest::Error| StoreError::StatusBody(500,json!("Streaming error: VOD provider request failed")))?,
             _ = stopped(&ticket) => return Err(StoreError::StatusBody(503,json!({"error":"VOD session stopped"}))),
         };
-        if original_range.is_some_and(|range| {
-            provider_rejects_explicit_range(upstream.status(), upstream.headers(), range)
-        }) {
+        // Original validates a known length before opening the provider. A
+        // cold upstream 416 raises through its normal initial request error.
+        if known_total != 0
+            && original_range.is_some_and(|range| {
+                provider_rejects_explicit_range(upstream.status(), upstream.headers(), range)
+            })
+        {
             return Ok(range_not_satisfiable());
         }
         if upstream.status().is_client_error() || upstream.status().is_server_error() {
