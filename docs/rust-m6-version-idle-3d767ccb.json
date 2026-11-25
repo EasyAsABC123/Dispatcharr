@@ -1,0 +1,99 @@
+{
+  "application_revision": "3d767ccb81839c5a6e8808fbacf17b1b2226bbc0",
+  "credits": "Dispatcharr original authors and contributors retain full credit. See ATTRIBUTION.md and LICENSE.",
+  "historical_b980_first_failure": {
+    "broker_monitor_sha256": "8a61d6ba8a707fa9026928751cfa9b2d880b158b17a8957e311addf1b5ae0505",
+    "candidate": "b9806b5bcbe65c87a7df4083029fa7599e698628",
+    "claims_observed_after_publication": 0,
+    "completed_origin_requests": 0,
+    "exact_socket_failure_observed": false,
+    "last_broker_observation_offset_ms": 36162.332,
+    "saved_periodic_publications": 1
+  },
+  "pinned_original": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "previous_application_revision": "0fa95d7901080c217b64726f962d6c0f82f4a294",
+  "previous_verified_branch_commit": "72699cf2fecec53b22dff794d2579bcf9bc70766",
+  "product_path": "rust/crates/job-transport/src/version_transport.rs",
+  "product_postimage_sha256": "bda4f223d7642fb40094194d72c02292aefaec4a4a9c9cda3a00f7a1627cd7f3",
+  "react_license_attribution_preserved": true,
+  "read_only_version_peek_reconnect": true,
+  "scope": {
+    "ARM64_validation_claimed": false,
+    "formal_version503_row": false,
+    "performance_gain_claimed": false,
+    "whole_M6": false
+  },
+  "selected_exact_head_and_mutation_semantics_preserved": true,
+  "title": "Scoped Rust saved Version503 after normal Redis idle expiry",
+  "validation": {
+    "amd64_aged_saved_version503": {
+      "actual_http": 503,
+      "actual_origin_requests": 1,
+      "durable_run_count_delta": 1,
+      "exact_cleanup": true,
+      "guard_deadline_unchanged": true,
+      "idle_after_sha256": "1c2742cf2fcfd83de19648c7754f836b63c977cec9ca02a38132476cdea389d9",
+      "idle_before_sha256": "4db071379a3c9bd3d3b16d2878d93eb8021afdd215f056865c6b0ee0bd7880fc",
+      "native_broker_monitor_sha256": "f4843237a9d012b628b4c125f0d528ade29b9612bda208fd9120d35fee36b70d",
+      "native_state_and_cleanup_sha256": "f8783d62feb93698a7be5d2c547c0269963aa5d34618c1f0111f679a377fe712",
+      "normal_worker_exit": 0,
+      "one_saved_run": true,
+      "owned_DB1_claims": 1,
+      "owned_DB1_publications": 1,
+      "proof_sha256": "7ecea0a14e878606f063791a38738d416910e1064c3b8b1ce769cf1feceb9bda",
+      "redis_idle_timeout_seconds": 2,
+      "result": "SUCCESS/null",
+      "retained_Original_proof_sha256": "43e0bc415e02ba59432f91c8c004115013db72b3694c2d80c1c66d7402f59dab",
+      "same_Main_generation_after_natural_idle": true,
+      "scoped_pass": true,
+      "version_SQL_notices": 0,
+      "version_notice_events": 0
+    },
+    "cold_intake": {
+      "aged_cold_sha256": "3b6eaa5b560676f132c7555dba811f47ac40ee427e6c9b59b373e1cd28ded2bf",
+      "ordinary_package_and_aged_fixture_cold_exits": [
+        0,
+        0
+      ]
+    },
+    "focused_transport_checks": {
+      "clippy_exit": 0,
+      "clippy_log_sha256": "1f7d66db8d9f936fa81f5ee586697f64f803fae4ac06776a8df2ef37c42b0a77",
+      "failed": 0,
+      "format_exit": 0,
+      "ignored": 119,
+      "passed": 465,
+      "test_exit": 0,
+      "test_stdout_sha256": "f5d6c711ae35e0af4b8567bc61e9d34cf85c1134606c3287958c62730beca1c9"
+    },
+    "ordinary_amd64_package": {
+      "application_inputs": 2260,
+      "build_manifest_sha256": "faf3517d4dc9b71fea7b91667c08344008d6c57f1fc69ed17811c741f6147fa9",
+      "git": "3d767ccb81839c5a6e8808fbacf17b1b2226bbc0",
+      "image_id": "sha256:119ee5611e5cf4eef91a2d1838418525717b41e8e0775cb9229f3ffaf7b10c02",
+      "ordinary_feature_arg": 0,
+      "ordinary_verification_sha256": "550e57fbc24e099e1e9fca503bfbbb94769d2feb3edfb5f1e3dbc6f8a797d0bb",
+      "platform": "linux/amd64",
+      "source_archive_sha256": "5637ad093a1e18c238fe32284064bf99977c150ba11f213ad493fe5dda21146f",
+      "source_tree_sha256": "a0ef0af53527dd3b376fe6af63abe34c92bdd2ee260f85b2af3d1a82a0a283b7",
+      "unchanged_protected_inputs": 497
+    },
+    "real_redis_component": {
+      "cleanup_sha256": "4a8f50d1bdc60dfb543bd5c21f4275ab7b85bb8f44de670a914d2a560c88fdc1",
+      "literal_exit": 0,
+      "owned_redis_retired": true,
+      "redis_idle_timeout_seconds": 2,
+      "test": "transport::version_transport::tests::version_claim_checks_exact_head_after_normal_idle_expiry",
+      "test_stdout_sha256": "d297de411d59f4368c6bda0b73c82bda3b63301c6eca26ded713e3ac96de49e1"
+    },
+    "root_campaign": {
+      "empty_engine_checks_preceded_owner_exit": true,
+      "exact_inner_retirement_replayed": true,
+      "literal_exits": {
+        "aged": 0,
+        "owner": 0,
+        "package": 0
+      }
+    }
+  }
+}
