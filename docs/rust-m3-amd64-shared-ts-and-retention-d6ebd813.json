@@ -1,0 +1,57 @@
+{
+  "application_publication": "30a661e814694a23637afaea0c518aec9d6e2009",
+  "application_revision": "d6ebd8134ed19a7792fefce069e100ba220b29c7",
+  "audit_stdout_sha256": "50136a6ed3211e44b09b9b1f9b5610acbe81446376a6480d80011d7f01f910e0",
+  "credits": "Original Dispatcharr authors, contributors and dependencies retain full credit. See ATTRIBUTION.md and LICENSE.",
+  "full_M3_accepted": false,
+  "image_id": "sha256:2a9976f6117c61d39f8b256ec086ae4751ceaf7620c0e16e83107e4b90a1bab9",
+  "literal_exits": {
+    "independent_audit": 0,
+    "owner": 0,
+    "partial_coordinator": 2
+  },
+  "manifest_sha256": "c1783caa5c34cc7f24c06b817de9615683dba92e57a2757429845e08a34e4712",
+  "paired_performance_measured": false,
+  "schema": "dispatcharr-exact-shared-ts-functional/v1",
+  "verified_rows": {
+    "package/retention100": {
+      "exact_cleanup": true,
+      "observed": {
+        "authoritative_per_channel_max": 16777216,
+        "bytes_per_reader": 1500000,
+        "channels": 10,
+        "historical_readers": 100,
+        "lag_seconds": 45,
+        "late_av_decodes": 10,
+        "local_per_channel_max": 4194304,
+        "no_additional_upstream": true,
+        "retained_captures_hash_verified": 10
+      },
+      "physical_receipt_sha256": "47ebf45200ab123550661f4485c1d4f54222a134eabd83d887115f6eeb934e74",
+      "provider_fixture_stream_limit": 0
+    },
+    "package/sharedTS18": {
+      "exact_cleanup": true,
+      "observed": {
+        "cases": 3,
+        "checks": 24,
+        "real_decoders": 6,
+        "signed_readers": 6
+      },
+      "physical_receipt_sha256": "458c3d6cb7e56612416f6abef4b835b50f93e823de528d606bc84fec151d9674",
+      "provider_fixture_stream_limit": 1
+    },
+    "package/sharedTS6-all-down": {
+      "exact_cleanup": true,
+      "observed": {
+        "cases": 1,
+        "checks": 14,
+        "real_decoders": 2,
+        "restart_cleanup_seconds": 5.999925099022221,
+        "signed_readers": 2
+      },
+      "physical_receipt_sha256": "13e08a8b614df25018e5fa0e57191724e4acb0128510e49fc4d52b5e89403ab3",
+      "provider_fixture_stream_limit": 1
+    }
+  }
+}
