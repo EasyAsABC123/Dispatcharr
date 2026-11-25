@@ -1,7 +1,7 @@
 //! Public documentation from pinned Original discovery and drf-spectacular templates.
 use axum::{
     extract::{ConnectInfo, OriginalUri, State},
-    http::{header, HeaderMap, HeaderValue, StatusCode, Uri},
+    http::{header, HeaderMap, HeaderValue, Uri},
     response::{IntoResponse, Response},
     routing::get,
     Router,
@@ -231,6 +231,7 @@ async fn documentation(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use axum::http::StatusCode;
     use axum::{
         body::{to_bytes, Body},
         http::Request,
