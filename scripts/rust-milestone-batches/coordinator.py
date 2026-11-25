@@ -177,6 +177,10 @@ def owner_readiness(nodes, document, output=None):
     bindings = document["nodes"]
     owners = document.get("owner_bindings", {})
     authorities = {}
+    scheduler_receipts = owners.get("m6", {}).get("scheduler_followon_receipts")
+    if scheduler_receipts is not None:
+        adapter = module(HERE / "m6/scheduler_followon_receipts.py", "current_scheduler_receipt_intake")
+        authorities.update(adapter.resolve(scheduler_receipts, nodes, document["candidate"], bindings))
     m235 = module(HERE / "m235/batch.py", "readiness_m235")
     m478 = module(HERE / "m478/batch.py", "readiness_m478")
     ops_matrix, ops_definitions, _ = m478.load()
@@ -478,10 +482,12 @@ def load_binding_fragments(paths, nodes, output, release_policy=None):
         authorities.update(policy.authorities(metadata, candidate, bindings))
     for document in documents:
         for key, authority in owner_readiness(nodes, document, output).items():
+            current = authority.get("status") == "verified_current_receipt"
+            kind = "verified current scheduler receipt" if current else "retained Source"
             if key in bindings:
-                raise ValueError("retained Source cannot also be dispatched: " + key)
+                raise ValueError(kind + " cannot also be dispatched: " + key)
             if authorities.setdefault(key, authority) != authority:
-                raise ValueError("conflicting retained Source authorities: " + key)
+                raise ValueError("conflicting " + kind + " authorities: " + key)
     return candidate, bindings, authorities
 
 
@@ -499,10 +505,12 @@ def binding_coverage(nodes, bindings, authorities):
     release_scope = {key for key, row in authorities.items() if row.get("status") in {
         "recorded_scope_authority", "retained_copied_utility_authority",
     }}
+    current_receipts = {key for key, row in authorities.items() if row.get("status") == "verified_current_receipt"}
     return {
         "required_rows": len(required),
         "execution_bindings": sorted(bindings.keys() - partial),
-        "retained_source_authority": sorted(authorities.keys() - release_scope),
+        "retained_source_authority": sorted(authorities.keys() - release_scope - current_receipts),
+        **({"verified_current_receipts": sorted(current_receipts)} if current_receipts else {}),
         **({"release_scope_authority": sorted(release_scope)} if release_scope else {}),
         "partial_probes": sorted(partial),
         "unbound_rows": sorted(required - bindings.keys() - authorities.keys()),
@@ -763,8 +771,14 @@ def schedule(nodes, bindings, output, candidate, worker=execute, authorities=Non
               'resources': sorted(set(n['resources']) | set(bindings.get(n['id'], {}).get('exclusive_resources', [])))}
              for n in nodes]
     utc_minute = utc_minute or (lambda: time.gmtime().tm_min)
-    output.mkdir(parents=True, exist_ok=False)
     results, running = dict(authorities or {}), {}
+    imported = {key: row for key, row in results.items() if row.get("status") == "verified_current_receipt"}
+    if imported:
+        if imported.keys() & bindings.keys():
+            raise ValueError("verified current scheduler receipt cannot also be dispatched")
+        adapter = module(HERE / "m6/scheduler_followon_receipts.py", "verified_scheduler_receipt_chain")
+        adapter.validate_chain(nodes, candidate, imported)
+    output.mkdir(parents=True, exist_ok=False)
     pending = {n['id']: n for n in nodes if n['id'] not in results}
     by_id = {n['id']: n for n in nodes}
     pairs = {n['same_global_lease_as']: n['id'] for n in nodes if n.get('same_global_lease_as')}
@@ -774,7 +788,8 @@ def schedule(nodes, bindings, output, candidate, worker=execute, authorities=Non
 
     def accepted(row):
         return row['status'] == 'passed' or (row['status'] in {
-            'retained_source_authority', 'recorded_scope_authority', 'retained_copied_utility_authority'
+            'retained_source_authority', 'recorded_scope_authority', 'retained_copied_utility_authority',
+            'verified_current_receipt'
         } and row.get('satisfies_dependency') is True)
 
     def directory(key):
