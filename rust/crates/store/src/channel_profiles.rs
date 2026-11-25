@@ -427,7 +427,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             get(list)
                 .layer(from_fn_with_state(
                     catalogue_options::COLLECTION_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .post(create)
                 .options(catalogue_options::channel_profile),
@@ -437,7 +437,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             get(retrieve)
                 .layer(from_fn_with_state(
                     catalogue_options::DETAIL_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .patch(patch)
                 .put(put)
@@ -449,7 +449,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             get(list)
                 .layer(from_fn_with_state(
                     catalogue_options::COLLECTION_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .fallback(omitted_profile_read_method),
         )
@@ -462,7 +462,7 @@ pub(crate) fn router(auth: AuthService) -> Router {
             get(retrieve)
                 .layer(from_fn_with_state(
                     catalogue_options::DETAIL_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .fallback(omitted_profile_read_method),
         )

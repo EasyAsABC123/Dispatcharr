@@ -639,7 +639,7 @@ async fn respond(
     };
     let accept = headers.get_all(header::ACCEPT);
     let mut accept = accept.iter();
-    let plain_json_get = method == Method::GET
+    let plain_json_read = matches!(method, Method::GET | Method::HEAD)
         && uri.query().is_none()
         && accept
             .next()
@@ -664,9 +664,10 @@ async fn respond(
     {
         Ok(data) => data,
         Err(error)
-            if plain_json_get
+            if plain_json_read
                 && programme_json_authorization_error(&error)
-                && canonical_programme_read_path(&uri, id.as_deref()) =>
+                && (canonical_programme_read_path(&uri, id.as_deref())
+                    || method == Method::GET && programme_json_read_alias(&uri, id.as_deref())) =>
         {
             let mut response = error.into_response();
             let headers = response.headers_mut();
@@ -732,6 +733,16 @@ async fn detail_json_alias(
 ) -> Result<Response, StoreError> {
     let id = programme_json_id(uri.path()).ok_or(StoreError::NotFound)?;
     respond_json_alias(state, peer, headers, Some(id.to_owned()), uri).await
+}
+
+fn programme_json_read_alias(uri: &Uri, id: Option<&str>) -> bool {
+    match id {
+        None => matches!(
+            uri.path(),
+            "/api/epg/programs.json" | "/api/epg/programs.json/"
+        ),
+        Some(id) => programme_json_id(uri.path()) == Some(id),
+    }
 }
 
 fn programme_json_id(path: &str) -> Option<&str> {
@@ -1056,7 +1067,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn programme_json_get_authorization_headers_are_route_and_representation_specific() {
+    async fn programme_json_read_authorization_headers_are_route_and_representation_specific() {
         let pool = sqlx::postgres::PgPoolOptions::new()
             .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
         let auth = AuthService::new(
@@ -1104,8 +1115,22 @@ mod tests {
                 Method::HEAD,
                 "/api/epg/programs/7/",
                 "application/json",
-                None,
-                None,
+                Some(PROGRAMME_DETAIL_ALLOW),
+                Some(PROGRAMME_JSON_VARY),
+            ),
+            (
+                Method::GET,
+                "/api/epg/programs.json",
+                "application/json",
+                Some(PROGRAMME_LIST_ALLOW),
+                Some(PROGRAMME_JSON_VARY),
+            ),
+            (
+                Method::GET,
+                "/api/epg/programs/7.json",
+                "application/json",
+                Some(PROGRAMME_DETAIL_ALLOW),
+                Some(PROGRAMME_JSON_VARY),
             ),
         ] {
             let request = Request::builder()

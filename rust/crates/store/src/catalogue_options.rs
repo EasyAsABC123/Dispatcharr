@@ -188,23 +188,97 @@ options!(server_group, ServerGroup);
 options!(epg_data, EpgData);
 
 pub(super) async fn typed_read_headers(
-    State(allow): State<&'static str>,
+    state: State<&'static str>,
     request: Request,
     next: Next,
 ) -> Response {
+    typed_read_response(state, request, next, false).await
+}
+
+pub(super) async fn typed_catalogue_read_headers(
+    state: State<&'static str>,
+    request: Request,
+    next: Next,
+) -> Response {
+    typed_read_response(state, request, next, true).await
+}
+
+async fn typed_read_response(
+    State(allow): State<&'static str>,
+    request: Request,
+    next: Next,
+    include_denials: bool,
+) -> Response {
     let reads = matches!(*request.method(), Method::GET | Method::HEAD);
     let response = next.run(request).await;
-    if reads
-        && response.status() == StatusCode::OK
-        && response
-            .headers()
-            .get(header::CONTENT_TYPE)
-            .is_some_and(|value| value == "application/json")
-    {
-        channel_options_headers(response, HeaderValue::from_static(allow))
-    } else {
-        response
+    if !reads || !is_json(&response) {
+        return response;
     }
+    if include_denials && access_denied(response.status()) {
+        return denial_metadata(response, allow);
+    }
+    if response.status() == StatusCode::OK {
+        return channel_options_headers(response, HeaderValue::from_static(allow));
+    }
+    response
+}
+
+fn access_denied(status: StatusCode) -> bool {
+    matches!(status, StatusCode::UNAUTHORIZED | StatusCode::FORBIDDEN)
+}
+
+fn is_json(response: &Response) -> bool {
+    response
+        .headers()
+        .get(header::CONTENT_TYPE)
+        .is_some_and(|value| value == "application/json")
+}
+
+/// Apply the measured DRF headers after a selected read has denied access.
+pub(super) fn read_denial_headers<S>(route: MethodRouter<S>, allow: &'static str) -> MethodRouter<S>
+where
+    S: Clone + Send + Sync + 'static,
+{
+    route.layer(from_fn_with_state(allow, read_denial))
+}
+
+async fn read_denial(State(allow): State<&'static str>, request: Request, next: Next) -> Response {
+    let read = matches!(*request.method(), Method::GET | Method::HEAD);
+    let response = next.run(request).await;
+    if read && access_denied(response.status()) && is_json(&response) {
+        return denial_metadata(response, allow);
+    }
+    response
+}
+
+fn denial_metadata(mut response: Response, allow: &'static str) -> Response {
+    let headers = response.headers_mut();
+    headers.insert(header::ALLOW, HeaderValue::from_static(allow));
+
+    let existing = headers
+        .get_all(header::VARY)
+        .iter()
+        .map(HeaderValue::to_str)
+        .collect::<Result<Vec<_>, _>>();
+    if let Ok(existing) = existing {
+        let changes_with_accept = existing
+            .iter()
+            .flat_map(|value| value.split(','))
+            .map(str::trim)
+            .any(|field| field == "*" || field.eq_ignore_ascii_case("accept"));
+        if changes_with_accept {
+            return response;
+        }
+        if existing.is_empty() {
+            headers.insert(header::VARY, HeaderValue::from_static("Accept"));
+        } else if let Ok(vary) = HeaderValue::from_str(&format!("Accept, {}", existing.join(", ")))
+        {
+            headers.insert(header::VARY, vary);
+        }
+    } else {
+        headers.append(header::VARY, HeaderValue::from_static("Accept"));
+    }
+    response
 }
 
 /// Successful GET metadata for narrowly measured canonical reads.
@@ -488,6 +562,91 @@ mod tests {
                         assert_eq!(response.headers()[header::VARY], "Accept");
                     }
                 }
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn selected_read_denial_headers_preserve_challenge_and_other_responses() {
+        let denied = read_denial_headers(
+            get(|method: Method| async move {
+                let status = if method == Method::HEAD {
+                    StatusCode::FORBIDDEN
+                } else {
+                    StatusCode::UNAUTHORIZED
+                };
+                let mut response = (
+                    status,
+                    [(header::WWW_AUTHENTICATE, "Bearer realm=\"api\"")],
+                    axum::Json("denied"),
+                )
+                    .into_response();
+                if method == Method::GET {
+                    response
+                        .headers_mut()
+                        .insert(header::VARY, HeaderValue::from_static("origin"));
+                }
+                response
+            }),
+            DETAIL_ALLOW,
+        );
+        let router = Router::new()
+            .route(
+                "/denied",
+                denied.options(|| async { StatusCode::NO_CONTENT }),
+            )
+            .route(
+                "/missing",
+                read_denial_headers(
+                    get(|| async { (StatusCode::NOT_FOUND, axum::Json("missing")) }),
+                    DETAIL_ALLOW,
+                ),
+            )
+            .route(
+                "/ordinary",
+                get(|| async { (StatusCode::UNAUTHORIZED, axum::Json("denied")) }),
+            );
+        for (method, uri, status, decorated) in [
+            (Method::GET, "/denied", StatusCode::UNAUTHORIZED, true),
+            (Method::HEAD, "/denied", StatusCode::FORBIDDEN, true),
+            (Method::OPTIONS, "/denied", StatusCode::NO_CONTENT, false),
+            (Method::GET, "/missing", StatusCode::NOT_FOUND, false),
+            (Method::GET, "/ordinary", StatusCode::UNAUTHORIZED, false),
+        ] {
+            let response = router
+                .clone()
+                .oneshot(
+                    Request::builder()
+                        .method(method.clone())
+                        .uri(uri)
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), status);
+            assert_eq!(response.headers().get(header::VARY).is_some(), decorated);
+            if decorated {
+                assert_eq!(response.headers()[header::ALLOW], DETAIL_ALLOW);
+                let vary = if method == Method::GET {
+                    "Accept, origin"
+                } else {
+                    "Accept"
+                };
+                assert_eq!(response.headers()[header::VARY], vary);
+                assert_eq!(
+                    response.headers()[header::WWW_AUTHENTICATE],
+                    "Bearer realm=\"api\""
+                );
+                let expected: &[u8] = if method == Method::HEAD {
+                    b""
+                } else {
+                    br#""denied""#
+                };
+                assert_eq!(
+                    to_bytes(response.into_body(), 128).await.unwrap().as_ref(),
+                    expected
+                );
             }
         }
     }

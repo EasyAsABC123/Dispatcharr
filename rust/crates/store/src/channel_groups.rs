@@ -584,16 +584,19 @@ pub(crate) fn router(auth: AuthService) -> Router {
         )
         .route(
             "/api/channels/groups/{json_id}",
-            get(retrieve_json_alias)
-                .head(omitted_json_method)
-                .fallback(omitted_json_method),
+            catalogue_options::read_denial_headers(
+                get(retrieve_json_alias),
+                catalogue_options::DETAIL_ALLOW,
+            )
+            .head(omitted_json_method)
+            .fallback(omitted_json_method),
         )
         .route(
             "/api/channels/groups/{id}/",
             get(retrieve)
                 .layer(from_fn_with_state(
                     DETAIL_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .patch(patch_group)
                 .put(put_group)

@@ -817,7 +817,7 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
     let streamprofiles_json = get(streamprofiles)
         .layer(from_fn_with_state(
             catalogue_options::COLLECTION_ALLOW,
-            catalogue_options::typed_read_headers,
+            catalogue_options::typed_catalogue_read_headers,
         ))
         .post(crate::core_stream_writes::create)
         .head(omitted_json_method)
@@ -836,17 +836,23 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
         )
         .route(
             "/api/core/useragents/{id}/",
-            get(direct_useragent)
-                .options(useragent_options)
-                .patch(crate::user_agent_writes::patch)
-                .put(crate::user_agent_writes::put)
-                .delete(crate::user_agent_writes::delete),
+            catalogue_options::read_denial_headers(
+                get(direct_useragent),
+                catalogue_options::DETAIL_ALLOW,
+            )
+            .options(useragent_options)
+            .patch(crate::user_agent_writes::patch)
+            .put(crate::user_agent_writes::put)
+            .delete(crate::user_agent_writes::delete),
         )
         .route(
             "/api/core/streamprofiles/",
-            get(direct_streamprofiles)
-                .options(streamprofiles_options)
-                .post(crate::core_stream_writes::create),
+            catalogue_options::read_denial_headers(
+                get(direct_streamprofiles),
+                catalogue_options::COLLECTION_ALLOW,
+            )
+            .options(streamprofiles_options)
+            .post(crate::core_stream_writes::create),
         )
         .route(
             "/api/core/streamprofiles/{id}/",
@@ -861,7 +867,7 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(outputprofiles)
                 .layer(from_fn_with_state(
                     catalogue_options::COLLECTION_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .options(catalogue_options::output_profile),
         )
@@ -870,7 +876,7 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(outputprofile)
                 .layer(from_fn_with_state(
                     catalogue_options::DETAIL_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .options(catalogue_options::output_profile),
         )
@@ -881,7 +887,7 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(useragent_json)
                 .layer(from_fn_with_state(
                     catalogue_options::DETAIL_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .patch(patch_useragent_json)
                 .put(put_useragent_json)
@@ -903,7 +909,7 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(outputprofiles)
                 .layer(from_fn_with_state(
                     catalogue_options::COLLECTION_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .head(omitted_json_method)
                 .fallback(omitted_json_method),
@@ -913,7 +919,7 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(outputprofile_json)
                 .layer(from_fn_with_state(
                     catalogue_options::DETAIL_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .head(omitted_json_method)
                 .fallback(omitted_json_method),
