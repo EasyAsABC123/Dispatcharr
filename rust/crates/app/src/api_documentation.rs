@@ -1,7 +1,7 @@
 //! Public documentation from pinned Original discovery and drf-spectacular templates.
 use axum::{
     extract::{ConnectInfo, OriginalUri, State},
-    http::{header, HeaderMap, HeaderValue, StatusCode, Uri},
+    http::{header, HeaderMap, HeaderValue, Method, StatusCode, Uri},
     response::{IntoResponse, Response},
     routing::get,
     Router,
@@ -14,6 +14,9 @@ const OPENAPI_JSON: &str = include_str!("../datasets/api-docs/openapi.json");
 const OPENAPI_YAML: &str = include_str!("../datasets/api-docs/openapi.yaml");
 const SWAGGER: &str = include_str!("../datasets/api-docs/swagger_ui.html");
 const REDOC: &str = include_str!("../datasets/api-docs/redoc.html");
+const SCHEMA_OPTIONS_JSON: &str = include_str!("../datasets/api-docs/schema_options.json");
+const SCHEMA_OPTIONS_YAML: &str = include_str!("../datasets/api-docs/schema_options.yaml");
+const REDOC_OPTIONS: &str = include_str!("../datasets/api-docs/redoc_options.html");
 const CSRF_SLOT: &str = "DISPATCHARRCSRFRENDERINGSLOT";
 
 #[derive(Clone, Copy)]
@@ -47,11 +50,14 @@ const HTML_RENDERERS: &[Renderer] = &[Renderer {
 
 pub(super) fn router(auth: AuthService) -> Router {
     Router::new()
-        .route("/api/schema/", get(documentation))
-        .route("/api/swagger.json", get(documentation))
+        .route("/api/schema/", get(documentation).options(documentation))
+        .route(
+            "/api/swagger.json",
+            get(documentation).options(documentation),
+        )
         .route("/api/swagger", get(documentation))
         .route("/api/swagger/", get(documentation))
-        .route("/api/redoc/", get(documentation))
+        .route("/api/redoc/", get(documentation).options(documentation))
         .with_state(auth)
 }
 
@@ -260,11 +266,63 @@ fn success(uri: &Uri, headers: &HeaderMap, renderer: Renderer, schema: bool) -> 
     response
 }
 
+fn schema_options(renderer: Renderer, headers: &HeaderMap) -> Response {
+    let body = if renderer.format == "json" {
+        let mime = renderer.mime;
+        let params = headers
+            .get_all(header::ACCEPT)
+            .iter()
+            .filter_map(|value| value.to_str().ok())
+            .flat_map(|value| value.split(','))
+            .filter_map(|range| {
+                let mut parts = range.split(';');
+                let specificity = match_specificity(mime, parts.next()?)?;
+                let indent = parts
+                    .filter_map(|part| part.trim().split_once('='))
+                    .find(|(key, _)| key.eq_ignore_ascii_case("indent"))
+                    .and_then(|(_, value)| value.trim().trim_matches('"').parse::<i32>().ok())
+                    .map(|value| value.clamp(0, 8))
+                    .filter(|&value| value != 0)
+                    .unwrap_or(4);
+                Some((specificity, indent))
+            })
+            .max_by_key(|&(specificity, _)| specificity);
+        let count = params.map_or(4, |(_, value)| value) as usize;
+        if count == 4 {
+            SCHEMA_OPTIONS_JSON.as_bytes().to_vec()
+        } else {
+            // The frozen metadata has four-space indentation and no literal
+            // newlines inside strings. Rewrite its structural indentation only.
+            SCHEMA_OPTIONS_JSON
+                .split('\n')
+                .map(|line| {
+                    let text = line.trim_start_matches(' ');
+                    let depth = (line.len() - text.len()) / 4;
+                    format!("{}{text}", " ".repeat(depth * count))
+                })
+                .collect::<Vec<_>>()
+                .join("\n")
+                .into_bytes()
+        }
+    } else {
+        SCHEMA_OPTIONS_YAML.as_bytes().to_vec()
+    };
+    (
+        [
+            (header::CONTENT_TYPE, renderer.mime),
+            (header::VARY, "Accept"),
+        ],
+        body,
+    )
+        .into_response()
+}
+
 async fn documentation(
     State(auth): State<AuthService>,
     ConnectInfo(peer): ConnectInfo<SocketAddr>,
     OriginalUri(uri): OriginalUri,
     headers: HeaderMap,
+    method: Method,
 ) -> Result<Response, StoreError> {
     let schema = matches!(uri.path(), "/api/schema/" | "/api/swagger.json");
     let renderers = if schema {
@@ -272,12 +330,31 @@ async fn documentation(
     } else {
         HTML_RENDERERS
     };
-    let renderer = match negotiate(&uri, &headers, renderers) {
-        Ok(renderer) => renderer,
-        Err(error) => return Ok(error.response(schema)),
+    let redoc = uri.path() == "/api/redoc/";
+    let mut response = match negotiate(&uri, &headers, renderers) {
+        Ok(renderer) => {
+            auth.authenticate(&supplied_auth(peer, &headers)).await?;
+            if method == Method::OPTIONS && schema {
+                schema_options(renderer, &headers)
+            } else if method == Method::OPTIONS && redoc {
+                (
+                    [(header::CONTENT_TYPE, "text/html; charset=utf-8")],
+                    REDOC_OPTIONS,
+                )
+                    .into_response()
+            } else {
+                success(&uri, &headers, renderer, schema)
+            }
+        }
+        Err(error) => error.response(schema),
     };
-    auth.authenticate(&supplied_auth(peer, &headers)).await?;
-    Ok(success(&uri, &headers, renderer, schema))
+    if schema || redoc {
+        response.headers_mut().insert(
+            header::ALLOW,
+            HeaderValue::from_static("GET, HEAD, OPTIONS"),
+        );
+    }
+    Ok(response)
 }
 
 #[cfg(test)]
@@ -382,6 +459,58 @@ mod tests {
             masks.push(masked.to_owned());
         }
         assert_ne!(masks[0], masks[1]);
+    }
+
+    #[tokio::test]
+    async fn measured_options_advertise_only_supported_routes() {
+        for (path, accept, expected_status, expected_size) in [
+            ("/api/schema/", "*/*", StatusCode::OK, 306),
+            ("/api/swagger.json", "application/json", StatusCode::OK, 417),
+            (
+                "/api/swagger.json",
+                "application/json; indent=2",
+                StatusCode::OK,
+                377,
+            ),
+            (
+                "/api/schema/?format=json",
+                "application/yaml",
+                StatusCode::NOT_ACCEPTABLE,
+                86,
+            ),
+            ("/api/redoc/?format=html", "*/*", StatusCode::OK, 640),
+        ] {
+            let response = fixture()
+                .oneshot(
+                    Request::builder()
+                        .method(Method::OPTIONS)
+                        .uri(path)
+                        .header(header::ACCEPT, accept)
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), expected_status);
+            assert_eq!(response.headers()[header::ALLOW], "GET, HEAD, OPTIONS");
+            assert!(!response.headers().contains_key(header::CONTENT_DISPOSITION));
+            assert!(!response.headers().contains_key(header::SET_COOKIE));
+            assert_eq!(
+                to_bytes(response.into_body(), 6000).await.unwrap().len(),
+                expected_size
+            );
+        }
+        let response = fixture()
+            .oneshot(
+                Request::builder()
+                    .method(Method::OPTIONS)
+                    .uri("/api/swagger/")
+                    .body(Body::empty())
+                    .unwrap(),
+            )
+            .await
+            .unwrap();
+        assert_eq!(response.status(), StatusCode::METHOD_NOT_ALLOWED);
     }
 
     #[tokio::test]
