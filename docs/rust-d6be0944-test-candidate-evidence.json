@@ -1,0 +1,78 @@
+{
+  "application": "d6be0944e85d6cdbc5ef9c2af06e7e87aac030f8",
+  "formal_milestone_credit": false,
+  "original_author_credit": "Original Dispatcharr authors and contributors",
+  "package": {
+    "image_id": "sha256:d16b57372da085ca48c3040bdd7adebca98972bb0251241b7dd6f7762bbb692d",
+    "manifest_sha256": "d0ce18eb13586cc688ef74ea54c13d961f59d590af2675bc4e46246154915de0",
+    "source_tree_sha256": "3098ec9690db273680ca8ffac622f6459d5a5c8c7bee9a2a466f9acbbf50a3b0"
+  },
+  "performance_claim": false,
+  "release_decision": "hold",
+  "runtime": {
+    "m0_docs": {
+      "actual_capture_exit": 0,
+      "actual_evaluator_exit": 1,
+      "counts": {
+        "different": 276,
+        "exact_selected_wire": 0,
+        "head_transport_diagnostic": 148,
+        "unsupported": 60
+      },
+      "exact_cleanup": true,
+      "outcome": "measured_differences"
+    },
+    "m3_hls": {
+      "actual_evaluator_exit": 1,
+      "actual_physical_exit": 1,
+      "exact_cleanup": true,
+      "outcome": "measured_differences",
+      "retained_media_decoded": false,
+      "same_token_fresh": false
+    },
+    "m4_adoption": {
+      "actual_owner_exit": 0,
+      "actual_physical_exit": 0,
+      "exact_cleanup": true,
+      "outcome": "matched"
+    },
+    "m4_cold_wire": {
+      "actual_owner_exit": 0,
+      "actual_physical_exit": 0,
+      "cold_downstream_status": [
+        500,
+        500
+      ],
+      "cold_error_redaction": {
+        "Native_bytes": 44,
+        "Original_bytes": 123
+      },
+      "exact_cleanup": true,
+      "outcome": "matched"
+    }
+  },
+  "scope": "test candidate only",
+  "superseded_fixture_attempts": [
+    {
+      "attempt": "R2",
+      "category": "fixture_helper_shadowing",
+      "exact_cleanup": true,
+      "exit": 1,
+      "scope": "m3_hls"
+    },
+    {
+      "attempt": "R2",
+      "category": "isolated_binding_import",
+      "engine_calls": 0,
+      "exit": 1,
+      "scope": "m4_cold_wire"
+    }
+  ],
+  "workspace": {
+    "clippy": 0,
+    "fmt": 0,
+    "passed_cases": 1999,
+    "suites": 194,
+    "test": 0
+  }
+}
