@@ -152,6 +152,7 @@ COPY --from=build /out/sqlite-operator-notices/ /usr/share/doc/dispatcharr/
 COPY --from=frontend /dispatcharr-frontend/dist/ /opt/dispatcharr-frontend/
 COPY LICENSE ATTRIBUTION.md /usr/share/doc/dispatcharr/
 COPY rust/crates/output-http/data/Django-LICENSE /usr/share/doc/dispatcharr/Django-LICENSE
+COPY rust/crates/app/datasets/api-docs/DRF-SPECTACULAR-LICENSE /usr/share/doc/dispatcharr/DRF-SPECTACULAR-LICENSE
 COPY rust/crates/app/assets/django-admin-6.0.9/LICENSE-DJANGO /usr/share/doc/dispatcharr/django-admin-6.0.9/LICENSE-DJANGO
 COPY rust/crates/app/assets/django-admin-6.0.9/js/vendor/jquery/LICENSE.txt /usr/share/doc/dispatcharr/django-admin-6.0.9/LICENSE-JQUERY
 COPY rust/crates/app/assets/django-admin-6.0.9/js/vendor/xregexp/LICENSE.txt /usr/share/doc/dispatcharr/django-admin-6.0.9/LICENSE-XREGEXP

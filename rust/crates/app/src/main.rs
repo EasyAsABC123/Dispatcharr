@@ -3,6 +3,7 @@ mod admin_channelgroup;
 mod admin_channelgroup_assets;
 mod admin_dedicated;
 mod admin_ingress;
+mod api_documentation;
 mod backup_config;
 mod combined_statistics;
 mod combined_statistics_html;
@@ -1359,6 +1360,7 @@ async fn run(logs: &managed_logs::ManagedLogs) -> Result<(), String> {
         })
         .merge(auth_routes)
         .merge(drf_api_roots::router(auth.clone()))
+        .merge(api_documentation::router(auth.clone()))
         .merge(stream_regex.router())
         .merge(combined_statistics.router())
         .route("/proxy/stats", any(combined_stats_legacy_alias))
