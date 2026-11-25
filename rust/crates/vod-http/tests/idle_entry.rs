@@ -261,9 +261,9 @@ async fn changed_id_entry_denies_requested_state_created_after_selection() {
     use scoped::functional::prototype::Error;
     use std::collections::BTreeMap;
     // ENTER_CURRENT can attach immediately if the retained generation turns
-    // active. CLAIM separately linearizes a transition from retained idle.
-    // At each boundary insert a stop, a same-user row and a foreign row.
-    for phase in ["ENTER_CURRENT", "CLAIM"] {
+    // active. CLAIM provisionally increments a retained idle row. COMMIT
+    // admits the body after provider reservation has physically settled.
+    for phase in ["ENTER_CURRENT", "CLAIM", "COMMIT"] {
         for requested_user in [None, Some("prototype-user"), Some("foreign-viewer")] {
             let p = proxy_at(phase, false, true).await;
             let (mut f, scope) = if phase == "ENTER_CURRENT" {
@@ -299,6 +299,23 @@ async fn changed_id_entry_denies_requested_state_created_after_selection() {
                 }
             });
             wait(|| p.seen.load(Ordering::SeqCst) != 0).await;
+            if phase == "COMMIT" {
+                assert_eq!(
+                    f.redis.get::<_, i64>(&counter).await.unwrap(),
+                    before_counter + 1
+                );
+                let (active, requests): (String, String) = f
+                    .redis
+                    .hget(&metadata, &["active_streams", "request_count"])
+                    .await
+                    .unwrap();
+                assert_eq!(active, "1");
+                assert_eq!(requests, before_row["request_count"]);
+                assert!(matches!(
+                    scope.attach_entry_pending(Arc::new(()), None).await,
+                    Err(Error::PartialState)
+                ));
+            }
             let expected = if let Some(user) = requested_user {
                 let _: () = f
                     .redis
@@ -323,13 +340,15 @@ async fn changed_id_entry_denies_requested_state_created_after_selection() {
                 "{phase} {requested_user:?}"
             );
             assert!(!scope.close(&body).await.unwrap().changed);
-            assert_eq!(
-                f.redis
-                    .hgetall::<_, BTreeMap<String, String>>(&metadata)
-                    .await
-                    .unwrap(),
-                before_row
-            );
+            let mut after_row: BTreeMap<String, String> = f.redis.hgetall(&metadata).await.unwrap();
+            let mut expected_row = before_row;
+            if phase == "COMMIT" {
+                // The existing exact-receipt rollback updates activity as it
+                // restores the provisional active count.
+                after_row.remove("last_activity");
+                expected_row.remove("last_activity");
+            }
+            assert_eq!(after_row, expected_row);
             assert_eq!(
                 f.redis
                     .hgetall::<_, BTreeMap<String, String>>(&ledger)

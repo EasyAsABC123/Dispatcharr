@@ -34,6 +34,10 @@ redis.call('HSET',KEYS[4],ARGV[9],ARGV[2]);redis.call('EXPIRE',KEYS[4],3600)
 return {'CLAIMED'}
 "#;
 const COMMIT: &str = r#"
+if KEYS[5] then
+ if redis.call('EXISTS',KEYS[5])~=0 then return {'REQUESTED_OCCUPIED'} end
+ if redis.call('EXISTS',KEYS[6])~=0 then return {'REQUESTED_STOP'} end
+end
 if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[2]
  or redis.call('HGET',KEYS[3],'token')~=ARGV[1] then return {'FOREIGN'} end
 if redis.call('HGET',KEYS[2],'user_id')~=ARGV[3] or redis.call('HGET',KEYS[2],'content_uuid')~=ARGV[4]
@@ -61,6 +65,8 @@ fn status(reply: &[String], expected: &str) -> Result<(), Error> {
     match reply.first().map(String::as_str) {
         Some(value) if value == expected => Ok(()),
         Some("FOREIGN") => Err(Error::ForeignOwner),
+        Some("REQUESTED_OCCUPIED") => Err(Error::RequestedIdOccupied),
+        Some("REQUESTED_STOP") => Err(Error::Stopped),
         Some("IDENTITY") => Err(Error::Configuration),
         Some("CAPACITY") => Err(Error::Capacity),
         Some("RECEIPT_ABSENT") => Err(Error::UnprovenEntry),
@@ -276,9 +282,12 @@ impl LocalScope {
             let _retained_control = _permit;
             {
                 let _hold = body.state.hold.lock().unwrap();
-                inner
-                    .pending_followers
-                    .store(!body.is_closed(), Ordering::Release);
+                // A changed-ID reservation remains provisional until its
+                // requested SID passes COMMIT, so followers cannot share it.
+                inner.pending_followers.store(
+                    requested_id.is_none() && !body.is_closed(),
+                    Ordering::Release,
+                );
             }
             // Publish the typed physical phase before polling the mutation.
             let reservation_phase = phase_observer.reserve();
@@ -306,11 +315,19 @@ impl LocalScope {
                 rollback(&inner, &gen, &receipt, true).await?;
                 return Err(Error::Stopped);
             }
-            let commit: redis::RedisResult<Vec<String>> = Script::new(COMMIT)
+            let script = Script::new(COMMIT);
+            let mut entry = script.prepare_invoke();
+            entry
                 .key(owner_key)
                 .key(key(&inner.id))
                 .key(ledger(&inner, &gen.lease))
-                .key(&receipt.key)
+                .key(&receipt.key);
+            if let Some(id) = &requested_id {
+                entry
+                    .key(key(id))
+                    .key(format!("vod_proxy:client:{id}:stop"));
+            }
+            let commit: redis::RedisResult<Vec<String>> = entry
                 .arg(gen.lease.token())
                 .arg(&gen.token)
                 .arg(&gen.user_id)
