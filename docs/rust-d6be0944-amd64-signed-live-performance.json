@@ -1,0 +1,133 @@
+{
+  "application": "d6be0944e85d6cdbc5ef9c2af06e7e87aac030f8",
+  "capture_only": {
+    "adverse_pairs": [],
+    "observed_arms": 18,
+    "observed_pairs": 9,
+    "reported_passed": true
+  },
+  "cohorts": {
+    "1": {
+      "median_by_backend": {
+        "original": {
+          "median_aggregate_throughput_bytes_per_second": 247339.06666666668,
+          "median_window_delivered_bytes": 14840344,
+          "median_window_mean_cpu_percent": 2.7906997104438105,
+          "median_window_peak_working_memory_bytes": 436113408,
+          "median_window_raw_first_byte_p95_ms": 20.759930019266903
+        },
+        "rust": {
+          "median_aggregate_throughput_bytes_per_second": 247339.06666666668,
+          "median_window_delivered_bytes": 14840344,
+          "median_window_mean_cpu_percent": 1.809738557663183,
+          "median_window_peak_working_memory_bytes": 238772224,
+          "median_window_raw_first_byte_p95_ms": 4.285729024559259
+        }
+      },
+      "median_paired_percent_change": {
+        "CPU": -35.151082329263694,
+        "first_byte_p95": 0.0,
+        "memory": -50.02014832597419,
+        "throughput": 0.0
+      },
+      "minimum_paired_throughput_ratio": 1.0,
+      "pairs": 3
+    },
+    "10": {
+      "median_by_backend": {
+        "original": {
+          "median_aggregate_throughput_bytes_per_second": 2494713.0,
+          "median_window_delivered_bytes": 149682780,
+          "median_window_mean_cpu_percent": 4.438938537565604,
+          "median_window_peak_working_memory_bytes": 394272768,
+          "median_window_raw_first_byte_p95_ms": 136.09186909161508
+        },
+        "rust": {
+          "median_aggregate_throughput_bytes_per_second": 2473390.6666666665,
+          "median_window_delivered_bytes": 148403440,
+          "median_window_mean_cpu_percent": 1.874779003233,
+          "median_window_peak_working_memory_bytes": 131739648,
+          "median_window_raw_first_byte_p95_ms": 17.55895104724914
+        }
+      },
+      "median_paired_percent_change": {
+        "CPU": -58.3469618311026,
+        "first_byte_p95": -63.260112206747095,
+        "memory": -63.02861685214627,
+        "throughput": -0.8547008547008517
+      },
+      "minimum_paired_throughput_ratio": 0.9863945578231292,
+      "pairs": 3
+    },
+    "100": {
+      "median_by_backend": {
+        "original": {
+          "median_aggregate_throughput_bytes_per_second": 25151824.4,
+          "median_window_delivered_bytes": 1509109464,
+          "median_window_mean_cpu_percent": 19.525432872092058,
+          "median_window_peak_working_memory_bytes": 397950976,
+          "median_window_raw_first_byte_p95_ms": 1322.9207179974765
+        },
+        "rust": {
+          "median_aggregate_throughput_bytes_per_second": 24738762.05,
+          "median_window_delivered_bytes": 1484325723,
+          "median_window_mean_cpu_percent": 2.5090220199160687,
+          "median_window_peak_working_memory_bytes": 164364288,
+          "median_window_raw_first_byte_p95_ms": 76.34200400207192
+        }
+      },
+      "median_paired_percent_change": {
+        "CPU": -87.23171499432706,
+        "first_byte_p95": -94.22928351159004,
+        "memory": -58.69735271110379,
+        "throughput": -1.6449041885704618
+      },
+      "minimum_paired_throughput_ratio": 0.983243825007227,
+      "pairs": 3
+    }
+  },
+  "credits": "Original Dispatcharr and dependency authors retain full authorship and license credit.",
+  "evidence_tip": "4ab97f9e8bb228ecd569357184ce593122243e15",
+  "exact_owned_cleanup": true,
+  "first_byte_effect_uses_50_ms_floor": true,
+  "fresh_original_qualification_windows": 3,
+  "full_m1_accepted": false,
+  "functional_windows": 6,
+  "historical_acceptance_imported": false,
+  "image_id": "sha256:d16b57372da085ca48c3040bdd7adebca98972bb0251241b7dd6f7762bbb692d",
+  "independent_r2_audit_replayed": true,
+  "literal_exits": {
+    "functional/audit": 0,
+    "functional/cue": 0,
+    "functional/exact-inventory": 0,
+    "functional/fixture-actual": 0,
+    "functional/fixture-controller": 0,
+    "functional/run": 0,
+    "measure/audit": 0,
+    "measure/cue": 0,
+    "measure/exact-inventory": 0,
+    "measure/fixture-actual": 0,
+    "measure/fixture-controller": 0,
+    "measure/run": 0,
+    "package_admit": 0,
+    "qualify/audit": 0,
+    "qualify/cue": 0,
+    "qualify/exact-inventory": 0,
+    "qualify/fixture-actual": 0,
+    "qualify/fixture-controller": 0,
+    "qualify/run": 0,
+    "root": 0
+  },
+  "manifest_sha256": "d0ce18eb13586cc688ef74ea54c13d961f59d590af2675bc4e46246154915de0",
+  "measured_arms": 18,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "paired_trials": 9,
+  "performance_verified": true,
+  "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+  "quiet_pair_gates_passed": true,
+  "raw_report_sha256": "aa20d8a094438a0d5d2f77ee6ae1974f5a2f204b71e5cb83eb2b6ff3e4f6fb47",
+  "release_accepted": false,
+  "scope": "signed continuous MPEG-TS with PostgreSQL, Redis and deterministic origin",
+  "status": "passed",
+  "working_memory_metric": "peak simultaneous summed working memory per arm"
+}
