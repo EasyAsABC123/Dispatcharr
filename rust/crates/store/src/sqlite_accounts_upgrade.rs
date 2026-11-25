@@ -164,7 +164,6 @@ async fn record(
 }
 
 #[cfg(test)]
-#[cfg(test)]
 #[path = "sqlite_accounts_upgrade_contract.rs"]
 mod contract;
 

@@ -244,7 +244,7 @@ pub(crate) async fn command(
         .bind(id)
         .fetch_optional(&mut *tx)
         .await?;
-        if !bytes.is_some_and(|n| n <= 65536) {
+        if bytes.is_none_or(|n| n > 65536) {
             return Err(outside());
         }
     }

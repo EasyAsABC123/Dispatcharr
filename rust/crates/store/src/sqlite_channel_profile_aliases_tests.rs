@@ -32,8 +32,10 @@ impl Owner for TestOwner {
                     .try_acquire_owned()
                     .map_err(|_| capacity())?,
             );
-            let mut limits = RestReadLimits::default();
-            limits.work_bytes = self.limit;
+            let limits = RestReadLimits {
+                work_bytes: self.limit,
+                ..RestReadLimits::default()
+            };
             Ok(RetainedSqliteRestReads {
                 config: self.config.clone(),
                 cache: None,
