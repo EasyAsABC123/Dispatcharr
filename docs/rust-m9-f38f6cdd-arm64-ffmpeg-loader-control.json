@@ -1,0 +1,822 @@
+{
+  "both_campaigns_and_auditors_literal_zero": true,
+  "both_exact_cleanup": true,
+  "engine_empty_after_both": true,
+  "formal_S120_accepted": false,
+  "formal_S360_admitted": false,
+  "formal_S7200_admitted": false,
+  "inferred_same_page_or_memcg_transfer": false,
+  "loader_list_candidate_counters": {
+    "first_payload": {
+      "active_file": 149143552,
+      "anon": 45150208,
+      "charged_bytes": 232632320,
+      "file": 182530048,
+      "file_mapped": 69197824,
+      "inactive_file": 33390592,
+      "working_bytes": 199241728
+    },
+    "post_drain": {
+      "active_file": 149139456,
+      "anon": 23236608,
+      "charged_bytes": 210440192,
+      "file": 182530048,
+      "file_mapped": 48263168,
+      "inactive_file": 33390592,
+      "working_bytes": 177049600
+    },
+    "pre_media_after": {
+      "active_file": 126087168,
+      "anon": 15958016,
+      "charged_bytes": 179855360,
+      "file": 159461376,
+      "file_mapped": 46166016,
+      "inactive_file": 33337344,
+      "working_bytes": 146518016
+    },
+    "pre_media_before": {
+      "active_file": 78327808,
+      "anon": 15958016,
+      "charged_bytes": 130191360,
+      "file": 110743552,
+      "file_mapped": 46166016,
+      "inactive_file": 32415744,
+      "working_bytes": 97775616
+    },
+    "pre_media_delta": {
+      "active_file": 47759360,
+      "anon": 0,
+      "charged_bytes": 49664000,
+      "file": 48717824,
+      "file_mapped": 0,
+      "inactive_file": 921600,
+      "working_bytes": 48742400
+    }
+  },
+  "loader_list_control": {
+    "checkpoints": {
+      "loader-list-after": {
+        "candidate_origin_same_file": null,
+        "cgroups_after": {
+          "baseline": {
+            "active_file": 181997568,
+            "anon": 28409856,
+            "charged_bytes": 403808256,
+            "file": 349425664,
+            "file_dirty": 0,
+            "file_mapped": 33636352,
+            "file_writeback": 0,
+            "inactive_file": 50507776,
+            "kernel": 22425600,
+            "working_bytes": 353300480
+          },
+          "candidate": {
+            "active_file": 126087168,
+            "anon": 15958016,
+            "charged_bytes": 179855360,
+            "file": 159461376,
+            "file_dirty": 0,
+            "file_mapped": 46166016,
+            "file_writeback": 0,
+            "inactive_file": 33337344,
+            "kernel": 1597440,
+            "working_bytes": 146518016
+          },
+          "origin": {
+            "active_file": 1822720,
+            "anon": 13914112,
+            "charged_bytes": 132657152,
+            "file": 115826688,
+            "file_dirty": 0,
+            "file_mapped": 577536,
+            "file_writeback": 0,
+            "inactive_file": 114008064,
+            "kernel": 1314816,
+            "working_bytes": 18649088
+          }
+        },
+        "cgroups_before": {
+          "baseline": {
+            "active_file": 181997568,
+            "anon": 28409856,
+            "charged_bytes": 403808256,
+            "file": 349425664,
+            "file_dirty": 0,
+            "file_mapped": 33636352,
+            "file_writeback": 0,
+            "inactive_file": 50507776,
+            "kernel": 22425600,
+            "working_bytes": 353300480
+          },
+          "candidate": {
+            "active_file": 126087168,
+            "anon": 15958016,
+            "charged_bytes": 179855360,
+            "file": 159461376,
+            "file_dirty": 0,
+            "file_mapped": 46166016,
+            "file_writeback": 0,
+            "inactive_file": 33337344,
+            "kernel": 1597440,
+            "working_bytes": 146518016
+          },
+          "origin": {
+            "active_file": 1822720,
+            "anon": 13914112,
+            "charged_bytes": 132657152,
+            "file": 115826688,
+            "file_dirty": 0,
+            "file_mapped": 577536,
+            "file_writeback": 0,
+            "inactive_file": 114008064,
+            "kernel": 1314816,
+            "working_bytes": 18649088
+          }
+        },
+        "file_memcg_charge_identified": false,
+        "file_residency_is_global": true,
+        "files": {
+          "candidate_guide_fixture": {
+            "dirty_pages": 0,
+            "evicted_pages": 0,
+            "file_bytes": 332,
+            "recently_evicted_pages": 0,
+            "resident_pages": 0,
+            "status": "sampled",
+            "writeback_pages": 0
+          },
+          "candidate_media_binary": {
+            "errno_category": "EPERM",
+            "failure_stage": "cachestat",
+            "fd_owner_matches_reader": false,
+            "file_bytes": 35468184,
+            "status": "access_denied"
+          },
+          "candidate_native_binary": {
+            "errno_category": "EPERM",
+            "failure_stage": "cachestat",
+            "fd_owner_matches_reader": false,
+            "file_bytes": 106996488,
+            "status": "access_denied"
+          },
+          "candidate_origin_fixture_mount": {
+            "errno_category": "ENOENT",
+            "failure_stage": "read_only_open",
+            "status": "absent"
+          },
+          "origin_fixture_media": {
+            "errno_category": "EACCES",
+            "failure_stage": "read_only_open",
+            "status": "access_denied"
+          }
+        },
+        "known_file_union": {
+          "distinct_files": 1,
+          "distinct_inode_samples": [
+            {
+              "alias_samples_disagree": false,
+              "categories": [
+                "candidate_guide_fixture"
+              ],
+              "representative_resident_pages": 0
+            }
+          ],
+          "sampled_categories": 1,
+          "union_resident_bytes": 0,
+          "union_resident_pages": 0
+        },
+        "page_bytes": 4096,
+        "status": "observed"
+      },
+      "loader-list-before": {
+        "candidate_origin_same_file": null,
+        "cgroups_after": {
+          "baseline": {
+            "active_file": 181997568,
+            "anon": 28409856,
+            "charged_bytes": 403816448,
+            "file": 349425664,
+            "file_dirty": 0,
+            "file_mapped": 33636352,
+            "file_writeback": 0,
+            "inactive_file": 50507776,
+            "kernel": 22425600,
+            "working_bytes": 353308672
+          },
+          "candidate": {
+            "active_file": 78327808,
+            "anon": 15958016,
+            "charged_bytes": 130191360,
+            "file": 110743552,
+            "file_dirty": 0,
+            "file_mapped": 46166016,
+            "file_writeback": 0,
+            "inactive_file": 32415744,
+            "kernel": 1347584,
+            "working_bytes": 97775616
+          },
+          "origin": {
+            "active_file": 1822720,
+            "anon": 13914112,
+            "charged_bytes": 132661248,
+            "file": 115826688,
+            "file_dirty": 0,
+            "file_mapped": 577536,
+            "file_writeback": 0,
+            "inactive_file": 114008064,
+            "kernel": 1314816,
+            "working_bytes": 18653184
+          }
+        },
+        "cgroups_before": {
+          "baseline": {
+            "active_file": 181997568,
+            "anon": 28409856,
+            "charged_bytes": 403816448,
+            "file": 349425664,
+            "file_dirty": 0,
+            "file_mapped": 33636352,
+            "file_writeback": 0,
+            "inactive_file": 50507776,
+            "kernel": 22425600,
+            "working_bytes": 353308672
+          },
+          "candidate": {
+            "active_file": 78327808,
+            "anon": 15958016,
+            "charged_bytes": 130191360,
+            "file": 110743552,
+            "file_dirty": 0,
+            "file_mapped": 46166016,
+            "file_writeback": 0,
+            "inactive_file": 32415744,
+            "kernel": 1347584,
+            "working_bytes": 97775616
+          },
+          "origin": {
+            "active_file": 1822720,
+            "anon": 13914112,
+            "charged_bytes": 132661248,
+            "file": 115826688,
+            "file_dirty": 0,
+            "file_mapped": 577536,
+            "file_writeback": 0,
+            "inactive_file": 114008064,
+            "kernel": 1314816,
+            "working_bytes": 18653184
+          }
+        },
+        "file_memcg_charge_identified": false,
+        "file_residency_is_global": true,
+        "files": {
+          "candidate_guide_fixture": {
+            "dirty_pages": 0,
+            "evicted_pages": 0,
+            "file_bytes": 332,
+            "recently_evicted_pages": 0,
+            "resident_pages": 0,
+            "status": "sampled",
+            "writeback_pages": 0
+          },
+          "candidate_media_binary": {
+            "errno_category": "EPERM",
+            "failure_stage": "cachestat",
+            "fd_owner_matches_reader": false,
+            "file_bytes": 35468184,
+            "status": "access_denied"
+          },
+          "candidate_native_binary": {
+            "errno_category": "EPERM",
+            "failure_stage": "cachestat",
+            "fd_owner_matches_reader": false,
+            "file_bytes": 106996488,
+            "status": "access_denied"
+          },
+          "candidate_origin_fixture_mount": {
+            "errno_category": "ENOENT",
+            "failure_stage": "read_only_open",
+            "status": "absent"
+          },
+          "origin_fixture_media": {
+            "errno_category": "EACCES",
+            "failure_stage": "read_only_open",
+            "status": "access_denied"
+          }
+        },
+        "known_file_union": {
+          "distinct_files": 1,
+          "distinct_inode_samples": [
+            {
+              "alias_samples_disagree": false,
+              "categories": [
+                "candidate_guide_fixture"
+              ],
+              "representative_resident_pages": 0
+            }
+          ],
+          "sampled_categories": 1,
+          "union_resident_bytes": 0,
+          "union_resident_pages": 0
+        },
+        "page_bytes": 4096,
+        "status": "observed"
+      }
+    },
+    "exact_loader_list_literal_exit": 0,
+    "file_charge_delta_bytes_before_media": {
+      "baseline": 0,
+      "candidate": 48717824,
+      "origin": 0
+    },
+    "file_memcg_owner_inferred": false,
+    "loader_only_diagnostic": true,
+    "media_http_started_before_probe": false,
+    "resolved_roster": {
+      "loader_resolution_only": true,
+      "locked_original_inventory_sha256": "95064285b5a2bac0b7f1ae235b845caccc6b6bf452c52fcb449511977b6b0d0a",
+      "observed_kernel_virtual_dso": true,
+      "observed_unnamed_loader_marker": true,
+      "per_library_residency_observed": false,
+      "resolved_packaged_count": 55,
+      "resolved_packaged_sonames": [
+        "ld-linux-aarch64.so.1",
+        "libOpenCL.so.1",
+        "libSvtAv1Enc.so.2",
+        "libaom.so.3",
+        "libass.so.9",
+        "libatomic.so.1",
+        "libbluray.so.3",
+        "libbrotlicommon.so.1",
+        "libbrotlidec.so.1",
+        "libbz2.so.1.0",
+        "libc.so.6",
+        "libcjson.so.1",
+        "libdrm.so.2",
+        "libexpat.so.1",
+        "libffi.so.8",
+        "libfontconfig.so.1",
+        "libfreetype.so.6",
+        "libfribidi.so.0",
+        "libgcc_s.so.1",
+        "libglib-2.0.so.0",
+        "libgmp.so.10",
+        "libgnutls.so.30",
+        "libgomp.so.1",
+        "libgraphite2.so.3",
+        "libharfbuzz.so.0",
+        "libhogweed.so.6",
+        "libidn2.so.0",
+        "liblzma.so.5",
+        "libm.so.6",
+        "libmbedcrypto.so.16",
+        "libmvec.so.1",
+        "libnettle.so.8",
+        "libogg.so.0",
+        "libp11-kit.so.0",
+        "libpcre2-8.so.0",
+        "libpng16.so.16",
+        "librist.so.4",
+        "libsharpyuv.so.0",
+        "libsoxr.so.0",
+        "libsrt-gnutls.so.1.5",
+        "libstdc++.so.6",
+        "libtasn1.so.6",
+        "libudfread.so.3",
+        "libunibreak.so.6",
+        "libunistring.so.5",
+        "libva-drm.so.2",
+        "libva.so.2",
+        "libvorbis.so.0",
+        "libvorbisenc.so.2",
+        "libwebp.so.7",
+        "libwebpmux.so.3",
+        "libxml2.so.16",
+        "libz.so.1",
+        "libzimg.so.2",
+        "libzvbi.so.0"
+      ]
+    }
+  },
+  "loader_list_physical_proof_sha256": "3c013543856d15c0bbe30fa395ff02a62487e86ce7b7183df18639fbe17e66a2",
+  "original_authors_retain_full_credit": true,
+  "prior_loader_parser_failure": {
+    "corrected_parser_accepted": true,
+    "formal_soak_admitted": false,
+    "hardware_calls": 0,
+    "original_nonempty_line_count": 57,
+    "resolved_roster": {
+      "loader_resolution_only": true,
+      "locked_original_inventory_sha256": "95064285b5a2bac0b7f1ae235b845caccc6b6bf452c52fcb449511977b6b0d0a",
+      "observed_kernel_virtual_dso": true,
+      "observed_unnamed_loader_marker": true,
+      "per_library_residency_observed": false,
+      "resolved_packaged_count": 55,
+      "resolved_packaged_sonames": [
+        "ld-linux-aarch64.so.1",
+        "libOpenCL.so.1",
+        "libSvtAv1Enc.so.2",
+        "libaom.so.3",
+        "libass.so.9",
+        "libatomic.so.1",
+        "libbluray.so.3",
+        "libbrotlicommon.so.1",
+        "libbrotlidec.so.1",
+        "libbz2.so.1.0",
+        "libc.so.6",
+        "libcjson.so.1",
+        "libdrm.so.2",
+        "libexpat.so.1",
+        "libffi.so.8",
+        "libfontconfig.so.1",
+        "libfreetype.so.6",
+        "libfribidi.so.0",
+        "libgcc_s.so.1",
+        "libglib-2.0.so.0",
+        "libgmp.so.10",
+        "libgnutls.so.30",
+        "libgomp.so.1",
+        "libgraphite2.so.3",
+        "libharfbuzz.so.0",
+        "libhogweed.so.6",
+        "libidn2.so.0",
+        "liblzma.so.5",
+        "libm.so.6",
+        "libmbedcrypto.so.16",
+        "libmvec.so.1",
+        "libnettle.so.8",
+        "libogg.so.0",
+        "libp11-kit.so.0",
+        "libpcre2-8.so.0",
+        "libpng16.so.16",
+        "librist.so.4",
+        "libsharpyuv.so.0",
+        "libsoxr.so.0",
+        "libsrt-gnutls.so.1.5",
+        "libstdc++.so.6",
+        "libtasn1.so.6",
+        "libudfread.so.3",
+        "libunibreak.so.6",
+        "libunistring.so.5",
+        "libva-drm.so.2",
+        "libva.so.2",
+        "libvorbis.so.0",
+        "libvorbisenc.so.2",
+        "libwebp.so.7",
+        "libwebpmux.so.3",
+        "libxml2.so.16",
+        "libz.so.1",
+        "libzimg.so.2",
+        "libzvbi.so.0"
+      ]
+    },
+    "retained_attempt_literal_exit": 1,
+    "retained_exact_cleanup": true,
+    "retained_loader_command_exit": 0,
+    "retained_loader_stdout_sha256": "61ac3fbc098d22f73bef6532674ba2ab27d381da870647f617fd0d7b105aad47",
+    "retained_primary_failure": "unexpected glibc loader line",
+    "unnamed_nonempty_record_ordinals": [
+      1
+    ]
+  },
+  "same_candidate": {
+    "application": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+    "arm_child": "sha256:6dcdc3687a4aea9216a13ce1c969fe32a206b3649c7eda22d0ab0bf38eb7c41d",
+    "arm_config": "sha256:f9b2292f6793fc657c731a390f4d454bbdc82417e82518ff17a7fe070b77fe9c",
+    "build_manifest_sha256": "0dc059e02e90a517197f1b55daf9907226f81ab9d0b6c32aabdf7b956cf4297d",
+    "dispatcharr_rs_sha256": "a00dc91e874a9d86cfcda5b305f35bff0ffc5e794840efb4b051981303f877f5",
+    "image": "sha256:1e71a9f9639766454f05671dd571487008ae04cd807b87b94cf6a1df98600623",
+    "package_audit_sha256": "6e30896ec6180217ab3e74b4f14c81bab850fb83ce4faba7f15580ff4c0e44e7",
+    "platform": "linux/arm64",
+    "signed_auth_sha256": "e9c51c3ebe00e35feff22302ad5078594f210854ac7a5d30970903b054cc8782",
+    "source_tree_sha256": "1f8506bcadf064000d135dc14510a907996ac72fa89cb3a8be616540ca844c43"
+  },
+  "separate_disposable_fixtures": true,
+  "version_minus_loader_pre_media_file_difference_bytes": 21045248,
+  "version_only_candidate_counters": {
+    "first_payload": {
+      "active_file": 149143552,
+      "anon": 45142016,
+      "charged_bytes": 232083456,
+      "file": 182530048,
+      "file_mapped": 69070848,
+      "inactive_file": 33390592,
+      "working_bytes": 198692864
+    },
+    "post_drain": {
+      "active_file": 149139456,
+      "anon": 23175168,
+      "charged_bytes": 209924096,
+      "file": 182530048,
+      "file_mapped": 48263168,
+      "inactive_file": 33390592,
+      "working_bytes": 176533504
+    },
+    "pre_media_after": {
+      "active_file": 147169280,
+      "anon": 15896576,
+      "charged_bytes": 200429568,
+      "file": 180506624,
+      "file_mapped": 46231552,
+      "inactive_file": 33337344,
+      "working_bytes": 167092224
+    },
+    "pre_media_before": {
+      "active_file": 78327808,
+      "anon": 15892480,
+      "charged_bytes": 130412544,
+      "file": 110743552,
+      "file_mapped": 46231552,
+      "inactive_file": 32415744,
+      "working_bytes": 97996800
+    },
+    "pre_media_delta": {
+      "active_file": 68841472,
+      "anon": 4096,
+      "charged_bytes": 70017024,
+      "file": 69763072,
+      "file_mapped": 0,
+      "inactive_file": 921600,
+      "working_bytes": 69095424
+    }
+  },
+  "version_only_control": {
+    "checkpoints": {
+      "version-after": {
+        "candidate_origin_same_file": null,
+        "cgroups_after": {
+          "baseline": {
+            "active_file": 181997568,
+            "anon": 30068736,
+            "charged_bytes": 404877312,
+            "file": 349409280,
+            "file_dirty": 4096,
+            "file_mapped": 33636352,
+            "file_writeback": 0,
+            "inactive_file": 50491392,
+            "kernel": 22413312,
+            "working_bytes": 354385920
+          },
+          "candidate": {
+            "active_file": 147169280,
+            "anon": 15896576,
+            "charged_bytes": 200429568,
+            "file": 180506624,
+            "file_dirty": 0,
+            "file_mapped": 46231552,
+            "file_writeback": 0,
+            "inactive_file": 33337344,
+            "kernel": 1654784,
+            "working_bytes": 167092224
+          },
+          "origin": {
+            "active_file": 1822720,
+            "anon": 15478784,
+            "charged_bytes": 134488064,
+            "file": 115826688,
+            "file_dirty": 0,
+            "file_mapped": 577536,
+            "file_writeback": 0,
+            "inactive_file": 114008064,
+            "kernel": 1327104,
+            "working_bytes": 20480000
+          }
+        },
+        "cgroups_before": {
+          "baseline": {
+            "active_file": 181997568,
+            "anon": 30068736,
+            "charged_bytes": 404877312,
+            "file": 349409280,
+            "file_dirty": 4096,
+            "file_mapped": 33636352,
+            "file_writeback": 0,
+            "inactive_file": 50491392,
+            "kernel": 22413312,
+            "working_bytes": 354385920
+          },
+          "candidate": {
+            "active_file": 147169280,
+            "anon": 15896576,
+            "charged_bytes": 200474624,
+            "file": 180506624,
+            "file_dirty": 0,
+            "file_mapped": 46231552,
+            "file_writeback": 0,
+            "inactive_file": 33337344,
+            "kernel": 1654784,
+            "working_bytes": 167137280
+          },
+          "origin": {
+            "active_file": 1822720,
+            "anon": 15478784,
+            "charged_bytes": 134488064,
+            "file": 115826688,
+            "file_dirty": 0,
+            "file_mapped": 577536,
+            "file_writeback": 0,
+            "inactive_file": 114008064,
+            "kernel": 1327104,
+            "working_bytes": 20480000
+          }
+        },
+        "file_memcg_charge_identified": false,
+        "file_residency_is_global": true,
+        "files": {
+          "candidate_guide_fixture": {
+            "dirty_pages": 0,
+            "evicted_pages": 0,
+            "file_bytes": 332,
+            "recently_evicted_pages": 0,
+            "resident_pages": 0,
+            "status": "sampled",
+            "writeback_pages": 0
+          },
+          "candidate_media_binary": {
+            "errno_category": "EPERM",
+            "failure_stage": "cachestat",
+            "fd_owner_matches_reader": false,
+            "file_bytes": 35468184,
+            "status": "access_denied"
+          },
+          "candidate_native_binary": {
+            "errno_category": "EPERM",
+            "failure_stage": "cachestat",
+            "fd_owner_matches_reader": false,
+            "file_bytes": 106996488,
+            "status": "access_denied"
+          },
+          "candidate_origin_fixture_mount": {
+            "errno_category": "ENOENT",
+            "failure_stage": "read_only_open",
+            "status": "absent"
+          },
+          "origin_fixture_media": {
+            "errno_category": "EACCES",
+            "failure_stage": "read_only_open",
+            "status": "access_denied"
+          }
+        },
+        "known_file_union": {
+          "distinct_files": 1,
+          "distinct_inode_samples": [
+            {
+              "alias_samples_disagree": false,
+              "categories": [
+                "candidate_guide_fixture"
+              ],
+              "representative_resident_pages": 0
+            }
+          ],
+          "sampled_categories": 1,
+          "union_resident_bytes": 0,
+          "union_resident_pages": 0
+        },
+        "page_bytes": 4096,
+        "status": "observed"
+      },
+      "version-before": {
+        "candidate_origin_same_file": null,
+        "cgroups_after": {
+          "baseline": {
+            "active_file": 181997568,
+            "anon": 30068736,
+            "charged_bytes": 404942848,
+            "file": 349409280,
+            "file_dirty": 4096,
+            "file_mapped": 33636352,
+            "file_writeback": 0,
+            "inactive_file": 50491392,
+            "kernel": 22413312,
+            "working_bytes": 354451456
+          },
+          "candidate": {
+            "active_file": 78327808,
+            "anon": 15892480,
+            "charged_bytes": 130412544,
+            "file": 110743552,
+            "file_dirty": 0,
+            "file_mapped": 46231552,
+            "file_writeback": 0,
+            "inactive_file": 32415744,
+            "kernel": 1368064,
+            "working_bytes": 97996800
+          },
+          "origin": {
+            "active_file": 1822720,
+            "anon": 15478784,
+            "charged_bytes": 134488064,
+            "file": 115826688,
+            "file_dirty": 0,
+            "file_mapped": 577536,
+            "file_writeback": 0,
+            "inactive_file": 114008064,
+            "kernel": 1327104,
+            "working_bytes": 20480000
+          }
+        },
+        "cgroups_before": {
+          "baseline": {
+            "active_file": 181997568,
+            "anon": 30068736,
+            "charged_bytes": 404942848,
+            "file": 349409280,
+            "file_dirty": 4096,
+            "file_mapped": 33636352,
+            "file_writeback": 0,
+            "inactive_file": 50491392,
+            "kernel": 22413312,
+            "working_bytes": 354451456
+          },
+          "candidate": {
+            "active_file": 78327808,
+            "anon": 15892480,
+            "charged_bytes": 130412544,
+            "file": 110743552,
+            "file_dirty": 0,
+            "file_mapped": 46231552,
+            "file_writeback": 0,
+            "inactive_file": 32415744,
+            "kernel": 1368064,
+            "working_bytes": 97996800
+          },
+          "origin": {
+            "active_file": 1822720,
+            "anon": 15478784,
+            "charged_bytes": 134488064,
+            "file": 115826688,
+            "file_dirty": 0,
+            "file_mapped": 577536,
+            "file_writeback": 0,
+            "inactive_file": 114008064,
+            "kernel": 1327104,
+            "working_bytes": 20480000
+          }
+        },
+        "file_memcg_charge_identified": false,
+        "file_residency_is_global": true,
+        "files": {
+          "candidate_guide_fixture": {
+            "dirty_pages": 0,
+            "evicted_pages": 0,
+            "file_bytes": 332,
+            "recently_evicted_pages": 0,
+            "resident_pages": 0,
+            "status": "sampled",
+            "writeback_pages": 0
+          },
+          "candidate_media_binary": {
+            "errno_category": "EPERM",
+            "failure_stage": "cachestat",
+            "fd_owner_matches_reader": false,
+            "file_bytes": 35468184,
+            "status": "access_denied"
+          },
+          "candidate_native_binary": {
+            "errno_category": "EPERM",
+            "failure_stage": "cachestat",
+            "fd_owner_matches_reader": false,
+            "file_bytes": 106996488,
+            "status": "access_denied"
+          },
+          "candidate_origin_fixture_mount": {
+            "errno_category": "ENOENT",
+            "failure_stage": "read_only_open",
+            "status": "absent"
+          },
+          "origin_fixture_media": {
+            "errno_category": "EACCES",
+            "failure_stage": "read_only_open",
+            "status": "access_denied"
+          }
+        },
+        "known_file_union": {
+          "distinct_files": 1,
+          "distinct_inode_samples": [
+            {
+              "alias_samples_disagree": false,
+              "categories": [
+                "candidate_guide_fixture"
+              ],
+              "representative_resident_pages": 0
+            }
+          ],
+          "sampled_categories": 1,
+          "union_resident_bytes": 0,
+          "union_resident_pages": 0
+        },
+        "page_bytes": 4096,
+        "status": "observed"
+      }
+    },
+    "exact_candidate_binary_startup_literal_exit": 0,
+    "file_charge_delta_bytes_before_media": {
+      "baseline": 0,
+      "candidate": 69763072,
+      "origin": 0
+    },
+    "file_memcg_owner_inferred": false,
+    "media_http_started_before_probe": false,
+    "startup_only_diagnostic": true
+  },
+  "version_only_physical_proof_sha256": "f3a7d89958bcebb137d859c6ed70458cd2d00cfff8f93d9db3cd8046d1124190"
+}
