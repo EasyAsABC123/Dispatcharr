@@ -836,7 +836,6 @@ async fn account_collection_headers(
 }
 const CRUD_LIST_ALLOW: &str = "GET, POST, HEAD, OPTIONS";
 const CRUD_DETAIL_ALLOW: &str = "GET, PUT, PATCH, DELETE, HEAD, OPTIONS";
-const EPG_DATA_ALLOW: &str = "GET, HEAD, OPTIONS";
 
 async fn epg_library_json_headers(
     State(allow): State<&'static str>,
@@ -1198,6 +1197,8 @@ mod tests {
     async fn epg_library_headers_apply_to_successful_json_gets_only() {
         use axum::body::Body;
         use tower::ServiceExt;
+
+        const EPG_DATA_ALLOW: &str = "GET, HEAD, OPTIONS";
 
         let headers = |allow| from_fn_with_state(allow, epg_library_json_headers);
         let app = Router::new()
