@@ -55,8 +55,8 @@ pub(super) fn router(auth: AuthService) -> Router {
             "/api/swagger.json",
             get(documentation).options(documentation),
         )
-        .route("/api/swagger", get(documentation))
-        .route("/api/swagger/", get(documentation))
+        .route("/api/swagger", get(documentation).options(documentation))
+        .route("/api/swagger/", get(documentation).options(documentation))
         .route("/api/redoc/", get(documentation).options(documentation))
         .with_state(auth)
 }
@@ -373,6 +373,14 @@ async fn documentation(
                     REDOC_OPTIONS,
                 )
                     .into_response()
+            } else if method == Method::OPTIONS {
+                // Original's successful Swagger negotiation invokes an invalid
+                // template context and faults. Keep the Native refusal explicit.
+                return Ok((
+                    StatusCode::METHOD_NOT_ALLOWED,
+                    [(header::ALLOW, "GET,HEAD")],
+                )
+                    .into_response());
             } else if schema {
                 schema_success(renderer, version)
             } else {
@@ -381,12 +389,10 @@ async fn documentation(
         }
         Err(error) => error.response(schema),
     };
-    if schema || redoc {
-        response.headers_mut().insert(
-            header::ALLOW,
-            HeaderValue::from_static("GET, HEAD, OPTIONS"),
-        );
-    }
+    response.headers_mut().insert(
+        header::ALLOW,
+        HeaderValue::from_static("GET, HEAD, OPTIONS"),
+    );
     Ok(response)
 }
 
@@ -532,6 +538,47 @@ mod tests {
             "/api/redoc/?lang=en",
         ] {
             assert_eq!(request(path, "*/*").await.status(), StatusCode::NOT_FOUND);
+        }
+    }
+
+    #[tokio::test]
+    async fn swagger_allow_and_options_rejections_match_original_metadata() {
+        for path in ["/api/swagger", "/api/swagger/"] {
+            let get = request(path, "text/html").await;
+            assert_eq!(get.headers()[header::ALLOW], "GET, HEAD, OPTIONS");
+            for (target, accept, status, body) in [
+                (
+                    format!("{path}?format=owned-unknown"),
+                    "*/*",
+                    StatusCode::NOT_FOUND,
+                    "404 Not Found",
+                ),
+                (
+                    path.to_owned(),
+                    "application/json",
+                    StatusCode::NOT_ACCEPTABLE,
+                    "406 Not Acceptable",
+                ),
+            ] {
+                let response = fixture()
+                    .oneshot(
+                        Request::builder()
+                            .method(Method::OPTIONS)
+                            .uri(target)
+                            .header(header::ACCEPT, accept)
+                            .body(Body::empty())
+                            .unwrap(),
+                    )
+                    .await
+                    .unwrap();
+                assert_eq!(response.status(), status);
+                assert_eq!(response.headers()[header::ALLOW], "GET, HEAD, OPTIONS");
+                assert_eq!(
+                    response.headers()[header::CONTENT_TYPE],
+                    "text/html; charset=utf-8"
+                );
+                assert_eq!(to_bytes(response.into_body(), 100).await.unwrap(), body);
+            }
         }
     }
 
