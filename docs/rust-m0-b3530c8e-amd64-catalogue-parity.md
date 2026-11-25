@@ -1,0 +1,7 @@
+# B353 AMD64 catalogue method parity
+
+The ordinary Rust candidate `b3530c8eeab4741256f3225d479785b5a622dda9` passed the paired Docker Compose catalogue comparison against pinned Original. The publication commit is `3a3e97b35f980f326e9333210489703cab3701df`. A fresh run compared 312 requests per backend on one owned SQL seed, including 234 target cases, 52 GET controls, and 26 same-seed references. Both observers exited zero with no mismatches under the paired comparator. The previous F38 run retained 96 status differences and 78 additional same-status header differences. [Typed proof](rust-m0-b3530c8e-amd64-catalogue-parity.json)
+
+The restored HEAD and OPTIONS aliases match the selected Original catalogue behavior, including authorization statuses and `Allow` and `Vary` metadata. GET and OPTIONS compare selected response digests. A separate comparison records direct-uWSGI HEAD entity behavior and verifies bodyless Rust HEAD. The run confirmed exact container and process retirement and zero owned containers, networks, and volumes. An independent file-only proof matched the fresh campaign output byte for byte.
+
+Formatting, strict Store Clippy, and 840 Store tests passed. The complete M0 executable contract inventory remains open. This campaign measured functional parity. Original Dispatcharr, Django, Django REST Framework, and dependencies retain full authorship and credit. React, license, and attribution files are unchanged.
