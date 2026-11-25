@@ -1,0 +1,135 @@
+{
+  "Native": [
+    {
+      "active_readers_after": 0,
+      "active_row_owner": "requester",
+      "alias_row_retained_after": true,
+      "effective_sid": "alias",
+      "mode": "release",
+      "prior_row_retained_after": true,
+      "provider_grants_after": 0,
+      "provider_grants_during": 1,
+      "second_prior": 429,
+      "second_requester": 429
+    },
+    {
+      "active_readers_after": 0,
+      "active_row_owner": "requester",
+      "alias_row_retained_after": true,
+      "effective_sid": "alias",
+      "mode": "cancel",
+      "prior_row_retained_after": true,
+      "provider_grants_after": 0,
+      "provider_grants_during": 1,
+      "second_prior": 429,
+      "second_requester": 429
+    }
+  ],
+  "Original": [
+    {
+      "active_readers_after": 0,
+      "active_row_owner": "prior",
+      "alias_row_retained_after": false,
+      "effective_sid": "prior",
+      "mode": "release",
+      "prior_row_retained_after": true,
+      "provider_grants_after": 0,
+      "provider_grants_during": 1,
+      "second_prior": 429,
+      "second_requester": 206
+    },
+    {
+      "active_readers_after": 0,
+      "active_row_owner": "prior",
+      "alias_row_retained_after": false,
+      "effective_sid": "prior",
+      "mode": "cancel",
+      "prior_row_retained_after": true,
+      "provider_grants_after": 0,
+      "provider_grants_during": 1,
+      "second_prior": 429,
+      "second_requester": 206
+    }
+  ],
+  "anonymous": {
+    "Native": {
+      "effective_sid": "alias",
+      "origin_range": "bytes=-256",
+      "status": 206
+    },
+    "Original": {
+      "effective_sid": "prior",
+      "origin_range": "bytes=0-256",
+      "status": 206
+    }
+  },
+  "anonymous_sid_and_origin_range_parity": false,
+  "application": "b3530c8eeab4741256f3225d479785b5a622dda9",
+  "attribution": "Original Dispatcharr and dependency authors retain full credit.",
+  "canonical_rows_added": 0,
+  "clean_quota_input_verified": {
+    "Native": [
+      {
+        "before_secondary": {
+          "prior": {
+            "anonymous_or_malformed": 0,
+            "signed_numeric": 2
+          },
+          "requester": {
+            "anonymous_or_malformed": 0,
+            "signed_numeric": 2
+          }
+        },
+        "mode": "release"
+      },
+      {
+        "before_secondary": {
+          "prior": {
+            "anonymous_or_malformed": 0,
+            "signed_numeric": 4
+          },
+          "requester": {
+            "anonymous_or_malformed": 0,
+            "signed_numeric": 4
+          }
+        },
+        "mode": "cancel"
+      }
+    ],
+    "Original": [
+      {
+        "before_secondary": {
+          "prior": {
+            "anonymous_or_malformed": 0,
+            "signed_numeric": 1
+          },
+          "requester": {
+            "anonymous_or_malformed": 0,
+            "signed_numeric": 1
+          }
+        },
+        "mode": "release"
+      },
+      {
+        "before_secondary": {
+          "prior": {
+            "anonymous_or_malformed": 0,
+            "signed_numeric": 3
+          },
+          "requester": {
+            "anonymous_or_malformed": 0,
+            "signed_numeric": 3
+          }
+        },
+        "mode": "cancel"
+      }
+    ]
+  },
+  "exact_owned_cleanup": true,
+  "independent_file_only_replay_exit": 0,
+  "manifest": "e1ecab4ca4e53b8d2bc8a1a61094c059c10809261c7661218fe7a7e670eb9660",
+  "matches_source_prediction": true,
+  "physical_fixture_exit": 0,
+  "product_changed": false,
+  "signed_secondary_quota_parity": false
+}

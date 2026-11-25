@@ -1,0 +1,142 @@
+{
+  "admitted_evidence_tip": "43f569835fae16cba406bfd660d2ebe7e91ad105",
+  "application": "b3530c8eeab4741256f3225d479785b5a622dda9",
+  "application_publication": "3a3e97b35f980f326e9333210489703cab3701df",
+  "canonical_passes": 4,
+  "credits": "Original Dispatcharr, Django, React and dependency authors retain credit.",
+  "full_release_accepted": false,
+  "historical_acceptance_imported": false,
+  "latest_independent_receiving_tip": "43f569835fae16cba406bfd660d2ebe7e91ad105",
+  "original_archive_sha256": "f2323ac705be2af5d1c264f26b1d297cb2bede53874e6bceccee4bf6603fa7ff",
+  "original_image_id": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "package": {
+    "build_manifest_sha256": "e1ecab4ca4e53b8d2bc8a1a61094c059c10809261c7661218fe7a7e670eb9660",
+    "image_id": "sha256:c136fe8a7e2ad26d94d6822e55aeb7f96e51c32e5e2e85835bf917e3813fd9af",
+    "source_archive_sha256": "888c8e1f9e11d58d8285d4e13d53ccfcf140bcce28b0ef24944c193b418a8948",
+    "source_map_sha256": "72fb4d88c6fc099473a8eb8bfa724d5f0fc2ad4fef0480412794ab3eb2b90f01"
+  },
+  "platform": "linux/amd64",
+  "queue_inventories_byte_equal": true,
+  "queue_inventory_sha256": "16f7018e109becafa4b385a7e26038f1bbe165c5a4a75c0f07d2db606a43df89",
+  "root_exits": {
+    "audit": 0,
+    "coordinator": 0,
+    "queue_exact_inventory": 0,
+    "queue_priority": 0,
+    "run": 0
+  },
+  "rows": {
+    "package/baseline-all": {
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "business": {
+        "checks": 1024,
+        "malformed_settings_id_404_body_equal": true,
+        "ordinary_decoded_frames": 75,
+        "suites": 18
+      },
+      "canonical_dependencies": [],
+      "cleanup": {
+        "full_observed_lifecycle": true,
+        "process_generations": 3,
+        "roles": 4
+      },
+      "entrypoint": "production-Main",
+      "exact_owned_cleanup": true,
+      "independent_replay": {
+        "evaluation_matches": true
+      },
+      "result_sha256": "7b02d755a5813688b1ac9c722ef9c18d671c9144127c1a7bc8c84977c7c2da60",
+      "status": "passed"
+    },
+    "package/clean-install": {
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "business": {
+        "authenticated_routes_per_state": 16,
+        "browser_graceful_close": true,
+        "checks": 11,
+        "initial_and_post_restart_authenticated_states": 2
+      },
+      "canonical_dependencies": [],
+      "cleanup": {
+        "browser_group_absent": true,
+        "browser_launcher_generation_absent": true,
+        "browser_scratch_absent": true
+      },
+      "entrypoint": "production-Main",
+      "exact_owned_cleanup": true,
+      "independent_replay": {
+        "evaluation_matches": true
+      },
+      "result_sha256": "434a4ffef12f9a8f7512851204566918d743249521302520e47641b56768d575",
+      "status": "passed"
+    },
+    "package/shipped-createsuperuser22": {
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "business": {
+        "cases": 22,
+        "cli_checks": 95,
+        "default_database_unchanged": true,
+        "native_scope_sha256": "908f4059885aaedc2b71661e187ed93ffc7b1f168430cc4e213c13fa01269e40"
+      },
+      "canonical_dependencies": [],
+      "cleanup": {
+        "compose_inventories_empty": true
+      },
+      "entrypoint": "production-CLI",
+      "exact_owned_cleanup": true,
+      "independent_replay": {
+        "evaluation_matches": true
+      },
+      "result_sha256": "210c234b833e643e6678b1a52c4c520eeb01011934aa00d340804525f5cbcecf",
+      "status": "passed"
+    },
+    "package/strict-typed154": {
+      "actual_phase_exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "business": {
+        "cases": 22,
+        "comparisons": 154,
+        "create22_native_scope_sha256": "908f4059885aaedc2b71661e187ed93ffc7b1f168430cc4e213c13fa01269e40",
+        "creation_clock_slots_per_backend": 10
+      },
+      "canonical_dependencies": [
+        "package/shipped-createsuperuser22"
+      ],
+      "cleanup": {
+        "create22_cleanup_join_replayed": true,
+        "offline_comparator_created_resources": false
+      },
+      "entrypoint": "offline-comparison",
+      "exact_owned_cleanup": true,
+      "independent_replay": {
+        "comparator_matches": true,
+        "evaluation_matches": true
+      },
+      "result_sha256": "60c1719330967ee9d84d9a1fcf787bf93d8249ba45ff990e2ec9280880776b8d",
+      "status": "passed"
+    }
+  },
+  "runtime": {
+    "default_mode_environment": true,
+    "production_Main": "/usr/local/bin/dispatcharr-rs",
+    "source_tree_sha256": "d56705ccb74d09515de7ca17cc2daef4ca5ae26fc51e3c3c88d36bfb4d6a6ce5",
+    "uid_gid": "65532:65532"
+  },
+  "typed_after_fresh_create22": true
+}
