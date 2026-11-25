@@ -643,7 +643,15 @@ impl Inner {
                     None=>return self.follow_manager(&manager,&mut cancelled).await,
                 }
             }
-            let mut input=tokio::select! {result=self.engine.open_input(source)=>result?,_=cancelled.changed()=>return Ok(())};
+            let retained = retained_on_startup.as_ref().is_some_and(|(_, descriptor)| descriptor.is_some());
+            let open = async {
+                if retained && manager.profile.is_none() {
+                    self.engine.open_hls_replacement(source, self.resolver.clone()).await
+                } else {
+                    self.engine.open_input(source).await
+                }
+            };
+            let mut input=tokio::select! {result=open=>result?,_=cancelled.changed()=>return Ok(())};
             retained_on_startup = None;
             if self.outputs.is_none()&&!self.clients.claim_output_owner(&manager.channel,&manager.format,&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS output is owned by another worker"));}
             lock(&manager.state).ready=Some(Instant::now());manager.notify.notify_waiters();

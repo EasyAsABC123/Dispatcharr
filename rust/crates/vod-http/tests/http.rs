@@ -284,7 +284,11 @@ async fn fixture_with_idle_grace(
     let coordinator = Coordinator::connect(&url, config).await.unwrap();
     let selected_path = if matches!(
         path,
-        "recovery-idle" | "signed-idle" | "signed-restart" | "signed-claim-timeout"
+        "recovery-idle"
+            | "signed-supervised"
+            | "signed-idle"
+            | "signed-restart"
+            | "signed-claim-timeout"
     ) {
         "bytes"
     } else if matches!(path, "fallback" | "preempt-full" | "redirect") {
@@ -361,7 +365,7 @@ async fn fixture_with_idle_grace(
     )
     .await
     .unwrap();
-    let engine = if path == "recovery-idle" {
+    let engine = if matches!(path, "recovery-idle" | "signed-supervised") {
         engine.with_redis_recovery(&recovery_namespace).unwrap()
     } else if path == "signed-restart" {
         engine
@@ -643,7 +647,7 @@ async fn native_head_is_405_and_initial_provider_error_releases_slot() {
         .await
         .unwrap();
     assert_eq!(response.status(), 405);
-    assert_eq!(response.headers()["allow"], "GET, OPTIONS");
+    assert_eq!(response.headers()["allow"], "OPTIONS, GET");
     server.abort();
     origin.abort();
 }
@@ -1576,6 +1580,37 @@ async fn recovery_idle_changed_requested_id_retains_one_metadata_identity() {
     let before: std::collections::BTreeMap<String, String> =
         redis.hgetall(&metadata).await.unwrap();
     let requested = format!("test-{}", uuid::Uuid::new_v4());
+    let requested_key = format!("vod_persistent_connection:{requested}");
+    let stop = format!("vod_proxy:client:{requested}:stop");
+    let _: () = redis
+        .hset(&requested_key, "rust_owner_token", "foreign")
+        .await
+        .unwrap();
+    assert_eq!(
+        engine.respond(request(&requested, None)).await.status(),
+        StatusCode::NOT_IMPLEMENTED
+    );
+    assert_eq!(
+        redis
+            .hget::<_, _, String>(&requested_key, "rust_owner_token")
+            .await
+            .unwrap(),
+        "foreign"
+    );
+    let _: () = redis.del(&requested_key).await.unwrap();
+    let _: () = redis.set_ex(&stop, "true", 60).await.unwrap();
+    assert_eq!(
+        engine.respond(request(&requested, None)).await.status(),
+        StatusCode::SERVICE_UNAVAILABLE
+    );
+    let _: () = redis.del(&stop).await.unwrap();
+    assert_eq!(
+        redis
+            .hgetall::<_, std::collections::BTreeMap<String, String>>(&metadata)
+            .await
+            .unwrap(),
+        before
+    );
     let response = engine.respond(request(&requested, None)).await;
     assert_eq!(response.status(), 200);
     let after: std::collections::BTreeMap<String, String> = redis.hgetall(&metadata).await.unwrap();
@@ -1609,5 +1644,60 @@ async fn recovery_idle_changed_requested_id_retains_one_metadata_identity() {
         keys
     };
     assert!(owners.is_empty(), "retained generation owner must retire");
+    origin.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback networking"]
+async fn supervised_changed_id_keeps_different_viewers_separate() {
+    let user = fixture_signed_user();
+    let viewer = user.id;
+    let (engine, mut redis, profile, origin) =
+        fixture_with_idle_grace("signed-supervised", Some(user), Duration::from_secs(2)).await;
+    let movie = uuid::Uuid::new_v4().to_string();
+    let retained = format!("test-{}", uuid::Uuid::new_v4());
+    let requested = format!("test-{}", uuid::Uuid::new_v4());
+    let first = engine
+        .respond(signed_full_request(viewer, &movie, Some(&retained)))
+        .await;
+    assert_eq!(first.status(), StatusCode::OK);
+    assert_eq!(
+        axum::body::to_bytes(first.into_body(), 256)
+            .await
+            .unwrap()
+            .len(),
+        256
+    );
+    let metadata = format!("vod_persistent_connection:{retained}");
+    let provider = format!("profile_connections:{profile}");
+    wait_for_idle_metadata(&mut redis, &metadata, &provider).await;
+
+    let second = engine
+        .respond(signed_full_request(viewer + 1, &movie, Some(&requested)))
+        .await;
+    assert_eq!(second.status(), StatusCode::OK);
+    let requested_metadata = format!("vod_persistent_connection:{requested}");
+    assert_eq!(
+        redis
+            .hget::<_, _, i64>(&requested_metadata, "user_id")
+            .await
+            .unwrap(),
+        viewer + 1
+    );
+    assert_eq!(
+        redis.hget::<_, _, i64>(&metadata, "user_id").await.unwrap(),
+        viewer
+    );
+    assert_eq!(
+        redis
+            .hget::<_, _, i64>(&metadata, "request_count")
+            .await
+            .unwrap(),
+        1
+    );
+    drop(second);
+    assert!(engine.shutdown().await);
+    clean(&mut redis, &retained, profile).await;
+    clean(&mut redis, &requested, profile).await;
     origin.abort();
 }

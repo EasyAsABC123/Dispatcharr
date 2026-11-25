@@ -33,6 +33,7 @@ pub enum Error {
     ProfileFull,
     UnprovenEntry,
     ForeignOwner,
+    RequestedIdOccupied,
     Stopped,
     NotLost,
     Admission(dispatcharr_clients::Error),

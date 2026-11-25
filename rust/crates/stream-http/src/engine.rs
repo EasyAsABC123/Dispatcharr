@@ -911,7 +911,7 @@ impl StreamEngine {
                 .play_output_profile(source, profile.id, profile.command)
                 .await;
         }
-        let stream = self.open_stream(source, true).await?;
+        let stream = self.open_stream(source, true, None).await?;
         Response::builder()
             .header("Content-Type", "video/mp2t")
             .header("Cache-Control", "no-cache")
@@ -935,13 +935,37 @@ impl StreamEngine {
                 .open_output_profile(source, profile.id, profile.command)
                 .await;
         }
-        self.open_stream(source, false).await
+        self.open_stream(source, false, None).await
     }
 
-    async fn open_stream(
+    /// Only the shared unprofiled HLS owner with a complete retained window
+    /// can offer a fresh resolution within the same raw startup.
+    pub async fn open_hls_replacement(
+        &self,
+        mut source: PlaybackSource,
+        resolver: Arc<dyn PlaybackResolver>,
+    ) -> Result<MediaStream, PlaybackError> {
+        if source.output_profile.is_some()
+            || source.output_format != dispatcharr_contracts::OutputFormat::Hls
+            || self.inner.clients.is_none()
+        {
+            return self.open_input(source).await;
+        }
+        let refresh = source.viewer.take().and_then(|viewer| {
+            Some(HlsInputRefresh {
+                resolver,
+                user_id: viewer.user_id?,
+                ip: viewer.ip_address.address(),
+            })
+        });
+        self.open_stream(source, false, refresh).await
+    }
+
+    pub(super) async fn open_stream(
         &self,
         source: PlaybackSource,
         register_client: bool,
+        refresh: Option<HlsInputRefresh>,
     ) -> Result<MediaStream, PlaybackError> {
         if source
             .viewer
@@ -1113,7 +1137,7 @@ impl StreamEngine {
             let weak = Arc::downgrade(&self.inner);
             let running = session.clone();
             let worker = Arc::new(WorkerCount(self.inner.clone()));
-            tokio::spawn(async move { run_upstream(weak, key, running, worker).await });
+            tokio::spawn(async move { run_upstream(weak, key, running, worker, refresh).await });
         }
         let mut startup = session.startup.subscribe();
         let ready = async {
@@ -2532,11 +2556,39 @@ mod retained_source_tests {
     }
 }
 
+fn valid_hls_input_refresh(candidates: &[PlaybackCandidate], numeric: i64, maximum: usize) -> bool {
+    !candidates.is_empty()
+        && candidates.len() <= maximum
+        && candidates.iter().all(|candidate| {
+            let mut channel_ids = candidate
+                .metadata
+                .iter()
+                .filter(|(key, _)| key == "channel_id");
+            channel_ids
+                .next()
+                .is_some_and(|(_, value)| value.parse::<i64>() == Ok(numeric))
+                && channel_ids.next().is_none()
+                && !candidate.metadata.iter().any(|(key, _)| {
+                    matches!(
+                        key.as_str(),
+                        "source_assignment_required" | "source_preview"
+                    )
+                })
+        })
+}
+
+pub(super) struct HlsInputRefresh {
+    resolver: Arc<dyn PlaybackResolver>,
+    user_id: i64,
+    ip: std::net::IpAddr,
+}
+
 async fn run_upstream(
     weak: Weak<Inner>,
     key: String,
     session: Arc<Session>,
     worker: Arc<WorkerCount>,
+    refresh: Option<HlsInputRefresh>,
 ) {
     let Some(inner) = weak.upgrade() else { return };
     let mut stop = session.stop.subscribe();
@@ -2675,6 +2727,7 @@ async fn run_upstream(
             Err(error) => assignment_error = Some(coordination_error(error)),
         }
     }
+    let mut recovered = None;
     if session
         .source
         .metadata
@@ -2683,10 +2736,47 @@ async fn run_upstream(
         && initial_assignment.is_none()
         && assignment_error.is_none()
     {
-        assignment_error = Some(PlaybackError::new(
-            503,
-            "Observed Source assignment changed before raw adoption",
-        ));
+        let missing = || {
+            PlaybackError::new(
+                503,
+                "Observed Source assignment changed before raw adoption",
+            )
+        };
+        assignment_error = Some(missing());
+        if let (Some(refresh), Some(numeric), Some(owner)) = (refresh, numeric_channel, &lease) {
+            let mut lost = owner.lost();
+            if !*stop.borrow() && !*lost.borrow() {
+                let fresh = refresh.resolver.refresh_hls_input(
+                    &key,
+                    numeric,
+                    session.source.profile_id,
+                    refresh.user_id,
+                    refresh.ip,
+                );
+                let resolved = tokio::select! {
+                    biased;
+                    _ = stop.changed() => Err(missing()),
+                    _ = lost.changed() => Err(missing()),
+                    result = time::timeout(inner.config.startup_timeout, fresh) => {
+                        result.unwrap_or_else(|_| Err(missing()))
+                    },
+                };
+                match resolved {
+                    Ok(candidates)
+                        if valid_hls_input_refresh(
+                            &candidates,
+                            numeric,
+                            inner.config.max_candidates,
+                        ) =>
+                    {
+                        recovered = Some(candidates);
+                        assignment_error = None;
+                    }
+                    Err(error) => assignment_error = Some(error),
+                    _ => {}
+                }
+            }
+        }
     }
     let metadata_task = inner.clients.as_ref().map(|clients| {
         let clients = clients.clone();
@@ -2711,16 +2801,20 @@ async fn run_upstream(
     });
     let (_unleased_guard, unleased_watch) = watch::channel(false);
     let mut lost = lease.as_ref().map_or(unleased_watch, |lease| lease.lost());
-    let mut candidates = vec![session.source.primary()];
-    for candidate in &session.source.alternates {
-        if !candidates.iter().any(|existing| {
-            existing.stream_id == candidate.stream_id
-                && existing.provider_profile_id == candidate.provider_profile_id
-                && existing.url == candidate.url
-        }) {
-            candidates.push(candidate.clone());
+    let mut recovery_numeric = numeric_channel.filter(|_| recovered.is_some());
+    let mut candidates = recovered.unwrap_or_else(|| {
+        let mut candidates = vec![session.source.primary()];
+        for candidate in &session.source.alternates {
+            if !candidates.iter().any(|existing| {
+                existing.stream_id == candidate.stream_id
+                    && existing.provider_profile_id == candidate.provider_profile_id
+                    && existing.url == candidate.url
+            }) {
+                candidates.push(candidate.clone());
+            }
         }
-    }
+        candidates
+    });
     let mut retry = crate::retry::RetryState::new();
     let mut current = if let Some(assignment) = initial_assignment.as_ref() {
         match candidates.iter().position(|candidate| {
@@ -2781,19 +2875,32 @@ async fn run_upstream(
                 Err(error)=>Err(error),
             }
         } else if let Some(lease) = &lease {
-            match lease
-                .reserve_provider(ProviderReservation {
-                    profile_id: candidate.provider_profile_id,
-                    max_streams: candidate.provider_max_streams,
-                    credential_pool: candidate.credential_pool.as_ref().map(|pool| {
-                        dispatcharr_coordination::CredentialPool {
-                            counter_key: pool.counter_key.clone(),
-                            max_streams: pool.max_streams,
-                        }
-                    }),
-                })
-                .await
-            {
+            let provider = ProviderReservation {
+                profile_id: candidate.provider_profile_id,
+                max_streams: candidate.provider_max_streams,
+                credential_pool: candidate.credential_pool.as_ref().map(|pool| {
+                    dispatcharr_coordination::CredentialPool {
+                        counter_key: pool.counter_key.clone(),
+                        max_streams: pool.max_streams,
+                    }
+                }),
+            };
+            let reserved = if let Some(numeric) = recovery_numeric {
+                match dispatcharr_coordination::LiveChannelAssignment::new(
+                    numeric,
+                    candidate.stream_id,
+                ) {
+                    Ok(assignment) => {
+                        lease
+                            .reserve_recovery_source_provider(provider, assignment)
+                            .await
+                    }
+                    Err(error) => Err(error),
+                }
+            } else {
+                lease.reserve_provider(provider).await
+            };
+            match reserved {
                 Ok(()) => Ok(()),
                 Err(
                     dispatcharr_coordination::Error::ProfileFull
@@ -2908,12 +3015,16 @@ async fn run_upstream(
                                         .await
                                 }
                             } else if let Some(clients) = inner.clients.as_ref() {
-                                lease
-                                    .publish_source_assignment_with_metadata(
-                                        assignment,
-                                        clients.channel_metadata_ttl(),
-                                    )
-                                    .await
+                                let ttl = clients.channel_metadata_ttl();
+                                if recovery_numeric.is_some() {
+                                    lease
+                                        .publish_recovery_source_assignment(assignment, ttl)
+                                        .await
+                                } else {
+                                    lease
+                                        .publish_source_assignment_with_metadata(assignment, ttl)
+                                        .await
+                                }
                             } else {
                                 lease.publish_source_assignment(assignment).await
                             };
@@ -2921,6 +3032,7 @@ async fn run_upstream(
                             last_error = coordination_error(error);
                             break 'session;
                         }
+                        recovery_numeric = None;
                         session
                             .source_slot_published
                             .store(inner.clients.is_some(), Ordering::Release);

@@ -1189,3 +1189,244 @@ async fn capability_auth_and_head_are_checked_before_token_or_origin_work() {
     clients.shutdown().await;
     server.abort();
 }
+
+#[derive(Clone, Copy)]
+enum ReplacementChoice {
+    Eligible,
+    Disabled,
+    Foreign,
+}
+struct ReplacementResolver {
+    channel: String,
+    numeric: i64,
+    url: String,
+    choice: ReplacementChoice,
+    started: tokio::sync::Notify,
+    proceed: tokio::sync::Notify,
+    calls: AtomicUsize,
+}
+impl PlaybackResolver for ReplacementResolver {
+    fn resolve(
+        &self,
+        request: PlaybackRequest,
+    ) -> BoxFuture<'_, Result<PlaybackSource, PlaybackError>> {
+        Resolver.resolve(request)
+    }
+
+    fn authorize_admin(
+        &self,
+        request: PlaybackRequest,
+    ) -> BoxFuture<'_, Result<(), PlaybackError>> {
+        Resolver.authorize_admin(request)
+    }
+
+    fn refresh_hls_input(
+        &self,
+        channel: &str,
+        numeric: i64,
+        stream_profile: i64,
+        user_id: i64,
+        ip: std::net::IpAddr,
+    ) -> BoxFuture<'_, Result<Vec<dispatcharr_contracts::PlaybackCandidate>, PlaybackError>> {
+        assert_eq!(
+            (channel, numeric, stream_profile, user_id),
+            (self.channel.as_str(), self.numeric, 1, 7)
+        );
+        assert!(ip.is_loopback());
+        Box::pin(async move {
+            self.calls.fetch_add(1, Ordering::SeqCst);
+            self.started.notify_one();
+            self.proceed.notified().await;
+            if matches!(self.choice, ReplacementChoice::Disabled) {
+                return Err(PlaybackError::new(
+                    403,
+                    "Provider or viewer no longer eligible",
+                ));
+            }
+            let mut candidate = source(self.channel.clone(), self.url.clone()).primary();
+            candidate.stream_id = self.numeric + 2;
+            candidate.provider_profile_id = Some(self.numeric + 3);
+            candidate.provider_max_streams = 1;
+            let selected_channel = if matches!(self.choice, ReplacementChoice::Foreign) {
+                self.numeric + 4
+            } else {
+                self.numeric
+            };
+            candidate.metadata = vec![("channel_id".into(), selected_channel.to_string())];
+            Ok(vec![candidate])
+        })
+    }
+}
+
+async fn lost_assignment_replacement(choice: ReplacementChoice) {
+    use dispatcharr_coordination::{
+        AcquireRequest, Coordinator, LeaseConfig, LiveChannelAssignment,
+    };
+    use dispatcharr_output_store::{OutputConfig, OutputStore};
+
+    let redis_url = std::env::var("REDIS_TEST_URL").unwrap();
+    let numeric = (std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_nanos()
+        % 1_000_000_000_000) as i64
+        + 100;
+    let channel = format!("81bb027a-4924-452b-adf1-{numeric:012x}");
+    let store = OutputStore::connect(&redis_url, Default::default())
+        .await
+        .unwrap();
+    let dying_outputs = OutputStore::connect(
+        &redis_url,
+        OutputConfig {
+            owner_ttl: Duration::from_millis(60),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let retained = dying_outputs
+        .claim(&channel, "hls", "expiring")
+        .await
+        .unwrap()
+        .unwrap();
+    let stamp = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .unwrap()
+        .as_secs_f64();
+    assert_eq!(retained.put(&clip(), stamp).await.unwrap(), 1);
+    retained
+        .publish(&serde_json::json!({
+            "window": [{"seq":1,"dur":4.0,"disc":false}], "target":4.0, "adv_target":6,
+            "disc_seq":0, "start_behind":2.0, "ts":stamp
+        }))
+        .await
+        .unwrap();
+    let coordinator = Coordinator::connect(&redis_url, LeaseConfig::default())
+        .await
+        .unwrap();
+    let old = coordinator
+        .acquire(AcquireRequest {
+            channel_id: channel.clone(),
+            provider_profile_id: Some(numeric + 1),
+            provider_max_streams: 1,
+            credential_pool: None,
+        })
+        .await
+        .unwrap();
+    old.publish_source_assignment(LiveChannelAssignment::new(numeric, numeric).unwrap())
+        .await
+        .unwrap();
+    let (_, old_engine, clients, url, origin_requests, server) =
+        setup(Default::default(), true).await;
+    old_engine.shutdown();
+    let resolver = Arc::new(ReplacementResolver {
+        channel: channel.clone(),
+        numeric,
+        url: url.clone(),
+        choice,
+        started: tokio::sync::Notify::new(),
+        proceed: tokio::sync::Notify::new(),
+        calls: AtomicUsize::new(0),
+    });
+    let engine = StreamEngine::new_with_services(
+        EngineConfig {
+            chunk_bytes: 188,
+            flush_interval: Duration::from_millis(5),
+            ..Default::default()
+        },
+        Some(coordinator),
+        Some(clients.clone()),
+    )
+    .unwrap();
+    let gateway = HlsGateway::new(
+        engine.clone(),
+        clients.clone(),
+        resolver.clone(),
+        Default::default(),
+    )
+    .unwrap()
+    .with_output_store(store.clone())
+    .unwrap();
+
+    // Capture the borrowed-only primary, then remove its real grant.
+    let mut borrowed = source(channel.clone(), format!("{url}/retired"));
+    borrowed.stream_id = numeric;
+    borrowed.provider_profile_id = Some(numeric + 1);
+    borrowed.provider_max_streams = 1;
+    borrowed.metadata = vec![
+        ("channel_id".into(), numeric.to_string()),
+        ("source_assignment_required".into(), "true".into()),
+    ];
+    assert!(old.release().await.unwrap());
+    until(|| async {
+        store
+            .snapshot(&channel, "hls")
+            .await
+            .unwrap()
+            .owner
+            .is_none()
+    })
+    .await;
+    let response = gateway.mint(borrowed).await.unwrap();
+    assert_eq!(response.status(), 302);
+    let token = response.headers()["X-Dispatcharr-Session-Token"]
+        .to_str()
+        .unwrap();
+    time::timeout(Duration::from_secs(3), resolver.started.notified())
+        .await
+        .unwrap();
+    assert_eq!(origin_requests.load(Ordering::SeqCst), 0);
+    let warm = get(&gateway, format!("/proxy/hls/{token}/1.ts")).await;
+    assert_eq!(warm.status(), 200);
+    assert_eq!(warm.into_body().collect().await.unwrap().to_bytes(), clip());
+    assert_eq!(store.snapshot(&channel, "hls").await.unwrap().index, 1);
+    resolver.proceed.notify_one();
+
+    if matches!(choice, ReplacementChoice::Eligible) {
+        until(|| async { store.snapshot(&channel, "hls").await.unwrap().index > 1 }).await;
+        let playlist = get(&gateway, format!("/proxy/hls/{token}/index.m3u8")).await;
+        assert_eq!(playlist.status(), 200);
+        let body = playlist.into_body().collect().await.unwrap().to_bytes();
+        let text = std::str::from_utf8(&body).unwrap();
+        assert!(text.lines().any(|line| line == "#EXT-X-DISCONTINUITY"));
+        assert!(text.lines().any(|line| line == "2.ts"));
+        let fresh = get(&gateway, format!("/proxy/hls/{token}/2.ts")).await;
+        assert_eq!(fresh.status(), 200);
+        assert!(!fresh
+            .into_body()
+            .collect()
+            .await
+            .unwrap()
+            .to_bytes()
+            .is_empty());
+        assert_eq!(origin_requests.load(Ordering::SeqCst), 1);
+    } else {
+        until(|| async {
+            get(&gateway, format!("/proxy/hls/{token}/index.m3u8"))
+                .await
+                .status()
+                == 410
+        })
+        .await;
+        assert_eq!(origin_requests.load(Ordering::SeqCst), 0);
+        assert_eq!(store.snapshot(&channel, "hls").await.unwrap().index, 1);
+    }
+    assert_eq!(resolver.calls.load(Ordering::SeqCst), 1);
+    gateway.shutdown().await;
+    assert!(engine.shutdown_wait(Duration::from_secs(3)).await);
+    clients.shutdown().await;
+    server.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis"]
+async fn lost_assignment_same_mint_serves_old_media_and_recovers_with_current_source() {
+    lost_assignment_replacement(ReplacementChoice::Eligible).await;
+}
+
+#[tokio::test]
+#[ignore = "requires isolated real Redis"]
+async fn lost_assignment_never_uses_disabled_or_foreign_candidates() {
+    lost_assignment_replacement(ReplacementChoice::Disabled).await;
+    lost_assignment_replacement(ReplacementChoice::Foreign).await;
+}

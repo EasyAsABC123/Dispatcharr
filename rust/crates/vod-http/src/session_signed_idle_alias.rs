@@ -43,19 +43,22 @@ fn claim_key(id: &str) -> String {
 fn allowed(user: &User, candidate: &VodCandidate) -> bool {
     user.is_active
         && user.custom_properties.get("vod_movies_enabled") != Some(&Value::Bool(false))
-        && user
-            .custom_properties
-            .get("allowed_m3u_profile_ids")
-            .is_none_or(|allowed| {
-                allowed.is_null()
-                    || allowed.as_array().is_some_and(|entries| {
-                        entries
-                            .iter()
-                            .map(|id| id.as_i64().or_else(|| id.as_str()?.parse().ok()))
-                            .collect::<Option<Vec<_>>>()
-                            .is_some_and(|ids| ids.contains(&candidate.profile_id))
-                    })
-            })
+        && profile_allowed(user, candidate.profile_id)
+}
+
+pub(super) fn profile_allowed(user: &User, profile_id: i64) -> bool {
+    user.custom_properties
+        .get("allowed_m3u_profile_ids")
+        .is_none_or(|allowed| {
+            allowed.is_null()
+                || allowed.as_array().is_some_and(|entries| {
+                    entries
+                        .iter()
+                        .map(|id| id.as_i64().or_else(|| id.as_str()?.parse().ok()))
+                        .collect::<Option<Vec<_>>>()
+                        .is_some_and(|ids| ids.contains(&profile_id))
+                })
+        })
 }
 
 fn matches_request(

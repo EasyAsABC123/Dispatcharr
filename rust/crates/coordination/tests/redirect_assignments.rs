@@ -715,3 +715,104 @@ async fn raw_unlimited_source_switch_moves_one_count_and_keeps_initial_alias() {
         .unwrap();
     assert_eq!(retired, (None, None, None, 0, 0));
 }
+
+#[tokio::test]
+#[ignore = "requires real isolated Redis"]
+async fn recovered_source_fences_foreign_alias_before_reserve_and_before_publish() {
+    use dispatcharr_coordination::{AcquireRequest, Error, LiveChannelAssignment};
+
+    let (coordinator, mut conn, _, numeric, profile) = setup().await;
+    let uuid = format!(
+        "8c640000-0000-4000-8000-{:012x}",
+        numeric & 0xffff_ffff_ffff
+    );
+    let stream = profile + 1;
+    let assign = LiveChannelAssignment::new(numeric, stream).unwrap();
+    let alias = format!("channel_stream:{numeric}");
+    let stream_alias = format!("stream_profile:{stream}");
+    let counter = format!("profile_connections:{profile}");
+    let lease = coordinator
+        .acquire(AcquireRequest {
+            channel_id: uuid,
+            provider_profile_id: None,
+            provider_max_streams: 0,
+            credential_pool: None,
+        })
+        .await
+        .unwrap();
+
+    let _: () = redis::cmd("SET")
+        .arg(&alias)
+        .arg(stream + 5)
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(
+        lease
+            .reserve_recovery_source_provider(provider(profile), assign)
+            .await,
+        Err(Error::AlreadyReserved)
+    );
+    let count: Option<i64> = redis::cmd("GET")
+        .arg(&counter)
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(count, None);
+    let _: () = redis::cmd("DEL")
+        .arg(&alias)
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+
+    let _: () = redis::cmd("SET")
+        .arg(&counter)
+        .arg(1)
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(
+        lease
+            .reserve_recovery_source_provider(provider(profile), assign)
+            .await,
+        Err(Error::ProfileFull)
+    );
+    let _: () = redis::cmd("DEL")
+        .arg(&counter)
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+
+    lease
+        .reserve_recovery_source_provider(provider(profile), assign)
+        .await
+        .unwrap();
+    let _: () = redis::pipe()
+        .set(&alias, stream)
+        .set(&stream_alias, profile + 8)
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(
+        lease
+            .publish_recovery_source_assignment(assign, Duration::from_secs(5))
+            .await,
+        Err(Error::AlreadyReserved)
+    );
+    assert!(lease.release().await.unwrap());
+    let observed: (i64, i64, i64) = redis::pipe()
+        .get(&alias)
+        .get(&stream_alias)
+        .get(&counter)
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+    assert_eq!(observed, (stream, profile + 8, 0));
+    let _: () = redis::cmd("DEL")
+        .arg(&alias)
+        .arg(&stream_alias)
+        .arg(&counter)
+        .query_async(&mut conn)
+        .await
+        .unwrap();
+}

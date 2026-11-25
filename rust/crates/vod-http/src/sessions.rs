@@ -476,8 +476,10 @@ impl SessionPool {
         }
     }
     pub async fn idle_session(&self, source: &VodSource, request: &VodRequest) -> Option<String> {
-        idle_match(&*self.inner.sessions.lock().await, source, request)
-            .map(|session| session.id.clone())
+        idle_match(&*self.inner.sessions.lock().await, source, request, |_| {
+            true
+        })
+        .map(|session| session.id.clone())
     }
     pub async fn redirect_candidate(
         &self,
@@ -715,24 +717,27 @@ impl SessionPool {
                         cleanup_needed: true,
                     });
                 }
-                scope
-                    .enter_current_or_idle(
-                        &body,
-                        admission,
-                        source
-                            .candidates
-                            .iter()
-                            .find(|candidate| candidate.profile_id == scope.profile_id())
-                            .map(|candidate| candidate.max_streams),
-                    )
-                    .await
-                    .map_err(|error| {
-                        if let recovery::Error::Admission(error) = error {
-                            admission_error(error, limit)
-                        } else {
-                            scope_error(error)
-                        }
-                    })?;
+                let profile_max = source
+                    .candidates
+                    .iter()
+                    .find(|candidate| candidate.profile_id == scope.profile_id())
+                    .map(|candidate| candidate.max_streams);
+                let entered = if requested_alias {
+                    scope
+                        .enter_changed_id(&body, admission, profile_max, id)
+                        .await
+                } else {
+                    scope
+                        .enter_current_or_idle(&body, admission, profile_max)
+                        .await
+                };
+                entered.map_err(|error| {
+                    if let recovery::Error::Admission(error) = error {
+                        admission_error(error, limit)
+                    } else {
+                        scope_error(error)
+                    }
+                })?;
                 let ordinary = if previous.authenticated_restart {
                     Some(
                         scope
@@ -1025,7 +1030,7 @@ impl SessionPool {
         }
         let reusable = registry.get(id).cloned().or_else(|| {
             if request.session_id.is_none() {
-                idle_match(&registry, &source, request)
+                idle_match(&registry, &source, request, |_| true)
             } else {
                 None
             }
@@ -1299,6 +1304,88 @@ impl SessionPool {
                 )
                 .await?;
             return Ok(ticket);
+        }
+        // The opt-in Source scope can attach a changed explicit ID to its
+        // retained idle generation. Keep ordinary and authenticated-restart
+        // entry on their exact-ID and signed-claim paths.
+        if request.session_id.is_some()
+            && signed_alias.is_none()
+            && !(source.limit_policy.terminate_on_limit_exceeded
+                && source
+                    .user
+                    .as_ref()
+                    .is_some_and(|user| user.stream_limit > 0))
+            && self
+                .inner
+                .recovery
+                .lock()
+                .unwrap()
+                .as_ref()
+                .is_some_and(|mode| mode.extended)
+        {
+            let viewer = source.user.as_ref().map(|user| user.id);
+            let idle = idle_match(&registry, &source, request, |session| {
+                session.scope.get().is_some()
+                    && !session.authenticated_restart
+                    && session.source.user.as_ref().map(|user| user.id) == viewer
+                    && source.user.as_ref().is_none_or(|user| {
+                        user.is_active
+                            && session_signed_idle_alias::profile_allowed(
+                                user,
+                                session.candidate.profile_id,
+                            )
+                    })
+                    && source
+                        .candidates
+                        .first()
+                        .is_some_and(|candidate| same_provider(candidate, &session.candidate))
+                    && request
+                        .profile_id
+                        .is_none_or(|profile| profile == session.candidate.profile_id)
+            });
+            if let Some(previous) = idle {
+                let mut connection = self.inner.connection.clone();
+                let mut check = redis::pipe();
+                check
+                    .exists(key(id))
+                    .exists(format!("vod_proxy:client:{id}:stop"));
+                let (occupied, stopped): (bool, bool) = tokio::time::timeout(
+                    Duration::from_secs(2),
+                    check.query_async(&mut connection),
+                )
+                .await
+                .map_err(|_| redis_error())?
+                .map_err(|_| redis_error())?;
+                if occupied {
+                    return Err(dispatcharr_store::StoreError::Unsupported(
+                        "Legacy or cross-worker VOD session adoption is not implemented",
+                    ));
+                }
+                if stopped {
+                    return Err(unavailable());
+                }
+                let scope = previous
+                    .scope
+                    .get()
+                    .expect("matched supervised scope")
+                    .clone();
+                drop(registry);
+                scope.activate_initial_idle();
+                return self
+                    .enter_recovered(
+                        id,
+                        source,
+                        request,
+                        request_permit,
+                        RetainedEntry {
+                            previous,
+                            scope,
+                            signed_claim: None,
+                            resolver,
+                        },
+                    )
+                    .await;
+            }
         }
         let slot = Arc::new(
             self.inner
@@ -1752,6 +1839,9 @@ fn monitor_scope(id: String, scope: LocalScope, pool: Weak<Inner>, authenticated
 fn scope_error(error: recovery::Error) -> dispatcharr_store::StoreError {
     match error {
         recovery::Error::ProfileFull => provider_full(),
+        recovery::Error::RequestedIdOccupied => dispatcharr_store::StoreError::Unsupported(
+            "Legacy or cross-worker VOD session adoption is not implemented",
+        ),
         recovery::Error::StillOwned | recovery::Error::PartialState => {
             dispatcharr_store::StoreError::Unsupported(
                 "VOD recovery state requires a separately verified transition",
@@ -2112,6 +2202,7 @@ fn idle_match(
     registry: &HashMap<String, Arc<Session>>,
     source: &VodSource,
     request: &VodRequest,
+    eligible: impl Fn(&Session) -> bool,
 ) -> Option<Arc<Session>> {
     let timeshift = crate::offset::requested(&request.playback);
     registry
@@ -2119,6 +2210,7 @@ fn idle_match(
         .filter(|session| {
             session.source.content_uuid == source.content_uuid
                 && session.source.kind == source.kind
+                && eligible(session)
                 && !*session.stop.borrow()
                 && session
                     .state

@@ -10,6 +10,10 @@ use dispatcharr_coordination::{Error as CoordinationError, ProviderReservation};
 // All writes require the same private owner, public generation, identity,
 // profile, and ledger. A receipt proves only this original-generation claim.
 const CLAIM: &str = r#"
+if KEYS[5] then
+ if redis.call('EXISTS',KEYS[5])~=0 then return {'REQUESTED_OCCUPIED'} end
+ if redis.call('EXISTS',KEYS[6])~=0 then return {'REQUESTED_STOP'} end
+end
 if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[2]
  or redis.call('HGET',KEYS[3],'token')~=ARGV[1] then return {'FOREIGN'} end
 if redis.call('HGET',KEYS[2],'user_id')~=ARGV[3] or redis.call('HGET',KEYS[2],'content_uuid')~=ARGV[4]
@@ -30,6 +34,10 @@ redis.call('HSET',KEYS[4],ARGV[9],ARGV[2]);redis.call('EXPIRE',KEYS[4],3600)
 return {'CLAIMED'}
 "#;
 const COMMIT: &str = r#"
+if KEYS[5] then
+ if redis.call('EXISTS',KEYS[5])~=0 then return {'REQUESTED_OCCUPIED'} end
+ if redis.call('EXISTS',KEYS[6])~=0 then return {'REQUESTED_STOP'} end
+end
 if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('HGET',KEYS[2],'rust_owner_token')~=ARGV[2]
  or redis.call('HGET',KEYS[3],'token')~=ARGV[1] then return {'FOREIGN'} end
 if redis.call('HGET',KEYS[2],'user_id')~=ARGV[3] or redis.call('HGET',KEYS[2],'content_uuid')~=ARGV[4]
@@ -57,6 +65,8 @@ fn status(reply: &[String], expected: &str) -> Result<(), Error> {
     match reply.first().map(String::as_str) {
         Some(value) if value == expected => Ok(()),
         Some("FOREIGN") => Err(Error::ForeignOwner),
+        Some("REQUESTED_OCCUPIED") => Err(Error::RequestedIdOccupied),
+        Some("REQUESTED_STOP") => Err(Error::Stopped),
         Some("IDENTITY") => Err(Error::Configuration),
         Some("CAPACITY") => Err(Error::Capacity),
         Some("RECEIPT_ABSENT") => Err(Error::UnprovenEntry),
@@ -105,7 +115,7 @@ impl LocalScope {
         admission: NewAdmission,
         profile_max: u32,
     ) -> Result<(), Error> {
-        self.enter_idle_inner(body, admission, profile_max, false)
+        self.enter_idle_inner(body, admission, profile_max, false, None)
             .await
     }
     // Only the same owned active-entry selector can attest its one completed
@@ -115,8 +125,9 @@ impl LocalScope {
         body: &Body,
         admission: NewAdmission,
         profile_max: u32,
+        requested_id: Option<String>,
     ) -> Result<(), Error> {
-        self.enter_idle_inner(body, admission, profile_max, true)
+        self.enter_idle_inner(body, admission, profile_max, true, requested_id)
             .await
     }
     async fn enter_idle_inner(
@@ -125,6 +136,7 @@ impl LocalScope {
         admission: NewAdmission,
         profile_max: u32,
         user_policy_checked: bool,
+        requested_id: Option<String>,
     ) -> Result<(), Error> {
         if !Weak::ptr_eq(&body.state.scope, &Arc::downgrade(&self.inner))
             || body.is_closed()
@@ -161,11 +173,9 @@ impl LocalScope {
             if *inner.stop.borrow() || *inner.shutdown.borrow() || body.is_closed() {
                 return Err(Error::Stopped);
             }
-            if !admission
-                .fields
-                .get("user_id")
-                .is_some_and(|user| user == &gen.user_id || user == "unknown")
-            {
+            if !admission.fields.get("user_id").is_some_and(|user| {
+                user == &gen.user_id || (requested_id.is_none() && user == "unknown")
+            }) {
                 return Err(Error::Configuration);
             }
             let owner_key = owner(&inner);
@@ -211,11 +221,19 @@ impl LocalScope {
                 }
                 *entry = Some(receipt.clone());
             }
-            let claim: redis::RedisResult<Vec<String>> = Script::new(CLAIM)
+            let script = Script::new(CLAIM);
+            let mut entry = script.prepare_invoke();
+            entry
                 .key(owner_key.clone())
                 .key(key(&inner.id))
                 .key(ledger(&inner, &gen.lease))
-                .key(&receipt.key)
+                .key(&receipt.key);
+            if let Some(id) = &requested_id {
+                entry
+                    .key(key(id))
+                    .key(format!("vod_proxy:client:{id}:stop"));
+            }
+            let claim: redis::RedisResult<Vec<String>> = entry
                 .arg(gen.lease.token())
                 .arg(&gen.token)
                 .arg(&gen.user_id)
@@ -233,7 +251,17 @@ impl LocalScope {
                 .invoke_async(&mut inner.recovery.inner.connection.clone())
                 .await;
             match claim {
-                Ok(reply) => status(&reply, "CLAIMED")?,
+                Ok(reply) => match reply.first().map(String::as_str) {
+                    Some("REQUESTED_OCCUPIED" | "REQUESTED_STOP") => {
+                        hold.receipt.lock().unwrap().take();
+                        return Err(if reply[0] == "REQUESTED_OCCUPIED" {
+                            Error::RequestedIdOccupied
+                        } else {
+                            Error::Stopped
+                        });
+                    }
+                    _ => status(&reply, "CLAIMED")?,
+                },
                 Err(_) => {
                     let cleanup = rollback(&inner, &gen, &receipt, false).await;
                     inner.failed.store(true, Ordering::Release);
@@ -254,9 +282,12 @@ impl LocalScope {
             let _retained_control = _permit;
             {
                 let _hold = body.state.hold.lock().unwrap();
-                inner
-                    .pending_followers
-                    .store(!body.is_closed(), Ordering::Release);
+                // A changed-ID reservation remains provisional until its
+                // requested SID passes COMMIT, so followers cannot share it.
+                inner.pending_followers.store(
+                    requested_id.is_none() && !body.is_closed(),
+                    Ordering::Release,
+                );
             }
             // Publish the typed physical phase before polling the mutation.
             let reservation_phase = phase_observer.reserve();
@@ -284,11 +315,19 @@ impl LocalScope {
                 rollback(&inner, &gen, &receipt, true).await?;
                 return Err(Error::Stopped);
             }
-            let commit: redis::RedisResult<Vec<String>> = Script::new(COMMIT)
+            let script = Script::new(COMMIT);
+            let mut entry = script.prepare_invoke();
+            entry
                 .key(owner_key)
                 .key(key(&inner.id))
                 .key(ledger(&inner, &gen.lease))
-                .key(&receipt.key)
+                .key(&receipt.key);
+            if let Some(id) = &requested_id {
+                entry
+                    .key(key(id))
+                    .key(format!("vod_proxy:client:{id}:stop"));
+            }
+            let commit: redis::RedisResult<Vec<String>> = entry
                 .arg(gen.lease.token())
                 .arg(&gen.token)
                 .arg(&gen.user_id)
