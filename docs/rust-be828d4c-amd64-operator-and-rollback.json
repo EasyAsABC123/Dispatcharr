@@ -1,0 +1,42 @@
+{
+  "application": "be828d4cdbbcb5b019ef6dd8c60043daa3e8c3e5",
+  "manifest_sha256": "4ab4a4b01ff1d2a80dadb8e4f929a5f112e5f8d5c7f16b6aff52a852c842a429",
+  "image": "sha256:21ba7f01028428aab218b4402059e9b19e7b5f41978fa5ce398683cf89559543",
+  "exact_outer_inventory_all_three": true,
+  "formal_m10_or_m11_accepted": false,
+  "deployment_authorized": false,
+  "read_only_operator": {
+    "passed": true,
+    "proof_sha256": "3787662ada6d95288064fdf6f2415951e825a6ee37ddd9e71d29f64c1d380101",
+    "cleanup_sha256": "9dbabd1787a9f24a9b0c32b0e540084cf8411a072d63d8c507b3d92a479874d3"
+  },
+  "guarded_restore": {
+    "passed": true,
+    "proof_sha256": "619bebe8e9cb71923a59187ca01587ee6bc5db86616830e2fccc978cb1728dd9",
+    "actual_distinct_jobs": 4,
+    "actual_signed_archive_deletions": 2,
+    "fresh_signed_restart_readback": true,
+    "scoped_guarded_partial_then_explicit_rollback": true,
+    "automatic_restore_rollback_qualified": false
+  },
+  "warm_rollback": {
+    "passed": true,
+    "proof_sha256": "db719c900b00b6580c00447fb139ab29bc86c4c9404e689d15c4f2f77da38db9",
+    "receipt_sha256": "72c4d6d247f914387a2b2555dda2f5ca0cfb66c2db36826762ce6426959f691e",
+    "local_fixture_recovery_ms": 8049,
+    "operator_action": {
+      "changed_fields": [
+        "name",
+        "updated_at"
+      ],
+      "changed_table": "dispatcharr_channels_channel",
+      "old_native_writer_retired_before_reconcile": true,
+      "one_fallback_patch_acknowledged": true,
+      "retained_native_write_reconciled": true,
+      "same_original_process_generations": true,
+      "same_signed_session_read": true,
+      "unrelated_rows_and_schema_equal": true,
+      "updated_rows": 1
+    }
+  }
+}
