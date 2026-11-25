@@ -8,8 +8,8 @@ use crate::resolver::{ContentKind, VodResolver};
 use dispatcharr_clients::vod::SignedIdleAlias;
 use dispatcharr_coordination::ProviderReservation;
 use dispatcharr_store::{StoreError, User};
-use redis::{AsyncCommands, Script};
-use serde_json::Value;
+use redis::Script;
+use serde_json::{json, Value};
 use std::sync::{atomic::AtomicBool, atomic::Ordering, Arc};
 use tokio::sync::OwnedSemaphorePermit;
 
@@ -89,7 +89,7 @@ impl SessionPool {
         }
         let created: i64 = Script::new(
             r#"
-if redis.call('EXISTS',KEYS[1],KEYS[2],KEYS[3])~=0 then return 0 end
+if redis.call('EXISTS',KEYS[1],KEYS[2],KEYS[3],KEYS[4])~=0 then return 0 end
 redis.call('SET',KEYS[1],ARGV[1],'EX',300)
 redis.call('SET',KEYS[2],ARGV[2],'EX',300)
 return 1
@@ -98,6 +98,7 @@ return 1
         .key(format!("vod_session_user:{id}"))
         .key(claim_key(id))
         .key(key(id))
+        .key(format!("vod_proxy:client:{id}:stop"))
         .arg(user)
         .arg(claim)
         .invoke_async(&mut self.inner.connection.clone())
@@ -127,7 +128,7 @@ return 1
             || source.redirect
             || source.limit_policy.terminate_on_limit_exceeded
             || source.limit_policy.ignore_same_channel_connections
-            || request.playback.header("range").is_none()
+            || request.playback.header("range").is_none_or(str::is_empty)
         {
             return Ok(None);
         }
@@ -136,31 +137,27 @@ return 1
             if self.stopped() || registry.contains_key(id) {
                 return Ok(None);
             }
-            let mut eligible = registry.values().filter(|previous| {
-                previous.id != id
-                    && matches_request(previous, source, request, requester)
-                    && previous
-                        .state
-                        .try_lock()
-                        .is_ok_and(|state| state.active == 0 && !state.reserved && !state.closed)
-            });
-            let previous = eligible.next().cloned();
-            if eligible.next().is_some() {
-                return Ok(None);
+            let mut eligible = None;
+            for previous in registry
+                .values()
+                .filter(|previous| matches_request(previous, source, request, requester))
+            {
+                let Ok(state) = previous.state.try_lock() else {
+                    return Ok(None);
+                };
+                if state.active == 0 && !state.reserved && !state.closed {
+                    if eligible.is_some() {
+                        return Ok(None);
+                    }
+                    eligible = Some(previous.clone());
+                }
             }
-            previous
+            eligible
         };
         let Some(previous) = followed else {
             return Ok(None);
         };
         let mut connection = self.inner.connection.clone();
-        let saved_claim: Option<String> = connection
-            .get(claim_key(id))
-            .await
-            .map_err(|_| redis_error())?;
-        if saved_claim.as_deref() != Some(claim) {
-            return Ok(None);
-        }
         let prior_id = previous
             .source
             .user
@@ -186,8 +183,28 @@ return 1
                 || state.closed
                 || state.reserved
             {
-                return Err(unavailable());
+                return Ok(None);
             }
+            if registry.values().any(|other| {
+                !Arc::ptr_eq(other, &previous)
+                    && matches_request(other, source, request, requester)
+                    && other.state.try_lock().map_or(true, |state| {
+                        state.active == 0 && !state.reserved && !state.closed
+                    })
+            }) {
+                return Ok(None);
+            }
+        }
+        if request.playback.header("range").is_some_and(|range| {
+            crate::engine::range_is_unsatisfiable(
+                range,
+                previous.content_length.load(Ordering::Relaxed),
+            )
+        }) {
+            return Err(StoreError::StatusBody(
+                416,
+                json!(crate::engine::RANGE_NOT_SATISFIABLE),
+            ));
         }
         let candidate = &previous.candidate;
         let reserved = previous

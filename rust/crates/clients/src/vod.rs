@@ -23,7 +23,7 @@ pub async fn admit<C: redis::aio::ConnectionLike + Send + Unpin>(
     connection: &mut C,
     request: Admission<'_>,
 ) -> Result<bool, Error> {
-    admit_inner(connection, request, None, false).await
+    admit_inner(connection, request, None, false, None).await
 }
 
 /// Literal Source policy for the opt-in VOD body-stop protocol. Public stop
@@ -32,7 +32,7 @@ pub async fn admit_source<C: redis::aio::ConnectionLike + Send + Unpin>(
     connection: &mut C,
     request: Admission<'_>,
 ) -> Result<bool, Error> {
-    admit_inner(connection, request, None, true).await
+    admit_inner(connection, request, None, true, None).await
 }
 
 /// Additional current-owner/stop fence for a supervised recovery transition.
@@ -57,7 +57,7 @@ pub async fn admit_fenced_physical<C: redis::aio::ConnectionLike + Send + Unpin>
     {
         return Err(Error::InvalidClient);
     }
-    admit_inner(connection, request, Some(fence), false).await
+    admit_inner(connection, request, Some(fence), false, None).await
 }
 
 /// Same physical ownership contract as the stopped-owner variant. Source's
@@ -76,7 +76,44 @@ pub async fn admit_source_owner_physical<C: redis::aio::ConnectionLike + Send + 
     {
         return Err(Error::InvalidClient);
     }
-    admit_inner(connection, request, Some(fence), true).await
+    admit_inner(connection, request, Some(fence), true, None).await
+}
+
+/// Check a protected SID before selecting either ordinary entry or adoption.
+pub async fn check_signed_claim<C: redis::aio::ConnectionLike + Send + Unpin>(
+    connection: &mut C,
+    id: &str,
+    claim: Option<&str>,
+    user: Option<i64>,
+) -> Result<bool, Error> {
+    let script = Script::new(&format!(
+        "{SIGNED_CLAIM}\nreturn signed_claim(ARGV[1],ARGV[2],ARGV[3])"
+    ));
+    let reply: i32 = script
+        .arg(id)
+        .arg(claim.unwrap_or_default())
+        .arg(user.map(|id| id.to_string()).unwrap_or_default())
+        .invoke_async(connection)
+        .await
+        .map_err(|_| Error::RedisUnavailable)?;
+    match reply {
+        0 => Ok(false),
+        1 => Ok(true),
+        _ => Err(Error::Stopped),
+    }
+}
+
+/// Recheck signed provenance atomically with the ordinary public row creation.
+pub async fn admit_signed_create<C: redis::aio::ConnectionLike + Send + Unpin>(
+    connection: &mut C,
+    request: Admission<'_>,
+    source_policy: bool,
+    claim: Option<&str>,
+) -> Result<bool, Error> {
+    if !request.create {
+        return Err(Error::InvalidClient);
+    }
+    admit_inner(connection, request, None, source_policy, claim).await
 }
 
 async fn admit_inner<C: redis::aio::ConnectionLike + Send + Unpin>(
@@ -84,6 +121,7 @@ async fn admit_inner<C: redis::aio::ConnectionLike + Send + Unpin>(
     request: Admission<'_>,
     fence: Option<AdmissionFence<'_>>,
     source_policy: bool,
+    claim: Option<&str>,
 ) -> Result<bool, Error> {
     let Admission {
         session_id,
@@ -107,14 +145,17 @@ async fn admit_inner<C: redis::aio::ConnectionLike + Send + Unpin>(
     }
     let policy = json!({"terminate_on_limit_exceeded":policy.terminate_on_limit_exceeded,"prioritize_single_client_channels":policy.prioritize_single_client_channels,"ignore_same_channel_connections":policy.ignore_same_channel_connections,"terminate_oldest":policy.terminate_oldest});
     const FENCE: &str = "if redis.call('EXISTS',KEYS[3])~=0 or redis.call('GET',KEYS[2])~=ARGV[8] then return {'STOPPED'} end\n";
+    let admission = format!("{SIGNED_CLAIM}\n{ADMIT}");
     let script = if fence.is_some() {
         if source_policy {
-            format!("if redis.call('GET',KEYS[2])~=ARGV[8] then return {{'STOPPED'}} end\n{ADMIT}")
+            format!(
+                "if redis.call('GET',KEYS[2])~=ARGV[8] then return {{'STOPPED'}} end\n{admission}"
+            )
         } else {
-            format!("{FENCE}{ADMIT}")
+            format!("{FENCE}{admission}")
         }
     } else {
-        ADMIT.to_owned()
+        admission
     };
     let script = Script::new(&script);
     let mut invocation = script.prepare_invoke();
@@ -136,6 +177,9 @@ async fn admit_inner<C: redis::aio::ConnectionLike + Send + Unpin>(
         invocation.arg("");
     }
     invocation.arg(if source_policy { "source" } else { "legacy" });
+    if create {
+        invocation.arg(claim.unwrap_or_default());
+    }
     let command = invocation.invoke_async::<Vec<String>>(connection);
     let result = if fence.is_some() {
         command.await.map_err(|_| Error::RedisUnavailable)?
@@ -178,13 +222,12 @@ pub async fn enter_signed_idle_alias<C: redis::aio::ConnectionLike + Send + Unpi
     alias: &SignedIdleAlias<'_>,
 ) -> Result<bool, Error> {
     let data = json!({"user_id":alias.requester.to_string(),"content_uuid":alias.content});
-    let reply: Vec<String> = Script::new(ADMIT)
+    let reply: Vec<String> = Script::new(&format!("{SIGNED_CLAIM}\n{ADMIT}"))
         .key(format!("vod_persistent_connection:{}", alias.prior))
         .key(alias.lease_key)
         .key(format!("vod_proxy:client:{}:stop", alias.prior))
         .key(format!("vod_persistent_connection:{}", alias.requested))
         .key(format!("vod_signed_idle_alias:{}", alias.requested))
-        .key(format!("vod_session_user:{}", alias.requested))
         .arg(data.to_string())
         .arg("{}")
         .arg(alias.requester_limit)
@@ -213,6 +256,22 @@ pub async fn enter_signed_idle_alias<C: redis::aio::ConnectionLike + Send + Unpi
     }
 }
 
+// 0 = legacy SID, 1 = matching pending claim, -1 = protected and unavailable.
+const SIGNED_CLAIM: &str = r#"
+local function signed_claim(id, expected, user)
+  local claim='vod_signed_idle_alias:'..id
+  if redis.call('EXISTS',claim)==0 then return 0 end
+  if redis.call('TYPE',claim).ok~='string' then return -1 end
+  local value=redis.call('GET',claim)
+  local ttl=redis.call('PTTL',claim)
+  if ttl<=0 or ttl>300000 or expected=='' or value=='used' or value~=expected
+    or redis.call('EXISTS','vod_proxy:client:'..id..':stop')~=0 then return -1 end
+  local mapping='vod_session_user:'..id
+  if redis.call('TYPE',mapping).ok~='string' or redis.call('GET',mapping)~=user then return -1 end
+  return 1
+end
+"#;
+
 const ADMIT: &str = r#"
 local function kind(key)
   local result=redis.call('TYPE',key)
@@ -230,16 +289,18 @@ local limit=tonumber(ARGV[3])
 local ttl=tonumber(ARGV[4])
 local user=tostring(data.user_id)
 if ARGV[6]=='create' then
-  local claim='vod_signed_idle_alias:'..data.session_id
-  if kind(claim)=='string' and redis.call('GET',claim)=='used' then return {'EXISTS'} end
+  local claim=signed_claim(data.session_id,ARGV[10],user)
+  if claim<0 or (claim==0 and ARGV[10]~='') then return {'STOPPED'} end
 end
 local claim_ttl, previous_activity
-if ARGV[10] then
+if ARGV[6]=='check' and ARGV[10] then
   -- A mismatched or consumed alias can never mutate another row.
-  if kind(KEYS[5])~='string' or redis.call('GET',KEYS[5])~=ARGV[10] then return {'ALIAS_MISS'} end
+  local claim=signed_claim(ARGV[13],ARGV[10],user)
+  if claim==0 then return {'ALIAS_MISS'} end
+  if claim~=1 then return {'STOPPED'} end
   claim_ttl=redis.call('PTTL',KEYS[5])
   if claim_ttl<=0 or claim_ttl>300000 then return {'ALIAS_MISS'} end
-  if kind(KEYS[4])~='none' or kind(KEYS[6])~='string' or redis.call('GET',KEYS[6])~=user then return {'STOPPED'} end
+  if kind(KEYS[4])~='none' then return {'STOPPED'} end
   if redis.call('GET',KEYS[2])~=ARGV[8] or redis.call('EXISTS',KEYS[3])~=0 then return {'STOPPED'} end
   local requests=redis.call('HGET',KEYS[1],'request_count')
   previous_activity=redis.call('HGET',KEYS[1],'last_activity')
@@ -353,7 +414,7 @@ if ARGV[6]=='create' then
   for key,value in pairs(data) do redis.call('HSET',KEYS[1],key,tostring(value)) end
   redis.call('PEXPIRE',KEYS[1],ttl)
 end
-if ARGV[10] then
+if ARGV[6]=='check' and ARGV[10] then
   redis.call('HINCRBY',KEYS[1],'active_streams',1)
   redis.call('HINCRBY',KEYS[1],'request_count',1)
   redis.call('HSET',KEYS[1],'last_activity',ARGV[14],'rust_signed_idle_alias',ARGV[13],

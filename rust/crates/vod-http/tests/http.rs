@@ -10,7 +10,7 @@ use axum::{
 };
 use dispatcharr_contracts::{BoxFuture, PlaybackRequest};
 use dispatcharr_coordination::{Coordinator, LeaseConfig};
-use dispatcharr_store::{StoreError, User};
+use dispatcharr_store::{RequestAuthMethod, StoreError, User};
 use dispatcharr_vod_http::*;
 use futures_util::stream;
 use redis::AsyncCommands;
@@ -25,6 +25,7 @@ use std::{
 use tokio::{net::TcpListener, task::JoinHandle};
 struct Resolver {
     source: VodSource,
+    signed_viewers: Vec<User>,
 }
 impl VodResolver for Resolver {
     fn authorize<'a>(
@@ -33,12 +34,44 @@ impl VodResolver for Resolver {
     ) -> BoxFuture<'a, Result<Option<User>, StoreError>> {
         Box::pin(async { Ok(None) })
     }
+    fn authorize_entry<'a>(
+        &'a self,
+        request: &'a VodRequest,
+    ) -> BoxFuture<'a, Result<(Option<User>, Option<RequestAuthMethod>), StoreError>> {
+        Box::pin(async move {
+            let id = request
+                .playback
+                .header("fixture-viewer")
+                .and_then(|value| value.parse::<i64>().ok());
+            let user = self.signed_viewers.iter().find(|user| Some(user.id) == id);
+            Ok((
+                user.cloned(),
+                user.map(|_| RequestAuthMethod::SignedBearerHeader),
+            ))
+        })
+    }
+    fn restore_user(&self, id: i64) -> BoxFuture<'_, Result<Option<User>, StoreError>> {
+        Box::pin(async move {
+            Ok(self
+                .signed_viewers
+                .iter()
+                .find(|user| user.id == id)
+                .cloned())
+        })
+    }
     fn resolve<'a>(
         &'a self,
-        _: &'a VodRequest,
-        _: Option<User>,
+        request: &'a VodRequest,
+        user: Option<User>,
     ) -> BoxFuture<'a, Result<VodSource, StoreError>> {
-        Box::pin(async { Ok(self.source.clone()) })
+        Box::pin(async move {
+            let mut source = self.source.clone();
+            if !self.signed_viewers.is_empty() {
+                source.content_uuid.clone_from(&request.content_id);
+                source.user = user;
+            }
+            Ok(source)
+        })
     }
     fn default_redirect(&self) -> BoxFuture<'_, Result<bool, StoreError>> {
         Box::pin(async { Ok(self.source.redirect) })
@@ -249,7 +282,7 @@ async fn fixture_with_idle_grace(
     };
     let recovery_namespace = config.namespace.clone();
     let coordinator = Coordinator::connect(&url, config).await.unwrap();
-    let selected_path = if path == "recovery-idle" {
+    let selected_path = if matches!(path, "recovery-idle" | "signed-idle") {
         "bytes"
     } else if matches!(path, "fallback" | "preempt-full" | "redirect") {
         "paced"
@@ -280,7 +313,22 @@ async fn fixture_with_idle_grace(
             user_agent: "VOD-contract-test".into(),
         });
     }
+    let signed_viewers = if path == "signed-idle" {
+        let prior = user.clone().unwrap();
+        let requester = User {
+            id: prior.id + 1,
+            ..prior.clone()
+        };
+        let second_owner = User {
+            id: prior.id + 2,
+            ..prior.clone()
+        };
+        vec![prior, requester, second_owner]
+    } else {
+        Vec::new()
+    };
     let resolver = Arc::new(Resolver {
+        signed_viewers,
         source: VodSource {
             kind: ContentKind::Movie,
             content_uuid: uuid::Uuid::new_v4().to_string(),
@@ -605,6 +653,176 @@ async fn wait_for_idle_metadata(
     })
     .await
     .unwrap();
+}
+
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback networking"]
+async fn signed_idle_alias_preserves_invalid_seek_and_ambiguous_candidate_state() {
+    let prior = User {
+        id: (uuid::Uuid::new_v4().as_u128() % 1_000_000_000) as i64 + 1000,
+        username: "prior".into(),
+        password: "!".into(),
+        is_active: true,
+        user_level: 0,
+        stream_limit: 1,
+        custom_properties: serde_json::json!({}),
+    };
+    let requester = prior.id + 1;
+    let (engine, mut redis, profile, origin) =
+        fixture_with_idle_grace("signed-idle", Some(prior.clone()), Duration::from_secs(5)).await;
+    let movie = uuid::Uuid::new_v4().to_string();
+    let signed = |viewer: i64, sid: Option<&str>, range: &str| {
+        let mut request = request(sid.unwrap_or_default(), Some(range));
+        request.session_id = sid.map(str::to_owned);
+        request.content_id = movie.clone();
+        request.playback.headers.extend([
+            ("user-agent".into(), "fixture-player".into()),
+            ("fixture-viewer".into(), viewer.to_string()),
+        ]);
+        request
+    };
+    let mint = |response: Response| {
+        assert_eq!(response.status(), StatusCode::MOVED_PERMANENTLY);
+        response.headers()["location"]
+            .to_str()
+            .unwrap()
+            .rsplit('/')
+            .next()
+            .unwrap()
+            .to_owned()
+    };
+    let prior_sid = mint(engine.respond(signed(prior.id, None, "bytes=0-15")).await);
+    let first = engine
+        .respond(signed(prior.id, Some(&prior_sid), "bytes=0-15"))
+        .await;
+    assert_eq!(first.status(), StatusCode::PARTIAL_CONTENT);
+    assert_eq!(
+        axum::body::to_bytes(first.into_body(), 256)
+            .await
+            .unwrap()
+            .len(),
+        16
+    );
+    let metadata = format!("vod_persistent_connection:{prior_sid}");
+    let provider = format!("profile_connections:{profile}");
+    wait_for_idle_metadata(&mut redis, &metadata, &provider).await;
+    let alias = mint(
+        engine
+            .respond(signed(requester, None, "bytes=9000000-"))
+            .await,
+    );
+    let marker = format!("vod_signed_idle_alias:{alias}");
+    let before: (String, String, String) = redis
+        .hget(
+            &metadata,
+            &["request_count", "active_streams", "last_activity"],
+        )
+        .await
+        .unwrap();
+    let claim: String = redis.get(&marker).await.unwrap();
+
+    let invalid = engine
+        .respond(signed(requester, Some(&alias), "bytes=9000000-"))
+        .await;
+    assert_eq!(invalid.status(), StatusCode::RANGE_NOT_SATISFIABLE);
+    assert_eq!(
+        axum::body::to_bytes(invalid.into_body(), 256)
+            .await
+            .unwrap(),
+        "Requested Range Not Satisfiable"
+    );
+    assert_eq!(redis.get::<_, String>(&marker).await.unwrap(), claim);
+    assert!(!redis
+        .exists::<_, bool>(format!("vod_persistent_connection:{alias}"))
+        .await
+        .unwrap());
+    let after: (String, String, String) = redis
+        .hget(
+            &metadata,
+            &["request_count", "active_streams", "last_activity"],
+        )
+        .await
+        .unwrap();
+    assert_eq!(after, before);
+    assert_eq!(
+        redis
+            .get::<_, Option<i64>>(&provider)
+            .await
+            .unwrap()
+            .unwrap_or(0),
+        0
+    );
+
+    let valid = engine
+        .respond(signed(requester, Some(&alias), "bytes=0-15"))
+        .await;
+    let status = valid.status();
+    if status != StatusCode::PARTIAL_CONTENT {
+        let body = axum::body::to_bytes(valid.into_body(), 256).await.unwrap();
+        panic!("expected retained range, got {status}: {body:?}");
+    }
+    assert_eq!(redis.get::<_, String>(&marker).await.unwrap(), "used");
+    assert!(!redis
+        .exists::<_, bool>(format!("vod_persistent_connection:{alias}"))
+        .await
+        .unwrap());
+    assert_eq!(
+        redis.hget::<_, _, i64>(&metadata, "user_id").await.unwrap(),
+        prior.id
+    );
+    // A second owner gets its own row while the first retained row is active.
+    let second_sid = mint(
+        engine
+            .respond(signed(prior.id + 2, None, "bytes=0-15"))
+            .await,
+    );
+    let second = engine
+        .respond(signed(prior.id + 2, Some(&second_sid), "bytes=0-15"))
+        .await;
+    assert_eq!(second.status(), StatusCode::PARTIAL_CONTENT);
+    assert_eq!(
+        axum::body::to_bytes(second.into_body(), 256)
+            .await
+            .unwrap()
+            .len(),
+        16
+    );
+    drop(valid);
+    let second_metadata = format!("vod_persistent_connection:{second_sid}");
+    wait_for_idle_metadata(&mut redis, &metadata, &provider).await;
+    wait_for_idle_metadata(&mut redis, &second_metadata, &provider).await;
+    let ambiguous = mint(engine.respond(signed(requester, None, "bytes=0-15")).await);
+    let own = engine
+        .respond(signed(requester, Some(&ambiguous), "bytes=0-15"))
+        .await;
+    assert_eq!(own.status(), StatusCode::PARTIAL_CONTENT);
+    let own_metadata = format!("vod_persistent_connection:{ambiguous}");
+    assert_eq!(
+        redis
+            .hget::<_, _, i64>(&own_metadata, "user_id")
+            .await
+            .unwrap(),
+        requester
+    );
+    assert_eq!(
+        redis
+            .hget::<_, _, i64>(&metadata, "request_count")
+            .await
+            .unwrap(),
+        2
+    );
+    assert_eq!(
+        redis
+            .hget::<_, _, i64>(&second_metadata, "request_count")
+            .await
+            .unwrap(),
+        1
+    );
+    drop(own);
+    wait_for_idle_metadata(&mut redis, &own_metadata, &provider).await;
+    assert!(engine.shutdown().await);
+    clean(&mut redis, &prior_sid, profile).await;
+    origin.abort();
 }
 
 #[tokio::test]

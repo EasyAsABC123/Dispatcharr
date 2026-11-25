@@ -1,6 +1,9 @@
 //! Real Redis VOD/live admission differential boundaries.
 use dispatcharr_clients::{
-    vod::{admit, enter_signed_idle_alias, Admission, SignedIdleAlias},
+    vod::{
+        admit, admit_signed_create, check_signed_claim, enter_signed_idle_alias, Admission,
+        SignedIdleAlias,
+    },
     ClientConfig, ClientStore, Error,
 };
 use dispatcharr_contracts::{PlaybackViewer, UserLimitPolicy};
@@ -177,6 +180,7 @@ async fn fresh_signed_alias_preserves_both_users_quota_and_reserves_one_retained
     let key = |id: &str| format!("vod_persistent_connection:{id}");
     let prior_key = key(&prior);
     let marker = format!("vod_signed_idle_alias:{requested}");
+    let stop = format!("vod_proxy:client:{requested}:stop");
     let mapping = format!("vod_session_user:{requested}");
     let lease_key = format!("exact_vod_lease_test:{suffix}");
     let prior_viewer = (suffix.as_u128() % 1_000_000_000) as i64 + 1000;
@@ -224,6 +228,50 @@ async fn fresh_signed_alias_preserves_both_users_quota_and_reserves_one_retained
     };
     assert!(!enter_signed_idle_alias(&mut redis, &alias).await.unwrap());
     let _: () = redis.set_ex(&marker, &claim, 300).await.unwrap();
+    let request_fields = fields(&requested, requester, "primary");
+    let create = || Admission {
+        session_id: &requested,
+        fields: &request_fields,
+        limit: 1,
+        policy: &deny,
+        create: true,
+        token: &requested,
+        scan_limit: 1000,
+        timeout: Duration::from_secs(2),
+        ttl: Duration::from_secs(10),
+    };
+    assert_eq!(
+        check_signed_claim(&mut redis, &requested, Some(&claim), Some(requester)).await,
+        Ok(true)
+    );
+    assert_eq!(
+        check_signed_claim(&mut redis, &requested, Some(&claim), Some(prior_viewer)).await,
+        Err(Error::Stopped)
+    );
+    assert_eq!(
+        admit_signed_create(&mut redis, create(), false, None).await,
+        Err(Error::Stopped)
+    );
+    let _: () = redis.set_ex(&stop, "true", 30).await.unwrap();
+    assert_eq!(
+        admit_signed_create(&mut redis, create(), false, Some(&claim)).await,
+        Err(Error::Stopped)
+    );
+    assert_eq!(
+        enter_signed_idle_alias(&mut redis, &alias).await,
+        Err(Error::Stopped)
+    );
+    let _: () = redis.del(&stop).await.unwrap();
+    assert_eq!(
+        admit_signed_create(&mut redis, create(), false, Some(&claim)).await,
+        Ok(true)
+    );
+    assert_eq!(
+        enter_signed_idle_alias(&mut redis, &alias).await,
+        Err(Error::Stopped)
+    );
+    let _: () = redis.del(key(&requested)).await.unwrap();
+
     alias.lease_token = "different-generation";
     assert_eq!(
         enter_signed_idle_alias(&mut redis, &alias).await,
@@ -252,7 +300,7 @@ async fn fresh_signed_alias_preserves_both_users_quota_and_reserves_one_retained
     );
     assert!(matches!(
         (one, two),
-        (Ok(true), Ok(false)) | (Ok(false), Ok(true))
+        (Ok(true), Err(Error::Stopped)) | (Err(Error::Stopped), Ok(true))
     ));
     let stored: (i64, i64, i64) = redis
         .hget(&prior_key, &["user_id", "active_streams", "request_count"])
@@ -274,14 +322,14 @@ async fn fresh_signed_alias_preserves_both_users_quota_and_reserves_one_retained
     assert!(add(&mut redis, &requester_other, &requester_data, &deny)
         .await
         .unwrap());
-    assert!(!add(
-        &mut redis,
-        &requested,
-        &fields(&requested, requester, "primary"),
-        &deny
-    )
-    .await
-    .unwrap());
+    assert_eq!(
+        admit_signed_create(&mut redis, create(), false, Some(&claim)).await,
+        Err(Error::Stopped)
+    );
+    assert_eq!(
+        check_signed_claim(&mut redis, &requested, Some(&claim), Some(requester)).await,
+        Err(Error::Stopped)
+    );
     let _: () = redis
         .del(&[
             prior_key,

@@ -985,6 +985,19 @@ impl SessionPool {
             restart_user,
             signed_alias,
         } = authorization;
+        let mut connection = self.inner.connection.clone();
+        let proven_claim = dispatcharr_clients::vod::check_signed_claim(
+            &mut connection,
+            id,
+            signed_alias.as_deref(),
+            source.user.as_ref().map(|user| user.id),
+        )
+        .await
+        .map_err(|error| match error {
+            dispatcharr_clients::Error::Stopped => dispatcharr_store::StoreError::Forbidden,
+            _ => redis_error(),
+        })?;
+        let signed_alias = signed_alias.filter(|_| proven_claim);
         if let (Some(claim), Some(policy)) = (signed_alias.as_deref(), resolver.as_deref()) {
             if let Some(ticket) = self
                 .enter_signed_idle_alias(id, claim, &source, request, policy, &request_permit)
@@ -1321,12 +1334,17 @@ impl SessionPool {
         let authenticated_restart = mode.is_some()
             && !source_mode
             && ordinary_restart_user(&source, request, restart_user).is_some();
-        let created = if source_mode {
-            dispatcharr_clients::vod::admit_source(&mut connection, admission).await
-        } else {
-            dispatcharr_clients::vod::admit(&mut connection, admission).await
-        }
-        .map_err(|error| admission_error(error, limit))?;
+        let created = dispatcharr_clients::vod::admit_signed_create(
+            &mut connection,
+            admission,
+            source_mode,
+            signed_alias.as_deref(),
+        )
+        .await
+        .map_err(|error| match error {
+            dispatcharr_clients::Error::Stopped => dispatcharr_store::StoreError::Forbidden,
+            _ => admission_error(error, limit),
+        })?;
         if !created {
             return Err(unavailable());
         }
