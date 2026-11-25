@@ -1,0 +1,1522 @@
+{
+  "adverse": {
+    "amd64_smoke_r2": {
+      "exact_inventory": true,
+      "inventory_exit": 0,
+      "run_exit": 1
+    },
+    "arm64_inventory": {
+      "owner_exit": 1,
+      "sha256": "f5e7056caf0d3d98e87fb226a5f2a1167279c9982900ff7e4213747ebe2018b6"
+    },
+    "concurrent_r3": {
+      "canonical_admitted": false,
+      "proxy_auth_cleanup_error": "TimeoutExpired",
+      "proxy_auth_predicates_true": 38,
+      "proxy_auth_workload_sha256": "68329bddab118f192d7d8729d84dec7d1fa6c2242d752d96dcb3e816b9878011",
+      "root_final_inventory_sha256": "16f7018e109becafa4b385a7e26038f1bbe165c5a4a75c0f07d2db606a43df89",
+      "root_recovered_objects": {
+        "containers": 1,
+        "networks": 1,
+        "volumes": 1
+      },
+      "root_recovery_exit": 0,
+      "root_recovery_exits": {
+        "exact-inventory": 0,
+        "ownership": 0,
+        "remove-container": 0,
+        "remove-network": 0,
+        "remove-volume": 0
+      },
+      "status": "held",
+      "terminal_exits": {
+        "cleanup": 1,
+        "reduce": 1,
+        "run": 2
+      }
+    },
+    "m0_strict_wire": {
+      "counts": {
+        "different": 276,
+        "exact_selected_wire": 0,
+        "head_transport_diagnostic": 148,
+        "unsupported": 60
+      },
+      "evaluate_exit": 1,
+      "phase": {
+        "exact_inventory": true,
+        "inventory_exit": 0,
+        "run_exit": 0
+      },
+      "sha256": "1b88cb991ab6487548e16efe47aa404257d144414cbdb2d20463afa603f65d6c"
+    },
+    "ordinary_hls_restart": {
+      "sha256": "686431a513ac1985b26652f9d33e1c46aab66b01b29ac3700484836226e43318",
+      "workflow_exit": 1
+    },
+    "private_hls_diagnostic": {
+      "semantic_exit": 1,
+      "sha256": "f954661e83c28e71e67c9539f3d4f42dfae3dc5bce14d77a8ecdc8e5cb680933"
+    },
+    "s120": {
+      "phase": {
+        "exact_inventory": true,
+        "inventory_exit": 0,
+        "run_exit": 1
+      },
+      "proof_exit": 1,
+      "sha256": "4d2ab49cacad68c2b5ad2b6fe7ba8b0e8afbe06fff2cd7fc7435efeb016531b9"
+    }
+  },
+  "application_publication": "1dcea2f00cf94ecc070b09a098bb5ed5ea10a56c",
+  "candidate": {
+    "git_revision": "d6be0944e85d6cdbc5ef9c2af06e7e87aac030f8",
+    "image_id": "sha256:d16b57372da085ca48c3040bdd7adebca98972bb0251241b7dd6f7762bbb692d",
+    "manifest_sha256": "d0ce18eb13586cc688ef74ea54c13d961f59d590af2675bc4e46246154915de0",
+    "platform": "linux/amd64",
+    "source_archive_sha256": "2e6d5bb6b040aae8d50749f276159db3f865e18b9c9159fd2e118664e089ecaa",
+    "source_tree_sha256": "3098ec9690db273680ca8ffac622f6459d5a5c8c7bee9a2a466f9acbbf50a3b0"
+  },
+  "canonical": {
+    "approved_rows": 125,
+    "authorities": {
+      "external/M9/datastore-scope": {
+        "cleanup_verified": true,
+        "counts_as_new_execution": false,
+        "id": "external/M9/datastore-scope",
+        "satisfies_dependency": true,
+        "status": "recorded_scope_authority"
+      },
+      "native/copied-SQLite-migration-utility": {
+        "cleanup_verified": true,
+        "counts_as_new_execution": false,
+        "id": "native/copied-SQLite-migration-utility",
+        "satisfies_dependency": true,
+        "status": "retained_copied_utility_authority"
+      }
+    },
+    "datastore_evidence_tip": "1c323b8fab6adf852ee4bb775122c03d83d47ab9",
+    "decision": "152d96dfe554448031ee70e18ba757dc52172301",
+    "export": {
+      "sha256": "78e77fdc5743cd71b049fdd4a0b19927096f84e08952a36b6e50fcb39ddee91a"
+    },
+    "export_replay_byte_identical": true,
+    "global_fixture_limit": 3,
+    "heavy_exclusive": true,
+    "profile": "postgresql-copied-sqlite-successor",
+    "publication": {
+      "sha256": "301c2b5bd8acc8bce3d62426bfebad1edd54bcc844579ce1d08b4b5778e1e0f1"
+    },
+    "remaining_rows": 123
+  },
+  "evidence_tip": "092788ffdfd518edfb1e8d3f79747e07dae09168",
+  "full_batch_passed": false,
+  "historical_passes_transferred": 0,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "published_operator_proof": {
+    "document": "docs/rust-d6be0944-amd64-guarded-restore-and-operator.json",
+    "sha256": "0a79e57191dbd619d192f11d3e7f49345c3451469d9e19c57d3c33cac17d5460"
+  },
+  "release": "hold",
+  "remaining_graph": [
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/baseline-all",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/proxy-auth",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/auth-hash",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/live-react-stats",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/user-agent",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/output-profile",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/profile-restart",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/guide-grid-packaged",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/current-packaged",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/m4-functional",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/clean-install",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/category-browser",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/unified-HTML-browser",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/complete-refresh-original",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "package/complete-refresh-original"
+      ],
+      "heavy": false,
+      "id": "package/complete-refresh",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/static-Chrome-HTML-browser",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/packaged-provider-actions",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/packaged-cached-provider-info",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/channel-logos",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/packaged-vod-images",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/provider-modal-browser",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/fresh-Original17capture",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "package/fresh-Original17capture"
+      ],
+      "heavy": false,
+      "id": "package/shipped-safe17",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "package/shipped-createsuperuser22",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "package/shipped-createsuperuser22"
+      ],
+      "heavy": false,
+      "id": "package/strict-typed154",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": true,
+      "id": "package/sharedTS18",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "package/sharedTS18"
+      ],
+      "heavy": true,
+      "id": "package/sharedTS6-all-down",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "package/sharedTS6-all-down"
+      ],
+      "heavy": true,
+      "id": "package/retention100",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "source/cache-and-profile-contexts",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "source/cache-and-profile-contexts"
+      ],
+      "heavy": false,
+      "id": "native/proxy-health",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "native/core-normal51",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "native/core-late-faults",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "native/proxy-health"
+      ],
+      "heavy": false,
+      "id": "Main/core-settings-workflow",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "Main/active-profile-status-probes",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "source/cache-and-profile-contexts",
+        "source/media-profile-and-format-workflows"
+      ],
+      "heavy": false,
+      "id": "native/profile-delivery",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "native/HLS-fMP4-workflows",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "Main/lifecycle-fault-workflow",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "native/proxy-health"
+      ],
+      "heavy": false,
+      "id": "Main/React-cross-workflows",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "Main/accounts-auth-and-channels",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "m6/default-job-graph"
+      ],
+      "heavy": false,
+      "id": "Main/settings-task-consumers",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "source/cache-and-profile-contexts"
+      ],
+      "heavy": false,
+      "id": "source/media-profile-and-format-workflows",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "Main/input-profile-and-provider-probes",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [
+        "package/baseline-all",
+        "package/proxy-auth",
+        "package/auth-hash",
+        "package/live-react-stats",
+        "package/user-agent",
+        "package/output-profile",
+        "package/profile-restart",
+        "package/guide-grid-packaged",
+        "package/current-packaged",
+        "package/m4-functional",
+        "package/clean-install",
+        "package/category-browser",
+        "package/unified-HTML-browser",
+        "package/complete-refresh-original",
+        "package/complete-refresh",
+        "package/static-Chrome-HTML-browser",
+        "package/packaged-provider-actions",
+        "package/packaged-cached-provider-info",
+        "package/channel-logos",
+        "package/packaged-vod-images",
+        "package/provider-modal-browser",
+        "package/fresh-Original17capture",
+        "package/shipped-safe17",
+        "package/shipped-createsuperuser22",
+        "package/strict-typed154",
+        "package/sharedTS18",
+        "package/sharedTS6-all-down",
+        "package/retention100",
+        "source/cache-and-profile-contexts",
+        "native/proxy-health",
+        "native/core-normal51",
+        "native/core-late-faults",
+        "Main/core-settings-workflow",
+        "Main/active-profile-status-probes",
+        "native/profile-delivery",
+        "native/HLS-fMP4-workflows",
+        "Main/lifecycle-fault-workflow",
+        "Main/React-cross-workflows",
+        "Main/accounts-auth-and-channels",
+        "Main/settings-task-consumers",
+        "source/media-profile-and-format-workflows",
+        "Main/input-profile-and-provider-probes"
+      ],
+      "heavy": true,
+      "id": "performance/M2-M3-M5",
+      "owner": "m235"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "tools/M8-transport-materials",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "tools/M8-transport-materials"
+      ],
+      "heavy": false,
+      "id": "source/plugin-TLS-DNS-GPG16",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "native/plugin-normal-metadata",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "native/plugin-unsigned25",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "native/plugin-normal-metadata",
+        "native/core-normal51"
+      ],
+      "heavy": false,
+      "id": "native/plugin-shared-ownership",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "source/plugin-TLS-DNS-GPG16"
+      ],
+      "heavy": false,
+      "id": "native/plugin-TLS-DNS-GPG16",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "source/plugin-managed-archives",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "source/plugin-managed-archives"
+      ],
+      "heavy": false,
+      "id": "native/plugin-execution-and-install",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "source/backup-restore-schedules",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "source/backup-restore-schedules"
+      ],
+      "heavy": false,
+      "id": "native/backup-workflow",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "native/backup-workflow"
+      ],
+      "heavy": false,
+      "id": "native/backup-lifecycle",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "source/admin-session-CSRF",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "source/admin-session-CSRF"
+      ],
+      "heavy": false,
+      "id": "native/admin-session-CSRF",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "source/operator-remaining-arguments",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "source/operator-remaining-arguments"
+      ],
+      "heavy": false,
+      "id": "native/operator-operational",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "source/VOD-missing-boundaries",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "source/VOD-missing-boundaries"
+      ],
+      "heavy": false,
+      "id": "native/VOD-lifecycle-recovery",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "package/m4-functional",
+        "native/profile-delivery"
+      ],
+      "heavy": false,
+      "id": "native/VOD-ranges-catchup",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "source/M7-hash-regex-realtime",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "native/XC-catalogue-refresh-info",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "source/M7-hash-regex-realtime"
+      ],
+      "heavy": false,
+      "id": "native/M3U-XMLTV-HDHR",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "source/M7-hash-regex-realtime",
+        "native/core-normal51",
+        "m6/default-job-graph"
+      ],
+      "heavy": false,
+      "id": "native/realtime-connect",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "native/plugin-execution-and-install",
+        "native/plugin-TLS-DNS-GPG16",
+        "native/backup-workflow",
+        "native/copied-SQLite-migration-utility",
+        "native/admin-session-CSRF",
+        "native/operator-operational",
+        "native/VOD-lifecycle-recovery",
+        "native/VOD-ranges-catchup",
+        "native/XC-catalogue-refresh-info",
+        "native/M3U-XMLTV-HDHR",
+        "native/realtime-connect",
+        "package/clean-install"
+      ],
+      "heavy": false,
+      "id": "Main/M4-M7-M8-required-routes",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "Main/M4-M7-M8-required-routes"
+      ],
+      "heavy": true,
+      "id": "performance/VOD-catchup",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "Main/M4-M7-M8-required-routes"
+      ],
+      "heavy": true,
+      "id": "performance/outputs-realtime",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [
+        "Main/M4-M7-M8-required-routes"
+      ],
+      "heavy": true,
+      "id": "performance/operations-plugins",
+      "owner": "m478"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "m6/Source-missing-domains",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "m6/api202-publication",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/api202-publication"
+      ],
+      "heavy": false,
+      "id": "m6/scanner-first",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/scanner-first"
+      ],
+      "heavy": false,
+      "id": "m6/m3u-groups-single",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/m3u-groups-single",
+        "m6/Source-missing-domains"
+      ],
+      "heavy": false,
+      "id": "m6/channel-signal-tvg-programmes",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/channel-signal-tvg-programmes",
+        "package/complete-refresh"
+      ],
+      "heavy": false,
+      "id": "m6/refresh-local-positive",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/refresh-local-positive"
+      ],
+      "heavy": false,
+      "id": "m6/programme-index",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/programme-index"
+      ],
+      "heavy": false,
+      "id": "m6/configured-series-positive",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/configured-series-positive"
+      ],
+      "heavy": false,
+      "id": "m6/configured-series-repeat",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/configured-series-repeat"
+      ],
+      "heavy": false,
+      "id": "m6/local-logo-artwork-positive-repeat",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/local-logo-artwork-positive-repeat"
+      ],
+      "heavy": false,
+      "id": "m6/oneoff-beat-publication",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/oneoff-beat-publication"
+      ],
+      "heavy": false,
+      "id": "m6/recording61-video-audio",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/recording61-video-audio",
+        "package/complete-refresh"
+      ],
+      "heavy": false,
+      "id": "m6/guide-current-output",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/guide-current-output",
+        "package/complete-refresh"
+      ],
+      "heavy": false,
+      "id": "m6/second-import-replaces-title",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/second-import-replaces-title"
+      ],
+      "heavy": false,
+      "id": "m6/remote-m3u-download-cache-compression",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/remote-m3u-download-cache-compression"
+      ],
+      "heavy": false,
+      "id": "m6/xc-stream-import",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/xc-stream-import"
+      ],
+      "heavy": false,
+      "id": "m6/vod-import",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/vod-import"
+      ],
+      "heavy": false,
+      "id": "m6/python-regex-filters-general-hash",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/python-regex-filters-general-hash"
+      ],
+      "heavy": false,
+      "id": "m6/account-CSV-hash-overrides",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/account-CSV-hash-overrides"
+      ],
+      "heavy": false,
+      "id": "m6/schedules-direct-guide",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/schedules-direct-guide"
+      ],
+      "heavy": false,
+      "id": "m6/matching-custom-dummy-offsets",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/matching-custom-dummy-offsets"
+      ],
+      "heavy": false,
+      "id": "m6/stream-rehash-settings-callback",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/stream-rehash-settings-callback"
+      ],
+      "heavy": false,
+      "id": "m6/dvr-offset-reschedule-settings-callback",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "m6/scheduler-install-known-defaults",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/scheduler-install-known-defaults"
+      ],
+      "heavy": false,
+      "id": "m6/scheduler-tick-publication",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/scheduler-tick-publication"
+      ],
+      "heavy": false,
+      "id": "m6/recurring-positive-repeat",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/recurring-positive-repeat"
+      ],
+      "heavy": false,
+      "id": "m6/backend-cleanup-expiry",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/backend-cleanup-expiry"
+      ],
+      "heavy": false,
+      "id": "m6/stats-live-ghost",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/stats-live-ghost"
+      ],
+      "heavy": false,
+      "id": "m6/scanner-empty-and-content",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/scanner-empty-and-content"
+      ],
+      "heavy": false,
+      "id": "m6/account-warning-expiration",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/account-warning-expiration"
+      ],
+      "heavy": false,
+      "id": "m6/version503",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/version503",
+        "m6/Source-missing-domains"
+      ],
+      "heavy": false,
+      "id": "m6/version200-update-no-update-malformed",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/version200-update-no-update-malformed"
+      ],
+      "heavy": false,
+      "id": "m6/scheduler-normal-stop",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/scheduler-normal-stop"
+      ],
+      "heavy": false,
+      "id": "m6/calendar-timezone-boundaries",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/calendar-timezone-boundaries"
+      ],
+      "heavy": false,
+      "id": "m6/default-job-graph",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "m6/SQL-ErrorResponse-heldReady",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/SQL-ErrorResponse-heldReady"
+      ],
+      "heavy": false,
+      "id": "m6/cache-reply-held",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/cache-reply-held"
+      ],
+      "heavy": false,
+      "id": "m6/event-reply-held",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/event-reply-held"
+      ],
+      "heavy": false,
+      "id": "m6/result-reply-postend",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/result-reply-postend"
+      ],
+      "heavy": false,
+      "id": "m6/observer-loss-physical-retention",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/observer-loss-physical-retention"
+      ],
+      "heavy": false,
+      "id": "m6/shutdown-drain",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/shutdown-drain"
+      ],
+      "heavy": false,
+      "id": "m6/unknown-FIFO-head-unchanged",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/unknown-FIFO-head-unchanged"
+      ],
+      "heavy": false,
+      "id": "m6/restart-preserves-unconsumed-head",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/restart-preserves-unconsumed-head"
+      ],
+      "heavy": false,
+      "id": "m6/longrunning-poison-recovery",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/longrunning-poison-recovery"
+      ],
+      "heavy": false,
+      "id": "m6/import-partial-failure-retention",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/import-partial-failure-retention"
+      ],
+      "heavy": false,
+      "id": "m6/durable-retry-cancel-restart",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/durable-retry-cancel-restart"
+      ],
+      "heavy": false,
+      "id": "m6/playback-during-refresh",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [
+        "m6/Source-missing-domains",
+        "m6/api202-publication",
+        "m6/scanner-first",
+        "m6/m3u-groups-single",
+        "m6/channel-signal-tvg-programmes",
+        "m6/refresh-local-positive",
+        "m6/programme-index",
+        "m6/configured-series-positive",
+        "m6/configured-series-repeat",
+        "m6/local-logo-artwork-positive-repeat",
+        "m6/oneoff-beat-publication",
+        "m6/recording61-video-audio",
+        "m6/guide-current-output",
+        "m6/second-import-replaces-title",
+        "m6/remote-m3u-download-cache-compression",
+        "m6/xc-stream-import",
+        "m6/vod-import",
+        "m6/python-regex-filters-general-hash",
+        "m6/account-CSV-hash-overrides",
+        "m6/schedules-direct-guide",
+        "m6/matching-custom-dummy-offsets",
+        "m6/stream-rehash-settings-callback",
+        "m6/dvr-offset-reschedule-settings-callback",
+        "m6/scheduler-install-known-defaults",
+        "m6/scheduler-tick-publication",
+        "m6/recurring-positive-repeat",
+        "m6/backend-cleanup-expiry",
+        "m6/stats-live-ghost",
+        "m6/scanner-empty-and-content",
+        "m6/account-warning-expiration",
+        "m6/version503",
+        "m6/version200-update-no-update-malformed",
+        "m6/scheduler-normal-stop",
+        "m6/calendar-timezone-boundaries",
+        "m6/default-job-graph",
+        "m6/SQL-ErrorResponse-heldReady",
+        "m6/cache-reply-held",
+        "m6/event-reply-held",
+        "m6/result-reply-postend",
+        "m6/observer-loss-physical-retention",
+        "m6/shutdown-drain",
+        "m6/unknown-FIFO-head-unchanged",
+        "m6/restart-preserves-unconsumed-head",
+        "m6/longrunning-poison-recovery",
+        "m6/import-partial-failure-retention",
+        "m6/durable-retry-cancel-restart",
+        "m6/playback-during-refresh"
+      ],
+      "heavy": true,
+      "id": "performance/M6-whole-graph",
+      "owner": "m6"
+    },
+    {
+      "depends_on": [],
+      "heavy": false,
+      "id": "root/M0-executable-coverage",
+      "owner": "Root"
+    },
+    {
+      "depends_on": [
+        "root/M0-executable-coverage"
+      ],
+      "heavy": true,
+      "id": "root/M1-core-acceptance",
+      "owner": "Root"
+    },
+    {
+      "depends_on": [
+        "package/baseline-all",
+        "package/proxy-auth",
+        "package/auth-hash",
+        "package/live-react-stats",
+        "package/user-agent",
+        "package/output-profile",
+        "package/profile-restart",
+        "package/guide-grid-packaged",
+        "package/current-packaged",
+        "package/m4-functional",
+        "package/clean-install",
+        "package/category-browser",
+        "package/unified-HTML-browser",
+        "package/complete-refresh-original",
+        "package/complete-refresh",
+        "package/static-Chrome-HTML-browser",
+        "package/packaged-provider-actions",
+        "package/packaged-cached-provider-info",
+        "package/channel-logos",
+        "package/packaged-vod-images",
+        "package/provider-modal-browser",
+        "package/fresh-Original17capture",
+        "package/shipped-safe17",
+        "package/shipped-createsuperuser22",
+        "package/strict-typed154",
+        "package/sharedTS18",
+        "package/sharedTS6-all-down",
+        "package/retention100",
+        "source/cache-and-profile-contexts",
+        "native/proxy-health",
+        "native/core-normal51",
+        "native/core-late-faults",
+        "Main/core-settings-workflow",
+        "Main/active-profile-status-probes",
+        "native/profile-delivery",
+        "native/HLS-fMP4-workflows",
+        "Main/lifecycle-fault-workflow",
+        "Main/React-cross-workflows",
+        "Main/accounts-auth-and-channels",
+        "Main/settings-task-consumers",
+        "source/media-profile-and-format-workflows",
+        "Main/input-profile-and-provider-probes",
+        "tools/M8-transport-materials",
+        "source/plugin-TLS-DNS-GPG16",
+        "native/plugin-normal-metadata",
+        "native/plugin-unsigned25",
+        "native/plugin-shared-ownership",
+        "native/plugin-TLS-DNS-GPG16",
+        "source/plugin-managed-archives",
+        "native/plugin-execution-and-install",
+        "source/backup-restore-schedules",
+        "native/backup-workflow",
+        "native/backup-lifecycle",
+        "source/admin-session-CSRF",
+        "native/admin-session-CSRF",
+        "source/operator-remaining-arguments",
+        "native/operator-operational",
+        "source/VOD-missing-boundaries",
+        "native/VOD-lifecycle-recovery",
+        "native/VOD-ranges-catchup",
+        "source/M7-hash-regex-realtime",
+        "native/XC-catalogue-refresh-info",
+        "native/M3U-XMLTV-HDHR",
+        "native/realtime-connect",
+        "Main/M4-M7-M8-required-routes",
+        "m6/Source-missing-domains",
+        "m6/api202-publication",
+        "m6/scanner-first",
+        "m6/m3u-groups-single",
+        "m6/channel-signal-tvg-programmes",
+        "m6/refresh-local-positive",
+        "m6/programme-index",
+        "m6/configured-series-positive",
+        "m6/configured-series-repeat",
+        "m6/local-logo-artwork-positive-repeat",
+        "m6/oneoff-beat-publication",
+        "m6/recording61-video-audio",
+        "m6/guide-current-output",
+        "m6/second-import-replaces-title",
+        "m6/remote-m3u-download-cache-compression",
+        "m6/xc-stream-import",
+        "m6/vod-import",
+        "m6/python-regex-filters-general-hash",
+        "m6/account-CSV-hash-overrides",
+        "m6/schedules-direct-guide",
+        "m6/matching-custom-dummy-offsets",
+        "m6/stream-rehash-settings-callback",
+        "m6/dvr-offset-reschedule-settings-callback",
+        "m6/scheduler-install-known-defaults",
+        "m6/scheduler-tick-publication",
+        "m6/recurring-positive-repeat",
+        "m6/backend-cleanup-expiry",
+        "m6/stats-live-ghost",
+        "m6/scanner-empty-and-content",
+        "m6/account-warning-expiration",
+        "m6/version503",
+        "m6/version200-update-no-update-malformed",
+        "m6/scheduler-normal-stop",
+        "m6/calendar-timezone-boundaries",
+        "m6/default-job-graph",
+        "m6/SQL-ErrorResponse-heldReady",
+        "m6/cache-reply-held",
+        "m6/event-reply-held",
+        "m6/result-reply-postend",
+        "m6/observer-loss-physical-retention",
+        "m6/shutdown-drain",
+        "m6/unknown-FIFO-head-unchanged",
+        "m6/restart-preserves-unconsumed-head",
+        "m6/longrunning-poison-recovery",
+        "m6/import-partial-failure-retention",
+        "m6/durable-retry-cancel-restart",
+        "m6/playback-during-refresh",
+        "root/M0-executable-coverage",
+        "root/M1-core-acceptance",
+        "external/M9/datastore-scope",
+        "native/copied-SQLite-migration-utility"
+      ],
+      "heavy": false,
+      "id": "root/M9-workflow-parity",
+      "owner": "Root"
+    },
+    {
+      "depends_on": [
+        "root/M9-workflow-parity"
+      ],
+      "heavy": true,
+      "id": "root/M9-soak",
+      "owner": "Root"
+    },
+    {
+      "depends_on": [
+        "root/M9-workflow-parity"
+      ],
+      "heavy": true,
+      "id": "root/M9-rollback",
+      "owner": "Root"
+    },
+    {
+      "depends_on": [
+        "root/M9-workflow-parity",
+        "root/M9-soak"
+      ],
+      "heavy": true,
+      "id": "root/M9-whole-service-performance",
+      "owner": "Root"
+    }
+  ],
+  "rollout": "hold",
+  "schema": "dispatcharr/private-release-progress/v1",
+  "scoped_actual": {
+    "dvr": {
+      "canonical_admitted": false,
+      "exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "sha256": "dad3a7349406a416b4bd15eb2ed8bd89f17c0dbc238263a014d42bc823787c48"
+    },
+    "guarded_restore": {
+      "actual_distinct_jobs": 4,
+      "actual_signed_archive_deletions": 2,
+      "automatic_restore_rollback_qualified": false,
+      "before_and_after_inventory_sha256": "16f7018e109becafa4b385a7e26038f1bbe165c5a4a75c0f07d2db606a43df89",
+      "candidate": "d6be0944e85d6cdbc5ef9c2af06e7e87aac030f8",
+      "changed_readback_columns": [
+        "accounts.user.owned.last_login"
+      ],
+      "cleanup_sha256": "afd768a47a5097d038e5cdc355612cef9f81e5044fe1ff2788734c569b6c8485",
+      "cold_exit": 0,
+      "corrected_file_only_proof_exit": 0,
+      "exact_cleanup": true,
+      "exact_inventory_exit": 0,
+      "formal_credit": false,
+      "fresh_main_generation": true,
+      "fresh_restart_readback": true,
+      "image": "sha256:d16b57372da085ca48c3040bdd7adebca98972bb0251241b7dd6f7762bbb692d",
+      "independent_repeat_exit": 0,
+      "joint_signed_history_raw_transport_metadata": true,
+      "original_proof_exit": 1,
+      "original_proof_stderr_sha256": "6e1c1d1933ebf6f721fa1b1b0464a72867372f6b85d8bddc2e642d03132b3841",
+      "original_wrapper_exit": 1,
+      "outer_run_exit": 1,
+      "physical_child_exit": 0,
+      "physical_receipt_exit": 0,
+      "physical_rerun": false,
+      "post_restart_login_HTTP": [
+        200,
+        401
+      ],
+      "private_broker_capture_sha256": "c71705341b82808df2d6425f948e373cecb83602f12711e82d3c2501f06ef782",
+      "private_metadata_sha256": "ecdc6c57e6b4f9e581a34557194f16ef30b6bf113a7fa03d2bd27b1040e255a6",
+      "raw_report_sha256": "15f798d2fcd69349d1a1d09512cc65080ba93e87da568c25eb4f75a189ab368f",
+      "receipt_sha256": "bc75dbff5bd5cb2090eb2556a9e6c424cc854aac305b86de8e43c90ab8da74de",
+      "recording_range_HTTP": [
+        206,
+        404,
+        206
+      ],
+      "same_postgres_identity": true,
+      "scoped_guarded_partial_then_explicit_rollback": true,
+      "typed_SQL_columns_compared": 82
+    },
+    "isolation_smoke_r3": {
+      "exits": {
+        "exact-inventory": 0,
+        "run": 0
+      },
+      "inventory_sha256": "16f7018e109becafa4b385a7e26038f1bbe165c5a4a75c0f07d2db606a43df89",
+      "projects_retired": 3,
+      "sha256": "2dc4476ebb30bcc890081efccdecccd635b96eb23a8f087715ad41b0a1a4fb85"
+    },
+    "operator_read_only": {
+      "before_and_after_inventory_sha256": "16f7018e109becafa4b385a7e26038f1bbe165c5a4a75c0f07d2db606a43df89",
+      "candidate": "d6be0944e85d6cdbc5ef9c2af06e7e87aac030f8",
+      "cleanup_sha256": "a7eee51aa5bd4944519d9c4cd8ae5eab7cfb7ae335e34fe8e117ff32056311ca",
+      "cold_exit": 0,
+      "exact_inventory_exit": 0,
+      "original_proof_exit": 0,
+      "original_wrapper_exit": 0,
+      "outer_run_exit": 0,
+      "phase": {
+        "exact_inventory": true,
+        "inventory_exit": 0,
+        "run_exit": 0
+      },
+      "physical_child_exit": 0,
+      "physical_receipt_exit": 0,
+      "read_only_preservation": true,
+      "receipt_sha256": "d34d0c1302f43e1b8889903a8ff723632d7ddd5ba2cca8c55dd4694e391fc593",
+      "scoped_operator_canary": true,
+      "sha256": "d34d0c1302f43e1b8889903a8ff723632d7ddd5ba2cca8c55dd4694e391fc593",
+      "shipped_CLI_exits": {
+        "help": 0,
+        "invalid-verbosity": 2
+      },
+      "signed_loopback_HTTP_after": [
+        401,
+        200
+      ],
+      "signed_loopback_HTTP_before": [
+        401,
+        200
+      ]
+    },
+    "ordinary_amd64": {
+      "build": {
+        "exact_inventory": true,
+        "inventory_exit": 0,
+        "run_exit": 0
+      },
+      "corrected_envelope_exit": 0,
+      "independent_audit_exit": 0,
+      "obsolete_envelope_exit": 1,
+      "sha256": "d0ce18eb13586cc688ef74ea54c13d961f59d590af2675bc4e46246154915de0"
+    },
+    "original_schema_authority": {
+      "entities": {
+        "schema-default.json": {
+          "bytes": 841486,
+          "sha256": "cca0ecc93bae12ee9490a9cef4dc2b08bbddfb4bc0c82dce7d920bd2b2fb079d"
+        },
+        "schema-default.yaml": {
+          "bytes": 409528,
+          "sha256": "830850db90dfadfaef0cfe4899353238699ba268b58f3fd83d704e35ba6d87b8"
+        },
+        "schema-indent-2.json": {
+          "bytes": 598218,
+          "sha256": "7f0f4696b81de8ac7b85f84831ff9d7fbf249f72cca4cc1e35ab014f4c6d7702"
+        },
+        "schema-version-v1.yaml": {
+          "bytes": 409539,
+          "sha256": "b169aecfc8da9c03c12d7c8b81c8d9507c8b9697d8da5dca8a2f499ab73ced9f"
+        }
+      },
+      "exits": {
+        "exact-inventory": 0,
+        "run": 0
+      },
+      "inventory_sha256": "16f7018e109becafa4b385a7e26038f1bbe165c5a4a75c0f07d2db606a43df89",
+      "native_verified": false,
+      "source_only": true
+    },
+    "signed_live": {
+      "cohorts": {
+        "1": {
+          "median_by_backend": {
+            "original": {
+              "median_aggregate_throughput_bytes_per_second": 247339.06666666668,
+              "median_window_delivered_bytes": 14840344,
+              "median_window_mean_cpu_percent": 2.7906997104438105,
+              "median_window_peak_working_memory_bytes": 436113408,
+              "median_window_raw_first_byte_p95_ms": 20.759930019266903
+            },
+            "rust": {
+              "median_aggregate_throughput_bytes_per_second": 247339.06666666668,
+              "median_window_delivered_bytes": 14840344,
+              "median_window_mean_cpu_percent": 1.809738557663183,
+              "median_window_peak_working_memory_bytes": 238772224,
+              "median_window_raw_first_byte_p95_ms": 4.285729024559259
+            }
+          },
+          "median_paired_percent_change": {
+            "CPU": -35.151082329263694,
+            "first_byte_p95": 0.0,
+            "memory": -50.02014832597419,
+            "throughput": 0.0
+          },
+          "minimum_paired_throughput_ratio": 1.0,
+          "pairs": 3
+        },
+        "10": {
+          "median_by_backend": {
+            "original": {
+              "median_aggregate_throughput_bytes_per_second": 2494713.0,
+              "median_window_delivered_bytes": 149682780,
+              "median_window_mean_cpu_percent": 4.438938537565604,
+              "median_window_peak_working_memory_bytes": 394272768,
+              "median_window_raw_first_byte_p95_ms": 136.09186909161508
+            },
+            "rust": {
+              "median_aggregate_throughput_bytes_per_second": 2473390.6666666665,
+              "median_window_delivered_bytes": 148403440,
+              "median_window_mean_cpu_percent": 1.874779003233,
+              "median_window_peak_working_memory_bytes": 131739648,
+              "median_window_raw_first_byte_p95_ms": 17.55895104724914
+            }
+          },
+          "median_paired_percent_change": {
+            "CPU": -58.3469618311026,
+            "first_byte_p95": -63.260112206747095,
+            "memory": -63.02861685214627,
+            "throughput": -0.8547008547008517
+          },
+          "minimum_paired_throughput_ratio": 0.9863945578231292,
+          "pairs": 3
+        },
+        "100": {
+          "median_by_backend": {
+            "original": {
+              "median_aggregate_throughput_bytes_per_second": 25151824.4,
+              "median_window_delivered_bytes": 1509109464,
+              "median_window_mean_cpu_percent": 19.525432872092058,
+              "median_window_peak_working_memory_bytes": 397950976,
+              "median_window_raw_first_byte_p95_ms": 1322.9207179974765
+            },
+            "rust": {
+              "median_aggregate_throughput_bytes_per_second": 24738762.05,
+              "median_window_delivered_bytes": 1484325723,
+              "median_window_mean_cpu_percent": 2.5090220199160687,
+              "median_window_peak_working_memory_bytes": 164364288,
+              "median_window_raw_first_byte_p95_ms": 76.34200400207192
+            }
+          },
+          "median_paired_percent_change": {
+            "CPU": -87.23171499432706,
+            "first_byte_p95": -94.22928351159004,
+            "memory": -58.69735271110379,
+            "throughput": -1.6449041885704618
+          },
+          "minimum_paired_throughput_ratio": 0.983243825007227,
+          "pairs": 3
+        }
+      },
+      "full_m1_accepted": false,
+      "measured_arms": 18,
+      "pairs": 9,
+      "sha256": "6827c7650d65250b0f8ccf38776bd07c99376d944651537c319610284f81b234"
+    },
+    "user_agent": {
+      "canonical_admitted": false,
+      "exits": {
+        "cleanup": 0,
+        "evaluation": 0,
+        "execution": 0
+      },
+      "sha256": "21e7b30229110bd2e81f4b7681f1da2460b0d53ed4e87c339c0ace4730499e8a"
+    },
+    "vod_cold_seven": {
+      "phase": {
+        "exact_inventory": true,
+        "inventory_exit": 0,
+        "run_exit": 0
+      },
+      "sha256": "2af20cd5600473cab197689c781cea57fe1097f229d7e2b5affe49c7c19b9214"
+    },
+    "vod_positive_adoption": {
+      "phase": {
+        "exact_inventory": true,
+        "inventory_exit": 0,
+        "run_exit": 0
+      },
+      "sha256": "9e03d85b0323fa32d2584cc9577cd77b79db0f0f6219da035d25f95a17006c4a"
+    },
+    "workspace": {
+      "clippy": 0,
+      "fmt": 0,
+      "passed_cases": 1999,
+      "sha256": "6fdabbffb6548db257335fef73a516d3179e003f0bdcd96b7308ea5ce9a85aa7",
+      "suites": 194,
+      "test": 0
+    }
+  },
+  "staged_or_unsettled": {
+    "amd64_queues": [
+      "scheduler and realtime/EPG",
+      "packaged health/settings, Core8, browser, scaled M3U",
+      "warm rollback and strict soak retry"
+    ],
+    "arm64_native_package_r3": {
+      "cold": 0,
+      "read_only_census": 0,
+      "physical_preflight": 0,
+      "execute": 1,
+      "accepted_opening_inventory": false,
+      "executor_started": false,
+      "fresh_package_credit": false,
+      "failure": "fresh opening differs from reviewed baseline",
+      "private_trace_sha256": "3759356d8d5c24839499a295afdbfd5ecc9199b1be97ac9e8b2702022225ed9d"
+    },
+    "fresh_canonical_credit": 0,
+    "scheduler_r3": {
+      "approved_export_match": true,
+      "exits": {
+        "cold-bind": 0,
+        "coordinator-export-preflight": 0
+      },
+      "runtime_credit": false
+    }
+  }
+}
