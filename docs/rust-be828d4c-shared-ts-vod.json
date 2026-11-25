@@ -1,0 +1,135 @@
+{
+  "application": "be828d4cdbbcb5b019ef6dd8c60043daa3e8c3e5",
+  "image": "sha256:21ba7f01028428aab218b4402059e9b19e7b5f41978fa5ce398683cf89559543",
+  "manifest_sha256": "4ab4a4b01ff1d2a80dadb8e4f929a5f112e5f8d5c7f16b6aff52a852c842a429",
+  "full_engine_inventory_exit": 0,
+  "shared_mpegts": {
+    "scoped_coordinator_exit": 2,
+    "independent_audit_exit": 0,
+    "audit_sha256": "2783fabf351135c0c0e2696d52172358909ffc91607b49b54c638b0af435fda5",
+    "verified_rows": [
+      {
+        "id": "package/retention100",
+        "exact_cleanup": true,
+        "result_sha256": "1611b2a5467cd02c5cd0479bf74d1cc8cf6db50da562321777fe7535470cbf52",
+        "proof": {
+          "cases": null,
+          "checks": null,
+          "signed_readers": null,
+          "real_decoders": null,
+          "all_down_before_restart": null,
+          "restart_cleanup_seconds": null,
+          "channels": 10,
+          "historical_readers": 100,
+          "late_av_decodes": 10,
+          "local_per_channel_max": 4194304,
+          "authoritative_per_channel_max": 16777216,
+          "no_additional_upstream": true
+        }
+      },
+      {
+        "id": "package/sharedTS18",
+        "exact_cleanup": true,
+        "result_sha256": "acfde68e9a4e576e576901414aeb27d34b9c8298a96c3f3ffc0ad8fcd01539e4",
+        "proof": {
+          "cases": 3,
+          "checks": 24,
+          "signed_readers": 6,
+          "real_decoders": 6,
+          "all_down_before_restart": null,
+          "restart_cleanup_seconds": null,
+          "channels": null,
+          "historical_readers": null,
+          "late_av_decodes": null,
+          "local_per_channel_max": null,
+          "authoritative_per_channel_max": null,
+          "no_additional_upstream": null
+        }
+      },
+      {
+        "id": "package/sharedTS6-all-down",
+        "exact_cleanup": true,
+        "result_sha256": "354c5cdd32201bd4857a507aa808743aa8eb734d36744c63d0f96cf3ef206b17",
+        "proof": {
+          "cases": 1,
+          "checks": 14,
+          "signed_readers": 2,
+          "real_decoders": 2,
+          "all_down_before_restart": {
+            "clients": 0,
+            "input_index": 4,
+            "metadata_fields": 0,
+            "owner": null,
+            "provider_slots": 1,
+            "state": null,
+            "timestamps": 0
+          },
+          "restart_cleanup_seconds": 6.089982897043228,
+          "channels": null,
+          "historical_readers": null,
+          "late_av_decodes": null,
+          "local_per_channel_max": null,
+          "authoritative_per_channel_max": null,
+          "no_additional_upstream": null
+        }
+      }
+    ]
+  },
+  "vod": {
+    "signed_adoption": {
+      "Original_cross_viewer_adoption": true,
+      "exact_cleanup": true,
+      "formal_release_credit": false,
+      "fresh_cold_per_backend": 6,
+      "image_id": "sha256:21ba7f01028428aab218b4402059e9b19e7b5f41978fa5ce398683cf89559543",
+      "invalid_origin_requests": [
+        0,
+        1
+      ],
+      "manifest_sha256": "4ab4a4b01ff1d2a80dadb8e4f929a5f112e5f8d5c7f16b6aff52a852c842a429",
+      "raw_sha256": "36993b4837af08f058e7607aa8ef20c1cc9fa95eb6ae173e2d9cb8e74690b68e",
+      "revision": "be828d4cdbbcb5b019ef6dd8c60043daa3e8c3e5",
+      "warm_same_sid_per_backend": 2,
+      "proof_sha256": "b862d5316f35ac72045ee321aff76fe575c70615ea8ca7f2676efdaf71b64ed2",
+      "owner_exit": 0
+    },
+    "seven_wire": {
+      "cold_error_comparison": {
+        "baseline": {
+          "body_bytes": 123,
+          "downstream_status": 500,
+          "origin_status": 416
+        },
+        "candidate": {
+          "body_bytes": 44,
+          "downstream_status": 500,
+          "origin_status": 416
+        }
+      },
+      "exact_cleanup": true,
+      "formal_release_credit": false,
+      "image_id": "sha256:21ba7f01028428aab218b4402059e9b19e7b5f41978fa5ce398683cf89559543",
+      "invalid_origin_requests": [
+        1,
+        1
+      ],
+      "manifest_sha256": "4ab4a4b01ff1d2a80dadb8e4f929a5f112e5f8d5c7f16b6aff52a852c842a429",
+      "paired_seven_cases": 7,
+      "raw_sha256": "464c27ecb95802ba6d29f6e30513068f91f8412c076993678581f90bb05b841d",
+      "revision": "be828d4cdbbcb5b019ef6dd8c60043daa3e8c3e5",
+      "warm_same_sid_per_backend": 1,
+      "proof_sha256": "b09321017bdedae3909de0c93cb15d57cc8e5b407f6c4c1109002f152891a214",
+      "owner_exit": 0
+    }
+  },
+  "current_published_counts_when_included": {
+    "required": 125,
+    "canonical_physical": 7,
+    "datastore_authority": 2,
+    "retained_source": 5,
+    "other": 111
+  },
+  "full_m3_closed": false,
+  "full_m4_closed": false,
+  "performance_measured": false
+}
