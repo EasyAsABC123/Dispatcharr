@@ -1,0 +1,527 @@
+{
+  "application_revision": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+  "candidate": {
+    "feature_arg": 0,
+    "image": "sha256:b3e24f01e0c864dba12d858288d8d27806c19363aa766e4eaf3bd2fd84b54195",
+    "manifest_sha256": "dc526bb02476e8610b8f79ba018242fcd34bbaa1c19988ee4b7f9e440a761387",
+    "revision": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1"
+  },
+  "cohorts": [
+    {
+      "median_paired_CPU_reduction_percent": 38.517507722110956,
+      "median_paired_working_memory_reduction_percent": 50.102056568497964,
+      "minimum_paired_delivered_byte_ratio": 0.9830508474576272,
+      "paired_median_ratios": {
+        "CPU": 0.6148249227788904,
+        "first_byte_p95": 1.0,
+        "memory": 0.49897943431502034,
+        "throughput": 1.0
+      },
+      "paired_trials": 3,
+      "unfloored_first_byte_p95_by_trial": [
+        {
+          "original_ms": 18.75353802461177,
+          "rust_ms": 3.8912799791432917,
+          "trial": 1
+        },
+        {
+          "original_ms": 20.953811006620526,
+          "rust_ms": 3.849817963782698,
+          "trial": 2
+        },
+        {
+          "original_ms": 18.351817037910223,
+          "rust_ms": 3.731784992851317,
+          "trial": 3
+        }
+      ],
+      "viewers": 1,
+      "window_medians": {
+        "rust": {
+          "CPU": 1.6640056169437454,
+          "bytes": 14840344,
+          "first_byte_p95": 3.849817963782698,
+          "memory": 238313472
+        },
+        "source": {
+          "CPU": 2.745542030256568,
+          "bytes": 14840344,
+          "first_byte_p95": 18.75353802461177,
+          "memory": 479965184
+        }
+      }
+    },
+    {
+      "median_paired_CPU_reduction_percent": 60.66213542159418,
+      "median_paired_working_memory_reduction_percent": 44.62421373451787,
+      "minimum_paired_delivered_byte_ratio": 0.9830508474576272,
+      "paired_median_ratios": {
+        "CPU": 0.3933786457840583,
+        "first_byte_p95": 0.3571385766681122,
+        "memory": 0.5537578626548213,
+        "throughput": 0.9880749574105622
+      },
+      "paired_trials": 3,
+      "unfloored_first_byte_p95_by_trial": [
+        {
+          "original_ms": 138.85001500602812,
+          "rust_ms": 17.363379010930657,
+          "trial": 1
+        },
+        {
+          "original_ms": 144.82071297243237,
+          "rust_ms": 16.36755099752918,
+          "trial": 2
+        },
+        {
+          "original_ms": 140.001677966211,
+          "rust_ms": 15.690381987951696,
+          "trial": 3
+        }
+      ],
+      "viewers": 10,
+      "window_medians": {
+        "rust": {
+          "CPU": 1.7443176606563673,
+          "bytes": 148403440,
+          "first_byte_p95": 16.36755099752918,
+          "memory": 280408064
+        },
+        "source": {
+          "CPU": 4.368632493107171,
+          "bytes": 150194516,
+          "first_byte_p95": 140.001677966211,
+          "memory": 505790464
+        }
+      }
+    },
+    {
+      "median_paired_CPU_reduction_percent": 87.80975431675913,
+      "median_paired_working_memory_reduction_percent": 47.554896142433236,
+      "minimum_paired_delivered_byte_ratio": 0.9830508474576272,
+      "paired_median_ratios": {
+        "CPU": 0.1219024568324088,
+        "first_byte_p95": 0.07179789098409471,
+        "memory": 0.5244510385756677,
+        "throughput": 0.9832174944905916
+      },
+      "paired_trials": 3,
+      "unfloored_first_byte_p95_by_trial": [
+        {
+          "original_ms": 1311.8232269771397,
+          "rust_ms": 82.34379393979907,
+          "trial": 1
+        },
+        {
+          "original_ms": 1338.261389057152,
+          "rust_ms": 116.38067092280835,
+          "trial": 2
+        },
+        {
+          "original_ms": 1395.4522439744323,
+          "rust_ms": 100.19052808638662,
+          "trial": 3
+        }
+      ],
+      "viewers": 100,
+      "window_medians": {
+        "rust": {
+          "CPU": 2.3726800932408603,
+          "bytes": 1484034400,
+          "first_byte_p95": 100.19052808638662,
+          "memory": 252416000
+        },
+        "source": {
+          "CPU": 19.316030315398102,
+          "bytes": 1509365332,
+          "first_byte_p95": 1338.261389057152,
+          "memory": 425631744
+        }
+      }
+    }
+  ],
+  "complete_planned_matrix": true,
+  "completed_measurement_windows": 18,
+  "completed_pairs": 9,
+  "credits": "Original Dispatcharr authors, contributors and dependencies retain full credit. See ATTRIBUTION.md and LICENSE.",
+  "engine_empty_before_and_after_observed": true,
+  "exact_cleanup": true,
+  "formal_M1_accepted": false,
+  "functional": {
+    "max_upstream": 1,
+    "readers": 222,
+    "windows": 6
+  },
+  "independent_measure_audit_sha256": "075e94b0ee91f93798dc74734c67b0de500f01fb92624a8ef7e0c06932acae9a",
+  "literal_owner_exits": {
+    "functional-audit": 0,
+    "functional-cue": 0,
+    "functional-run": 0,
+    "measure-audit": 0,
+    "measure-cue": 0,
+    "measure-run": 0,
+    "measurement_controller": 0,
+    "measurement_fixture_owner": 0,
+    "outer-owner": 0,
+    "qualify-audit": 0,
+    "qualify-cue": 0,
+    "qualify-run": 0,
+    "static": 0
+  },
+  "maximum_paired_CPU_ratio": 0.6154542864582789,
+  "maximum_paired_floored_first_byte_p95_ratio": 1.0,
+  "maximum_paired_working_memory_ratio": 0.5930384741228324,
+  "measured_pairs": [
+    {
+      "failed_gates": [],
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.6148249227788904,
+        "first_byte_p95": 1.0,
+        "memory": 0.49897943431502034,
+        "throughput": 0.9830508474576272
+      },
+      "rust": {
+        "CPU": 1.6640056169437454,
+        "bytes": 14840344,
+        "first_byte_p95": 3.8912799791432917,
+        "memory": 238313472,
+        "samples": 59
+      },
+      "source": {
+        "CPU": 2.706470663913167,
+        "bytes": 15096212,
+        "first_byte_p95": 18.75353802461177,
+        "memory": 477601792,
+        "samples": 59
+      },
+      "trial": 1,
+      "viewers": 1
+    },
+    {
+      "failed_gates": [],
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.6154542864582789,
+        "first_byte_p95": 1.0,
+        "memory": 0.493330716254619,
+        "throughput": 1.0
+      },
+      "rust": {
+        "CPU": 1.6943119894797167,
+        "bytes": 14840344,
+        "first_byte_p95": 3.849817963782698,
+        "memory": 236781568,
+        "samples": 59
+      },
+      "source": {
+        "CPU": 2.752945306839735,
+        "bytes": 14840344,
+        "first_byte_p95": 20.953811006620526,
+        "memory": 479965184,
+        "samples": 59
+      },
+      "trial": 2,
+      "viewers": 1
+    },
+    {
+      "failed_gates": [],
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.6025104274547726,
+        "first_byte_p95": 1.0,
+        "memory": 0.5180679639375025,
+        "throughput": 1.0
+      },
+      "rust": {
+        "CPU": 1.6542177022449287,
+        "bytes": 14840344,
+        "first_byte_p95": 3.731784992851317,
+        "memory": 260083712,
+        "samples": 59
+      },
+      "source": {
+        "CPU": 2.745542030256568,
+        "bytes": 14840344,
+        "first_byte_p95": 18.351817037910223,
+        "memory": 502026240,
+        "samples": 59
+      },
+      "trial": 3,
+      "viewers": 1
+    },
+    {
+      "failed_gates": [],
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.39203622215510026,
+        "first_byte_p95": 0.3601007893144936,
+        "memory": 0.5549220951702245,
+        "throughput": 0.9965635738831615
+      },
+      "rust": {
+        "CPU": 1.7443176606563673,
+        "bytes": 148403440,
+        "first_byte_p95": 17.363379010930657,
+        "memory": 280674304,
+        "samples": 59
+      },
+      "source": {
+        "CPU": 4.449378812670702,
+        "bytes": 148915176,
+        "first_byte_p95": 138.85001500602812,
+        "memory": 505790464,
+        "samples": 59
+      },
+      "trial": 1,
+      "viewers": 10
+    },
+    {
+      "failed_gates": [],
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.414964168824342,
+        "first_byte_p95": 0.3452544803416197,
+        "memory": 0.5537578626548213,
+        "throughput": 0.9880749574105622
+      },
+      "rust": {
+        "CPU": 1.8128259514012302,
+        "bytes": 148403440,
+        "first_byte_p95": 16.36755099752918,
+        "memory": 279822336,
+        "samples": 59
+      },
+      "source": {
+        "CPU": 4.368632493107171,
+        "bytes": 150194516,
+        "first_byte_p95": 144.82071297243237,
+        "memory": 505315328,
+        "samples": 59
+      },
+      "trial": 2,
+      "viewers": 10
+    },
+    {
+      "failed_gates": [],
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.3933786457840583,
+        "first_byte_p95": 0.3571385766681122,
+        "memory": 0.5528332512335161,
+        "throughput": 0.9830508474576272
+      },
+      "rust": {
+        "CPU": 1.715908416147455,
+        "bytes": 148403440,
+        "first_byte_p95": 15.690381987951696,
+        "memory": 280408064,
+        "samples": 59
+      },
+      "source": {
+        "CPU": 4.361976519410226,
+        "bytes": 150962120,
+        "first_byte_p95": 140.001677966211,
+        "memory": 507219968,
+        "samples": 59
+      },
+      "trial": 3,
+      "viewers": 10
+    },
+    {
+      "failed_gates": [],
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.1219024568324088,
+        "first_byte_p95": 0.06277049548020697,
+        "memory": 0.5244510385756677,
+        "throughput": 0.9830508474576272
+      },
+      "rust": {
+        "CPU": 2.3419216828157308,
+        "bytes": 1484034400,
+        "first_byte_p95": 82.34379393979907,
+        "memory": 289570816,
+        "samples": 59
+      },
+      "source": {
+        "CPU": 19.2114395695519,
+        "bytes": 1509621200,
+        "first_byte_p95": 1311.8232269771397,
+        "memory": 552140800,
+        "samples": 59
+      },
+      "trial": 1,
+      "viewers": 100
+    },
+    {
+      "failed_gates": [],
+      "order": [
+        "candidate",
+        "source"
+      ],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.10918244953701475,
+        "first_byte_p95": 0.08696408031677748,
+        "memory": 0.5930384741228324,
+        "throughput": 1.0
+      },
+      "rust": {
+        "CPU": 2.3726800932408603,
+        "bytes": 1484034400,
+        "first_byte_p95": 116.38067092280835,
+        "memory": 252416000,
+        "samples": 59
+      },
+      "source": {
+        "CPU": 21.731332309378903,
+        "bytes": 1484034400,
+        "first_byte_p95": 1338.261389057152,
+        "memory": 425631744,
+        "samples": 59
+      },
+      "trial": 2,
+      "viewers": 100
+    },
+    {
+      "failed_gates": [],
+      "order": [
+        "source",
+        "candidate"
+      ],
+      "passed": true,
+      "ratios": {
+        "CPU": 0.1246354696254243,
+        "first_byte_p95": 0.07179789098409471,
+        "memory": 0.43155291790306627,
+        "throughput": 0.9832174944905916
+      },
+      "rust": {
+        "CPU": 2.407462509658575,
+        "bytes": 1484034400,
+        "first_byte_p95": 100.19052808638662,
+        "memory": 178708480,
+        "samples": 59
+      },
+      "source": {
+        "CPU": 19.316030315398102,
+        "bytes": 1509365332,
+        "first_byte_p95": 1395.4522439744323,
+        "memory": 414105600,
+        "samples": 59
+      },
+      "trial": 3,
+      "viewers": 100
+    }
+  ],
+  "metric_units": {
+    "CPU": "mean percent of one logical CPU across the three measured services",
+    "bytes": "total viewer bytes over the 60-second measured window",
+    "first_byte_p95": "unfloored nearest-rank p95 for the measured arm, milliseconds",
+    "memory": "peak sampled simultaneous working memory across the three measured services, bytes"
+  },
+  "minimum_paired_delivered_byte_ratio": 0.9830508474576272,
+  "original_image": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "original_qualification": {
+    "max_upstream": 1,
+    "readers": 111,
+    "windows": 3
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "paired_window_samples": 1062,
+  "platform": "linux/amd64",
+  "protocol": {
+    "backend_limits": {
+      "memory_bytes": 536870912,
+      "nano_cpus": 2000000000
+    },
+    "budgets": {
+      "cleanup_seconds": 60,
+      "first_byte_floor_ms": 50,
+      "max_CPU_ratio": 0.9,
+      "max_first_byte_ratio": 1.1,
+      "max_memory_ratio": 0.95,
+      "maximum_OOM_events": 0,
+      "maximum_errors": 0,
+      "maximum_viewer_rate_fraction": 1.1,
+      "minimum_samples": 50,
+      "minimum_throughput_ratio": 0.95,
+      "minimum_viewer_rate_fraction": 0.9
+    },
+    "decoder_output_seconds": 5,
+    "decoder_prefix_bytes": 2097152,
+    "infrastructure_limits": {
+      "memory_bytes": 1073741824,
+      "nano_cpus": 1000000000
+    },
+    "max_original_cpu_percent": 170,
+    "max_original_throttled_period_fraction": 0.05,
+    "max_original_working_memory_fraction_of_its_cap": 0.9,
+    "minimum_per_viewer_video_frames": 25,
+    "orders": [
+      [
+        "source",
+        "candidate"
+      ],
+      [
+        "candidate",
+        "source"
+      ],
+      [
+        "source",
+        "candidate"
+      ]
+    ],
+    "origin_limits": {
+      "memory_bytes": 536870912,
+      "nano_cpus": 2000000000
+    },
+    "paired_trials_per_viewer_cohort": 3,
+    "resource_measure_seconds": 60,
+    "resource_warmup_seconds": 15,
+    "sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+    "viewers": [
+      1,
+      10,
+      100
+    ]
+  },
+  "publication": {
+    "application": "f38f6cdd09ad214d3d3ff18b0a46c286637fc9d1",
+    "published_commit": "7927b2d4765f82b650d958fd15d0b70200a6b72c",
+    "remote_ref_sha256": "c563a2457b30a687b8ef9afe05bf4f73b0cc53a20849c72cfed8a0de91a68a75"
+  },
+  "retained_report_sha256": "6b73508826eede37bda45f9bfd709a937b3d59af3b4e1af12a5f8d05c81a0279",
+  "schema": "dispatcharr-f38-amd64-signed-live-resource/v1",
+  "scope": "signed continuous HTTP MPEG-TS backend with shared PostgreSQL, Redis and deterministic origin",
+  "scope_performance_accepted": true
+}
