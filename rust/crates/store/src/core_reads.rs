@@ -497,6 +497,25 @@ macro_rules! profile_options_routes {
 profile_options_routes!(useragents_options, useragent_options, UserAgent);
 profile_options_routes!(streamprofiles_options, streamprofile_options, StreamProfile);
 
+async fn useragent_json_options(
+    State(auth): State<AuthService>,
+    JsonReadId(id): JsonReadId,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Result<Response, StoreError> {
+    negotiate_literal_json_alias(&headers)?;
+    Ok(direct_profile_options(
+        auth,
+        peer,
+        headers,
+        uri,
+        ProfileOptions::UserAgent,
+        Some(id),
+    )
+    .await)
+}
+
 macro_rules! direct_profile_reads {
     ($list:ident, $detail:ident, $canonical_list:ident, $canonical_detail:ident, $fields:ident) => {
         async fn $list(
@@ -817,10 +836,9 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
     let streamprofiles_json = get(streamprofiles)
         .layer(from_fn_with_state(
             catalogue_options::COLLECTION_ALLOW,
-            catalogue_options::typed_read_headers,
+            catalogue_options::typed_catalogue_read_headers,
         ))
         .post(crate::core_stream_writes::create)
-        .head(omitted_json_method)
         .fallback(omitted_json_method);
     let mut router = Router::new()
         .route("/api/core/settings/", get(settings))
@@ -836,17 +854,23 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
         )
         .route(
             "/api/core/useragents/{id}/",
-            get(direct_useragent)
-                .options(useragent_options)
-                .patch(crate::user_agent_writes::patch)
-                .put(crate::user_agent_writes::put)
-                .delete(crate::user_agent_writes::delete),
+            catalogue_options::read_denial_headers(
+                get(direct_useragent),
+                catalogue_options::DETAIL_ALLOW,
+            )
+            .options(useragent_options)
+            .patch(crate::user_agent_writes::patch)
+            .put(crate::user_agent_writes::put)
+            .delete(crate::user_agent_writes::delete),
         )
         .route(
             "/api/core/streamprofiles/",
-            get(direct_streamprofiles)
-                .options(streamprofiles_options)
-                .post(crate::core_stream_writes::create),
+            catalogue_options::read_denial_headers(
+                get(direct_streamprofiles),
+                catalogue_options::COLLECTION_ALLOW,
+            )
+            .options(streamprofiles_options)
+            .post(crate::core_stream_writes::create),
         )
         .route(
             "/api/core/streamprofiles/{id}/",
@@ -861,7 +885,7 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(outputprofiles)
                 .layer(from_fn_with_state(
                     catalogue_options::COLLECTION_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .options(catalogue_options::output_profile),
         )
@@ -870,7 +894,7 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(outputprofile)
                 .layer(from_fn_with_state(
                     catalogue_options::DETAIL_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .options(catalogue_options::output_profile),
         )
@@ -881,16 +905,22 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(useragent_json)
                 .layer(from_fn_with_state(
                     catalogue_options::DETAIL_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
                 .patch(patch_useragent_json)
                 .put(put_useragent_json)
                 .delete(delete_useragent_json)
-                .head(omitted_json_method)
+                .options(useragent_json_options)
                 .fallback(omitted_json_method),
         )
-        .route("/api/core/streamprofiles.json", streamprofiles_json.clone())
-        .route("/api/core/streamprofiles.json/", streamprofiles_json)
+        .route(
+            "/api/core/streamprofiles.json",
+            streamprofiles_json.clone().options(streamprofiles_options),
+        )
+        .route(
+            "/api/core/streamprofiles.json/",
+            streamprofiles_json.head(omitted_json_method),
+        )
         .route(
             "/api/core/streamprofiles/{json_id}",
             get(streamprofile_json)
@@ -903,9 +933,9 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(outputprofiles)
                 .layer(from_fn_with_state(
                     catalogue_options::COLLECTION_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
-                .head(omitted_json_method)
+                .options(catalogue_options::output_profile_json_alias)
                 .fallback(omitted_json_method),
         )
         .route(
@@ -913,9 +943,9 @@ fn router_with_settings_detail(auth: AuthService, detail: bool) -> Router {
             get(outputprofile_json)
                 .layer(from_fn_with_state(
                     catalogue_options::DETAIL_ALLOW,
-                    catalogue_options::typed_read_headers,
+                    catalogue_options::typed_catalogue_read_headers,
                 ))
-                .head(omitted_json_method)
+                .options(catalogue_options::output_profile_json_alias)
                 .fallback(omitted_json_method),
         );
     if detail {
@@ -1377,22 +1407,30 @@ mod direct_profile_options_tests {
             crate::Store::from_pool(pool),
             crate::AuthConfig::new("owned-options-test-signing-key".into()).unwrap(),
         );
-        for (path, detail, alias) in [
-            ("/api/core/useragents/", false, "/api/core/useragents.json"),
+        for (path, detail, alias, alias_status) in [
+            (
+                "/api/core/useragents/",
+                false,
+                "/api/core/useragents.json",
+                StatusCode::NOT_FOUND,
+            ),
             (
                 "/api/core/useragents/1/",
                 true,
                 "/api/core/useragents/1.json",
+                StatusCode::UNAUTHORIZED,
             ),
             (
                 "/api/core/streamprofiles/",
                 false,
                 "/api/core/streamprofiles.json",
+                StatusCode::UNAUTHORIZED,
             ),
             (
                 "/api/core/streamprofiles/1/",
                 true,
                 "/api/core/streamprofiles/1.json",
+                StatusCode::NOT_FOUND,
             ),
         ] {
             let request = |uri, accept| {
@@ -1428,7 +1466,7 @@ mod direct_profile_options_tests {
                 .oneshot(request(alias, "application/json"))
                 .await
                 .unwrap();
-            assert_eq!(response.status(), StatusCode::NOT_FOUND);
+            assert_eq!(response.status(), alias_status);
         }
     }
 }

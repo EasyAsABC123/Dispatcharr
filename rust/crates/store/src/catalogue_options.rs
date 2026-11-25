@@ -139,10 +139,48 @@ pub(super) async fn respond(
     uri: Uri,
     kind: Kind,
 ) -> Response {
-    let (_, root, query) = kind.definition();
+    let (_, root, _) = kind.definition();
     let Some(id) = detail_id(&uri, root) else {
         return kind.previous_unhandled(true);
     };
+    respond_for_id(auth, peer, headers, uri, kind, id).await
+}
+
+pub(super) async fn respond_json_alias(
+    auth: &AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    uri: Uri,
+    kind: Kind,
+) -> Response {
+    let (_, root, _) = kind.definition();
+    let id = if uri.path().strip_suffix(".json") == root.strip_suffix('/') {
+        None
+    } else if let Some(id) = uri
+        .path()
+        .strip_prefix(root)
+        .and_then(|key| key.strip_suffix(".json"))
+        .filter(|key| !key.is_empty() && key.bytes().all(|byte| byte.is_ascii_digit()))
+    {
+        Some(id.parse().unwrap_or(-1))
+    } else {
+        return StoreError::NotFound.into_response();
+    };
+    if let Err(error) = negotiate_literal_json_alias(&headers) {
+        return error.into_response();
+    }
+    respond_for_id(auth, peer, headers, uri, kind, id).await
+}
+
+async fn respond_for_id(
+    auth: &AuthService,
+    peer: SocketAddr,
+    headers: HeaderMap,
+    uri: Uri,
+    kind: Kind,
+    id: Option<i64>,
+) -> Response {
+    let (_, _, query) = kind.definition();
     let detail = id.is_some();
     let Ok(indentation) = channel_options_indentation(&uri, &headers) else {
         return kind.previous_unhandled(detail);
@@ -171,40 +209,122 @@ pub(super) async fn respond(
 }
 
 macro_rules! options {
-    ($name:ident, $kind:ident) => {
+    ($name:ident, $kind:ident, $respond:ident) => {
         pub(super) async fn $name(
             State(auth): State<AuthService>,
             ConnectInfo(peer): ConnectInfo<SocketAddr>,
             headers: HeaderMap,
             OriginalUri(uri): OriginalUri,
         ) -> Response {
-            respond(&auth, peer, headers, uri, Kind::$kind).await
+            $respond(&auth, peer, headers, uri, Kind::$kind).await
         }
     };
 }
-options!(output_profile, OutputProfile);
-options!(channel_profile, ChannelProfile);
-options!(server_group, ServerGroup);
-options!(epg_data, EpgData);
+options!(output_profile, OutputProfile, respond);
+options!(output_profile_json_alias, OutputProfile, respond_json_alias);
+options!(channel_profile, ChannelProfile, respond);
+options!(
+    channel_profile_json_alias,
+    ChannelProfile,
+    respond_json_alias
+);
+options!(server_group, ServerGroup, respond);
+options!(server_group_json_alias, ServerGroup, respond_json_alias);
+options!(epg_data, EpgData, respond);
+options!(epg_data_json_alias, EpgData, respond_json_alias);
 
 pub(super) async fn typed_read_headers(
-    State(allow): State<&'static str>,
+    state: State<&'static str>,
     request: Request,
     next: Next,
 ) -> Response {
+    typed_read_response(state, request, next, false).await
+}
+
+pub(super) async fn typed_catalogue_read_headers(
+    state: State<&'static str>,
+    request: Request,
+    next: Next,
+) -> Response {
+    typed_read_response(state, request, next, true).await
+}
+
+async fn typed_read_response(
+    State(allow): State<&'static str>,
+    request: Request,
+    next: Next,
+    include_denials: bool,
+) -> Response {
     let reads = matches!(*request.method(), Method::GET | Method::HEAD);
     let response = next.run(request).await;
-    if reads
-        && response.status() == StatusCode::OK
-        && response
-            .headers()
-            .get(header::CONTENT_TYPE)
-            .is_some_and(|value| value == "application/json")
-    {
-        channel_options_headers(response, HeaderValue::from_static(allow))
-    } else {
-        response
+    if !reads || !is_json(&response) {
+        return response;
     }
+    if include_denials && access_denied(response.status()) {
+        return denial_metadata(response, allow);
+    }
+    if response.status() == StatusCode::OK {
+        return channel_options_headers(response, HeaderValue::from_static(allow));
+    }
+    response
+}
+
+fn access_denied(status: StatusCode) -> bool {
+    matches!(status, StatusCode::UNAUTHORIZED | StatusCode::FORBIDDEN)
+}
+
+fn is_json(response: &Response) -> bool {
+    response
+        .headers()
+        .get(header::CONTENT_TYPE)
+        .is_some_and(|value| value == "application/json")
+}
+
+/// Apply the measured DRF headers after a selected read has denied access.
+pub(super) fn read_denial_headers<S>(route: MethodRouter<S>, allow: &'static str) -> MethodRouter<S>
+where
+    S: Clone + Send + Sync + 'static,
+{
+    route.layer(from_fn_with_state(allow, read_denial))
+}
+
+async fn read_denial(State(allow): State<&'static str>, request: Request, next: Next) -> Response {
+    let read = matches!(*request.method(), Method::GET | Method::HEAD);
+    let response = next.run(request).await;
+    if read && access_denied(response.status()) && is_json(&response) {
+        return denial_metadata(response, allow);
+    }
+    response
+}
+
+fn denial_metadata(mut response: Response, allow: &'static str) -> Response {
+    let headers = response.headers_mut();
+    headers.insert(header::ALLOW, HeaderValue::from_static(allow));
+
+    let existing = headers
+        .get_all(header::VARY)
+        .iter()
+        .map(HeaderValue::to_str)
+        .collect::<Result<Vec<_>, _>>();
+    if let Ok(existing) = existing {
+        let changes_with_accept = existing
+            .iter()
+            .flat_map(|value| value.split(','))
+            .map(str::trim)
+            .any(|field| field == "*" || field.eq_ignore_ascii_case("accept"));
+        if changes_with_accept {
+            return response;
+        }
+        if existing.is_empty() {
+            headers.insert(header::VARY, HeaderValue::from_static("Accept"));
+        } else if let Ok(vary) = HeaderValue::from_str(&format!("Accept, {}", existing.join(", ")))
+        {
+            headers.insert(header::VARY, vary);
+        }
+    } else {
+        headers.append(header::VARY, HeaderValue::from_static("Accept"));
+    }
+    response
 }
 
 /// Successful GET metadata for narrowly measured canonical reads.
@@ -488,6 +608,91 @@ mod tests {
                         assert_eq!(response.headers()[header::VARY], "Accept");
                     }
                 }
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn selected_read_denial_headers_preserve_challenge_and_other_responses() {
+        let denied = read_denial_headers(
+            get(|method: Method| async move {
+                let status = if method == Method::HEAD {
+                    StatusCode::FORBIDDEN
+                } else {
+                    StatusCode::UNAUTHORIZED
+                };
+                let mut response = (
+                    status,
+                    [(header::WWW_AUTHENTICATE, "Bearer realm=\"api\"")],
+                    axum::Json("denied"),
+                )
+                    .into_response();
+                if method == Method::GET {
+                    response
+                        .headers_mut()
+                        .insert(header::VARY, HeaderValue::from_static("origin"));
+                }
+                response
+            }),
+            DETAIL_ALLOW,
+        );
+        let router = Router::new()
+            .route(
+                "/denied",
+                denied.options(|| async { StatusCode::NO_CONTENT }),
+            )
+            .route(
+                "/missing",
+                read_denial_headers(
+                    get(|| async { (StatusCode::NOT_FOUND, axum::Json("missing")) }),
+                    DETAIL_ALLOW,
+                ),
+            )
+            .route(
+                "/ordinary",
+                get(|| async { (StatusCode::UNAUTHORIZED, axum::Json("denied")) }),
+            );
+        for (method, uri, status, decorated) in [
+            (Method::GET, "/denied", StatusCode::UNAUTHORIZED, true),
+            (Method::HEAD, "/denied", StatusCode::FORBIDDEN, true),
+            (Method::OPTIONS, "/denied", StatusCode::NO_CONTENT, false),
+            (Method::GET, "/missing", StatusCode::NOT_FOUND, false),
+            (Method::GET, "/ordinary", StatusCode::UNAUTHORIZED, false),
+        ] {
+            let response = router
+                .clone()
+                .oneshot(
+                    Request::builder()
+                        .method(method.clone())
+                        .uri(uri)
+                        .body(Body::empty())
+                        .unwrap(),
+                )
+                .await
+                .unwrap();
+            assert_eq!(response.status(), status);
+            assert_eq!(response.headers().get(header::VARY).is_some(), decorated);
+            if decorated {
+                assert_eq!(response.headers()[header::ALLOW], DETAIL_ALLOW);
+                let vary = if method == Method::GET {
+                    "Accept, origin"
+                } else {
+                    "Accept"
+                };
+                assert_eq!(response.headers()[header::VARY], vary);
+                assert_eq!(
+                    response.headers()[header::WWW_AUTHENTICATE],
+                    "Bearer realm=\"api\""
+                );
+                let expected: &[u8] = if method == Method::HEAD {
+                    b""
+                } else {
+                    br#""denied""#
+                };
+                assert_eq!(
+                    to_bytes(response.into_body(), 128).await.unwrap().as_ref(),
+                    expected
+                );
             }
         }
     }

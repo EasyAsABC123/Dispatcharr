@@ -373,9 +373,7 @@ impl EpgProgramReads {
         })
     }
     pub fn router(self) -> Router {
-        let list_json = get(list_json_alias)
-            .head(omitted_json_method)
-            .fallback(omitted_json_method);
+        let list_json = get(list_json_alias).fallback(omitted_json_method);
         Router::new()
             .route(
                 "/api/epg/programs/",
@@ -387,16 +385,22 @@ impl EpgProgramReads {
             )
             .route(
                 "/api/epg/programs.json",
-                list_json.clone().post(mutations::create_json),
+                list_json
+                    .clone()
+                    .post(mutations::create_json)
+                    .options(programme_json_options),
             )
-            .route("/api/epg/programs.json/", list_json)
+            .route(
+                "/api/epg/programs.json/",
+                list_json.head(omitted_json_method),
+            )
             .route(search::PATH, search::routes())
             .route("/api/epg/programs/search.json", search::routes())
             .route("/api/epg/programs/search.json/", search::routes())
             .route(
                 "/api/epg/programs/{json_id}",
                 get(detail_json_alias)
-                    .head(omitted_json_method)
+                    .options(programme_json_options)
                     .put(mutations::change_json)
                     .patch(mutations::change_json)
                     .delete(mutations::change_json)
@@ -639,7 +643,7 @@ async fn respond(
     };
     let accept = headers.get_all(header::ACCEPT);
     let mut accept = accept.iter();
-    let plain_json_get = method == Method::GET
+    let plain_json_read = matches!(method, Method::GET | Method::HEAD)
         && uri.query().is_none()
         && accept
             .next()
@@ -664,9 +668,10 @@ async fn respond(
     {
         Ok(data) => data,
         Err(error)
-            if plain_json_get
+            if plain_json_read
                 && programme_json_authorization_error(&error)
-                && canonical_programme_read_path(&uri, id.as_deref()) =>
+                && (canonical_programme_read_path(&uri, id.as_deref())
+                    || method == Method::GET && programme_json_read_alias(&uri, id.as_deref())) =>
         {
             let mut response = error.into_response();
             let headers = response.headers_mut();
@@ -734,6 +739,16 @@ async fn detail_json_alias(
     respond_json_alias(state, peer, headers, Some(id.to_owned()), uri).await
 }
 
+fn programme_json_read_alias(uri: &Uri, id: Option<&str>) -> bool {
+    match id {
+        None => matches!(
+            uri.path(),
+            "/api/epg/programs.json" | "/api/epg/programs.json/"
+        ),
+        Some(id) => programme_json_id(uri.path()) == Some(id),
+    }
+}
+
 fn programme_json_id(path: &str) -> Option<&str> {
     let id = path
         .strip_suffix('/')
@@ -750,6 +765,22 @@ async fn programme_options(
     OriginalUri(uri): OriginalUri,
 ) -> Response {
     catalogue_options::respond(
+        state.auth(),
+        peer,
+        headers,
+        uri,
+        catalogue_options::Kind::Programme,
+    )
+    .await
+}
+
+async fn programme_json_options(
+    State(state): State<EpgProgramReads>,
+    ConnectInfo(peer): ConnectInfo<SocketAddr>,
+    headers: HeaderMap,
+    OriginalUri(uri): OriginalUri,
+) -> Response {
+    catalogue_options::respond_json_alias(
         state.auth(),
         peer,
         headers,
@@ -966,7 +997,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn seven_catalogue_json_aliases_use_protected_get_without_forcing_canonical_changes() {
+    async fn grouped_catalogue_json_aliases_use_protected_reads_and_options() {
         let pool = sqlx::postgres::PgPoolOptions::new()
             .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
         let auth = AuthService::new(
@@ -978,9 +1009,17 @@ mod tests {
         let router = reads
             .router()
             .merge(crate::channel_groups::router(auth.clone()))
+            .merge(crate::core_reads::router(auth.clone()))
+            .merge(crate::channel_profiles::router(auth.clone()))
             .merge(crate::provider_reads::router(auth))
             .layer(Extension(ConnectInfo(peer)));
         for path in [
+            "/api/core/useragents/1.json",
+            "/api/core/streamprofiles.json",
+            "/api/core/outputprofiles.json",
+            "/api/core/outputprofiles/1.json",
+            "/api/channels/profiles.json",
+            "/api/channels/profiles/1.json",
             "/api/channels/groups/1.json",
             "/api/m3u/server-groups.json",
             "/api/m3u/server-groups/1.json",
@@ -1003,12 +1042,17 @@ mod tests {
                     StatusCode::UNAUTHORIZED,
                 ),
                 (Method::GET, "text/html", "", StatusCode::NOT_ACCEPTABLE),
-                (Method::HEAD, "application/json", "", StatusCode::NOT_FOUND),
+                (
+                    Method::HEAD,
+                    "application/json",
+                    "",
+                    StatusCode::UNAUTHORIZED,
+                ),
                 (
                     Method::OPTIONS,
                     "application/json",
                     "",
-                    StatusCode::NOT_FOUND,
+                    StatusCode::UNAUTHORIZED,
                 ),
                 (
                     Method::POST,
@@ -1024,6 +1068,12 @@ mod tests {
                     },
                 ),
             ] {
+                if !matches!(method, Method::HEAD | Method::OPTIONS)
+                    && (path.starts_with("/api/core/")
+                        || path.starts_with("/api/channels/profiles"))
+                {
+                    continue;
+                }
                 let request = Request::builder()
                     .method(method.clone())
                     .uri(format!("{path}{query}"))
@@ -1033,6 +1083,12 @@ mod tests {
                 let response = router.clone().oneshot(request).await.unwrap();
                 assert_eq!(response.status(), expected, "{method} {path}{query}");
                 assert!(!response.headers().contains_key(header::SET_COOKIE));
+                if method == Method::HEAD {
+                    assert!(to_bytes(response.into_body(), 1024)
+                        .await
+                        .unwrap()
+                        .is_empty());
+                }
             }
         }
         for path in [
@@ -1056,7 +1112,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn programme_json_get_authorization_headers_are_route_and_representation_specific() {
+    async fn programme_json_read_authorization_headers_are_route_and_representation_specific() {
         let pool = sqlx::postgres::PgPoolOptions::new()
             .connect_lazy_with(sqlx::postgres::PgConnectOptions::new());
         let auth = AuthService::new(
@@ -1104,8 +1160,22 @@ mod tests {
                 Method::HEAD,
                 "/api/epg/programs/7/",
                 "application/json",
-                None,
-                None,
+                Some(PROGRAMME_DETAIL_ALLOW),
+                Some(PROGRAMME_JSON_VARY),
+            ),
+            (
+                Method::GET,
+                "/api/epg/programs.json",
+                "application/json",
+                Some(PROGRAMME_LIST_ALLOW),
+                Some(PROGRAMME_JSON_VARY),
+            ),
+            (
+                Method::GET,
+                "/api/epg/programs/7.json",
+                "application/json",
+                Some(PROGRAMME_DETAIL_ALLOW),
+                Some(PROGRAMME_JSON_VARY),
             ),
         ] {
             let request = Request::builder()
