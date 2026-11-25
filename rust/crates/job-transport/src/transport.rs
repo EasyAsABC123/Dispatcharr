@@ -797,7 +797,7 @@ impl Jobs {
         let (reply, _held) = self
             .inner
             .broker
-            .command_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &keys, &[], lease)
+            .command_read_classified::<(i64, Vec<u8>), _>(PEEK_CREATE, &keys, &[], lease)
             .await
             .map_err(map)?;
         match reply.0 {
