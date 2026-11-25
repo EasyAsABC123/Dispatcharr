@@ -1,0 +1,75 @@
+{
+  "actual": {
+    "package/retention100": {
+      "exact_cleanup": true,
+      "node_result_sha256": "d523aade80eea9f2f49dcb6fbbe1ab1e41e41d931457d7565fb4156f49fa61e6",
+      "proof": {
+        "authoritative_per_channel_max": 16777216,
+        "bytes_per_reader": 1500000,
+        "channels": 10,
+        "historical_readers": 100,
+        "lag_seconds": 45,
+        "late_av_decodes": 10,
+        "local_per_channel_max": 4194304,
+        "no_additional_upstream": true,
+        "performance_measured": false,
+        "reference_prefix_bytes": 65536,
+        "retained_captures_hash_verified": 10
+      }
+    },
+    "package/sharedTS18": {
+      "exact_cleanup": true,
+      "node_result_sha256": "9b485598814c6497f51c0061b9d36fbeaa722354463d55d8c4dbe61eacebd08b",
+      "proof": {
+        "all_down_before_restart": null,
+        "cases": 3,
+        "checks": 24,
+        "performance_measured": false,
+        "real_decoders": 6,
+        "restart_cleanup_seconds": null,
+        "signed_readers": 6,
+        "timeline": null
+      }
+    },
+    "package/sharedTS6-all-down": {
+      "exact_cleanup": true,
+      "node_result_sha256": "23f33ce50c12dcf0f521ea8a94bf59d3f34181a32c619702e3c80562d4557833",
+      "proof": {
+        "all_down_before_restart": {
+          "clients": 0,
+          "input_index": 4,
+          "metadata_fields": 0,
+          "owner": null,
+          "provider_slots": 1,
+          "state": null,
+          "timestamps": 0
+        },
+        "cases": 1,
+        "checks": 14,
+        "performance_measured": false,
+        "real_decoders": 2,
+        "restart_cleanup_seconds": 6.170203912013676,
+        "signed_readers": 2,
+        "timeline": {
+          "exact_two_workers_killed": true,
+          "new_same_image_replica": true,
+          "seconds_between_real_kill_and_replica_removal": 65.092640735,
+          "stock_controller_requires_fixed_idle_seconds": 65
+        }
+      }
+    }
+  },
+  "application_revision": "b9806b5bcbe65c87a7df4083029fa7599e698628",
+  "controller_exit": 2,
+  "exact_engine_retirement": true,
+  "full_m3_or_performance_accepted": false,
+  "independent_audit_exit": 0,
+  "original_authors_retain_full_credit": true,
+  "package": {
+    "build_manifest_sha256": "a15bce71a7889b41c3e3dc6dfb0aa0f990a7c93b1191bed46dd6be549a84e0dd",
+    "image_id": "sha256:62e265becbada0a2403eb038be9340d960536d85214f6f17ee4a691a1160bc3b",
+    "source_archive_sha256": "52831cdb602c6869df13bb4ec54d59e32abc14130d2109e018f792c3a67617a7",
+    "source_map_sha256": "48e1570b2b4888d6d1e65d42cf66549b2f5e02f0c0631559d525d58a8bdb6a15"
+  },
+  "report_sha256": "78ef9db12d1bc3a309b74b4459a8c97642ffdca606b1704737456f668dfc148f"
+}
