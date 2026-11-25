@@ -1,0 +1,212 @@
+{
+  "admitted_S120": false,
+  "admitted_S360": false,
+  "application_revision": "7be23e9117cc4c3e8bd73ad7b45fd717b6040350",
+  "checkpoint_byte_counters": {
+    "active": {
+      "after": {
+        "active_file": 4096,
+        "anon": 42758144,
+        "charged": 46985216,
+        "file": 4096,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 4096,
+        "kernel": 1503232,
+        "shmem": 0
+      },
+      "before": {
+        "active_file": 4096,
+        "anon": 42758144,
+        "charged": 46985216,
+        "file": 4096,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 4096,
+        "kernel": 1503232,
+        "shmem": 0
+      }
+    },
+    "after-binary": {
+      "after": {
+        "active_file": 0,
+        "anon": 7450624,
+        "charged": 10891264,
+        "file": 0,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 0,
+        "kernel": 1093632,
+        "shmem": 0
+      },
+      "before": {
+        "active_file": 0,
+        "anon": 7450624,
+        "charged": 10891264,
+        "file": 0,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 0,
+        "kernel": 1093632,
+        "shmem": 0
+      }
+    },
+    "before-binary": {
+      "after": {
+        "active_file": 0,
+        "anon": 7319552,
+        "charged": 10809344,
+        "file": 0,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 0,
+        "kernel": 970752,
+        "shmem": 0
+      },
+      "before": {
+        "active_file": 0,
+        "anon": 7319552,
+        "charged": 10809344,
+        "file": 0,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 0,
+        "kernel": 970752,
+        "shmem": 0
+      }
+    },
+    "first-payload": {
+      "after": {
+        "active_file": 4096,
+        "anon": 42246144,
+        "charged": 46403584,
+        "file": 4096,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 4096,
+        "kernel": 1507328,
+        "shmem": 0
+      },
+      "before": {
+        "active_file": 4096,
+        "anon": 42246144,
+        "charged": 46403584,
+        "file": 4096,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 4096,
+        "kernel": 1507328,
+        "shmem": 0
+      }
+    },
+    "post-drain": {
+      "after": {
+        "active_file": 0,
+        "anon": 23449600,
+        "charged": 26734592,
+        "file": 4096,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 4096,
+        "kernel": 1064960,
+        "shmem": 0
+      },
+      "before": {
+        "active_file": 0,
+        "anon": 23449600,
+        "charged": 26734592,
+        "file": 4096,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 4096,
+        "kernel": 1064960,
+        "shmem": 0
+      }
+    },
+    "pre-reader": {
+      "after": {
+        "active_file": 0,
+        "anon": 15876096,
+        "charged": 19070976,
+        "file": 4096,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 4096,
+        "kernel": 995328,
+        "shmem": 0
+      },
+      "before": {
+        "active_file": 0,
+        "anon": 15876096,
+        "charged": 19070976,
+        "file": 4096,
+        "file_dirty": 0,
+        "file_mapped": 0,
+        "file_writeback": 0,
+        "inactive_file": 4096,
+        "kernel": 995328,
+        "shmem": 0
+      }
+    }
+  },
+  "credits": "Original Dispatcharr authors, contributors and dependencies retain full credit. See ATTRIBUTION.md and LICENSE.",
+  "diagnostic_only": true,
+  "encoder": {
+    "active_deduplicated_runtime_mapping_bytes": 74084352,
+    "active_unique_runtime_mapped_inodes": 58,
+    "first_payload_deduplicated_runtime_mapping_bytes": 74084352,
+    "first_payload_unique_runtime_mapped_inodes": 58,
+    "same_generation": true
+  },
+  "engine_running_empty_on_recheck": true,
+  "independent_proof_sha256": "e1ee41b8df6ad18d3fb2ae65c7ebd73bbd320740bc8d4170f053ee5d18dd2bac",
+  "independent_recovery_report_exit": 0,
+  "interpretation": "The candidate charge rose around first useful playback in this one-reader run. Its observed file charge stayed flat. Runtime virtual mappings establish binary and library access and do not measure per-inode file charge.",
+  "literal_exit_codes": {
+    "actual/actual-exit": 0,
+    "owner/actual-exit": 0,
+    "owner/media.actual-exit": 0,
+    "owner/preflight.actual-exit": 0,
+    "owner/run.actual-exit": 0,
+    "proof/actual-exit": 0
+  },
+  "original_outer_report_exit": 1,
+  "outer_report_failure": "Summary passed a null successful blocked field to a string matcher after physical execution and independent proof had both passed.",
+  "paired_release_performance_accepted": false,
+  "pre_reader_to_drained_byte_delta": {
+    "anon": 7573504,
+    "charged": 7663616,
+    "file": 0,
+    "file_mapped": 0,
+    "shmem": 0
+  },
+  "pre_reader_to_first_payload_byte_delta": {
+    "anon": 26370048,
+    "charged": 27332608,
+    "file": 0,
+    "file_mapped": 0,
+    "shmem": 0
+  },
+  "provider_slots_during": 1,
+  "provider_slots_idle_after": 0,
+  "registered_clients_during": 1,
+  "schema": "dispatcharr-arm64-single-reader-memory-attribution/v1",
+  "signed_reader_count": 1,
+  "upstream_connections": 1,
+  "useful_av_payload_packets": {
+    "audio": 442,
+    "video": 3547
+  },
+  "vm_observation_sha256": "60eb8cbfcfeecac73dd35220e85bd9c301fff9a919270a10d228c1955fcb512b"
+}

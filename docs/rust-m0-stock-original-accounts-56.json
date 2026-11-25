@@ -1,0 +1,1084 @@
+{
+  "account_case_plan_sha256": "8f298501410222e18ff99f89ac21e0e56f2a42bdf6469afb29fe6c5a2751bd7a",
+  "credits": "Original Dispatcharr, Django, DRF, nginx and contributors retain full credit.",
+  "exact_owned_cleanup": true,
+  "independent_cleanup_sha256": "1ea39352aca6265bf4da48695e735940b1a11b33060f4c68594dfb4320abd16e",
+  "inventory_unchanged": {
+    "fully_verified_route_operations": 0,
+    "routes_with_unresolved_methods": 322,
+    "runtime_operation_work_items": 798,
+    "runtime_routes": 592,
+    "static_non_HTTP_candidates": 250
+  },
+  "new_declared_operations": 0,
+  "new_fully_verified_operations": 0,
+  "next_batch_plan_sha256": "6090c566bd762d0167b129306f9c00d3e6e49fd125208d1df1177a3d21be3bd6",
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "performance_measured": false,
+  "physical_http_observations": 56,
+  "physical_receipt_sha256": "2e38ea068921e138d642cd78d637ca5f4ee87f15505571fc24c37dd491799b3b",
+  "physical_wire_sha256": "907a5c1d3280444375deef0739ab587f34bac8deaf61ad759edec22e61ba1f8b",
+  "register_sha256": "30e0bac84f63f866c4072dcbad41b182aad0440b0fc7256e1526dd3532add6c0",
+  "release_revision": "739d9cece008820560f41193695d2bd435e06c12",
+  "root_queue_actual_exits": {
+    "accounts": 0,
+    "accounts-audit": 0
+  },
+  "root_queue_audit_sha256": "776e0b7d2bebff64d4a2557bc8be93ef349728ae088ae2f1a1a6215ae7ff94a1",
+  "rows": [
+    {
+      "entity_bytes": 76,
+      "entity_sha256": "3e0d8c397399b64b3591df78a7a7e5280642ba1de39260d50f9662646a40eab3",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "76",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "empty",
+      "resolver_ordinal": 3,
+      "role": "anonymous",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "76",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "empty",
+      "resolver_ordinal": 3,
+      "role": "anonymous",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 76,
+      "entity_sha256": "3e0d8c397399b64b3591df78a7a7e5280642ba1de39260d50f9662646a40eab3",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "76",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "empty",
+      "resolver_ordinal": 3,
+      "role": "anonymous",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 48,
+      "entity_sha256": "4a48726c3454a0d13223f17fa71ae19cc2fef265d00293bb914e697a88fbc5a0",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "48",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "POST",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "reject-incomplete",
+      "resolver_ordinal": 3,
+      "role": "anonymous",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 400
+    },
+    {
+      "entity_bytes": 26,
+      "entity_sha256": "061a71658524cbcef06f508fdf69643d4596afbc42dbed4eadffcbbba68d99ca",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "POST",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "create-admin",
+      "resolver_ordinal": 3,
+      "role": "anonymous",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 26,
+      "entity_sha256": "061a71658524cbcef06f508fdf69643d4596afbc42dbed4eadffcbbba68d99ca",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "after-create",
+      "resolver_ordinal": 3,
+      "role": "anonymous",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f7c174fdedb4d5f479b2:METHOD_UNRESOLVED",
+      "method": "POST",
+      "path": "/api/accounts/token/",
+      "phase": "admin-credentials",
+      "resolver_ordinal": 5,
+      "role": "anonymous",
+      "route_id": "route-f7c174fdedb4d5f479b2",
+      "status": 200,
+      "token_field_presence": {
+        "access": true,
+        "refresh": true
+      }
+    },
+    {
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f7c174fdedb4d5f479b2:METHOD_UNRESOLVED",
+      "method": "POST",
+      "path": "/api/accounts/token/",
+      "phase": "standard-credentials",
+      "resolver_ordinal": 5,
+      "role": "anonymous",
+      "route_id": "route-f7c174fdedb4d5f479b2",
+      "status": 200,
+      "token_field_presence": {
+        "access": true,
+        "refresh": true
+      }
+    },
+    {
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "method": "POST",
+      "path": "/api/accounts/token/refresh/",
+      "phase": "refresh-grant",
+      "resolver_ordinal": 6,
+      "role": "anonymous",
+      "route_id": "route-f0653886908640416ded",
+      "status": 200,
+      "token_field_presence": {
+        "access": true,
+        "refresh": false
+      }
+    },
+    {
+      "entity_bytes": 330,
+      "entity_sha256": "b7218fb31831623294e8495727273a800e0a0d18b1795f5db9fa772b9ca8e3fe",
+      "existing_declared_operation_id": "route-e26d7a42abc653fff1d5:GET",
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, PATCH, HEAD, OPTIONS",
+        "Content-Length": "330",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "GET",
+      "owned_identity_verified": true,
+      "path": "/api/accounts/users/me/",
+      "phase": "refreshed-identity",
+      "resolver_ordinal": 13,
+      "role": "standard",
+      "route_id": "route-e26d7a42abc653fff1d5",
+      "status": 200
+    },
+    {
+      "entity_bytes": 26,
+      "entity_sha256": "061a71658524cbcef06f508fdf69643d4596afbc42dbed4eadffcbbba68d99ca",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "configured",
+      "resolver_ordinal": 3,
+      "role": "anonymous",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "configured",
+      "resolver_ordinal": 3,
+      "role": "anonymous",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 26,
+      "entity_sha256": "061a71658524cbcef06f508fdf69643d4596afbc42dbed4eadffcbbba68d99ca",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "configured",
+      "resolver_ordinal": 3,
+      "role": "anonymous",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 26,
+      "entity_sha256": "061a71658524cbcef06f508fdf69643d4596afbc42dbed4eadffcbbba68d99ca",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "configured",
+      "resolver_ordinal": 3,
+      "role": "admin",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "configured",
+      "resolver_ordinal": 3,
+      "role": "admin",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 26,
+      "entity_sha256": "061a71658524cbcef06f508fdf69643d4596afbc42dbed4eadffcbbba68d99ca",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "configured",
+      "resolver_ordinal": 3,
+      "role": "admin",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 26,
+      "entity_sha256": "061a71658524cbcef06f508fdf69643d4596afbc42dbed4eadffcbbba68d99ca",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "configured",
+      "resolver_ordinal": 3,
+      "role": "standard",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "configured",
+      "resolver_ordinal": 3,
+      "role": "standard",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 26,
+      "entity_sha256": "061a71658524cbcef06f508fdf69643d4596afbc42dbed4eadffcbbba68d99ca",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-1486c7d150ac1a2ebe13:METHOD_UNRESOLVED",
+      "headers": {
+        "Content-Length": "26",
+        "Content-Type": "application/json",
+        "Vary": "origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/initialize-superuser/",
+      "phase": "configured",
+      "resolver_ordinal": 3,
+      "role": "standard",
+      "route_id": "route-1486c7d150ac1a2ebe13",
+      "status": 200
+    },
+    {
+      "entity_bytes": 361,
+      "entity_sha256": "e994ec90642e162fb2778b2d2407e612392f8970d6094ac201a14008ab4b8d33",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f7c174fdedb4d5f479b2:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Length": "361",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/token/",
+      "phase": "configured",
+      "resolver_ordinal": 5,
+      "role": "anonymous",
+      "route_id": "route-f7c174fdedb4d5f479b2",
+      "status": 200
+    },
+    {
+      "entity_bytes": 40,
+      "entity_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Length": "40",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/token/refresh/",
+      "phase": "configured",
+      "resolver_ordinal": 6,
+      "role": "anonymous",
+      "route_id": "route-f0653886908640416ded",
+      "status": 405
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Length": "41",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/token/refresh/",
+      "phase": "configured",
+      "resolver_ordinal": 6,
+      "role": "anonymous",
+      "route_id": "route-f0653886908640416ded",
+      "status": 405
+    },
+    {
+      "entity_bytes": 351,
+      "entity_sha256": "648da7b5965ffabe55f16c491a58a9219a0e99440c9785ac25d2f437d9028864",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Length": "351",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/token/refresh/",
+      "phase": "configured",
+      "resolver_ordinal": 6,
+      "role": "anonymous",
+      "route_id": "route-f0653886908640416ded",
+      "status": 200
+    },
+    {
+      "entity_bytes": 40,
+      "entity_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Length": "40",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/token/refresh/",
+      "phase": "configured",
+      "resolver_ordinal": 6,
+      "role": "admin",
+      "route_id": "route-f0653886908640416ded",
+      "status": 405
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Length": "41",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/token/refresh/",
+      "phase": "configured",
+      "resolver_ordinal": 6,
+      "role": "admin",
+      "route_id": "route-f0653886908640416ded",
+      "status": 405
+    },
+    {
+      "entity_bytes": 351,
+      "entity_sha256": "648da7b5965ffabe55f16c491a58a9219a0e99440c9785ac25d2f437d9028864",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Length": "351",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/token/refresh/",
+      "phase": "configured",
+      "resolver_ordinal": 6,
+      "role": "admin",
+      "route_id": "route-f0653886908640416ded",
+      "status": 200
+    },
+    {
+      "entity_bytes": 40,
+      "entity_sha256": "0a721532497036ff7d8b228dd8d4ef5e91777b0bd2b11f49f5b2ccddd55eb259",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Length": "40",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/token/refresh/",
+      "phase": "configured",
+      "resolver_ordinal": 6,
+      "role": "standard",
+      "route_id": "route-f0653886908640416ded",
+      "status": 405
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Length": "41",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/token/refresh/",
+      "phase": "configured",
+      "resolver_ordinal": 6,
+      "role": "standard",
+      "route_id": "route-f0653886908640416ded",
+      "status": 405
+    },
+    {
+      "entity_bytes": 351,
+      "entity_sha256": "648da7b5965ffabe55f16c491a58a9219a0e99440c9785ac25d2f437d9028864",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-f0653886908640416ded:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "POST, OPTIONS",
+        "Content-Length": "351",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/token/refresh/",
+      "phase": "configured",
+      "resolver_ordinal": 6,
+      "role": "standard",
+      "route_id": "route-f0653886908640416ded",
+      "status": 200
+    },
+    {
+      "entity_bytes": 58,
+      "entity_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "existing_declared_operation_id": "route-d89c8561ac609119a031:GET",
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, POST, HEAD, OPTIONS",
+        "Content-Length": "58",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "WWW-Authenticate": "Bearer realm=\"api\""
+      },
+      "method": "GET",
+      "path": "/api/accounts/users/",
+      "phase": "configured",
+      "resolver_ordinal": 11,
+      "role": "anonymous",
+      "route_id": "route-d89c8561ac609119a031",
+      "status": 401
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, POST, HEAD, OPTIONS",
+        "Content-Length": "58",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "WWW-Authenticate": "Bearer realm=\"api\""
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/users/",
+      "phase": "configured",
+      "resolver_ordinal": 11,
+      "role": "anonymous",
+      "route_id": "route-d89c8561ac609119a031",
+      "status": 401
+    },
+    {
+      "entity_bytes": 58,
+      "entity_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, POST, HEAD, OPTIONS",
+        "Content-Length": "58",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "WWW-Authenticate": "Bearer realm=\"api\""
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/users/",
+      "phase": "configured",
+      "resolver_ordinal": 11,
+      "role": "anonymous",
+      "route_id": "route-d89c8561ac609119a031",
+      "status": 401
+    },
+    {
+      "entity_bytes": 659,
+      "entity_sha256": "af5ef4e5f90e8f53a82ca158ea2215c5849435ede5e6a328070c629a7b48909a",
+      "existing_declared_operation_id": "route-d89c8561ac609119a031:GET",
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, POST, HEAD, OPTIONS",
+        "Content-Length": "659",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/users/",
+      "phase": "configured",
+      "resolver_ordinal": 11,
+      "role": "admin",
+      "route_id": "route-d89c8561ac609119a031",
+      "status": 200
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, POST, HEAD, OPTIONS",
+        "Content-Length": "659",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/users/",
+      "phase": "configured",
+      "resolver_ordinal": 11,
+      "role": "admin",
+      "route_id": "route-d89c8561ac609119a031",
+      "status": 200
+    },
+    {
+      "entity_bytes": 2042,
+      "entity_sha256": "3acdcd9fdb2a92c00088733969cea3e28350b55522364575bc47ca322a0167df",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, POST, HEAD, OPTIONS",
+        "Content-Length": "2042",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/users/",
+      "phase": "configured",
+      "resolver_ordinal": 11,
+      "role": "admin",
+      "route_id": "route-d89c8561ac609119a031",
+      "status": 200
+    },
+    {
+      "entity_bytes": 63,
+      "entity_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "existing_declared_operation_id": "route-d89c8561ac609119a031:GET",
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, POST, HEAD, OPTIONS",
+        "Content-Length": "63",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/users/",
+      "phase": "configured",
+      "resolver_ordinal": 11,
+      "role": "standard",
+      "route_id": "route-d89c8561ac609119a031",
+      "status": 403
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, POST, HEAD, OPTIONS",
+        "Content-Length": "63",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/users/",
+      "phase": "configured",
+      "resolver_ordinal": 11,
+      "role": "standard",
+      "route_id": "route-d89c8561ac609119a031",
+      "status": 403
+    },
+    {
+      "entity_bytes": 63,
+      "entity_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, POST, HEAD, OPTIONS",
+        "Content-Length": "63",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/users/",
+      "phase": "configured",
+      "resolver_ordinal": 11,
+      "role": "standard",
+      "route_id": "route-d89c8561ac609119a031",
+      "status": 403
+    },
+    {
+      "entity_bytes": 58,
+      "entity_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "existing_declared_operation_id": "route-e26d7a42abc653fff1d5:GET",
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, PATCH, HEAD, OPTIONS",
+        "Content-Length": "58",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "WWW-Authenticate": "Bearer realm=\"api\""
+      },
+      "method": "GET",
+      "path": "/api/accounts/users/me/",
+      "phase": "configured",
+      "resolver_ordinal": 13,
+      "role": "anonymous",
+      "route_id": "route-e26d7a42abc653fff1d5",
+      "status": 401
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, PATCH, HEAD, OPTIONS",
+        "Content-Length": "58",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "WWW-Authenticate": "Bearer realm=\"api\""
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/users/me/",
+      "phase": "configured",
+      "resolver_ordinal": 13,
+      "role": "anonymous",
+      "route_id": "route-e26d7a42abc653fff1d5",
+      "status": 401
+    },
+    {
+      "entity_bytes": 58,
+      "entity_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, PATCH, HEAD, OPTIONS",
+        "Content-Length": "58",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "WWW-Authenticate": "Bearer realm=\"api\""
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/users/me/",
+      "phase": "configured",
+      "resolver_ordinal": 13,
+      "role": "anonymous",
+      "route_id": "route-e26d7a42abc653fff1d5",
+      "status": 401
+    },
+    {
+      "entity_bytes": 326,
+      "entity_sha256": "f490336b3cd61da6ed04ed26abba97fc544021a6e6bfc883fd4ab324b486e0b9",
+      "existing_declared_operation_id": "route-e26d7a42abc653fff1d5:GET",
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, PATCH, HEAD, OPTIONS",
+        "Content-Length": "326",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "GET",
+      "owned_identity_verified": true,
+      "path": "/api/accounts/users/me/",
+      "phase": "configured",
+      "resolver_ordinal": 13,
+      "role": "admin",
+      "route_id": "route-e26d7a42abc653fff1d5",
+      "status": 200
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, PATCH, HEAD, OPTIONS",
+        "Content-Length": "326",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/users/me/",
+      "phase": "configured",
+      "resolver_ordinal": 13,
+      "role": "admin",
+      "route_id": "route-e26d7a42abc653fff1d5",
+      "status": 200
+    },
+    {
+      "entity_bytes": 194,
+      "entity_sha256": "ecbeaa3df95747c7ee5d8f67e2a18cef7415e367e4c8f01cc6c2278b4b1e3a25",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, PATCH, HEAD, OPTIONS",
+        "Content-Length": "194",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/users/me/",
+      "phase": "configured",
+      "resolver_ordinal": 13,
+      "role": "admin",
+      "route_id": "route-e26d7a42abc653fff1d5",
+      "status": 200
+    },
+    {
+      "entity_bytes": 330,
+      "entity_sha256": "b7218fb31831623294e8495727273a800e0a0d18b1795f5db9fa772b9ca8e3fe",
+      "existing_declared_operation_id": "route-e26d7a42abc653fff1d5:GET",
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, PATCH, HEAD, OPTIONS",
+        "Content-Length": "330",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "GET",
+      "owned_identity_verified": true,
+      "path": "/api/accounts/users/me/",
+      "phase": "configured",
+      "resolver_ordinal": 13,
+      "role": "standard",
+      "route_id": "route-e26d7a42abc653fff1d5",
+      "status": 200
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, PATCH, HEAD, OPTIONS",
+        "Content-Length": "330",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/users/me/",
+      "phase": "configured",
+      "resolver_ordinal": 13,
+      "role": "standard",
+      "route_id": "route-e26d7a42abc653fff1d5",
+      "status": 200
+    },
+    {
+      "entity_bytes": 63,
+      "entity_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": null,
+      "headers": {
+        "Allow": "GET, PATCH, HEAD, OPTIONS",
+        "Content-Length": "63",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/users/me/",
+      "phase": "configured",
+      "resolver_ordinal": 13,
+      "role": "standard",
+      "route_id": "route-e26d7a42abc653fff1d5",
+      "status": 403
+    },
+    {
+      "entity_bytes": 58,
+      "entity_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "GET, OPTIONS",
+        "Content-Length": "58",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "WWW-Authenticate": "Bearer realm=\"api\""
+      },
+      "method": "GET",
+      "path": "/api/accounts/permissions/",
+      "phase": "configured",
+      "resolver_ordinal": 4,
+      "role": "anonymous",
+      "route_id": "route-74d9c31060dfc7c91063",
+      "status": 401
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "GET, OPTIONS",
+        "Content-Length": "58",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "WWW-Authenticate": "Bearer realm=\"api\""
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/permissions/",
+      "phase": "configured",
+      "resolver_ordinal": 4,
+      "role": "anonymous",
+      "route_id": "route-74d9c31060dfc7c91063",
+      "status": 401
+    },
+    {
+      "entity_bytes": 58,
+      "entity_sha256": "dbff0849bc109eee7f9b7b1fe12e40fc8add21823b2f1fb600b37f620cbd7862",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "GET, OPTIONS",
+        "Content-Length": "58",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin",
+        "WWW-Authenticate": "Bearer realm=\"api\""
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/permissions/",
+      "phase": "configured",
+      "resolver_ordinal": 4,
+      "role": "anonymous",
+      "route_id": "route-74d9c31060dfc7c91063",
+      "status": 401
+    },
+    {
+      "entity_bytes": 17035,
+      "entity_sha256": "11f1d95f060ca9c5f09861e39654c799f646c6c0f1dde9b24fac52e0cc066cb4",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "GET, OPTIONS",
+        "Content-Length": "17035",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/permissions/",
+      "phase": "configured",
+      "resolver_ordinal": 4,
+      "role": "admin",
+      "route_id": "route-74d9c31060dfc7c91063",
+      "status": 200
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "GET, OPTIONS",
+        "Content-Length": "41",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/permissions/",
+      "phase": "configured",
+      "resolver_ordinal": 4,
+      "role": "admin",
+      "route_id": "route-74d9c31060dfc7c91063",
+      "status": 405
+    },
+    {
+      "entity_bytes": 239,
+      "entity_sha256": "a0d9da6fb81efcbf026839529cec3b4f539872f9951a4f244b0237005628efa7",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "GET, OPTIONS",
+        "Content-Length": "239",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/permissions/",
+      "phase": "configured",
+      "resolver_ordinal": 4,
+      "role": "admin",
+      "route_id": "route-74d9c31060dfc7c91063",
+      "status": 200
+    },
+    {
+      "entity_bytes": 63,
+      "entity_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "GET, OPTIONS",
+        "Content-Length": "63",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "GET",
+      "path": "/api/accounts/permissions/",
+      "phase": "configured",
+      "resolver_ordinal": 4,
+      "role": "standard",
+      "route_id": "route-74d9c31060dfc7c91063",
+      "status": 403
+    },
+    {
+      "entity_bytes": 0,
+      "entity_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "GET, OPTIONS",
+        "Content-Length": "63",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "HEAD",
+      "path": "/api/accounts/permissions/",
+      "phase": "configured",
+      "resolver_ordinal": 4,
+      "role": "standard",
+      "route_id": "route-74d9c31060dfc7c91063",
+      "status": 403
+    },
+    {
+      "entity_bytes": 63,
+      "entity_sha256": "9cd1a74094aa824be194aab50f0b8114351284e76fa15f73b3ec84a233204796",
+      "existing_declared_operation_id": null,
+      "existing_unresolved_anchor": "route-74d9c31060dfc7c91063:METHOD_UNRESOLVED",
+      "headers": {
+        "Allow": "GET, OPTIONS",
+        "Content-Length": "63",
+        "Content-Type": "application/json",
+        "Vary": "Accept, origin"
+      },
+      "method": "OPTIONS",
+      "path": "/api/accounts/permissions/",
+      "phase": "configured",
+      "resolver_ordinal": 4,
+      "role": "standard",
+      "route_id": "route-74d9c31060dfc7c91063",
+      "status": 403
+    }
+  ],
+  "rust_parity": false,
+  "schema": "dispatcharr-stock-original-account-method-role-observations/v1",
+  "stock_front_door_only": true,
+  "stock_original_distribution_manifest": "sha256:34f9011514edd31ef0ff111b5f256d2e37614fcb08a6ee1ed9eccec9251a856f",
+  "stock_original_image_id": "sha256:7d435cbd2d8d68d68fffe76cd1a4594af9c31a8fa989e87c25392f66cf1844e3"
+}
