@@ -1,0 +1,147 @@
+{
+  "candidate": {
+    "feature_arg": 0,
+    "image": "sha256:21ba7f01028428aab218b4402059e9b19e7b5f41978fa5ce398683cf89559543",
+    "manifest_sha256": "4ab4a4b01ff1d2a80dadb8e4f929a5f112e5f8d5c7f16b6aff52a852c842a429",
+    "revision": "be828d4cdbbcb5b019ef6dd8c60043daa3e8c3e5"
+  },
+  "cohorts": {
+    "1": {
+      "median_by_backend": {
+        "original": {
+          "decoded_prefix_bytes_per_reader": 2097152,
+          "http_200_continuous_readers": 3,
+          "median_aggregate_throughput_bytes_per_second": 247339.06666666668,
+          "median_decoded_frames": 72,
+          "median_window_delivered_bytes": 14840344,
+          "median_window_mean_cpu_percent": 2.7720223661429126,
+          "median_window_peak_working_memory_bytes": 480215040,
+          "median_window_raw_first_byte_p95_ms": 18.072222010232508,
+          "minimum_decoded_frames": 72
+        },
+        "rust": {
+          "decoded_prefix_bytes_per_reader": 2097152,
+          "http_200_continuous_readers": 3,
+          "median_aggregate_throughput_bytes_per_second": 247339.06666666668,
+          "median_decoded_frames": 124,
+          "median_window_delivered_bytes": 14840344,
+          "median_window_mean_cpu_percent": 1.6762822516711313,
+          "median_window_peak_working_memory_bytes": 238211072,
+          "median_window_raw_first_byte_p95_ms": 4.108145018108189,
+          "minimum_decoded_frames": 124
+        }
+      },
+      "median_paired_percent_change": {
+        "CPU": -39.52396928487985,
+        "first_byte_p95": 0.0,
+        "memory": -50.132770066385035,
+        "throughput": 0.0
+      },
+      "minimum_paired_throughput_ratio": 1.0,
+      "pairs": 3
+    },
+    "10": {
+      "median_by_backend": {
+        "original": {
+          "decoded_prefix_bytes_per_reader": 2097152,
+          "http_200_continuous_readers": 30,
+          "median_aggregate_throughput_bytes_per_second": 2520299.8,
+          "median_decoded_frames": 72.0,
+          "median_window_delivered_bytes": 151217988,
+          "median_window_mean_cpu_percent": 4.454233474000153,
+          "median_window_peak_working_memory_bytes": 506982400,
+          "median_window_raw_first_byte_p95_ms": 139.04628599993885,
+          "minimum_decoded_frames": 72
+        },
+        "rust": {
+          "decoded_prefix_bytes_per_reader": 2097152,
+          "http_200_continuous_readers": 30,
+          "median_aggregate_throughput_bytes_per_second": 2473390.6666666665,
+          "median_decoded_frames": 124.0,
+          "median_window_delivered_bytes": 148403440,
+          "median_window_mean_cpu_percent": 1.8349933622046115,
+          "median_window_peak_working_memory_bytes": 281047040,
+          "median_window_raw_first_byte_p95_ms": 16.89501793589443,
+          "minimum_decoded_frames": 124
+        }
+      },
+      "median_paired_percent_change": {
+        "CPU": -58.80338619617342,
+        "first_byte_p95": -64.040751149569,
+        "memory": -44.50267690124492,
+        "throughput": -1.8612521150592198
+      },
+      "minimum_paired_throughput_ratio": 0.9797297297297297,
+      "pairs": 3
+    },
+    "100": {
+      "median_by_backend": {
+        "original": {
+          "decoded_prefix_bytes_per_reader": 2097152,
+          "http_200_continuous_readers": 300,
+          "median_aggregate_throughput_bytes_per_second": 25160353.333333332,
+          "median_decoded_frames": 98.0,
+          "median_window_delivered_bytes": 1509621200,
+          "median_window_mean_cpu_percent": 19.60689422803272,
+          "median_window_peak_working_memory_bytes": 455036928,
+          "median_window_raw_first_byte_p95_ms": 1289.9523439118639,
+          "minimum_decoded_frames": 72
+        },
+        "rust": {
+          "decoded_prefix_bytes_per_reader": 2097152,
+          "http_200_continuous_readers": 300,
+          "median_aggregate_throughput_bytes_per_second": 24733906.666666668,
+          "median_decoded_frames": 124.0,
+          "median_window_delivered_bytes": 1484034400,
+          "median_window_mean_cpu_percent": 2.346116625525416,
+          "median_window_peak_working_memory_bytes": 176476160,
+          "median_window_raw_first_byte_p95_ms": 106.03521508164704,
+          "minimum_decoded_frames": 124
+        }
+      },
+      "median_paired_percent_change": {
+        "CPU": -87.99632824132593,
+        "first_byte_p95": -92.03040349332635,
+        "memory": -61.22167913369879,
+        "throughput": -1.6782505509408407
+      },
+      "minimum_paired_throughput_ratio": 0.9830508474576272,
+      "pairs": 3
+    }
+  },
+  "exact_inventory": true,
+  "formal_m1": false,
+  "header_scope": "HTTP status observed; response header values unavailable in sealed load",
+  "historical_acceptance_imported": false,
+  "independent_audit_replayed": true,
+  "literal_exits": {
+    "actual-exit": 0,
+    "admit.actual-exit": 0,
+    "functional/audit.actual-exit": 0,
+    "functional/cue.actual-exit": 0,
+    "functional/exact-inventory.actual-exit": 0,
+    "functional/fixture-run.actual-exit": 0,
+    "functional/run.actual-exit": 0,
+    "measure/audit.actual-exit": 0,
+    "measure/cue.actual-exit": 0,
+    "measure/exact-inventory.actual-exit": 0,
+    "measure/fixture-run.actual-exit": 0,
+    "measure/run.actual-exit": 0,
+    "qualify/audit.actual-exit": 0,
+    "qualify/cue.actual-exit": 0,
+    "qualify/exact-inventory.actual-exit": 0,
+    "qualify/fixture-run.actual-exit": 0,
+    "qualify/run.actual-exit": 0
+  },
+  "measured_arms": 18,
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "packet_work_scope": "same bounded decodable prefix size and minimum frames; packet identity unclaimed",
+  "paired_trials": 9,
+  "performance_verified": true,
+  "protocol_sha256": "ffb54395d3d6e44e5ed4ee0053db48a31091d014f7da778a59a16bade21a50a1",
+  "publication": "cf27c8993fd2ffa78584f70c2a1183d6c668ef3e",
+  "raw_sha256": "f77a0a426532a94614a58234e786369b7cd6f5652eee322f3bc5a62c3fc0a5ed",
+  "release_accepted": false,
+  "scope": "signed continuous live MPEG-TS plus common PostgreSQL, Redis and deterministic origin",
+  "status": "passed"
+}
