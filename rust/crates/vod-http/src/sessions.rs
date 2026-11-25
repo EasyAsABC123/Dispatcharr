@@ -233,9 +233,10 @@ impl Progress {
         .await;
     }
 }
-struct RetainedEntry {
+struct RetainedEntry<'a> {
     previous: Arc<Session>,
     scope: LocalScope,
+    signed_claim: Option<&'a str>,
     resolver: Option<Arc<dyn crate::resolver::VodResolver>>,
 }
 
@@ -549,11 +550,12 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
         request_permit: Arc<OwnedSemaphorePermit>,
-        retained: RetainedEntry,
+        retained: RetainedEntry<'_>,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
         let RetainedEntry {
             previous,
             scope,
+            signed_claim,
             resolver,
         } = retained;
         // Source2's changed-request-ID cases keep the one retained public ID.
@@ -810,7 +812,7 @@ impl SessionPool {
             .as_ref()
             .map_or(0, |user| user.stream_limit.max(0));
         scope
-            .reopen(
+            .reopen_with_signed_claim(
                 &body,
                 AcquireRequest {
                     channel_id: id.into(),
@@ -823,6 +825,7 @@ impl SessionPool {
                     limit: limit as u32,
                     policy: source.limit_policy.clone(),
                 },
+                signed_claim.filter(|_| !requested_alias).map(str::to_owned),
             )
             .await
             .map_err(|error| {
@@ -985,19 +988,28 @@ impl SessionPool {
             restart_user,
             signed_alias,
         } = authorization;
-        let mut connection = self.inner.connection.clone();
-        let proven_claim = dispatcharr_clients::vod::check_signed_claim(
-            &mut connection,
-            id,
-            signed_alias.as_deref(),
-            source.user.as_ref().map(|user| user.id),
-        )
-        .await
-        .map_err(|error| match error {
-            dispatcharr_clients::Error::Stopped => dispatcharr_store::StoreError::Forbidden,
-            _ => redis_error(),
-        })?;
-        let signed_alias = signed_alias.filter(|_| proven_claim);
+        // Legacy IDs outside the signed mint namespace have no claim to read.
+        let signed_alias = if session_signed_idle_alias::is_minted_session(id) {
+            let mut connection = self.inner.connection.clone();
+            let proven = tokio::time::timeout(
+                Duration::from_secs(2),
+                dispatcharr_clients::vod::check_signed_claim(
+                    &mut connection,
+                    id,
+                    signed_alias.as_deref(),
+                    source.user.as_ref().map(|user| user.id),
+                ),
+            )
+            .await
+            .map_err(|_| redis_error())?
+            .map_err(|error| match error {
+                dispatcharr_clients::Error::Stopped => dispatcharr_store::StoreError::Forbidden,
+                _ => redis_error(),
+            })?;
+            signed_alias.filter(|_| proven)
+        } else {
+            None
+        };
         if let (Some(claim), Some(policy)) = (signed_alias.as_deref(), resolver.as_deref()) {
             if let Some(ticket) = self
                 .enter_signed_idle_alias(id, claim, &source, request, policy, &request_permit)
@@ -1069,6 +1081,7 @@ impl SessionPool {
                                     RetainedEntry {
                                         previous: session,
                                         scope,
+                                        signed_claim: signed_alias.as_deref(),
                                         resolver: resolver.clone(),
                                     },
                                 )
@@ -1087,6 +1100,7 @@ impl SessionPool {
                             RetainedEntry {
                                 previous: session,
                                 scope,
+                                signed_claim: signed_alias.as_deref(),
                                 resolver: resolver.clone(),
                             },
                         )
@@ -1116,6 +1130,7 @@ impl SessionPool {
                             RetainedEntry {
                                 previous: session,
                                 scope,
+                                signed_claim: signed_alias.as_deref(),
                                 resolver: resolver.clone(),
                             },
                         )
@@ -1266,6 +1281,7 @@ impl SessionPool {
                             RetainedEntry {
                                 previous,
                                 scope,
+                                signed_claim: signed_alias.as_deref(),
                                 resolver: resolver.clone(),
                             },
                         )

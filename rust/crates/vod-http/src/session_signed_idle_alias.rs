@@ -25,6 +25,17 @@ pub(crate) fn signed_alias_claim(request: &VodRequest, subject: i64) -> Option<S
     (uuid.to_string() == request.content_id).then(|| format!("movie:{uuid}:{subject}"))
 }
 
+pub(super) fn is_minted_session(id: &str) -> bool {
+    id.strip_prefix("vod_")
+        .and_then(|value| value.split_once('_'))
+        .is_some_and(|(timestamp, nonce)| {
+            !timestamp.is_empty()
+                && timestamp.bytes().all(|byte| byte.is_ascii_digit())
+                && nonce.len() == 32
+                && nonce.bytes().all(|byte| byte.is_ascii_hexdigit())
+        })
+}
+
 fn claim_key(id: &str) -> String {
     format!("vod_signed_idle_alias:{id}")
 }

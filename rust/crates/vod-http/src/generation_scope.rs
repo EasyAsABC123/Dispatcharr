@@ -845,6 +845,17 @@ impl LocalScope {
         request: AcquireRequest,
         admission: NewAdmission,
     ) -> Result<(), Error> {
+        self.reopen_with_signed_claim(body, request, admission, None)
+            .await
+    }
+
+    pub(crate) async fn reopen_with_signed_claim(
+        &self,
+        body: &Body,
+        request: AcquireRequest,
+        admission: NewAdmission,
+        signed_claim: Option<String>,
+    ) -> Result<(), Error> {
         if !Weak::ptr_eq(&body.state.scope, &Arc::downgrade(&self.inner))
             || body.is_closed()
             || body.state.admitted.load(Ordering::Acquire)
@@ -889,7 +900,17 @@ impl LocalScope {
                 .get("user_id")
                 .cloned()
                 .ok_or(Error::Configuration)?;
-            let generation = if inner.authenticated_restart {
+            let generation = if let Some(claim) = signed_claim {
+                retired
+                    .reopen_signed_retained(
+                        request,
+                        admission,
+                        caller,
+                        !inner.authenticated_restart,
+                        claim,
+                    )
+                    .await?
+            } else if inner.authenticated_restart {
                 retired.reopen_retained(request, admission, caller).await?
             } else {
                 retired

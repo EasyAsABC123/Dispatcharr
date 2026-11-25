@@ -1,8 +1,8 @@
 //! Real Redis VOD/live admission differential boundaries.
 use dispatcharr_clients::{
     vod::{
-        admit, admit_signed_create, check_signed_claim, enter_signed_idle_alias, Admission,
-        SignedIdleAlias,
+        admit, admit_signed_create, admit_signed_reopen, check_signed_claim,
+        enter_signed_idle_alias, Admission, AdmissionFence, SignedIdleAlias,
     },
     ClientConfig, ClientStore, Error,
 };
@@ -252,7 +252,25 @@ async fn fresh_signed_alias_preserves_both_users_quota_and_reserves_one_retained
         admit_signed_create(&mut redis, create(), false, None).await,
         Err(Error::Stopped)
     );
+    let reopen_fence = || AdmissionFence {
+        owner_key: &lease_key,
+        owner_token: "retained",
+        stop_key: &stop,
+    };
+    // Change physical state after the successful preflight read above.
+    let _: () = redis.set_ex(&marker, "used", 300).await.unwrap();
+    assert_eq!(
+        admit_signed_reopen(&mut redis, create(), reopen_fence(), false, &claim).await,
+        Err(Error::Stopped)
+    );
+    let _: () = redis.set_ex(&marker, &claim, 300).await.unwrap();
     let _: () = redis.set_ex(&stop, "true", 30).await.unwrap();
+    for source_policy in [false, true] {
+        assert_eq!(
+            admit_signed_reopen(&mut redis, create(), reopen_fence(), source_policy, &claim).await,
+            Err(Error::Stopped)
+        );
+    }
     assert_eq!(
         admit_signed_create(&mut redis, create(), false, Some(&claim)).await,
         Err(Error::Stopped)

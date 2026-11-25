@@ -79,6 +79,27 @@ pub async fn admit_source_owner_physical<C: redis::aio::ConnectionLike + Send + 
     admit_inner(connection, request, Some(fence), true, None).await
 }
 
+/// Recreate a retired row under its physical owner and recheck the signed claim.
+pub async fn admit_signed_reopen<C: redis::aio::ConnectionLike + Send + Unpin>(
+    connection: &mut C,
+    request: Admission<'_>,
+    fence: AdmissionFence<'_>,
+    source_policy: bool,
+    claim: &str,
+) -> Result<bool, Error> {
+    if !request.create
+        || fence.owner_key.is_empty()
+        || fence.owner_key.len() > 512
+        || fence.owner_token.is_empty()
+        || fence.owner_token.len() > 128
+        || fence.stop_key.is_empty()
+        || fence.stop_key.len() > 512
+    {
+        return Err(Error::InvalidClient);
+    }
+    admit_inner(connection, request, Some(fence), source_policy, Some(claim)).await
+}
+
 /// Check a protected SID before selecting either ordinary entry or adoption.
 pub async fn check_signed_claim<C: redis::aio::ConnectionLike + Send + Unpin>(
     connection: &mut C,

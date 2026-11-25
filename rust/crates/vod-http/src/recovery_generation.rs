@@ -5,7 +5,9 @@
 //! request creates a new public generation with active_streams=1. This component
 //! deliberately does not rebuild public counts from old local bodies. It does
 //! not yet integrate body delivery, lifecycle events or partial-state recovery.
-use dispatcharr_clients::vod::{admit_fenced_physical, Admission, AdmissionFence};
+use dispatcharr_clients::vod::{
+    admit_fenced_physical, admit_signed_reopen, Admission, AdmissionFence,
+};
 use dispatcharr_contracts::UserLimitPolicy;
 use dispatcharr_coordination::{AcquireRequest, Coordinator, Lease};
 use redis::{aio::ConnectionManager, Script};
@@ -258,7 +260,8 @@ impl Retired {
         request: AcquireRequest,
         admission: NewAdmission,
     ) -> Result<NewGeneration, Error> {
-        self.reopen_scoped(request, admission, None, false).await
+        self.reopen_scoped(request, admission, None, false, None)
+            .await
     }
     /// Retain this new request's scope through actual setup/ambiguous cleanup.
     /// Successful delivery releases this extra setup reference: the caller must
@@ -269,7 +272,7 @@ impl Retired {
         admission: NewAdmission,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<NewGeneration, Error> {
-        self.reopen_scoped(request, admission, Some(caller), false)
+        self.reopen_scoped(request, admission, Some(caller), false, None)
             .await
     }
     /// Opt-in Source body-stop admission; retain physical setup/cleanup owners.
@@ -279,15 +282,28 @@ impl Retired {
         admission: NewAdmission,
         caller: Arc<dyn Send + Sync>,
     ) -> Result<NewGeneration, Error> {
-        self.reopen_scoped(request, admission, Some(caller), true)
+        self.reopen_scoped(request, admission, Some(caller), true, None)
             .await
     }
+    pub(crate) async fn reopen_signed_retained(
+        self,
+        request: AcquireRequest,
+        admission: NewAdmission,
+        caller: Arc<dyn Send + Sync>,
+        source_policy: bool,
+        claim: String,
+    ) -> Result<NewGeneration, Error> {
+        self.reopen_scoped(request, admission, Some(caller), source_policy, Some(claim))
+            .await
+    }
+
     async fn reopen_scoped(
         self,
         request: AcquireRequest,
         mut admission: NewAdmission,
         caller: Option<Arc<dyn Send + Sync>>,
         source_policy: bool,
+        signed_claim: Option<String>,
     ) -> Result<NewGeneration, Error> {
         if request.channel_id != self.id
             || admission.fields.get("session_id") != Some(&self.id)
@@ -351,7 +367,9 @@ impl Retired {
                 owner_token: lease.token(),
                 stop_key: &stop,
             };
-            let outcome = if source_policy {
+            let outcome = if let Some(claim) = signed_claim.as_deref() {
+                admit_signed_reopen(&mut connection, request, fence, source_policy, claim).await
+            } else if source_policy {
                 dispatcharr_clients::vod::admit_source_owner_physical(
                     &mut connection,
                     request,

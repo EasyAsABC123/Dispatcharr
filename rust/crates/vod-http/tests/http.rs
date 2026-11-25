@@ -282,7 +282,10 @@ async fn fixture_with_idle_grace(
     };
     let recovery_namespace = config.namespace.clone();
     let coordinator = Coordinator::connect(&url, config).await.unwrap();
-    let selected_path = if matches!(path, "recovery-idle" | "signed-idle") {
+    let selected_path = if matches!(
+        path,
+        "recovery-idle" | "signed-idle" | "signed-restart" | "signed-claim-timeout"
+    ) {
         "bytes"
     } else if matches!(path, "fallback" | "preempt-full" | "redirect") {
         "paced"
@@ -313,7 +316,7 @@ async fn fixture_with_idle_grace(
             user_agent: "VOD-contract-test".into(),
         });
     }
-    let signed_viewers = if path == "signed-idle" {
+    let signed_viewers = if path.starts_with("signed-") {
         let prior = user.clone().unwrap();
         let requester = User {
             id: prior.id + 1,
@@ -348,6 +351,11 @@ async fn fixture_with_idle_grace(
         &url,
         VodConfig {
             idle_grace,
+            max_requests: if path == "signed-claim-timeout" {
+                1
+            } else {
+                VodConfig::default().max_requests
+            },
             ..Default::default()
         },
     )
@@ -355,6 +363,10 @@ async fn fixture_with_idle_grace(
     .unwrap();
     let engine = if path == "recovery-idle" {
         engine.with_redis_recovery(&recovery_namespace).unwrap()
+    } else if path == "signed-restart" {
+        engine
+            .with_authenticated_redis_restart(&recovery_namespace)
+            .unwrap()
     } else {
         engine
     };
@@ -653,6 +665,171 @@ async fn wait_for_idle_metadata(
     })
     .await
     .unwrap();
+}
+
+fn signed_full_request(viewer: i64, movie: &str, sid: Option<&str>) -> VodRequest {
+    let mut request = request(sid.unwrap_or_default(), None);
+    request.session_id = sid.map(str::to_owned);
+    request.content_id = movie.to_owned();
+    request
+        .playback
+        .headers
+        .push(("fixture-viewer".into(), viewer.to_string()));
+    request
+}
+
+fn fixture_signed_user() -> User {
+    User {
+        id: (uuid::Uuid::new_v4().as_u128() % 1_000_000_000) as i64 + 1000,
+        username: "fixture-viewer".into(),
+        password: "!".into(),
+        is_active: true,
+        user_level: 0,
+        stream_limit: 1,
+        custom_properties: serde_json::json!({}),
+    }
+}
+
+async fn mint_signed_full(engine: &VodEngine, viewer: i64, movie: &str) -> String {
+    let response = engine
+        .respond(signed_full_request(viewer, movie, None))
+        .await;
+    assert_eq!(response.status(), StatusCode::MOVED_PERMANENTLY);
+    response.headers()["location"]
+        .to_str()
+        .unwrap()
+        .rsplit('/')
+        .next()
+        .unwrap()
+        .to_owned()
+}
+
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback networking"]
+async fn authenticated_scoped_restart_preserves_pending_signed_claim() {
+    let user = fixture_signed_user();
+    let viewer = user.id;
+    let (engine, mut redis, profile, origin) =
+        fixture_with_idle_grace("signed-restart", Some(user), Duration::from_secs(5)).await;
+    let movie = uuid::Uuid::new_v4().to_string();
+    let sid = mint_signed_full(&engine, viewer, &movie).await;
+    let follow = || signed_full_request(viewer, &movie, Some(&sid));
+    let marker = format!("vod_signed_idle_alias:{sid}");
+    let claim: String = redis.get(&marker).await.unwrap();
+    let metadata = format!("vod_persistent_connection:{sid}");
+    let stop = format!("vod_proxy:client:{sid}:stop");
+    let provider = format!("profile_connections:{profile}");
+    let first = engine.respond(follow()).await;
+    assert_eq!(first.status(), StatusCode::OK);
+    let old_token: String = redis.hget(&metadata, "rust_owner_token").await.unwrap();
+    let owner_suffix = format!(":vod:session:{sid}:owner");
+    let owner: String = redis
+        .scan_match(format!("test:vod:*{owner_suffix}"))
+        .await
+        .unwrap()
+        .next_item()
+        .await
+        .unwrap();
+    let namespace = owner.strip_suffix(&owner_suffix).unwrap();
+    let lease_token: String = redis.get(&owner).await.unwrap();
+    let ledger = format!("{namespace}:lease:{lease_token}");
+    let removed: usize = redis
+        .del(&[&owner, &metadata, &ledger, &provider])
+        .await
+        .unwrap();
+    assert_eq!(removed, 4);
+
+    let _: () = redis.set_ex(&marker, "used", 300).await.unwrap();
+    assert_eq!(
+        engine.respond(follow()).await.status(),
+        StatusCode::FORBIDDEN
+    );
+    let _: () = redis.set_ex(&marker, &claim, 300).await.unwrap();
+    let _: () = redis.set_ex(&stop, "true", 300).await.unwrap();
+    assert_eq!(
+        engine.respond(follow()).await.status(),
+        StatusCode::FORBIDDEN
+    );
+    let _: () = redis.del(&stop).await.unwrap();
+    assert!(!redis.exists::<_, bool>(&metadata).await.unwrap());
+
+    let reopened = engine.respond(follow()).await;
+    assert_eq!(reopened.status(), StatusCode::OK);
+    let token: String = redis.hget(&metadata, "rust_owner_token").await.unwrap();
+    assert_ne!(token, old_token);
+    assert_eq!(redis.get::<_, String>(&marker).await.unwrap(), claim);
+    assert_eq!(
+        redis.hget::<_, _, i64>(&metadata, "user_id").await.unwrap(),
+        viewer
+    );
+    assert_eq!(redis.get::<_, i64>(&provider).await.unwrap(), 1);
+    drop(first);
+    assert_eq!(
+        axum::body::to_bytes(reopened.into_body(), 256)
+            .await
+            .unwrap()
+            .len(),
+        256
+    );
+    assert!(engine.shutdown().await);
+    clean(&mut redis, &sid, profile).await;
+    origin.abort();
+}
+
+#[tokio::test]
+#[ignore = "requires disposable REDIS_TEST_URL and loopback networking"]
+async fn stalled_signed_claim_read_releases_the_only_request_permit() {
+    let user = fixture_signed_user();
+    let viewer = user.id;
+    let (engine, mut redis, profile, origin) = fixture_with_idle_grace(
+        "signed-claim-timeout",
+        Some(user),
+        Duration::from_millis(20),
+    )
+    .await;
+    let movie = uuid::Uuid::new_v4().to_string();
+    let sid = mint_signed_full(&engine, viewer, &movie).await;
+    let follow = || signed_full_request(viewer, &movie, Some(&sid));
+    let started = tokio::time::Instant::now();
+    let _: () = redis::cmd("CLIENT")
+        .arg("PAUSE")
+        .arg(3000)
+        .arg("ALL")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    let status = tokio::time::timeout(Duration::from_millis(2750), engine.respond(follow()))
+        .await
+        .unwrap()
+        .status();
+    assert_eq!(status, StatusCode::SERVICE_UNAVAILABLE);
+    assert!(started.elapsed() >= Duration::from_millis(1800));
+    // Drop another caller while its detached read is paused. Its permit must
+    // still be returned at the inner deadline.
+    let _: () = redis::cmd("CLIENT")
+        .arg("UNPAUSE")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    let _: () = redis::cmd("CLIENT")
+        .arg("PAUSE")
+        .arg(3000)
+        .arg("ALL")
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    assert!(
+        tokio::time::timeout(Duration::from_millis(300), engine.respond(follow()))
+            .await
+            .is_err()
+    );
+    tokio::time::sleep(Duration::from_millis(1850)).await;
+    let next = engine.respond(follow()).await;
+    assert_eq!(next.status(), StatusCode::OK);
+    drop(next);
+    clean(&mut redis, &sid, profile).await;
+    assert!(engine.shutdown().await);
+    origin.abort();
 }
 
 #[tokio::test]
