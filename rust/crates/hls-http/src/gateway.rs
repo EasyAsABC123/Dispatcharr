@@ -108,7 +108,8 @@ pub(crate) struct Manager {
     done: watch::Sender<bool>,
     profile_start: watch::Sender<Option<bool>>,
     demand: AtomicUsize,
-    admission: Arc<OwnedSemaphorePermit>,
+    admission: Mutex<Option<Arc<OwnedSemaphorePermit>>>,
+    startup_recovery: Mutex<Option<(Instant, u64)>>,
     behind: f64,
     output_lease: Mutex<Option<OutputLease>>,
 }
@@ -319,7 +320,11 @@ impl HlsGateway {
             let mut stopped = session.client.stopped();
             loop {
                 tokio::select! { _=tokio::time::sleep(Duration::from_millis(250))=>{}, _=stopped.changed()=>{} }
-                if *stopped.borrow() || session.expired.load(Ordering::Acquire) {
+                if *stopped.borrow()
+                    || session.expired.load(Ordering::Acquire)
+                    || lock(&session.manager.startup_recovery)
+                        .is_some_and(|(deadline, _)| Instant::now() >= deadline)
+                {
                     break;
                 }
                 if lock(&session.touched).elapsed() >= inner.config.session_idle_timeout {
@@ -417,7 +422,8 @@ impl Inner {
             done,
             profile_start,
             demand: AtomicUsize::new(0),
-            admission,
+            admission: Mutex::new(Some(admission)),
+            startup_recovery: Mutex::new(None),
             behind: source.startup_behind.as_secs_f64(),
             output_lease: Mutex::new(None),
             state: Mutex::new(ManagerState {
@@ -503,9 +509,46 @@ impl Inner {
         Ok(Arc::new(Payload {
             data,
             _budget: budget,
-            _manager: manager.admission.clone(),
+            _manager: lock(&manager.admission)
+                .clone()
+                .ok_or_else(|| failure(503, "HLS producer retired"))?,
         }))
     }
+    pub(crate) fn hls_startup_recovery(
+        &self,
+        token: &str,
+        info: &dispatcharr_clients::HlsSessionInfo,
+        active_index: Option<u64>,
+    ) -> Result<Option<String>, PlaybackError> {
+        let Some(session) = lock(&self.sessions).get(token).cloned() else {
+            return Ok(None);
+        };
+        let mut recovered = lock(&session.manager.startup_recovery);
+        let Some((deadline, index)) = *recovered else {
+            return Ok(None);
+        };
+        if self.stopped.load(Ordering::Acquire) {
+            return Err(failure(503, "HLS is shutting down"));
+        }
+        if Instant::now() >= deadline
+            || session.expired.load(Ordering::Acquire)
+            || session.client.id() != info.client_id
+            || session.manager.channel != info.channel_id
+            || session.manager.profile.is_some()
+            || info
+                .metadata
+                .get("output_profile_id")
+                .is_some_and(|value| !value.is_empty())
+        {
+            return Err(failure(410, "Session expired"));
+        }
+        if active_index.is_some_and(|latest| latest > index) {
+            *recovered = None;
+            return Ok(None);
+        }
+        Ok(Some(session.manager.fence.clone()))
+    }
+
     async fn has_demand(&self, channel: &str, profile: Option<i64>) -> Result<bool, PlaybackError> {
         let clients = self
             .clients
@@ -568,14 +611,32 @@ impl Inner {
     }
     async fn run_manager(self: Arc<Self>, manager: Arc<Manager>, source: PlaybackSource) {
         let mut cancelled = manager.stop.subscribe();
+        let mut retained_on_startup = None;
         let result=async {
             if *cancelled.borrow() {return Ok(());}
             if let Some(outputs)=&self.outputs {
                 match outputs.claim(&manager.channel,&manager.format,&manager.fence).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {
                     Some(lease)=>{
                         let snapshot=outputs.snapshot(&manager.channel,&manager.format).await.map_err(|_|failure(503,"HLS state unavailable"))?;
-                        {let mut state=lock(&manager.state);state.seq=snapshot.index+1;
-                            if let Some(descriptor)=snapshot.descriptor {let (window,disc_seq,_,ts)=crate::shared::descriptor(&descriptor,self.config.max_stored_segments)?;state.window=window.into();state.disc_seq=disc_seq;state.ts=ts;}
+                        {
+                            let mut state = lock(&manager.state);
+                            state.seq = snapshot.index + 1;
+                            if let Some(descriptor) = snapshot.descriptor {
+                                let (window, disc_seq, _, ts) = crate::shared::descriptor(
+                                    &descriptor,
+                                    self.config.max_stored_segments,
+                                )?;
+                                if snapshot.owner.as_deref() == Some(manager.fence.as_str())
+                                    && snapshot.index > 0
+                                    && !window.is_empty()
+                                {
+                                    let whole_published_window = window.last().is_some_and(|leaf| leaf.seq == snapshot.index);
+                                    retained_on_startup = Some((snapshot.index, whole_published_window.then_some(descriptor)));
+                                }
+                                state.window = window.into();
+                                state.disc_seq = disc_seq;
+                                state.ts = ts;
+                            }
                         }
                         *lock(&manager.output_lease)=Some(lease.clone());lease.set_state("initializing").await.map_err(|_|failure(503,"HLS state unavailable"))?;
                     },
@@ -583,6 +644,7 @@ impl Inner {
                 }
             }
             let mut input=tokio::select! {result=self.engine.open_input(source)=>result?,_=cancelled.changed()=>return Ok(())};
+            retained_on_startup = None;
             if self.outputs.is_none()&&!self.clients.claim_output_owner(&manager.channel,&manager.format,&manager.fence,Duration::from_secs(60)).await.map_err(|_|failure(503,"HLS ownership unavailable"))? {return Err(failure(503,"HLS output is owned by another worker"));}
             lock(&manager.state).ready=Some(Instant::now());manager.notify.notify_waiters();
             let mut segmenter=TSSegmenter::new(SegmenterConfig {target_duration:3.9,max_segment_duration:Some(6.45),max_segment_bytes:self.config.max_segment_bytes,..Default::default()}).map_err(|_|failure(500,"Segmenter unavailable"))?;
@@ -612,7 +674,10 @@ impl Inner {
             }}
             Ok::<(),PlaybackError>(())
         }.await;
-        let _ = result;
+        let allow_recovery = result.is_err()
+            && !self.stopped.load(Ordering::Acquire)
+            && !*cancelled.borrow()
+            && manager.profile.is_none();
         {
             let mut state = lock(&manager.state);
             state.dead = true;
@@ -625,8 +690,33 @@ impl Inner {
             manager.profile_start.send_replace(Some(false));
         }
         let lease = lock(&manager.output_lease).take();
+        let mut recovering = false;
         if let Some(lease) = lease {
-            let _ = lease.release().await;
+            match retained_on_startup {
+                Some((index, Some(descriptor))) if allow_recovery => {
+                    let started = Instant::now();
+                    if let Ok(ttl) = lease
+                        .retain_abandoned_hls_startup(
+                            index,
+                            &descriptor,
+                            self.config.initialization_timeout,
+                        )
+                        .await
+                    {
+                        if ttl > started.elapsed() {
+                            *lock(&manager.startup_recovery) = Some((started + ttl, index));
+                            lock(&manager.admission).take();
+                            recovering = true;
+                        }
+                    }
+                }
+                Some((index, _)) => {
+                    let _ = lease.abandon_hls_startup(index).await;
+                }
+                None => {
+                    let _ = lease.release().await;
+                }
+            }
         } else if self.outputs.is_none() {
             let _ = self
                 .clients
@@ -641,6 +731,10 @@ impl Inner {
             {
                 managers.remove(&manager.key);
             }
+        }
+        if recovering {
+            manager.done.send_replace(true);
+            return;
         }
         let sessions: Vec<_> = lock(&self.sessions)
             .values()

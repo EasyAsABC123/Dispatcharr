@@ -80,6 +80,7 @@ if redis.call('HGET',KEYS[1],'rust_owner_token')~=ARGV[1] then return -1 end
 local count=tonumber(redis.call('HGET',KEYS[1],'active_streams') or '0')
 if count>0 then count=count-1 end
 redis.call('HSET',KEYS[1],'active_streams',count,'last_activity',ARGV[2])
+if count==0 then redis.call('HDEL',KEYS[1],'rust_signed_idle_alias','rust_signed_idle_alias_previous_activity') end
 return count
 "#;
 const DELETE: &str = r#"
@@ -115,6 +116,7 @@ pub(crate) struct Session {
     metadata_token: String,
     pub(super) authenticated_restart: bool,
     generation_epoch: u64,
+    signed_alias_owner: bool,
     state: Mutex<State>,
     _slot: Arc<OwnedSemaphorePermit>,
 }
@@ -231,9 +233,10 @@ impl Progress {
         .await;
     }
 }
-struct RetainedEntry {
+struct RetainedEntry<'a> {
     previous: Arc<Session>,
     scope: LocalScope,
+    signed_claim: Option<&'a str>,
     resolver: Option<Arc<dyn crate::resolver::VodResolver>>,
 }
 
@@ -245,6 +248,12 @@ pub(crate) struct Ticket {
     body_started: AtomicBool,
     scope_body: Option<ScopedBody>,
     cleanup_needed: bool,
+}
+
+#[derive(Default)]
+pub(crate) struct EntryAuthorization {
+    pub(super) restart_user: Option<i64>,
+    pub(super) signed_alias: Option<String>,
 }
 
 impl SessionPool {
@@ -541,11 +550,12 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
         request_permit: Arc<OwnedSemaphorePermit>,
-        retained: RetainedEntry,
+        retained: RetainedEntry<'_>,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
         let RetainedEntry {
             previous,
             scope,
+            signed_claim,
             resolver,
         } = retained;
         // Source2's changed-request-ID cases keep the one retained public ID.
@@ -668,6 +678,7 @@ impl SessionPool {
                         scope: std::sync::OnceLock::new(),
                         authenticated_restart: false,
                         generation_epoch: 0,
+                        signed_alias_owner: false,
                         state: Mutex::new(State {
                             active: 1,
                             reserved: false,
@@ -801,7 +812,7 @@ impl SessionPool {
             .as_ref()
             .map_or(0, |user| user.stream_limit.max(0));
         scope
-            .reopen(
+            .reopen_with_signed_claim(
                 &body,
                 AcquireRequest {
                     channel_id: id.into(),
@@ -814,6 +825,7 @@ impl SessionPool {
                     limit: limit as u32,
                     policy: source.limit_policy.clone(),
                 },
+                signed_claim.filter(|_| !requested_alias).map(str::to_owned),
             )
             .await
             .map_err(|error| {
@@ -860,6 +872,7 @@ impl SessionPool {
             scope: std::sync::OnceLock::new(),
             authenticated_restart: previous.authenticated_restart,
             generation_epoch,
+            signed_alias_owner: false,
             state: Mutex::new(State {
                 active: 1,
                 reserved: true,
@@ -910,7 +923,8 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
-        self.enter_selected(id, source, request, None, None).await
+        self.enter_selected(id, source, request, None, EntryAuthorization::default())
+            .await
     }
     pub(crate) async fn enter_with_resolver(
         &self,
@@ -918,9 +932,9 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
         resolver: Arc<dyn crate::resolver::VodResolver>,
-        restart_user: Option<i64>,
+        authorization: EntryAuthorization,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
-        self.enter_selected(id, source, request, Some(resolver), restart_user)
+        self.enter_selected(id, source, request, Some(resolver), authorization)
             .await
     }
     async fn enter_selected(
@@ -929,7 +943,7 @@ impl SessionPool {
         source: VodSource,
         request: &VodRequest,
         resolver: Option<Arc<dyn crate::resolver::VodResolver>>,
-        restart_user: Option<i64>,
+        authorization: EntryAuthorization,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
         // All entry/recovery paths share this immutable process identity. Fail
         // before a pending body, retirement job, ledger or quota can be created.
@@ -954,7 +968,7 @@ impl SessionPool {
                 &request,
                 request_permit,
                 resolver,
-                restart_user,
+                authorization,
             )
             .await
         })
@@ -968,8 +982,42 @@ impl SessionPool {
         request: &VodRequest,
         request_permit: Arc<OwnedSemaphorePermit>,
         resolver: Option<Arc<dyn crate::resolver::VodResolver>>,
-        restart_user: Option<i64>,
+        authorization: EntryAuthorization,
     ) -> Result<Ticket, dispatcharr_store::StoreError> {
+        let EntryAuthorization {
+            restart_user,
+            signed_alias,
+        } = authorization;
+        // Legacy IDs outside the signed mint namespace have no claim to read.
+        let signed_alias = if session_signed_idle_alias::is_minted_session(id) {
+            let mut connection = self.inner.connection.clone();
+            let proven = tokio::time::timeout(
+                Duration::from_secs(2),
+                dispatcharr_clients::vod::check_signed_claim(
+                    &mut connection,
+                    id,
+                    signed_alias.as_deref(),
+                    source.user.as_ref().map(|user| user.id),
+                ),
+            )
+            .await
+            .map_err(|_| redis_error())?
+            .map_err(|error| match error {
+                dispatcharr_clients::Error::Stopped => dispatcharr_store::StoreError::Forbidden,
+                _ => redis_error(),
+            })?;
+            signed_alias.filter(|_| proven)
+        } else {
+            None
+        };
+        if let (Some(claim), Some(policy)) = (signed_alias.as_deref(), resolver.as_deref()) {
+            if let Some(ticket) = self
+                .enter_signed_idle_alias(id, claim, &source, request, policy, &request_permit)
+                .await?
+            {
+                return Ok(ticket);
+            }
+        }
         // This lock serializes bounded session SETUP only, never media/network body I/O.
         let mut registry = self.inner.sessions.lock().await;
         if self.stopped() {
@@ -1033,6 +1081,7 @@ impl SessionPool {
                                     RetainedEntry {
                                         previous: session,
                                         scope,
+                                        signed_claim: signed_alias.as_deref(),
                                         resolver: resolver.clone(),
                                     },
                                 )
@@ -1051,6 +1100,7 @@ impl SessionPool {
                             RetainedEntry {
                                 previous: session,
                                 scope,
+                                signed_claim: signed_alias.as_deref(),
                                 resolver: resolver.clone(),
                             },
                         )
@@ -1080,6 +1130,7 @@ impl SessionPool {
                             RetainedEntry {
                                 previous: session,
                                 scope,
+                                signed_claim: signed_alias.as_deref(),
                                 resolver: resolver.clone(),
                             },
                         )
@@ -1230,6 +1281,7 @@ impl SessionPool {
                             RetainedEntry {
                                 previous,
                                 scope,
+                                signed_claim: signed_alias.as_deref(),
                                 resolver: resolver.clone(),
                             },
                         )
@@ -1298,12 +1350,17 @@ impl SessionPool {
         let authenticated_restart = mode.is_some()
             && !source_mode
             && ordinary_restart_user(&source, request, restart_user).is_some();
-        let created = if source_mode {
-            dispatcharr_clients::vod::admit_source(&mut connection, admission).await
-        } else {
-            dispatcharr_clients::vod::admit(&mut connection, admission).await
-        }
-        .map_err(|error| admission_error(error, limit))?;
+        let created = dispatcharr_clients::vod::admit_signed_create(
+            &mut connection,
+            admission,
+            source_mode,
+            signed_alias.as_deref(),
+        )
+        .await
+        .map_err(|error| match error {
+            dispatcharr_clients::Error::Stopped => dispatcharr_store::StoreError::Forbidden,
+            _ => admission_error(error, limit),
+        })?;
         if !created {
             return Err(unavailable());
         }
@@ -1375,6 +1432,7 @@ impl SessionPool {
             metadata_token,
             authenticated_restart,
             generation_epoch: 0,
+            signed_alias_owner: signed_alias.is_some(),
             state: Mutex::new(State {
                 active: 1,
                 reserved: true,
@@ -2083,6 +2141,10 @@ fn idle_match(
 #[cfg(test)]
 #[path = "session_restart_peer.rs"]
 mod session_restart_peer;
+
+#[path = "session_signed_idle_alias.rs"]
+mod session_signed_idle_alias;
+pub(crate) use session_signed_idle_alias::signed_alias_claim;
 
 #[path = "session_user_lookup.rs"]
 mod session_user_lookup;

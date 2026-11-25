@@ -256,6 +256,10 @@ fn keys(channel: &str, format: &str) -> Result<[String; 7], Error> {
 fn profile_binding_key(owner_key: &str) -> String {
     format!("{owner_key}:rust_input_binding")
 }
+fn hls_startup_key(owner: &str) -> String {
+    format!("{owner}:retained-startup")
+}
+
 fn valid_token(token: &str) -> bool {
     !token.is_empty()
         && token.len() <= 128
@@ -421,9 +425,13 @@ impl OutputStore {
             } else {
                 b"0"
             };
+            let mut claim_keys = vec![keys[0].clone(), keys[6].clone()];
+            if format == "hls" {
+                claim_keys.push(hls_startup_key(&keys[0]));
+            }
             self.command(
                 CLAIM,
-                &[keys[0].clone(), keys[6].clone()],
+                &claim_keys,
                 &[token.as_bytes(), ttl.as_bytes(), b"", reset_state],
                 guard,
             )
@@ -568,12 +576,78 @@ impl OutputStore {
         let keys = keys(channel, format)?;
         self.read_key_retained(
             format!("{}{sequence}", keys[4]),
-            Some((keys[0].clone(), expected_owner.to_owned())),
+            Some(ReadFence::Owner(keys[0].clone(), expected_owner.to_owned())),
             guard,
             admission,
         )
         .await
     }
+    /// Return the live portion of the exact abandoned unprofiled HLS window.
+    pub async fn retained_hls_startup(
+        &self,
+        channel: &str,
+        expected: &str,
+    ) -> Result<Option<Snapshot>, Error> {
+        if !valid_token(expected) {
+            return Err(Error::InvalidKey);
+        }
+        let keys = keys(channel, "hls")?;
+        let marker = hls_startup_key(&keys[0]);
+        let limit = self.inner.config.max_segments.to_string();
+        let maximum = self.inner.config.max_segment_bytes.to_string();
+        let (index, descriptor, segments): (u64, String, Vec<(u64, f64)>) = self
+            .invoke(
+                RETAINED_HLS_STARTUP,
+                &[
+                    keys[0].clone(),
+                    marker,
+                    keys[1].clone(),
+                    keys[2].clone(),
+                    keys[3].clone(),
+                    keys[4].clone(),
+                ],
+                &[expected.as_bytes(), limit.as_bytes(), maximum.as_bytes()],
+            )
+            .await?;
+        if index == 0 || segments.is_empty() {
+            return Ok(None);
+        }
+        Ok(Some(Snapshot {
+            owner: None,
+            index,
+            descriptor: Some(serde_json::from_str(&descriptor).map_err(|_| Error::Corrupt)?),
+            segments,
+        }))
+    }
+
+    pub async fn get_retained_hls_startup<G: Send + 'static>(
+        &self,
+        channel: &str,
+        expected: &str,
+        sequence: u64,
+        guard: G,
+    ) -> Result<(Option<SegmentBytes>, G), Error> {
+        if !valid_token(expected) {
+            return Err(Error::InvalidKey);
+        }
+        let keys = keys(channel, "hls")?;
+        self.read_key_retained(
+            format!("{}{sequence}", keys[4]),
+            Some(ReadFence::RetainedHls {
+                owner_key: keys[0].clone(),
+                marker: hls_startup_key(&keys[0]),
+                membership: keys[3].clone(),
+                index: keys[1].clone(),
+                descriptor: keys[2].clone(),
+                sequence: sequence.to_string(),
+                expected: expected.to_owned(),
+            }),
+            guard,
+            ReadAdmission::Immediate,
+        )
+        .await
+    }
+
     /// The init and media fragments of an fMP4 response must share one producer.
     pub async fn get_init_owned_retained<G: Send + 'static>(
         &self,
@@ -588,7 +662,7 @@ impl OutputStore {
         let keys = keys(channel, format)?;
         self.read_key_retained(
             keys[5].clone(),
-            Some((keys[0].clone(), expected_owner.to_owned())),
+            Some(ReadFence::Owner(keys[0].clone(), expected_owner.to_owned())),
             guard,
             ReadAdmission::Immediate,
         )
@@ -602,7 +676,7 @@ impl OutputStore {
     async fn read_key_retained<G: Send + 'static>(
         &self,
         key: String,
-        expected: Option<(String, String)>,
+        expected: Option<ReadFence>,
         guard: G,
         admission: ReadAdmission,
     ) -> Result<(Option<SegmentBytes>, G), Error> {
@@ -617,16 +691,50 @@ impl OutputStore {
             .await?;
         let maximum = self.inner.config.max_segment_bytes.to_string();
         let mut keys = vec![key];
+        let mut mode: &[u8] = b"";
         let mut owner = String::new();
-        if let Some((owner_key, expected)) = expected {
-            keys.push(owner_key);
-            owner = expected;
+        let mut sequence = String::new();
+        match expected {
+            None => {}
+            Some(ReadFence::Owner(owner_key, expected)) => {
+                owner = expected;
+                keys.push(owner_key);
+                mode = b"owner";
+            }
+            Some(ReadFence::RetainedHls {
+                owner_key,
+                marker,
+                membership,
+                index,
+                descriptor,
+                sequence: requested,
+                expected,
+            }) => {
+                keys.extend([owner_key, marker, membership, index, descriptor]);
+                owner = expected;
+                sequence = requested;
+                mode = b"retained-hls";
+            }
         }
-        let ((matched,data),(mut reserved,guard)) = self.command::<(i64,Option<Vec<u8>>),_>(
-            "if ARGV[2]~='' and redis.call('GET',KEYS[2])~=ARGV[2] then return {0,false} end local n=redis.call('STRLEN',KEYS[1]);if n>tonumber(ARGV[1]) then return redis.error_reply('CORRUPT oversized output') end return {1,redis.call('GET',KEYS[1])}",
-            &keys,&[maximum.as_bytes(),owner.as_bytes()],(reserved,guard)).await?;
+        let ((matched, data), (mut reserved, guard)) = self
+            .command::<(i64, Option<Vec<u8>>), _>(
+                READ_MEDIA,
+                &keys,
+                &[
+                    maximum.as_bytes(),
+                    owner.as_bytes(),
+                    mode,
+                    sequence.as_bytes(),
+                ],
+                (reserved, guard),
+            )
+            .await?;
         if matched != 1 {
-            return Err(Error::LostOwnership);
+            return if mode == b"retained-hls" {
+                Ok((None, guard))
+            } else {
+                Err(Error::LostOwnership)
+            };
         }
         let Some(data) = data else {
             return Ok((None, guard));
@@ -642,6 +750,19 @@ impl OutputStore {
         ))
     }
 }
+enum ReadFence {
+    Owner(String, String),
+    RetainedHls {
+        owner_key: String,
+        marker: String,
+        membership: String,
+        index: String,
+        descriptor: String,
+        sequence: String,
+        expected: String,
+    },
+}
+
 #[derive(Clone, Copy)]
 enum ReadAdmission {
     Immediate,
@@ -892,6 +1013,70 @@ impl OutputLease {
             Err(Error::LostOwnership)
         }
     }
+    /// Relinquish an initializing HLS producer without retiring its
+    /// predecessor's retained timeline. The caller supplies the validated
+    /// sequence observed before opening input. No media TTL is extended.
+    pub async fn abandon_hls_startup(&self, retained_index: u64) -> Result<bool, Error> {
+        self.finish_hls_startup(retained_index, Duration::ZERO, None)
+            .await
+            .map(|(released, _)| released)
+    }
+
+    /// Offer ownerless reads for one abandoned unprofiled HLS generation.
+    /// Redis clamps the window to the existing media and playlist TTLs.
+    pub async fn retain_abandoned_hls_startup(
+        &self,
+        retained_index: u64,
+        retained_descriptor: &serde_json::Value,
+        window: Duration,
+    ) -> Result<Duration, Error> {
+        if self.format != "hls" {
+            return Err(Error::Configuration);
+        }
+        self.finish_hls_startup(retained_index, window, Some(retained_descriptor))
+            .await
+            .map(|(_, retained)| retained)
+    }
+
+    async fn finish_hls_startup(
+        &self,
+        retained_index: u64,
+        window: Duration,
+        retained_descriptor: Option<&serde_json::Value>,
+    ) -> Result<(bool, Duration), Error> {
+        if retained_index == 0
+            || !(self.format == "hls" || self.format.starts_with("hls:p"))
+            || self.input_owner.is_some()
+        {
+            return Err(Error::Configuration);
+        }
+        let mut keys = keys(&self.channel, &self.format)?.to_vec();
+        let marker = hls_startup_key(&keys[0]);
+        keys.push(marker);
+        let index = retained_index.to_string();
+        let limit = window.min(Duration::from_secs(30)).as_millis().to_string();
+        let maximum = self.store.inner.config.max_segment_bytes.to_string();
+        let descriptor = retained_descriptor.map_or_else(String::new, serde_json::Value::to_string);
+        if descriptor.len() > 65_536 {
+            return Err(Error::Capacity);
+        }
+        let (released, ttl): (i64, u64) = self
+            .store
+            .invoke(
+                ABANDON_HLS_STARTUP,
+                &keys,
+                &[
+                    self.token.as_bytes(),
+                    index.as_bytes(),
+                    limit.as_bytes(),
+                    maximum.as_bytes(),
+                    descriptor.as_bytes(),
+                ],
+            )
+            .await?;
+        Ok((released == 1, Duration::from_millis(ttl)))
+    }
+
     pub async fn release(&self) -> Result<bool, Error> {
         self.release_retained(())
             .await
@@ -968,8 +1153,55 @@ if ARGV[3]~='' and redis.call('GET',KEYS[3])~=ARGV[3] then return 0 end
 local old=redis.call('GET',KEYS[1])
 if old and old~=ARGV[1] then return 0 end
 redis.call('SET',KEYS[1],ARGV[1],'PX',ARGV[2])
+if ARGV[3]=='' and KEYS[3] then redis.call('DEL',KEYS[3]) end
 if not old and ARGV[4]=='1' then redis.call('SET',KEYS[2],'initializing','EX',3600) end
 return 1
+"#;
+const ABANDON_HLS_STARTUP: &str = r#"
+if redis.call('GET',KEYS[1])~=ARGV[1] or redis.call('GET',KEYS[2])~=ARGV[2]
+   or redis.call('GET',KEYS[7])~='initializing' then return {0,0} end
+local ttl=0
+local bound=tonumber(ARGV[3])
+local descriptor=false
+if bound>0 and redis.call('STRLEN',KEYS[3])<=65536 then descriptor=redis.call('GET',KEYS[3]) end
+if descriptor and descriptor==ARGV[5] and redis.call('ZSCORE',KEYS[4],ARGV[2]) then
+  local chunk=KEYS[5]..ARGV[2];local length=redis.call('STRLEN',chunk)
+  if length>0 and length<=tonumber(ARGV[4]) then
+    ttl=math.max(0,math.min(bound,redis.call('PTTL',chunk),redis.call('PTTL',KEYS[3]),redis.call('PTTL',KEYS[4])))
+  end
+end
+if ttl>0 then redis.call('SET',KEYS[8],ARGV[1]..':'..ARGV[2]..':'..redis.sha1hex(descriptor),'PX',ttl) end
+redis.call('DEL',KEYS[1],KEYS[7]);return {1,ttl}
+"#;
+const RETAINED_HLS_STARTUP: &str = r#"
+if redis.call('EXISTS',KEYS[1])~=0 or redis.call('PTTL',KEYS[2])<=0 then return {0,'',{}} end
+if redis.call('STRLEN',KEYS[3])>32 or redis.call('STRLEN',KEYS[4])>65536
+   or redis.call('ZCARD',KEYS[5])>tonumber(ARGV[2]) then return redis.error_reply('CORRUPT retained output') end
+local index=redis.call('GET',KEYS[3]);local descriptor=redis.call('GET',KEYS[4])
+if not index or not tonumber(index) or not descriptor or redis.call('GET',KEYS[2])~=ARGV[1]..':'..index..':'..redis.sha1hex(descriptor) then return {0,'',{}} end
+local raw=redis.call('ZRANGE',KEYS[5],0,-1,'WITHSCORES');local entries={}
+for i=1,#raw,2 do
+  local seq=raw[i];local number=tonumber(seq);local chunk=KEYS[6]..seq
+  if number and number>0 and number<=tonumber(index) and redis.call('PTTL',chunk)>0 then
+    local length=redis.call('STRLEN',chunk)
+    if length>0 and length<=tonumber(ARGV[3]) then table.insert(entries,{seq,raw[i+1]}) end
+  end
+end
+return {index,descriptor,entries}
+"#;
+const READ_MEDIA: &str = r#"
+if ARGV[3]=='owner' and redis.call('GET',KEYS[2])~=ARGV[2] then return {0,false} end
+if ARGV[3]=='retained-hls' then
+  if redis.call('EXISTS',KEYS[2])~=0 or redis.call('PTTL',KEYS[3])<=0
+     or redis.call('STRLEN',KEYS[5])>32 or redis.call('STRLEN',KEYS[6])>65536 then return {0,false} end
+  local index=redis.call('GET',KEYS[5]);local descriptor=redis.call('GET',KEYS[6])
+  if not index or not tonumber(index) or tonumber(ARGV[4])>tonumber(index) or not descriptor
+     or redis.call('GET',KEYS[3])~=ARGV[2]..':'..index..':'..redis.sha1hex(descriptor)
+     or not redis.call('ZSCORE',KEYS[4],ARGV[4]) or redis.call('PTTL',KEYS[1])<=0 then return {0,false} end
+end
+local n=redis.call('STRLEN',KEYS[1])
+if n>tonumber(ARGV[1]) then return redis.error_reply('CORRUPT oversized output') end
+return {1,redis.call('GET',KEYS[1])}
 "#;
 const RELEASE: &str = r#"
 if redis.call('GET',KEYS[1])~=ARGV[1] then return 0 end

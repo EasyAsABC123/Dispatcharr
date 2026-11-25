@@ -4,8 +4,9 @@ use axum::{body::Body, response::Response};
 use bytes::Bytes;
 use dispatcharr_contracts::PlaybackError;
 use dispatcharr_hls_core::{render_media_playlist, SegmentDescriptor};
-use dispatcharr_output_store::{HlsColdState, SegmentBytes};
+use dispatcharr_output_store::{HlsColdState, SegmentBytes, Snapshot};
 use std::{
+    collections::HashSet,
     convert::Infallible,
     sync::{
         atomic::{AtomicBool, Ordering},
@@ -130,6 +131,43 @@ fn render(value: &serde_json::Value, limit: usize) -> Result<Vec<u8>, PlaybackEr
             .into_bytes(),
     )
 }
+fn retained_window(
+    snapshot: &Snapshot,
+    limit: usize,
+) -> Result<(Vec<SegmentDescriptor>, u64, f64), PlaybackError> {
+    let unavailable = || failure(404, "Retained playlist expired");
+    let descriptor = snapshot.descriptor.as_ref().ok_or_else(unavailable)?;
+    let (mut window, disc, behind, _) = self::descriptor(descriptor, limit)?;
+    let available: HashSet<_> = snapshot
+        .segments
+        .iter()
+        .map(|(sequence, _)| *sequence)
+        .collect();
+    // Take the contiguous live suffix so the playlist sequence and its URI
+    // numbering are still exact if earlier chunks have reached their TTL.
+    let keep = window
+        .iter()
+        .rev()
+        .enumerate()
+        .take_while(|(offset, item)| {
+            snapshot.index.checked_sub(*offset as u64) == Some(item.seq)
+                && available.contains(&item.seq)
+        })
+        .count();
+    if keep == 0 {
+        return Err(unavailable());
+    }
+    let dropped = window.len() - keep;
+    let skipped_boundaries = window[..dropped]
+        .iter()
+        .filter(|item| item.discontinuity)
+        .count();
+    let disc = disc
+        .checked_add(skipped_boundaries as u64)
+        .ok_or_else(unavailable)?;
+    Ok((window.split_off(dropped), disc, behind))
+}
+
 fn admit(
     inner: &Inner,
     token: &str,
@@ -249,6 +287,33 @@ pub(crate) async fn playlist(inner: Arc<Inner>, token: String) -> Result<Respons
         outputs.snapshot(&info.channel_id, &format)
     })
     .await?;
+    let recovery = inner.hls_startup_recovery(&token, &info, None)?;
+    if let (None, Some(expected)) = (&snapshot.owner, recovery) {
+        let held = retry(&inner, &token, || {
+            outputs.retained_hls_startup(&info.channel_id, &expected)
+        })
+        .await?
+        .ok_or_else(|| failure(404, "Retained playlist expired"))?;
+        let (window, disc, behind) = retained_window(&held, inner.config.max_stored_segments)?;
+        let current = touch(&inner, &token).await?;
+        inner.hls_startup_recovery(&token, &current, None)?;
+        let details = held
+            .descriptor
+            .as_ref()
+            .ok_or_else(|| failure(404, "Retained playlist expired"))?;
+        let advertised = details.get("adv_target").and_then(|value| value.as_u64());
+        let target = details
+            .get("target")
+            .and_then(|value| value.as_f64())
+            .filter(|value| value.is_finite())
+            .unwrap_or(4.0);
+        let media =
+            render_media_playlist(&window, target, "{seq}.ts", advertised, disc, Some(behind));
+        return Ok(crate::routes::body(
+            Body::from(frame(&inner, media.into_bytes(), session, request, None)?),
+            "application/vnd.apple.mpegurl",
+        ));
+    }
     if let Some(descriptor) = snapshot.descriptor {
         let data = render(&descriptor, inner.config.max_stored_segments)?;
         return Ok(crate::routes::body(
@@ -371,19 +436,37 @@ pub(crate) async fn segment(
         outputs.snapshot(&info.channel_id, &format)
     })
     .await?;
-    let expected = snapshot
-        .owner
+    let recovery = inner.hls_startup_recovery(&token, &info, None)?;
+    let retained = || (inner.clone(), session.clone(), request.clone());
+    let data = if let Some(owner) = snapshot.owner {
+        let (data, _) = retry(&inner, &token, || {
+            outputs.get_owned_retained(&info.channel_id, &format, &owner, seq, retained())
+        })
+        .await?;
+        if data.is_some() && recovery.is_some() {
+            inner.hls_startup_recovery(&token, &info, Some(seq))?;
+        }
+        data
+    } else if let Some(expected) = recovery {
+        let held = retry(&inner, &token, || {
+            outputs.retained_hls_startup(&info.channel_id, &expected)
+        })
+        .await?
         .ok_or_else(|| failure(404, "Segment expired"))?;
-    let (data, _retained) = retry(&inner, &token, || {
-        outputs.get_owned_retained(
-            &info.channel_id,
-            &format,
-            &expected,
-            seq,
-            (inner.clone(), session.clone(), request.clone()),
-        )
-    })
-    .await?;
+        let (window, _, _) = retained_window(&held, inner.config.max_stored_segments)?;
+        if !window.iter().any(|item| item.seq == seq) {
+            return Err(failure(404, "Segment expired"));
+        }
+        let (data, _) = retry(&inner, &token, || {
+            outputs.get_retained_hls_startup(&info.channel_id, &expected, seq, retained())
+        })
+        .await?;
+        let current = touch(&inner, &token).await?;
+        inner.hls_startup_recovery(&token, &current, None)?;
+        data
+    } else {
+        None
+    };
     let data = data.ok_or_else(|| failure(404, "Segment expired"))?;
     Ok(crate::routes::body(
         Body::from(Bytes::from_owner(RemoteMedia {

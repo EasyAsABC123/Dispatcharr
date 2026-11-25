@@ -127,6 +127,215 @@ async fn profiled_hls_readiness_follows_the_current_output_owner() {
 
 #[tokio::test]
 #[ignore = "requires real Redis"]
+async fn failed_hls_startup_releases_only_the_same_unpublished_owner() {
+    let store = OutputStore::connect(
+        &url(),
+        OutputConfig {
+            owner_ttl: Duration::from_millis(150),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let channel = channel();
+    let old = store.claim(&channel, "hls", "old").await.unwrap().unwrap();
+    assert_eq!(old.put(b"old-media", now()).await.unwrap(), 1);
+    let descriptor = serde_json::json!({"window":[{"seq":1}]});
+    old.publish(&descriptor).await.unwrap();
+    tokio::time::sleep(Duration::from_millis(180)).await;
+
+    let failed = store
+        .claim(&channel, "hls", "failed")
+        .await
+        .unwrap()
+        .unwrap();
+    failed.set_state("initializing").await.unwrap();
+    assert!(!old.abandon_hls_startup(1).await.unwrap());
+    assert!(!failed.abandon_hls_startup(2).await.unwrap());
+    failed.set_state("active").await.unwrap();
+    assert!(!failed.abandon_hls_startup(1).await.unwrap());
+    failed.set_state("initializing").await.unwrap();
+    assert!(failed.abandon_hls_startup(1).await.unwrap());
+
+    let retained = store.snapshot(&channel, "hls").await.unwrap();
+    assert_eq!(retained.owner, None);
+    assert_eq!(retained.index, 1);
+    assert_eq!(retained.descriptor, Some(descriptor));
+    assert_eq!(store.state(&channel, "hls").await.unwrap(), None);
+    assert_eq!(
+        store
+            .get(&channel, "hls", 1)
+            .await
+            .unwrap()
+            .unwrap()
+            .as_ref(),
+        b"old-media"
+    );
+
+    let next = store.claim(&channel, "hls", "next").await.unwrap().unwrap();
+    assert!(!failed.abandon_hls_startup(1).await.unwrap());
+    assert_eq!(next.put(b"new-media", now()).await.unwrap(), 2);
+    assert!(next.release().await.unwrap());
+    assert!(store.get(&channel, "hls", 1).await.unwrap().is_none());
+}
+#[tokio::test]
+#[ignore = "requires real Redis"]
+async fn abandoned_hls_reads_require_exact_live_window_and_new_claim_invalidates_it() {
+    let store = OutputStore::connect(
+        &url(),
+        OutputConfig {
+            owner_ttl: Duration::from_millis(80),
+            chunk_ttl: Duration::from_millis(650),
+            ..Default::default()
+        },
+    )
+    .await
+    .unwrap();
+    let channel = channel();
+    let old = store.claim(&channel, "hls", "old").await.unwrap().unwrap();
+    old.put(b"old", now()).await.unwrap();
+    let descriptor = serde_json::json!({"window":[{"seq":1}]});
+    old.publish(&descriptor).await.unwrap();
+    tokio::time::sleep(Duration::from_millis(100)).await;
+    let failing = store
+        .claim(&channel, "hls", "failing")
+        .await
+        .unwrap()
+        .unwrap();
+    failing.set_state("initializing").await.unwrap();
+    assert_eq!(
+        failing
+            .retain_abandoned_hls_startup(2, &descriptor, Duration::from_secs(60))
+            .await
+            .unwrap(),
+        Duration::ZERO
+    );
+    let ttl = failing
+        .retain_abandoned_hls_startup(1, &descriptor, Duration::from_secs(60))
+        .await
+        .unwrap();
+    assert!(ttl > Duration::ZERO && ttl < Duration::from_millis(650));
+    assert!(store
+        .retained_hls_startup(&channel, "wrong")
+        .await
+        .unwrap()
+        .is_none());
+    assert!(store
+        .get_retained_hls_startup(&channel, "failing", 2, ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    assert_eq!(
+        store
+            .get_retained_hls_startup(&channel, "failing", 1, ())
+            .await
+            .unwrap()
+            .0
+            .unwrap()
+            .as_ref(),
+        b"old"
+    );
+    // An ownerless legacy write must not repoint a still-live startup marker.
+    let redis = redis::Client::open(url()).unwrap();
+    let mut raw = redis.get_multiplexed_async_connection().await.unwrap();
+    let index_key = format!("live:channel:{channel}:output:hls:buffer:index");
+    let descriptor_key = format!("live:channel:{channel}:output:hls:playlist");
+    redis::cmd("SET")
+        .arg(&index_key)
+        .arg(2)
+        .query_async::<()>(&mut raw)
+        .await
+        .unwrap();
+    assert!(store
+        .retained_hls_startup(&channel, "failing")
+        .await
+        .unwrap()
+        .is_none());
+    assert!(store
+        .get_retained_hls_startup(&channel, "failing", 1, ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    redis::cmd("SET")
+        .arg(&index_key)
+        .arg(1)
+        .query_async::<()>(&mut raw)
+        .await
+        .unwrap();
+    redis::cmd("SET")
+        .arg(&descriptor_key)
+        .arg("{}")
+        .arg("KEEPTTL")
+        .query_async::<()>(&mut raw)
+        .await
+        .unwrap();
+    assert!(store
+        .retained_hls_startup(&channel, "failing")
+        .await
+        .unwrap()
+        .is_none());
+    assert!(store
+        .get_retained_hls_startup(&channel, "failing", 1, ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    redis::cmd("SET")
+        .arg(&descriptor_key)
+        .arg(descriptor.to_string())
+        .arg("KEEPTTL")
+        .query_async::<()>(&mut raw)
+        .await
+        .unwrap();
+
+    let fresh = store
+        .claim(&channel, "hls", "fresh")
+        .await
+        .unwrap()
+        .unwrap();
+    assert!(store
+        .retained_hls_startup(&channel, "failing")
+        .await
+        .unwrap()
+        .is_none());
+    assert!(store
+        .get_retained_hls_startup(&channel, "failing", 1, ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+
+    fresh.set_state("initializing").await.unwrap();
+    fresh
+        .retain_abandoned_hls_startup(1, &descriptor, Duration::from_millis(40))
+        .await
+        .unwrap();
+    assert!(store
+        .retained_hls_startup(&channel, "fresh")
+        .await
+        .unwrap()
+        .is_some());
+    tokio::time::sleep(Duration::from_millis(55)).await;
+    assert!(store
+        .retained_hls_startup(&channel, "fresh")
+        .await
+        .unwrap()
+        .is_none());
+    assert!(store
+        .get_retained_hls_startup(&channel, "fresh", 1, ())
+        .await
+        .unwrap()
+        .0
+        .is_none());
+    assert!(
+        store.get(&channel, "hls", 1).await.unwrap().is_some(),
+        "marker expiry never deletes bytes"
+    );
+}
+#[tokio::test]
+#[ignore = "requires real Redis"]
 async fn retained_read_owner_and_channel_capacity_survive_clones_and_ttl() {
     let store = OutputStore::connect(
         &url(),
