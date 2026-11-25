@@ -557,7 +557,7 @@ impl Execution<'_> {
         let locks = &self.services.locks;
         let acquisition = match scalar {
             Some(source) => locks.acquire_positive_refresh_scalar(source).await,
-            None => locks.acquire("refresh_epg_data", request.source_id).await,
+            None => locks.acquire_epg_refresh_root(request.source_id).await,
         };
         let lease = match acquisition {
             Ok(v) => v,
@@ -713,7 +713,17 @@ impl Execution<'_> {
         let now = (self.services.clock)();
         sqlx::query("INSERT INTO epg_epgsourceindex(source_id,data,updated_at) VALUES($1,NULL,$2) ON CONFLICT(source_id) DO UPDATE SET data=NULL,updated_at=EXCLUDED.updated_at").bind(source.id).bind(now).execute(self.services.store.pool()).await?;
         context.ensure_active()?;
-        let (counter,_): (Option<String>,_)=self.transport.command("if redis.call('STRLEN',KEYS[1])>4096 then return redis.error_reply('counter capacity') end return redis.call('GET',KEYS[1])",&[format!("epg_source_tvg_parse_{}",source.id)],&[],context.retained.clone()).await.map_err(|_|ImportError::Worker)?;
+        let counter_key = format!("epg_source_tvg_parse_{}", source.id);
+        let (counter, _): (Option<String>, _) = self
+            .transport
+            .command_read_classified(
+                "if redis.call('STRLEN',KEYS[1])>4096 then return redis.error_reply('counter capacity') end return redis.call('GET',KEYS[1])",
+                &[counter_key],
+                &[],
+                context.retained.clone(),
+            )
+            .await
+            .map_err(|_| ImportError::Worker)?;
         if let Some(value) = counter {
             let Some(number) = source_integer_literal(&value) else {
                 let admitted = scalar.is_none()

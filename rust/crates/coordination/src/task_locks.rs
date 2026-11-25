@@ -315,6 +315,13 @@ impl TaskLocks {
         .map_err(TaskLockDetailedError::coarse)
     }
 
+    /// Readiness for the ordinary numeric XMLTV refresh root only.
+    pub async fn acquire_epg_refresh_root(&self, id: i64) -> Result<TaskLease, TaskLockError> {
+        self.acquire_suffix_impl("refresh_epg_data", &id.to_string(), None, false, true, true)
+            .await
+            .map_err(TaskLockDetailedError::coarse)
+    }
+
     /// Prepare the same lock manager before the ordinary XMLTV programme SET.
     /// Redis may close this otherwise idle connection while playback continues.
     pub async fn acquire_epg_programmes_retained(

@@ -614,6 +614,110 @@ async fn artwork_preflight_recovers_closed_socket_before_one_publication() {
     let _: () = redis.del(key).await.unwrap();
 }
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+#[ignore = "requires actual owned Redis and exact client idle-close equivalent"]
+async fn refresh_counter_read_discriminates_a_closed_socket() {
+    let mut redis = raw().await;
+    let script = "if redis.call('STRLEN',KEYS[1])>4096 then return redis.error_reply('counter capacity') end return redis.call('GET',KEYS[1])";
+    assert_eq!(
+        std::env::var("JOB_DISPOSABLE_FIXTURE").as_deref(),
+        Ok("playback-fixture-only")
+    );
+    let _: String = redis::cmd("SCRIPT")
+        .arg("LOAD")
+        .arg(script)
+        .query_async(&mut redis)
+        .await
+        .unwrap();
+    // Published Docker ports can translate the upstream peer address. Use
+    // exact server IDs, not a guessed hostIP:port, and fail closed if anything
+    // besides our one newly connected/marked client appeared in this fixture.
+    async fn client_rows(
+        redis: &mut redis::aio::MultiplexedConnection,
+    ) -> std::collections::BTreeMap<u64, String> {
+        let raw: String = redis::cmd("CLIENT")
+            .arg("LIST")
+            .query_async(redis)
+            .await
+            .unwrap();
+        assert!(raw.len() <= 262144);
+        let mut rows = std::collections::BTreeMap::new();
+        for row in raw.lines() {
+            assert!(rows.len() < 128);
+            let id = row
+                .split_whitespace()
+                .find_map(|v| v.strip_prefix("id="))
+                .unwrap()
+                .parse::<u64>()
+                .unwrap();
+            let command = row
+                .split_whitespace()
+                .find_map(|v| v.strip_prefix("cmd="))
+                .unwrap()
+                .to_owned();
+            assert!(rows.insert(id, command).is_none());
+        }
+        rows
+    }
+    for preflight in [false, true] {
+        let before = client_rows(&mut redis).await;
+        let proxy = proxy().await;
+        let transport =
+            RedisTransport::connect_classified(&proxy.url, config(1, Duration::from_secs(2)))
+                .await
+                .unwrap();
+        let (marker, _) = transport
+            .command_classified::<i64, _>("return 7", &[], &[], ())
+            .await
+            .unwrap();
+        assert_eq!(marker, 7);
+        assert_eq!(proxy.accepted.load(Ordering::SeqCst), 1);
+        let after = client_rows(&mut redis).await;
+        let fresh: Vec<_> = after
+            .iter()
+            .filter(|(id, _)| !before.contains_key(*id))
+            .collect();
+        assert_eq!(
+            fresh.len(),
+            1,
+            "ambiguous client identity must never choose a victim"
+        );
+        let (id, command) = fresh[0];
+        assert_eq!(
+            command, "evalsha",
+            "exact new client must carry our transport marker"
+        );
+        let killed: i64 = redis::cmd("CLIENT")
+            .arg("KILL")
+            .arg("ID")
+            .arg(id)
+            .query_async(&mut redis)
+            .await
+            .unwrap();
+        assert_eq!(
+            killed, 1,
+            "close only the exact transport socket, as idle expiry does"
+        );
+        let key = format!("owned:refresh-counter:missing:{}", uuid_suffix());
+        if preflight {
+            let (counter, _) = transport
+                .command_read_classified::<Option<String>, _>(script, &[key], &[], ())
+                .await
+                .unwrap();
+            assert_eq!(counter, None, "absent counter survives settled reconnect");
+            assert_eq!(proxy.accepted.load(Ordering::SeqCst), 2);
+        } else {
+            assert!(
+                transport
+                    .command::<Option<String>, _>(script, &[key], &[], ())
+                    .await
+                    .is_err(),
+                "stock first read fails on the closed manager"
+            );
+        }
+    }
+}
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 #[ignore = "requires actual owned Redis and dropped artwork publication reply"]
 async fn artwork_preflight_does_not_replay_an_uncertain_publication() {
     let mut redis = raw().await;
