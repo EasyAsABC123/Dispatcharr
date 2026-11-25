@@ -1,0 +1,80 @@
+{
+  "candidate": {
+    "image_id": "sha256:21ba7f01028428aab218b4402059e9b19e7b5f41978fa5ce398683cf89559543",
+    "manifest_sha256": "4ab4a4b01ff1d2a80dadb8e4f929a5f112e5f8d5c7f16b6aff52a852c842a429",
+    "revision": "be828d4cdbbcb5b019ef6dd8c60043daa3e8c3e5",
+    "source_archive_sha256": "06cc91d879be5ef77075a9e581979f8b4c99efaf71ac153c4dc73075ad45a18a",
+    "source_tree_sha256": "e1b1bbb61e1354b8b5b847617c3596700b4d461f577b90f3528e8a376c5c38ee",
+    "tag": "dispatcharr-rust-candidate:ordinary-amd64-be828d4cdbbc"
+  },
+  "original_revision": "1241b3f7ffb2e64c8d1157ecd5e3b199af1ae430",
+  "exact_owner_exit": 0,
+  "exact_inventory_exit": 0,
+  "group_sha256": "1644a116441de2c2ff90fd4c6d6a1c8ddda55e7457c6d066f0648baba9648e8f",
+  "websocket": {
+    "paired_controller_exit": 0,
+    "strict_scoped_cases_per_backend": 5,
+    "cross_backend_equal": true,
+    "scoped_observations": [
+      "administrator-graceful-reconnect",
+      "authenticated-hello",
+      "cached-ip-snapshot",
+      "standard-hello-and-cached-ip",
+      "status-get-websocket-update"
+    ]
+  },
+  "disconnects": [
+    {
+      "scope": "webhook",
+      "paired_controller_exit": 0,
+      "exact_cleanup": {
+        "Native": {
+          "cleanup_sha256": "a14b3db9d1874f84e1fa4321863da84af5fae0dda20384bbf80847e06b1b5cd2",
+          "exact_retired_roles": 4,
+          "probe_stdout_sha256": "c194edf2039b16e410a354926bb5f9bdba7fdfe959abb803f1eee6dc111f1166",
+          "receipt_sha256": "59d20c87ada0fbe248f7b4be5ddcf35416053197dc7efd8b1f45fcb972fcec1f"
+        },
+        "Original": {
+          "cleanup_sha256": "4aa84db213cbcdf57b8536e9bca3d896210bccb77be0e35ffcbcdb38bb3e0c09",
+          "exact_retired_roles": 2,
+          "probe_stdout_sha256": "fd15edc04d874cc96cf259f8147ad592bcee6b80e4a4911edc3d20db82d42b30",
+          "receipt_sha256": "f9ba9e70d79f0fe78e5c0f6eebb35b1c3d999f39934b217a6fe364c0455ce6f9"
+        }
+      },
+      "observed": {
+        "disconnect_webhook_count": 1,
+        "disconnect_DeliveryLog_count": 1,
+        "one_disconnect_SystemEvent": true,
+        "natural_origin_retirement": true,
+        "disconnect_duration_and_bytes_valid": true
+      }
+    },
+    {
+      "scope": "audit-only",
+      "paired_controller_exit": 0,
+      "exact_cleanup": {
+        "Native": {
+          "cleanup_sha256": "3b6cfe5bb97816712f8c709d2fa81c4fe3c60f9b8e41c8397778897b770a0bff",
+          "exact_retired_roles": 4,
+          "probe_stdout_sha256": "1624771cdb6ef173416dbaed7c30380effba12603894e30942ca2be6fab9f8e2",
+          "receipt_sha256": "c41018581456f449cd092edfd81571784ea502328957b5acfd228b495ff09722"
+        },
+        "Original": {
+          "cleanup_sha256": "cc410bd399c83cb97173ff8773cb8c9eb22532de0883d65fafff6ff44279d614",
+          "exact_retired_roles": 2,
+          "probe_stdout_sha256": "c27d64b29869800cd2888694734b0649e26e756a4f60dc22bd883339abced0d9",
+          "receipt_sha256": "f09fae0997001a6ababd83ff6663f6d31a596c6e1f25da61c458aac8631c4698"
+        }
+      },
+      "observed": {
+        "disconnect_webhook_count": 0,
+        "disconnect_DeliveryLog_count": 0,
+        "one_disconnect_SystemEvent": true,
+        "natural_origin_retirement": true,
+        "disconnect_duration_and_bytes_valid": true
+      }
+    }
+  ],
+  "formal_m7_closed": false,
+  "performance_measured": false
+}
