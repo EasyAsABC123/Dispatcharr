@@ -8,7 +8,7 @@ use axum::{
 };
 use dispatcharr_contracts::{source_headers, PlaybackRequest};
 use dispatcharr_store::{AuthService, StoreError};
-use std::net::SocketAddr;
+use std::{borrow::Cow, net::SocketAddr};
 
 const OPENAPI_JSON: &str = include_str!("../datasets/api-docs/openapi.json");
 const OPENAPI_YAML: &str = include_str!("../datasets/api-docs/openapi.yaml");
@@ -113,28 +113,51 @@ impl NegotiationError {
     }
 }
 
+#[derive(Default)]
+struct Selectors<'a> {
+    format: Option<Cow<'a, str>>,
+    language: Option<Cow<'a, str>>,
+    version: Option<Cow<'a, str>>,
+}
+
+impl<'a> Selectors<'a> {
+    fn from_query(query: &'a str) -> Self {
+        let mut selected = Self::default();
+        for (key, value) in url::form_urlencoded::parse(query.as_bytes()) {
+            match key.as_ref() {
+                "format" => selected.format = Some(value),
+                "lang" => selected.language = Some(value),
+                "version" => selected.version = Some(value),
+                _ => {}
+            }
+        }
+        selected
+    }
+
+    fn schema_version(&self, schema: bool) -> Result<Option<&str>, NegotiationError> {
+        let lang = self.language.as_deref().filter(|value| !value.is_empty());
+        let version = self.version.as_deref().filter(|value| !value.is_empty());
+        if lang.is_some_and(|value| !schema || value != "en")
+            || version.is_some_and(|value| {
+                !schema
+                    || value.len() > 64
+                    || !value.bytes().all(|byte| {
+                        byte.is_ascii_alphanumeric() || matches!(byte, b'.' | b'_' | b'-')
+                    })
+            })
+        {
+            return Err(NegotiationError::VariantUnavailable);
+        }
+        Ok(version)
+    }
+}
+
 fn negotiate(
-    uri: &Uri,
+    format: Option<&str>,
     headers: &HeaderMap,
     renderers: &[Renderer],
 ) -> Result<Renderer, NegotiationError> {
-    let query = url::form_urlencoded::parse(uri.query().unwrap_or_default().as_bytes());
-    let mut format = None;
-    for (key, value) in query {
-        match key.as_ref() {
-            "format" => format = Some(value),
-            // Only the default public discovery snapshot has exact retained provenance.
-            "lang" | "version" if !value.is_empty() => {
-                return Err(NegotiationError::VariantUnavailable)
-            }
-            _ => {}
-        }
-    }
-    let eligible = |r: &Renderer| {
-        format
-            .as_deref()
-            .is_none_or(|value| value.is_empty() || value == r.format)
-    };
+    let eligible = |r: &Renderer| format.is_none_or(|value| value.is_empty() || value == r.format);
     if !renderers.iter().any(eligible) {
         return Err(NegotiationError::UnknownFormat);
     }
@@ -190,32 +213,39 @@ fn supplied_auth(peer: SocketAddr, headers: &HeaderMap) -> PlaybackRequest {
     request
 }
 
-fn success(uri: &Uri, headers: &HeaderMap, renderer: Renderer, schema: bool) -> Response {
-    let html_format = url::form_urlencoded::parse(uri.query().unwrap_or_default().as_bytes())
-        .filter(|(key, _)| key == "format")
-        .last()
-        .is_some_and(|(_, value)| value == "html");
-    let mut response = if schema {
-        let (body, disposition) = if renderer.format == "json" {
-            (OPENAPI_JSON, "inline; filename=\"Dispatcharr API.json\"")
-        } else {
-            (OPENAPI_YAML, "inline; filename=\"Dispatcharr API.yaml\"")
-        };
+fn schema_success(renderer: Renderer, version: Option<&str>) -> Response {
+    let (body, prefix) = if renderer.format == "json" {
         (
-            [
-                (
-                    header::CONTENT_TYPE,
-                    HeaderValue::from_static(renderer.mime),
-                ),
-                (
-                    header::CONTENT_DISPOSITION,
-                    HeaderValue::from_static(disposition),
-                ),
-            ],
-            body,
+            OPENAPI_JSON,
+            "\n        \"title\": \"Dispatcharr API\",\n        \"version\": \"1.0.0",
         )
-            .into_response()
-    } else if uri.path() == "/api/redoc/" {
+    } else {
+        (OPENAPI_YAML, "\n  title: Dispatcharr API\n  version: 1.0.0")
+    };
+    let (body, suffix) = match version {
+        None => (Cow::Borrowed(body), String::new()),
+        Some(version) => (
+            Cow::Owned(body.replacen(prefix, &format!("{prefix} ({version})"), 1)),
+            format!(" ({version})"),
+        ),
+    };
+    let disposition = format!(
+        "inline; filename=\"Dispatcharr API{suffix}.{}\"",
+        renderer.format
+    );
+    (
+        [
+            (header::CONTENT_TYPE, renderer.mime),
+            (header::VARY, "Accept"),
+        ],
+        [(header::CONTENT_DISPOSITION, disposition)],
+        body,
+    )
+        .into_response()
+}
+
+fn html_success(uri: &Uri, headers: &HeaderMap, html_format: bool) -> Response {
+    let mut response = if uri.path() == "/api/redoc/" {
         let body = if html_format {
             REDOC.replace(
                 "spec-url=\"/api/schema/\"",
@@ -254,11 +284,7 @@ fn success(uri: &Uri, headers: &HeaderMap, renderer: Renderer, schema: bool) -> 
         )
             .into_response()
     };
-    if schema {
-        response
-            .headers_mut()
-            .insert(header::VARY, HeaderValue::from_static("Accept"));
-    } else if uri.path() != "/api/redoc/" {
+    if uri.path() != "/api/redoc/" {
         response
             .headers_mut()
             .insert(header::VARY, HeaderValue::from_static("origin, Cookie"));
@@ -331,8 +357,13 @@ async fn documentation(
         HTML_RENDERERS
     };
     let redoc = uri.path() == "/api/redoc/";
-    let mut response = match negotiate(&uri, &headers, renderers) {
-        Ok(renderer) => {
+    let selected = Selectors::from_query(uri.query().unwrap_or_default());
+    let negotiated = selected.schema_version(schema).and_then(|version| {
+        negotiate(selected.format.as_deref(), &headers, renderers)
+            .map(|renderer| (renderer, version))
+    });
+    let mut response = match negotiated {
+        Ok((renderer, version)) => {
             auth.authenticate(&supplied_auth(peer, &headers)).await?;
             if method == Method::OPTIONS && schema {
                 schema_options(renderer, &headers)
@@ -342,8 +373,10 @@ async fn documentation(
                     REDOC_OPTIONS,
                 )
                     .into_response()
+            } else if schema {
+                schema_success(renderer, version)
             } else {
-                success(&uri, &headers, renderer, schema)
+                html_success(&uri, &headers, selected.format.as_deref() == Some("html"))
             }
         }
         Err(error) => error.response(schema),
@@ -459,6 +492,47 @@ mod tests {
             masks.push(masked.to_owned());
         }
         assert_ne!(masks[0], masks[1]);
+    }
+
+    #[tokio::test]
+    async fn schema_selectors_keep_the_graph_and_guard_the_filename() {
+        let response = request("/api/schema/?lang=en", "*/*").await;
+        assert_eq!(response.status(), StatusCode::OK);
+        assert_eq!(
+            &to_bytes(response.into_body(), 1_000_000).await.unwrap()[..],
+            OPENAPI_YAML.as_bytes()
+        );
+
+        let response = request(
+            "/api/swagger.json?version=ignored&version=owned-v1",
+            "application/json",
+        )
+        .await;
+        assert_eq!(
+            response.headers()[header::CONTENT_DISPOSITION],
+            "inline; filename=\"Dispatcharr API (owned-v1).json\""
+        );
+        let raw = to_bytes(response.into_body(), 1_000_000).await.unwrap();
+        let mut actual: serde_json::Value = serde_json::from_slice(&raw).unwrap();
+        assert_eq!(actual["info"]["version"], "1.0.0 (owned-v1)");
+        actual["info"]["version"] = "1.0.0".into();
+        assert_eq!(
+            actual,
+            serde_json::from_str::<serde_json::Value>(OPENAPI_JSON).unwrap()
+        );
+        let yaml = request("/api/schema/?version=owned-v1", "*/*").await;
+        let raw = to_bytes(yaml.into_body(), 1_000_000).await.unwrap();
+        assert!(std::str::from_utf8(&raw)
+            .unwrap()
+            .contains("  version: 1.0.0 (owned-v1)\n"));
+
+        for path in [
+            "/api/schema/?lang=fr",
+            "/api/schema/?version=a%22b",
+            "/api/redoc/?lang=en",
+        ] {
+            assert_eq!(request(path, "*/*").await.status(), StatusCode::NOT_FOUND);
+        }
     }
 
     #[tokio::test]
