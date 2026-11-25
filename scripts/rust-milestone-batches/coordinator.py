@@ -179,7 +179,7 @@ def owner_readiness(nodes, document, output=None):
     authorities = {}
     scheduler_receipts = owners.get("m6", {}).get("scheduler_followon_receipts")
     if scheduler_receipts is not None:
-        adapter = module(HERE / "m6/scheduler_followon_receipts.py", "current_scheduler_receipt_intake")
+        adapter = module(HERE.parent / "rust-contracts/m6_scheduler_followon_receipts.py", "current_scheduler_receipt_intake")
         authorities.update(adapter.resolve(scheduler_receipts, nodes, document["candidate"], bindings))
     m235 = module(HERE / "m235/batch.py", "readiness_m235")
     m478 = module(HERE / "m478/batch.py", "readiness_m478")
@@ -776,7 +776,7 @@ def schedule(nodes, bindings, output, candidate, worker=execute, authorities=Non
     if imported:
         if imported.keys() & bindings.keys():
             raise ValueError("verified current scheduler receipt cannot also be dispatched")
-        adapter = module(HERE / "m6/scheduler_followon_receipts.py", "verified_scheduler_receipt_chain")
+        adapter = module(HERE.parent / "rust-contracts/m6_scheduler_followon_receipts.py", "verified_scheduler_receipt_chain")
         adapter.validate_chain(nodes, candidate, imported)
     output.mkdir(parents=True, exist_ok=False)
     pending = {n['id']: n for n in nodes if n['id'] not in results}

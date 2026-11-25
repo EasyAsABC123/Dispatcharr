@@ -15,8 +15,8 @@ def load(path):
 
 
 HERE = Path(__file__).resolve().parent
-coordinator = load(HERE.parent / "coordinator.py")
-adapter = load(HERE / "scheduler_followon_receipts.py")
+coordinator = load(HERE.parent / "rust-milestone-batches/coordinator.py")
+adapter = load(HERE / "m6_scheduler_followon_receipts.py")
 STATS = "m6/stats-live-ghost"
 
 
